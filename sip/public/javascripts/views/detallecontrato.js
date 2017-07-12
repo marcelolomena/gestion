@@ -56,15 +56,17 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
 
     templateServicio += "<div class='form-row'>";
     templateServicio += "<div class='column-half'>Fecha Control{fechacontrol}</div>";
-    templateServicio += "<div class='column-half'>Anexo{anexo}</div>";
+    templateServicio += "<div class='column-half'>Número Solicitud<span style='color:red'>*</span>{numerosolicitud}</div>";    
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
+    templateServicio += "<div class='column-half'>Anexo{anexo}</div>";    
+    templateServicio += "<div class='column-half'>Numero Ficha Criticidad{numfichacriticidad}</div>";
     templateServicio += "<div class='column-half'>Estado<span style='color:red'>*</span>{idestadocto}</div>";
-    templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</span>{idplazocontrato}</div>";
     templateServicio += "</div>";
 
     templateServicio += "<div class='form-row'>";
+templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</span>{idplazocontrato}</div>";    
     templateServicio += "<div class='column-half'>Condición<span style='color:red'>*</span>{idcondicion}</div>";
     templateServicio += "</div>";
     
@@ -140,6 +142,7 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                                 success: function (data) {
                                     var r = "<select>";
                                     r += '<option value="0">--Escoger SAP--</option>';
+                                    r += '<option value="1">--En Tramite--</option>';
                                     $.each(data, function (i, item) {
                                         r += '<option value="' + data[i].id + '">' + data[i].id+ ' ' +data[i].nombre+ '</option>';
                                     });
@@ -155,33 +158,17 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             { label: 'SAP', name: 'sap', width: 100, align: 'left', search: true, editable: true,
                 edittype: "select",
                 editoptions: {
-                    dataUrl: '/getlistasap/' + proveedor+'/'+codigoart,
-                    postData: function (rowid, value, cmName) {
-                        return {
-                            codigoart: $('#' + subgrid_table_id).getRowData(rowid).codigoart
-                        }
-                    },                         
+                    dataUrl: '/getlistasap/0/0',
                     buildSelect: function (response) {
-                        var grid = $('#' + subgrid_table_id);
-                        var rowKey = grid.getGridParam("selrow");
-                        var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.sap;
-                        var data = JSON.parse(response);
-                        var s = "<select>";//el default
-                        s += '<option value="0">--Escoger SAP--</option>';                        
-                        $.each(data, function (i, item) {
-                            if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].id+ ' ' +data[i].nombre + '</option>';
-                            } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].id+ ' ' +data[i].nombre + '</option>';
-                            }
-                        });
-
-                        return s + "</select>";
-                    }                    
-                }             
+                        var r = "<select>";
+                        r += '<option value="0">--Escoger SAP--</option>';  
+                        r += '<option value="1">--En Tramite--</option>';  
+                        return r + "</select>";    
+                    }             
+                }         
             },                                   
             { label: 'Anexo', name: 'anexo', width: 100, align: 'left', search: true, editable: true },          
+            { label: 'Solicitud', name: 'numerosolicitud', width: 100, align: 'left', search: true, editable: true, hidden: true },            
             {
                 label: 'idcui', name: 'idcui', search: false, editable: true, hidden: true,
                 edittype: "select",
@@ -713,7 +700,10 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
             {
                 label: 'Comentario', name: 'comentario', search: false, editable: true, hidden: false,
                 edittype: "textarea"
-            }                                                       
+            },
+            {
+                label: 'Numero Ficha Criticidad', name: 'numfichacriticidad', search: false, editable: true, hidden: true,
+            }                                                                 
         ],
         shrinkToFit: true,
         autowidth: true,
@@ -762,6 +752,9 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
+                if (!confirm('Esta seguro de modificar. Puede perder los flujos ingresados')){
+                    return [true, "", ""];
+                }
                 if (typeof(postdata.valorcuota) != "undefined"){
                     postdata.valorcuota = postdata.valorcuota.split(".").join("").replace(",", ".");
                 }
@@ -769,8 +762,16 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 var cuota = new Number(postdata.valorcuota);  
                 var montocontrato = new Number(postdata.montocontrato);  
                 var mecuotas =  new Number(postdata.mesesentrecuotas);
-                var cantcuotas = new Number(postdata.numerocuotas);       
-
+                var cantcuotas = new Number(postdata.numerocuotas);   
+                if (parseInt(postdata.sap) == 0) {
+                    return [false, "SAP: Debe escoger un valor", ""];  
+                }                    
+                if (tipocontrato == 'Proyectos') {
+                    console.log('art:'+postdata.codigoart.length);
+                    if (postdata.codigoart.length == 0) {
+                        return [false, "Código Art: Debe ingresar un valor", ""];
+                    }
+                }                 
                 if (parseInt(postdata.idservicio) == 0) {
                     return [false, "Servicio: Debe escoger un valor", ""];
                 } if (parseInt(postdata.idcui) == 0) {
@@ -832,6 +833,8 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idservicio;
                     var thiscid = rowData.idcui;
+                    var thiscart = rowData.codigoart;
+                    var thiscsap = rowData.sap;
                     var grid = $('#' + subgrid_table_id);
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);                    
@@ -855,7 +858,26 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                             $("#idservicio").html(r);
                         }
                     });
-
+                    $.ajax({
+                        type: "GET",
+                        url: '/getlistasap/' + $('#grid').getRowData(row_id).idproveedor +'/'+thiscart ,
+                        async: false,
+                        success: function (data) {
+                            var r = "<select>";
+                            r += '<option value="0">--Escoger Servicio--</option>';
+                            r += '<option value="1">--En Tramite--</option>';
+                            $.each(data, function (i, item) {
+                                console.log("nombresrv:"+data[i].id+" = thissrv:"+thissid);
+                                if (data[i].id == thiscsap) {
+                                    r += '<option value="' + data[i].id + '" selected>' + data[i].id + ' ' + data[i].nombre+ '</option>';
+                                } else {
+                                    r += '<option value="' + data[i].id + '" >' + data[i].id+ ' ' + data[i].nombre+ '</option>';
+                                }
+                            });
+                            r += "</select>";
+                            $("#sap").html(r);
+                        }
+                    });
                 }, 1000);
 
                 sipLibrary.centerDialog($('#' + subgrid_table_id).attr('id'));
@@ -886,7 +908,14 @@ function showSubGrid_JQGrid2(subgrid_id, row_id, message, suffix) {
                 var cantcuotas = new Number(postdata.numerocuotas);       
                 if (parseInt(postdata.sap) == 0) {
                     return [false, "SAP: Debe escoger un valor", ""];  
-                } if (parseInt(postdata.idcui) == 0) {
+                }
+                if (tipocontrato == 'Proyectos') {
+                    console.log('art:'+postdata.codigoart.length);
+                    if (postdata.codigoart.length == 0) {
+                        return [false, "Código Art: Debe ingresar un valor", ""];
+                    }
+                }                    
+                if (parseInt(postdata.idcui) == 0) {
                     return [false, "CUI: Debe escoger un valor", ""];
                 } else if (parseInt(postdata.idservicio) == 0) {
                     return [false, "Servicio: Debe escoger un valor", ""];

@@ -8,7 +8,6 @@ var constants = require("../utils/constants");
 exports.action = function (req, res) {
     var action = req.body.oper;
     var montoorigen = req.body.montoorigen
-    var costoorigen = req.body.costoorigen
     var porcentaje = 0.00
     var idsubtarea
     var fechainicio;
@@ -16,8 +15,8 @@ exports.action = function (req, res) {
     var tipopago = 84
 
     if (action != "del") {
-        if (costoorigen != "")
-            costoorigen = costoorigen.split(".").join("").replace(",", ".")
+        if (montoorigen != "")
+            montoorigen = montoorigen;//.split(".").join("").replace(",", ".")
 
         var ano = req.body.periodo.substring(0, 4);
         var mes = req.body.periodo.substring(4, 6);
@@ -43,7 +42,7 @@ exports.action = function (req, res) {
                 idtareaenvuelo: req.body.parent_id,
                 idsubtarea: idsubtarea,
                 periodo: req.body.periodo,
-                costoorigen: costoorigen,
+                montoorigen: montoorigen,
                 glosaitem: req.body.glosaitem,
                 porcentaje: porcentaje,
                 idtipopago: tipopago,
@@ -84,11 +83,11 @@ exports.action = function (req, res) {
                 req.body,
                 function (err, idlog) {
                     if (!err) {
-                        if (req.body.costoorigen != "") {
+                        if (req.body.montoorigen != "") {
                             models.flujopagoenvuelo.update({
                                 idsubtarea: idsubtarea,
                                 periodo: req.body.periodo,
-                                costoorigen: costoorigen,
+                                montoorigen: montoorigen,
                                 glosaitem: req.body.glosaitem,
                                 porcentaje: porcentaje,
                                 idtipopago: tipopago,

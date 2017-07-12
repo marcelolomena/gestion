@@ -238,6 +238,8 @@ module.exports = function (passport) {
     router.route('/iniciativasconsultaword')
         .get(isAuthenticated, iniciativaconsultaController.getWord);
         
+    router.route('/proveedorcotizaciones/:idcui/:idservicio/:idproveedor')
+        .get(isAuthenticated, tareasnuevosproyectosController.getCotizaciones);
      
                 
     return router;

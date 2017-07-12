@@ -27,6 +27,10 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
+    template += "<div class='column-full'>Cotización{idcotizacion}</div>";
+    template += "</div>";
+    
+    template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>Tipo Pago{idtipopago}</div>";
     template += "<div class='column-half'><span style='color: red'>*</span>Moneda{idmoneda}</div>";
     template += "</div>";
@@ -199,10 +203,49 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             edittype: "select",
             editoptions: {
                 value: "0:--Escoger Proveedor--",
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        $("input#cui").val($('option:selected', this).val());
+                        $("input#inputcui").val($('option:selected', this).val());
+                        var idProv = $('option:selected', this).val();
+                        var idCUI = $('#idcui').val();
+                        var idServicio = $('#idservicio').val();
+                        console.log('idServicio: ' + idServicio+' idCui:'+idCUI+' idProv:'+idProv);
+                        if (idCUI != "0") {
+                            $.ajax({
+                                type: "GET",
+                                url: '/proveedorcotizaciones/' + idCUI + '/' + idServicio+ '/' + idProv,
+                                async: false,
+                                success: function (data) {
+                                    var r = "<select>";
+                                    r += '<option value="0">--Escoger Cotización--</option>';
+                                    $.each(data, function (x, item) {
+                                        //console.log("X:"+x+" item:"+item.idcotizacion+", "+item.nombre);
+                                        r += '<option value="' + data[x].idcotizacion + '">' + data[x].nombre+ '</option>';
+                                    });
+                                    r += "</select>";
+                                    $("#idcotizacion").empty().html(r);                                    
+                                }
+                            });
+                        }
+
+                    }
+                }],                
             },
             dataInit: function (elem) { $(elem).width(100); }
 
         },
+        {
+            label: 'Cotización', name: 'idcotizacion', search: false, width: 300,
+            editable: true, hidden: true,
+            editrules: { required: true },
+            edittype: "select",
+            editoptions: {
+                value: "0:--Escoger Cotización--",
+            },
+            dataInit: function (elem) { $(elem).width(100); }
+
+        },        
         {
             label: 'Proveedor', name: 'proveedor.razonsocial', width: 150, align: 'left',
             search: true, editable: false, hidden: false,
@@ -500,6 +543,10 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                     return [false, "Moneda: Debe seleccionar un valor", ""];
                 }  if (isNaN(costounitario) || costounitario < 0) {
                     return [false, "Costo Unitario: Ingrese un número valido", ""];                    
+                } else if (postdata.idcotizacion > 0) { 
+                    if (confirm("Los flujos de la tarea serán actualizados, esta seguro de modificar?")){
+                        return [true, "", ""];
+                    } 
                 } else {
                     return [true, "", ""]
                 }
@@ -525,6 +572,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                     var thisidservicio = rowData.idservicio;
                     var thisidcui = rowData.idcui;
                     var thisidproveedor = rowData.idproveedor;
+                    var thisidcotiza = rowData.idcotizacion;
 
                     $.ajax({
                         type: "GET",
@@ -563,6 +611,24 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                             $("select#idproveedor").html(s);
                         }
                     });
+                    
+                    $.ajax({
+                        type: "GET",
+                        url: '/proveedorcotizaciones/' + thisidcui + '/' + thisidservicio+ '/' + thisidproveedor,
+                        success: function (data) {
+                            var s = "<select>";
+                            s += '<option value="0">--Escoger Cotización--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].idcotizacion == thisidcotiza) {
+                                    s += '<option value="' + data[i].idcotizacion + '" selected>' + data[i].nombre + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].idcotizacion + '">' + data[i].nombre + '</option>';
+                                }
+                            });
+                            s += "</select>";
+                            $("select#idcotizacion").html(s);
+                        }
+                    });                    
                     //}, 1000);
                     sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                     //$('input#codigoart', form).attr('readonly', 'readonly');

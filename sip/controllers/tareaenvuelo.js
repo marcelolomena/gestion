@@ -18,7 +18,7 @@ exports.action = function (req, res) {
 
   if (action != "del") {
     if (req.body.costounitario != "")
-      costounitario = req.body.costounitario.split(".").join("").replace(",", ".")
+      costounitario = req.body.costounitario;//.split(".").join("").replace(",", ".")
 
     if (req.body.fechainicio != "")
       fechainicio = req.body.fechainicio.split("-").reverse().join("-")

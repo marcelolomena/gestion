@@ -6,7 +6,7 @@ function gridDetail(parentRowID, parentRowKey) {
     templateDetalle += "<div class='form-row'>";
     templateDetalle += "<div class='column-three'>Periodo{periodo}</div>";
     templateDetalle += "<div class='column-three'>Neto{valorcuota}</div>";
-
+    templateDetalle += "<div class='column-three'>Descripción Hito{descripcion}</div>";
     templateDetalle += "</div>";
 
     templateDetalle += "<hr style='width:100%;'/>";
@@ -59,7 +59,11 @@ function gridDetail(parentRowID, parentRowKey) {
             {
                 label: 'Estado', name: 'estadopago', width: 150, editable: false,
                 editoptions: { size: 10, readonly: 'readonly' }
-            }
+            },
+            {
+                label: 'Descripcion', name: 'descripcion', width: 100, editable: true,
+                editoptions: { size: 100 }
+            }            
         ],
         pager: "#" + childGridPagerID,
         //regional: "es",

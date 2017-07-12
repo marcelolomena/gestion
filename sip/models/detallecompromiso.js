@@ -51,7 +51,11 @@ module.exports = function(sequelize, DataTypes) {
     saldopago: {
       type: DataTypes.FLOAT,
       allowNull: true
-    }
+    },
+    descripcion: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }    
   }, {
     schema: 'sip',timestamps: false,tableName: 'detallecompromiso'
   });
