@@ -327,7 +327,7 @@ $(document).ready(function () {
                                     var rowData = grid.getRowData(rowKey);
                                     var thissid = rowData.idnegociador;
                                     $("input#correonegociador").val(data[0].email);
-                                    $("input#fononegociador").val(data[0].contact_number);
+                                    $("input#fononegociador").val(data[0].telefonoTrab);
                                     $("input#direccionnegociador").val('Estado 260, Entrepiso');
                                 }
                             });
