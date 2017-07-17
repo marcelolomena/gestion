@@ -156,7 +156,8 @@ exports.action2 = function (req, res) {
         idclase: req.body.parent_id,
         codigo: req.body.codigo,
         criticidad: req.body.criticidad,
-        borrado: 1
+        borrado: 1,
+        nombre: req.body.nombre,
       }).then(function (plantillaclausula) {
         res.json({ error: 0, glosa: '' });
       }).catch(function (err) {
@@ -169,6 +170,7 @@ exports.action2 = function (req, res) {
       models.plantillaclausula.update({
         codigo: req.body.codigo,
         criticidad: req.body.criticidad,
+        nombre: req.body.nombre,
       }, {
           where: {
             id: req.body.id

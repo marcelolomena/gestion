@@ -320,7 +320,7 @@ function gridCuerpos(parentRowID, parentRowKey, suffix) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
                 $("#modificar").show();
                 setTimeout(function () {
-                    $("#tipoadjunto", form).attr('disabled', 'disabled');
+                    //$("#tipoadjunto", form).attr('disabled', 'disabled');
                 }, 250);
                 $('input#nombreadjunto', form).attr('readonly', 'readonly');
 

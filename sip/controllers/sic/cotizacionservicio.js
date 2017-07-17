@@ -345,7 +345,7 @@ exports.actionnota = function (req, res) {
                 idserviciorequerido: req.body.parent_id,
                 idcriterioevaluacion: req.body.idcriterioevaluacion,
                 idproveedor: req.body.idproveedor,
-                nota: 0,
+                nota:req.body.nota,
                 comentario: req.body.comentario,
                 borrado: 1
             }).then(function (notaevaluaciontecnica) {
@@ -385,7 +385,7 @@ exports.actionnota = function (req, res) {
                         models.notaevaluaciontecnica.update({
                             idcriterioevaluacion: req.body.idcriterioevaluacion,
                             idproveedor: req.body.idproveedor,
-                            nota: 0,
+                            nota:req.body.nota,
                             comentario: req.body.comentario
                         }, {
                                 where: {

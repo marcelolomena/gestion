@@ -39,7 +39,7 @@ var gridDoc = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Doc', 'Nombre Documento', 'Descripción', 'Tipo', 'Tipo', 'Responsable', 'Archivo', 'Archivo'],
+            colNames: ['Doc', 'Nombre Documento', 'Descripción', 'Tipo', 'Tipo', 'Responsable', 'Descripción', 'Archivo', 'Archivo'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true, width: 10,
@@ -149,7 +149,8 @@ var gridDoc = {
                 },
 
 
-                { name: 'nombreresponsable', index: 'nombreresponsable', width: 100, align: "left", editable: true },
+                { name: 'nombreresponsable', index: 'nombreresponsable', width: 50, align: "left", editable: true },
+                { name: 'descripcionlarga', index: 'descripcionlarga', width: 125, align: "left", editable: true },
                 {
                     name: 'nombrearchivo', index: 'nombrearchivo', hidden: false, width: 100, align: "left", editable: true,
                     editoptions: {

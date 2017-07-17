@@ -22,7 +22,7 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_codigosolicitud'>Código solicitud<span style='color:red'>*</span>{codigosolicitud}</div>";
+    t1 += "<div class='column-half' id='d_codigosolicitud'>Código solicitud{codigosolicitud}</div>";
     t1 += "<div class='column-half' id='d_correonegociador'>Correo Negociador<span style='color:red'>*</span>{correonegociador}</div>";
     t1 += "</div>";
 
@@ -229,7 +229,7 @@ $(document).ready(function () {
 
         },
 
-        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: true, editable: true, editrules: { required: true }, hidden: false },
+        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: true, editable: true, editrules: { required: false }, hidden: false },
         {
             name: 'idclasificacionsolicitud', search: false, editable: true, hidden: true,
             edittype: "select",

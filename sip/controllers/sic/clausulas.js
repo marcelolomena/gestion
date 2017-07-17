@@ -299,7 +299,7 @@ exports.download = function (req, res) {
 		where: { idsolicitudcotizacion: req.params.id },
 		include: [
 			{
-				attributes: [['descripcion', 'descripcion']],
+				attributes: [['numerorfp', 'numerorfp'],['descripcion', 'descripcion']],
 				model: models.solicitudcotizacion
 			}, {
 				model: models.plantillaclausula,
@@ -946,7 +946,7 @@ exports.download = function (req, res) {
 		  <div style='border:none;border-bottom:solid #4F81BD 1.0pt;padding:0cm 0cm 4.0pt 0cm;
 		  margin-left:19.85pt;margin-right:0cm'>
 		  <p class=MsoTitle align=center style='margin-left:0cm;text-align:center'><b><span
-		  lang=ES-CL>BASES DE LICITACION N°</span></b></p>
+		  lang=ES-CL>BASES DE LICITACION N°`+clausulas[0].solicitudcotizacion.numerorfp+`</span></b></p>
 		  </div>
 		  </td>
 		 </tr>
