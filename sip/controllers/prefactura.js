@@ -6,6 +6,7 @@ var utilSeq = require('../utils/seq');
 var logger = require("../utils/logger");
 var logtransaccion = require("../utils/logtransaccion");
 var constants = require("../utils/constants");
+var winston = require('winston');
 
 exports.test = function (req, res) {
 
@@ -83,12 +84,94 @@ exports.test = function (req, res) {
                 WHERE a.id=:id AND m.periodo = (SELECT MAX(periodo) FROM dbo.RecursosHumanos)       
             `
 
-        sequelize.query(sql_1,
+
+
+var sql_2 =
+            `
+               SELECT 
+				a.id,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotalsinmulta), 1))-1) ,',','.')  subtotalsinmulta,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.subtotal), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.subtotal), 1))-1) ,',','.')  subtotal,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalmulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalmulta), 1))+1,len(CONVERT(varchar, CONVERT(money, a.totalmulta), 1))) totalmulta,
+				a.impuesto,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalimpuesto), 1))-1) ,',','.')  totalimpuesto,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, a.totalprefactura), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, a.totalprefactura), 1))-1) ,',','.')  totalprefactura,
+				CONVERT(varchar(10),a.fecha,103) fecha,
+				b.glosaservicio,
+                b.idfacturacion,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoaprobado), 1))) montoaprobado,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomulta), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomulta), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montomulta), 1))) montomulta,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoabono), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoabono), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoabono), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoabono), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoabono), 1))) montoabono,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.factorconversion), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.factorconversion), 1))+1,len(CONVERT(varchar, CONVERT(money, b.factorconversion), 1))) factorconversion,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobadopesos), 1))-1) ,',','.')  montoaprobadopesos,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montomultapesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montomultapesos), 1))-1) ,',','.')  montomultapesos,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoabonopesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoabonopesos), 1))-1) ,',','.')  montoabonopesos,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta+b.montoabono), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta+b.montoabono), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta+b.montoabono), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta+b.montoabono), 1))+1,len(CONVERT(varchar, CONVERT(money, b.montoaprobado-b.montomulta+b.montoabono), 1))) montoapagar,
+				REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1))-1) ,',','.') + ',' + SUBSTRING(CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1),CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montoapagarpesos), 1))+1,len(CONVERT(varchar, CONVERT(money,b.montoapagarpesos), 1))) montoapagarpesos,
+                REPLACE( SUBSTRING(CONVERT(varchar, CONVERT(money, b.montototalpesos), 1),1,CHARINDEX('.',CONVERT(varchar, CONVERT(money, b.montototalpesos), 1))-1) ,',','.')  montototalpesos,                                
+                c.razonsocial,
+				c.numrut,
+				c.dvrut,
+				d.contacto,
+				d.correo,
+				e.glosamoneda,
+                f.cui numcui,
+				f.nombre cui,
+				f.nombreresponsable,
+				CONVERT(varchar(10),h.fechainicio,103) fechainicio,
+				CONVERT(varchar(10),h.fechafin,103) fechafin,
+				i.nombre servicio,
+				j.cuentacontable,
+				j.nombrecuenta,
+				k.id idcontrato,
+				k.numero,
+				m.glosaCargoAct,
+                l.email,
+				b.sap,
+				h.tarea,
+				hh.id,
+				k.tipocontrato                
+                FROM sip.prefactura a
+                LEFT JOIN sip.solicitudaprobacion b ON a.id = b.idprefactura 
+                LEFT JOIN sip.proveedor c ON a.idproveedor = c.id
+				LEFT JOIN sip.moneda e ON a.idmoneda = e.id
+				LEFT JOIN sip.flujopagoenvuelo g ON g.id = b.iddetallecompromiso
+				LEFT JOIN sip.tareaenvuelo h ON h.id = g.idtareaenvuelo
+				LEFT JOIN sip.presupuestoenvuelo hh ON hh.id = h.idpresupuestoenvuelo
+				LEFT JOIN sip.estructuracui f ON f.id = h.idcui
+				LEFT JOIN sip.servicio i  ON i.id = h.idservicio
+				LEFT JOIN sip.cuentascontables j ON j.id = i.idcuenta
+				LEFT JOIN sip.contrato k ON k.id = b.idcontrato
+				LEFT JOIN dbo.art_user l ON l.uid = f.uid
+				LEFT JOIN dbo.RecursosHumanos m ON l.email = m.emailTrab
+				LEFT JOIN 
+				(
+					SELECT z.idproveedor,w.id, w.contacto,w.correo FROM sip.contactoproveedor w
+					RIGHT OUTER JOIN
+					(
+						SELECT x.id idproveedor, MIN(y.id) idcontacto  FROM sip.proveedor x join sip.contactoproveedor y on x.id=y.idproveedor GROUP BY x.id 
+					) z ON w.id= z.idcontacto
+				) d ON c.id = d.idproveedor
+                WHERE a.id=:id AND m.periodo = (SELECT MAX(periodo) FROM dbo.RecursosHumanos)             
+            `
+        //Si continuidad sql_1, proyectos sql_2
+        var sql_ok;
+        //console.log("***********SAP:"+req.params.sap);
+        var mysap = req.params.sap;
+        if (mysap > 0 ) {
+            console.log("****Con SAP");
+            sql_ok = sql_2;
+        } else {
+            console.log("****Sin SAP");
+            sql_ok = sql_1;
+        }
+        //console.log("****SQL:"+sql_ok);
+        sequelize.query(sql_ok,
             {
                 replacements: { id: req.params.id },
                 type: sequelize.QueryTypes.SELECT
             }).then(function (rows) {
-
+                //console.log("****ROWS:"+rows.length+ " data:"+JSON.stringify(rows));
                 var datum = {
                     "prefactura": rows
                 }
@@ -133,7 +216,7 @@ exports.test = function (req, res) {
                 })
 
             }).catch(function (err) {
-                logger.error(e)
+                logger.error(err)
             });
 
     } catch (e) {

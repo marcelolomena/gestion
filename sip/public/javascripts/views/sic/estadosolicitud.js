@@ -299,10 +299,10 @@ var gridEstado = {
                 }
             });
         $gridTab.jqGrid('navButtonAdd', '#navGridEst', {
-            caption: "Generar Documento RFC",
+            caption: "Generar Documento",
             id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
             buttonicon: "glyphicon glyphicon-download-alt",
-            title: "Generar Documento RFC",
+            title: "Generar Documento",
             position: "last",
             onClickButton: function () {
                 //var rowKey = $gridTab.getGridParam("selrow");

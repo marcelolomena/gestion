@@ -28,7 +28,7 @@ exports.action = function (req, res) {
     switch (action) {
         case "add":
             sequelize.query("EXECUTE sip.InsertaPeriodoContrato " + req.params.idd + "," +
-                req.body.periodo + "," + valorcuota)
+                req.body.periodo + "," + valorcuota + ",'" + req.body.descripcion+"'")
                 .then(function (rows) {
                     logger.debug("****Creo Periodo contrato:" + rows[0][0].id + ',' + JSON.stringify(rows));
                     models.detallecompromiso.findAll({
@@ -68,7 +68,7 @@ exports.action = function (req, res) {
                 function (err, idlog) {
                     if (!err) {
                         sequelize.query("EXECUTE sip.UpdatePeriodoContrato " + req.body.id + "," +
-                            valorcuota)
+                            valorcuota + ",'" + req.body.descripcion+"'")
                             .then(function (rows) {
                                 logger.debug("****Actualizo Periodo contrato");
                                 logtransaccion.actualizar(idlog, req.body.id, models.detallecompromiso,

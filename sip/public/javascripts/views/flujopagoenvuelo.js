@@ -14,7 +14,7 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>Periodo{periodo}</div>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Pagos{costoorigen}</div>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Pagos{montoorigen}</div>";
     //template += "<div class='column-half'><span style='color: red'>*</span>Porcentaje{porcentaje}</div>";
     template += "</div>";
 
@@ -159,14 +159,12 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
             editrules: { required: true },
         },*/
         {
-            label: 'Pagos', name: 'costoorigen', width: 80, align: 'right',
+            label: 'Pagos', name: 'montoorigen', width: 80, align: 'right',
             search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
+            formatter: 'number', formatoptions: { decimalPlaces: 2 },
             editrules: { required: true },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         /*
@@ -400,6 +398,15 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
+            beforeSubmit: function (postdata, formid) {
+                var montoorigen = new Number(postdata.montoorigen.replace(",", "."));
+                postdata.montoorigen=montoorigen;  
+                if (montoorigen < 0)  {
+                    return [false, "Pagos: Debe seleccionar un valor mayor que cero", ""];
+                } else {
+                    return [true, "", ""]
+                }                                 
+            },    
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -441,6 +448,15 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
+            beforeSubmit: function (postdata, formid) {
+                var montoorigen = new Number(postdata.montoorigen.replace(",", "."));
+                postdata.montoorigen=montoorigen;  
+                if (montoorigen < 0)  {
+                    return [false, "Pagos: Debe seleccionar un valor mayor que cero", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            },             
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey };
             },
@@ -499,7 +515,7 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
         onClickButton: function () {
             var $self = $(this);
             // make "myColumn" temporary editable
-            $self.jqGrid("setColProp", "costoorigen", { editable: false });
+            $self.jqGrid("setColProp", "montoorigen", { editable: false });
             $self.jqGrid("setColProp", "glosaitem", { editable: false });
             $self.jqGrid("setColProp", "idproyecto", { editable: false });
             $self.jqGrid("setColProp", "idtarea", { editable: false });
@@ -509,12 +525,12 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
                 { // some options
                     recreateForm: true,
                     onclickSubmit: function (options, postData) {
-                        return { costoorigen: "" };
+                        return { montoorigen: "" };
                     },
                 }
             );
             // make "myColumn" back as non-editable
-            $self.jqGrid("setColProp", "costoorigen", { editable: true });
+            $self.jqGrid("setColProp", "montoorigen", { editable: true });
             $self.jqGrid("setColProp", "glosaitem", { editable: true });
             $self.jqGrid("setColProp", "idproyecto", { editable: true });
             $self.jqGrid("setColProp", "idtarea", { editable: true });

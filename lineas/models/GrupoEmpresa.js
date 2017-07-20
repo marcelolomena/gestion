@@ -10,11 +10,19 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		Empresa_Id: {
 			type: DataTypes.INTEGER,
-			allowNull: true
+			allowNull: true,
+			references: {
+				model: 'Empresa',
+				key: 'Id'
+			}
 		},
 		Grupo_Id: {
 			type: DataTypes.INTEGER,
-			allowNull: true
+			allowNull: true,
+			references: {
+				model: 'Grupo',
+				key: 'Id'
+			}
 		}
 	}, {
 		schema: 'dbo', timestamps: false, tableName: 'GrupoEmpresa'

@@ -36,7 +36,7 @@ var gridEvaluacionEco = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'idsolicitudcotizacion','idServicio', 'Servicio', 'Glosa Servicio', 'Porcentaje Servicio', 'Porcentaje Económico', 'Porcentaje Técnico', 'Clase Evaluación Técnica', 'Clase Evaluación Técnica'],
+            colNames: ['id', 'idsolicitudcotizacion','idServicio', 'Servicio', 'Porcentaje Servicio', 'Glosa Servicio', 'Porcentaje Económico', 'Porcentaje Técnico', 'Clase Evaluación Técnica', 'Clase Evaluación Técnica'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
 
@@ -66,7 +66,6 @@ var gridEvaluacionEco = {
                     }
                 },
                 { name: 'servicio.nombre', index: 'servicio', width: 350, editable: true, editoptions: { size: 10 } },
-                { name: 'glosaservicio', index: 'glosaservicio', width: 250, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
                     name: 'porcentajeservicio', index: 'porcentajeservicio', width: 150, align: 'left',
                     formatoptions: { decimalPlaces: 0 },
@@ -84,6 +83,7 @@ var gridEvaluacionEco = {
                     search: false, editable: true, hidden: false,
                     editrules: { edithidden: false, required: true },
                 },
+                { name: 'glosaservicio', index: 'glosaservicio', width: 250, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
                     name: 'porcentajeeconomico', index: 'porcentajeeconomico', width:180, align: 'left',
                     formatoptions: { decimalPlaces: 0 },

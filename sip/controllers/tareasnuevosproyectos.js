@@ -141,7 +141,7 @@ exports.action = function (req, res) {
   var costounitario = 0
   var fechainicio;
   var fechafin;
-
+  console.log("********En Action:");
   if (action != "del") {
     if (req.body.costounitario != "")
       costounitario = req.body.costounitario; //.split(".").join("").replace(",", ".")
@@ -171,12 +171,26 @@ exports.action = function (req, res) {
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
         glosa: req.body.glosa,
-        borrado: 1
-      }).then(function (iniciativa) {
+        borrado: 1,
+        idcotizacion: req.body.idcotizacion
+      }).then(function (tarea) {
+        console.log("****THEN Id Tarea:"+JSON.stringify(tarea)+ ", cot:"+req.body.idcotizacion);
+        if (req.body.idcotizacion != 0) {
+          //llama sp que copia flujo
+          console.log("Id Tarea:"+JSON.stringify(tarea)+", "+tarea.id);
+          var sql = "EXECUTE sip.CopiaFlujoCotizacion " + tarea.id + "," + req.body.idcotizacion+", "+req.body.idproveedor;
+          console.log("SQL:"+sql);
+          sequelize.query(sql).then(function (rows) {
+               //LLamo ok
+            }).catch(function (err) {
+              logger.error(err);
+              return res.json({ error_code: 1 });
+            });
+        }
         res.json({ error_code: 0 });
       }).catch(function (err) {
         logger.error(err);
-        res.json({ error_code: 1 });
+        return res.json({ error_code: 1 });
       });
 
       break;
@@ -196,11 +210,24 @@ exports.action = function (req, res) {
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
         glosa: req.body.glosa,
+        idcotizacion: req.body.idcotizacion
       }, {
           where: {
             id: req.body.id
           }
-        }).then(function (contrato) {
+        }).then(function (tarea) {
+          console.log("Id Tarea:"+tarea[0].id +", "+JSON.stringify(tarea));
+          if (req.body.idcotizacion != 0) {
+            //llama sp que copia flujo
+          var sql = "EXECUTE sip.CopiaFlujoCotizacion " + tarea.id + "," + req.body.idcotizacion+", "+req.body.idproveedor;
+          console.log("SQL:"+sql);
+          sequelize.query(sql).then(function (rows) {
+                //LLamo ok
+              }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error_code: 1 });
+              });
+          }
           res.json({ error_code: 0 });
         }).catch(function (err) {
           logger.error(err);
@@ -227,3 +254,33 @@ exports.action = function (req, res) {
   }
 
 }
+
+exports.getCotizaciones = function (req, res) {
+  console.log('EN:getCotizaciones');
+
+  var sql = "select distinct h.idsolicitudcotizacion idcotizacion, d.descripcion nombre " +
+    "from sip.servicio a " +
+    "join sip.tareasnuevosproyectos b on b.idservicio = a.id " +
+    "join sic.serviciosrequeridos c on c.idservicio = a.id " +
+    "join sic.solicitudcotizacion d on c.idsolicitudcotizacion = d.id " +
+    "join sic.cotizacionservicio e on e.idserviciorequerido = c.id " +
+    "left OUTER join sic.solicitudcontrato h on d.id = h.idsolicitudcotizacion " +
+    "where b.idservicio = :idservicio and b.idproveedor = :idproveedor and d.idcui = :idcui";
+
+  console.log('SQL:' + sql);
+  console.log("params:" + req.params.idservicio + ", " + req.params.idproveedor + ", " + req.params.idcui)
+  sequelize.query(sql,
+    {
+      replacements: {
+        idservicio: req.params.idservicio, idproveedor: req.params.idproveedor,
+        idcui: req.params.idcui
+      }, type: sequelize.QueryTypes.SELECT
+    }
+  ).then(function (rows) {
+    res.json(rows);
+  }).catch(function (err) {
+    logger.error(err)
+    res.json({ error_code: 1 });
+  });
+};
+

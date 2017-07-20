@@ -23,7 +23,9 @@ exports.action = function (req, res) {
                 idproveedor: req.body.idproveedor,
                 nombre: req.body.nombre,
                 cargo: req.body.cargo,
-                borrado: 1
+                borrado: 1,
+                correo: req.body.correo,
+                telefono: req.body.telefono
             }).then(function (foro) {
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
@@ -61,7 +63,9 @@ exports.action = function (req, res) {
                         models.participanteproveedor.update({
 
                             nombre: req.body.nombre,
-                            cargo: req.body.cargo
+                            cargo: req.body.cargo,
+                            correo: req.body.correo,
+                            telefono: req.body.telefono
                         }, {
                                 where: {
                                     id: req.body.id

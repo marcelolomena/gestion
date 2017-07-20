@@ -165,12 +165,12 @@ exports.action = function (req, res) {
                 "SELECT @estadocto=nombre FROM sip.parametro WHERE id=" + req.body.idestadocto + "; " +
                 "INSERT INTO sip.detalleserviciocto (idcontrato, anexo, idcui, idservicio, idcuenta, " +
                 "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, " +
-                "idplazocontrato, idcondicion, impuesto, factorimpuesto, idestadocto, estadocontrato, " +
+                "idplazocontrato, idcondicion, numerosolicitud, numfichacriticidad, impuesto, factorimpuesto, idestadocto, estadocontrato, " +
                 "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, " +
                 "diferido, saldopresupuesto, tipogeneracion, comentario, montocontrato " + sapcampos + ") " +
                 "VALUES (" + req.body.parent_id + ",'" + anexo + "'," + req.body.idcui + "," + req.body.idservicio + ", @ctacontable,'" + req.body.fechainicio + "','" +
                 req.body.fechatermino + "','" + req.body.fechacontrol + "'," + cuota + "," + cuota + "," + req.body.idmoneda + "," +
-                req.body.idplazocontrato + "," + req.body.idcondicion + "," +
+                req.body.idplazocontrato + "," + req.body.idcondicion + ",'" +req.body.numerosolicitud + "','" +req.body.numfichacriticidad + "'," +
                 req.body.impuesto + "," + factorimpuesto + "," + req.body.idestadocto + ",@estadocto,'" +
                 req.body.glosaservicio + "',1," + mesesentrecuotas + "," + periodoprimeracuota + "," +
                 numerocuotas + "," + periodoinicioservicio + "," + diferido + "," + req.body.saldopresupuesto + "," +
@@ -178,7 +178,7 @@ exports.action = function (req, res) {
                 "DECLARE @id INT;" +
                 "select @id = @@IDENTITY; " +
                 "select @id as id;";
-            console.log("sql:" + sql);
+            console.log("***sqlADD:" + sql);
             sequelize.query(sql).spread(function (contratosrv) {
                 logger.debug("------------>cc:" + contratosrv);
                 logger.debug("------------>ID:" + contratosrv[0].id)
@@ -239,13 +239,13 @@ exports.action = function (req, res) {
                 ", idcuenta=@ctacontable, fechainicio='" + req.body.fechainicio + "', fechatermino='" + req.body.fechatermino +
                 "', fechacontrol='" + req.body.fechacontrol + "', valorcuota=" + cuota + ", valortotal=" + cuota +
                 ", idmoneda=" + req.body.idmoneda + ", idplazocontrato=" + req.body.idplazocontrato + ", idcondicion=" + req.body.idcondicion +
-                ", impuesto=" + req.body.impuesto + ", factorimpuesto=" + factorimpuesto + 
+                ", impuesto=" + req.body.impuesto + ", factorimpuesto=" + factorimpuesto + ", numerosolicitud='"+req.body.numerosolicitud+"', numfichacriticidad='"+req.body.numfichacriticidad +"' "+
                 ", idestadocto=" + req.body.idestadocto + ", estadocontrato=@estadocto, glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + mesesentrecuotas +
                 ", periodoprimeracuota=" + periodoprimeracuota + ", numerocuotas=" + numerocuotas + ", periodoinicioservicio=" + periodoinicioservicio +
                 ", diferido=" + diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + tipogeneracion +
                 ", comentario='" + req.body.comentario + "', montocontrato="+ req.body.montocontrato + upsap + " " +
                 "WHERE id=" + req.body.id;
-            console.log("sqlup:" + sql);
+            console.log("******SQLUP:" + sql);
             logtransaccion.registrar(
                 constants.ActualizaServicio,
                 req.body.id,

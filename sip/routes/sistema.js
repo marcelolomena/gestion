@@ -111,8 +111,8 @@ module.exports = function (passport) {
                     ]
                 }).then(function (pagina) {
 
-                    if (idsistema != pagina.idsistema)
-                        throw new Error("No tiene permiso para ver una página de otro sistema")
+                    //if (idsistema != pagina.idsistema)
+                    //    throw new Error("No tiene permiso para ver una página de otro sistema")
 
                     var tmpl = pug.renderFile(pagina.contenido.plantilla, {
                         title: pagina.title

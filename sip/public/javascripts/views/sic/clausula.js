@@ -274,6 +274,7 @@ var gridClausula = {
                     $("#del_" + thisId).addClass('ui-disabled');
                     $("#refresh_" + thisId).addClass('ui-disabled');
                     $("#download_" + thisId).addClass('ui-disabled');
+                    $("#borrar_" + thisId).addClass('ui-disabled');
 
                     $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
                         caption: "",
@@ -325,6 +326,7 @@ var gridClausula = {
                     $("#refresh_" + thisId).removeClass('ui-disabled');
                     $("#download_" + thisId).removeClass('ui-disabled');
                     $("#pushpin_" + thisId).addClass('ui-disabled');
+                    $("#borrar_" + thisId).removeClass('ui-disabled');
                 }
             },
             loadComplete: function (data) {
@@ -341,7 +343,7 @@ var gridClausula = {
                             //$("#del__gridMaster").hide();
                             $("#download_" + thisId).addClass('ui-disabled');
                             $("#pushpin_" + thisId).addClass('ui-disabled');
-                            
+
                         }
                     });
                 });
@@ -492,6 +494,24 @@ var gridClausula = {
 
             }
         });
+
+        $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
+            caption: "",
+            id: "borrar_" + $(targ + "_t_" + parentRowKey).attr('id'),
+            buttonicon: "glyphicon glyphicon-erase",
+            title: "Borrar todo",
+            position: "last",
+            onClickButton: function () {
+                var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                $.getJSON('/sic/BorrarClausulas/' + parentRowKey, function (res) {
+
+
+                },
+                    $gridTab.trigger("reloadGrid"));
+            }
+
+        });
+
     }
 }
 function returnDocLink(cellValue, options, rowdata) {

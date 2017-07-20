@@ -18,6 +18,10 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
     tmplPF += "<div class='column-four'><span style='color: red'>*</span>Código {codigo}</div>";
     tmplPF += "</div>";
 
+    tmplPF += "<div class='form-row'>";
+    tmplPF += "<div class='column-four'><span style='color: red'>*</span>Nombre {nombre}</div>";
+    tmplPF += "</div>";
+
     tmplPF += "<div class='form-row' id='elradio'>";
     tmplPF += "<div class='column-full'><span style='color: red'>*</span>Crítica {criticidad}</div>";
     tmplPF += "</div>";
@@ -36,7 +40,7 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
         { label: 'id', name: 'id', key: true, hidden: true },
 
         {
-            label: 'Código', name: 'codigo', width: 60, align: 'left', search: false, editable: true,
+            label: 'Código', name: 'codigo', width: 25, align: 'left', search: false, editable: true,
             editoptions: {
                 dataInit: function (element) {
                     $(element).mask("00.00", { placeholder: "__.__" });
@@ -44,8 +48,14 @@ function gridClausulas(parentRowID, parentRowKey, suffix) {
             },
             editrules: { required: true }
         },
+
         {
-            label: 'Criticidad', name: 'criticidad', width: 60,
+            label: 'Nombre', name: 'nombre', width: 100, align: 'left', search: false, editable: true,
+            editrules: { required: false }
+        },
+
+        {
+            label: 'Criticidad', name: 'criticidad', width: 25,
             search: false, editable: true, hidden: false,
             //editrules: { required: true },
             edittype: "custom",

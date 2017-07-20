@@ -12,22 +12,20 @@ $(document).ready(function () {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo Solicitud<span style='color:red'>*</span>{idtiposolicitud}</div>";
-    template += "<div class='column-half'>Estado Solicitud<span style='color:red'>*</span>{idestadosol}</div>";
+    template += "<div class='column-half'>Tipo Contrato<span style='color:red'>*</span>{idtiposolicitud}</div>";
+    template += "<div class='column-half'>Estado Contrato<span style='color:red'>*</span>{idestadosol}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Solicitud{solicitudcontrato}</div>";
     template += "<div class='column-half'>Número{numero}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Documento<span style='color:red'>*</span>{tipodocumento}</div>";
     template += "<div class='column-half'>Negociador<span style='color:red'>*</span>{uidpmo}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo<span style='color:red'>*</span>{tipocontrato}</div>";
+    template += "<div class='column-half'>Origen<span style='color:red'>*</span>{tipocontrato}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
@@ -138,7 +136,7 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'TipoContrato', name: 'tipocontrato', search: false, editable: true, hidden: false,
+            label: 'Origen', name: 'tipocontrato', search: false, editable: true, hidden: false,
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
@@ -186,7 +184,7 @@ $(document).ready(function () {
             },
         },
         {
-            label: 'Estado Solicitud', name: 'idestadosol', hidden: true, search: true, editable: true,
+            label: 'Estado Contrato', name: 'idestadosol', hidden: true, search: true, editable: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/parameters/estadosolicitud',
@@ -216,11 +214,11 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Estado Solicitud', name: 'estadosolicitud', width: 150, align: 'left', search: true, editable: true,
+            label: 'Estado Contrato', name: 'estadosolicitud', width: 150, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Número', name: 'numero', width: 150, align: 'left', search: true, editable: true,
+            label: 'Número Contrato', name: 'numero', width: 150, align: 'left', search: true, editable: true,
             searchoptions: {
                 sopt: ["eq", "ge", "le"] // ge = greater or equal to, le = less or equal to, eq = equal to
             }
@@ -266,7 +264,7 @@ $(document).ready(function () {
             }
         },        
         {
-            label: 'Tipo Solicitud', name: 'tiposolicitud', width: 200, align: 'left', search: true, editable: true,
+            label: 'Tipo Contrato', name: 'tiposolicitud', width: 200, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true,
             stype: 'select',
             searchoptions: {
@@ -274,7 +272,7 @@ $(document).ready(function () {
                 buildSelect: function (response) {
                     var data = JSON.parse(response);
                     var s = "<select>";
-                    s += '<option value="0">--Escoger Tipo Solicitud--</option>';
+                    s += '<option value="0">--Escoger Tipo Contrato--</option>';
                     $.each(data, function (i, item) {
                         s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                     });
@@ -432,9 +430,7 @@ $(document).ready(function () {
                 } if (parseInt(postdata.idestadosol) == 0) {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
-                    return [false, "Negociador: Debe escoger un valor", ""];
-                } if (parseInt(postdata.tipodocumento) == 0) {
-                    return [false, "Tipo Documento: Debe escoger un valor", ""];                    
+                    return [false, "Negociador: Debe escoger un valor", ""];                
                 } else {
                     return [true, "", ""]
                 }
@@ -480,9 +476,7 @@ $(document).ready(function () {
                 } if (parseInt(postdata.idestadosol) == 0) {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
-                    return [false, "Negociador: Debe escoger un valor", ""];
-                } if (parseInt(postdata.tipodocumento) == 0) {
-                    return [false, "Tipo Documento: Debe escoger un valor", ""];                    
+                    return [false, "Negociador: Debe escoger un valor", ""];                 
                 } else {
                     return [true, "", ""]
                 }

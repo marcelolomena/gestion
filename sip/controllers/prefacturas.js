@@ -15,11 +15,13 @@ exports.list = function (req, res) {
     var sidx = req.body.sidx;
     var sord = req.body.sord;
 
-    if (!sidx)
+    if (!sidx) {
         sidx = "a.id";
+        sord = "desc";
+    }
 
     if (!sord)
-        sord = "asc";
+        sord = "desc";
 
     var order = sidx + " " + sord;
 

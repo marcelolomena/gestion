@@ -36,7 +36,7 @@ var gridCriterios = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'idServicio', 'Servicio', 'Glosa Servicio', 'Porcentaje Servicio', 'Porcentaje Económico', 'Porcentaje Técnico', 'Clase Evaluación Técnica', 'Clase Evaluación Técnica'],
+            colNames: ['id', 'idServicio', 'Servicio', 'Porcentaje Servicio', 'Glosa Servicio', 'Porcentaje Económico', 'Porcentaje Técnico', 'Clase Evaluación Técnica', 'Clase Evaluación Técnica'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 {
@@ -63,10 +63,9 @@ var gridCriterios = {
                         }
                     }
                 },
-                { name: 'servicio.nombre', index: 'servicio', width: 350, editable: true, editoptions: { size: 10 } },
-                { name: 'glosaservicio', index: 'glosaservicio', width: 350, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
+                { name: 'servicio.nombre', index: 'servicio', width: 250, editable: true, editoptions: { size: 10 } },
                 {
-                    name: 'porcentajeservicio', index: 'porcentajeservicio', width: 150, align: 'left',
+                    name: 'porcentajeservicio', index: 'porcentajeservicio', width: 100, align: 'left',
                     formatoptions: { decimalPlaces: 0 },
                     editoptions: {
                         dataInit: function (el) {
@@ -82,8 +81,9 @@ var gridCriterios = {
                     search: false, editable: true, hidden: false,
                     editrules: { edithidden: false, required: true },
                 },
+                { name: 'glosaservicio', index: 'glosaservicio', width: 300, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
-                    name: 'porcentajeeconomico', index: 'porcentajeeconomico', width: 150, align: 'left',
+                    name: 'porcentajeeconomico', index: 'porcentajeeconomico', width: 100, align: 'left',
                     formatoptions: { decimalPlaces: 0 },
                     editoptions: {
                         dataInit: function (el) {
@@ -112,7 +112,7 @@ var gridCriterios = {
 
                 },
                 {
-                    name: 'porcentajetecnico', index: 'porcentajetecnico', width: 150, align: 'left',
+                    name: 'porcentajetecnico', index: 'porcentajetecnico', width: 100, align: 'left',
                     formatoptions: { decimalPlaces: 0 },
                     editoptions: {
                         dataInit: function (el) {
@@ -125,7 +125,7 @@ var gridCriterios = {
                         dato = val * 100;
                         return dato;
                     },
-                    search: false, editable: true, hidden: true,
+                    search: false, editable: true, hidden: false,
                     editrules: { edithidden: false, required: true },
                 },
                 {

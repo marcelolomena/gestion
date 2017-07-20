@@ -255,7 +255,11 @@ exports.tecnicosresponsablescui = function (req, res) {
 
 exports.traerdatos = function (req, res) {
     var id = req.params.id;
-    var sql = " select email, contact_number from art_user where uid=" + id + ";";
+    var sql = 'select a.email, b.telefonoTrab ' +
+                'from dbo.art_user a ' +
+                'join dbo.RecursosHumanos b on a.email = b.emailTrab ' +
+                'where uid = ' + id + 'and periodo = (select max(periodo) from dbo.RecursosHumanos)'
+    //var sql = " select email, contact_number from art_user where uid=" + id + ";";
 
     sequelize.query(sql)
         .spread(function (rows) {

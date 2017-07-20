@@ -418,11 +418,9 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             search: false, editable: true, hidden: true,
             editrules: {required: true},
             formatter: 'number', 
-            formatoptions: { decimalPlaces: 0 },
+            formatoptions: { decimalPlaces: 2 },
             editoptions: {
-                dataInit: function (el) {
-                    $(el).mask('000.000.000.000.000', { reverse: true });
-                }
+                defaultValue:0
             }
         },
         {
@@ -438,13 +436,14 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         },
         {
             label: 'Costo Total', name: 'costototal', width: 100, align: 'left',
-            formatoptions: { decimalPlaces: 0 },
+            formatoptions: { decimalPlaces: 2 },
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
+                //var costounitario = new Number(rowObject.costounitario.replace(",", "."));
                 var valunitario = rowObject.costounitario;
                 var valcantidad = rowObject.cantidad;
                 dato = valunitario*valcantidad;
-                dato = parseInt(dato);
+                dato = parseFloat(dato);
                 return dato;
             },
             editoptions: {
@@ -594,6 +593,8 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
+                var costounitario = new Number(postdata.costounitario.replace(",", "."));
+                postdata.costounitario=costounitario;                
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe seleccionar un valor", ""];
                 } if (postdata.idcui == 0) {
@@ -692,6 +693,8 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
                 return { parent_id: parentRowKey };
             },
             beforeSubmit: function (postdata, formid) {
+                var costounitario = new Number(postdata.costounitario.replace(",", "."));
+                postdata.costounitario=costounitario;                 
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe seleccionar un valor", ""];
                 } if (postdata.idcui == 0) {

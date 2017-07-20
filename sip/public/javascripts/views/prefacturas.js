@@ -1,5 +1,5 @@
 function returnTaskLink(cellValue, options, rowdata, action) {
-    return "<a target='_blank' href='/factura/prefactura/" + rowdata.id + "' >" + cellValue + " <img src='images/export_pdf.png' alt='PDF'></a>";
+    return "<a target='_blank' href='/factura/prefactura/" + rowdata.id + "/"+rowdata.sap+"' >" + cellValue + " <img src='images/export_pdf.png' alt='PDF'></a>";
 }
 
 function getPeriodo() {
@@ -36,7 +36,7 @@ function cancelId(id, factura) {
                         url: '/prefacturas/anular/' + id
                     }).done(function () {
                         bootbox.alert("Prefactura anulada ...", function () { /* your callback code */ })
-                        $("#grid").trigger("reloadGrid");
+                        $("#table_prefacturas").trigger("reloadGrid");
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         bootbox.alert("Error!!…", function () { /* your callback code */ })
                     }).always(function () {
@@ -88,73 +88,74 @@ $(document).ready(function () {
             align: 'center',
             search: false,
             hidden: true,
+            sortable: false,
             formatter: cancelBtn
         },
-        { label: 'Número', name: 'id', key: true, width: 80, hidden: false, formatter: returnTaskLink },
+        { label: 'Número', name: 'id', key: true, width: 80, sortable: false, hidden: false, formatter: returnTaskLink },
         {
             label: 'Estado', name: 'estado', width: 80, align: 'left',
             search: true, editable: false, hidden: false
         },
         {
-            label: 'Periodo', name: 'periodo', width: 70, align: 'left',
+            label: 'Periodo', name: 'periodo', width: 70, sortable: false, align: 'left',
             search: true, editable: true, hidden: false
         },
         {
-            label: 'Proveedor', name: 'idproveedor',
+            label: 'Proveedor', name: 'idproveedor',sortable: false, 
             search: false, editable: true, hidden: true,
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Proveedor', name: 'proveedor', width: 400, align: 'left',
+            label: 'Proveedor', name: 'proveedor', sortable: false, width: 400, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
 
         {
-            label: 'Contrato', name: 'numero', width: 100, align: 'left',
+            label: 'Contrato', name: 'numero', width: 100, sortable: false, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
             label: 'Contrato', name: 'idcontrato',
-            search: false, editable: true, hidden: true,
+            search: false, editable: true, hidden: true,sortable: false, 
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
             label: 'CUI', name: 'idcui',
-            search: false, editable: true, hidden: true,
+            search: false, editable: true, hidden: true,sortable: false, 
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
             label: 'CUI', name: 'cui', width: 100, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: true, editable: true, hidedlg: true,sortable: false, 
             editrules: { edithidden: false, required: true }
         },
         {
             label: 'SAP', name: 'sap', width: 100, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: true, editable: true, hidedlg: true,sortable: false, 
             editrules: { edithidden: false, required: true }
         },
         {
             label: 'Tarea', name: 'tarea', width: 100, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: true, editable: true, hidedlg: true,sortable: false, 
             editrules: { edithidden: false, required: true }
         },        
         {
             label: 'Moneda', name: 'idmoneda',
-            search: false, editable: true, hidden: true,
+            search: false, editable: true, hidden: true,sortable: false, 
             editrules: { required: true },
             edittype: "select",
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
             label: 'Moneda', name: 'moneda', width: 80, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: true, editable: true, hidedlg: true,sortable: false, 
             editrules: { edithidden: false, required: true }
         },
 
         {
-            label: 'Fecha', name: 'fecha', width: 130, align: 'left',
+            label: 'Fecha', name: 'fecha', width: 130, align: 'left',sortable: false, 
             search: false, editable: true, formatter: 'date',
             formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
@@ -165,7 +166,7 @@ $(document).ready(function () {
                         autoclose: true,
                         onSelect: function (dateText, inst) {
                             setTimeout(function () {
-                                $('#grid')[0].triggerToolbar();
+                                $('#table_prefacturas')[0].triggerToolbar();
                             }, 100);
                         }
                     });
@@ -182,17 +183,17 @@ $(document).ready(function () {
         },
 
         {
-            label: 'Estado', name: 'estado', width: 150, align: 'left',
+            label: 'Estado', name: 'estado', width: 150, align: 'left',sortable: false, 
             search: true, editable: true, hidedlg: true, hidden: true,
             editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Factura', name: 'factura', width: 100, align: 'left',
+            label: 'Factura', name: 'factura', width: 100, align: 'left',sortable: false, 
             search: true, editable: false, hidden: true
         },        
 
     ];
-    $("#grid").jqGrid({
+    $("#table_prefacturas").jqGrid({
         url: '/prefacturas/list',
         mtype: "POST",
         datatype: "json",
@@ -206,7 +207,7 @@ $(document).ready(function () {
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
-        pager: "#pager",
+        pager: "#pager_prefacturas",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/prefacturas/action',
@@ -228,15 +229,15 @@ $(document).ready(function () {
                 $.each(data, function (i, item) {
 
                     if (item.glosarol === "Administrador DIVOT") {
-                        $("#grid").jqGrid("showCol", "Anular")
+                        $("#table_prefacturas").jqGrid("showCol", "Anular")
                     }
                 });
             });
         }
     });
-    $("#grid").jqGrid("setLabel", "Anular", "", { "text-align": "center" });
+    $("#table_prefacturas").jqGrid("setLabel", "Anular", "", { "text-align": "center" });
 
-    $('#grid').jqGrid('navGrid', "#pager", {
+    $('#table_prefacturas').jqGrid('navGrid', "#pager_prefacturas", {
         edit: false, add: false, del: false, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },
@@ -253,5 +254,5 @@ $(document).ready(function () {
         }
     );
 
-    $("#pager_left").css("width", "");
+    $("#pager_prefacturas_left").css("width", "");
 });

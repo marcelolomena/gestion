@@ -22,7 +22,7 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_codigosolicitud'>Código solicitud<span style='color:red'>*</span>{codigosolicitud}</div>";
+    t1 += "<div class='column-half' id='d_codigosolicitud'>Código solicitud{codigosolicitud}</div>";
     t1 += "<div class='column-half' id='d_correonegociador'>Correo Negociador<span style='color:red'>*</span>{correonegociador}</div>";
     t1 += "</div>";
 
@@ -37,8 +37,8 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
-    t1 += "<div class='column-half' id='d_grupo'>Grupo<span style='color:red'>*</span>{idgrupo}</div>";
+    t1 += "<div class='column-threequarter' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
+    t1 += "<div class='column-quarter' id='d_grupo'>Grupo{idgrupo}</div>";
     t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
@@ -229,7 +229,7 @@ $(document).ready(function () {
 
         },
 
-        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: true, editable: true, editrules: { required: true }, hidden: false },
+        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: true, editable: true, editrules: { required: false }, hidden: false },
         {
             name: 'idclasificacionsolicitud', search: false, editable: true, hidden: true,
             edittype: "select",
@@ -327,7 +327,7 @@ $(document).ready(function () {
                                     var rowData = grid.getRowData(rowKey);
                                     var thissid = rowData.idnegociador;
                                     $("input#correonegociador").val(data[0].email);
-                                    $("input#fononegociador").val(data[0].contact_number);
+                                    $("input#fononegociador").val(data[0].telefonoTrab);
                                     $("input#direccionnegociador").val('Estado 260, Entrepiso');
                                 }
                             });
