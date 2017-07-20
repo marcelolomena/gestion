@@ -28,7 +28,7 @@ function gridGarantia(parentRowID, parentRowKey, suffix) {
     var childGridPagerID = pager_id;
     var childGridURL = "/garantiareallimite/" + parentRowKey;
 
-    var modelGarantia = [
+    var modelGarantiasEstatales = [
         {
             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
             editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },

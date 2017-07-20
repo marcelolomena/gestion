@@ -1,12 +1,11 @@
-var gridReservar = {
+var gridVermac = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab = $(targ + "_t")
 
         var tmpl = "<div id='responsive-form' class='clearfix'>";
-
         tmpl += "<div class='form-row'>";
-        tmpl += `<div id="garantiascliente" class='column-full'>Garantías Disponibles: <br />
+        tmpl += `<div id="operacionmac" class='column-full'>Garantías Disponibles: <br />
         <br />   
         <input type="checkbox" name="chk_group" value="1" />  Terreno<br />
         <input type="checkbox" name="chk_group" value="2" />  Máquina <br />
@@ -55,7 +54,7 @@ var gridReservar = {
                 
             ],
             rowNum: 20,
-            pager: '#navGridRes',
+            pager: '#navGridVermac',
             styleUI: "Bootstrap",
             //sortname: 'fecha',
             //sortorder: "desc",
@@ -64,7 +63,7 @@ var gridReservar = {
             //autowidth: true,
             width: 1350,
             subGrid: true,
-            subGridRowExpanded: subGridSublimite,
+            subGridRowExpanded: subGridSublimite, //se llama la funcion de abajo
             subGridOptions: {
                 plusicon: "glyphicon-hand-right",
                 minusicon: "glyphicon-hand-down"
@@ -81,7 +80,7 @@ var gridReservar = {
             
         });
 
-        $gridTab.jqGrid('navGrid', '#navGridRes', { edit: false, add: false, del: false, search: false },
+        $gridTab.jqGrid('navGrid', '#navGridVermac', { edit: false, add: false, del: false, search: false },
             {
                 editCaption: "Modificar Límite",
                 closeAfterEdit: true,
@@ -185,7 +184,9 @@ var gridReservar = {
     }
 }
 
-function subGridSublimite2(subgrid_id, row_id) {         
-      //gridSublimiteOp(subgrid_id, row_id, 'sublimite');
-      //gridOperacion(subgrid_id, row_id, 'veroperacion');
+function subGridSublimite(subgrid_id, row_id) {         
+      gridSublimiteOp(subgrid_id, row_id, 'sublimite');
+      gridOperacion(subgrid_id, row_id, 'veroperacion');
+      gridGarantias(subgrid_id, row_id, 'vergarantias');
 }
+      
