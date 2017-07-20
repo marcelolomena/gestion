@@ -38,7 +38,7 @@ exports.action = function (req, res) {
 					});
 			}).catch(function (err) {
 				logger.error(err)
-				res.json({ error: 1, glosa: err.message });
+				return res.json({ error: 1, glosa: err.message });
 			});
 			break;
 		case "edit":
@@ -60,10 +60,10 @@ exports.action = function (req, res) {
 									id: req.body.id
 								}
 							}).then(function (clausulas) {
-								res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+								return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
 							}).catch(function (err) {
 								logger.error(err)
-								res.json({ message: err.message, success: false });
+								return res.json({ message: err.message, success: false });
 							});
 					} else {
 						logger.error(err)
@@ -95,7 +95,7 @@ exports.action = function (req, res) {
 								return res.json({ message: '', success: true });
 							}).catch(function (err) {
 								logger.error(err)
-								res.json({ message: err.message, success: false });
+								return res.json({ message: err.message, success: false });
 							});
 						} else {
 							logger.error(err)
@@ -179,11 +179,11 @@ exports.list = function (req, res) {
 					return res.json({ records: records, total: total, page: page, rows: clausulas });
 				}).catch(function (err) {
 					logger.error(err.message);
-					res.json({ error_code: 1 });
+					return res.json({ error_code: 1 });
 				});
 			}).catch(function (err) {
 				logger.error(err.message);
-				res.json({ error_code: 1 });
+				return res.json({ error_code: 1 });
 			});
 
 		}
@@ -229,10 +229,10 @@ exports.clases = function (req, res) {
 		{ type: sequelize.QueryTypes.SELECT }
 	).then(function (valores) {
 		//logger.debug(valores)
-		res.json(valores);
+		return res.json(valores);
 	}).catch(function (err) {
 		logger.error(err);
-		res.json({ error: 1 });
+		return res.json({ error: 1 });
 	});
 
 }
@@ -248,10 +248,10 @@ exports.plantillas = function (req, res) {
 		{ replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
 	).then(function (valores) {
 		//logger.debug(valores)
-		res.json(valores);
+		return res.json(valores);
 	}).catch(function (err) {
 		logger.error(err);
-		res.json({ error: 1 });
+		return res.json({ error: 1 });
 	});
 
 }
@@ -278,12 +278,12 @@ exports.texto = function (req, res) {
 				return res.json(plantillapordefecto);
 			}).catch(function (err) {
 				logger.error(err.message);
-				res.json({ error_code: 1 });
+				return res.json({ error_code: 1 });
 			});
 		}
 	}).catch(function (err) {
 		logger.error(err.message);
-		res.json({ error_code: 1 });
+		return res.json({ error_code: 1 });
 	});
 }
 
@@ -1033,13 +1033,13 @@ exports.download = function (req, res) {
 		`
 
 		var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
-		res.setHeader('Content-disposition', hdr);
-		res.set('Content-Type', 'application/msword;charset=utf-8');
-		res.status(200).send(result);
+		return res.setHeader('Content-disposition', hdr);
+		return res.set('Content-Type', 'application/msword;charset=utf-8');
+		return res.status(200).send(result);
 
 	}).catch(function (err) {
 		logger.error(err.message);
-		res.status(500).send(err.message);
+		return res.status(500).send(err.message);
 	});
 
 }
@@ -1148,7 +1148,7 @@ exports.default = function (req, res) {
 				return res.json({ message: 'Las cláusulas predefinidas fueron generadas', success: true });
 			}).catch(function (err) {
 				logger.error(err)
-				res.json({ message: err.message, success: false });
+				return res.json({ message: err.message, success: false });
 			});
 
 		}).catch(function (err) {
@@ -1267,7 +1267,7 @@ exports.defaulttoc = function (req, res) {
 			return res.json({ message: 'Las cláusulas predefinidas fueron generadas', success: true });
 		}).catch(function (err) {
 			logger.error(err)
-			res.json({ message: err.message, success: false });
+			return res.json({ message: err.message, success: false });
 		});
 
 	}).catch(function (err) {
@@ -1352,11 +1352,11 @@ exports.listsolcon = function (req, res) {
 					return res.json({ records: records, total: total, page: page, rows: clausulas });
 				}).catch(function (err) {
 					logger.error(err.message);
-					res.json({ error_code: 1 });
+					return res.json({ error_code: 1 });
 				});
 			}).catch(function (err) {
 				logger.error(err.message);
-				res.json({ error_code: 1 });
+				return res.json({ error_code: 1 });
 			});
 
 		}
@@ -2110,13 +2110,13 @@ exports.downloadsolcon = function (req, res) {
 		`
 
 		var hdr = 'attachment; filename=RTF_' + Math.floor(Date.now()) + '.doc'
-		res.setHeader('Content-disposition', hdr);
-		res.set('Content-Type', 'application/msword;charset=utf-8');
-		res.status(200).send(result);
+		return res.setHeader('Content-disposition', hdr);
+		return res.set('Content-Type', 'application/msword;charset=utf-8');
+		return res.status(200).send(result);
 
 	}).catch(function (err) {
 		logger.error(err.message);
-		res.status(500).send(err.message);
+		return res.status(500).send(err.message);
 	});
 
 }
@@ -2153,7 +2153,7 @@ exports.actionsolcon = function (req, res) {
 					});
 			}).catch(function (err) {
 				logger.error(err)
-				res.json({ error: 1, glosa: err.message });
+				return res.json({ error: 1, glosa: err.message });
 			});
 			break;
 		case "edit":
@@ -2175,10 +2175,10 @@ exports.actionsolcon = function (req, res) {
 									id: req.body.id
 								}
 							}).then(function (clausulas) {
-								res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+								return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
 							}).catch(function (err) {
 								logger.error(err)
-								res.json({ message: err.message, success: false });
+								return res.json({ message: err.message, success: false });
 							});
 					} else {
 						logger.error(err)
@@ -2210,7 +2210,7 @@ exports.actionsolcon = function (req, res) {
 								return res.json({ message: '', success: true });
 							}).catch(function (err) {
 								logger.error(err)
-								res.json({ message: err.message, success: false });
+								return res.json({ message: err.message, success: false });
 							});
 						} else {
 							logger.error(err)
@@ -2244,11 +2244,20 @@ exports.textosolcon = function (req, res) {
 				return res.json(plantillapordefecto);
 			}).catch(function (err) {
 				logger.error(err.message);
-				res.json({ error_code: 1 });
+				return res.json({ error_code: 1 });
 			});
 		}
 	}).catch(function (err) {
 		logger.error(err.message);
-		res.json({ error_code: 1 });
+		return res.json({ error_code: 1 });
 	});
+}
+
+exports.BorrarClausulas = function (req, res) {
+
+    var idsolicitudcotizacion = req.params.id
+    console.log(idsolicitudcotizacion)
+	
+	sequelize.query('EXECUTE sic.BorrarFullClausulas ' + idsolicitudcotizacion)
+	
 }

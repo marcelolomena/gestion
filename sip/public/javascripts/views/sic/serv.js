@@ -24,11 +24,8 @@ var gridServ = {
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Clase Criticidad<span style='color:red'>*</span>{idclasecriticidad}</div>";
-        tmplServ += "</div>";
-
-        tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Nota Criticidad<span style='color:red'>*</span>{notacriticidad}</div>";
+        tmplServ += "<div class='column-half'>Clase Criticidad<span style='color:red'>*</span>{idclasecriticidad}</div>";
+        tmplServ += "<div class='column-half'>Nota Criticidad{notacriticidad}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<hr style='width:100%;'/>";

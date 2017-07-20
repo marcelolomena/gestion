@@ -229,19 +229,21 @@ exports.list = function (req, res) {
     var page = 1
     var rows = 10
     var filters = req.params.filters
-    /*
+    
     var filters = req.body.filters;
     var sidx = req.body.sidx;
     var sord = req.body.sord;
   
     if (!sidx)
-      sidx = "descripcion";
+      sidx = "nombre";
   
     if (!sord)
       sord = "asc";
   
-    var orden = "[solicitudcotizacion]." + sidx + " " + sord;
-    */
+    var orden = "[servicio]." + sidx + " " + sord;
+    
+
+    
 
     utilSeq.buildCondition(filters, function (err, data) {
         if (err) {
@@ -263,7 +265,7 @@ exports.list = function (req, res) {
                 models.serviciosrequeridos.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    //order: orden,
+                    order: orden,
                     where: {
                         idsolicitudcotizacion: id
                     },

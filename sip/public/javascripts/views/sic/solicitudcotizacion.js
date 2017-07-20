@@ -37,8 +37,8 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
-    t1 += "<div class='column-half' id='d_grupo'>Grupo<span style='color:red'>*</span>{idgrupo}</div>";
+    t1 += "<div class='column-threequarter' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
+    t1 += "<div class='column-quarter' id='d_grupo'>Grupo{idgrupo}</div>";
     t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";

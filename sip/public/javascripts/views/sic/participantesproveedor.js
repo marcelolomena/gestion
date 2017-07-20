@@ -12,14 +12,13 @@ var gridParticipantesPro = {
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'><span style='color: red'>*</span>Nombre {nombre}</div>";
+        tmplServ += "<div class='column-half'><span style='color: red'>*</span>Nombre {nombre}</div>";
+        tmplServ += "<div class='column-half'><span style='color: red'>*</span>Cargo {cargo}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'><span style='color: red'>*</span>Cargo {cargo}</div>";
-        tmplServ += "</div>";
-
-        tmplServ += "<div class='form-row' style='display: none;'>";
+        tmplServ += "<div class='column-half'><span style='color: red'>*</span>Correo {correo}</div>";
+        tmplServ += "<div class='column-half'><span style='color: red'>*</span>Teléfono {telefono}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<hr style='width:100%;'/>";
@@ -60,11 +59,13 @@ var gridParticipantesPro = {
                 },
 
                 {
-                    label: 'Nombre Proveedor', name: 'proveedor.razonsocial', width: 400, align: 'left', search: true, editable: true,
+                    label: 'Nombre Proveedor', name: 'proveedor.razonsocial', width: 250, align: 'left', search: true, editable: true,
                     editrules: { edithidden: false, required: true }, hidedlg: true
                 },
                 { label: 'Nombre', name: 'nombre', width: 350, align: 'left', search: false, editable: true, editrules: { required: true } },
-                { label: 'Cargo', name: 'cargo', width: 350, align: 'left', search: false, editable: true, editrules: { required: true } },
+                { label: 'Cargo', name: 'cargo', width: 100, align: 'left', search: false, editable: true, editrules: { required: true } },
+                { label: 'Correo', name: 'correo', width: 300, align: 'left', search: false, editable: true, editrules: { required: true } },
+                { label: 'Teléfono', name: 'telefono', width: 100, align: 'left', search: false, editable: true, editrules: { required: true } },
 
             ],
             rowNum: 10,
