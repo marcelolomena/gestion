@@ -739,7 +739,7 @@ module.exports = function (passport) {
     router.route('/sic/guardarcontrato/:id')
         .get(isAuthenticated, solicitudcontratoController.guardarcontrato)
 
-    router.route('/sic/BorrarClausulas/:id')
+    router.route('/sic/BorrarClausulas/:id/:numero')
         .get(isAuthenticated, clausulasController.BorrarClausulas)
 
 

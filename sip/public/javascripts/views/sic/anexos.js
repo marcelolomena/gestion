@@ -277,6 +277,7 @@ var gridAnexos = {
                             $("#del_" + thisId).addClass('ui-disabled');
                             //$("#del__gridMaster").hide();
                             $("#download_" + thisId).addClass('ui-disabled');
+                            $("#borrar_" + thisId).addClass('ui-disabled');
                         }
                     });
                 });
@@ -428,6 +429,48 @@ var gridAnexos = {
 
             }
         });
+
+        $gridTab.jqGrid('navButtonAdd', '#navGridAnexos', {
+            caption: "",
+            id: "borrar_" + $(targ + "_t_" + parentRowKey).attr('id'),
+            buttonicon: "glyphicon glyphicon-erase",
+            title: "Borrar todo",
+            position: "last",
+            onClickButton: function () {
+                var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                bootbox.confirm({
+                    message: "¿Esta seguro de eliminar todas las claúsulas anexas?",
+                    buttons: {
+                        confirm: {
+                            label: 'Si',
+                            //className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            //className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        var numeroanexos = parseInt("1");
+                        if (result) {
+                            console.log('ESTO ES UN NUMERO DE ANEXO: ' + numeroanexos)
+                            var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                            $.getJSON('/sic/BorrarClausulas/' + parentRowKey + '/' + numeroanexos, function (res) { },
+                                $gridTab.trigger("reloadGrid"));
+                        } else {
+                            console.log('ESTO ES UN LOG')
+                            
+                        }
+
+
+
+                    }
+                })
+
+            }
+
+        });
+
     }
 }
 function returnDocLink(cellValue, options, rowdata) {

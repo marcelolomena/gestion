@@ -2255,9 +2255,11 @@ exports.textosolcon = function (req, res) {
 
 exports.BorrarClausulas = function (req, res) {
 
-    var idsolicitudcotizacion = req.params.id
-    console.log(idsolicitudcotizacion)
+	var idsolicitudcotizacion = req.params.id
+	var anexo = req.params.numero
+	console.log(idsolicitudcotizacion)
+	console.log(anexo)
 	
-	sequelize.query('EXECUTE sic.BorrarFullClausulas ' + idsolicitudcotizacion)
+	sequelize.query('EXECUTE sic.BorrarFullClausulas ' + idsolicitudcotizacion+',' + anexo)
 	
 }
