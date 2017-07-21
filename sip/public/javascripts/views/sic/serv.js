@@ -16,11 +16,11 @@ var gridServ = {
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Documento Técnico Asociado<span style='color:red'>*</span>{iddoctotecnico}</div>";
+        tmplServ += "<div class='column-full'>Documento Técnico Asociado{iddoctotecnico}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Glosa Referencia Dcto<span style='color:red'>*</span>{glosareferencia}</div>";
+        tmplServ += "<div class='column-full'>Glosa Referencia Dcto{glosareferencia}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
