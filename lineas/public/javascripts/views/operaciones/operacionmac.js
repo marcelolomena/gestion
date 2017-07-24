@@ -1,4 +1,4 @@
-var gridVermac = {
+var gridoperacionmac = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab = $(targ + "_t")
@@ -48,8 +48,6 @@ var gridVermac = {
                 { name: 'MontoAprobado', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
                 { name: 'DeudaActual', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
                 { name: 'MontoAprobacion', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                
-                
                 { name: 'Garantiaestatal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
                 
             ],
@@ -79,7 +77,7 @@ var gridVermac = {
             },
             
         });
-
+        /*
         $gridTab.jqGrid('navGrid', '#navGridVermac', { edit: false, add: false, del: false, search: false },
             {
                 editCaption: "Modificar Límite",
@@ -87,7 +85,7 @@ var gridVermac = {
                 recreateForm: true,
                 template: tmpl,
                 mtype: 'POST',
-                url: '/limite',
+                url: '/operacionmac',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
@@ -149,12 +147,14 @@ var gridVermac = {
                     var lafechastring = eldiaactual + "-" + elmesactual + "-" + elanoactual
                     return { parent_id: parentRowKey };
                 }, beforeSubmit: function (postdata, formid) {
-                    /*
+
+                    
+                    
                     if (parseInt(postdata.fechavencimiento) == 0) {
                         return [false, "Color: Debe escoger un valor", ""];
                     } if (postdata.comentario.trim().length == 0) {
                         return [false, "Comentario: Debe ingresar un comentario", ""];
-                    } else {*/
+                    } else {
                     return [true, "", ""]
                     //}
                 }
@@ -180,13 +180,14 @@ var gridVermac = {
                         return [true, "", ""]
                 }
             });
-
+            */
+        
     }
 }
 
 function subGridSublimite(subgrid_id, row_id) {         
-      gridSublimiteOp(subgrid_id, row_id, 'sublimite');
-      gridOperacion(subgrid_id, row_id, 'veroperacion');
-      gridGarantias(subgrid_id, row_id, 'vergarantias');
+      //gridSublimiteOp(subgrid_id, row_id, 'sublimite');
+      //gridOperacion(subgrid_id, row_id, 'veroperacion');
+      //gridGarantias(subgrid_id, row_id, 'vergarantias');
 }
       

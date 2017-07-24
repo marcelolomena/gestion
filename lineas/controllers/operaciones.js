@@ -603,3 +603,51 @@ exports.listoperacion = function (req, res) {
         }
     });
 };
+
+exports.listoperacionmac = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "id",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    if (!sidx)
+        sidx = "rut";
+
+    if (!sord)
+        sord = "asc";
+
+    var orden = "[mac]." + sidx + " " + sord;
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.mac.belongsTo(models.macgrupal, { foreignKey: 'idgrupo' });
+            models.mac.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.mac.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    order: orden,
+                    include: [{
+                        model: models.macgrupal
+                    }]
+                }).then(function (lineas) {
+                    return res.json({ records: records, total: total, page: page, rows: lineas });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};

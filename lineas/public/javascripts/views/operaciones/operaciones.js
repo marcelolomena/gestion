@@ -2,7 +2,7 @@ $(document).ready(function () {
     var parentRowKey = "hola"
 
     var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-    tabs += "<li><a href='/operaciones/1' data-target='#operacionmac' id='operacionmac' data-toggle='tab'>Resumen</a></li>"
+    tabs += "<li><a href='/operacionmac/1' data-target='#operacionmac' id='operacionmac' data-toggle='tab'>Ver Mac</a></li>"
     //tabs += "<li><a href='/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
     //tabs += "<li><a href='/aprobaciones/" + parentRowKey + "' data-target='#aprobaciones' id='aprobaciones_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Aprobaciones</a></li>"
     tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Reservar</a></li>"
@@ -50,7 +50,7 @@ $(document).ready(function () {
             loadurl = $this.attr('href'),
             targ = $this.attr('data-target');
         if (targ === '#operacionmac') { //ver macgrupal es la grilla padre
-            gridVermac.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
+            gridoperacionmac.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
         } else if (targ === '#reservar') {
             gridReservar.renderGrid(loadurl, targ)
         } else if (targ === '#bitacora') {
@@ -65,8 +65,8 @@ $(document).ready(function () {
         var $this = $(this),
             loadurl = $this.attr('href'),
             targ = $this.attr('data-target');
-        if (targ === '#vermac') {
-            gridVermac.renderGrid(loadurl, targ)
+        if (targ === '#operacionmac') {
+            gridoperacionmac.renderGrid(loadurl, targ)
         } else if (targ === '#reservar') {
             gridReservar.renderGrid(loadurl, targ)
         } else if (targ === '#bitacora') {

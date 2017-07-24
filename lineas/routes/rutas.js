@@ -79,5 +79,8 @@ module.exports = function (passport) {
     router.route('/grupoempresa')
         .post(isAuthenticated, grupoController.actiongrupoempresa)
 
+    router.route('/operacionmac/:id')
+        .get(isAuthenticated, operacionesController.listoperacionmac);
+
     return router;
 }
