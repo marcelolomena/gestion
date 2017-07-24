@@ -12,7 +12,7 @@ $(document).ready(function () {
     tabs += "</ul>"
 
     tabs += "<div class='tab-content'>"
-    tabs += "<div class='tab-pane active' id='vermac'><div class='container-fluid'><table id='vermac_t'></table><div id='navGridVermac'></div></div></div>"
+    tabs += "<div class='tab-pane active' id='operacionmac'><div class='container-fluid'><table id='operacionmac_t'></table><div id='navGridVermac'></div></div></div>"
     //tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
     //tabs += "<div class='tab-pane' id='aprobaciones'><table id='aprobaciones_t_" + parentRowKey + "'></table><div id='navGridAprob'></div></div>"
     tabs += "<div class='tab-pane' id='reservar'><table id='reservar_t'></table><div id='navGridRes'></div></div>"
@@ -44,7 +44,7 @@ $(document).ready(function () {
             </div>`);
 
     $("#gridMaster").append(tabs);
-    $('#vermac_tab').addClass('media_node active span')
+    $('#operacionmac_tab').addClass('media_node active span')
     $('.active[data-toggle="tab"]').each(function (e) {
         var $this = $(this),
             loadurl = $this.attr('href'),

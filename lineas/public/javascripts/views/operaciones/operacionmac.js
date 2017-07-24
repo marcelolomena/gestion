@@ -24,6 +24,7 @@ var gridoperacionmac = {
                 tmpl += "<div class='column-full'></div>";
                 tmpl += "</div>";
         */
+
         tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
@@ -77,7 +78,7 @@ var gridoperacionmac = {
             },
             
         });
-        /*
+        
         $gridTab.jqGrid('navGrid', '#navGridVermac', { edit: false, add: false, del: false, search: false },
             {
                 editCaption: "Modificar Límite",
@@ -85,7 +86,7 @@ var gridoperacionmac = {
                 recreateForm: true,
                 template: tmpl,
                 mtype: 'POST',
-                url: '/operacionmac',
+                url: '/operacionmac/1',
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
@@ -156,7 +157,7 @@ var gridoperacionmac = {
                         return [false, "Comentario: Debe ingresar un comentario", ""];
                     } else {
                     return [true, "", ""]
-                    //}
+                    }
                 }
             }, {
                 mtype: 'POST',
@@ -180,7 +181,7 @@ var gridoperacionmac = {
                         return [true, "", ""]
                 }
             });
-            */
+            
         
     }
 }
