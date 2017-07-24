@@ -2,6 +2,23 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
+    var elcaption = ""
+
+    $(".gcontainer").prepend(`
+            <div id="cabecera" class="panel panel-primary">
+                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
+                    <h3 class="panel-title">Paso 3 de 3 - Creación MAC Individuales</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <p>
+                            Seleccione las empresas que desea presentar a comité para crear los MAC individuales
+                        </p>  
+                    </div>         
+                </div>
+                
+            </div>`);
+
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
@@ -19,43 +36,9 @@ $(document).ready(function () {
     template += "<hr style='width:100%;'/>";
     template += "<div> {sData} {cData}  </div>";
     template += "</div>";
-
-    $(".gcontainer").prepend(`
-            <div class="panel panel-primary">
-                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
-                    <h3 class="panel-title">Configuración Grupo</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-xs-3"><label for="sel1">Tipo Aprobación:</label>
-                            <select class="form-control" style="height:35px;">
-                                <option value="0">Seleccione un tipo de aprobación</option>    
-                                <option value="1">MAC</option> 
-                                <option value="2">Prórroga</option> 
-                                <option value="3">Especial</option> 
-                                <option value="4">Complementaria</option> 
-                                <option value="5">Atribuciones Factory</option> 
-                                <option value="6">Atribuciones Leasing</option> 
-                            </select>
-                         </div>
-                         <div id="warning" class="col-xs-9" style="padding-top: 30px;">
-                            <span class="glyphicon glyphicon-exclamation-sign" style="color: red;"></span>
-                            Warning
-                         </div>
-                    </div>
-                    
-                          
-                </div>
-                
-            </div>`);
-        $(".gcontainer").append(`
-        <div class="form-group" style="padding-top: 10px; padding-left: 15px;">  
-            <a href='/menu/macindividuales' class="btn btn-info" role="button" style="background-color: #0B2161; border-color: #0B2161;">Continuar</a>
-        </div>
-        `);
-
     var modelGrupo = [
         { label: 'Id', name: 'Id', width: 30, key: true, hidden: true, editable: true },
+
         {
             label: 'Rut', name: 'Rut', width: 80, hidden: false, search: true, editable: true,
             editrules: { required: true },
@@ -117,8 +100,9 @@ $(document).ready(function () {
         height: 'auto',
         autowidth: true,
         shrinkToFit: true,
-        caption: 'Grupo Empresas',
+        caption: "Grupo",
         pager: "#pager",
+        multiselect: true,
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
@@ -134,8 +118,8 @@ $(document).ready(function () {
     });
 
     $("#grid").jqGrid('navGrid', "#pager", {
-        edit: false, add: true, del: true, search: false,
-        refresh: true, view: false, position: "left", cloneToTop: false
+        edit: false, add: false, del: false, search: false,
+        refresh: false, view: false, position: "left", cloneToTop: false
     },
         {
             closeAfterEdit: true,
@@ -157,6 +141,10 @@ $(document).ready(function () {
             template: template,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
+            },
+            beforeShowForm: function (form) {
+                $("input#Nombre").prop('disabled', true);
+                $("input#RazonSocial").prop('disabled', true);
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
@@ -202,12 +190,50 @@ $(document).ready(function () {
         }
     );
 
+    $("#pager").css("height", "50px");
+
+    $("#grid").jqGrid('navButtonAdd', "#pager", {
+        caption: '<button class="btn btn-default">Guardar y Crear MAC Individuales</button>',
+        buttonicon: "",
+        title: "Excel",
+        position: "last",
+        onClickButton: function () {
+            var $grid = $("#grid")
+            var selIds = $grid.jqGrid("getGridParam", "selarrrow")
+            if(selIds!=""){
+                var i, n;
+                var cellValues = [];
+                var alerta = "Se creará el MAC Grupal y Mac Individuales para las siguientes empresas: \n"
+                for (i = 0, n = selIds.length; i < n; i++) {
+                    alerta += $grid.jqGrid("getCell", selIds[i], "Nombre") + "\n";
+                    cellValues.push($grid.jqGrid("getCell", selIds[i], "Id"));
+                }
+                if (confirm(alerta)) {
+                    window.location.href = "/menu/macindividuales";
+                }
+                else {
+                    return false;
+                };
+            }else{
+                alert("Debe seleccionar al menos una empresa");
+            }
+
+        }
+    });
+
     $("#pager_left").css("width", "");
+
+    $(".gcontainer").append(`
+        `);
+
+
 
     $(window).bind('resize', function () {
         $("#grid").setGridWidth($(".gcontainer").width(), true);
         $("#pager").setGridWidth($(".gcontainer").width(), true);
     });
+
+
 });
 
 

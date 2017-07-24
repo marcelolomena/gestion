@@ -13,15 +13,6 @@ var gridVermacIndividuales = {
         var modelmacindividual = [
             { label: 'ID', name: 'Id', key: true, hidden: true },
             {
-                label: ' ', name: 'marca', key: false, hidden: false, width: 30,
-                formatter: function (cellvalue, options, rowObject) {
-
-                    dato = '<input type="checkbox" name="chk_group" value="1" />'
-
-                    return dato
-                }
-            },
-            {
                 label: 'Rut',
                 name: 'Rut',
                 width: 80,
