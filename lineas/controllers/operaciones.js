@@ -624,23 +624,22 @@ exports.listoperacionmac = function (req, res) {
     if (!sord)
         sord = "asc";
 
-    var orden = "[mac]." + sidx + " " + sord;
+    var orden = "[MacIndividual]." + sidx + " " + sord;
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (data) {
-            models.mac.belongsTo(models.macgrupal, { foreignKey: 'idgrupo' });
-            models.mac.count({
+            models.MacIndividual.count({
                 where: data
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.mac.findAll({
+                models.MacIndividual.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     where: data,
                     order: orden,
-                    include: [{
-                        model: models.macgrupal
-                    }]
+                    /*include: [{
+                        model: models.MacIndividual
+                    }]*/
                 }).then(function (lineas) {
                     return res.json({ records: records, total: total, page: page, rows: lineas });
                 }).catch(function (err) {
