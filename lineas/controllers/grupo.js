@@ -300,11 +300,10 @@ exports.listgrupoempresa = function (req, res) {
     var order = sidx + " " + sord;
 
     var sqlcount = `
-  select count (*) from Empresa a
-join GrupoEmpresa b on a.Id=b.Empresa_Id 
-join GrupoEmpresa c on b.Grupo_Id=c.Grupo_Id
-join Empresa d on d.Id=c.Empresa_Id
-where a.Rut=`+ req.params.id;
+  select count (*) from GrupoEmpresa a
+join GrupoEmpresa b on b.Grupo_Id=a.Grupo_Id
+join Empresa c on b.Empresa_Id = c.Id
+where a.Empresa_Id=`+ req.params.id;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
@@ -312,11 +311,10 @@ where a.Rut=`+ req.params.id;
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, d.*,c.Id as idrelacion, c.Grupo_Id as idgrupo from Empresa a
-        join GrupoEmpresa b on a.Id=b.Empresa_Id 
-        join GrupoEmpresa c on b.Grupo_Id=c.Grupo_Id
-        join Empresa d on d.Id=c.Empresa_Id
-        where a.Rut=`+ req.params.id;
+        `as resultNum, b.Id as idrelacion, b.Grupo_Id as idgrupo, c.* from GrupoEmpresa a
+        join GrupoEmpresa b on b.Grupo_Id=a.Grupo_Id
+        join Empresa c on b.Empresa_Id = c.Id
+        where a.Empresa_Id=`+ req.params.id;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 

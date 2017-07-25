@@ -50,6 +50,9 @@ module.exports = function (passport) {
     router.route('/getdatoscliente/:rut')
         .get(isAuthenticated, carteraController.getdatoscliente);
 
+    router.route('/getdatosclientecongrupo/:id')
+        .get(isAuthenticated, carteraController.getdatosclientecongrupo);
+
     router.route('/buscargrupo/:rut')
         .get(isAuthenticated, carteraController.getgrupo);
 
@@ -81,6 +84,17 @@ module.exports = function (passport) {
 
     router.route('/operacionmac/:id')
         .get(isAuthenticated, operacionesController.listoperacionmac);
+
+    router.route('/creargruponuevo/:id/:nombre')
+        .get(isAuthenticated, carteraController.creargruponuevo);
+
+    router.route('/crearmacgrupal/:id')
+        .post(isAuthenticated, carteraController.crearmacgrupal);
+
+    router.route('/getdatosmacgrupal/:id')
+        .get(isAuthenticated, carteraController.getdatosmacgrupal);
+
+    
 
     return router;
 }

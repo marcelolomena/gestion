@@ -2,33 +2,122 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
-    var elcaption = ""
-
     $(".gcontainer").prepend(`
-            <div id="cabecera" class="panel panel-primary">
+            <div class="panel panel-primary">
                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
                     <h3 class="panel-title">Paso 2 de 3 - Configuración Grupo</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-6" style="font-size:12px"><b><span id="rut"></span></b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6" style="font-size:18px"><b><span id="nombre"></span></b></div>
+                    </div>
+                    <div id="conmacgrupal" class="form-group" style="display:none;">
+                        <hr class="section-separations"></hr>
+                        <p>Vincule o desvincule las empresas que conforman el grupo segun corresponda</p>
+                    </div>
+                    <div id="sinmacgrupal" class="form-group" style="display:none;">
                         <p>
                             No ha sido posible encontrar MAC de Grupo asociado a este cliente </br>
-                            ¿Desea buscar el grupo por otro RUT cliente?
+                            ¿Desea buscar el grupo por otro RUT cliente o crear grupo nuevo para el cliente seleccionado?
                         </p>
-                        <button id="si" class="btn btn-default">Sí</button> 
-                        <button id="no" class="btn btn-default">No</button>  
-                    </div>         
+                        <button id="si" class="btn btn-default">Buscar Nuevo Cliente</button> 
+                        <button id="no" class="btn btn-default">Crear Nuevo Grupo</button>  
+                    </div>
+                    <div id="buscarrut" class="form-group" style="display:none;">
+                        <form id="paso2" onsubmit="return false;">
+                            <label for="nuevorut">Ingrese RUT de Empresa:</label>
+                            <input id="nuevorut" class="form-control" style="height:auto; width:auto;">
+                            </input>
+                            <button id="elboton" type="submit" class="btn neutro border ladda-button ng-scope" style="margin-top:15px;">Continuar</button>
+                        </form>  
+                    </div>
                 </div>
                 
             </div>`);
 
+    var id = $("#param").text();
+    var nombre = ""
+    var rut = ""
+    var idgrupo = ""
+    var nombregrupo = ""
+    var elcaption = ""
+    $.ajax({
+        type: "GET",
+        url: '/getdatosclientecongrupo/' + id,
+        async: false,
+        success: function (data) {
+            if (data.length > 0) {
+                nombre = data[0].Nombre;
+                rut = data[0].Rut;
+                idgrupo = data[0].Idgrupo;
+                nombregrupo = data[0].Grupo;
+                $("#rut").html(rut)
+                $("#nombre").html(nombre)
+                $('#conmacgrupal').css("display", "block");
+                grilladegrupo(idgrupo, nombregrupo);
+            } else {
+                $('#sinmacgrupal').css("display", "block");
+            }
+        }
+    });
+
+
+
     $('#si').click(function () {
-        $('#cabecera').css("display", "none");
-        window.location.href = "/menu/crearaprobacion";
+        $('#sinmacgrupal').css("display", "none");
+        $("#buscarrut").css("display", "block")
+    });
+
+    $('#elboton').click(function () {
+        var nuevorut = $('#nuevorut').val();
+        if (nuevorut != "") {
+            $.ajax({
+                type: "GET",
+                url: '/getdatoscliente/' + nuevorut,
+                async: false,
+                success: function (data) {
+                    if (data.length > 0) {
+                        id = data[0].Id;
+                        window.location.assign("/menu/crearaprobacionmac/p/" + id);
+                    } else {
+                        alert("No existe cliente en Base de Datos");
+                    }
+                }
+            });
+
+        } else {
+            alert("Debe ingresar un RUT");
+        }
+    })
+
+    $('#no').click(function () {
+        var nombregrupo = prompt("Ingrese un nombre para el grupo", nombre);
+        if (nombregrupo == null || nombregrupo == "") {
+            alert("Debe ingresar un nombre de grupo")
+        } else {
+            $.ajax({
+                type: "GET",
+                url: '/creargruponuevo/' + id+'/'+nombregrupo,
+                async: false,
+                success: function (data) {
+                    if (data.length > 0) {
+                        window.location.assign("/menu/crearaprobacionmac/p/" + id);
+                    } else {
+                        alert("Error al crear grupo");
+                    }
+                }
+            });
+        }
+
+
 
     });
-    $('#no').click(function () {
-        elcaption = "Nuevo Grupo";
+    function grilladegrupo(idgrupo, nombregrupo) {
+
+        elcaption = "Grupo: " + nombregrupo;
         $('#cabecera').html(`<div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
                     <h3 class="panel-title">Paso 2 de 3 - Configuración Grupo</h3>
                      </div>
@@ -83,16 +172,6 @@ $(document).ready(function () {
                                     }
                                 }
                             });
-                            setTimeout(function () {
-                                var rut = $('#Rut').val();
-                                $.ajax({
-                                    type: "GET",
-                                    url: '/buscargrupo/' + rut,
-                                    success: function (data) {
-                                        $("input#idgrupo").val(data[0].Id);
-                                    }
-                                });
-                            }, 500);
 
                         }
                     }],
@@ -107,7 +186,7 @@ $(document).ready(function () {
         ];
 
         $("#grid").jqGrid({
-            url: '/grupoempresa/90222000',
+            url: '/grupoempresa/'+id,
             mtype: "GET",
             datatype: "json",
             page: 1,
@@ -175,7 +254,7 @@ $(document).ready(function () {
 
                 },
                 onclickSubmit: function (rowid) {
-                    return { grupo: "1" };
+                    return { grupo: idgrupo };
                 }
             },
             {
@@ -210,20 +289,20 @@ $(document).ready(function () {
 
         $(".gcontainer").append(`
         <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
-            <button id="confirmar" class="btn btn-default">Continuar</button>     
+            <button id="confirmar" type="submit" class="btn neutro border ladda-button ng-scope" >Continuar</button> 
         </div>
         `);
 
         $('#confirmar').click(function () {
             if (confirm("¿Está seguro de continuar con esta configuración de grupo?")) {
-                window.location.href = "/menu/crearaprobacionmac2";
+                window.location.assign("/menu/crearaprobacionmac2"+"/p/"+id);
             }
             else {
                 return false;
             }
         });
 
-    });
+    }
 
     $(window).bind('resize', function () {
         $("#grid").setGridWidth($(".gcontainer").width(), true);

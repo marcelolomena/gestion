@@ -2,7 +2,8 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
-    var elcaption = ""
+
+
 
     $(".gcontainer").prepend(`
             <div id="cabecera" class="panel panel-primary">
@@ -12,12 +13,39 @@ $(document).ready(function () {
                 <div class="panel-body">
                     <div class="form-group">
                         <p>
-                            Seleccione las empresas que desea presentar a comité para crear los MAC individuales
+                            Seleccione las empresas del grupo <span id="nombregrupo"></span> que desea presentar a comité para crear los MAC individuales
                         </p>  
                     </div>         
                 </div>
                 
             </div>`);
+
+    var id = $("#param").text();
+    var nombre = ""
+    var rut = ""
+    var idgrupo = ""
+    var nombregrupo = ""
+    var elcaption = ""
+    $.ajax({
+        type: "GET",
+        url: '/getdatosclientecongrupo/' + id,
+        async: false,
+        success: function (data) {
+            if (data.length > 0) {
+                nombre = data[0].Nombre;
+                rut = data[0].Rut;
+                idgrupo = data[0].Idgrupo;
+                nombregrupo = data[0].Grupo;
+                $("#rut").html(rut)
+                $("#nombre").html(nombre)
+                $("#nombregrupo").html(nombregrupo)
+            } else {
+                alert("Error con datos del grupo")
+            }
+        }
+    });
+
+    elcaption = "Grupo: " + nombregrupo;
 
     var template = "<div id='responsive-form' class='clearfix'>";
 
@@ -90,7 +118,7 @@ $(document).ready(function () {
     ];
 
     $("#grid").jqGrid({
-        url: '/grupoempresa/90222000',
+        url: '/grupoempresa/' + id,
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -100,7 +128,7 @@ $(document).ready(function () {
         height: 'auto',
         autowidth: true,
         shrinkToFit: true,
-        caption: "Grupo",
+        caption: elcaption,
         pager: "#pager",
         multiselect: true,
         viewrecords: true,
@@ -200,21 +228,45 @@ $(document).ready(function () {
         onClickButton: function () {
             var $grid = $("#grid")
             var selIds = $grid.jqGrid("getGridParam", "selarrrow")
-            if(selIds!=""){
+            if (selIds != "") {
                 var i, n;
                 var cellValues = [];
                 var alerta = "Se creará el MAC Grupal y Mac Individuales para las siguientes empresas: \n"
                 for (i = 0, n = selIds.length; i < n; i++) {
                     alerta += $grid.jqGrid("getCell", selIds[i], "Nombre") + "\n";
-                    cellValues.push($grid.jqGrid("getCell", selIds[i], "Id"));
+                    cellValues.push(
+                        {
+                            "id": $grid.jqGrid("getCell", selIds[i], "Id"),
+                            "nombre": $grid.jqGrid("getCell", selIds[i], "Nombre"),
+                            "rut": $grid.jqGrid("getCell", selIds[i], "Rut")  
+                        });
                 }
+                console.log(cellValues)
                 if (confirm(alerta)) {
-                    window.location.href = "/menu/macindividuales";
+                    $.ajax({
+                        url: '/crearmacgrupal/' + idgrupo,
+                        type: 'POST',
+                        async: false,
+                        data: JSON.stringify({empresas: cellValues}),
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.error == 0) {
+                                var idmacgrupal = data.macgrupal.Id;
+                                console.log(idmacgrupal);
+                                window.location.href = "/menu/macindividuales/p/"+idmacgrupal;
+                            } else {
+                                alert("Algo falló :(")
+                            }
+
+                        }
+                    });
+
                 }
                 else {
                     return false;
                 };
-            }else{
+            } else {
                 alert("Debe seleccionar al menos una empresa");
             }
 

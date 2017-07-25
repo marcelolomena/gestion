@@ -1,24 +1,4 @@
 $(document).ready(function () {
-    var parentRowKey = "hola"
-
-    var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-    tabs += "<li><a href='/macindividuales/1' data-target='#vermacindividuales' id='vermacindividuales_tab' data-toggle='tab'>MAC Individuales</a></li>"
-    //tabs += "<li><a href='/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
-    //tabs += "<li><a href='/aprobaciones/" + parentRowKey + "' data-target='#aprobaciones' id='aprobaciones_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Aprobaciones</a></li>"
-    tabs += "<li><a href='/aprobaciones/' data-target='#aprobaciones' id='aprobaciones_tab' data-toggle='tab'>Aprobaciones</a></li>"
-    //tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Asignar</a></li>"
-    //tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Estado</a></li>"
-    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Bitacora</a></li>"
-    tabs += "</ul>"
-
-    tabs += "<div class='tab-content'>"
-    tabs += "<div class='tab-pane active' id='vermacindividuales'><div class='container-fluid'><table id='vermacindividuales_t'></table><div id='navGridVermacindividuales'></div></div></div>"
-    //tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
-    //tabs += "<div class='tab-pane' id='aprobaciones'><table id='aprobaciones_t_" + parentRowKey + "'></table><div id='navGridAprob'></div></div>"
-    tabs += "<div class='tab-pane' id='aprobaciones'><table id='aprobaciones_t'></table><div id='navGridAprob'></div></div>"
-    //tabs += "<div class='tab-pane' id='reservar'><table id='reservar_t'></table><div id='navGridRes'></div></div>"
-    tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>"
-    tabs += "</div>"
     $("#gridMaster").append(`
             <div class="panel panel-primary">
                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
@@ -31,7 +11,7 @@ $(document).ready(function () {
                         <div class="col-xs-2"></div>
                         <div class="col-xs-2"></div>
                         <div class="col-xs-2"></br><b>Nombre Grupo:</b></div>
-                        <div class="col-xs-2"></br>MATTE</div>
+                        <div class="col-xs-2"></br><span id="nombregrupo"></span></div>
                     </div>
                     <div class="row">
                         <div class="col-xs-2"><b>Fecha Presentación:</b></div>
@@ -54,7 +34,36 @@ $(document).ready(function () {
                     </div>    
                 </div>
             </div>`);
+    var idmacgrupal = $("#param").text();
+    var nombre = ""
+    var rut = ""
+    var idgrupo = ""
+    var nombregrupo = ""
+    var elcaption = ""
+    $.ajax({
+        type: "GET",
+        url: '/getdatosmacgrupal/' + idmacgrupal,
+        async: false,
+        success: function (data) {
+            if (data.length > 0) {
+                nombregrupo = data[0].nombregrupo;
+                $("#nombregrupo").html(nombregrupo)
+            } else {
+                alert("Error con datos del Mac Grupal")
+            }
+        }
+    });
+    var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
+    tabs += "<li><a href='/macindividuales/" + idmacgrupal + "' data-target='#vermacindividuales' id='vermacindividuales_tab' data-toggle='tab'>MAC Individuales</a></li>"
+    tabs += "<li><a href='/aprobaciones/' data-target='#aprobaciones' id='aprobaciones_tab' data-toggle='tab'>Aprobaciones</a></li>"
+    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Bitacora</a></li>"
+    tabs += "</ul>"
 
+    tabs += "<div class='tab-content'>"
+    tabs += "<div class='tab-pane active' id='vermacindividuales'><div class='container-fluid'><table id='vermacindividuales_t'></table><div id='navGridVermacindividuales'></div></div></div>"
+    tabs += "<div class='tab-pane' id='aprobaciones'><table id='aprobaciones_t'></table><div id='navGridAprob'></div></div>"
+    tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>"
+    tabs += "</div>"
     $("#gridMaster").append(tabs);
     $('#vermacindividuales_tab').addClass('media_node active span')
     $('.active[data-toggle="tab"]').each(function (e) {
