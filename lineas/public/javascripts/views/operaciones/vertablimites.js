@@ -1,4 +1,4 @@
-var gridoperacionmac = {
+var gridvertablimites = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab = $(targ + "_t")
@@ -36,34 +36,19 @@ var gridoperacionmac = {
             //colNames: ['Id', 'Nombre', 'Rut', 'ActividadEconomica','RatingGrupal', 'NivelAtribucion','RatingIndividual', 'Clasificacion', 'Vigilancia','FechaInformacionFinanciera', 'PromedioSaldoVista', 'DeudaSbif', 'AprobadoVinculado','EquipoCobertura','Oficina','FechaCreacion','FechaVencimiento','FechaVencimientoMacAnterior','Empresa_Id'],
             colModel: [
                 {
-                    name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
+                    label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
-                { label: 'Nombre', name: 'Nombre', hidden: true, editable: true },
-                { label: 'Rut', name: 'Rut', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'ActividadEconomica', name: 'ActividadEconomica', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'RatingGrupal', name: 'RatingGrupal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'NivelAtribucion', name: 'NivelAtribucion', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'RatingIndividual', name: 'RatingIndividual', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Clasificacion', name: 'Clasificacion', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Vigilancia', name: 'Vigilancia', width: 60, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { label: 'FechaInformacion', name: 'FechaInformacion', width: 60, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { label: 'PromedioSaldoVista', name: 'PromedioSaldoVista', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'DeudaSbif', name: 'DeudaSbif', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'AprovadoVinculado', name: 'AprovadoVinculado', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'EquipoCobertura', name: 'EquipoCobertura', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Oficina', name: 'Oficina', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'FechaCreacion', name: 'FechaCreacion', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'FechaVencimiento', name: 'FechaVencimiento', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'FechaVencimientoMacAnterior', name: 'FechaVencimientoMacAnterior', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Empresa_Id', name: 'Empresa_Id', width: 60, hidden: true, search: true, editable: true, editrules: { required: true } },
-                {
-                    label: 'Estado', name: 'Directo', width: 100, hidden: false, search: true, editable: true,
-                    formatter: function (cellvalue, options, rowObject) {
-                        dato = 'Vigente';
-                        return dato
-                    }
-                },
+                { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true },
+                { label: 'Numero', name: 'Numero', width: 15, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'TipoRiesgo', name: 'TipoRiesgo', width: 15, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'Comentario', name: 'Comentario', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'Plazo Residual', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'Moneda', name: 'Moneda', width: 20, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'MontoAprobado', name: 'MontoAprobado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'DeudaActual', name: 'DeudaActual', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'MontoAprobacion', name: 'MontoAprobacion', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
             ],
             rowNum: 20,
             pager: '#navGridVermac',
@@ -74,7 +59,7 @@ var gridoperacionmac = {
             //shrinkToFit: true,
             //autowidth: true,
             width: 1350,
-            subGrid: true,
+            subGrid: false,
             subGridRowExpanded: subGridlimite, //se llama la funcion de abajo
             subGridOptions: {
                 plusicon: "glyphicon-hand-right",
@@ -85,7 +70,7 @@ var gridoperacionmac = {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
-            caption: "Resumen Mac",
+            caption: "Detalle Limites",
             loadComplete: function (data) {
                 var thisId = $.jgrid.jqID(this.id);
             },
@@ -199,10 +184,8 @@ var gridoperacionmac = {
     }
 }
 
-function subGridlimite(subgrid_id, row_id) {
-    console.log("dsafadsfas")
-    gridverlimite(subgrid_id, row_id, 'sublimite'); //sublimite es el nombre con el que quedaran los divs en la subgrilla (/verlimite.js)
+function subGridlimiteotrawea(subgrid_id, row_id) {//cambiar el nombre a la funcion si se copia la plantilla!!!!
+    //gridverlimite(subgrid_id, row_id, 'sublimite'); //sublimite es el nombre con el que quedaran los divs en la subgrilla (/verlimite.js)
     //gridOperacion(subgrid_id, row_id, 'veroperacion');
     //gridGarantias(subgrid_id, row_id, 'vergarantias');
-    //gridvertablimites.renderGrid(subgrid_id, row_id, 'sublimite');
 }

@@ -82,5 +82,11 @@ module.exports = function (passport) {
     router.route('/operacionmac/:id')
         .get(isAuthenticated, operacionesController.listoperacionmac);
 
+    router.route('/verlimite/:id')
+        .get(isAuthenticated, operacionesController.listverlmite);
+
+    router.route('/vertablimites/:id')
+        .get(isAuthenticated, operacionesController.listtabverlimite);
+
     return router;
 }
