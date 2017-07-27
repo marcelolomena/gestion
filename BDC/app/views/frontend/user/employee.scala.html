@@ -58,8 +58,13 @@
 								<span class="show_tasks"  id="subtask_@p.program_id"></span>
 								<div class="width_full task_list_div" id="task_list_@p.program_id">
 									@for(s <- SubTaskServices.findSubTasksListForProgram(session.get("uId").get, p.program_id.get.toString())){
-										<span class="left">&raquo;</span>
-										<span class="employee_task_title" id="@s.sub_task_id">@*<a href="@controllers.Frontend.routes.SubTask.subTaskDetails(s.sub_task_id.get.toString())">*@ <a href="@controllers.Frontend.routes.TimeSheet.productsTimesheet()" id="timesheet_id"> @s.task</a> </span>
+										
+										@if(s.priority > 0){
+											<span class="employee_task_title" id="@s.sub_task_id">@*<a href="@controllers.Frontend.routes.SubTask.subTaskDetails(s.sub_task_id.get.toString())">*@ <a href="@controllers.Frontend.routes.TimeSheet.productsTimesheet()" id="timesheet_id" style="color:red"> @s.task</a> </span>			
+										}else{
+											<span class="employee_task_title" id="@s.sub_task_id">@*<a href="@controllers.Frontend.routes.SubTask.subTaskDetails(s.sub_task_id.get.toString())">*@ <a href="@controllers.Frontend.routes.TimeSheet.productsTimesheet()" id="timesheet_id"> @s.task</a> </span>
+										}
+										
 									}
 								</div>
 							</div>
@@ -74,8 +79,12 @@
 								<span class="xshow_tasks"  id="xsubtask_@pt.program_id"></span>
 								<div class="width_full task_list_div" id="xtask_list_@pt.program_id">
 									@for(st <- SubTaskServices.sin_avance_en_tareas(session.get("uId").get, pt.program_id.get.toString())){
-										<span class="left">&raquo;</span>
-										<span class="employee_task_title" id="st_@st.sub_task_id"><a class="openbox" id="openbox_@st.sub_task_id.get.toString()" href="#"> @st.task</a> </span>
+										@if(st.priority > 0){
+											<span class="employee_task_title" id="st_@st.sub_task_id"><a class="openbox" id="openbox_@st.sub_task_id.get.toString()" href="#" style="color:red"> @st.task</a> </span>
+										}else{
+											<span class="employee_task_title" id="st_@st.sub_task_id"><a class="openbox" id="openbox_@st.sub_task_id.get.toString()" href="#"> @st.task</a> </span>
+										}
+										
 									}
 								</div>
 							</div>

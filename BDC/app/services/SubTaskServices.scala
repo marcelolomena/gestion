@@ -1213,7 +1213,7 @@ object SubTaskServices extends CustomColumns {
   }
 
   def findSubTasksListForProgram(employee_id: String, program_id: String) = {
-    val sqlString = "select * from art_sub_task  where (completion_percentage < 100 OR completion_percentage Is Null) AND sub_task_id IN (select DISTINCT(sub_task_id) from art_sub_task_allocation where is_deleted=1 AND user_id= " + employee_id + " AND pId IN (select DISTINCT(pId) from art_project_master where program=" + program_id + ") ) AND is_deleted=1 AND task_id IN ( select DISTINCT(task_id) from art_task  where is_active=1 AND  pId IN ( select DISTINCT(pId) from art_project_master where is_active=1 AND program =" + program_id + ") )"
+    val sqlString = "select [sub_task_id],[task_id],[title],[description],[plan_start_date],[plan_end_date],[actual_start_date] ,[actual_end_date] ,DATEDIFF(day, plan_end_date,GETDATE()) as priority  ,[added_date]  ,[note] ,[status] ,[completion_percentage] ,[task_complete] ,[sub_task_depend] ,[dependencies_type] ,[is_deleted] ,[catalogue_id],[actual_end_date_final] from art_sub_task  where (completion_percentage < 100 OR completion_percentage Is Null) AND sub_task_id IN (select DISTINCT(sub_task_id) from art_sub_task_allocation where is_deleted=1 AND user_id= " + employee_id + " AND pId IN (select DISTINCT(pId) from art_project_master where program=" + program_id + ") ) AND is_deleted=1 AND task_id IN ( select DISTINCT(task_id) from art_task  where is_active=1 AND  pId IN ( select DISTINCT(pId) from art_project_master where is_active=1 AND program =" + program_id + ") )"
 
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(SubTasks.subTask *)
@@ -1222,7 +1222,7 @@ object SubTaskServices extends CustomColumns {
   }
 
   def findAllSubTasksForProgram(program_id: String) = {
-    val sqlString = "select * from art_sub_task  where (completion_percentage < 100 OR completion_percentage Is Null) AND is_deleted=1 AND sub_task_id IN (select DISTINCT(sub_task_id) from art_sub_task_allocation where is_deleted=1 AND  pId IN (select DISTINCT(pId) from art_project_master where is_active=1 AND program=" + program_id + ") ) AND is_deleted=1 AND task_id IN ( select DISTINCT(task_id) from art_task  where is_active=1 AND  pId IN ( select DISTINCT(pId) from art_project_master where is_active=1 AND program =" + program_id + ") )"
+    val sqlString ="select *  from art_sub_task  where (completion_percentage < 100 OR completion_percentage Is Null) AND is_deleted=1 AND sub_task_id IN (select DISTINCT(sub_task_id) from art_sub_task_allocation where is_deleted=1 AND  pId IN (select DISTINCT(pId) from art_project_master where is_active=1 AND program=" + program_id + ") ) AND is_deleted=1 AND task_id IN ( select DISTINCT(task_id) from art_task  where is_active=1 AND  pId IN ( select DISTINCT(pId) from art_project_master where is_active=1 AND program =" + program_id + ") )"
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(SubTasks.subTask *)
       result

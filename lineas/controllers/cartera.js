@@ -672,3 +672,34 @@ exports.getdatosmacgrupal = function (req, res) {
     });
 
 }
+
+exports.getmacindividuales = function (req, res) {
+    sequelize.query(
+        'select a.* from MacIndividual a  ' +
+        'join GrupoEmpresa c on c.Empresa_Id =a.Empresa_Id ' +
+        'join MacGrupal e on e.Grupo_Id = c.Grupo_Id '+
+        'where e.Id =  ' + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
+}
+exports.getmacindividual = function (req, res) {
+    sequelize.query(
+        'select * from MacIndividual a  ' +
+        'where Id =  ' + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
+}

@@ -5,8 +5,8 @@ var gridVermacIndividuales = {
 
         var tmpl = "<div id='responsive-form' class='clearfix'>";
         tmpl += "<div class='form-row'>";
-        tmpl += "<div id='mensaje' class='column-full'>"
-        tmpl += "Cierre esta ventana cuando termine de crear los MACs";
+        tmpl += "<div id='mensaje' class='column-full'>" 
+        tmpl += "Cierre esta ventana cuando termine de crear los MACs"; 
         tmpl += "</div>";
         tmpl += "</div>";
         tmpl += "</div>";
@@ -15,46 +15,94 @@ var gridVermacIndividuales = {
             {
                 label: 'Rut',
                 name: 'Rut',
-                width: 60,
+                width: 80,
                 align: 'left',
                 search: false,
                 editable: true,
                 hidden: false
             },
             {
-                label: 'Nombre', name: 'Nombre', width: 150, hidden: false, search: true, editable: true, editrules: { required: true }
+                label: 'Cliente', name: 'Nombre', width: 150, hidden: false, search: true, editable: true, editrules: { required: true }
             },
 
-            { label: 'A. Económica', name: 'ActividadEconomica', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'R. Individ.', name: 'RatingIndividual', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
 
-            { label: 'Ejecutivo C.', name: 'EquipoCobertura', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'Banca/Oficina', name: 'Oficina', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'Clasificación', name: 'Clasificacion', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'Vigilancia', name: 'Vigilancia', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'F.Info', name: 'FechaInformacionFinanciera', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'F.Apertura C', name: 'FechaCreacion', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'Saldo Prom.$', name: 'PromedioSaldoVista', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'Clasif.', name: 'Clasificacion', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'Vigil.', name: 'Vigilancia', width: 70, hidden: false, search: true, editable: true, editrules: { required: true } },
             {
-                label: 'Saldo Prom.USD', name: 'SaldoPromUsd', width: 90, hidden: false, search: true, editable: true, editrules: { required: true },
+                label: 'Directo', name: 'Directo', width: 100, hidden: false, search: true, editable: true,
                 formatter: function (cellvalue, options, rowObject) {
-                    dato = (parseInt(rowObject.PromedioSaldoVista) / 644).toFixed(2)
+                    dato = Math.floor((Math.random() * 200000) + 1000);
                     return dato
                 }
             },
             {
-                label: 'T. Cambio UF', name: 'TipoCambioUF', width: 70, hidden: false, search: true, editable: true, editrules: { required: true },
+                label: 'Contingente', name: 'Contingente', width: 100, hidden: false, search: true, editable: true,
                 formatter: function (cellvalue, options, rowObject) {
-                    dato = 26.611
+                    dato = Math.floor((Math.random() * 200000) + 1000);
                     return dato
                 }
             },
             {
-                label: 'T. Cambio USD', name: 'TipoCambioUSD', width: 80, hidden: false, search: true, editable: true, editrules: { required: true },
+                label: 'Derivados', name: 'Derivados', width: 100, hidden: false, search: true, editable: true,
                 formatter: function (cellvalue, options, rowObject) {
-                    dato = 644
+                    dato = Math.floor((Math.random() * 200000) + 1000);
                     return dato
                 }
             },
+            {
+                label: 'Entrega Dif.', name: 'Diferida', width: 100, hidden: false, search: true, editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    dato = Math.floor((Math.random() * 200000) + 1000);
+                    return dato
+                }
+            },
+            {
+                label: 'Total', name: 'Total', width: 100, hidden: false, search: true, editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    dato = Math.floor((Math.random() * 200000) + 1000);
+                    return dato
+                }
+            },
+            {
+                label: 'Var Aprob.', name: 'VarAprobacion', width: 100, hidden: false, search: true, editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    dato = Math.floor((Math.random() * 200000) + 1000);
+                    return dato
+                }
+            },
+            {
+                label: 'Deuda Banco', name: 'DeudaBanco', width: 120, hidden: false, search: true, editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    dato = Math.floor((Math.random() * 200000) + 1000);
+                    return dato
+                }
+            },
+            {
+                label: 'Gar. Real', name: 'GarantiaReal', width: 100, hidden: false, search: true, editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    dato = Math.floor((Math.random() * 200000) + 1000);
+                    return dato
+                }
+            },
+            {
+                label: 'SBIF+ACHEL', name: 'SBIFACHEL', width: 100, hidden: false, search: true, editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    dato = Math.floor((Math.random() * 200000) + 1000);
+                    return dato
+                }
+            },
+            {
+                label: 'Penetración', name: 'Penetracion', width: 100, hidden: false, search: true, editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    dato = Math.floor((Math.random() * 100) + 0);
+                    return dato + '%'
+                }
+            },
+
+
+
+
         ];
 
         $gridTab.jqGrid({
@@ -130,7 +178,7 @@ var gridVermacIndividuales = {
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
-                    window.open("/menu/operaciones", "Creación MAC Individual EMPRESAS CMPC S.A.", "directories=no, location=no, menubar=no, scrollbars=yes, statusbar=no, tittlebar=no, width=1024, height=768");
+                    window.open ("/menu/operaciones", "Creación MAC Individual EMPRESAS CMPC S.A.","directories=no, location=no, menubar=no, scrollbars=yes, statusbar=no, tittlebar=no, width=1024, height=768");
                     //window.open ("/menu/operaciones", "Creación MAC Individual FORESTAL, CONST. Y COMERCIAL DEL PACIFICO SUR S.A.","directories=no, location=no, menubar=no, scrollbars=yes, statusbar=no, tittlebar=no, width=1024, height=768");
                 }
             }, {

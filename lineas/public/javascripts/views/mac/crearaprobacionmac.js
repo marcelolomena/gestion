@@ -8,13 +8,24 @@ $(document).ready(function () {
                     <h3 class="panel-title">Paso 2 de 3 - Configuración Grupo</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6" style="font-size:12px"><b><span id="rut"></span></b></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6" style="font-size:18px"><b><span id="nombre"></span></b></div>
-                    </div>
+                    
                     <div id="conmacgrupal" class="form-group" style="display:none;">
+                        <div class="row">
+                        <div class="col-xs-4" style="font-size:12px"><b><span id="rut"></span></b></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4" style="font-size:18px"><b><span id="nombre"></span></b></div>
+                            <div class="col-xs-4" style="font-size:16px"><b>Grupo: <span id="nombregrupo"></span></b></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4" style="font-size:12px"><b>Banca Corporativa / Oficina Moneda / PEP</b></div>
+                        </div>
+                        <div class="row">    
+                            <div class="col-xs-4" style="font-size:12px"><b>Ejecutivo Control: Alvaro Vidal</b></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4" style="font-size:12px"><b>Riesgo: A5 / Rating: 7.5</b></div>
+                        </div>
                         <hr class="section-separations"></hr>
                         <p>Vincule o desvincule las empresas que conforman el grupo segun corresponda</p>
                     </div>
@@ -56,6 +67,7 @@ $(document).ready(function () {
                 nombregrupo = data[0].Grupo;
                 $("#rut").html(rut)
                 $("#nombre").html(nombre)
+                $("#nombregrupo").html(nombregrupo)
                 $('#conmacgrupal').css("display", "block");
                 grilladegrupo(idgrupo, nombregrupo);
             } else {

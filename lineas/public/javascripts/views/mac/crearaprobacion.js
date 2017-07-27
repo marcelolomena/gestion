@@ -18,6 +18,10 @@ $(document).ready(function () {
             }
         }
     });
+    var nombregrupo = "No tiene"
+    if(rut =="90222000"){
+        nombregrupo = "MATTE"
+    }
     $(".gcontainer").prepend(`
             <div class="panel panel-primary">
                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
@@ -25,10 +29,20 @@ $(document).ready(function () {
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-xs-6" style="font-size:12px"><b>`+ rut + `</b></div>
+                        <div class="col-xs-4" style="font-size:12px"><b>`+ rut + `</b></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-6" style="font-size:18px"><b>`+ nombre + `</b></div>
+                        <div class="col-xs-4" style="font-size:18px"><b>`+ nombre + `</b></div>
+                        <div class="col-xs-4" style="font-size:16px"><b>Grupo: `+ nombregrupo + `</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4" style="font-size:12px"><b>Banca Corporativa / Oficina Moneda / PEP</b></div>
+                    </div>
+                    <div class="row">    
+                        <div class="col-xs-4" style="font-size:12px"><b>Ejecutivo Control: Alvaro Vidal</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4" style="font-size:12px"><b>Riesgo: A5 / Rating: 7.5</b></div>
                     </div>
                     <hr class="section-separations"></hr>
                     <form id="paso2" onsubmit="return false;">
@@ -46,7 +60,7 @@ $(document).ready(function () {
                             <div id="warning" class="form-group" style="display: none;">
                                 <span id="mensaje" class="glyphicon glyphicon-exclamation-sign" style="color: red; margin-top:10px;"> Warning</span>     
                             </div>
-                            <button id="elboton" type="submit" class="btn neutro border ladda-button ng-scope" style="margin-top:20px;">Continuar</button>   
+                            <button id="elboton" type="submit" class="btn neutro border ladda-button ng-scope" style="margin-top:20px;">Crear Aprobación</button>   
                         </div>    
                     </form>        
                 </div>              

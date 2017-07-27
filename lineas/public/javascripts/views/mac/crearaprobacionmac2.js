@@ -254,7 +254,7 @@ $(document).ready(function () {
                             if (data.error == 0) {
                                 var idmacgrupal = data.macgrupal.Id;
                                 console.log(idmacgrupal);
-                                window.location.href = "/menu/macindividuales/p/"+idmacgrupal;
+                                window.location.href = "/menu/macgrupal0/p/"+idmacgrupal;
                             } else {
                                 alert("Algo falló :(")
                             }
