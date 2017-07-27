@@ -2,193 +2,137 @@ var gridoperacionmac = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab = $(targ + "_t")
+        console.log(loadurl.substring(14))
+        //console.log(targ)
+        var idmac = loadurl.substring(14);
+        $gridTab.html(
+            `
+            <div id="cabecera" class="panel panel-primary" style="width: 1250px">
+                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
+                    <h3 align="center" class="panel-title">MEMORANDUM DE APROBACIÓN DE CRÉDITOS</h3>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <h5>I. IDENTIFICACIÓN</h5>
+                        <div class="panel panel-primary">
+                            <div class="row">
+                                <div class="col-xs-1"><b>NOMBRE</b></div>
+                                <div class="col-xs-5"><span id="nombre`+ idmac + `"></span></div>
+                                <div class="col-xs-2"></div>
+                                <div class="col-xs-2"><b>RATING GRUPO</b></div>
+                                <div class="col-xs-1">7</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-1"><b>RUT</b></div>
+                                <div class="col-xs-3"><span id="rut`+ idmac + `"></span></div>
+                                <div class="col-xs-2"></div>
+                                <div class="col-xs-2"></div>
+                                <div class="col-xs-2"><b>NIVEL ATRIBUCIÓN</b></div>
+                                <div class="col-xs-1"><span id="nivelatribucion`+ idmac + `"></span></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-1"><b>ACTIVIDAD</b></div>
+                                <div class="col-xs-3"><span id="actividad`+ idmac + `"></span></div>
+                                <div class="col-xs-2"></div>
+                                <div class="col-xs-2"></div>
+                                <div class="col-xs-2"><b>RATING INDIVIDUAL</b></div>
+                                <div class="col-xs-1"><span id="ratingindividual`+ idmac + `"></span></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-1"><b>OFIC/EJEC</b></div>
+                                <div class="col-xs-3">Mayorista 1 / Marcela Castro C.</div>
+                                <div class="col-xs-2"><b>FECHA PROX. VENC.</b></div>
+                                <div class="col-xs-2"><span id="fechaproxvenc`+ idmac + `"></span></div>
+                                <div class="col-xs-2"><b>CLASIFICACIÓN</b></div>
+                                <div class="col-xs-1"><span id="clasificacion`+ idmac + `"></span></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-1"><b>FECHA</b></div>
+                                <div class="col-xs-3"><span id="fecha`+ idmac + `"></span></div>
+                                <div class="col-xs-2"><b>FECHA VENC. ANT.</b></div>
+                                <div class="col-xs-2"><span id="fechavencant`+ idmac + `"></span></div>
+                                <div class="col-xs-2"><b>VIGILANCIA</b></div>
+                                <div class="col-xs-1"><span id="vigilancia`+ idmac + `"></span></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-1"></div>
+                                <div class="col-xs-3"></div>
+                                <div class="col-xs-2"></div>
+                                <div class="col-xs-2"></div>
+                                <div class="col-xs-2"><b>FECHA INFORMACIÓN</br>FINANCIERA</b></div>
+                                <div class="col-xs-1"><span id="fechainfo`+ idmac + `"></span></div>
+                            </div>
+                        </div>
+                        <h5>II. ANTECEDENTES (M$ a 31/05/2017)</h5>
+                        <div class="panel panel-primary">
+                            <div class="row">
+                                <div class="col-xs-1"></div>
+                                <div class="col-xs-1"></div>
+                                <div class="col-xs-2"><b>DEUDA SBIF</b></div>
+                                <div class="col-xs-1"><b>DIRECTA</b></div>
+                                <div class="col-xs-2"><b>INDIRECTA</b></div>
+                                <div class="col-xs-2"></div>
+                                <div class="col-xs-1"><b>DIRECTA</b></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-1"><b>P. SALDO </br>VISTA</br><span style="font-size:10px">(Ultimos 12 Meses)</span></b></div>
+                                <div class="col-xs-1"><u><span id="promediosaldovista`+ idmac + `"></span></u></div>
+                                <div class="col-xs-2">SIST. FINANCIERO</div>
+                                <div class="col-xs-1"><u><span id="deudasbif`+ idmac + `"></span></u></div>
+                                <div class="col-xs-2"><u>0</u></div>
+                                <div class="col-xs-2">LEASING ACHEL</div>
+                                <div class="col-xs-1"><u>65.983</u></div>
+                            </div>
+                        </div>
+                        <h5>III. TIPO DE CAMBIO</h5>
+                        <div class="panel panel-primary">
+                            <div class="row">
+                                <div class="col-xs-1"><b>UF</b></div>
+                                <div class="col-xs-1">26.597,3</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-1"><b>USD</b></div>
+                                <div class="col-xs-1">664,3</div>
+                            </div>
+                        </div>
+                    </div>         
+                </div>
+                
+            </div>
+        
+        `)
+        $.ajax({
+            type: "GET",
+            url: '/getmacindividual/' + idmac,
+            async: false,
+            success: function (data) {
+                if (data.length > 0) {
+                    //console.log("nombre"+idmac+" es "+data[0].Nombre)
+                    $("#nombre" + idmac).html(data[0].Nombre)
+                    $("#rut" + idmac).html(data[0].Rut)
+                    $("#actividad" + idmac).html(data[0].ActividadEconomica)
+                    $("#fecha" + idmac).html(data[0].FechaCreacion)
+                    $("#fechaproxvenc" + idmac).html(data[0].FechaVencimiento)
+                    $("#fechavencant" + idmac).html(data[0].FechaVencimientoMacAnterior)
+                    $("#ratingindividual" + idmac).html(data[0].RatingIndividual)
+                    $("#clasificacion" + idmac).html(data[0].Clasificacion)
+                    $("#vigilancia" + idmac).html(data[0].Vigilancia)
+                    $("#fechainfo" + idmac).html(data[0].FechaInformacionFinanciera)
+                    $("#nivelatribucion" + idmac).html(data[0].NivelAtribucion)
+                    $("#promediosaldovista" + idmac).html(data[0].PromedioSaldoVista)
+                    $("#deudasbif" + idmac).html(data[0].DeudaSbif)
 
-        var tmpl = "<div id='responsive-form' class='clearfix'>";
-        tmpl += "<div class='form-row'>";
-        tmpl += `<div id="operacionmac" class='column-full'>Garantías Disponibles: <br />
-        <br />   
-        <input type="checkbox" name="chk_group" value="1" />  Terreno<br />
-        <input type="checkbox" name="chk_group" value="2" />  Máquina <br />
-        <input type="checkbox" name="chk_group" value="3" />  Propiedad <br />`
-        tmpl += "</div>";
-        tmpl += "<hr style='width:100%;'/>";
-        tmpl += "<div> {sData} {cData}  </div>";
-        tmpl += "</div>";
-
-        $gridTab.jqGrid({
-            url: loadurl,
-            datatype: "json",
-            mtype: "GET",
-            //colNames: ['Id', 'Nombre', 'Rut', 'ActividadEconomica','RatingGrupal', 'NivelAtribucion','RatingIndividual', 'Clasificacion', 'Vigilancia','FechaInformacionFinanciera', 'PromedioSaldoVista', 'DeudaSbif', 'AprobadoVinculado','EquipoCobertura','Oficina','FechaCreacion','FechaVencimiento','FechaVencimientoMacAnterior','Empresa_Id'],
-            colModel: [
-                {
-                    name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
-                    editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
-                },
-                { label: 'Nombre', name: 'Nombre', hidden: true, editable: true },
-                { label: 'Rut', name: 'Rut', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'ActividadEconomica', name: 'ActividadEconomica', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'RatingGrupal', name: 'RatingGrupal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'NivelAtribucion', name: 'NivelAtribucion', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'RatingIndividual', name: 'RatingIndividual', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Clasificacion', name: 'Clasificacion', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Vigilancia', name: 'Vigilancia', width: 60, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { label: 'FechaInformacion', name: 'FechaInformacion', width: 60, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-                { label: 'PromedioSaldoVista', name: 'PromedioSaldoVista', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'DeudaSbif', name: 'DeudaSbif', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'AprovadoVinculado', name: 'AprovadoVinculado', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'EquipoCobertura', name: 'EquipoCobertura', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Oficina', name: 'Oficina', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'FechaCreacion', name: 'FechaCreacion', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'FechaVencimiento', name: 'FechaVencimiento', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'FechaVencimientoMacAnterior', name: 'FechaVencimientoMacAnterior', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Empresa_Id', name: 'Empresa_Id', width: 60, hidden: true, search: true, editable: true, editrules: { required: true } },
-                {
-                    label: 'Estado', name: 'Directo', width: 100, hidden: false, search: true, editable: true,
-                    formatter: function (cellvalue, options, rowObject) {
-                        dato = 'Vigente';
-                        return dato
-                    }
-                },
-            ],
-            rowNum: 20,
-            pager: '#navGridVermac',
-            styleUI: "Bootstrap",
-            //sortname: 'fecha',
-            //sortorder: "desc",
-            height: "auto",
-            //shrinkToFit: true,
-            //autowidth: true,
-            width: 1350,
-            subGrid: true,
-            subGridRowExpanded: subGridlimite, //se llama la funcion de abajo
-            subGridOptions: {
-                plusicon: "glyphicon-hand-right",
-                minusicon: "glyphicon-hand-down"
-            },
-            rownumbers: false,
-            onSelectRow: function (id) {
-                var getID = $(this).jqGrid('getCell', id, 'id');
-            },
-            viewrecords: true,
-            caption: "Resumen Mac",
-            loadComplete: function (data) {
-                var thisId = $.jgrid.jqID(this.id);
-            },
-
+                } else {
+                    alert("Error con datos del Mac Grupal")
+                }
+            }
         });
 
-        $gridTab.jqGrid('navGrid', '#navGridVermac', { edit: false, add: false, del: false, search: false },
-            {
-                editCaption: "Modificar Límite",
-                closeAfterEdit: true,
-                recreateForm: true,
-                template: tmpl,
-                mtype: 'POST',
-                url: '/operacionmac/1',
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                beforeShowForm: function (form) {
-                    var rowKey = $gridTab.getGridParam("selrow");
-                    var rowData = $gridTab.getRowData(rowKey);
-                    var thissid = rowData.fecha;
-                    $('#mensajefecha').html("<div class='column-full'>Estado con fecha: " + thissid + "</div>");
-                },
-                onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
-                }, beforeSubmit: function (postdata, formid) {
-                    if (parseInt(postdata.idcolor) == 0) {
-                        return [false, "Color: Debe escoger un valor", ""];
-                    } if (postdata.comentario.trim().length == 0) {
-                        return [false, "Comentario: Debe ingresar un comentario", ""];
-                    } else {
-                        return [true, "", ""]
-                    }
-                }
-            }, {
-                addCaption: "Agregar Límite",
-                closeAfterAdd: true,
-                recreateForm: true,
-                //template: tmpl,
-                mtype: 'POST',
-                url: '/limite',
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                beforeShowForm: function (form) {
-                    var lafechaactual = new Date();
-                    var elanoactual = lafechaactual.getFullYear();
-                    var elmesactual = (lafechaactual.getMonth() + 1);
-                    if (elmesactual < 10) {
-                        elmesactual = "0" + elmesactual
-                    }
-                    var eldiaactual = lafechaactual.getDate();
-                    if (eldiaactual < 10) {
-                        eldiaactual = "0" + eldiaactual
-                    }
-
-                    var lafechastring = eldiaactual + "-" + elmesactual + "-" + elanoactual
-                    $('input#fecha').html(lafechastring);
-                    $('input#fecha').attr('value', lafechastring);
-                    $('#mensajefecha').html("<div class='column-full'>El estado se guardará con fecha: " + lafechastring + "</div>");
-
-                },
-                onclickSubmit: function (rowid) {
-                    var lafechaactual = new Date();
-                    var elanoactual = lafechaactual.getFullYear();
-                    var elmesactual = (lafechaactual.getMonth() + 1);
-                    if (elmesactual < 10) {
-                        elmesactual = "0" + elmesactual
-                    }
-                    var eldiaactual = lafechaactual.getDate();
-                    if (eldiaactual < 10) {
-                        eldiaactual = "0" + eldiaactual
-                    }
-
-                    var lafechastring = eldiaactual + "-" + elmesactual + "-" + elanoactual
-                    return { parent_id: parentRowKey };
-                }, beforeSubmit: function (postdata, formid) {
 
 
 
-                    if (parseInt(postdata.fechavencimiento) == 0) {
-                        return [false, "Color: Debe escoger un valor", ""];
-                    } if (postdata.comentario.trim().length == 0) {
-                        return [false, "Comentario: Debe ingresar un comentario", ""];
-                    } else {
-                        return [true, "", ""]
-                    }
-                }
-            }, {
-                mtype: 'POST',
-                url: '/limite',
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
-                },
-                beforeShowForm: function (form) {
-                    ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
-                    $("td.delmsg", form).html("<b>Usted borrará el limite:</b><br><b>" + ret.tipolimite + "</b> ?");
 
-                },
-                afterSubmit: function (response, postdata) {
-                    var json = response.responseText;
-                    var result = JSON.parse(json);
-                    if (!result.success)
-                        return [false, result.message, ""];
-                    else
-                        return [true, "", ""]
-                }
-            });
 
 
     }
-}
-
-function subGridlimite(subgrid_id, row_id) {
-    console.log("dsafadsfas")
-    gridverlimite(subgrid_id, row_id, 'sublimite'); //sublimite es el nombre con el que quedaran los divs en la subgrilla (/verlimite.js)
-    //gridOperacion(subgrid_id, row_id, 'veroperacion');
-    //gridGarantias(subgrid_id, row_id, 'vergarantias');
-    //gridvertablimites.renderGrid(subgrid_id, row_id, 'sublimite');
 }
