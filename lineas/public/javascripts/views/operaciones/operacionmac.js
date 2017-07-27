@@ -7,6 +7,7 @@ var gridoperacionmac = {
         var idmac = loadurl.substring(14);
         $gridTab.html(
             `
+            <div style="text-align:right;"><button type="button" class="btn btn-primary" style="background-color: #0B2161;"> Imprimir</button></div>
             <div id="cabecera" class="panel panel-primary" style="width: 1250px">
                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
                     <h3 align="center" class="panel-title">MEMORANDUM DE APROBACIÓN DE CRÉDITOS</h3>

@@ -37,19 +37,19 @@ var gridvertablimites = {
                 { label: 'N°', name: 'Numero', width: 15, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, editrules: { required: true } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Descripcion', name: 'Descripcion', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, editrules: { required: true } },
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Moneda', name: 'Moneda', width: 20, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { label: 'Aprobado', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Utilizado', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 {
-                    label: 'Condicion', name: 'Condicion', width: 15, hidden: false, search: true, editable: true,
+                    label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true, align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        dato = '<span align="center" class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color: green ; font-size: 15px"></span>';
-                        dato2 = '<span class="glyphicon glyphicon-remove-circle" aria-hidden="true" style="color: Red ; font-size: 15px"></span>';
-                        dato3 = '<span align="center" class="glyphicon glyphicon-ok-circle" aria-hidden="true" style="color: Yellow ; font-size: 15px"></span>';
+                        dato = '<span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: Green ; font-size: 15px; text-align: center;"></span>';
+                        dato2 = '<span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: Red ; font-size: 15px"></span>';
+                        dato3 = '<span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: Yellow ; font-size: 15px"></span>';
                         console.log(cellvalue);
                         if (cellvalue === 'Rojo') {
                             return dato2
@@ -65,14 +65,14 @@ var gridvertablimites = {
                     }
                 },
                 {
-                    label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true,
+                    label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
                         dato = '<span class="glyphicon glyphicon-lock" aria-hidden="true" style= "font-size: 15px"></span>'
                         return dato;
                     }
                 },
                 {
-                    label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true,
+                    label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
                         dato = '<span class="glyphicon glyphicon-align-justify" aria-hidden="true" style= "font-size: 15px"></span>'
                         return dato;
@@ -120,7 +120,7 @@ var gridvertablimites = {
 
                 $gridTab.jqGrid('footerData', 'set',
                     {
-                        Moneda: 'Totales:',
+                        Moneda: 'Total (MM$) :',
                         Aprobado: sum1,
                         Utilizado: sum2,
                         Reservado: sum3,
