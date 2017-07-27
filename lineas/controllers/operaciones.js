@@ -756,7 +756,7 @@ exports.listtabverlimite = function (req, res) {
     var sord = req.query.sord;
 
     var additional = [{
-        "field": "id",
+        "field": "MacIndividual_Id",
         "op": "eq",
         "data": req.params.id
     }];
@@ -776,6 +776,53 @@ exports.listtabverlimite = function (req, res) {
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 models.Linea.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    order: orden,
+                    /*include: [{
+                        model: models.MacIndividual
+                    }]*/
+                }).then(function (lineas) {
+                    return res.json({ records: records, total: total, page: page, rows: lineas });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+
+exports.listtabversublimite = function (req, res) {
+
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "MacIndividual_Id",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    if (!sidx)
+        sidx = "Numero";  //ordenar por variable
+
+    if (!sord)
+        sord = "asc"; //ordenar por asc
+
+    var orden = "[Sublinea]." + sidx + " " + sord;
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.Sublinea.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.Sublinea.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     where: data,

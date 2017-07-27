@@ -11,20 +11,6 @@ var gridoperacionmac = {
         <input type="checkbox" name="chk_group" value="2" />  Máquina <br />
         <input type="checkbox" name="chk_group" value="3" />  Propiedad <br />`
         tmpl += "</div>";
-
-        /*
-                tmpl += "<div class='form-row'>";
-                tmpl += "<div class='column-full'>Comentario<span style='color:red'>*</span>{comentario}</div>";
-                tmpl += "</div>";
-        
-                tmpl += "<div class='form-row'>";
-                tmpl += "<div class='column-full' style='display: none;'>Fecha {fecha}</div>";
-                tmpl += "</div>";
-                tmpl += "<div class='form-row', id='mensajefecha'>";
-                tmpl += "<div class='column-full'></div>";
-                tmpl += "</div>";
-        */
-
         tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
