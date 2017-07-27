@@ -101,5 +101,8 @@ module.exports = function (passport) {
     router.route('/vertablimites/:id')
         .get(isAuthenticated, operacionesController.listtabverlimite);
 
+    router.route('/vertabsublimites/:id')
+        .get(isAuthenticated, operacionesController.listtabversublimite);
+
     return router;
 }

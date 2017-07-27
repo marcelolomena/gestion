@@ -2,13 +2,19 @@ $(document).ready(function () {
     var parentRowKey = "hola"
 
     var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-    tabs += "<li><a href='/operacionmac/1' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Ver Mac</a></li>"
+    tabs += "<li><a href='/operacionmac/1' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Mac</a></li>"
     //tabs += "<li><a href='/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
     //tabs += "<li><a href='/aprobaciones/" + parentRowKey + "' data-target='#aprobaciones' id='aprobaciones_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Aprobaciones</a></li>"
-    tabs += "<li><a href='/vertablimites/1' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Ver Limites</a></li>"
-    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Asignar</a></li>"
-    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Estado</a></li>"
-    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Bitacora</a></li>"
+    tabs += "<li><a href='/vertablimites/1' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Limites</a></li>"
+    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Operaciones</a></li>"
+    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Reservas</a></li>"
+    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Asignar</a></li>"
+    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Estados</a></li>"
+    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Asignar</a></li>"
+    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Excepciones</a></li>"
+
+
+
     tabs += "</ul>"
 
     tabs += "<div class='tab-content'>"
@@ -35,8 +41,8 @@ $(document).ready(function () {
                         <div class="col-xs-6 col-sm-3"><b>Vigilancia:</b> No</div>
                     </div>   
                     <div class="row">    
-                        <div class="col-xs-6 col-sm-3"><b>F. Rating Ind:</b> 13-07-2017</div>
-                        <div class="col-xs-6 col-sm-3"><b>F. Rating Grupal:</b> 13-07-2017</div>
+                        <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Ind:</b> 13-07-2017</div> -->
+                        <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Grupal:</b> 13-07-2017</div>-->
                         <div class="col-xs-6 col-sm-3"><b>F. Creación MAC:</b> 09-06-2017</div>
                         <div class="col-xs-6 col-sm-3"><b>F. Vencimiento MAC:</b> 08-06-2018</div>
                     </div>       
