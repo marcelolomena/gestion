@@ -1,7 +1,7 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-	return sequelize.define('Sublinia', {
+	return sequelize.define('Sublinea', {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
@@ -53,6 +53,6 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'Sublinia'
+		schema: 'dbo', timestamps: false, tableName: 'Sublinea'
 	});
 };
