@@ -25,6 +25,6 @@ module.exports = function(sequelize, DataTypes) {
 			}
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'GrupoEmpresa'
+		schema: 'scl', timestamps: false, tableName: 'GrupoEmpresa'
 	});
 };

@@ -61,6 +61,6 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'Operacion'
+		schema: 'scl', timestamps: false, tableName: 'Operacion'
 	});
 };

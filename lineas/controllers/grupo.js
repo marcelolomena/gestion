@@ -221,7 +221,7 @@ exports.listdesglose = function (req, res) {
 };
 exports.getgrupo = function (req, res) {
     sequelize.query(
-        'select * from dbo.grupocliente ' +
+        'select * from scl.grupocliente ' +
         'where rutcliente =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
@@ -300,9 +300,9 @@ exports.listgrupoempresa = function (req, res) {
     var order = sidx + " " + sord;
 
     var sqlcount = `
-  select count (*) from GrupoEmpresa a
-join GrupoEmpresa b on b.Grupo_Id=a.Grupo_Id
-join Empresa c on b.Empresa_Id = c.Id
+  select count (*) from scl.GrupoEmpresa a
+join scl.GrupoEmpresa b on b.Grupo_Id=a.Grupo_Id
+join scl.Empresa c on b.Empresa_Id = c.Id
 where a.Empresa_Id=`+ req.params.id;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
@@ -311,9 +311,9 @@ where a.Empresa_Id=`+ req.params.id;
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, b.Id as idrelacion, b.Grupo_Id as idgrupo, c.* from GrupoEmpresa a
-        join GrupoEmpresa b on b.Grupo_Id=a.Grupo_Id
-        join Empresa c on b.Empresa_Id = c.Id
+        `as resultNum, b.Id as idrelacion, b.Grupo_Id as idgrupo, c.* from scl.GrupoEmpresa a
+        join scl.GrupoEmpresa b on b.Grupo_Id=a.Grupo_Id
+        join scl.Empresa c on b.Empresa_Id = c.Id
         where a.Empresa_Id=`+ req.params.id;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";

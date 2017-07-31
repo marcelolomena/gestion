@@ -123,7 +123,7 @@ $(document).ready(function () {
         datatype: "json",
         page: 1,
         colModel: modelGrupo,
-        rowNum: 10,
+        rowNum: 20,
         regional: 'es',
         height: 'auto',
         autowidth: true,
@@ -254,7 +254,7 @@ $(document).ready(function () {
                             if (data.error == 0) {
                                 var idmacgrupal = data.macgrupal.Id;
                                 console.log(idmacgrupal);
-                                window.location.href = "/menu/macgrupal0/p/"+idmacgrupal;
+                                window.location.href = "/menu/macgrupal/p/"+idmacgrupal;
                             } else {
                                 alert("Algo falló :(")
                             }

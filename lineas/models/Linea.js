@@ -53,6 +53,6 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'Linea'
+		schema: 'scl', timestamps: false, tableName: 'Linea'
 	});
 };

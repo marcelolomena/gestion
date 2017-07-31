@@ -1,10 +1,16 @@
 $(document).ready(function () {
+    var idmacgrupal = $("#param").text();
+    var nombre = ""
+    var rut = ""
+    var idgrupo = ""
+    var nombregrupo = ""
+    var elcaption = ""
     $("#gridMaster").append(`
-            <div class="panel panel-primary">
-                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
+            <div class="panel panel-primary" id="accordion">
+                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161; cursor: pointer;' data-toggle="collapse" data-parent="#accordion" data-target="#contenido" aria-expanded="true">
                     <h3 class="panel-title">Información General</h3>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" id="contenido">
                     <div class="row">
                         <div class="col-xs-2"><b>Promedio Saldo Vista Ultimos </br>12 Meses (M$):</b></div>
                         <div class="col-xs-2">408.000</div>
@@ -19,27 +25,64 @@ $(document).ready(function () {
                         <div class="col-xs-2"><b>Fecha Vcto:</b></div>
                         <div class="col-xs-2">05-06-2017</div>
                     </div>
-
                     <div class="row">
                         <div class="col-xs-4"></div>
                         <div class="col-xs-2"><b>Rating Grupo:</b></div>
                         <div class="col-xs-2">7</div>
                     </div>
-
                     <div class="row">
                         <div class="col-xs-2"><b>Ejecutivo Control /Area:</b></div>
                         <div class="col-xs-2">Leslie Calderón / Mayorista 4</div>
                         <div class="col-xs-2"><b>Nivel Atribución:</b></div>
                         <div class="col-xs-2">R2</div>
-                    </div>    
+                    </div>
+                    <hr class="section-separations"></hr>
+                    <ul class='nav nav-tabs tabs-up' id='myTabGrupal'>
+                        <li><a href='/macindividuales/` + idmacgrupal+`' data-target='#vermacgrupal' id='vermacgrupal_tab' data-toggle='tabgrupal'>MAC Grupal</a></li>
+                        <li><a href='/aprobacion/' data-target='#aprobacion' id='aprobacion_tab' data-toggle='tabgrupal'>Aprobación</a></li>
+                        <li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tabgrupal'>Bitacora</a></li>
+                    </ul>
+                    <div class='tab-content'>
+                        <div class='tab-pane active' id='vermacgrupal'><div class='container-fluid'><table id='vermacgrupal_t'></table><div id='navGridVermacGrupal'></div></div></div>
+                        <div class='tab-pane' id='aprobacion'><table id='aprobacion_t'></table><div id='navGridAprob'></div></div>
+                        <div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>
+                    </div>
                 </div>
-            </div>`);
-    var idmacgrupal = $("#param").text();
-    var nombre = ""
-    var rut = ""
-    var idgrupo = ""
-    var nombregrupo = ""
-    var elcaption = ""
+            </div> `)
+
+
+    
+    $('#vermacgrupal_tab').addClass('media_node active span')
+    $('.active[data-toggle="tabgrupal"]').each(function (e) {
+        var $this = $(this),
+            loadurlgrupal = $this.attr('href'),
+            targgrupal = $this.attr('data-target');
+        if (targgrupal === '#vermacgrupal') {
+            gridVermacgrupal.renderGrid(loadurlgrupal, targgrupal)
+        } else if (targ === '#aprobacion') {
+            gridAprobacion.renderGrid(loadurlgrupal, targgrupal)
+        }
+        $this.tab('show');
+        return false;
+    });
+
+    $('[data-toggle="tabgrupal"]').click(function (e) {
+        var $this = $(this),
+            loadurlgrupal = $this.attr('href'),
+            targgrupal = $this.attr('data-target');
+        if (targgrupal === '#vermacgrupal') {
+            gridVermacgrupal.renderGrid(loadurlgrupal, targgrupal)
+        } else if (targgrupal === '#aprobacion') {
+            gridAprobacion.renderGrid(loadurlgrupal, targgrupal)
+        }
+
+        $this.tab('show');
+        return false;
+    });
+
+
+
+
     $.ajax({
         type: "GET",
         url: '/getdatosmacgrupal/' + idmacgrupal,
@@ -77,7 +120,7 @@ $(document).ready(function () {
                 }
                 tabs += "</div>"
                 $("#gridMaster").append(tabs);
-                $('#mac' + data[0].Id+'_tab').addClass('media_node active span')
+                $('#mac' + data[0].Id + '_tab').addClass('media_node active span')
 
                 $('.active[data-toggle="tab"]').each(function (e) {
                     var $this = $(this),

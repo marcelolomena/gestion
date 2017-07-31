@@ -203,7 +203,7 @@ $(document).ready(function () {
             datatype: "json",
             page: 1,
             colModel: modelGrupo,
-            rowNum: 10,
+            rowNum: 20,
             regional: 'es',
             height: 'auto',
             autowidth: true,

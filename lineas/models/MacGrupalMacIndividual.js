@@ -25,6 +25,6 @@ module.exports = function (sequelize, DataTypes) {
 			}
 		}
 	}, {
-			schema: 'dbo', timestamps: false, tableName: 'MacGrupalMacIndividual'
+			schema: 'scl', timestamps: false, tableName: 'MacGrupalMacIndividual'
 		});
 };

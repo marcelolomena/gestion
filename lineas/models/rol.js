@@ -21,7 +21,7 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-      schema: 'sip', timestamps: false, tableName: 'rol'
+      schema: 'lin', timestamps: false, tableName: 'rol'
     }, {
       classMethods: {
         associate: function (models) {

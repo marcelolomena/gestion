@@ -13,6 +13,6 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'Grupo'
+		schema: 'scl', timestamps: false, tableName: 'Grupo'
 	});
 };

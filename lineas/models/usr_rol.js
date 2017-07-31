@@ -37,7 +37,7 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   }, {
-      schema: 'sip', timestamps: false, tableName: 'usr_rol'
+      schema: 'lin', timestamps: false, tableName: 'usr_rol'
     }, {
       classMethods: {
         associate: function (models) {

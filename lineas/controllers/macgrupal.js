@@ -218,9 +218,9 @@ exports.listindividuales = function (req, res) {
     var order = sidx + " " + sord;
 
     var sqlcount = `
-  select count (*) from MacIndividual a 
-join GrupoEmpresa c on c.Empresa_Id =a.Empresa_Id
-join MacGrupal e on e.Grupo_Id = c.Grupo_Id
+  select count (*) from scl.MacIndividual a 
+join scl.GrupoEmpresa c on c.Empresa_Id =a.Empresa_Id
+join scl.MacGrupal e on e.Grupo_Id = c.Grupo_Id
 where e.Id=`+ req.params.id;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
@@ -229,9 +229,9 @@ where e.Id=`+ req.params.id;
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, a.* from MacIndividual a 
-        join GrupoEmpresa c on c.Empresa_Id =a.Empresa_Id
-        join MacGrupal e on e.Grupo_Id = c.Grupo_Id
+        `as resultNum, a.* from scl.MacIndividual a 
+        join scl.GrupoEmpresa c on c.Empresa_Id =a.Empresa_Id
+        join scl.MacGrupal e on e.Grupo_Id = c.Grupo_Id
         where e.Id=`+ req.params.id;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -502,7 +502,7 @@ exports.listgarantia = function (req, res) {
 };
 exports.getdatoscliente = function (req, res) {
     sequelize.query(
-        'select * from dbo.cliente ' +
+        'select * from scl.cliente ' +
         'where rut =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {

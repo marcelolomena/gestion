@@ -21,6 +21,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'contenido'
+    schema: 'lin',timestamps: false,tableName: 'contenido'
   });
 };

@@ -9,6 +9,6 @@ module.exports = function(sequelize, DataTypes) {
 			autoIncrement: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'InformacionCliente'
+		schema: 'scl', timestamps: false, tableName: 'InformacionCliente'
 	});
 };

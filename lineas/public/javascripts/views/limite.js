@@ -1,4 +1,4 @@
-var gridLimite = {
+var gridLimite2 = {
 
     renderGrid: function (loadurl, parentRowKey, targ) {
         var $gridTab = $(targ + "_t_" + parentRowKey)

@@ -17,6 +17,6 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'LineaGarantiaReal'
+		schema: 'scl', timestamps: false, tableName: 'LineaGarantiaReal'
 	});
 };

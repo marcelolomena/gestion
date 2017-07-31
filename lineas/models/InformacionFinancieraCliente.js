@@ -21,6 +21,6 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'InformacionFinancieraCliente'
+		schema: 'scl', timestamps: false, tableName: 'InformacionFinancieraCliente'
 	});
 };

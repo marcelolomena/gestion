@@ -524,7 +524,7 @@ exports.listgarantia = function (req, res) {
 };
 exports.getdatoscliente = function (req, res) {
     sequelize.query(
-        'select * from dbo.Empresa ' +
+        'select * from scl.Empresa ' +
         'where rut =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
@@ -539,10 +539,10 @@ exports.getdatoscliente = function (req, res) {
 
 exports.getdatosclientecongrupo = function (req, res) {
     sequelize.query(`
-        select distinct c.Id as Idgrupo, c.Nombre as Grupo, f.* from GrupoEmpresa a
-        join GrupoEmpresa b on b.Grupo_Id=a.Grupo_Id
-        join Grupo c on b.Grupo_Id = c.Id
-        join Empresa f on a.Empresa_Id=f.Id
+        select distinct c.Id as Idgrupo, c.Nombre as Grupo, f.* from scl.GrupoEmpresa a
+        join scl.GrupoEmpresa b on b.Grupo_Id=a.Grupo_Id
+        join scl.Grupo c on b.Grupo_Id = c.Id
+        join scl.Empresa f on a.Empresa_Id=f.Id
         where a.Empresa_Id = `+ req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
@@ -557,9 +557,9 @@ exports.getdatosclientecongrupo = function (req, res) {
 
 exports.getgrupo = function (req, res) {
     sequelize.query(
-        'select a.Id, a.Nombre from dbo.Grupo a  ' +
-        'join dbo.GrupoEmpresa b on b.Grupo_Id=a.Id  ' +
-        'join dbo.Empresa c on c.Id = b.Empresa_Id  ' +
+        'select a.Id, a.Nombre from scl.Grupo a  ' +
+        'join scl.GrupoEmpresa b on b.Grupo_Id=a.Id  ' +
+        'join scl.Empresa c on c.Id = b.Empresa_Id  ' +
         'where c.rut =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
@@ -622,7 +622,7 @@ exports.listmacs = function (req, res) {
 
 exports.creargruponuevo = function (req, res) {
     sequelize.query(
-        "EXEC creargruponuevo " + req.params.id + ",'" + req.params.nombre + "'",
+        "EXEC scl.creargruponuevo " + req.params.id + ",'" + req.params.nombre + "'",
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -638,10 +638,10 @@ exports.crearmacgrupal = function (req, res) {
     models.MacGrupal.create({
         Grupo_Id: req.params.id
     }).then(function (macgrupal) {
-        //console.dir(macgrupal)
+        //console.log(macgrupal.Id)
         var empresas = req.body.empresas;
         sequelize.query(
-            "EXEC crearmacsengrupo " + req.params.id + ",'" + JSON.stringify(empresas) + "'",
+            "EXEC scl.crearmacsengrupo " + macgrupal.Id + ",'" + JSON.stringify(empresas) + "'",
             { type: sequelize.QueryTypes.SELECT }
         ).then(function (valores) {
             console.dir(valores)
@@ -659,8 +659,8 @@ exports.crearmacgrupal = function (req, res) {
 }
 exports.getdatosmacgrupal = function (req, res) {
     sequelize.query(
-        'select a.*, b.Nombre as nombregrupo from dbo.MacGrupal a ' +
-        'join dbo.Grupo b on a.Grupo_Id = b.Id ' +
+        'select a.*, b.Nombre as nombregrupo from scl.MacGrupal a ' +
+        'join scl.Grupo b on a.Grupo_Id = b.Id ' +
         'where a.Id =  ' + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
@@ -675,9 +675,9 @@ exports.getdatosmacgrupal = function (req, res) {
 
 exports.getmacindividuales = function (req, res) {
     sequelize.query(
-        'select a.* from MacIndividual a  ' +
-        'join GrupoEmpresa c on c.Empresa_Id =a.Empresa_Id ' +
-        'join MacGrupal e on e.Grupo_Id = c.Grupo_Id '+
+        'select a.* from scl.MacIndividual a  ' +
+        'join scl.GrupoEmpresa c on c.Empresa_Id =a.Empresa_Id ' +
+        'join scl.MacGrupal e on e.Grupo_Id = c.Grupo_Id '+
         'where e.Id =  ' + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
@@ -691,7 +691,7 @@ exports.getmacindividuales = function (req, res) {
 }
 exports.getmacindividual = function (req, res) {
     sequelize.query(
-        'select * from MacIndividual a  ' +
+        'select * from scl.MacIndividual a  ' +
         'where Id =  ' + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {

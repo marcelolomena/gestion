@@ -17,6 +17,6 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'LineaCovenants'
+		schema: 'scl', timestamps: false, tableName: 'LineaCovenants'
 	});
 };
