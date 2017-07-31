@@ -110,7 +110,7 @@ $(document).ready(function () {
         
     ];
     $("#grid").jqGrid({
-        url: '/presupuestolist',
+        url: '/presupuestolistro',
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -139,9 +139,9 @@ $(document).ready(function () {
     $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $('#grid').jqGrid('navGrid', "#pager", {
-        edit: true,
-        add: true,
-        del: true,
+        edit: false,
+        add: false,
+        del: false,
         refresh: true,
         search: false, // show search button on the toolbar        
         cloneToTop: false
@@ -321,68 +321,6 @@ $(document).ready(function () {
             }
         }, {}
     );
-
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
-        caption: "",
-        buttonicon: "glyphicon glyphicon-download-alt",
-        title: "Excel",
-        //position: "last",
-        onClickButton: function () {
-            var grid = $('#grid');
-            var rowKey = grid.getGridParam("selrow");
-            var url = '/presupuestosexcel';
-            $('#grid').jqGrid('excelExport', { "url": url });
-        }
-    });
-
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
-        caption: "",
-        buttonicon: "glyphicon glyphicon glyphicon-check",
-        title: "Confirmar",
-        position: "last",
-        onClickButton: function () {
-            var grid = $('#grid');
-            var rowKey = grid.getGridParam("selrow");
-            var rowData = grid.getRowData(rowKey);
-
-            if (rowKey != null) {
-                if (rowData.estado == 'Creado') {
-                    if (confirm("¿Esta seguro de Confirmar el presupuesto?")) {
-                        $.ajax({
-                            url: "/presupuestoconfirma/" + rowData.id + "/Confirmado/" + rowData.idcui + "/" + rowData.idejercicio,
-                            dataType: 'json',
-                            async: false,
-                            success: function (j) {
-                                //var json = response.responseText;
-                                //var result = JSON.parse(json);
-                                console.log("j:" + j);
-                                if (j.error_code == 0) {
-                                    $("#grid").trigger("reloadGrid");
-                                } else if (j.error_code == 10) {
-                                    alert("Ya existe un presupuesto Confirmado para el CUI");
-                                }
-                            }
-                        });
-                    }
-                } else if (rowData.estado == 'Confirmado') {
-                    if (confirm("El presupuesto ya esta Confirmado, desea volver a estado Creado")) {
-                        $.ajax({
-                            url: "/presupuestoconfirma/" + rowData.id + "/Creado/" + rowData.idcui + "/" + rowData.idejercicio,
-                            dataType: 'json',
-                            async: false,
-                            success: function (j) {
-                                $("#grid").trigger("reloadGrid");
-                            }
-                        });
-                    }
-                } else if (rowData.estado == 'Aprobado') {
-                    alert("El presupuesto esta aprobado, no se puede cambiar el estado")
-                }
-            } else {
-                alert("Debe seleccionar una fila");
-            }
-        }
-    });
 
     $("#pager_left").css("width", "");
 });
@@ -786,9 +724,9 @@ function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true,
-        add: true,
-        del: true,
+        edit: false,
+        add: false,
+        del: false,
         refresh: true,
         search: false
     },
@@ -1076,7 +1014,7 @@ function showExplicaciones(parentRowID, parentRowKey, titulo) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true,
+        edit: false,
         add: false,
         del: false,
         search: false,
@@ -1282,7 +1220,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true,
+        edit: false,
         add: false,
         del: false,
         search: false,
