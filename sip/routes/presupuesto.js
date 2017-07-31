@@ -149,6 +149,9 @@ module.exports = function (passport) {
 */
     router.route('/presupuestoperiodoscosto/action')
         .post(isAuthenticated, presupuestoperiodosController.actioncosto);
+        
+    router.route('/presupuestogetrol')
+        .post(isAuthenticated, presupuestoController.getRolNegocio);        
 
     return router;
 

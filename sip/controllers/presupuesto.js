@@ -4,7 +4,8 @@ var nodeExcel = require('excel-export');
 var constants = require("../utils/constants");
 var logger = require("../utils/logger");
 
-// Create endpoint /proyecto for GET
+// List para pagina principal de presupuesto
+// Lista presupuesto propios y de sus cui hijos
 exports.getPresupuestoPaginados = function (req, res) {
   // Use the Proyectos model to find all proyectos
   var page = req.query.page;
@@ -93,17 +94,7 @@ exports.getPresupuestoPaginados = function (req, res) {
       logger.debug("***CONDICION:" + condition);
     }
   }
-  sqlcount = "Select count(*) AS count FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id JOIN sip.ejercicios c ON c.id=a.idejercicio ";
-  if (filters && condition != "") {
-    sqlcount += "WHERE " + condition + " ";
-  }
 
-  sequelize.query(sqlcount).spread(function (recs) {
-    var records = recs[0].count;
-    var total = Math.ceil(parseInt(recs[0].count) / rowspp);
-    logger.debug("####COUNT:" + recs[0].count + " Total:" + total);
-    logger.debug("EL SUPER ID : " + req.session.passport.user)
-    logger.debug("ROL : " + req.session.passport.sidebar[0].rid)
     superCui(req.session.passport.user, function (elcui) {//req.user[0].uid
       logger.debug('elcui:' + elcui)
       var rol = req.session.passport.sidebar[0].rid;//req.user[0].rid;
@@ -124,6 +115,10 @@ exports.getPresupuestoPaginados = function (req, res) {
         }
         sqlok += "ORDER BY id desc) " +
           "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+        sqlcount = "Select count(*) AS count FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id JOIN sip.ejercicios c ON c.id=a.idejercicio ";
+        if (filters && condition != "") {
+          sqlcount += "WHERE " + condition + " ";
+        }          
       } else {
         sqlok = "declare @rowsPerPage as bigint; " +
           "declare @pageNum as bigint;" +
@@ -141,7 +136,19 @@ exports.getPresupuestoPaginados = function (req, res) {
         }
         sqlok += "ORDER BY id desc) " +
           "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+        sqlcount = "Select count(*) AS count FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id JOIN sip.ejercicios c ON c.id=a.idejercicio ";
+        sqlcount +=  "WHERE a.idcui IN (" + elcui + ") ";
+        if (filters && condition != "") {
+          sqlcount += "AND " + condition + " ";
+        }          
       }
+      
+      sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        logger.debug("####COUNT:" + recs[0].count + " Total:" + total);
+        logger.debug("EL SUPER ID : " + req.session.passport.user)
+        logger.debug("ROL : " + req.session.passport.sidebar[0].rid)
       sequelize.query(sqlok).spread(function (rows) {
         res.json({ records: records, total: total, page: page, rows: rows });
       });
@@ -314,6 +321,19 @@ exports.getUsersByRol = function (req, res) {
     res.json({ error_code: 1 });
   });
 
+};
+
+exports.getRolNegocio = function (req, res) {
+  var idcui;
+  var rol = req.session.passport.sidebar[0].rid;
+  logger.debug("******usr*********:" + req.session.passport.user);
+  logger.debug("******rol*********:" + req.session.passport.sidebar[0].rid);
+  logger.debug("*ROLADM*:" + constants.ROLADMDIVOT+ ", "+rol);
+  if (rol == constants.ROLADMDIVOT) {
+    res.json({ error_code: 0 });
+  } else {
+    res.json({ error_code: 10 });
+  }
 };
 
 exports.getCUIs = function (req, res) {
@@ -546,4 +566,161 @@ exports.confirma = function (req, res) {
     });
   }
 
+};
+
+// List para pagina de presupuesto read only
+// Lista presupuestos de padres y hermanos e hijos
+exports.getPresupuestoReadOnly = function (req, res) {
+  // Use the Proyectos model to find all proyectos
+  var page = req.query.page;
+  var rowspp = req.query.rows;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var filters = req.query.filters;
+  var condition = "";
+
+  if (!sidx)
+    sidx = "a.id";
+
+  if (!sord)
+    sord = "desc";
+
+  var order = sidx + " " + sord;
+  //var cuis = getCuis(req.session.passport.user);
+
+  var superCui = function (uid, callback) {
+    var rol = req.session.passport.sidebar[0].rid;
+    if (rol != constants.ROLADMDIVOT) {
+      var sql1 = "SELECT cui FROM sip.estructuracui WHERE uid=" + uid;
+      logger.debug("query:" + sql1);
+      sequelize.query(sql1)
+        .spread(function (rows) {
+          if (rows.length > 0) {
+            logger.debug("query:" + rows + ", valor:" + rows[0].cui);
+            idcui = rows[0].cui;
+          } else {
+            idcui = 0; //cui no existente para que no encuentre nada
+          }
+        }).then(function (servicio) {
+          var sql = "declare @cui as INT; "+
+            "select @cui = sip.obtienecuipadre("+idcui+"); "+
+            "select a.id " +
+            "from   sip.estructuracui a " +
+            "where  a.cui = @cui " +
+            "union " +
+            "select b.id " +
+            "from   sip.estructuracui a,sip.estructuracui b " +
+            "where  a.cui = @cui " +
+            "  and  a.cui = b.cuipadre " +
+            "union " +
+            "select c.id " +
+            "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c " +
+            "where  a.cui = @cui " +
+            "  and  a.cui = b.cuipadre " +
+            "  and  b.cui = c.cuipadre " +
+            "union " +
+            "select d.id " +
+            "from   sip.estructuracui a,sip.estructuracui b,sip.estructuracui c,sip.estructuracui d " +
+            "where  a.cui = @cui " +
+            "  and  a.cui = b.cuipadre " +
+            "  and  b.cui = c.cuipadre " +
+            "  and  c.cui = d.cuipadre ";
+          sequelize.query(sql)
+            .spread(function (rows) {
+              var cuis = "";
+              logger.debug("En cuis:" + rows);
+              for (i = 0; i < rows.length; i++) {
+                //logger.debug("cui:" + rows[i].id);
+                cuis = cuis + rows[i].id + ",";
+              }
+              //return cuis.substring(0, cuis.length - 1);
+              logger.debug("antes call:" + cuis.substring(0, cuis.length - 1));
+              callback(cuis.substring(0, cuis.length - 1));
+            });
+        });
+    } else {
+      callback("*");
+    }
+  };
+
+  if (filters) {
+    var jsonObj = JSON.parse(filters);
+    if (JSON.stringify(jsonObj.rules) != '[]') {
+      jsonObj.rules.forEach(function (item) {
+        if (item.op === 'cn')
+          if (item.field == 'CUI' || item.field == 'nombre' || item.field == 'nombreresponsable') {
+            condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
+          } else if (item.field == 'estado') {
+            condition += "a.estado like '%" + item.data + "%' AND ";
+          } else {
+            condition += 'c.' + item.field + "=" + item.data + " AND ";
+          }
+      });
+      condition = condition.substring(0, condition.length - 5);
+      logger.debug("***CONDICION:" + condition);
+    }
+  }
+
+    superCui(req.session.passport.user, function (elcui) {//req.user[0].uid
+      logger.debug('elcui:' + elcui)
+      var rol = req.session.passport.sidebar[0].rid;//req.user[0].rid;
+      var sqlok;
+      if (rol == constants.ROLADMDIVOT) {
+        sqlok = "declare @rowsPerPage as bigint; " +
+          "declare @pageNum as bigint;" +
+          "set @rowsPerPage=" + rowspp + "; " +
+          "set @pageNum=" + page + ";   " +
+          "With SQLPaging As   ( " +
+          "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY a.id desc) " +
+          "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable, c.ejercicio " +
+          "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
+          "JOIN sip.ejercicios c ON c.id=a.idejercicio ";
+        if (filters && condition != "") {
+          logger.debug("**" + condition + "**");
+          sqlok += "WHERE " + condition + " ";
+        }
+        sqlok += "ORDER BY id desc) " +
+          "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+        sqlcount = "Select count(*) AS count FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id "+
+        "JOIN sip.ejercicios c ON c.id=a.idejercicio ";
+        if (filters && condition != "") {
+          sqlcount += "WHERE " + condition + " ";
+        }          
+      } else {
+        sqlok = "declare @rowsPerPage as bigint; " +
+          "declare @pageNum as bigint;" +
+          "set @rowsPerPage=" + rowspp + "; " +
+          "set @pageNum=" + page + ";   " +
+          "With SQLPaging As   ( " +
+          "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY a.id desc) " +
+          "as resultNum, a.*, b.CUI, b.nombre, b.nombreresponsable as responsable, c.ejercicio " +
+          "FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id " +
+          "JOIN sip.ejercicios c ON c.id=a.idejercicio " +
+          "WHERE a.idcui IN (" + elcui + ") ";
+        if (filters && condition != "") {
+          logger.debug("**" + condition + "**");
+          sqlok += "AND " + condition + " ";
+        }
+        sqlok += "ORDER BY id desc) " +
+          "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+        sqlcount = "Select count(*) AS count FROM sip.presupuesto a JOIN sip.estructuracui b ON a.idcui=b.id "+ 
+        "JOIN sip.ejercicios c ON c.id=a.idejercicio ";
+        sqlcount +=  "WHERE a.idcui IN (" + elcui + ") "; 
+        if (filters && condition != "") {
+          sqlcount += "AND " + condition + " ";
+        }          
+      }
+      logger.debug('**SQLCount:' + sqlcount);
+      logger.debug('**SQLOK:' + sqlok);
+      sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        logger.debug("####COUNT:" + recs[0].count + " Total:" + total);
+        logger.debug("EL SUPER ID : " + req.session.passport.user)
+        logger.debug("ROL : " + req.session.passport.sidebar[0].rid)      
+      sequelize.query(sqlok).spread(function (rows) {
+        res.json({ records: records, total: total, page: page, rows: rows });
+      });
+    });
+  })
 };
