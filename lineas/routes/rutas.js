@@ -107,6 +107,9 @@ module.exports = function (passport) {
     router.route('/getmacindividual/:id')
         .get(isAuthenticated, carteraController.getmacindividual);
 
+    router.route('/getmacporrut/:rut')
+        .get(isAuthenticated, carteraController.getmacporrut);
+
     router.route('/vertabsublimites/:id')
         .get(isAuthenticated, operacionesController.listtabversublimite);
 

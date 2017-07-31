@@ -703,3 +703,18 @@ exports.getmacindividual = function (req, res) {
     });
 
 }
+
+exports.getmacporrut = function (req, res) {
+    sequelize.query(
+        'select Id from scl.MacIndividual a  ' +
+        'where Rut =  ' + req.params.rut,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
+}

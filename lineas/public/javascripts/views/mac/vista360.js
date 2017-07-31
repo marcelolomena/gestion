@@ -12,6 +12,12 @@ $(document).ready(function () {
                         </div>
                     </form>        
                 </div>              
+        </div>
+        <div id="cascara2" style="width: 1266px; height: 95px; display: none;">   
+            <div class="panel-body">
+                <h3 class="text-primary text-light col-1"><a id="mac" href="#">Generación MAC</a></h3> 
+                <h3 class="text-primary text-light col-1"><a id="limites" href="#" onclick="limites();return false;">Control de Límites</a></h3> 
+            </div>              
         </div>`);
     $(".gcontainer").append(`
         
@@ -24,7 +30,10 @@ $(document).ready(function () {
             async: false,
             success: function (data) {
                 if (data.length > 0) {
-                    window.location.assign ("/menu/crearaprobacion/p/" + rut);
+                    $('#cascara2').css("display", "block");
+                    $('#mac').attr("href", "/menu/crearaprobacion/p/" + rut)
+                    //$('#limites').attr("href", "/menu/operaciones/p/" + rut)
+                    //window.location.assign ("/menu/crearaprobacion/p/" + rut);
                 } else {
                     alert("No existe cliente en Base de Datos");
                 }
@@ -32,6 +41,29 @@ $(document).ready(function () {
         });
 
     });
+
+    $('#limites').click(function () {
+        var rut = $("#rut").val();
+        $.ajax({
+            type: "GET",
+            url: '/getmacporrut/' + rut,
+            async: false,
+            success: function (data) {
+                if (data.length > 0) {
+                    var idmac = data[0].Id
+                    $('#cascara2').css("display", "block");
+                    //$('#mac').attr("href", "/menu/crearaprobacion/p/" + rut)
+                    $('#limites').attr("href", "/menu/operaciones/p/" + idmac)
+                    //window.location.assign ("/menu/crearaprobacion/p/" + rut);
+                } else {
+                    alert("No existe MAC para el Rut ingresado");
+                }
+            }
+        });
+
+    });
+
+
     /*
     $('#rut').on('change', function () {
         if (this.value != "") {
@@ -50,6 +82,5 @@ $(document).ready(function () {
         $("#pager").setGridWidth($(".gcontainer").width(), true);
     });
 });
-
 
 

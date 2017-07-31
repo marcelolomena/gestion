@@ -1,11 +1,11 @@
 $(document).ready(function () {
-    var parentRowKey = "hola"
+    var idmac = $("#param").text();
 
     var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-    tabs += "<li><a href='/operacionmac/1' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Mac</a></li>"
+    tabs += "<li><a href='/operacionmac/"+idmac+"' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Mac</a></li>"
     //tabs += "<li><a href='/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
     //tabs += "<li><a href='/aprobaciones/" + parentRowKey + "' data-target='#aprobaciones' id='aprobaciones_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Aprobaciones</a></li>"
-    tabs += "<li><a href='/vertablimites/1' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Limites</a></li>"
+    tabs += "<li><a href='/vertablimites/"+idmac+"' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Limites</a></li>"
     tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Operaciones</a></li>"
     tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Reservas</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Asignar</a></li>"

@@ -3,7 +3,7 @@ var gridoperacionmac = {
     renderGrid: function (loadurl, targ) {
         var $gridTab = $(targ + "_t")
         console.log(loadurl.substring(14))
-        //console.log(targ)
+        console.log(loadurl)
         var idmac = loadurl.substring(14);
         $gridTab.html(
             `
