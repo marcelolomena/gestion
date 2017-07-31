@@ -150,6 +150,7 @@ exports.list = function (req, res) {
         }
     });
 };
+/*
 exports.listindividuales = function (req, res) {
 
     var page = req.query.page;
@@ -195,6 +196,54 @@ exports.listindividuales = function (req, res) {
                 });
             })
         }
+    });
+};
+*/
+
+exports.listindividuales = function (req, res) {
+    //console.dir("***************EN LISTNEW ***************************");
+    var page = req.query.page;
+    var rowspp = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var condition = "";
+
+    if (!sidx) {
+        sidx = "a.id";
+        sord = "asc";
+    }
+
+
+    var order = sidx + " " + sord;
+
+    var sqlcount = `
+  select count (*) from MacIndividual a 
+join GrupoEmpresa c on c.Empresa_Id =a.Empresa_Id
+join MacGrupal e on e.Grupo_Id = c.Grupo_Id
+where e.Id=`+ req.params.id;
+
+    var sqlok = "declare @rowsPerPage as bigint; " +
+        "declare @pageNum as bigint;" +
+        "set @rowsPerPage=" + rowspp + "; " +
+        "set @pageNum=" + page + ";   " +
+        "With SQLPaging As   ( " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+        `as resultNum, a.* from MacIndividual a 
+        join GrupoEmpresa c on c.Empresa_Id =a.Empresa_Id
+        join MacGrupal e on e.Grupo_Id = c.Grupo_Id
+        where e.Id=`+ req.params.id;
+    sqlok += ") " +
+        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+    sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        console.log("Total:" + total + "recs[0].count:" + recs[0].count);
+        console.log("SQL2:" + sqlok);
+        sequelize.query(sqlok).spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+        });
     });
 };
 

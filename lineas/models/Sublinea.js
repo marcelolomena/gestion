@@ -8,31 +8,15 @@ module.exports = function(sequelize, DataTypes) {
 			primaryKey: true,
 			autoIncrement: true
 		},
-		Linea_Id: {
-			type: DataTypes.INTEGER,
-			allowNull: true
-		},
 		Numero: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		TipoRiesgo: {
+		Riesgo: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		PlazoResudual: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		MontoAprobado: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		DeudaActual: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		MontoAprobacion: {
+		Descripcion: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
@@ -40,16 +24,32 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Comentario: {
+		Aprobado: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Tipolimite: {
+		Utilizado: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Garantiaestatal: {
+		Reservado: {
 			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Condicion: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Disponible: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Estado: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		MacIndividual_Id: {
+			type: DataTypes.INTEGER,
 			allowNull: true
 		}
 	}, {

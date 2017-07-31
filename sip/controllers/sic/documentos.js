@@ -297,7 +297,10 @@ exports.gettipodocumentos = function (req, res) {
 
     sequelize.query(
         'select a.* ' +
-        'from sic.tipodocumento a ',
+        'from sic.tipodocumento a ' +
+        'order by a.nombrecorto asc',
+        //'select a.* ' +
+        //'from sic.tipodocumento a ',
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)

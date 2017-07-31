@@ -64,7 +64,7 @@ var gridVermac = {
             //autowidth: true,
             width: 1350,
             subGrid: true,
-            subGridRowExpanded: subGridSublimite,
+            subGridRowExpanded: subGridSublimite, //se llama la funcion de abajo
             subGridOptions: {
                 plusicon: "glyphicon-hand-right",
                 minusicon: "glyphicon-hand-down"
@@ -188,4 +188,6 @@ var gridVermac = {
 function subGridSublimite(subgrid_id, row_id) {         
       gridSublimiteOp(subgrid_id, row_id, 'sublimite');
       gridOperacion(subgrid_id, row_id, 'veroperacion');
+      gridGarantias(subgrid_id, row_id, 'vergarantias');
 }
+      

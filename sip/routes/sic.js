@@ -26,7 +26,7 @@ var participantesproveedorController = require('../controllers/sic/participantes
 var cotizacionservicioController = require('../controllers/sic/cotizacionservicio')
 var matrizevaluacionController = require('../controllers/sic/matrizevaluacion')
 var adjudicacionController = require('../controllers/sic/adjudicacion')
-var solicitudcontratoController =  require('../controllers/sic/solicitudcontrato')
+var solicitudcontratoController = require('../controllers/sic/solicitudcontrato')
 
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
@@ -738,6 +738,9 @@ module.exports = function (passport) {
 
     router.route('/sic/guardarcontrato/:id')
         .get(isAuthenticated, solicitudcontratoController.guardarcontrato)
+
+    router.route('/sic/BorrarClausulas/:id/:numero')
+        .get(isAuthenticated, clausulasController.BorrarClausulas)
 
 
     return router;

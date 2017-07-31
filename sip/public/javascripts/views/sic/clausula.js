@@ -274,6 +274,7 @@ var gridClausula = {
                     $("#del_" + thisId).addClass('ui-disabled');
                     $("#refresh_" + thisId).addClass('ui-disabled');
                     $("#download_" + thisId).addClass('ui-disabled');
+                    $("#borrar_" + thisId).addClass('ui-disabled');
 
                     $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
                         caption: "",
@@ -305,16 +306,42 @@ var gridClausula = {
                                 });
                             });
                             */
-                            var dialog = bootbox.dialog({
-                                title: 'Generando Cláusulas Predefinidas...',
-                                message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
-                            });
-                            dialog.init(function () {
-                                $.getJSON('/sic/default/' + parentRowKey + '/' + parentRowData.idgrupo + '/' + parentRowData.idtipo, function (res) {
-                                    $gridTab.trigger("reloadGrid");
-                                    dialog.find('.bootbox-body').html(res.message);
-                                });
-                            });
+
+                            bootbox.prompt({
+                                title: "¿Que tipo de claúsulas quiere?",
+                                inputType: 'select',
+                                inputOptions: [
+                                    {
+                                        text: 'Documento General RFP',
+                                        value: '1',
+                                    }
+                                ],
+                                callback: function (result) {
+                                    if (result == 1) {
+                                        var dialog = bootbox.dialog({
+                                            title: 'Generando Cláusulas Predefinidas...',
+                                            message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
+                                        });
+                                        dialog.init(function () {
+                                            $.getJSON('/sic/default/' + parentRowKey + '/' + parentRowData.idgrupo + '/' + parentRowData.idtipo, function (res) {
+                                                $gridTab.trigger("reloadGrid");
+                                                dialog.find('.bootbox-body').html(res.message);
+                                            });
+                                        });
+                                    } else {
+                                        if (result == 2) {
+
+                                        } else {
+
+                                        }
+                                    }
+                                }
+                            })
+
+
+
+
+
 
                         }
                     })
@@ -325,6 +352,7 @@ var gridClausula = {
                     $("#refresh_" + thisId).removeClass('ui-disabled');
                     $("#download_" + thisId).removeClass('ui-disabled');
                     $("#pushpin_" + thisId).addClass('ui-disabled');
+                    $("#borrar_" + thisId).removeClass('ui-disabled');
                 }
             },
             loadComplete: function (data) {
@@ -341,7 +369,7 @@ var gridClausula = {
                             //$("#del__gridMaster").hide();
                             $("#download_" + thisId).addClass('ui-disabled');
                             $("#pushpin_" + thisId).addClass('ui-disabled');
-                            
+
                         }
                     });
                 });
@@ -492,6 +520,49 @@ var gridClausula = {
 
             }
         });
+
+        $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
+            caption: "",
+            id: "borrar_" + $(targ + "_t_" + parentRowKey).attr('id'),
+            buttonicon: "glyphicon glyphicon-erase",
+            title: "Borrar todo",
+            position: "last",
+
+            onClickButton: function () {
+                var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                bootbox.confirm({
+                    message: "¿Esta seguro de eliminar todas las claúsulas?",
+                    buttons: {
+                        confirm: {
+                            label: 'Si',
+                            //className: 'btn-success'
+                        },
+                        cancel: {
+                            label: 'No',
+                            //className: 'btn-danger'
+                        }
+                    },
+                    callback: function (result) {
+                        var numeroanexos = parseInt("0");
+                        if (result) {
+                            console.log('ESTO ES UN NUMERO DE ANEXO: ' + numeroanexos)
+                            var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                            $.getJSON('/sic/BorrarClausulas/' + parentRowKey + '/' + numeroanexos, function (res) { },
+                                $gridTab.trigger("reloadGrid"));
+                        } else {
+                            console.log('ESTO ES UN LOG')
+
+                        }
+
+
+
+                    }
+                })
+
+            }
+
+        });
+
     }
 }
 function returnDocLink(cellValue, options, rowdata) {

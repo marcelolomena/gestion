@@ -68,12 +68,14 @@ function gridPlantillas(parentRowID, parentRowKey, suffix) {
                 }
             }
         },
-        { label: 'Codigo Clausula', name: 'plantillaclausula.codigo', width: 150, editable: true, editoptions: { size: 10 } },
+        { label: 'Codigo Clausula', name: 'plantillaclausula.codigo', width: 25, editable: true, editoptions: { size: 10 } },
+        
+        { label: 'Nombre', name: 'plantillaclausula.nombre', width: 150, hidden: false, search: false, editable: true },
 
         //{ label: 'Secuencia', name: 'secuencia', width: 80, editable: true, editoptions: { size: 10 }, editrules: { required: true } },
 
         {
-            label: 'Secuencia', name: 'secuencia', width: 80, search: false, editable: true, hidden: false,
+            label: 'Secuencia', name: 'secuencia', width: 25, search: false, editable: true, hidden: false,
             edittype: "select",
             editoptions: {
                 dataUrl: '/sic/buscarsecuenciatocplantilla/' + parentTipo + "/"+ parentClase,
@@ -147,7 +149,7 @@ function gridPlantillas(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Plantilla Cláusulas',
+        caption: 'Cláusulas',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

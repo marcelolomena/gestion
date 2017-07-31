@@ -229,19 +229,21 @@ exports.list = function (req, res) {
     var page = 1
     var rows = 10
     var filters = req.params.filters
-    /*
+
     var filters = req.body.filters;
     var sidx = req.body.sidx;
     var sord = req.body.sord;
-  
+
     if (!sidx)
-      sidx = "descripcion";
-  
+        sidx = "nombre";
+
     if (!sord)
-      sord = "asc";
-  
-    var orden = "[solicitudcotizacion]." + sidx + " " + sord;
-    */
+        sord = "asc";
+
+    var orden = "[servicio]." + sidx + " " + sord;
+
+
+
 
     utilSeq.buildCondition(filters, function (err, data) {
         if (err) {
@@ -263,7 +265,7 @@ exports.list = function (req, res) {
                 models.serviciosrequeridos.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    //order: orden,
+                    order: orden,
                     where: {
                         idsolicitudcotizacion: id
                     },
@@ -388,7 +390,60 @@ exports.proveedoressugeridoslist = function (req, res) {
 exports.listaservicios = function (req, res) {
 
     var id = req.params.id;
+    sequelize.query(
+        'select tipocontrato from sic.solicitudcotizacion ' +
+        'where id =:id ',
+        { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (tipocontrato) {
 
+        console.dir(tipocontrato[0]);
+        var tipocontra = ''
+        var tcontrato1 = 'Proyecto'
+        var tcontrato2 = 'Continuidad'
+        tipocontra = tipocontrato[0].tipocontrato;
+        console.dir("ESTO ES UN TIPO DE CONTRATO: " + tipocontra)
+        if (tipocontra == 1) {
+            console.dir("ESTOY ES CONTINUIDAD")
+            sequelize.query(
+                "SELECT distinct a.id, a.nombre " +
+                "FROM sip.servicio a " +
+                "join sip.plantillapresupuesto b on b.idservicio=a.id " +
+                "join sic.solicitudcotizacion c on c.idcui=b.idcui " +
+                "where c.id=:id and a.tiposervicio = 'Continuidad' " +
+                "group by a.id, a.nombre ",
+                { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+            ).then(function (valores) {
+                logger.debug(valores)
+                return res.json(valores);
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1 });
+            });
+        } else {
+            console.dir("ESTOY EN PROYECTO")
+            sequelize.query(
+                "SELECT distinct a.id, a.nombre " +
+                "FROM sip.servicio a " +
+                "join sip.plantillapresupuesto b on b.idservicio=a.id " +
+                "join sic.solicitudcotizacion c on c.idcui=b.idcui " +
+                "where c.id=:id and a.tiposervicio = 'Proyecto' " +
+                "group by a.id, a.nombre ",
+                { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
+            ).then(function (valores) {
+                logger.debug(valores)
+                return res.json(valores);
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1 });
+            });
+        }
+    }).catch(function (err) {
+        logger.error(err);
+        return res.json({ error: 1 });
+    });
+
+
+    /*
     sequelize.query(
         'SELECT distinct a.id, a.nombre ' +
         'FROM sip.servicio a ' +
@@ -404,6 +459,7 @@ exports.listaservicios = function (req, res) {
         logger.error(err);
         return res.json({ error: 1 });
     });
+    */
 }
 
 exports.proveedoressugeridostriada = function (req, res) {
@@ -579,7 +635,7 @@ exports.proveedoressugeridosaction = function (req, res) {
             break;
         case "edit":
             break;
-        case "del":    
+        case "del":
             models.proveedorsugerido.findAll({
                 where: {
                     id: req.body.id

@@ -33,7 +33,7 @@ $(document).ready(function () {
         shrinkToFit: true,
         viewrecords: true,
         editurl: '/sic/grid_toctipo',
-        caption: 'Tipos de Cláusulas',
+        caption: 'Tipos de Documentos',
         styleUI: "Bootstrap",
         onSelectRow: function (id) {
             var getID = $(this).jqGrid('getCell', id, 'id');

@@ -1,4 +1,4 @@
-function gridProducto(parentRowID, parentRowKey, suffix) { //no esta activa
+function gridverlimite(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -26,24 +26,23 @@ function gridProducto(parentRowID, parentRowKey, suffix) { //no esta activa
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/limite/" + parentRowKey;
+    var childGridURL = "/verlimite/" + parentRowKey;
 
-    var modelOperacion = [
+    var modelLinea = [
         {
             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
             editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
         },
-        //{ label: 'Id', name: 'Id', hidden: true, editable: true },
-        { label: 'Plazo', name: 'Plazo', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'T. Credito', name: 'TipoCredito', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Moneda', name: 'Moneda', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Monto', name: 'Monto', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Tasa', name: 'Tasa', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Vencimiento', name: 'Vencimiento', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Curse', name: 'Curse', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-        //{ label: 'Deuda', name: 'DeudaActual', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-        //{ label: 'Some. Aprob', name: 'MontoAprobacion', width: 100, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 2 }, editrules: { required: true } },
-        //{ label: 'G. Estatal', name: 'Garantiaestatal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true },
+        { label: 'Numero', name: 'Numero', width: 15, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'TipoRiesgo', name: 'TipoRiesgo', width: 15, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Comentario', name: 'Comentario', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Plazo Residual', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Moneda', name: 'Moneda', width: 20, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'MontoAprobado', name: 'MontoAprobado', width:30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+        { label: 'DeudaActual', name: 'DeudaActual', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+        { label: 'MontoAprobacion', name: 'MontoAprobacion', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
@@ -54,22 +53,21 @@ function gridProducto(parentRowID, parentRowKey, suffix) { //no esta activa
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Producto',
+        caption: 'Resumen Limites',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: modelOperacion,
+        colModel: modelLinea,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID,
-        
         /*
         subGrid: true,
-        subGridRowExpanded: verproducto,
+        subGridRowExpanded: showSubGrids3,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
@@ -83,11 +81,42 @@ function gridProducto(parentRowID, parentRowKey, suffix) { //no esta activa
 
                 $("#" + childGridID).addRowData("blankRow", { "id": 0, "nombre": "No hay datos" });
             }
-        }
+        },
+        footerrow: false,
+        /*
+        loadComplete: function () {
+            var sum1 = $("#" + childGridID).jqGrid('getCol', 'Directo', false, 'sum');
+            var sum2 = $("#" + childGridID).jqGrid('getCol', 'Contingente', false, 'sum');
+            var sum3 = $("#" + childGridID).jqGrid('getCol', 'Derivados', false, 'sum');
+            var sum4 = $("#" + childGridID).jqGrid('getCol', 'Diferida', false, 'sum');
+            var sum5 = $("#" + childGridID).jqGrid('getCol', 'Total', false, 'sum');
+            var sum6 = $("#" + childGridID).jqGrid('getCol', 'VarAprobacion', false, 'sum');
+            var sum7 = $("#" + childGridID).jqGrid('getCol', 'DeudaBanco', false, 'sum');
+            var sum8 = $("#" + childGridID).jqGrid('getCol', 'GarantiaReal', false, 'sum');
+            var sum9 = $("#" + childGridID).jqGrid('getCol', 'SBIFACHEL', false, 'sum');
+            var sum10 = $("#" + childGridID).jqGrid('getCol', 'Penetracion', false, 'avg');
+
+            $("#" + childGridID).jqGrid('footerData', 'set',
+                {
+                    Vigilancia: 'Totales:',
+                    Directo: sum1,
+                    Contingente: sum2,
+                    Derivados: sum3,
+                    Diferida: sum4,
+                    Total: sum5,
+                    VarAprobacion: sum6,
+                    DeudaBanco: sum7,
+                    GarantiaReal: sum8,
+                    SBIFACHEL: sum9,
+                    Penetracion: sum10
+
+                });
+        } */
+
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false,
+        edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false,
     },
         {
             closeAfterEdit: true,
@@ -129,7 +158,7 @@ function gridProducto(parentRowID, parentRowKey, suffix) { //no esta activa
 
             onclickSubmit: function (rowid) {
                 return { idclaseevaluaciontecnica: parentbisabuelo, childGridID: childGridID, idcriterioevaluacion2: parentRowKey };
-            }, afterSubmit: UploadPre
+            }
 
         },
         {
@@ -156,56 +185,4 @@ function gridProducto(parentRowID, parentRowKey, suffix) { //no esta activa
         */
 
 
-}
-function UploadPre(response, postdata) {
-    //console.log(postdata)
-    var data = $.parseJSON(response.responseText);
-    if (data.success) {
-        if ($("#ArchivoUpload").val() != "") {
-            ajaxPregUpload(data.id, data.idc, postdata.idcriterioevaluacion2, postdata.childGridID);
-            console.log(data.id);
-            console.log(data.idc);
-        }
-    }
-
-    return [data.success, data.message, data.id];
-}
-
-function ajaxPregUpload(id, idc, idpadre, childGridID) {
-    console.log("ESTA WEA SI FUNCIONA CTM: " + id)
-    console.log("este es:" + idc)
-    var dialog = bootbox.dialog({
-        title: 'Se inicia la transferencia',
-        message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar segundos...</p>'
-    });
-    dialog.init(function () {
-        $.ajaxFileUpload({
-            url: '/sic/criterio3/upload/' + idc,
-            secureuri: false,
-            fileElementId: 'ArchivoUpload',
-            dataType: 'json',
-            data: { id: id, idc: idc },
-            success: function (data, status) {
-                if (typeof (data.success) != 'undefined') {
-                    if (data.success == true) {
-                        dialog.find('.bootbox-body').html(data.message);
-                        $("#" + childGridID).trigger('reloadGrid');
-                    } else {
-                        dialog.find('.bootbox-body').html(data.message);
-                    }
-                }
-                else {
-                    dialog.find('.bootbox-body').html(data.message);
-                }
-            },
-            error: function (data, status, e) {
-                dialog.find('.bootbox-body').html(e);
-            }
-        })
-    });
-}
-
-function subGridSublimite(subgrid_id, row_id) {
-    gridSublimiteOp(subgrid_id, row_id, 'sublimite');
-    //gridGarantia(subgrid_id, row_id, 'garantia');
 }

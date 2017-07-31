@@ -311,6 +311,6 @@ var gridLimite = {
     }
 }
 function subGridSublimite(subgrid_id, row_id) {
-    gridSublimite(subgrid_id, row_id, 'sublimite');
-    gridGarantia(subgrid_id, row_id, 'garantia');
+    //gridSublimite(subgrid_id, row_id, 'sublimite');
+    //gridGarantia(subgrid_id, row_id, 'garantia');
 }

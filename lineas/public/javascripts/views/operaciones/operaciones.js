@@ -2,20 +2,26 @@ $(document).ready(function () {
     var parentRowKey = "hola"
 
     var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-    tabs += "<li><a href='/vermac/1' data-target='#vermac' id='vermac_tab' data-toggle='tab'>Resumen</a></li>"
+    tabs += "<li><a href='/operacionmac/1' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Mac</a></li>"
     //tabs += "<li><a href='/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
     //tabs += "<li><a href='/aprobaciones/" + parentRowKey + "' data-target='#aprobaciones' id='aprobaciones_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Aprobaciones</a></li>"
-    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Reservar</a></li>"
-    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Asignar</a></li>"
-    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Estado</a></li>"
-    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Bitacora</a></li>"
+    tabs += "<li><a href='/vertablimites/1' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Limites</a></li>"
+    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Operaciones</a></li>"
+    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Reservas</a></li>"
+    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Asignar</a></li>"
+    //tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Estados</a></li>"
+    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Excepciones</a></li>"
+    tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Reportes</a></li>"
+
+
+
     tabs += "</ul>"
 
     tabs += "<div class='tab-content'>"
-    tabs += "<div class='tab-pane active' id='vermac'><div class='container-fluid'><table id='vermac_t'></table><div id='navGridVermac'></div></div></div>"
+    tabs += "<div class='tab-pane active' id='operacionmac'><div class='container-fluid'><table id='operacionmac_t'></table><div id='lol'></div></div></div>"
     //tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"
     //tabs += "<div class='tab-pane' id='aprobaciones'><table id='aprobaciones_t_" + parentRowKey + "'></table><div id='navGridAprob'></div></div>"
-    tabs += "<div class='tab-pane' id='reservar'><table id='reservar_t'></table><div id='navGridRes'></div></div>"
+    tabs += "<div class='tab-pane' id='vertablimites'><table id='vertablimites_t'></table><div id='navGridtabverlimites'></div></div>"
     tabs += "<div class='tab-pane' id='reservar'><table id='reservar_t'></table><div id='navGridRes'></div></div>"
     tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>"
     tabs += "</div>"
@@ -35,8 +41,8 @@ $(document).ready(function () {
                         <div class="col-xs-6 col-sm-3"><b>Vigilancia:</b> No</div>
                     </div>   
                     <div class="row">    
-                        <div class="col-xs-6 col-sm-3"><b>F. Rating Ind:</b> 13-07-2017</div>
-                        <div class="col-xs-6 col-sm-3"><b>F. Rating Grupal:</b> 13-07-2017</div>
+                        <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Ind:</b> 13-07-2017</div> -->
+                        <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Grupal:</b> 13-07-2017</div>-->
                         <div class="col-xs-6 col-sm-3"><b>F. Creación MAC:</b> 09-06-2017</div>
                         <div class="col-xs-6 col-sm-3"><b>F. Vencimiento MAC:</b> 08-06-2018</div>
                     </div>       
@@ -44,14 +50,14 @@ $(document).ready(function () {
             </div>`);
 
     $("#gridMaster").append(tabs);
-    $('#vermac_tab').addClass('media_node active span')
+    $('#operacionmac_tab').addClass('media_node active span')
     $('.active[data-toggle="tab"]').each(function (e) {
         var $this = $(this),
             loadurl = $this.attr('href'),
             targ = $this.attr('data-target');
-        if (targ === '#vermac') { //ver mac es la grilla padre
-            gridVermac.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
-        } else if (targ === '#reservar') {
+        if (targ === '#operacionmac') { //ver macgrupal es la grilla padre
+            gridoperacionmac.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
+        } else if (targ === '#vertablimites') { // target del <li>
             gridReservar.renderGrid(loadurl, targ)
         } else if (targ === '#bitacora') {
             gridBitacora.renderGrid(loadurl, targ)
@@ -65,10 +71,10 @@ $(document).ready(function () {
         var $this = $(this),
             loadurl = $this.attr('href'),
             targ = $this.attr('data-target');
-        if (targ === '#vermac') {
-            gridVermac.renderGrid(loadurl, targ)
-        } else if (targ === '#reservar') {
-            gridReservar.renderGrid(loadurl, targ)
+        if (targ === '#operacionmac') {
+            gridoperacionmac.renderGrid(loadurl, targ)
+        } else if (targ === '#vertablimites') {
+            gridvertablimites.renderGrid(loadurl, targ)
         } else if (targ === '#bitacora') {
             gridBitacora.renderGrid(loadurl, targ)
         }
