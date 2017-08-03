@@ -45,7 +45,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
             formatter: function (cellvalue, options, rowObject) {
                 var idlimite = rowObject.Id;
                 if (cellvalue != null) {
-                    var dato = '<a class="muestraop" href="#' + idlimite + '">' + cellvalue + '</a>';
+                    var dato = '<a class="muestraop2" href="#' + idlimite + '">' + cellvalue + '</a>';
                 }
                 else {
                     var dato = "no existe sub limite";
@@ -89,7 +89,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         {
             label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
             formatter: function (cellvalue, options, rowObject) {
-                var dato = '<span role="button" class="glyphicon glyphicon-th-list muestradet" href="#' + rowObject.Id + '"></span>';
+                var dato = '<span role="button" class="glyphicon glyphicon-th-list muestradet2" href="#' + rowObject.Id + '"></span>';
                 //dato = `<span role="button" class="glyphicon glyphicon-th-list" aria-hidden="true onclick="yourFunction()"></span>`
                 return dato;
             }
@@ -129,7 +129,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         editurl: '/limite/action3',
         loadComplete: function () {
             $("#" + childGridID).append(`
-                    <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal fade" id="myModal3" role="dialog">
                         <div class="modal-dialog modal-sm">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -146,7 +146,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="myModal2" role="dialog">
+                    <div class="modal fade" id="myModal4" role="dialog">
                         <div class="modal-dialog modal-sm">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -179,7 +179,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         `);
 
 
-            $('.muestraop').click(function () {
+            $('.muestraop2').click(function () {
                 var idlimite = $(this).attr('href');
                 $('#ellimite').html(idlimite.substring(1))
                 console.log("estamos listos")
@@ -201,10 +201,10 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                         }
                     }
                 });
-                $("#myModal").modal();
+                $("#myModal3").modal();
             });
 
-            $('.muestradet').click(function () {
+            $('.muestradet2').click(function () {
                 var idlimite = $(this).attr('href');
                 $('#ellimite2').html(idlimite.substring(1))
                 $.ajax({
@@ -231,7 +231,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                         }
                     }
                 });
-                $("#myModal2").modal();
+                $("#myModal4").modal();
             });
         },
 
