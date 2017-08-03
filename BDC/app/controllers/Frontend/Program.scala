@@ -908,7 +908,7 @@ object Program extends Controller {
             Option(new Date()),
             Option(new Date()),
             1, //risk.risk_state
-            111 //risk.sub_category
+            27 //risk.sub_category
             )
 
           val last = RiskService.insertRisk(risk_master)
