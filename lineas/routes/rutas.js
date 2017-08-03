@@ -113,5 +113,17 @@ module.exports = function (passport) {
     router.route('/vertabsublimites/:id')
         .get(isAuthenticated, operacionesController.listtabversublimite);
 
-    return router;
+    router.route('/veroperacionesmodal/:id')
+        .get(isAuthenticated, operacionesController.listveroperacion);
+    
+    router.route('/verdetalleslim/:id')
+        .get(isAuthenticated, operacionesController.listverdetallelim);
+    
+    router.route('/veroperacionesmodal2/:id')
+        .get(isAuthenticated, operacionesController.listveroperacion2);
+    
+    router.route('/verdetalleslim2/:id')
+        .get(isAuthenticated, operacionesController.listverdetallelim2);
+    
+        return router;
 }

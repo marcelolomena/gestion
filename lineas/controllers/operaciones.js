@@ -803,7 +803,7 @@ exports.listtabversublimite = function (req, res) {
     var sord = req.query.sord;
 
     var additional = [{
-        "field": "MacIndividual_Id",
+        "field": "Linea_Id",
         "op": "eq",
         "data": req.params.id
     }];
@@ -838,5 +838,127 @@ exports.listtabversublimite = function (req, res) {
                 });
             })
         }
+    });
+};
+
+exports.listveroperacion = function (req, res) {
+    console.log("llegue al controlador!");
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "Linea_Id",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    if (!sidx)
+        sidx = "Id";  //ordenar por variable
+
+    if (!sord)
+        sord = "asc"; //ordenar por asc
+
+    var orden = "[Operacion]." + sidx + " " + sord;
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.Operacion.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.Operacion.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    order: orden,
+                    /*include: [{
+                        model: models.MacIndividual
+                    }]*/
+                }).then(function (lineas) {
+                    return res.json({ records: records, total: total, page: page, rows: lineas });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+
+exports.listverdetallelim = function (req, res) {
+    sequelize.query(
+        'select * from scl.Linea a  ' +
+        'where Id =  ' + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.listveroperacion2 = function (req, res) {
+    console.log("llegue al controlador!");
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+
+    var additional = [{
+        "field": "Sublinea_Id",
+        "op": "eq",
+        "data": req.params.id
+    }];
+
+    if (!sidx)
+        sidx = "Id";  //ordenar por variable
+
+    if (!sord)
+        sord = "asc"; //ordenar por asc
+
+    var orden = "[Operacion]." + sidx + " " + sord;
+
+    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+        if (data) {
+            models.Operacion.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.Operacion.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: data,
+                    order: orden,
+                    /*include: [{
+                        model: models.MacIndividual
+                    }]*/
+                }).then(function (lineas) {
+                    return res.json({ records: records, total: total, page: page, rows: lineas });
+                }).catch(function (err) {
+                    logger.error(err);
+                    res.json({ error_code: 1 });
+                });
+            })
+        }
+    });
+};
+
+exports.listverdetallelim2 = function (req, res) {
+    sequelize.query(
+        'select * from scl.Sublinea a  ' +
+        'where Id =  ' + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
     });
 };

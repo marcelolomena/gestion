@@ -52,6 +52,22 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.INTEGER,
 			allowNull: true
 		}
+		Plazo: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		}
+		FechaVencimiento: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		}
+		Comentarios: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		}
+		Condiciones: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		}
 	}, {
 		schema: 'scl', timestamps: false, tableName: 'Linea'
 	});
