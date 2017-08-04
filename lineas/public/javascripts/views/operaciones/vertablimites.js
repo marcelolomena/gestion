@@ -1,9 +1,9 @@
 var gridvertablimites = {
 
     renderGrid: function (loadurl, targ) {
-        var $gridTab = $(targ + "_t")
+        var $gridTab2 = $(targ + "_t")
         /*
-        $gridTab.prepend(`
+        $gridTab2.prepend(`
             <div class='form-row'>
                 <div class="panel-body">
                     <button type="button" class="btn btn-primary btn-md">Medium</button>
@@ -23,7 +23,11 @@ var gridvertablimites = {
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
 
-        $gridTab.jqGrid({
+
+
+
+
+        $gridTab2.jqGrid({
             url: loadurl,
             datatype: "json",
             mtype: "GET",
@@ -37,7 +41,14 @@ var gridvertablimites = {
                 { label: 'N°', name: 'Numero', width: 15, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, editrules: { required: true } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, editrules: { required: true } },
+                {
+                    label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, editrules: { required: true },
+                    formatter: function (cellvalue, options, rowObject) {
+                        var idlimite = rowObject.Id;
+                        var dato = '<a class="muestraop" href="#' + idlimite + '">' + cellvalue + '</a>';
+                        return dato;
+                    }
+                },
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { label: 'Aprobado', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
@@ -74,7 +85,8 @@ var gridvertablimites = {
                 {
                     label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        dato = '<span class="glyphicon glyphicon-align-justify" aria-hidden="true" style= "font-size: 15px"></span>'
+                        var dato = '<span role="button" class="glyphicon glyphicon-th-list muestradet" href="#' + rowObject.Id + '"></span>';
+                        //dato = `<span role="button" class="glyphicon glyphicon-th-list" aria-hidden="true onclick="yourFunction()"></span>`
                         return dato;
                     }
                 },
@@ -103,13 +115,134 @@ var gridvertablimites = {
             viewrecords: true,
             caption: "Detalle Limites",
             footerrow: true,
+            gridComplete: function () {
+                $gridTab2.jqGrid('navButtonAdd', '#navGridtabverlimites', {
+                    caption: "IMPRIMIR",
+                    buttonicon: "",
+                    title: "Imprimir",
+                    position: "last",
+                    onClickButton: function () {
+                        var grid = $gridTab2
+                        var rowKey = grid.getGridParam("selrow");
+                        var url = '#';
+                        $gridTab2.jqGrid('excelExport', { "url": url });
+                    }
+                });
+            },
             loadComplete: function () {
+
+                $gridTab2.append(`
+                    <div class="modal fade" id="myModal" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Operaciones</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Aqui muestro las operaciones del limite: <span id="ellimite"></span></p>
+                                    <div id="operaciones"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="myModal2" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Detalle Limite</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Detalles del Limite N°: <span id="ellimite2"></span></p>
+                                    <p>Riesgo: <span id="Riesgo"></span></p>
+                                    <p>Descripción: <span id="Descripcion"></span></p>
+                                    <p>Moneda: <span id="Moneda"></span></p>
+                                    <p>Aprobado: <span id="Aprobado"></span></p>
+                                    <p>Utilizado: <span id="Utilizado"></span></p>
+                                    <p>Reservado: <span id="Reservado"></span></p>
+                                    <p>Disponible: <span id="Disponible"></span></p>
+                                    <p>Condicion: <span id="Condicion"></span></p>
+                                    <p>Plazo: <span id="Plazo"></span></p>
+                                    <p>FechaVencimiento: <span id="FechaVencimiento"></span></p>
+                                    <p>Comentarios: <span id="Comentarios"></span></p>
+                                    <p>Condiciones: <span id="Condiciones"></span></p>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        `);
+
+
+
+                $('.muestraop').click(function () {
+                    var idlimite = $(this).attr('href');
+                    $('#ellimite').html(idlimite.substring(1))
+                    console.log("estamos listos")
+                    $.ajax({
+                        type: "GET",
+                        url: '/veroperacionesmodal/' + idlimite.substring(1),
+                        async: false,
+                        success: function (data) {
+                            if (data.rows.length > 0) {
+                                var operaciones = "";
+                                for (var i = 0; i < data.rows.length; i++) {
+                                    operaciones += "<p>"
+                                    operaciones += data.rows[i].TipoCredito
+                                    operaciones += "</p>"
+                                }
+                                $("#operaciones").html(operaciones)
+                            } else {
+                                alert("No existe cliente en Base de Datos");
+                            }
+                        }
+                    });
+                    $("#myModal").modal();
+                });
+
+                $('.muestradet').click(function () {
+                    var idlimite = $(this).attr('href');
+                    $('#ellimite2').html(idlimite.substring(1))
+                    $.ajax({
+                        type: "GET",
+                        url: '/verdetalleslim/' + idlimite.substring(1),
+                        async: false,
+                        success: function (data) {
+                            if (data.length > 0) {
+                                $("#Riesgo").html(data[0].Riesgo)
+                                $("#Descripcion").html(data[0].Descripcion)
+                                $("#Moneda").html(data[0].Moneda)
+                                $("#Aprobado").html(data[0].Aprobado)
+                                $("#Utilizado").html(data[0].Utilizado)
+                                $("#Reservado").html(data[0].Reservado)
+                                $("#Disponible").html(data[0].Disponible)
+                                $("#Condicion").html(data[0].Condicion)
+                                $("#Plazo").html(data[0].Plazo)
+                                $("#FechaVencimiento").html(data[0].FechaVencimiento)
+                                $("#Comentarios").html(data[0].Comentarios)
+                                $("#Condiciones").html(data[0].Condiciones)
+                            }
+                            else {
+                                alert("No existe cliente en Base de Datos");
+                            }
+                        }
+                    });
+                    $("#myModal2").modal();
+                });
+
                 var thisId = $.jgrid.jqID(this.id);
-                console.log("estamos listos")
-                var sum1 = $gridTab.jqGrid('getCol', 'Aprobado', false, 'sum');
-                var sum2 = $gridTab.jqGrid('getCol', 'Utilizado', false, 'sum');
-                var sum3 = $gridTab.jqGrid('getCol', 'Reservado', false, 'sum');
-                var sum4 = $gridTab.jqGrid('getCol', 'Disponible', false, 'sum');
+
+                var sum1 = $gridTab2.jqGrid('getCol', 'Aprobado', false, 'sum');
+                var sum2 = $gridTab2.jqGrid('getCol', 'Utilizado', false, 'sum');
+                var sum3 = $gridTab2.jqGrid('getCol', 'Reservado', false, 'sum');
+                var sum4 = $gridTab2.jqGrid('getCol', 'Disponible', false, 'sum');
                 /*var sum5 = $("#" + childGridID).jqGrid('getCol', 'Total', false, 'sum');
                 var sum6 = $("#" + childGridID).jqGrid('getCol', 'VarAprobacion', false, 'sum');
                 var sum7 = $("#" + childGridID).jqGrid('getCol', 'DeudaBanco', false, 'sum');
@@ -118,7 +251,7 @@ var gridvertablimites = {
                 var sum10 = $("#" + childGridID).jqGrid('getCol', 'Penetracion', false, 'avg');
                 */
 
-                $gridTab.jqGrid('footerData', 'set',
+                $gridTab2.jqGrid('footerData', 'set',
                     {
                         Moneda: 'Total (MM$) :',
                         Aprobado: sum1,
@@ -138,7 +271,7 @@ var gridvertablimites = {
 
         });
 
-        $gridTab.jqGrid('navGrid', '#navGridtabverlimites', { edit: false, add: false, del: false, search: false },
+        $gridTab2.jqGrid('navGrid', '#navGridtabverlimites', { edit: false, add: false, del: false, search: false },
             {
                 editCaption: "Modificar Límite",
                 closeAfterEdit: true,
@@ -149,8 +282,8 @@ var gridvertablimites = {
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
-                    var rowKey = $gridTab.getGridParam("selrow");
-                    var rowData = $gridTab.getRowData(rowKey);
+                    var rowKey = $gridTab2.getGridParam("selrow");
+                    var rowData = $gridTab2.getRowData(rowKey);
                     var thissid = rowData.fecha;
                     $('#mensajefecha').html("<div class='column-full'>Estado con fecha: " + thissid + "</div>");
                 },
@@ -227,7 +360,7 @@ var gridvertablimites = {
                     return { idsolicitudcotizacion: parentRowKey };
                 },
                 beforeShowForm: function (form) {
-                    ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
+                    ret = $gridTab2.getRowData($gridTab2.jqGrid('getGridParam', 'selrow'));
                     $("td.delmsg", form).html("<b>Usted borrará el limite:</b><br><b>" + ret.tipolimite + "</b> ?");
 
                 },
@@ -240,25 +373,15 @@ var gridvertablimites = {
                         return [true, "", ""]
                 }
             });
-        $gridTab.jqGrid('navButtonAdd', '#navGridtabverlimites', {
-            caption: "IMPRIMIR",
-            buttonicon: "",
-            title: "Imprimir",
-            position: "last",
-            onClickButton: function () {
-                var grid = $gridTab
-                var rowKey = grid.getGridParam("selrow");
-                var url = '#';
-                $gridTab.jqGrid('excelExport', { "url": url });
-            }
-        });
+
+
 
 
     }
 }
 
 function subGridsublimite2(subgrid_id, row_id) {//cambiar el nombre a la funcion si se copia la plantilla!!!!
-    console.log('hola');
+    //console.log('hola');
     gridvertabsublimites(subgrid_id, row_id, 'sublimite'); //sublimite es el nombre con el que quedaran los divs en la subgrilla (/verlimite.js)
     //gridOperacion(subgrid_id, row_id, 'veroperacion');
     //gridGarantias(subgrid_id, row_id, 'vergarantias');

@@ -48,7 +48,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		MacIndividual_Id: {
+		Linea_Id: {
 			type: DataTypes.INTEGER,
 			allowNull: true
 		}
