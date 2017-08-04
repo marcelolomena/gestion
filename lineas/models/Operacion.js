@@ -8,11 +8,19 @@ module.exports = function(sequelize, DataTypes) {
 			primaryKey: true,
 			autoIncrement: true
 		},
-		Plazo: {
+		TipoOperacion: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		TipoCredito: {
+		NumeroProducto: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaOtorgamiento: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaProxVenc: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
@@ -20,19 +28,11 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Monto: {
+		MontoInicial: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Tasa: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		Vencimiento: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		Curse: {
+		MontoActual: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
@@ -42,6 +42,14 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		Linea_Id: {
 			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		MontoActualMLinea: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		MontoActualMNac: {
+			type: DataTypes.STRING,
 			allowNull: true
 		},
 		

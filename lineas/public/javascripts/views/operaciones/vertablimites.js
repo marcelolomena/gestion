@@ -58,19 +58,20 @@ var gridvertablimites = {
                 {
                     label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true, align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        dato = '<span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: Green ; font-size: 15px; text-align: center;"></span>';
-                        dato2 = '<span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: Red ; font-size: 15px"></span>';
-                        dato3 = '<span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: Yellow ; font-size: 15px"></span>';
-                        console.log(cellvalue);
+                        dato = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                        //console.log(rowObject.Id);
+                        dato2 = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                        dato3 = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
+                        //console.log(cellvalue);
                         if (cellvalue === 'Rojo') {
-                            return dato2
+                            return dato
                         }
                         else {
                             if (cellvalue === 'Verde') {
-                                return dato
-                            }
-                            else {
                                 return dato3
+                            } 
+                            else {
+                                return dato2
                             }
                         }
                     }
@@ -78,7 +79,7 @@ var gridvertablimites = {
                 {
                     label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        dato = '<span class="glyphicon glyphicon-lock" aria-hidden="true" style= "font-size: 15px"></span>'
+                        dato = '<span role="button" class="glyphicon glyphicon-lock bloqueo" aria-hidden="true" href="#' + rowObject.Id + 'style= "font-size: 15px"></span>'
                         return dato;
                     }
                 },
@@ -133,7 +134,7 @@ var gridvertablimites = {
 
                 $gridTab2.append(`
                     <div class="modal fade" id="myModal" role="dialog">
-                        <div class="modal-dialog modal-sm">
+                        <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -178,6 +179,48 @@ var gridvertablimites = {
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade" id="myModalbloqueo" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Bloqueo de Linea</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label class="radio-inline"><input type="radio" name="optradio">Total</label>
+                                        <label class="radio-inline"><input type="radio" name="optradio">Parcial</label>
+                                    </div>
+                                        
+                                        <div class="form-group">
+                                        <label for="monto">Monto:</label>
+                                        <input type="text" class="form-control" id="monto">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="myModalCondicionL" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Detalle Condicion</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Condiciones del Limite N°: <span id="ellimite3"></span></p>
+                                    <p>Condicion: <span id="Condicion2"></span></p>
+                                    <p>Condiciones: <span id="Condiciones2"></span></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
         `);
 
 
@@ -192,12 +235,84 @@ var gridvertablimites = {
                         async: false,
                         success: function (data) {
                             if (data.rows.length > 0) {
-                                var operaciones = "";
+
+                                var operaciones = `
+                                <div class="table-responsive clear">
+	<table class="table">
+		<thead>
+			<tr>
+				<th width="10%" ng-click="predicate = 'dato1'; reverse=!reverse">
+					Tipo OP
+					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+				</th>
+				<th width="10%" ng-click="predicate = 'dato2'; reverse=!reverse">
+					N° Producto
+					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+				</th>
+				<th width="15%" ng-click="predicate = 'dato3'; reverse=!reverse">
+					F. Otorgamiento
+					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato3', 'ion-ios-arrow-up': predicate == 'dato3'}"></i>
+				</th>
+				<th width="15%" ng-click="predicate = 'dato4'; reverse=!reverse">
+					F. Prox. Venc.
+					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato4', 'ion-ios-arrow-up': predicate == 'dato4'}"></i>
+				</th>
+				<th width="10%" ng-click="predicate = 'dato5'; reverse=!reverse">
+					Moneda
+					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato5', 'ion-ios-arrow-up': predicate == 'dato5'}"></i>
+                </th>
+                <th width="10%" ng-click="predicate = 'dato5'; reverse=!reverse">
+					Monto Inic.
+					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato6', 'ion-ios-arrow-up': predicate == 'dato5'}"></i>
+                </th>
+                <th width="10%" ng-click="predicate = 'dato5'; reverse=!reverse">
+					Monto Act.
+					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato7', 'ion-ios-arrow-up': predicate == 'dato5'}"></i>
+                </th>
+                <th width="10%" ng-click="predicate = 'dato5'; reverse=!reverse">
+					Monto Act. Eq. M/Lin
+					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato8', 'ion-ios-arrow-up': predicate == 'dato5'}"></i>
+                </th>
+                <th width="10%" ng-click="predicate = 'dato5'; reverse=!reverse">
+					Monto Act. Eq. M/N M$
+					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato9', 'ion-ios-arrow-up': predicate == 'dato5'}"></i>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+                                `
                                 for (var i = 0; i < data.rows.length; i++) {
-                                    operaciones += "<p>"
-                                    operaciones += data.rows[i].TipoCredito
-                                    operaciones += "</p>"
+                                    operaciones += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
+                                    operaciones += "<td>"
+                                    operaciones += data.rows[i].TipoOperacion
+                                    operaciones += "</td>"
+                                    operaciones += "<td>"
+                                    operaciones += data.rows[i].NumeroProducto
+                                    operaciones += "</td>"
+                                    operaciones += "<td>"
+                                    operaciones += data.rows[i].FechaOtorgamiento
+                                    operaciones += "</td>"
+                                    operaciones += "<td>"
+                                    operaciones += data.rows[i].FechaProxVenc
+                                    operaciones += "</td>"
+                                    operaciones += "<td>"
+                                    operaciones += data.rows[i].Moneda
+                                    operaciones += "</td>"
+                                    operaciones += "<td>"
+                                    operaciones += data.rows[i].MontoInicial
+                                    operaciones += "</td>"
+                                    operaciones += "<td>"
+                                    operaciones += data.rows[i].MontoActual
+                                    operaciones += "</td>"
+                                    operaciones += "<td>"
+                                    operaciones += data.rows[i].MontoActualMLinea
+                                    operaciones += "</td>"
+                                    operaciones += "<td>"
+                                    operaciones += data.rows[i].MontoActualMNac
+                                    operaciones += "</td>"
+                                    operaciones += "</tr>"
                                 }
+                                operaciones += "</tbody></table></div>"
                                 $("#operaciones").html(operaciones)
                             } else {
                                 alert("No existe cliente en Base de Datos");
@@ -237,6 +352,32 @@ var gridvertablimites = {
                     $("#myModal2").modal();
                 });
 
+                $('.muestracond').click(function () {
+                    var idlimite = $(this).attr('href');
+                    $('#ellimite3').html(idlimite.substring(1))
+                    $.ajax({
+                        type: "GET",
+                        url: '/verdetalleslim/' + idlimite.substring(1),
+                        async: false,
+                        success: function (data) {
+                            if (data.length > 0) {               
+                                $("#Condicion2").html(data[0].Condicion)
+                                $("#Condiciones2").html(data[0].Condiciones)
+                            }
+                            else {
+                                //alert("No existe cliente en Base de Datos");
+                            }
+                        }
+                    });
+                    $("#myModalCondicionL").modal();
+                });
+
+                $('.bloqueo').click(function () {
+                    var idlimite = $(this).attr('href');
+
+                    $("#myModalbloqueo").modal();
+                });
+
                 var thisId = $.jgrid.jqID(this.id);
 
                 var sum1 = $gridTab2.jqGrid('getCol', 'Aprobado', false, 'sum');
@@ -257,7 +398,8 @@ var gridvertablimites = {
                         Aprobado: sum1,
                         Utilizado: sum2,
                         Reservado: sum3,
-                        Disponible: sum4
+                        Disponible: sum4,
+                        Bloqueo_N: 'CANDADO'
                         /*Total : sum5,
                         VarAprobacion : sum6,
                         DeudaBanco: sum7,

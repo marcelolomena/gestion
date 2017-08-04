@@ -18,6 +18,7 @@ $(document).ready(function () {
     tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>"
     tabs += "<div class='tab-pane' id='operacionmac'><div class='container-fluid'><table id='operacionmac_t'></table><div id='lol'></div></div></div>"
     tabs += "</div>"
+
     $("#gridMaster").append(`
             <div class="panel panel-primary">
                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
@@ -25,19 +26,21 @@ $(document).ready(function () {
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-xs-9"><b>Cliente: </b> 75.214.694-9 / Zrismart Consultores Limitada </div>
+                        <div class="col-xs-6 col-sm-3"><b>Cliente: </b> 96.566.940-k / Agencias Universales S.A. </div>
+                        <div class="col-xs-6 col-sm-3"><b>Grupo Id: </b>1/[Nombre Grupo]</div>
+                        
                     </div>
                     <div class="row">    
                         <div class="col-xs-6 col-sm-3"><b>Clasificación:</b> A4</div>
-                        <div class="col-xs-6 col-sm-3"><b>Rating Ind:</b> 7 <span class="glyphicon glyphicon-exclamation-sign" style="color: red;"></span></div>
-                        <div class="col-xs-6 col-sm-3"><b>Rating Grupal:</b> 8 <span class="glyphicon glyphicon-ok-sign" style="color: green;"></div>     
+                        <div class="col-xs-6 col-sm-3"><b>Rating Ind:</b> 6,5 <span class="glyphicon glyphicon-exclamation-sign" style="color: red;"></span></div>
+                        <div class="col-xs-6 col-sm-3"><b>Rating Grupal:</b> 7 <span class="glyphicon glyphicon-ok-sign" style="color: green;"></div>     
                         <div class="col-xs-6 col-sm-3"><b>Vigilancia:</b> No</div>
                     </div>   
                     <div class="row">    
                         <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Ind:</b> 13-07-2017</div> -->
                         <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Grupal:</b> 13-07-2017</div>-->
-                        <div class="col-xs-6 col-sm-3"><b>F. Creación MAC:</b> 09-06-2017</div>
-                        <div class="col-xs-6 col-sm-3"><b>F. Vencimiento MAC:</b> 08-06-2018</div>
+                        <div class="col-xs-6 col-sm-3"><b>F. Creación MAC:</b> 31-07-2017</div>
+                        <div class="col-xs-6 col-sm-3"><b>F. Vencimiento MAC:</b> 30-06-2018</div>
                     </div>       
                 </div>
             </div>`);
@@ -55,7 +58,6 @@ $(document).ready(function () {
         } else if (targ === '#bitacora') {
             gridBitacora.renderGrid(loadurl, targ)
         }
-
         $this.tab('show');
         return false;
     });
