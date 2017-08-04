@@ -4,6 +4,13 @@ $(document).ready(function () {
     var rut = $("#param").text();
     var id = ""
     var nombre = ""
+    var nombregrupo = "No tiene"
+    var banca = ""
+    var oficina = ""
+    var ejecutivo = ""
+    var riesgo = ""
+    var rating = ""
+    var pep = ""
     $.ajax({
         type: "GET",
         url: '/getdatoscliente/' + rut,
@@ -12,16 +19,23 @@ $(document).ready(function () {
             if (data.length > 0) {
                 id = data[0].Id;
                 nombre = data[0].Nombre;
+                banca = data[0].Banca;
+                oficina = data[0].Oficina;
+                ejecutivo = data[0].Ejecutivo;
+                riesgo = data[0].Riesgo;
+                rating = data[0].Rating;
+                pep = data[0].Pep;
+                if(data[0].grupo){
+                    nombregrupo = data[0].grupo
+                }
             } else {
                 alert("Error al traer datos del cliente")
                 window.location.assign("/menu/vista360");
             }
         }
     });
-    var nombregrupo = "No tiene"
-    if(rut =="90222000"){
-        nombregrupo = "MATTE"
-    }
+    
+    
     $(".gcontainer").prepend(`
             <div class="panel panel-primary">
                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
@@ -36,13 +50,13 @@ $(document).ready(function () {
                         <div class="col-xs-4" style="font-size:16px"><b>Grupo: `+ nombregrupo + `</b></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-4" style="font-size:12px"><b>Banca Corporativa / Oficina Moneda / PEP</b></div>
+                        <div class="col-xs-4" style="font-size:12px"><b>`+banca+` / `+oficina+` / `+pep+`</b></div>
                     </div>
                     <div class="row">    
-                        <div class="col-xs-4" style="font-size:12px"><b>Ejecutivo Control: Alvaro Vidal</b></div>
+                        <div class="col-xs-4" style="font-size:12px"><b>Ejecutivo Control: `+ejecutivo+`</b></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-4" style="font-size:12px"><b>Riesgo: A5 / Rating: 7.5</b></div>
+                        <div class="col-xs-4" style="font-size:12px"><b>Riesgo: `+riesgo+` / Rating: `+rating+`</b></div>
                     </div>
                     <hr class="section-separations"></hr>
                     <form id="paso2" onsubmit="return false;">
@@ -54,7 +68,7 @@ $(document).ready(function () {
                                 <option value="2">Prórroga</option> 
                                 <option value="3">Especial</option> 
                                 <option value="4">Complementaria</option> 
-                                <option value="5">Atribuciones Factory</option> 
+                                <option value="5">Atribuciones Factoring</option> 
                                 <option value="6">Atribuciones Leasing</option> 
                             </select>
                             <div id="warning" class="form-group" style="display: none;">

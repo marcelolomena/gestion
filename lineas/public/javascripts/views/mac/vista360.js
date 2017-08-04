@@ -63,20 +63,6 @@ $(document).ready(function () {
 
     });
 
-
-    /*
-    $('#rut').on('change', function () {
-        if (this.value != "") {
-            $('#warning').css("display", "none");
-            $('#paso2').attr("action", "/menu/crearaprobacion/p/" + this.value);
-        } else {
-            $('#warning').css("display", "block");
-            $('#mensaje').html("Ingrese un RUT")
-        }
-    })
-    */
-    //<a href='2' class="btn btn-info" role="button" style="background-color: #0B2161; border-color: #0B2161;"></a>
-
     $(window).bind('resize', function () {
         $("#grid").setGridWidth($(".gcontainer").width(), true);
         $("#pager").setGridWidth($(".gcontainer").width(), true);
