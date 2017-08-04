@@ -1,21 +1,21 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-	return sequelize.define('Grupo', {
+	return sequelize.define('AprobacionLinea', {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 			primaryKey: true
 		},
-		Nombre: {
-			type: DataTypes.STRING,
+		Aprobacion_Id: {
+			type: DataTypes.INTEGER,
 			allowNull: true
 		},
-		Rating: {
-			type: DataTypes.STRING,
+		Linea_Id: {
+			type: DataTypes.INTEGER,
 			allowNull: true
 		}
 	}, {
-		schema: 'scl', timestamps: false, tableName: 'Grupo'
+		schema: 'scl', timestamps: false, tableName: 'AprobacionLinea'
 	});
 };

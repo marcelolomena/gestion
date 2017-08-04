@@ -5,8 +5,7 @@ module.exports = function(sequelize, DataTypes) {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			primaryKey: true,
-			autoIncrement: true
+			primaryKey: true
 		},
 		TipoOperacion: {
 			type: DataTypes.STRING,
@@ -36,14 +35,6 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Sublinea_Id: {
-			type: DataTypes.INTEGER,
-			allowNull: true
-		},
-		Linea_Id: {
-			type: DataTypes.INTEGER,
-			allowNull: true
-		},
 		MontoActualMLinea: {
 			type: DataTypes.STRING,
 			allowNull: true
@@ -52,7 +43,22 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		
+		EstadoOperacion_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		NumeroOperacion: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		DescripcionProducto: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaDesembolso: {
+			type: DataTypes.STRING,
+			allowNull: true
+		}
 	}, {
 		schema: 'scl', timestamps: false, tableName: 'Operacion'
 	});

@@ -1,7 +1,7 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-	return sequelize.define('Grupo', {
+	return sequelize.define('EstadoAprobacion', {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
@@ -10,12 +10,8 @@ module.exports = function(sequelize, DataTypes) {
 		Nombre: {
 			type: DataTypes.STRING,
 			allowNull: true
-		},
-		Rating: {
-			type: DataTypes.STRING,
-			allowNull: true
 		}
 	}, {
-		schema: 'scl', timestamps: false, tableName: 'Grupo'
+		schema: 'scl', timestamps: false, tableName: 'EstadoAprobacion'
 	});
 };

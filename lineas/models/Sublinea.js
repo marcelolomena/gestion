@@ -5,8 +5,7 @@ module.exports = function(sequelize, DataTypes) {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			primaryKey: true,
-			autoIncrement: true
+			primaryKey: true
 		},
 		Numero: {
 			type: DataTypes.STRING,
@@ -45,6 +44,22 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		},
 		Estado: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Plazo: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaVencimiento: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Comentarios: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Condiciones: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},

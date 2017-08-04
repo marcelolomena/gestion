@@ -1,22 +1,45 @@
 /* jshint indent: 1 */
 
 module.exports = function(sequelize, DataTypes) {
-	return sequelize.define('MacGrupal', {
+	return sequelize.define('Aprobacion', {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			primaryKey: true,
-			autoIncrement: true
+			primaryKey: true
 		},
-		FechaPresentacion: {
+		Nombre: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		EjecutivoControl: {
+		Rut: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		FechaVencimiento: {
+		Actividad: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Oficina: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Ejecutivo: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaCreacion: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaVenc: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaVencAnt: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		RatingInd: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
@@ -24,59 +47,55 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
+		Clasificacion: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Vigilancia: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaInfFin: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		PromSaldoVista: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		DeudaSbifDirecta: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		DeudaSbifIndirecta: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Penetracion: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Leasing: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
 		NivelAtribucion: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		SometidoAprobacion: {
-			type: DataTypes.STRING,
+		Empresa_Id: {
+			type: DataTypes.INTEGER,
 			allowNull: true
 		},
-		Plazos: {
-			type: DataTypes.STRING,
+		TipoAprobacion_Id: {
+			type: DataTypes.INTEGER,
 			allowNull: true
 		},
-		AprobadoTotal: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		NombreAprobacion: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		FirmaAprobacion: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		ValorMonedaUf: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		ValorMonedaDolares: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		TotalAprobacionPesos: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		TotalAprobacionUf: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		ObservacionComiteRiesgo: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		PromedioSaldoVistaUlt12M: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		Grupo_Id: {
+		EstadoAprobacion_Id: {
 			type: DataTypes.INTEGER,
 			allowNull: true
 		}
 	}, {
-		schema: 'scl', timestamps: false, tableName: 'MacGrupal'
+		schema: 'scl', timestamps: false, tableName: 'Aprobacion'
 	});
 };
