@@ -12,6 +12,14 @@ var macgrupalController = require('../controllers/macgrupal')
 
 module.exports = function (passport) {
 
+    router.route('/getdatoscliente/:rut') 
+        .get(isAuthenticated, carteraController.getdatoscliente);
+
+    router.route('/getmacporrut/:rut')
+        .get(isAuthenticated, carteraController.getmacporrut);
+
+        
+
     router.route('/grid_cartera')
         .post(isAuthenticated, carteraController.action)
         .get(isAuthenticated, carteraController.list);
@@ -47,8 +55,7 @@ module.exports = function (passport) {
         router.route('/grupodesglose')
             .post(isAuthenticated, grupoController.actiondesglose);
     */
-    router.route('/getdatoscliente/:rut')
-        .get(isAuthenticated, carteraController.getdatoscliente);
+    
 
     router.route('/getdatosclientecongrupo/:id')
         .get(isAuthenticated, carteraController.getdatosclientecongrupo);
@@ -107,8 +114,7 @@ module.exports = function (passport) {
     router.route('/getmacindividual/:id')
         .get(isAuthenticated, carteraController.getmacindividual);
 
-    router.route('/getmacporrut/:rut')
-        .get(isAuthenticated, carteraController.getmacporrut);
+    
 
     router.route('/vertabsublimites/:id')
         .get(isAuthenticated, operacionesController.listtabversublimite);

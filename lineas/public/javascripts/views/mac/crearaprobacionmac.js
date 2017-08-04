@@ -18,13 +18,13 @@ $(document).ready(function () {
                             <div class="col-xs-4" style="font-size:16px"><b>Grupo: <span id="nombregrupo"></span></b></div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-4" style="font-size:12px"><b>Banca Corporativa / Oficina Moneda / PEP</b></div>
+                            <div class="col-xs-4" style="font-size:12px"><b><span id="banca"></span> / <span id="oficina"></span> / <span id="pep"></span></b></div>
                         </div>
                         <div class="row">    
-                            <div class="col-xs-4" style="font-size:12px"><b>Ejecutivo Control: Alvaro Vidal</b></div>
+                            <div class="col-xs-4" style="font-size:12px"><b>Ejecutivo Control: <span id="ejecutivo"></span></b></div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-4" style="font-size:12px"><b>Riesgo: A5 / Rating: 7.5</b></div>
+                            <div class="col-xs-4" style="font-size:12px"><b>Riesgo: <span id="riesgo"></span> / Rating: <span id="rating"></span></b></div>
                         </div>
                         <hr class="section-separations"></hr>
                         <p>Vincule o desvincule las empresas que conforman el grupo segun corresponda</p>
@@ -65,9 +65,21 @@ $(document).ready(function () {
                 rut = data[0].Rut;
                 idgrupo = data[0].Idgrupo;
                 nombregrupo = data[0].Grupo;
+                banca = data[0].Banca;
+                oficina = data[0].Oficina;
+                ejecutivo = data[0].Ejecutivo;
+                riesgo = data[0].Riesgo;
+                rating = data[0].Rating;
+                pep = data[0].Pep;
                 $("#rut").html(rut)
                 $("#nombre").html(nombre)
                 $("#nombregrupo").html(nombregrupo)
+                $("#banca").html(banca)
+                $("#oficina").html(oficina)
+                $("#ejecutivo").html(ejecutivo)
+                $("#riesgo").html(riesgo)
+                $("#rating").html(rating)
+                $("#pep").html(pep)
                 $('#conmacgrupal').css("display", "block");
                 grilladegrupo(idgrupo, nombregrupo);
             } else {
@@ -112,7 +124,7 @@ $(document).ready(function () {
         } else {
             $.ajax({
                 type: "GET",
-                url: '/creargruponuevo/' + id+'/'+nombregrupo,
+                url: '/creargruponuevo/' + id + '/' + nombregrupo,
                 async: false,
                 success: function (data) {
                     if (data.length > 0) {
@@ -158,6 +170,19 @@ $(document).ready(function () {
         var modelGrupo = [
             { label: 'Id', name: 'Id', width: 30, key: true, hidden: true, editable: true },
             {
+                label: ' ', name: 'acomite', width: 20, hidden: false, search: true, editable: true, editrules: { required: true },
+                formatter: function (cellvalue, options, rowObject) {
+                    if (rowObject.Id == id) {
+                        dato = '<input type="checkbox" name="acomite" value="1" checked/> '
+                    }
+                    else {
+                        dato = '<input type="checkbox" name="acomite" value="0" /> '
+                    }
+                    return dato
+                }
+            },
+
+            {
                 label: 'Rut', name: 'Rut', width: 80, hidden: false, search: true, editable: true,
                 editrules: { required: true },
                 editoptions: {
@@ -191,14 +216,40 @@ $(document).ready(function () {
             },
             { label: 'idgrupo', name: 'idgrupo', hidden: true, editable: true },
             { label: 'idrelacion', name: 'idrelacion', hidden: true, editable: true },
-
             { label: 'Nombre', name: 'Nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
             { label: 'Razón Social', name: 'RazonSocial', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'Riesgo', name: 'Riesgo', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'R. Grupal', name: 'ratinggrupal', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'R. Indiv.', name: 'Rating', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'Vig.', name: 'Vigilancia', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'Ejecutivo', name: 'Ejecutivo', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'Banca', name: 'Ejecutivo', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
+            {
+                label: 'Aprobado', name: 'Aprobado', width: 100, hidden: false, search: true, editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    dato = Math.floor((Math.random() * 200000) + 1000);
+                    return dato
+                }
+            },
+            {
+                label: 'Cursado', name: 'Cursado', width: 100, hidden: false, search: true, editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    dato = Math.floor((Math.random() * 20000) + 1000);
+                    return dato
+                }
+            },
+            {
+                label: 'Grupos', name: 'Grupos', width: 50, hidden: false, search: true, editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    dato = 1
+                    return dato
+                }
+            },
 
         ];
 
         $("#grid").jqGrid({
-            url: '/grupoempresa/'+id,
+            url: '/grupoempresa/' + id,
             mtype: "GET",
             datatype: "json",
             page: 1,
@@ -301,13 +352,15 @@ $(document).ready(function () {
 
         $(".gcontainer").append(`
         <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
-            <button id="confirmar" type="submit" class="btn neutro border ladda-button ng-scope" >Continuar</button> 
+            <button id="crearmacindividual" type="submit" class="btn neutro border ladda-button ng-scope" >Crear MAC Individuales</button> 
+            <button id="editargrupo" type="submit" class="btn neutro border ladda-button ng-scope" >Editar Grupo</button> 
+            <button id="generarcompgrupo" type="submit" class="btn neutro border ladda-button ng-scope" >Generar Comportamiento Grupo</button> 
         </div>
         `);
 
         $('#confirmar').click(function () {
             if (confirm("¿Está seguro de continuar con esta configuración de grupo?")) {
-                window.location.assign("/menu/crearaprobacionmac2"+"/p/"+id);
+                window.location.assign("/menu/crearaprobacionmac2" + "/p/" + id);
             }
             else {
                 return false;
