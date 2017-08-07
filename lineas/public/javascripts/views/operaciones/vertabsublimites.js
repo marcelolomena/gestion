@@ -27,7 +27,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/vertabsublimites/" + parentRowKey;
+    var childGridURL = "/sublimite/" + parentRowKey;
 
     var modelSublinea = [
         {
@@ -62,19 +62,19 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         {
             label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true, align: 'center',
             formatter: function (cellvalue, options, rowObject) {
-                dato = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
-                dato2 = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
-                dato3 = '<span><img src="../../../../images/greencircle.png" width="25px"/></span>';
+                rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                verde = '<span><img src="../../../../images/greencircle.png" width="25px"/></span>';
                 console.log(cellvalue);
                 if (cellvalue === 'Rojo') {
-                    return dato2
+                    return rojo
                 }
                 else {
                     if (cellvalue === 'Verde') {
-                        return dato
+                        return verde
                     }
                     else {
-                        return dato3
+                        return amarillo
                     }
                 }
             }
@@ -212,7 +212,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                     url: '/veroperacionesmodal2/' + idlimite.substring(1),
                     async: false,
                     success: function (data) {
-                        if (data.rows.length > 0) {
+                        if (data.length > 0) {
                                  
                                 var operaciones = `
                                 <div class="table-responsive clear">
@@ -259,34 +259,34 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
 		</thead>
 		<tbody>
                                 `
-                                for (var i = 0; i < data.rows.length; i++) {
+                                for (var i = 0; i < data.length; i++) {
                                     operaciones += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
                                     operaciones += "<td>"
-                                    operaciones += data.rows[i].TipoOperacion
+                                    operaciones += data[i].TipoOperacion
                                     operaciones += "</td>"
                                     operaciones += "<td>"
-                                    operaciones += data.rows[i].NumeroProducto
+                                    operaciones += data[i].NumeroProducto
                                     operaciones += "</td>"
                                     operaciones += "<td>"
-                                    operaciones += data.rows[i].FechaOtorgamiento
+                                    operaciones += data[i].FechaOtorgamiento
                                     operaciones += "</td>"
                                     operaciones += "<td>"
-                                    operaciones += data.rows[i].FechaProxVenc
+                                    operaciones += data[i].FechaProxVenc
                                     operaciones += "</td>"
                                     operaciones += "<td>"
-                                    operaciones += data.rows[i].Moneda
+                                    operaciones += data[i].Moneda
                                     operaciones += "</td>"
                                     operaciones += "<td>"
-                                    operaciones += data.rows[i].MontoInicial
+                                    operaciones += data[i].MontoInicial
                                     operaciones += "</td>"
                                     operaciones += "<td>"
-                                    operaciones += data.rows[i].MontoActual
+                                    operaciones += data[i].MontoActual
                                     operaciones += "</td>"
                                     operaciones += "<td>"
-                                    operaciones += data.rows[i].MontoActualMLinea
+                                    operaciones += data[i].MontoActualMLinea
                                     operaciones += "</td>"
                                     operaciones += "<td>"
-                                    operaciones += data.rows[i].MontoActualMNac
+                                    operaciones += data[i].MontoActualMNac
                                     operaciones += "</td>"
                                     operaciones += "</tr>"
                                 }

@@ -44,6 +44,7 @@ $(document).ready(function () {
 
     $('#limites').click(function () {
         var rut = $("#rut").val();
+        /*
         $.ajax({
             type: "GET",
             url: '/getmacporrut/' + rut,
@@ -60,6 +61,11 @@ $(document).ready(function () {
                 }
             }
         });
+        */
+        $('#cascara2').css("display", "block");
+        //$('#mac').attr("href", "/menu/crearaprobacion/p/" + rut)
+        $('#limites').attr("href", "/menu/operaciones/p/" + rut)
+        //window.location.assign ("/menu/crearaprobacion/p/" + rut);
 
     });
 

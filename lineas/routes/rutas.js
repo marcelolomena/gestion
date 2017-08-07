@@ -15,47 +15,20 @@ module.exports = function (passport) {
     router.route('/getdatoscliente/:rut') 
         .get(isAuthenticated, carteraController.getdatoscliente);
 
+    router.route('/getdatosclientelimite/:rut') 
+        .get(isAuthenticated, operacionesController.getdatosclientelimite);
+
     router.route('/getmacporrut/:rut')
         .get(isAuthenticated, carteraController.getmacporrut);
 
-        
-
-    router.route('/grid_cartera')
-        .post(isAuthenticated, carteraController.action)
-        .get(isAuthenticated, carteraController.list);
-
     router.route('/limite/:id')
-        .get(isAuthenticated, carteraController.listlimite);
+        .get(isAuthenticated, operacionesController.listlimite);
 
     router.route('/sublimite/:id')
-        .get(isAuthenticated, carteraController.listsublimite);
-
-    router.route('/garantiareallimite/:id')
-        .get(isAuthenticated, carteraController.listgarantiareallimite);
+        .get(isAuthenticated, operacionesController.listsublimite);
 
     router.route('/vermac/:id')
         .get(isAuthenticated, carteraController.listlimite);
-
-    router.route('/limite')
-        .post(isAuthenticated, carteraController.actionlimite);
-
-    router.route('/garantia/:id')
-        .get(isAuthenticated, carteraController.listgarantia);
-
-    router.route('/garantia')
-        .post(isAuthenticated, carteraController.actiongarantia);
-    /*
-        router.route('/grupo')
-            .post(isAuthenticated, grupoController.action)
-            .get(isAuthenticated, grupoController.list);
-    
-        router.route('/grupodesglose/:id')
-            .get(isAuthenticated, grupoController.listdesglose);
-    
-        router.route('/grupodesglose')
-            .post(isAuthenticated, grupoController.actiondesglose);
-    */
-    
 
     router.route('/getdatosclientecongrupo/:id')
         .get(isAuthenticated, carteraController.getdatosclientecongrupo);
@@ -74,23 +47,11 @@ module.exports = function (passport) {
     router.route('/macs/:id')
         .get(isAuthenticated, carteraController.listmacs);
 
-    router.route('/limite/:id')
-        .get(isAuthenticated, operacionesController.listlimite);
-
-    router.route('/sublimite/:id')
-        .get(isAuthenticated, operacionesController.listsublimite);
-
-    router.route('/operaciones/:id')
-        .get(isAuthenticated, operacionesController.listoperacion);
-
     router.route('/grupoempresa/:id')
         .get(isAuthenticated, grupoController.listgrupoempresa);
 
     router.route('/grupoempresa')
         .post(isAuthenticated, grupoController.actiongrupoempresa)
-
-    router.route('/operacionmac/:id')
-        .get(isAuthenticated, operacionesController.listoperacionmac);
 
     router.route('/creargruponuevo/:id/:nombre')
         .get(isAuthenticated, carteraController.creargruponuevo);
@@ -101,32 +62,21 @@ module.exports = function (passport) {
     router.route('/getdatosmacgrupal/:id')
         .get(isAuthenticated, carteraController.getdatosmacgrupal);
 
-    
-    router.route('/verlimite/:id')
-        .get(isAuthenticated, operacionesController.listverlmite);
-
-    router.route('/vertablimites/:id')
-        .get(isAuthenticated, operacionesController.listtabverlimite);
-
     router.route('/getmacindividuales/:id')
         .get(isAuthenticated, carteraController.getmacindividuales);
 
     router.route('/getmacindividual/:id')
         .get(isAuthenticated, carteraController.getmacindividual);
 
-    
-
-    router.route('/vertabsublimites/:id')
-        .get(isAuthenticated, operacionesController.listtabversublimite);
 
     router.route('/veroperacionesmodal/:id')
-        .get(isAuthenticated, operacionesController.listveroperacion);
+        .get(isAuthenticated, operacionesController.listveroperacionlimite);
     
     router.route('/verdetalleslim/:id')
         .get(isAuthenticated, operacionesController.listverdetallelim);
     
     router.route('/veroperacionesmodal2/:id')
-        .get(isAuthenticated, operacionesController.listveroperacion2);
+        .get(isAuthenticated, operacionesController.listveroperacionsublimite);
     
     router.route('/verdetalleslim2/:id')
         .get(isAuthenticated, operacionesController.listverdetallelim2);

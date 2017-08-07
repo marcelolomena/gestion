@@ -1,23 +1,60 @@
 $(document).ready(function () {
-    var idmac = $("#param").text();
+    var rut = $("#param").text();
 
     var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-    tabs += "<li><a href='/vertablimites/"+idmac+"' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Limites</a></li>"
+    tabs += "<li><a href='/limite/" + rut + "' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Limites</a></li>"
     tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Operaciones</a></li>"
     tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Reservas</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Asignar</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Excepciones</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Reportes</a></li>"
-    tabs += "<li><a href='/operacionmac/"+idmac+"' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Mac</a></li>"
+    tabs += "<li><a href='/operacionmac/" + rut + "' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Mac</a></li>"
     tabs += "</ul>"
 
     tabs += "<div class='tab-content'>"
-    
+
     tabs += "<div class='tab-pane active' id='vertablimites'><table id='vertablimites_t'></table><div id='navGridtabverlimites'></div></div>"
     tabs += "<div class='tab-pane' id='reservar'><table id='reservar_t'></table><div id='navGridRes'></div></div>"
     tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>"
     tabs += "<div class='tab-pane' id='operacionmac'><div class='container-fluid'><table id='operacionmac_t'></table><div id='lol'></div></div></div>"
     tabs += "</div>"
+
+    var nombre = ""
+    var idgrupo = ""
+    var nombregrupo = "No tiene"
+    var banca = ""
+    var oficina = ""
+    var ejecutivo = ""
+    var riesgo = ""
+    var rating = ""
+    var ratinggrupal = ""
+    var pep = ""
+    var vigilancia = ""
+    $.ajax({
+        type: "GET",
+        url: '/getdatosclientelimite/' + rut,
+        async: false,
+        success: function (data) {
+            if (data.length > 0) {
+                id = data[0].Id;
+                nombre = data[0].Nombre;
+                banca = data[0].Banca;
+                oficina = data[0].Oficina;
+                ejecutivo = data[0].Ejecutivo;
+                riesgo = data[0].Riesgo;
+                rating = data[0].Rating;
+                vigilancia = data[0].Vigilancia;
+                pep = data[0].Pep;
+                if (data[0].nombregrupo) {
+                    idgrupo = data[0].idgrupo
+                    nombregrupo = data[0].nombregrupo
+                    ratinggrupal = data[0].ratinggrupal
+                }
+            } else {
+                alert("Error al traer datos del cliente")
+            }
+        }
+    });
 
     $("#gridMaster").append(`
             <div class="panel panel-primary">
@@ -26,21 +63,21 @@ $(document).ready(function () {
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-xs-6 col-sm-3"><b>Cliente: </b> 96.566.940-k / Agencias Universales S.A. </div>
-                        <div class="col-xs-6 col-sm-3"><b>Grupo Id: </b>1/[Nombre Grupo]</div>
+                        <div class="col-xs-6 col-sm-6"><b>Cliente: </b>`+rut+` / `+nombre+` </div>
+                        <div class="col-xs-6 col-sm-3"><b>Grupo Id: </b>`+idgrupo+` / `+nombregrupo+`</div>
                         
                     </div>
                     <div class="row">    
-                        <div class="col-xs-6 col-sm-3"><b>Clasificación:</b> A4</div>
-                        <div class="col-xs-6 col-sm-3"><b>Rating Ind:</b> 6,5 <span class="glyphicon glyphicon-exclamation-sign" style="color: red;"></span></div>
-                        <div class="col-xs-6 col-sm-3"><b>Rating Grupal:</b> 7 <span class="glyphicon glyphicon-ok-sign" style="color: green;"></div>     
-                        <div class="col-xs-6 col-sm-3"><b>Vigilancia:</b> No</div>
+                        <div class="col-xs-6 col-sm-3"><b>Clasificación:</b> `+riesgo+`</div>
+                        <div class="col-xs-6 col-sm-3"><b>Rating Ind:</b> `+rating+` <span class="glyphicon glyphicon-exclamation-sign" style="color: red;"></span></div>
+                        <div class="col-xs-6 col-sm-3"><b>Rating Grupal:</b> `+ratinggrupal+` <span class="glyphicon glyphicon-ok-sign" style="color: green;"></div>     
+                        <div class="col-xs-6 col-sm-3"><b>Vigilancia:</b> `+vigilancia+`</div>
                     </div>   
                     <div class="row">    
                         <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Ind:</b> 13-07-2017</div> -->
                         <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Grupal:</b> 13-07-2017</div>-->
-                        <div class="col-xs-6 col-sm-3"><b>F. Creación MAC:</b> 31-07-2017</div>
-                        <div class="col-xs-6 col-sm-3"><b>F. Vencimiento MAC:</b> 30-06-2018</div>
+                        <div class="col-xs-6 col-sm-3"><b>F. Creación MAC:</b> 03-07-2017</div>
+                        <div class="col-xs-6 col-sm-3"><b>F. Vencimiento MAC:</b> 26-07-2018</div>
                     </div>       
                 </div>
             </div>`);
