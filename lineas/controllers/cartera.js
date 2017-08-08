@@ -527,7 +527,7 @@ exports.getdatoscliente = function (req, res) {
         'select a.*, c.Nombre as grupo from scl.Empresa a '+
         'left outer join scl.GrupoEmpresa b on b.Empresa_Id=a.Id '+
         'left outer join scl.Grupo c on c.Id=b.Grupo_Id ' +
-        'where a.rut =  ' + req.params.rut,
+        'where a.Rut =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)

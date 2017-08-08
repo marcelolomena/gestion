@@ -15,7 +15,7 @@ exports.listlimite = function (req, res) {
     var condition = "";
 
     if (!sidx) {
-        sidx = "a.id";
+        sidx = "a.Id";
         sord = "asc";
     }
 
@@ -25,9 +25,8 @@ exports.listlimite = function (req, res) {
     var sqlcount = `
   select count (*) from scl.Linea a  
 join scl.Sublinea b on b.Linea_Id = a.Id
-join scl.EmpresaSublinea c on c.Sublinea_Id=b.Id
-join scl.Empresa d on d.Id = c.Empresa_Id
-where d.Rut=`+ req.params.id;
+join scl.Empresa c on c.Id = b.Beneficiario_Id
+where c.Rut=`+ req.params.id;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
@@ -37,9 +36,8 @@ where d.Rut=`+ req.params.id;
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         `as resultNum, a.* from scl.Linea a  
         join scl.Sublinea b on b.Linea_Id = a.Id
-        join scl.EmpresaSublinea c on c.Sublinea_Id=b.Id
-        join scl.Empresa d on d.Id = c.Empresa_Id
-        where d.Rut=`+ req.params.id;
+        join scl.Empresa c on c.Id = b.Beneficiario_Id
+        where c.Rut=`+ req.params.id;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -59,7 +57,7 @@ exports.getdatosclientelimite = function (req, res) {
         'select a.*, c.Nombre as nombregrupo, c.Id as idgrupo, c.Rating as ratinggrupal from scl.Empresa a '+
         'left outer join scl.GrupoEmpresa b on b.Empresa_Id=a.Id '+
         'left outer join scl.Grupo c on c.Id=b.Grupo_Id ' +
-        'where a.rut =  ' + req.params.rut,
+        'where a.Rut =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -161,7 +159,7 @@ exports.listoperacionmac = function (req, res) {
     var sord = req.query.sord;
 
     var additional = [{
-        "field": "id",
+        "field": "Id",
         "op": "eq",
         "data": req.params.id
     }];

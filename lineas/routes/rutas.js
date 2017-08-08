@@ -83,6 +83,9 @@ module.exports = function (passport) {
 
     router.route('/getultimomac/:id')
         .get(isAuthenticated, operacionesController.listultimomac);
-    
+   /* 
+    router.route('/getsublimitesoperaciones/:id')
+        .get(isAuthenticated, operacionesController.listsublimop);
+        */
         return router;
 }

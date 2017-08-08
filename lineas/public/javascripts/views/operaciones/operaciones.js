@@ -64,7 +64,7 @@ $(document).ready(function () {
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-6 col-sm-6"><b>Cliente: </b>`+rut+` / `+nombre+` </div>
-                        <div class="col-xs-6 col-sm-3"><b>Grupo Id: </b>`+idgrupo+` / `+nombregrupo+`</div>
+                        <div class="col-xs-6 col-sm-6"><b>Grupo Id: </b>`+idgrupo+` / `+nombregrupo+`</div>
                         
                     </div>
                     <div class="row">    

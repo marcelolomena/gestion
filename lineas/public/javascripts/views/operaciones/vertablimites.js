@@ -141,7 +141,7 @@ var gridvertablimites = {
                                     <h4 class="modal-title">Operaciones</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Aqui muestro las operaciones del limite: <span id="ellimite"></span></p>
+                                    <p>Limite: <span id="ellimite"></span></p>
                                     <div id="operaciones"></div>
                                 </div>
                                 <div class="modal-footer">
@@ -151,19 +151,45 @@ var gridvertablimites = {
                         </div>
                     </div>
                     <div class="modal fade" id="myModal2" role="dialog">
-                        <div class="modal-dialog modal-sm">
+                        <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Detalle Limite</h4>
+                                    <h4 class="modal-title">Detalle</h4>
                                 </div>
-                                <div class="modal-body">
-                                    <p>Detalles del Limite N°: <span id="ellimite2"></span></p>
-                                    <p>Plazo: <span id="Plazo"></span></p>
-                                    <p>FechaVencimiento: <span id="FechaVencimiento"></span></p>
-                                    <p>Comentarios: <span id="Comentarios"></span></p>
-                                    <p>Condiciones: <span id="Condiciones"></span></p>
 
+                                <div class="modal-body">
+                                        
+                                        <div class="panel panel-primary">                             
+                                        <div class="panel-heading"><p>Resumen Limite</p></div>
+                                        
+                                        <div class="panel-body">
+                                            <p>N°: <span id="Numero"></span></p>
+                                            <p>Riesgo: <span id="Riesgo"></span></p>
+                                            <p>Descripcion: <span id="Descripcion"></span></p>
+                                            <p>Moneda: <span id="Moneda"></span></p>
+                                            <p>Aprobado: <span id="Aprobado"></span></p>
+                                            <p>Utilizado: <span id="Utilizado"></span></p>
+                                            <p>Reservado: <span id="Reservado"></span></p>
+                                            <p>Disponible: <span id="Disponible"></span></p>
+                                            <p>Plazo: <span id="Plazo"></span></p>
+                                            <p>FechaVencimiento: <span id="FechaVencimiento"></span></p>
+                                            <p>Comentarios: <span id="Comentarios"></span></p>
+                                            <p>Condiciones: <span id="Condiciones"></span></p>
+                                        </div>
+
+                                        <div class="panel panel-primary">                             
+                                        <div class="panel-heading"><p>Limite N°: <span id="ellimite2"></span></p></div>
+                                        
+                                        <div class="panel-body">
+                                            <p>Plazo: <span id="Plazo"></span></p>
+                                            <p>FechaVencimiento: <span id="FechaVencimiento"></span></p>
+                                            <p>Comentarios: <span id="Comentarios"></span></p>
+                                            <p>Condiciones: <span id="Condiciones"></span></p>
+                                        </div>      
+                                </div>
+
+                                                   
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -323,6 +349,7 @@ var gridvertablimites = {
                         async: false,
                         success: function (data) {
                             if (data.length > 0) {
+                                $("#Numero").html(dato[0].Numero)
                                 $("#Riesgo").html(data[0].Riesgo)
                                 $("#Descripcion").html(data[0].Descripcion)
                                 $("#Moneda").html(data[0].Moneda)
