@@ -2,7 +2,7 @@
     "development": {
         "username": "biometria",
         "password": "biometria123",
-        "database": "art_live",
+        "database": "controldelimites",
         "host": "200.14.166.182",
         "dialect": "mssql",
         "port": "1433",

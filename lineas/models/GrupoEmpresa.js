@@ -15,40 +15,8 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.INTEGER,
 			allowNull: true
 		},
-		AComite: {
+		MacGrupo_Id: {
 			type: DataTypes.INTEGER,
-			allowNull: true
-		},
-		FechaCreacion: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		FechaPresentacion: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		Comentario: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		PromSaldoVista: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		FechaVencimiento: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		RatingGrupo: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		NivelAtribucion: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		TotalSometidoAprobacion: {
-			type: DataTypes.STRING,
 			allowNull: true
 		}
 	}, {
