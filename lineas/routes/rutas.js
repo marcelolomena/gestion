@@ -80,6 +80,9 @@ module.exports = function (passport) {
     
     router.route('/verdetalleslim2/:id')
         .get(isAuthenticated, operacionesController.listverdetallelim2);
+
+    router.route('/getultimomac/:id')
+        .get(isAuthenticated, operacionesController.listultimomac);
     
         return router;
 }

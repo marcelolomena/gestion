@@ -306,3 +306,17 @@ exports.listverdetallelim2 = function (req, res) {
         res.json({ error: 1 });
     });
 };
+
+exports.listultimomac = function (req, res) {
+    sequelize.query(
+        'select * from scl.Aprobacion a  ' +
+        'where Rut =  ' + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};

@@ -155,14 +155,6 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                                 </div>
                                 <div class="modal-body">
                                     <p>Detalles del Sub-Limite N°: <span id="ellimite2"></span></p>
-                                    <p>Riesgo: <span id="Riesgo"></span></p>
-                                    <p>Descripción: <span id="Descripcion"></span></p>
-                                    <p>Moneda: <span id="Moneda"></span></p>
-                                    <p>Aprobado: <span id="Aprobado"></span></p>
-                                    <p>Utilizado: <span id="Utilizado"></span></p>
-                                    <p>Reservado: <span id="Reservado"></span></p>
-                                    <p>Disponible: <span id="Disponible"></span></p>
-                                    <p>Condicion: <span id="Condicion"></span></p>
                                     <p>Plazo: <span id="Plazo"></span></p>
                                     <p>FechaVencimiento: <span id="FechaVencimiento"></span></p>
                                     <p>Comentarios: <span id="Comentarios"></span></p>
