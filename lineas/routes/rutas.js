@@ -86,6 +86,13 @@ module.exports = function (passport) {
    
     router.route('/getsublimitesoperaciones/:id')
         .get(isAuthenticated, operacionesController.listsublimop);
+
+    router.route('/tipooperacion/:id')
+        .get(isAuthenticated, operacionesController.listtipooperaciones);
+
+    router.route('/getoperaciones2/:id/:rut')
+        .get(isAuthenticated, operacionesController.listoperaciones2);
+
         
         return router;
 }

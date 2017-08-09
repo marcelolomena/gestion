@@ -38,23 +38,24 @@ var gridvertablimites = {
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
                 { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true,align: 'right' },
-                { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
-                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
+                { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
+                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                 {
-                    label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true },
+                    label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true,align: 'left', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
                         var idlimite = rowObject.Id;
-                        var dato = '<a class="muestraop" href="#' + idlimite + '">' + cellvalue + '</a>';
+                        var dato = cellvalue;
+                        //var dato = '<a class="muestraop" href="#' + idlimite + '">' + cellvalue + '</a>';
                         return dato;
                     }
                 },
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
-                { label: 'Aprobado', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Utilizado', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Reservado', name: 'Reservado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
+                { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Disponible (Miles)', name: 'Disponible', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 {
                     label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true,align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
@@ -165,21 +166,28 @@ var gridvertablimites = {
                                         
                                         <div class="panel-body">
                                             <div class="table-responsive clear">
+
+
                                                 <table class="table">    
                                                 <thead>
-                                                <tr>
-                                                    <p>Riesgo: <span id="Riesgo"></span></p>
-                                                    <p>Descripcion: <span id="Descripcion"></span></p>
-                                                    <p>Moneda: <span id="Moneda"></span></p>
-                                                    <p>Aprobado: <span id="Aprobado"></span></p>
-                                                    <p>Utilizado: <span id="Utilizado"></span></p>
-                                                    <p>Reservado: <span id="Reservado"></span></p>
-                                                    <p>Disponible: <span id="Disponible"></span></p>
-                                                    <p>Plazo: <span id="Plazo"></span></p>
-                                                    <p>FechaVencimiento: <span id="FechaVencimiento"></span></p>
-                                                    <p>Comentarios: <span id="Comentarios"></span></p>
-                                                    <p>Condiciones: <span id="Condiciones"></span></p>
-                                                </th>
+                                                    <tr>
+                                                            <p>Riesgo: <span id="Riesgo"></span></p>
+                                                            <p>Descripcion: <span id="Descripcion"></span></p>
+                                                            <p>Moneda: <span id="Moneda"></span></p>
+                                                            <p>Aprobado: <span id="Aprobado"></span></p>
+                                                            <p>Utilizado: <span id="Utilizado"></span></p>
+                                                            <p>Reservado: <span id="Reservado"></span></p>
+                                                            <p>Disponible: <span id="Disponible"></span></p>
+                                                            <p>Plazo: <span id="Plazo"></span></p>
+                                                            <p>FechaVencimiento: <span id="FechaVencimiento"></span></p>
+                                                            <p>Comentarios: <span id="Comentarios"></span></p>
+                                                            <p>Condiciones: <span id="Condiciones"></span></p>
+                                               	     </tr>
+		                                        </thead>
+		                                        <tbody>
+                                                </tbody>
+                                                </table>
+
                                             </div>
                                         </div>
                                         <div class="panel panel-primary">                             
@@ -417,7 +425,7 @@ var gridvertablimites = {
 
                 $gridTab2.jqGrid('footerData', 'set',
                     {
-                        Moneda: 'Total (MM$) :',
+                        Moneda: 'Total :',
                         Aprobado: sum1,
                         Utilizado: sum2,
                         Reservado: sum3,
@@ -435,6 +443,16 @@ var gridvertablimites = {
 
 
         });
+        $gridTab2.jqGrid ('setLabel', 'Numero', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Riesgo', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Descripcion', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Moneda', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Aprobado', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Utilizado', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Disponible', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Condicion', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Bloqueo_N', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Detalle_N', '', {'text-align':'center'});
 
         $gridTab2.jqGrid('navGrid', '#navGridtabverlimites', { edit: false, add: false, del: false, search: false },
             {

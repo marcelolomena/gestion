@@ -333,3 +333,41 @@ exports.listsublimop = function (req, res) {
         res.json({ error: 1 });
     });
 };
+
+exports.listtipooperaciones = function (req, res) {
+    sequelize.query(
+         `select distinct a.Id, f.Rut, a.Nombre from scl.TipoOperacion a
+join scl.Operacion b on a.Codigo = b.TipoOperacion
+join scl.SublineaOperacion c on c.Operacion_Id=b.Id
+join scl.Sublinea d on d.Id = c.Sublinea_Id
+join scl.EmpresaSublinea e on e.Sublinea_Id=d.Id
+join scl.Empresa f on f.Id=e.Empresa_Id
+where f.Rut=`+req.params.id, 
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.listoperaciones2 = function (req, res) {
+    sequelize.query(
+         `select a.*, c.Numero from scl.Operacion a 
+join scl.SublineaOperacion b on b.Operacion_Id=a.Id
+join scl.Sublinea c on c.Id=b.Sublinea_Id
+join scl.EmpresaSublinea d on d.Sublinea_Id=c.Id
+join scl.Empresa e on e.Id=d.Empresa_Id
+join scl.TipoOperacion f on f.Codigo=a.TipoOperacion
+where e.Rut=`+req.params.rut+` and f.Id=`+req.params.id, 
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};

@@ -34,7 +34,8 @@ function gridsublimiteoperaciones(parentRowID, parentRowKey, suffix) {
             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
             editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
         },
-        { label: 'Tipo Operacion', name: 'TipoOperacion', hidden: true, editable: true,align: 'right' },
+        
+        { label: 'Tipo Operacion', name: 'TipoOperacion', width: 8, hidden: false, editable: true,align: 'right' },
         { label: 'Nro Producto', name: 'NumeroProducto', width: 8, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
         { label: 'Fecha Otorgamiento', name: 'FechaOtorgamiento', width: 10, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
         //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
@@ -47,7 +48,7 @@ function gridsublimiteoperaciones(parentRowID, parentRowKey, suffix) {
         { label: 'Monto Actual', name: 'MontoActual', width: 10, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Monto Actual Equiv.M /Linea', name: 'MontoActualMLinea', width: 15, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         {
-            label: 'Monto Actual Equiv. M/N M$', name: 'Condicion', width: 15, hidden: false, search: true, editable: true, align: 'center',
+            label: 'Monto Actual Equiv. M/N M$', name: 'MontoActualMNac', width: 15, hidden: false, search: true, editable: true, align: 'right',formatter: 'number', formatoptions: { decimalPlaces: 0 },
         },
     ];
 

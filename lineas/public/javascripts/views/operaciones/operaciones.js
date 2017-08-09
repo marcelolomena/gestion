@@ -3,18 +3,19 @@ $(document).ready(function () {
 
     var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
     tabs += "<li><a href='/limite/" + rut + "' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Limites</a></li>"
-    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Operaciones</a></li>"
+    tabs += "<li><a href='/tipooperacion/"+rut+"' data-target='#operacion' id='operacion_tab' data-toggle='tab'>Operaciones</a></li>"
     tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Reservas</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Asignar</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Excepciones</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Reportes</a></li>"
-    tabs += "<li><a href='/operacionmac/" + rut + "' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Mac</a></li>"
+    tabs += "<li><a href='/operacionmac/" + rut + "' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>MAC</a></li>"
     tabs += "</ul>"
 
     tabs += "<div class='tab-content'>"
 
     tabs += "<div class='tab-pane active' id='vertablimites'><table id='vertablimites_t'></table><div id='navGridtabverlimites'></div></div>"
-    tabs += "<div class='tab-pane' id='reservar'><table id='reservar_t'></table><div id='navGridRes'></div></div>"
+    tabs += "<div class='tab-pane' id='operacion'><table id='operacion_t'></table><div id='navGridveroperaciones'></div></div>"
+    tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>"
     tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>"
     tabs += "<div class='tab-pane' id='operacionmac'><div class='container-fluid'><table id='operacionmac_t'></table><div id='lol'></div></div></div>"
     tabs += "</div>"
@@ -92,7 +93,7 @@ $(document).ready(function () {
             gridoperacionmac.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
         } else if (targ === '#vertablimites') { // target del <li>
             gridvertablimites.renderGrid(loadurl, targ)
-        } else if (targ === '#bitacora') {
+        } else if (targ === '#operacion') {
             gridBitacora.renderGrid(loadurl, targ)
         }
         $this.tab('show');
@@ -107,8 +108,8 @@ $(document).ready(function () {
             gridoperacionmac.renderGrid(loadurl, targ)
         } else if (targ === '#vertablimites') {
             gridvertablimites.renderGrid(loadurl, targ)
-        } else if (targ === '#bitacora') {
-            gridBitacora.renderGrid(loadurl, targ)
+        } else if (targ === '#operacion') {
+            gridvertaboperaciones.renderGrid(loadurl, targ)
         }
 
         $this.tab('show');

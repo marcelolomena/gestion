@@ -37,15 +37,16 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
 
         },
         { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
-        { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true } },
-        { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true } },
+        { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+        { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
         //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
         {
-            label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
+            label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'left', editrules: { required: true },
             formatter: function (cellvalue, options, rowObject) {
                 var idlimite = rowObject.Id;
                 if (cellvalue != null) {
-                    var dato = '<a class="muestraop2" href="#' + idlimite + '">' + cellvalue + '</a>';
+                    //var dato = '<a class="muestraop2" href="#' + idlimite + '">' + cellvalue + '</a>';
+                    var dato = cellvalue
                 }
                 else {
                     var dato = "no existe sub limite";
@@ -54,7 +55,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
             }
         },
         //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true } },
+        { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
         { label: 'Aprobado', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Utilizado', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Reservado', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
