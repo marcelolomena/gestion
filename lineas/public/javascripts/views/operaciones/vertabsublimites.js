@@ -36,12 +36,12 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
 
 
         },
-        { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true },
-        { label: 'N°', name: 'Numero', width: 15, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
+        { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true } },
+        { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true } },
         //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
         {
-            label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, editrules: { required: true },
+            label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
             formatter: function (cellvalue, options, rowObject) {
                 var idlimite = rowObject.Id;
                 if (cellvalue != null) {
@@ -54,13 +54,13 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
             }
         },
         //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Aprobado', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-        { label: 'Utilizado', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-        { label: 'Reservado', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-        { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+        { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true } },
+        { label: 'Aprobado', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+        { label: 'Utilizado', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+        { label: 'Reservado', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+        { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         {
-            label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true, align: 'center',
+            label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
             formatter: function (cellvalue, options, rowObject) {
                 rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
                 amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
@@ -80,14 +80,14 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
+            label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
             formatter: function (cellvalue, options, rowObject) {
-            dato = '<span role="button" class="glyphicon glyphicon-lock bloqueo2" aria-hidden="true" href="#' + rowObject.Id + 'style= "font-size: 15px"></span>'
-            return dato;
+                dato = '<span role="button" class="glyphicon glyphicon-lock bloqueo2" aria-hidden="true" href="#' + rowObject.Id + 'style= "font-size: 15px"></span>'
+                return dato;
             }
         },
         {
-            label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
+            label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '<span role="button" class="glyphicon glyphicon-th-list muestradet2" href="#' + rowObject.Id + '"></span>';
                 //dato = `<span role="button" class="glyphicon glyphicon-th-list" aria-hidden="true onclick="yourFunction()"></span>`
@@ -106,9 +106,9 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         rowNum: 100,
         datatype: "json",
         //caption: 'Resumen Sub-Limites',
-        //width: null,
+        width: 1348,
         //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
+        //autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelSublinea,
@@ -117,17 +117,22 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         regional: 'es',
         height: 'auto',
         //pager: "#" + childGridPagerID,
-        
+
         subGrid: true,
         subGridRowExpanded: showsublimiteoperaciones,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         },
+        ondblClickRow: function (rowid) {
+            $(this).jqGrid("toggleSubGridRow", rowid);
+        },
         
 
         editurl: '/limite/action3',
         loadComplete: function () {
+            $("#" + childGridID).css("margin-left", "-6px");
+            $("#" + childGridID).jqGrid("hideCol", "subgrid");
             $("#" + childGridID).append(`
                     <div class="modal fade" id="myModal3" role="dialog">
                         <div class="modal-dialog modal-lg">
@@ -203,7 +208,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                     async: false,
                     success: function (data) {
                         if (data.length > 0) {
-                                var operaciones = `
+                            var operaciones = `
                                 <div class="table-responsive clear">
 	<table class="table">
 		<thead>
@@ -248,43 +253,43 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
 		</thead>
 		<tbody>
                                 `
-                                for (var i = 0; i < data.length; i++) {
-                                    operaciones += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
-                                    operaciones += "<td>"
-                                    operaciones += data[i].TipoOperacion
-                                    operaciones += "</td>"
-                                    operaciones += "<td>"
-                                    operaciones += data[i].NumeroProducto
-                                    operaciones += "</td>"
-                                    operaciones += "<td>"
-                                    operaciones += data[i].FechaOtorgamiento
-                                    operaciones += "</td>"
-                                    operaciones += "<td>"
-                                    operaciones += data[i].FechaProxVenc
-                                    operaciones += "</td>"
-                                    operaciones += "<td>"
-                                    operaciones += data[i].Moneda
-                                    operaciones += "</td>"
-                                    operaciones += "<td>"
-                                    operaciones += data[i].MontoInicial
-                                    operaciones += "</td>"
-                                    operaciones += "<td>"
-                                    operaciones += data[i].MontoActual
-                                    operaciones += "</td>"
-                                    operaciones += "<td>"
-                                    operaciones += data[i].MontoActualMLinea
-                                    operaciones += "</td>"
-                                    operaciones += "<td>"
-                                    operaciones += data[i].MontoActualMNac
-                                    operaciones += "</td>"
-                                    operaciones += "</tr>"
-                                }
-                                operaciones += "</tbody></table></div>"
-                                $("#operaciones").html(operaciones)
-                            } else {
-                                alert("No existe cliente en Base de Datos");
+                            for (var i = 0; i < data.length; i++) {
+                                operaciones += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
+                                operaciones += "<td>"
+                                operaciones += data[i].TipoOperacion
+                                operaciones += "</td>"
+                                operaciones += "<td>"
+                                operaciones += data[i].NumeroProducto
+                                operaciones += "</td>"
+                                operaciones += "<td>"
+                                operaciones += data[i].FechaOtorgamiento
+                                operaciones += "</td>"
+                                operaciones += "<td>"
+                                operaciones += data[i].FechaProxVenc
+                                operaciones += "</td>"
+                                operaciones += "<td>"
+                                operaciones += data[i].Moneda
+                                operaciones += "</td>"
+                                operaciones += "<td>"
+                                operaciones += data[i].MontoInicial
+                                operaciones += "</td>"
+                                operaciones += "<td>"
+                                operaciones += data[i].MontoActual
+                                operaciones += "</td>"
+                                operaciones += "<td>"
+                                operaciones += data[i].MontoActualMLinea
+                                operaciones += "</td>"
+                                operaciones += "<td>"
+                                operaciones += data[i].MontoActualMNac
+                                operaciones += "</td>"
+                                operaciones += "</tr>"
                             }
+                            operaciones += "</tbody></table></div>"
+                            $("#operaciones").html(operaciones)
+                        } else {
+                            alert("No existe cliente en Base de Datos");
                         }
+                    }
                 });
                 $("#myModal3").modal();
             });
@@ -320,10 +325,10 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
             });
 
             $('.bloqueo2').click(function () {
-                    var idlimite = $(this).attr('href');
+                var idlimite = $(this).attr('href');
 
-                    $("#myModalbloqueo2").modal();
-                });
+                $("#myModalbloqueo2").modal();
+            });
         },
 
         gridComplete: function () {
@@ -444,9 +449,9 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
     );
 
 
-        function showsublimiteoperaciones(subgrid_id, row_id) {
-           gridsublimiteoperaciones(subgrid_id, row_id, 'operaciones');
-        }
+    function showsublimiteoperaciones(subgrid_id, row_id) {
+        gridsublimiteoperaciones(subgrid_id, row_id, 'operaciones');
+    }
 
 
 

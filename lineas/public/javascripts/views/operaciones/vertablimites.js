@@ -37,12 +37,12 @@ var gridvertablimites = {
                     label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
-                { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true },
-                { label: 'N°', name: 'Numero', width: 15, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true,align: 'right' },
+                { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
+                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                 {
-                    label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, editrules: { required: true },
+                    label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
                         var idlimite = rowObject.Id;
                         var dato = '<a class="muestraop" href="#' + idlimite + '">' + cellvalue + '</a>';
@@ -50,13 +50,13 @@ var gridvertablimites = {
                     }
                 },
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Aprobado', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Utilizado', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Reservado', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
+                { label: 'Aprobado', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Utilizado', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Reservado', name: 'Reservado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 {
-                    label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true, align: 'center',
+                    label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true,align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
                         rojo = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
                         //console.log(rowObject.Id);
@@ -77,14 +77,14 @@ var gridvertablimites = {
                     }
                 },
                 {
-                    label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
+                    label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true,align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
                         dato = '<span role="button" class="glyphicon glyphicon-lock bloqueo" aria-hidden="true" href="#' + rowObject.Id + 'style= "font-size: 15px"></span>'
                         return dato;
                     }
                 },
                 {
-                    label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
+                    label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true,align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
                         var dato = '<span role="button" class="glyphicon glyphicon-th-list muestradet" href="#' + rowObject.Id + '"></span>';
                         //dato = `<span role="button" class="glyphicon glyphicon-th-list" aria-hidden="true onclick="yourFunction()"></span>`
@@ -100,7 +100,7 @@ var gridvertablimites = {
             //sortname: 'fecha',
             //sortorder: "desc",
             height: "auto",
-            //shrinkToFit: true,
+            shrinkToFit: true,
             //autowidth: true,
             width: 1350,
             subGrid: true,

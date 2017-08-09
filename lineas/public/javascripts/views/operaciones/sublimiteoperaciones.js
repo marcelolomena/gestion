@@ -34,20 +34,20 @@ function gridsublimiteoperaciones(parentRowID, parentRowKey, suffix) {
             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
             editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
         },
-        { label: 'TipoOperacion', name: 'TipoOperacion', hidden: true, editable: true },
-        { label: 'NumeroProducto', name: 'NumeroProducto', width: 15, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'FechaOtorgamiento', name: 'FechaOtorgamiento', width: 20, hidden: false, search: true, editable: true, editrules: { required: true } },
+        { label: 'Tipo Operacion', name: 'TipoOperacion', hidden: true, editable: true,align: 'right' },
+        { label: 'Nro Producto', name: 'NumeroProducto', width: 8, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
+        { label: 'Fecha Otorgamiento', name: 'FechaOtorgamiento', width: 10, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
         //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
         {
-            label: 'FechaProxVenc', name: 'FechaProxVenc', width: 40, hidden: false, search: true, editable: true, editrules: { required: true },
+            label: 'Fecha Prox Vencimiento', name: 'FechaProxVenc', width: 12, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true },
         },
         //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'MontoInicial', name: 'MontoInicial', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-        { label: 'MontoActual', name: 'MontoActual', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-        { label: 'MontoActualMLinea', name: 'MontoActualMLinea', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+        { label: 'Moneda', name: 'Moneda', width: 5, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
+        { label: 'Monto Inicial', name: 'MontoInicial', width: 5, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+        { label: 'Monto Actual', name: 'MontoActual', width: 10, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+        { label: 'Monto Actual Equiv.M /Linea', name: 'MontoActualMLinea', width: 15, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         {
-            label: 'MontoActualMNac', name: 'Condicion', width: 20, hidden: false, search: true, editable: true, align: 'center',
+            label: 'Monto Actual Equiv. M/N M$', name: 'Condicion', width: 15, hidden: false, search: true, editable: true, align: 'center',
         },
     ];
 
@@ -282,7 +282,8 @@ function gridsublimiteoperaciones(parentRowID, parentRowKey, suffix) {
         },
 
         gridComplete: function () {
-            /*
+            //$("#" + childGridID).css("margin-left", "6px");
+            
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
                 //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
@@ -296,7 +297,7 @@ function gridsublimiteoperaciones(parentRowID, parentRowKey, suffix) {
                 $("#" + childGridID).jqGrid('setRowData', rows[i], false, { background: '#f5f5f5' });
 
             }
-            */
+            
 
         },
         footerrow: false,
