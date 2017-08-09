@@ -65,7 +65,7 @@ function gridsublimiteoperaciones(parentRowID, parentRowKey, suffix) {
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
-        colModel: Operacion,
+        colModel: modelOperacion,
         viewrecords: true,
         styleUI: "Bootstrap",
         regional: 'es',
@@ -282,6 +282,7 @@ function gridsublimiteoperaciones(parentRowID, parentRowKey, suffix) {
         },
 
         gridComplete: function () {
+            /*
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
                 //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
@@ -295,6 +296,7 @@ function gridsublimiteoperaciones(parentRowID, parentRowKey, suffix) {
                 $("#" + childGridID).jqGrid('setRowData', rows[i], false, { background: '#f5f5f5' });
 
             }
+            */
 
         },
         footerrow: false,
@@ -329,11 +331,11 @@ function gridsublimiteoperaciones(parentRowID, parentRowKey, suffix) {
         } */
 
     });
-
+/*
     $("#" + childGridID).closest("div.ui-jqgrid-view")
         .children("div.ui-jqgrid-hdiv")
         .hide();
-
+*/
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false,

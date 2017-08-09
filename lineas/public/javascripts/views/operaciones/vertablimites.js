@@ -164,20 +164,24 @@ var gridvertablimites = {
                                         <div class="panel-heading"><p>Resumen Limite</p></div>
                                         
                                         <div class="panel-body">
-                                            <p>N°: <span id="Numero"></span></p>
-                                            <p>Riesgo: <span id="Riesgo"></span></p>
-                                            <p>Descripcion: <span id="Descripcion"></span></p>
-                                            <p>Moneda: <span id="Moneda"></span></p>
-                                            <p>Aprobado: <span id="Aprobado"></span></p>
-                                            <p>Utilizado: <span id="Utilizado"></span></p>
-                                            <p>Reservado: <span id="Reservado"></span></p>
-                                            <p>Disponible: <span id="Disponible"></span></p>
-                                            <p>Plazo: <span id="Plazo"></span></p>
-                                            <p>FechaVencimiento: <span id="FechaVencimiento"></span></p>
-                                            <p>Comentarios: <span id="Comentarios"></span></p>
-                                            <p>Condiciones: <span id="Condiciones"></span></p>
+                                            <div class="table-responsive clear">
+                                                <table class="table">    
+                                                <thead>
+                                                <tr>
+                                                    <p>Riesgo: <span id="Riesgo"></span></p>
+                                                    <p>Descripcion: <span id="Descripcion"></span></p>
+                                                    <p>Moneda: <span id="Moneda"></span></p>
+                                                    <p>Aprobado: <span id="Aprobado"></span></p>
+                                                    <p>Utilizado: <span id="Utilizado"></span></p>
+                                                    <p>Reservado: <span id="Reservado"></span></p>
+                                                    <p>Disponible: <span id="Disponible"></span></p>
+                                                    <p>Plazo: <span id="Plazo"></span></p>
+                                                    <p>FechaVencimiento: <span id="FechaVencimiento"></span></p>
+                                                    <p>Comentarios: <span id="Comentarios"></span></p>
+                                                    <p>Condiciones: <span id="Condiciones"></span></p>
+                                                </th>
+                                            </div>
                                         </div>
-
                                         <div class="panel panel-primary">                             
                                         <div class="panel-heading"><p>Limite N°: <span id="ellimite2"></span></p></div>
                                         
@@ -349,7 +353,7 @@ var gridvertablimites = {
                         async: false,
                         success: function (data) {
                             if (data.length > 0) {
-                                $("#Numero").html(dato[0].Numero)
+                                //$("#Numero").html(dato[0].Numero)
                                 $("#Riesgo").html(data[0].Riesgo)
                                 $("#Descripcion").html(data[0].Descripcion)
                                 $("#Moneda").html(data[0].Moneda)
@@ -544,6 +548,4 @@ var gridvertablimites = {
 function subGridsublimite2(subgrid_id, row_id) {//cambiar el nombre a la funcion si se copia la plantilla!!!!
     //console.log('hola');
     gridvertabsublimites(subgrid_id, row_id, 'sublimite'); //sublimite es el nombre con el que quedaran los divs en la subgrilla (/verlimite.js)
-    //gridOperacion(subgrid_id, row_id, 'veroperacion');
-    //gridGarantias(subgrid_id, row_id, 'vergarantias');
 }
