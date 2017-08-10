@@ -55,15 +55,29 @@ var gridvertablimites = {
                 { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Disponible (Miles)', name: 'Disponible', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Disponible (Miles)', name: 'Disponible', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } ,
+                formatter: function (cellvalue, options, rowObject) {
+                        dato='<div style="color: red">'+cellvalue+'</div>'
+                        if(cellvalue<0)
+                            {
+                                return dato;
+                            }
+                            else
+                            {
+                                return cellvalue;
+                            }
+                        
+                    }
+                },
+                
                 {
-                    label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true,align: 'right', align: 'center',
+                    label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true,align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
                         rojo = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
                         //console.log(rowObject.Id);
                         amarillo = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
                         verde = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
-                        //console.log(cellvalue);
+                        
                         if (cellvalue === 'Rojo') {
                             return rojo
                         }
@@ -624,10 +638,7 @@ var gridvertablimites = {
 					Monto Act.
 					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato7', 'ion-ios-arrow-up': predicate == 'dato5'}"></i>
                 </th>
-                <th width="10%" ng-click="predicate = 'dato5'; reverse=!reverse">
-					Monto Act. Eq. M/Lin
-					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato8', 'ion-ios-arrow-up': predicate == 'dato5'}"></i>
-                </th>
+                
                 <th width="10%" ng-click="predicate = 'dato5'; reverse=!reverse">
 					Monto Act. Eq. M/N M$
 					<i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato9', 'ion-ios-arrow-up': predicate == 'dato5'}"></i>
@@ -750,7 +761,7 @@ var gridvertablimites = {
 
                 $gridTab2.jqGrid('footerData', 'set',
                     {
-                        Moneda: 'Total :',
+                        Moneda: 'Total (CLP) :',
                         Aprobado: sum1,
                         Utilizado: sum2,
                         Reservado: sum3,

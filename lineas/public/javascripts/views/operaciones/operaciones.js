@@ -81,20 +81,22 @@ $(document).ready(function () {
                         <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Grupal:</b> 13-07-2017</div>-->
                         <div class="col-xs-6 col-sm-3"><b>F. Creación MAC:</b> 03-07-2017</div>
                     </div>
-                    <p></p>
-                    <div class="row"> 
-                        <div class="panel panel-primary" style="width: 210px;>
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div><b> F. Vencimiento MAC:</b> 26-07-2018</div>      
-                                </div>      
-                            </div>
-                        </div>
+                    
+            </div>
+    ` );
+
+    $("#gridMaster").append(`
+                <div class="panel panel-primary" style="width: 240px; margin-left: 14px">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div><b> F. Vencimiento MAC:</b> 26-07-2018</div>     
+     
+                        </div>      
                     </div>
-        
+                </div>
+
             
-        
-       ` );
+    ` );
 
     $("#gridMaster").append(tabs);
     $('#vertablimites_tab').addClass('media_node active span') //tab seleccionado
