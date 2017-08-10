@@ -31,6 +31,7 @@ $(document).ready(function () {
     var ratinggrupal = ""
     var pep = ""
     var vigilancia = ""
+    var dv=""
     $.ajax({
         type: "GET",
         url: '/getdatosclientelimite/' + rut,
@@ -46,6 +47,7 @@ $(document).ready(function () {
                 rating = data[0].Rating;
                 vigilancia = data[0].Vigilancia;
                 pep = data[0].Pep;
+                dv=data[0].Dv;
                 if (data[0].nombregrupo) {
                     idgrupo = data[0].idgrupo
                     nombregrupo = data[0].nombregrupo
@@ -64,7 +66,7 @@ $(document).ready(function () {
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-xs-6 col-sm-6"><b>Cliente: </b>`+rut+` / `+nombre+` </div>
+                        <div class="col-xs-6 col-sm-6"><b>Cliente: </b>`+rut+"-"+dv+` / `+nombre+` </div>
                         <div class="col-xs-6 col-sm-6"><b>Grupo Id: </b>`+idgrupo+` / `+nombregrupo+`</div>
                         
                     </div>
@@ -78,10 +80,21 @@ $(document).ready(function () {
                         <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Ind:</b> 13-07-2017</div> -->
                         <!-- <div class="col-xs-6 col-sm-3"><b>F. Rating Grupal:</b> 13-07-2017</div>-->
                         <div class="col-xs-6 col-sm-3"><b>F. Creación MAC:</b> 03-07-2017</div>
-                        <div class="col-xs-6 col-sm-3"><b>F. Vencimiento MAC:</b> 26-07-2018</div>
-                    </div>       
-                </div>
-            </div>`);
+                    </div>
+                    <p></p>
+                    <div class="row"> 
+                        <div class="panel panel-primary" style="width: 210px;>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div><b> F. Vencimiento MAC:</b> 26-07-2018</div>      
+                                </div>      
+                            </div>
+                        </div>
+                    </div>
+        
+            
+        
+       ` );
 
     $("#gridMaster").append(tabs);
     $('#vertablimites_tab').addClass('media_node active span') //tab seleccionado

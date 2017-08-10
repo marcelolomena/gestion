@@ -35,7 +35,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Condicion: {
+		ColorCondicion: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
@@ -43,7 +43,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Estado: {
+		Bloqueado: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
@@ -55,18 +55,27 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Comentarios: {
+		BORRARCOMEN: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Condiciones: {
+		BORRARCOND: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
 		Linea_Id: {
 			type: DataTypes.INTEGER,
 			allowNull: true
+		},
+		Beneficiario_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		Comentario_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
 		}
+
 	}, {
 		schema: 'scl', timestamps: false, tableName: 'Sublinea'
 	});

@@ -40,19 +40,19 @@ function gridOperaciones2(parentRowID, parentRowKey, suffix) {
             editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
         },
         { label: 'Tipo Operacion', name: 'TipoOperacion', hidden: true, editable: true,align: 'right' },
-        { label: 'Nro Producto', name: 'NumeroProducto', width: 8, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
-        { label: 'Fecha Otorgamiento', name: 'FechaOtorgamiento', width: 10, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
+        { label: 'Nro Producto', name: 'NumeroProducto', width: 8, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
+        { label: 'Fecha Otorgamiento', name: 'FechaOtorgamiento', width: 10, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
         //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
         {
-            label: 'Fecha Prox Vencimiento', name: 'FechaProxVenc', width: 10, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true },
+            label: 'Fecha Prox Vencimiento', name: 'FechaProxVenc', width: 10, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true },
         },
         //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Moneda', name: 'Moneda', width: 5, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
+        { label: 'Moneda', name: 'Moneda', width: 5, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
         { label: 'Monto Inicial', name: 'MontoInicial', width: 5, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Monto Actual', name: 'MontoActual', width: 10, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Monto Actual Equiv.M /Linea', name: 'MontoActualMLinea', width: 10, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-        { label: 'Monto Actual Equiv. M/N M$', name: 'MontoActualMNac', width: 10, hidden: false, search: true, editable: true,align: 'right'},
-        { label: 'Número SubLinea', name: 'Numero', width: 10, hidden: false, search: true, editable: true, align: 'center',align: 'right'},
+        { label: 'Monto Actual Equiv. M/N M$', name: 'MontoActualMNac', width: 10, hidden: false, search: true, editable: true,align: 'right',formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+        { label: 'Número SubLinea', name: 'Numero', width: 10, hidden: false, search: true, editable: true, align: 'center'},
     ];
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');

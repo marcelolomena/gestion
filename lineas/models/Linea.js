@@ -35,7 +35,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Condicion: {
+		ColorCondicion: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
@@ -43,7 +43,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Estado: {
+		Bloqueado: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
@@ -55,11 +55,11 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Comentarios: {
+		BORRARCOMEN: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Condiciones: {
+		BORRARCOND: {
 			type: DataTypes.STRING,
 			allowNull: true
 		}

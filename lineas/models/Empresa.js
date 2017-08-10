@@ -46,6 +46,10 @@ module.exports = function(sequelize, DataTypes) {
 		Vigilancia: {
 			type: DataTypes.STRING,
 			allowNull: true
+		},
+		Dv: {
+			type: DataTypes.STRING,
+			allowNull: true
 		}
 	}, {
 		schema: 'scl', timestamps: false, tableName: 'Empresa'
