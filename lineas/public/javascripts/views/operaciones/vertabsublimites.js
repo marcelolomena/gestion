@@ -95,6 +95,13 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                 return dato;
             }
         },
+        {
+            label: 'Reservar', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';             
+                return dato;
+            }
+        },
 
     ];
 
