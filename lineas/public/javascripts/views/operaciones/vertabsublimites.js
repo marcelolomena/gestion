@@ -61,12 +61,12 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         { label: 'Reservado', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         {
-            label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
+            label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
             formatter: function (cellvalue, options, rowObject) {
                 rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
                 amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
                 verde = '<span><img src="../../../../images/greencircle.png" width="25px"/></span>';
-                console.log(cellvalue);
+                console.log(" carlos ql " +cellvalue);
                 if (cellvalue === 'Rojo') {
                     return rojo
                 }

@@ -23,10 +23,10 @@ exports.listlimite = function (req, res) {
     var order = sidx + " " + sord;
 
     var sqlcount = `
-  select count (*) from scl.Linea a  
-join scl.Sublinea b on b.Linea_Id = a.Id
-join scl.Empresa c on c.Id = b.Beneficiario_Id
-where c.Rut=`+ req.params.id;
+    select count (*) from scl.Linea a  
+    join scl.Sublinea b on b.Linea_Id = a.Id
+    join scl.Empresa c on c.Id = b.Beneficiario_Id
+    where c.Rut=`+ req.params.id;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
