@@ -529,7 +529,7 @@ var gridvertablimites = {
                                         
                                     </div>
                                     <div id="cuerpo3">
-                                        <div style="width:100%;display: inline-block;margin-right: 10px; vertical-align:top">                  
+                                        <div style="width:98.5%;display: inline-block;margin-right: 10px; vertical-align:top">                  
                                             <div class="panel panel-primary" >
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Comentarios</div>
                                                 <div class="panel-body">
