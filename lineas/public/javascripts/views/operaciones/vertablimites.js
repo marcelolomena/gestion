@@ -142,236 +142,391 @@ var gridvertablimites = {
                                     <h4 class="modal-title">Detalle Linea <span id="idlinea">1</span></h4>
                                 </div>
                                 <div class="modal-body">
-                                    <div style="width:47%;display: inline-block;margin-right: 40px; vertical-align:top">                  
-                                        <div class="panel panel-primary">
-                                            <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'><span id="nombrelimite">Linea Capital de Trabajo</span></div>
-                                            <div class="panel-body">
-                                                <div class="table-responsive clear">
-                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                        <div class="row">
-                                                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
-                                                                <b>Aprobado:</b>
+                                    <div id="cuerpo1">
+                                        <div style="width:32%;display: inline-block;margin-right: 1%; vertical-align:top">                  
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'><span id="nombrelimite">Linea Capital de Trabajo</span></div>
+                                                <div class="panel-body" style="max-height: 130px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        <div style="margin-left: 50px;">
+                                                            <div class="row">
+                                                                <div class="col-lg-1">
+                                                                    <b>Aprobado:</b>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
+                                                                    $ 3.000
+                                                                </div>
+                                                            </div> 
+                                                            <div class="row">
+                                                                <div class="col-lg-1">
+                                                                    <b>Utilizado:</b>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
+                                                                    $ 3.000
+                                                                </div>
                                                             </div>
-                                                            <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                $ 3.000
+                                                            <div class="row">
+                                                                <div class="col-lg-1">
+                                                                    <b>Reservado:</b>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
+                                                                    $ 0
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
-                                                                <b>Reservado:</b>
+                                                            <div class="row">
+                                                                <div class="col-lg-1">
+                                                                    <b>Bloqueado:</b>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
+                                                                    $ 0
+                                                                </div>
                                                             </div>
-                                                            <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                $ 0
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
-                                                                <b>Utilizado:</b>
-                                                            </div>
-                                                            <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                $ 3.000
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
-                                                                <b>Bloqueado:</b>
-                                                            </div>
-                                                            <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                $ 0
-                                                            </div>
-                                                        </div>
-                                                        <div class="row" style="border: 1px solid; sborder-color: #0B2161;">
-                                                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
-                                                                <b>Disponible:</b>
-                                                            </div>
-                                                            <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                $ 0
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel panel-primary" >
-                                            <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Otros</div>
-                                            <div class="panel-body">
-                                                <div class="table-responsive clear">
-                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                        <div class="row">
-                                                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
-                                                                <b>Plazo: </b><span id="plazo">12 meses</span>
-                                                            </div>
-                                                            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
-                                                                <b>Plazo: </b><span id="vencimiento">12-05-2018</span>
+                                                            <div class="row" style="border: 1px solid; border-color: #0B2161;background-color: #0B2161;color: white;">
+                                                                <div class="col-lg-1">
+                                                                    <b>Disponible:</b>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
+                                                                    $ 0
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="panel panel-primary" >
-                                            <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Condiciones</div>
-                                            <div class="panel-body">
-                                                <div class="table-responsive clear">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th width="40%" ng-click="predicate = 'dato1'; reverse=!reverse">
-                                                                    Tipo Condición
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
-                                                                </th>
-                                                                <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                    RUT
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                </th>
-                                                                <th width="40%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                    Nombre
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
-                                                                <td>Aval</td>
-                                                                <td>10.723.799-2</td>
-                                                                <td>Ivan Droguett Saez</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel panel-primary" >
-                                            <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Comentarios</div>
-                                            <div class="panel-body">
-                                                <div class="table-responsive clear">
-                                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <span id="comentario">Se Solicita Boleta de Garantía para Fiel cumplimiento en obra adjudicada Con Aguas Andinas S.A. Con la glosa : Garantizar el fiel, completo y oportuno cumplimiento por la ejecución del proyecto refuerzo de agua potable Camino La Vara</span>
-                                                            </div>
-                                                        </div>
+                                        <div style="width:32%;display: inline-block;margin-right: 1%;vertical-align:top;">
+                                            
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Productos</div>
+                                                <div class="panel-body" style="max-height: 130px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                                        Tipo OP
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                                    </th>
+                                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Nombre OP
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>8610</td>
+                                                                    <td>Linea de Credito Empresa SEMP</td>
+                                                                </tr>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>9206</td>
+                                                                    <td>Credito para Bol. Garantía</td>
+                                                                </tr>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>9221</td>
+                                                                    <td>Linea BDG MN_ME</td>
+                                                                </tr>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>9252</td>
+                                                                    <td>Crédito en Cuotas Comercial</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> 
+                                        </div> 
+                                        <div style="width:32%;display: inline-block;vertical-align:top;">
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Clientes</div>
+                                                <div class="panel-body" style="max-height: 130px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                                        RUT
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                                    </th>
+                                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Nombre
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>96.848.750-7</td>
+                                                                    <td>Aislantes Volcán</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div> 
                                         </div> 
                                     </div>
-                                    <div style="width:47%;display: inline-block;vertical-align:top;">
+                                    <div id="cuerpo2">
+                                        <div style="width:48%;display: inline-block;margin-right: 2%; vertical-align:top">                  
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Condiciones</div>
+                                                <div class="panel-body" style="max-height: 200px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="40%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                                        Tipo Condición
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                                    </th>
+                                                                    <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        RUT
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="40%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Nombre
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>Aval</td>
+                                                                    <td>10.723.799-2</td>
+                                                                    <td>Ivan Droguett Saez</td>
+                                                                </tr>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>Aval</td>
+                                                                    <td>10.723.799-2</td>
+                                                                    <td>Ivan Droguett Saez</td>
+                                                                </tr>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>Aval</td>
+                                                                    <td>10.723.799-2</td>
+                                                                    <td>Ivan Droguett Saez</td>
+                                                                </tr>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>Aval</td>
+                                                                    <td>10.723.799-2</td>
+                                                                    <td>Ivan Droguett Saez</td>
+                                                                </tr>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>Aval</td>
+                                                                    <td>10.723.799-2</td>
+                                                                    <td>Ivan Droguett Saez</td>
+                                                                </tr>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>Aval</td>
+                                                                    <td>10.723.799-2</td>
+                                                                    <td>Ivan Droguett Saez</td>
+                                                                </tr>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>Aval</td>
+                                                                    <td>10.723.799-2</td>
+                                                                    <td>Ivan Droguett Saez</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                             
+                                        </div>
+                                        <div style="width:48%;display: inline-block;vertical-align:top;"> 
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Garantías</div>
+                                                <div class="panel-body" style="max-height: 200px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        Reales
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="5%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Folio
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Tipo
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="30%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Descripción
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Estado
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        V.Comercial
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        V.Liquidación
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>01</td>
+                                                                    <td>Leasing</td>
+                                                                    <td>50% sobre vehículo</td>
+                                                                    <td>Constituida</td>
+                                                                    <td align="right">8.599</td>
+                                                                    <td align="right">4.299</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        Acciones
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="5%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Folio
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Tipo
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="30%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Descripción
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Estado
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        V.Comercial
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        V.Liquidación
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>01</td>
+                                                                    <td>Leasing</td>
+                                                                    <td>50% sobre vehículo</td>
+                                                                    <td>Constituida</td>
+                                                                    <td align="right">8.599</td>
+                                                                    <td align="right">4.299</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        Estatales
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="5%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Folio
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Tipo
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="30%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Descripción
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Estado
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        V.Comercial
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        V.Liquidación
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>01</td>
+                                                                    <td>Leasing</td>
+                                                                    <td>50% sobre vehículo</td>
+                                                                    <td>Constituida</td>
+                                                                    <td align="right">8.599</td>
+                                                                    <td align="right">4.299</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        Covenants
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="5%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Folio
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Tipo
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="30%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Descripción
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Estado
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        V.Comercial
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        V.Liquidación
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>01</td>
+                                                                    <td>Leasing</td>
+                                                                    <td>50% sobre vehículo</td>
+                                                                    <td>Constituida</td>
+                                                                    <td align="right">8.599</td>
+                                                                    <td align="right">4.299</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div> 
+                                        
+                                    </div>
+                                    <div id="cuerpo3">
+                                        <div style="width:100%;display: inline-block;margin-right: 10px; vertical-align:top">                  
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Comentarios</div>
+                                                <div class="panel-body">
+                                                    <div class="table-responsive clear">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <span id="comentario">Se Solicita Boleta de Garantía para Fiel cumplimiento en obra adjudicada Con Aguas Andinas S.A. Con la glosa : Garantizar el fiel, completo y oportuno cumplimiento por la ejecución del proyecto refuerzo de agua potable Camino La Vara</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                          
-                                        <div class="panel panel-primary" >
-                                            <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Productos</div>
-                                            <div class="panel-body">
-                                                <div class="table-responsive clear">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
-                                                                    Tipo OP
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
-                                                                </th>
-                                                                <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                    Nombre OP
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
-                                                                <td>8610</td>
-                                                                <td>Linea de Credito Empresa SEMP</td>
-                                                            </tr>
-                                                            <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
-                                                                <td>9206</td>
-                                                                <td>Credito para Bol. Garantía</td>
-                                                            </tr>
-                                                            <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
-                                                                <td>9221</td>
-                                                                <td>Linea BDG MN_ME</td>
-                                                            </tr>
-                                                            <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
-                                                                <td>9252</td>
-                                                                <td>Crédito en Cuotas Comercial</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <div class="panel panel-primary" >
-                                            <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Clientes</div>
-                                            <div class="panel-body">
-                                                <div class="table-responsive clear">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
-                                                                    RUT
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
-                                                                </th>
-                                                                <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                    Nombre
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
-                                                                <td>96.848.750-7</td>
-                                                                <td>Aislantes Volcán</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <div class="panel panel-primary" >
-                                            <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Garantías</div>
-                                            <div class="panel-body">
-                                                <div class="table-responsive clear">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th width="5%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                    Folio
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                </th>
-                                                                <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                    Tipo
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                </th>
-                                                                <th width="30%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                    Descripción
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                </th>
-                                                                <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                    Estado
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                </th>
-                                                                <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                    V.Comercial
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                </th>
-                                                                <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                    V.Liquidación
-                                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
-                                                                <td>01</td>
-                                                                <td>Leasing</td>
-                                                                <td>50% sobre vehículo</td>
-                                                                <td>Constituida</td>
-                                                                <td align="right">8.599</td>
-                                                                <td align="right">4.299</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                    </div>  
+                                         
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
