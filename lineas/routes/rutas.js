@@ -96,6 +96,12 @@ module.exports = function (passport) {
     router.route('/verproductoslinea/:id')
         .get(isAuthenticated, operacionesController.listproductoslinea);
 
+    router.route('/vercondicioneslinea/:id')
+        .get(isAuthenticated, operacionesController.listcondicioneslinea);
+
+    router.route('/vergarantiaslinea/:id')
+        .get(isAuthenticated, operacionesController.listgarantiaslinea);
+
         
         return router;
 }

@@ -54,8 +54,8 @@ exports.listlimite = function (req, res) {
 
 exports.getdatosclientelimite = function (req, res) {
     sequelize.query(
-        'select a.*, c.Nombre as nombregrupo, c.Id as idgrupo, c.Rating as ratinggrupal from scl.Empresa a '+
-        'left outer join scl.GrupoEmpresa b on b.Empresa_Id=a.Id '+
+        'select a.*, c.Nombre as nombregrupo, c.Id as idgrupo, c.Rating as ratinggrupal from scl.Empresa a ' +
+        'left outer join scl.GrupoEmpresa b on b.Empresa_Id=a.Id ' +
         'left outer join scl.Grupo c on c.Id=b.Grupo_Id ' +
         'where a.Rut =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
@@ -321,9 +321,9 @@ exports.listultimomac = function (req, res) {
 
 exports.listsublimop = function (req, res) {
     sequelize.query(
-         `select *from scl.Operacion a 
+        `select *from scl.Operacion a 
           join scl.SublineaOperacion b on a.Id = b.Operacion_Id
-          where b.Sublinea_Id=` + req.params.id, 
+          where b.Sublinea_Id=` + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -336,13 +336,13 @@ exports.listsublimop = function (req, res) {
 
 exports.listtipooperaciones = function (req, res) {
     sequelize.query(
-         `select distinct a.Id, f.Rut, a.Nombre from scl.TipoOperacion a
+        `select distinct a.Id, f.Rut, a.Nombre from scl.TipoOperacion a
 join scl.Operacion b on a.Codigo = b.TipoOperacion
 join scl.SublineaOperacion c on c.Operacion_Id=b.Id
 join scl.Sublinea d on d.Id = c.Sublinea_Id
 join scl.EmpresaSublinea e on e.Sublinea_Id=d.Id
 join scl.Empresa f on f.Id=e.Empresa_Id
-where f.Rut=`+req.params.id, 
+where f.Rut=`+ req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -355,13 +355,13 @@ where f.Rut=`+req.params.id,
 
 exports.listoperaciones2 = function (req, res) {
     sequelize.query(
-         `select a.*, c.Numero from scl.Operacion a 
+        `select a.*, c.Numero from scl.Operacion a 
 join scl.SublineaOperacion b on b.Operacion_Id=a.Id
 join scl.Sublinea c on c.Id=b.Sublinea_Id
 join scl.EmpresaSublinea d on d.Sublinea_Id=c.Id
 join scl.Empresa e on e.Id=d.Empresa_Id
 join scl.TipoOperacion f on f.Codigo=a.TipoOperacion
-where e.Rut=`+req.params.rut+` and f.Id=`+req.params.id, 
+where e.Rut=`+ req.params.rut + ` and f.Id=` + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -374,8 +374,41 @@ where e.Rut=`+req.params.rut+` and f.Id=`+req.params.id,
 
 exports.listproductoslinea = function (req, res) {
     sequelize.query(
-         `select * from scl.TipoOperacion
-            where TipoRiesgo='`+req.params.id+`'`, 
+        `select * from scl.TipoOperacion
+            where TipoRiesgo='`+ req.params.id + `'`,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.listcondicioneslinea = function (req, res) {
+    sequelize.query(
+        `select a.* from scl.Condicion a 
+join scl.Sublinea b on a.Sublinea_Id=b.Id
+join scl.Linea c on b.Linea_Id=c.Id
+            where c.Id=`+ req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.listgarantiaslinea = function (req, res) {
+    sequelize.query(
+        `select a.* from scl.Garantias a 
+        join scl.GarantiasSublinea b on b.Garantias_Id=a.Id
+        join scl.Sublinea c on b.Sublinea_Id=c.Id
+        join scl.Linea d on c.Linea_Id=d.Id
+            where d.Id=`+ req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
