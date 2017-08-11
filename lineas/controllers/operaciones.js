@@ -401,3 +401,20 @@ join scl.Linea c on b.Linea_Id=c.Id
         res.json({ error: 1 });
     });
 };
+
+exports.listgarantiaslinea = function (req, res) {
+    sequelize.query(
+        `select a.* from scl.Garantias a 
+        join scl.GarantiasSublinea b on b.Garantias_Id=a.Id
+        join scl.Sublinea c on b.Sublinea_Id=c.Id
+        join scl.Linea d on c.Linea_Id=d.Id
+            where d.Id=`+ req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
