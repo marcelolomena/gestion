@@ -158,13 +158,13 @@ var gridvertablimites = {
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Detalle Linea <span id="idlinea">1</span></h4>
+                                    <h4 class="modal-title"><b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span> - <b>Plazo: </b><span id="plazolinea">12 meses</span> meses - <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
                                 </div>
                                 <div class="modal-body">
                                     <div id="cuerpo1">
                                         <div style="width:32%;display: inline-block;margin-right: 1%; vertical-align:top">                  
                                             <div class="panel panel-primary">
-                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'><span id="nombrelimite">Linea Capital de Trabajo</span></div>
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Límites</span></div>
                                                 <div class="panel-body" style="max-height: 130px;overflow-y: auto;">
                                                     <div class="table-responsive clear">
                                                         <div style="margin-left: 50px;">
@@ -173,7 +173,7 @@ var gridvertablimites = {
                                                                     <b>Aprobado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ 3.000
+                                                                    $ <span id="aprobadolinea">3.000</span>
                                                                 </div>
                                                             </div> 
                                                             <div class="row">
@@ -181,7 +181,7 @@ var gridvertablimites = {
                                                                     <b>Utilizado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ 3.000
+                                                                    $ <span id="utilizadolinea">3.000</span>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -189,7 +189,7 @@ var gridvertablimites = {
                                                                     <b>Reservado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ 0
+                                                                    $ <span id="reservadolinea">3.000</span>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -197,7 +197,7 @@ var gridvertablimites = {
                                                                     <b>Bloqueado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ 0
+                                                                    $ <span id="bloqueadolinea">0</span>
                                                                 </div>
                                                             </div>
                                                             <div class="row" style="border: 1px solid; border-color: #0B2161;background-color: #0B2161;color: white;">
@@ -205,7 +205,7 @@ var gridvertablimites = {
                                                                     <b>Disponible:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ 0
+                                                                    $ <span id="disponiblelinea">0</span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -217,7 +217,7 @@ var gridvertablimites = {
                                             
                                             <div class="panel panel-primary" >
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Productos</div>
-                                                <div class="panel-body" style="max-height: 130px;overflow-y: auto;">
+                                                <div id="productoslinea" class="panel-body" style="max-height: 130px;overflow-y: auto;">
                                                     <div class="table-responsive clear">
                                                         <table class="table">
                                                             <thead>
@@ -695,26 +695,56 @@ var gridvertablimites = {
 
                 $('.muestradet').click(function () {
                     var idlimite = $(this).attr('href');
-                    $('#ellimite2').html(idlimite.substring(1))
+                    $('#idlinea').html(idlimite.substring(1))
                     $.ajax({
                         type: "GET",
                         url: '/verdetalleslim/' + idlimite.substring(1),
                         async: false,
                         success: function (data) {
                             if (data.length > 0) {
-                                //$("#Numero").html(dato[0].Numero)
-                                $("#Riesgo").html(data[0].Riesgo)
-                                $("#Descripcion").html(data[0].Descripcion)
-                                $("#Moneda").html(data[0].Moneda)
-                                $("#Aprobado").html(data[0].Aprobado)
-                                $("#Utilizado").html(data[0].Utilizado)
-                                $("#Reservado").html(data[0].Reservado)
-                                $("#Disponible").html(data[0].Disponible)
-                                $("#Condicion").html(data[0].Condicion)
-                                $("#Plazo").html(data[0].Plazo)
-                                $("#FechaVencimiento").html(data[0].FechaVencimiento)
-                                $("#Comentarios").html(data[0].Comentarios)
-                                $("#Condiciones").html(data[0].Condiciones)
+                                $("#nombrelinea").html(data[0].Descripcion)
+                                $("#aprobadolinea").html(data[0].Aprobado)
+                                $("#utilizadolinea").html(data[0].Utilizado)
+                                $("#reservadolinea").html(data[0].Reservado)
+                                $("#disponiblelinea").html(data[0].Disponible)
+                                $("#bloqueadolinea").html(0)
+                                $("#plazolinea").html(data[0].Plazo)
+                                var fechavenclinea = data[0].FechaVencimiento.split('-').reverse().join('-');
+                                $("#fechavenclinea").html(data[0].FechaVencimiento)
+                                var productos = `
+                                    <div class="table-responsive clear">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                        Tipo OP
+                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                    </th>
+                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                        Nombre OP
+                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>`
+                                var tipolinea = data[0].Riesgo;
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/verproductoslinea/' + tipolinea,
+                                    async: false,
+                                    success: function (data2) {
+                                        for (var i = 0; i < data2.length; i++) {
+                                            productos += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
+                                            productos += "<td>" + data2[i].Codigo + "</td>"
+                                            productos += "<td>" + data2[i].Nombre + "</td>"
+                                            productos += "</tr>"
+                                        }
+                                    }
+                                });
+                                productos += "</tbody>"
+                                productos += "</table>"
+                                productos += "</div>"
+                                $("#productoslinea").html(productos)
                             }
                             else {
                                 alert("No existe cliente en Base de Datos");

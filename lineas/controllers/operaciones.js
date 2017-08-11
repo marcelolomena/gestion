@@ -371,3 +371,17 @@ where e.Rut=`+req.params.rut+` and f.Id=`+req.params.id,
         res.json({ error: 1 });
     });
 };
+
+exports.listproductoslinea = function (req, res) {
+    sequelize.query(
+         `select * from scl.TipoOperacion
+            where TipoRiesgo='`+req.params.id+`'`, 
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
