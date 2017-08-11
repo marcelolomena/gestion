@@ -37,12 +37,12 @@ var gridvertablimites = {
                     label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
-                { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true,align: 'right' },
-                { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
-                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
+                { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
+                { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                 {
-                    label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true,align: 'left', editrules: { required: true },
+                    label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'left', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
                         var idlimite = rowObject.Id;
                         var dato = cellvalue;
@@ -51,40 +51,26 @@ var gridvertablimites = {
                     }
                 },
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
-                { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Disponible (Miles)', name: 'Disponible', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } ,
-                formatter: function (cellvalue, options, rowObject) {
-                        dato='<div style="color: red">'+cellvalue+'</div>'
-                        if(cellvalue<0)
-                            {
-                                return dato;
-                            }
-                            else
-                            {
-                                return cellvalue;
-                            }
-                        
-                    }
-                },
-                
+                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 {
-                    label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true,align: 'right', align: 'center',
+                    label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        rojo = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                        rojo = '<span role="button" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
                         //console.log(rowObject.Id);
-                        amarillo = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
-                        verde = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
-                        
+                        amarillo = '<span role="button" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                        verde = '<span role="button" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
+
                         if (cellvalue === 'Rojo') {
                             return rojo
                         }
                         else {
                             if (cellvalue === 'Verde') {
                                 return verde
-                            } 
+                            }
                             else {
                                 return amarillo
                             }
@@ -92,16 +78,17 @@ var gridvertablimites = {
                     }
                 },
                 {
-                    label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true,align: 'right', align: 'center',
+                    label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
                         dato = '<span role="button" class="glyphicon glyphicon-lock bloqueo" aria-hidden="true" href="#' + rowObject.Id + 'style= "font-size: 15px"></span>'
                         return dato;
                     }
                 },
                 {
-                    label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true,align: 'right', align: 'center',
+                    label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        var dato = '<span role="button" class="glyphicon glyphicon-th-list muestradet" href="#' + rowObject.Id + '"></span>';
+                        var dato = '<span role="button" class="glyphicon glyphicon-folder-open muestradet" aria-hidden="true" href="#' + rowObject.Id + '"></span>';
+
                         //dato = `<span role="button" class="glyphicon glyphicon-th-list" aria-hidden="true onclick="yourFunction()"></span>`
                         return dato;
                     }
@@ -109,10 +96,10 @@ var gridvertablimites = {
                 {
                     label: 'Reservar', name: 'Reservar', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';             
+                        var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';
                         return dato;
-                }
-        },
+                    }
+                },
 
             ],
 
@@ -153,6 +140,17 @@ var gridvertablimites = {
                 });
             },
             loadComplete: function () {
+
+                var rows = $gridTab2.getDataIDs();
+                for (var i = 0; i < rows.length; i++) {
+                    var eldisponible = $gridTab2.getRowData(rows[i]).Disponible;
+                    if(parseInt(eldisponible)<0)
+                        {
+                            $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
+                        }
+                }
+
+                
 
                 $gridTab2.append(`
                     <div class="modal fade" id="myModal2" role="dialog">
@@ -734,7 +732,7 @@ var gridvertablimites = {
                         url: '/verdetalleslim/' + idlimite.substring(1),
                         async: false,
                         success: function (data) {
-                            if (data.length > 0) {               
+                            if (data.length > 0) {
                                 $("#Condicion2").html(data[0].Condicion)
                                 $("#Condiciones2").html(data[0].Condiciones)
                             }
@@ -786,17 +784,17 @@ var gridvertablimites = {
 
 
         });
-        $gridTab2.jqGrid ('setLabel', 'Numero', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Riesgo', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Descripcion', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Moneda', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Aprobado', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Utilizado', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Disponible', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'ColorCondicion', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Bloqueo_N', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Detalle_N', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Reservar', '', {'text-align':'center'});
+        $gridTab2.jqGrid('setLabel', 'Numero', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Riesgo', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Descripcion', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Moneda', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Aprobado', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Utilizado', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Disponible', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'ColorCondicion', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Bloqueo_N', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Detalle_N', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Reservar', '', { 'text-align': 'center' });
 
         $gridTab2.jqGrid('navGrid', '#navGridtabverlimites', { edit: false, add: false, del: false, search: false },
             {
