@@ -37,12 +37,12 @@ var gridvertablimites = {
                     label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
-                { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true,align: 'right' },
-                { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
-                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
+                { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
+                { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                 {
-                    label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true,align: 'left', editrules: { required: true },
+                    label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'left', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
                         var idlimite = rowObject.Id;
                         var dato = cellvalue;
@@ -51,40 +51,39 @@ var gridvertablimites = {
                     }
                 },
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true,align: 'center', editrules: { required: true } },
-                { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Disponible (Miles)', name: 'Disponible', width: 30, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } ,
-                formatter: function (cellvalue, options, rowObject) {
-                        dato='<div style="color: red">'+cellvalue+'</div>'
-                        if(cellvalue<0)
-                            {
-                                return dato;
-                            }
-                            else
-                            {
-                                return cellvalue;
-                            }
-                        
+                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                {
+                    label: 'Disponible (Miles)', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
+                    formatter: function (cellvalue, options, rowObject) {
+                        dato = '<div style="color: red">' + cellvalue + '</div>'
+                        if (cellvalue < 0) {
+                            return dato;
+                        }
+                        else {
+                            return cellvalue;
+                        }
+
                     }
                 },
-                
+
                 {
-                    label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true,align: 'right', align: 'center',
+                    label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        rojo = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                        rojo = '<span role="button" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
                         //console.log(rowObject.Id);
-                        amarillo = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
-                        verde = '<span role="button" class="muestracond" href="#'+ rowObject.Id +'" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
-                        
+                        amarillo = '<span role="button" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                        verde = '<span role="button" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
+
                         if (cellvalue === 'Rojo') {
                             return rojo
                         }
                         else {
                             if (cellvalue === 'Verde') {
                                 return verde
-                            } 
+                            }
                             else {
                                 return amarillo
                             }
@@ -92,14 +91,14 @@ var gridvertablimites = {
                     }
                 },
                 {
-                    label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true,align: 'right', align: 'center',
+                    label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
                         dato = '<span role="button" class="glyphicon glyphicon-lock bloqueo" aria-hidden="true" href="#' + rowObject.Id + 'style= "font-size: 15px"></span>'
                         return dato;
                     }
                 },
                 {
-                    label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true,align: 'right', align: 'center',
+                    label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
                         var dato = '<span role="button" class="glyphicon glyphicon-th-list muestradet" href="#' + rowObject.Id + '"></span>';
                         //dato = `<span role="button" class="glyphicon glyphicon-th-list" aria-hidden="true onclick="yourFunction()"></span>`
@@ -153,13 +152,13 @@ var gridvertablimites = {
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Detalle Linea <span id="idlinea">1</span></h4>
+                                    <h4 class="modal-title"><b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span> - <b>Plazo: </b><span id="plazolinea">12 meses</span> meses - <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
                                 </div>
                                 <div class="modal-body">
                                     <div id="cuerpo1">
                                         <div style="width:32%;display: inline-block;margin-right: 1%; vertical-align:top">                  
                                             <div class="panel panel-primary">
-                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'><span id="nombrelimite">Linea Capital de Trabajo</span></div>
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Límites</span></div>
                                                 <div class="panel-body" style="max-height: 130px;overflow-y: auto;">
                                                     <div class="table-responsive clear">
                                                         <div style="margin-left: 50px;">
@@ -168,7 +167,7 @@ var gridvertablimites = {
                                                                     <b>Aprobado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ 3.000
+                                                                    $ <span id="aprobadolinea">3.000</span>
                                                                 </div>
                                                             </div> 
                                                             <div class="row">
@@ -176,7 +175,7 @@ var gridvertablimites = {
                                                                     <b>Utilizado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ 3.000
+                                                                    $ <span id="utilizadolinea">3.000</span>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -184,7 +183,7 @@ var gridvertablimites = {
                                                                     <b>Reservado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ 0
+                                                                    $ <span id="reservadolinea">3.000</span>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -192,7 +191,7 @@ var gridvertablimites = {
                                                                     <b>Bloqueado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ 0
+                                                                    $ <span id="bloqueadolinea">0</span>
                                                                 </div>
                                                             </div>
                                                             <div class="row" style="border: 1px solid; border-color: #0B2161;background-color: #0B2161;color: white;">
@@ -200,7 +199,7 @@ var gridvertablimites = {
                                                                     <b>Disponible:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ 0
+                                                                    $ <span id="disponiblelinea">0</span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -212,7 +211,7 @@ var gridvertablimites = {
                                             
                                             <div class="panel panel-primary" >
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Productos</div>
-                                                <div class="panel-body" style="max-height: 130px;overflow-y: auto;">
+                                                <div id="productoslinea" class="panel-body" style="max-height: 130px;overflow-y: auto;">
                                                     <div class="table-responsive clear">
                                                         <table class="table">
                                                             <thead>
@@ -690,26 +689,55 @@ var gridvertablimites = {
 
                 $('.muestradet').click(function () {
                     var idlimite = $(this).attr('href');
-                    $('#ellimite2').html(idlimite.substring(1))
+                    $('#idlinea').html(idlimite.substring(1))
                     $.ajax({
                         type: "GET",
                         url: '/verdetalleslim/' + idlimite.substring(1),
                         async: false,
                         success: function (data) {
                             if (data.length > 0) {
-                                //$("#Numero").html(dato[0].Numero)
-                                $("#Riesgo").html(data[0].Riesgo)
-                                $("#Descripcion").html(data[0].Descripcion)
-                                $("#Moneda").html(data[0].Moneda)
-                                $("#Aprobado").html(data[0].Aprobado)
-                                $("#Utilizado").html(data[0].Utilizado)
-                                $("#Reservado").html(data[0].Reservado)
-                                $("#Disponible").html(data[0].Disponible)
-                                $("#Condicion").html(data[0].Condicion)
-                                $("#Plazo").html(data[0].Plazo)
-                                $("#FechaVencimiento").html(data[0].FechaVencimiento)
-                                $("#Comentarios").html(data[0].Comentarios)
-                                $("#Condiciones").html(data[0].Condiciones)
+                                $("#nombrelinea").html(data[0].Descripcion)
+                                $("#aprobadolinea").html(data[0].Aprobado)
+                                $("#utilizadolinea").html(data[0].Utilizado)
+                                $("#reservadolinea").html(data[0].Reservado)
+                                $("#disponiblelinea").html(data[0].Disponible)
+                                $("#bloqueadolinea").html(0)
+                                $("#plazolinea").html(data[0].Plazo)
+                                var fechavenclinea = data[0].FechaVencimiento.split('-').reverse().join('-');
+                                $("#fechavenclinea").html(data[0].FechaVencimiento7)
+                                var productos = `
+                                    <div class="table-responsive clear">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                        Tipo OP
+                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                    </th>
+                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                        Nombre OP
+                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>`
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/verproductoslinea/' + idlimite.substring(1),
+                                    async: false,
+                                    success: function (data) {
+                                        for (var i = 0; i < data.length; i++) {
+                                            productos += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
+                                            productos += "<td>"+data[i].Codigo+"</td>"
+                                            productos += "<td>"+data[i].Nombre+"</td>"
+                                            productos += "</tr>"
+                                        }
+                                    }
+                                });
+                                productos += "</tbody>"
+                                productos += "</table>"
+                                productos += "</div>"
+                                $("#productoslinea").html(productos)
                             }
                             else {
                                 alert("No existe cliente en Base de Datos");
@@ -727,7 +755,7 @@ var gridvertablimites = {
                         url: '/verdetalleslim/' + idlimite.substring(1),
                         async: false,
                         success: function (data) {
-                            if (data.length > 0) {               
+                            if (data.length > 0) {
                                 $("#Condicion2").html(data[0].Condicion)
                                 $("#Condiciones2").html(data[0].Condiciones)
                             }
@@ -779,16 +807,16 @@ var gridvertablimites = {
 
 
         });
-        $gridTab2.jqGrid ('setLabel', 'Numero', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Riesgo', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Descripcion', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Moneda', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Aprobado', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Utilizado', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Disponible', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Condicion', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Bloqueo_N', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Detalle_N', '', {'text-align':'center'});
+        $gridTab2.jqGrid('setLabel', 'Numero', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Riesgo', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Descripcion', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Moneda', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Aprobado', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Utilizado', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Disponible', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Condicion', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Bloqueo_N', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Detalle_N', '', { 'text-align': 'center' });
 
         $gridTab2.jqGrid('navGrid', '#navGridtabverlimites', { edit: false, add: false, del: false, search: false },
             {
