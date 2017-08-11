@@ -418,3 +418,20 @@ exports.listgarantiaslinea = function (req, res) {
         res.json({ error: 1 });
     });
 };
+
+exports.listcomentarioslinea = function (req, res) {
+    sequelize.query(
+        `select a.* from scl.Comentario a 
+        join scl.ComentarioSublinea b on b.Comentario_Id=a.Id
+        join scl.Sublinea c on b.Sublinea_Id=c.Id
+        join scl.Linea d on c.Linea_Id=d.Id
+            where d.Id=`+ req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};

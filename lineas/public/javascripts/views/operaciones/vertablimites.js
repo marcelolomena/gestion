@@ -144,13 +144,12 @@ var gridvertablimites = {
                 var rows = $gridTab2.getDataIDs();
                 for (var i = 0; i < rows.length; i++) {
                     var eldisponible = $gridTab2.getRowData(rows[i]).Disponible;
-                    if(parseInt(eldisponible)<0)
-                        {
-                            $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
-                        }
+                    if (parseInt(eldisponible) < 0) {
+                        $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
+                    }
                 }
 
-                
+
 
                 $gridTab2.append(`
                     <div class="modal fade" id="myModal2" role="dialog">
@@ -367,10 +366,10 @@ var gridvertablimites = {
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Comentarios</div>
                                                 <div class="panel-body">
                                                     <div class="table-responsive clear">
-                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                        <div id="comentarioslinea" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                                             <div class="row">
                                                                 <div class="col-lg-12">
-                                                                    <span id="comentario">Se Solicita Boleta de Garantía para Fiel cumplimiento en obra adjudicada Con Aguas Andinas S.A. Con la glosa : Garantizar el fiel, completo y oportuno cumplimiento por la ejecución del proyecto refuerzo de agua potable Camino La Vara</span>
+                                                                   
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -591,7 +590,7 @@ var gridvertablimites = {
                                         for (var i = 0; i < data4.length; i++) {
                                             garantiasreales += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
                                             garantiasreales += "<td>" + data4[i].Folio + "</td>"
-                                            garantiasreales += "<td>" + data4[i].Tipo+ "</td>"
+                                            garantiasreales += "<td>" + data4[i].Tipo + "</td>"
                                             garantiasreales += "<td>" + data4[i].Descripcion + "</td>"
                                             garantiasreales += "<td>" + data4[i].Estado + "</td>"
                                             garantiasreales += "<td>" + data4[i].ValorComercial + "</td>"
@@ -602,6 +601,24 @@ var gridvertablimites = {
                                         garantiasreales += "</table>"
                                         garantiasreales += "</div>"
                                         $("#garantiasrealeslinea").html(garantiasreales)
+                                    }
+                                });
+                                var comentarios = "";
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/vercomentarioslinea/' + idlimite.substring(1),
+                                    async: false,
+                                    success: function (data5) {
+                                        for (var i = 0; i < data5.length; i++) {
+                                            comentarios += "<div class='row'>";
+                                            comentarios += "<div class='col-lg-12'>"
+                                            comentarios += data5[i].Comentario
+                                            comentarios += "</div>";
+                                            comentarios += "</div>";
+                                        }
+                                        
+                                        $("#comentarioslinea").html(garantiasreales)
                                     }
                                 });
 
