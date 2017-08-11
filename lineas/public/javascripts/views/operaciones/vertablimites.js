@@ -55,20 +55,7 @@ var gridvertablimites = {
                 { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                {
-                    label: 'Disponible (Miles)', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
-                    formatter: function (cellvalue, options, rowObject) {
-                        dato = '<div style="color: red">' + cellvalue + '</div>'
-                        if (cellvalue < 0) {
-                            return dato;
-                        }
-                        else {
-                            return cellvalue;
-                        }
-
-                    }
-                },
-
+                { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 {
                     label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
@@ -100,7 +87,8 @@ var gridvertablimites = {
                 {
                     label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        var dato = '<span role="button" class="glyphicon glyphicon-th-list muestradet" href="#' + rowObject.Id + '"></span>';
+                        var dato = '<span role="button" class="glyphicon glyphicon-folder-open muestradet" aria-hidden="true" href="#' + rowObject.Id + '"></span>';
+
                         //dato = `<span role="button" class="glyphicon glyphicon-th-list" aria-hidden="true onclick="yourFunction()"></span>`
                         return dato;
                     }
@@ -152,6 +140,17 @@ var gridvertablimites = {
                 });
             },
             loadComplete: function () {
+
+                var rows = $gridTab2.getDataIDs();
+                for (var i = 0; i < rows.length; i++) {
+                    var eldisponible = $gridTab2.getRowData(rows[i]).Disponible;
+                    if(parseInt(eldisponible)<0)
+                        {
+                            $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
+                        }
+                }
+
+                
 
                 $gridTab2.append(`
                     <div class="modal fade" id="myModal2" role="dialog">
