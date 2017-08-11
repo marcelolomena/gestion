@@ -624,7 +624,7 @@ var gridvertablimites = {
                                             comentarios += "</div>";
                                         }
                                         
-                                        $("#comentarioslinea").html(garantiasreales)
+                                        $("#comentarioslinea").html(comentarios)
                                     }
                                 });
 
