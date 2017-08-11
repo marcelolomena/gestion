@@ -428,9 +428,7 @@ var gridvertablimites = {
                                     <h4 class="modal-title">Detalle Condicion</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Condiciones del Limite N°: <span id="ellimite3"></span></p>
-                                    <p>Condicion: <span id="Condicion2"></span></p>
-                                    <p>Condiciones: <span id="Condiciones2"></span></p>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -631,8 +629,8 @@ var gridvertablimites = {
                         async: false,
                         success: function (data) {
                             if (data.length > 0) {
-                                $("#Condicion2").html(data[0].Condicion)
-                                $("#Condiciones2").html(data[0].Condiciones)
+                                //$("#Condicion2").html(data[0].ColorCondicion)
+                               // $("#Condiciones2").html(data[0].Condiciones)
                             }
                             else {
                                 //alert("No existe cliente en Base de Datos");
@@ -644,8 +642,9 @@ var gridvertablimites = {
 
                 $('.bloqueo').click(function () {
                     var idlimite = $(this).attr('href');
-
+                   
                     $("#myModalbloqueo").modal();
+                    
                 });
 
                 var thisId = $.jgrid.jqID(this.id);
