@@ -108,10 +108,10 @@ var gridvertablimites = {
                 {
                     label: 'Reservar', name: 'Reservar', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';             
+                        var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';
                         return dato;
-                }
-        },
+                    }
+                },
 
             ],
 
@@ -711,7 +711,7 @@ var gridvertablimites = {
                                 $("#bloqueadolinea").html(0)
                                 $("#plazolinea").html(data[0].Plazo)
                                 var fechavenclinea = data[0].FechaVencimiento.split('-').reverse().join('-');
-                                $("#fechavenclinea").html(data[0].FechaVencimiento7)
+                                $("#fechavenclinea").html(data[0].FechaVencimiento)
                                 var productos = `
                                     <div class="table-responsive clear">
                                         <table class="table">
@@ -728,15 +728,16 @@ var gridvertablimites = {
                                                 </tr>
                                             </thead>
                                             <tbody>`
+                                var tipolinea = data[0].Riesgo;
                                 $.ajax({
                                     type: "GET",
-                                    url: '/verproductoslinea/' + idlimite.substring(1),
+                                    url: '/verproductoslinea/' + tipolinea,
                                     async: false,
-                                    success: function (data) {
-                                        for (var i = 0; i < data.length; i++) {
+                                    success: function (data2) {
+                                        for (var i = 0; i < data2.length; i++) {
                                             productos += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
-                                            productos += "<td>"+data[i].Codigo+"</td>"
-                                            productos += "<td>"+data[i].Nombre+"</td>"
+                                            productos += "<td>" + data2[i].Codigo + "</td>"
+                                            productos += "<td>" + data2[i].Nombre + "</td>"
                                             productos += "</tr>"
                                         }
                                     }
@@ -814,17 +815,17 @@ var gridvertablimites = {
 
 
         });
-        $gridTab2.jqGrid ('setLabel', 'Numero', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Riesgo', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Descripcion', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Moneda', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Aprobado', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Utilizado', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Disponible', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'ColorCondicion', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Bloqueo_N', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Detalle_N', '', {'text-align':'center'});
-        $gridTab2.jqGrid ('setLabel', 'Reservar', '', {'text-align':'center'});
+        $gridTab2.jqGrid('setLabel', 'Numero', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Riesgo', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Descripcion', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Moneda', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Aprobado', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Utilizado', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Disponible', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'ColorCondicion', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Bloqueo_N', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Detalle_N', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Reservar', '', { 'text-align': 'center' });
 
         $gridTab2.jqGrid('navGrid', '#navGridtabverlimites', { edit: false, add: false, del: false, search: false },
             {
