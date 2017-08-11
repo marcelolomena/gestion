@@ -92,6 +92,7 @@ function gridOperaciones2(parentRowID, parentRowKey, suffix) {
         gridComplete: function () {
             //$("#" + childGridID).css("margin-left", "6px");
             
+            
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
                 //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });

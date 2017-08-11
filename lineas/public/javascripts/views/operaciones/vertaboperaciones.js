@@ -53,7 +53,7 @@ var gridvertaboperaciones = {
             ],
 
             rowNum: 20,
-            pager: '#navGridveroperaciones',
+            pager: '#navGridveroperaciones2',
             styleUI: "Bootstrap",
             //sortname: 'fecha',
             //sortorder: "desc",
