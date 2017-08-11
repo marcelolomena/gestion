@@ -66,7 +66,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                 rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
                 amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
                 verde = '<span><img src="../../../../images/greencircle.png" width="25px"/></span>';
-                console.log(" carlos ql " +cellvalue);
+                //console.log(" carlos ql " +cellvalue);
                 if (cellvalue === 'Rojo') {
                     return rojo
                 }
@@ -83,14 +83,15 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         {
             label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
             formatter: function (cellvalue, options, rowObject) {
-                dato = '<span role="button" class="glyphicon glyphicon-lock bloqueo2" aria-hidden="true" href="#' + rowObject.Id + 'style= "font-size: 15px"></span>'
+                dato = '<span role="button" class="fa fa-unlock-alt bloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>'
                 return dato;
             }
         },
         {
             label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
             formatter: function (cellvalue, options, rowObject) {
-                var dato = '<span role="button" class="glyphicon glyphicon-th-list muestradet2" href="#' + rowObject.Id + '"></span>';
+                var dato = '<span role="button" class="glyphicon glyphicon-folder-open muestradet2" aria-hidden="true" href="#' + rowObject.Id + '"></span>';
+
                 //dato = `<span role="button" class="glyphicon glyphicon-th-list" aria-hidden="true onclick="yourFunction()"></span>`
                 return dato;
             }
@@ -98,7 +99,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         {
             label: 'Reservar', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
             formatter: function (cellvalue, options, rowObject) {
-                var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';             
+                var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';
                 return dato;
             }
         },
@@ -135,7 +136,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         ondblClickRow: function (rowid) {
             $(this).jqGrid("toggleSubGridRow", rowid);
         },
-        
+
 
         editurl: '/limite/action3',
         loadComplete: function () {

@@ -80,7 +80,7 @@ var gridvertablimites = {
                 {
                     label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        dato = '<span role="button" class="glyphicon glyphicon-lock bloqueo" aria-hidden="true" href="#' + rowObject.Id + 'style= "font-size: 15px"></span>'
+                        dato = '<span role="button" class="fa fa-unlock-alt bloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>'
                         return dato;
                     }
                 },
@@ -104,7 +104,7 @@ var gridvertablimites = {
             ],
 
             rowNum: 20,
-            pager: '#navGridtabverlimites',
+            pager: '#navGridtabverlimites2',
             styleUI: "Bootstrap",
             //sortname: 'fecha',
             //sortorder: "desc",
@@ -140,6 +140,14 @@ var gridvertablimites = {
                 });
             },
             loadComplete: function () {
+
+                var recs = $gridTab2.getGridParam("reccount");
+                if (isNaN(recs) || recs == 0) {
+                //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
+                $gridTab2.parent().parent().remove();
+                $gridTab2PagerID.hide();
+
+            }
 
                 var rows = $gridTab2.getDataIDs();
                 for (var i = 0; i < rows.length; i++) {
