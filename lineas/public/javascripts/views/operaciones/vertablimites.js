@@ -105,6 +105,13 @@ var gridvertablimites = {
                         return dato;
                     }
                 },
+                {
+                    label: 'Reservar', name: 'Reservar', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';             
+                        return dato;
+                }
+        },
 
             ],
 
@@ -807,16 +814,17 @@ var gridvertablimites = {
 
 
         });
-        $gridTab2.jqGrid('setLabel', 'Numero', '', { 'text-align': 'center' });
-        $gridTab2.jqGrid('setLabel', 'Riesgo', '', { 'text-align': 'center' });
-        $gridTab2.jqGrid('setLabel', 'Descripcion', '', { 'text-align': 'center' });
-        $gridTab2.jqGrid('setLabel', 'Moneda', '', { 'text-align': 'center' });
-        $gridTab2.jqGrid('setLabel', 'Aprobado', '', { 'text-align': 'center' });
-        $gridTab2.jqGrid('setLabel', 'Utilizado', '', { 'text-align': 'center' });
-        $gridTab2.jqGrid('setLabel', 'Disponible', '', { 'text-align': 'center' });
-        $gridTab2.jqGrid('setLabel', 'Condicion', '', { 'text-align': 'center' });
-        $gridTab2.jqGrid('setLabel', 'Bloqueo_N', '', { 'text-align': 'center' });
-        $gridTab2.jqGrid('setLabel', 'Detalle_N', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid ('setLabel', 'Numero', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Riesgo', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Descripcion', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Moneda', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Aprobado', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Utilizado', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Disponible', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'ColorCondicion', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Bloqueo_N', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Detalle_N', '', {'text-align':'center'});
+        $gridTab2.jqGrid ('setLabel', 'Reservar', '', {'text-align':'center'});
 
         $gridTab2.jqGrid('navGrid', '#navGridtabverlimites', { edit: false, add: false, del: false, search: false },
             {
