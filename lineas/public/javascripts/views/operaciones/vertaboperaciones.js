@@ -66,7 +66,8 @@ var gridvertaboperaciones = {
             subGridRowExpanded: subGridOperaciones2, //se llama la funcion de abajo
             subGridOptions: {
                 plusicon: "glyphicon-hand-right",
-                minusicon: "glyphicon-hand-down"
+                minusicon: "glyphicon-hand-down",
+                expandOnLoad: true
             },
             rownumbers: false,
             onSelectRow: function (id) {
