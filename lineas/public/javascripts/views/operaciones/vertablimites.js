@@ -394,7 +394,8 @@ var gridvertablimites = {
                                 </div>
                             </div>
                         </div>
-                
+                    </div>
+
                     <div class="modal fade" id="myModalbloqueo" role="dialog">
                         <div class="modal-dialog modal-sm">
                             <div class="modal-content">
@@ -402,32 +403,40 @@ var gridvertablimites = {
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     <h4 class="modal-title">Bloqueo de Linea</h4>
                                 </div>
+
                                 <div class="modal-body">
-                                    <div class="form-group">
-                                        <label class="radio-inline"><input type="radio" name="optradio">Total</label>
-                                        <label class="radio-inline"><input type="radio" name="optradio">Parcial</label>
-                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Bloqueo Total</div>
+                                            <div class="panel-body">
+                                                <div class="form-group">
+                                                    <label class="radio-inline"><input type="radio" name="optradio">Total</label>
+                                                    <label class="radio-inline"><input type="radio" name="optradio">Parcial</label>
+                                                </div>
+                                             
+                                                <div class="form-group">
+                                                    <label for="monto">Monto:</label>
+                                                    <input type="text" class="form-control" id="monto">
+                                                </div>
+                                            </div>
                                         
-                                        <div class="form-group">
-                                        <label for="monto">Monto:</label>
-                                        <input type="text" class="form-control" id="monto">
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="modal fade" id="myModalCondicionL" role="dialog">
-                        <div class="modal-dialog modal-sm">
+                        <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     <h4 class="modal-title">Detalle Condicion</h4>
                                 </div>
                                 <div class="modal-body">
-
+                                    <label class="radio-inline"><input type="radio" name="condicion2">Parcial</label>
+                                    <p>hola</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -646,11 +655,11 @@ var gridvertablimites = {
                         async: false,
                         success: function (data) {
                             if (data.length > 0) {
-                                //$("#Condicion2").html(data[0].ColorCondicion)
-                               // $("#Condiciones2").html(data[0].Condiciones)
+                                $("#Condicion2").html(data[0].ColorCondicion)
+                                $("#Condiciones2").html(data[0].Condiciones)
                             }
                             else {
-                                //alert("No existe cliente en Base de Datos");
+                                alert("No existe cliente en Base de Datos");
                             }
                         }
                     });
