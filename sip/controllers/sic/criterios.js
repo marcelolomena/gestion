@@ -8,12 +8,102 @@ var fs = require('fs');
 var bitacora = require("../../utils/bitacora");
 var co = require('co');
 
+var insertanotaevaluaciontecnica = function (criterioevaluacion) {
+    logger.debug("ENTRAMOS AL INSERTANOTA")
+    return new Promise(function (resolve, reject) {
+        try {
+            var promesas = []
+
+            logger.debug("LARGOOOOOOOOOOOOOOOO " + criterioevaluacion.length)
+            //models.sequelize.transaction({ autocommit: true }, function (t) {
+            for (var c in criterioevaluacion) {
+                var newPromise = models.notaevaluaciontecnica.create({
+                    idserviciorequerido: criterioevaluacion[c].idservicio,
+                    idcriterioevaluacion: criterioevaluacion[c].idcrite,
+                    idproveedor: criterioevaluacion[c].idproveedor,
+                    nota: 0,
+                    comentario: criterioevaluacion[c].comentario,
+                    borrado: 1
+                })//, { transaction: t });
+
+                promesas.push(newPromise);
+
+            }
+
+            //logger.debug("ESTO ES UNA SOLICITUD DE COTIZACION PARA EL SEGUNDO CICLO" + idsolicitudcotiza)
+
+
+            logger.debug("ejecutando promesas")
+            Promise.all(promesas);
+
+            resolve("ESTO ES UN OK FINAL");
+        } catch (err) {
+            logger.debug("cago altiro 1")
+            reject(err);
+        }
+    })
+}
+
+var insertanotaevaluaciontecnica2 = function (idsolicitudcotiza) {
+    logger.debug("ENTRAMOS AL INSERTANOTA CON ID " + idsolicitudcotiza)
+    return new Promise(function (resolve, reject) {
+        try {
+            var promesas = []
+            var querynota2 =
+                `
+            SELECT f.id as idnota, e.id as idcriterio2, a.idproveedor, e.comentario 
+                FROM sic.proveedorsugerido a 
+                JOIN sic.serviciosrequeridos b on a.idserviciorequerido = b.id 
+                JOIN sic.criterioevaluacion c on c.idclaseevaluaciontecnica = b.claseevaluaciontecnica 
+                JOIN sic.solicitudcotizacion d on d.id = b.idsolicitudcotizacion 
+                JOIN sic.criterioevaluacion2 e on e.idcriterioevaluacion = c.id 
+                JOIN sic.notaevaluaciontecnica f on b.id = f.idserviciorequerido and c.id= f.idcriterioevaluacion and a.idproveedor = f.idproveedor 
+                WHERE d.id=:idsolicitudcotiza
+                `
+
+
+            sequelize.query(querynota2, {
+                replacements: { idsolicitudcotiza: idsolicitudcotiza },
+                type: sequelize.QueryTypes.SELECT
+            }).then(function (resultado) {
+                logger.debug("estamos en la nota 2")
+                //logger.debug("querynota2:" + querynota2);
+                logger.debug("LARGOOOOOOOOOOOOOOOO DEL CICLO 2 " + resultado.length)
+                console.dir(resultado)
+
+                for (var d in resultado) {
+                    logger.debug("ESTO ES UN IDNOTAEVA: " + resultado[d].idnota)
+                    logger.debug("ESTO ES UN IDCRITERIO2: " + resultado[d].idcriterio2)
+                    logger.debug("ESTO ES UN IDPROVEEDOR: " + resultado[d].idproveedor)
+                    var newPromise = models.notaevaluaciontecnica2.create({
+                        idnotaevaluaciontecnica: resultado[d].idnota,
+                        idcriterioevaluacion2: resultado[d].idcriterio2,
+                        idproveedor: resultado[d].idproveedor,
+                        nota: 0,
+                        comentario: resultado[d].comentario,
+                        borrado: 1
+                    })//, { transaction: t });
+                    promesas.push(newPromise);
+                }
+                Promise.all(promesas);
+            })
+            resolve("ESTO ES UN OK FINAL");
+
+        } catch (err) {
+            logger.debug("cago altiro 2")
+            reject(err);
+        }
+    })
+}
+
+
 exports.action = function (req, res) {
     var action = req.body.oper;
-
+    var idsolicitudcotiza = req.body.idsolicitudcotizacion;
+    var varcriterioevaluacion;
+    var varcriterioevaluacion2;
     switch (action) {
         case "add":
-
             break;
         case "edit":
             bitacora.registrar(
@@ -37,10 +127,105 @@ exports.action = function (req, res) {
                                     id: req.body.id
                                 }
                             }).then(function (serviciosrequeridos) {
+                                //console.log('ESTO ES EL ID DE CLASE DE EVALUACION TECNICA: ' + req.body.claseevaluaciontecnica);
+                                sequelize.query('select niveles ' +
+                                    'from sic.claseevaluaciontecnica ' +
+                                    'where id=:id ',
+                                    { replacements: { id: req.body.claseevaluaciontecnica }, type: sequelize.QueryTypes.SELECT }
+                                ).then(function (lv) {
+                                    if (lv[0].niveles != 0) {
+                                        console.log("ESTAMOS POR BORRAR TODO!")
+                                        //console.log("ESTO ES UNA IDSOLICITUD!: " + idsolicitudcotiza)
+                                        //console.log("ESTO ES UN ISERVICIOREQUERIDO:! " + req.body.id)
+                                        sequelize.query('EXECUTE sic.EliminaNotaEvaluacionTecnica ' + idsolicitudcotiza + ',' + req.body.id)
+                                        console.log("YA TE BORRE TODO!")
+                                        if (lv[0].niveles == 1) {
+                                            sequelize.query('select b.id as idservicio, c.id as idcrite, a.idproveedor, c.comentario ' +
+                                                'from sic.proveedorsugerido a ' +
+                                                'join sic.serviciosrequeridos b on a.idserviciorequerido = b.id ' +
+                                                'join sic.criterioevaluacion c on c.idclaseevaluaciontecnica = b.claseevaluaciontecnica ' +
+                                                'join sic.solicitudcotizacion d on d.id = b.idsolicitudcotizacion ' +
+                                                'where d.id=:id ',
+                                                { replacements: { id: idsolicitudcotiza }, type: sequelize.QueryTypes.SELECT }
+
+                                            ).then(function (criterioevaluacion) {
+                                                insertanotaevaluaciontecnica(criterioevaluacion).then(function (algo) {
+                                                    logger.debug(algo)
+                                                })
+                                            }).catch(function (err) {
+                                                logger.error(err);
+                                                return res.json({ error: 1 });
+                                            });
+                                        } else {
+                                            if (lv[0].niveles == 2) {
+                                                sequelize.query('select b.id as idservicio, c.id as idcrite, a.idproveedor, c.comentario ' +
+                                                    'from sic.proveedorsugerido a ' +
+                                                    'join sic.serviciosrequeridos b on a.idserviciorequerido = b.id ' +
+                                                    'join sic.criterioevaluacion c on c.idclaseevaluaciontecnica = b.claseevaluaciontecnica ' +
+                                                    'join sic.solicitudcotizacion d on d.id = b.idsolicitudcotizacion ' +
+                                                    'where d.id=:id ',
+                                                    { replacements: { id: idsolicitudcotiza }, type: sequelize.QueryTypes.SELECT }
+
+                                                ).then(function (criterioevaluacion) {
+                                                    insertanotaevaluaciontecnica(criterioevaluacion).then(function (algo) {
+                                                        logger.debug(algo)
+                                                        insertanotaevaluaciontecnica2(idsolicitudcotiza).then(function (algomas) {
+                                                            logger.debug(algomas)
+
+                                                        })
+
+                                                    })
+                                                }).catch(function (err) {
+                                                    logger.error(err);
+                                                    return res.json({ error: 1 });
+                                                });
+
+
+
+
+                                            } else {
+                                                console.log('ESTOY DENTRO SI ES NIVEL 3: ' + lv[0].niveles)
+                                                sequelize.query('select b.id as idservicio, c.id as idcrite, a.idproveedor, c.comentario ' +
+                                                    'from sic.proveedorsugerido a ' +
+                                                    'join sic.serviciosrequeridos b on a.idserviciorequerido = b.id ' +
+                                                    'join sic.criterioevaluacion c on c.idclaseevaluaciontecnica = b.claseevaluaciontecnica ' +
+                                                    'join sic.solicitudcotizacion d on d.id = b.idsolicitudcotizacion ' +
+                                                    'where d.id=:id ',
+                                                    { replacements: { id: idsolicitudcotiza }, type: sequelize.QueryTypes.SELECT }
+
+                                                ).then(function (criterioevaluacion) {
+                                                    insertanotaevaluaciontecnica(criterioevaluacion).then(function (algo) {
+                                                        logger.debug(algo)
+                                                        insertanotaevaluaciontecnica2(idsolicitudcotiza).then(function (algomas) {
+                                                            logger.debug(algomas)
+
+                                                        })
+
+                                                    })
+                                                }).catch(function (err) {
+                                                    logger.error(err);
+                                                    return res.json({ error: 1 });
+                                                });
+
+
+                                            }
+                                        }
+                                    } else {
+
+
+                                        logger.error(err)
+                                        return res.json({ message: err.message, success: false });
+                                    }
+
+                                }).catch(function (err) {
+                                    logger.error(err);
+                                    return res.json({ error: 1 });
+                                });
+
                                 res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
                             }).catch(function (err) {
                                 logger.error(err)
-                                res.json({ message: err.message, success: false });
+                                return res.json({ message: err.message, success: false });
                             });
                     } else {
                         logger.error(err)
@@ -278,10 +463,10 @@ exports.listaservicios = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -300,10 +485,10 @@ exports.proveedoressugeridostriada = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -319,10 +504,10 @@ exports.getcalculado = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -337,10 +522,10 @@ exports.getcalculadoconclase = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -356,10 +541,10 @@ exports.doctoasociado = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -369,10 +554,10 @@ exports.clasecriticidad = function (req, res) {
 
     }).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -382,10 +567,10 @@ exports.segmentoproveedor = function (req, res) {
 
     }).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 
@@ -408,63 +593,47 @@ exports.desgloseaction = function (req, res) {
                     }
                 }).then(function (factorescriticidad) {
 
-                    res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
+                    return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Actualizando', success: true });
                 }).catch(function (err) {
                     logger.error(err)
-                    res.json({ id: 0, message: err.message, success: false });
+                    return res.json({ id: 0, message: err.message, success: false });
                 });
-
-
-
             break;
         case "del":
-
-
             break;
     }
 }
 
 exports.proveedoressugeridosaction = function (req, res) {
     var action = req.body.oper;
-
     switch (action) {
         case "add":
-
             models.proveedorsugerido.create({
                 idserviciorequerido: req.body.parent_id,
                 idproveedor: req.body.idproveedor,
                 borrado: 1
             }).then(function (serviciosrequeridos) {
-
-                res.json({ id: serviciosrequeridos.id, message: 'Agregado', success: true });
-
+                return res.json({ id: serviciosrequeridos.id, message: 'Agregado', success: true });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+                return res.json({ id: 0, message: err.message, success: false });
             });
-
             break;
         case "edit":
-
-
-
             break;
         case "del":
-
             models.proveedorsugerido.destroy({
                 where: {
                     id: req.body.id
                 }
             }).then(function (rowDeleted) {
 
-                res.json({ id: rowDeleted, message: 'Eliminado', success: true, error_code: 0 });
+                return res.json({ id: rowDeleted, message: 'Eliminado', success: true, error_code: 0 });
 
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+                return res.json({ id: 0, message: err.message, success: false });
             });
-
-
             break;
     }
 }
@@ -489,21 +658,20 @@ exports.actualizanotafactor = function (req, res) {
         }
         models.serviciosrequeridos.update({
             notacriticidad: notafinal,
-
         }, {
                 where: {
                     id: id
                 }
             }).then(function (factorescriticidad) {
-                res.json({ message: 'Actualizada la nota', success: true });
+                return res.json({ message: 'Actualizada la nota', success: true });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+                return res.json({ id: 0, message: err.message, success: false });
             });
 
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 exports.getnotasdefactor = function (req, res) {
@@ -519,10 +687,10 @@ exports.getnotasdefactor = function (req, res) {
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
-        res.json(valores);
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 exports.actualizacolorfactor = function (req, res) {
@@ -554,14 +722,14 @@ exports.actualizacolorfactor = function (req, res) {
                     id: id
                 }
             }).then(function (factorescriticidad) {
-                res.json({ message: 'Actualizado el color', success: true });
+                return res.json({ message: 'Actualizado el color', success: true });
             }).catch(function (err) {
                 logger.error(err)
-                res.json({ id: 0, message: err.message, success: false });
+                return res.json({ id: 0, message: err.message, success: false });
             });
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 }
 

@@ -85,8 +85,6 @@ var matrizAjustada = function (id, ladata) {
                     }
                     total.push(datum)
                 }
-
-
                 //console.dir(total)
                 var sum = (r, a) => r.map((b, i) => a[i] + b);
                 var tot1 = total.reduce(sum)

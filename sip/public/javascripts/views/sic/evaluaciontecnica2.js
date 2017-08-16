@@ -120,7 +120,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
             search: false, editable: true, hidden: false,
             formatter: 'number', formatoptions: { decimalPlaces: 0 },
             editrules: { required: false },
-        
+
         },
 
         {
@@ -194,6 +194,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
+        navkeys: true,
         pager: "#" + childGridPagerID,
         subGrid: true,
         subGridRowExpanded: showSubGridsCot3,
@@ -213,29 +214,34 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+        edit: true, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
-            closeAfterEdit: true,
+            closeAfterEdit: false,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             editCaption: "Modificar Nota ",
-            template: tmplPF,
+            //template: tmplPF,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
             },
             onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey, abuelo: parentSolicitud };
             },
-            
+
             beforeShowForm: function (form) {
+                $("input#criterioevaluacion.nombre").attr("readonly", false);
+                $("input#criterioevaluacion.porcentaje").attr("readonly", false);
+                $("input#proveedor.razonsocial").attr("readonly", false);
                 var nivel = 0;
+
+
                 $.ajax({
                     type: "GET",
                     url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
                     success: function (data) {
-                        console.log("ESTAMOS EN NIVEL 1 DE: "+ data[0].niveles)
+                        console.log("ESTAMOS EN NIVEL 1 DE: " + data[0].niveles)
                         nivel = (data[0].niveles);
                         if (parseInt(nivel) > 1) {
                             $("input#nota").attr("readonly", true);
@@ -245,11 +251,8 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                     }
                 });
 
-                console.log("ESTO ES UN PARENTCLASEEVALUACIONTECNICA: "+ parentClaseEvaluacionTecnica)
-                console.log("estamos en el nivel: " + nivel)
-
-
-                
+            }, afterShowForm: function (form) {
+                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
         {
@@ -292,7 +295,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                 console.log("niveles: " + nivel)
 
 
-                
+
             }
 
         },
@@ -317,7 +320,7 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
 
             },
             onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey , abuelo: parentSolicitud };
+                return { parent_id: parentRowKey, abuelo: parentSolicitud };
             },
         },
         {

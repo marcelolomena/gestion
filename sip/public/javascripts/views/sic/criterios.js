@@ -210,6 +210,7 @@ var gridCriterios = {
                         var porcentajetecnico = 100 - parseInt(porcentajeeconomico)
                         console.log("el % tec: " + porcentajetecnico)
                         $("input#porcentajetecnico").val(porcentajetecnico);
+                        $("#idservicio", form).attr('disabled', 'disabled');
                     }, 450);
 
 
@@ -229,6 +230,9 @@ var gridCriterios = {
 
                         return [true, "", ""]
                     }
+                },
+                onclickSubmit: function (rowid) {
+                    return { idsolicitudcotizacion: parentRowKey };
                 }
             }, {
                 addCaption: "Agrega Servicio",

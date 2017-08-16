@@ -254,31 +254,31 @@ var gridSolicitudContrato = {
             }
         });
 
-/*
-        $gridTab.jqGrid('navButtonAdd', '#navGridSolCon', {
-            caption: "",
-            //id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
-            buttonicon: "glyphicon glyphicon-floppy-save",
-
-            title: "Generar Contratos",
-            position: "last",
-            onClickButton: function () {
-                //var rowKey = $gridTab.getGridParam("selrow");
-                //var parentRowData = $("#gridMaster").getRowData(parentRowKey);
-                //console.log(parentRowData.idtipo)
-                //console.log(parentRowData.idgrupo)
-                console.log("esto es una solicitud: " + parentRowKey)
-                try {
-                    var url = '/sic/guardarcontrato/' + parentRowKey;
-                    $gridTab.jqGrid('excelExport', { "url": url });
-                } catch (e) {
-                    console.log("error: " + e)
-
-                }
-
-            }
-        });
-        */
+        /*
+                $gridTab.jqGrid('navButtonAdd', '#navGridSolCon', {
+                    caption: "",
+                    //id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
+                    buttonicon: "glyphicon glyphicon-floppy-save",
+        
+                    title: "Generar Contratos",
+                    position: "last",
+                    onClickButton: function () {
+                        //var rowKey = $gridTab.getGridParam("selrow");
+                        //var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                        //console.log(parentRowData.idtipo)
+                        //console.log(parentRowData.idgrupo)
+                        console.log("esto es una solicitud: " + parentRowKey)
+                        try {
+                            var url = '/sic/guardarcontrato/' + parentRowKey;
+                            $gridTab.jqGrid('excelExport', { "url": url });
+                        } catch (e) {
+                            console.log("error: " + e)
+        
+                        }
+        
+                    }
+                });
+                */
 
         $gridTab.jqGrid('navButtonAdd', '#navGridSolCon', {
             caption: "",
@@ -291,17 +291,27 @@ var gridSolicitudContrato = {
                 //console.log(parentRowData.idtipo)
                 //console.log(parentRowData.idgrupo)
 
-                var dialog = bootbox.dialog({
-                    title: 'Generando Contratos',
-                    message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar segundos...</p>'
-                });
-                dialog.init(function () {
-                    $.getJSON('/sic/guardarcontrato/' + parentRowKey, function (res) {
-                        $gridTab.trigger("reloadGrid");
-                        dialog.find('.bootbox-body').html(res.message);
-                    });
-                });
-
+                bootbox.confirm({
+                    message: "¿Esta seguro de guardar los contratos?",
+                    buttons: {
+                        confirm: {
+                            label: 'Si',
+                        },
+                        cancel: {
+                            label: 'No',
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            $.getJSON('/sic/guardarcontrato/' + parentRowKey, function (res) {
+                                $gridTab.trigger("reloadGrid");
+                                dialog.find('.bootbox-body').html(res.message);
+                            });
+                        } else {
+                            console.log('ESTO NO SE GUARDO!')
+                        }
+                    }
+                })
             }
         });
     }

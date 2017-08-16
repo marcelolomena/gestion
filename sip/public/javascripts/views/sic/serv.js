@@ -213,11 +213,18 @@ var gridServ = {
                     $('input#notacriticidad', form).attr('readonly', 'readonly');
                     setTimeout(function () {
                         $("#idclasecriticidad", form).attr('disabled', 'disabled');
+                        $("#idservicio", form).attr('disabled', 'disabled');
+                        
                     }, 450);
-
+                    
+                    
+                
+                //$('input#porcentaje', form).attr('readonly', 'readonly');
+                //$('input#valor', form).attr('readonly', 'readonly');
 
 
                 },
+                
                 beforeSubmit: function (postdata, formid) {
                     if (postdata.idservicio == 0) {
                         return [false, "Servicio: Campo obligatorio", ""];
@@ -324,7 +331,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row'>";
-    tmplPF += "<div class='column-full'>Observación {observacion}</div>";
+    tmplPF += "<div class='column-full'>Justificación {observacion}</div>";
     tmplPF += "</div>";
 
     tmplPF += "<div class='form-row' style='display: none;'>";
@@ -382,9 +389,28 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
                         var rowKey = $("#" + childGridID).getGridParam("selrow");
                         var rowData = $("#" + childGridID).getRowData(rowKey);
                         var porcentaje = rowData.porcentaje;
+                        var nombrefactor = rowData.nombrefactor;
                         //console.log("la nota: "+lanota+" porcentaje: "+porcentaje);
                         $("input#valor").val((parseFloat(porcentaje) / 100) * parseFloat(lanota));
+                        editoptions: {
+                            console.log('ESTO ES UN PARENTROWKEY: ' + parentRowKey)
+                            console.log('ESTO ES UNA NOTA: ' + lanota)
+                            console.log('ESTO ES UN NOMBRE DE FACTOR: ' + nombrefactor)
+                            $.ajax({
+                                type: "GET",
+                                url: '/sic/getjustificacion/' + nombrefactor + '/' + lanota,
+                                async: false,
+                                success: function (data) {
+                                    console.log(data[0].nombrenota)
+                                    $("input#observacion").val(data[0].nombrenota);
+                                }
+                            });
 
+
+
+
+
+                        }
                     }
                 }],
 
@@ -396,11 +422,9 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             formatter: 'number', formatoptions: { decimalPlaces: 2 }
         },
         {
-            label: 'Observación', name: 'observacion', width: 200,
-            align: 'left', edittype: "textarea",
+            label: 'Justificación', name: 'observacion', width: 200,
+            align: 'left', //edittype: "textarea",
             search: true, editable: true, hidden: false,
-            editoptions: { placeholder: "Ingresar comentario sobre la nota" },
-
         },
     ];
 
@@ -443,21 +467,21 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             }
         },
         loadComplete: function (data) {
-                var thisId = $.jgrid.jqID(this.id);
-                $.get('/sic/getsession', function (data) {
-                    $.each(data, function (i, item) {
-                        console.log("EL ROL ES: " + item.glosarol)
-                        if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC') {
-                            $("#add_" + thisId).addClass('ui-disabled');
-                            //$("#add_gridMaster").hide();
-                            $("#edit_" + thisId).addClass('ui-disabled');
-                            //$("#edit__gridMaster").hide();
-                            $("#del_" + thisId).addClass('ui-disabled');
-                            //$("#del__gridMaster").hide();
-                        }
-                    });
+            var thisId = $.jgrid.jqID(this.id);
+            $.get('/sic/getsession', function (data) {
+                $.each(data, function (i, item) {
+                    console.log("EL ROL ES: " + item.glosarol)
+                    if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC') {
+                        $("#add_" + thisId).addClass('ui-disabled');
+                        //$("#add_gridMaster").hide();
+                        $("#edit_" + thisId).addClass('ui-disabled');
+                        //$("#edit__gridMaster").hide();
+                        $("#del_" + thisId).addClass('ui-disabled');
+                        //$("#del__gridMaster").hide();
+                    }
                 });
-            }
+            });
+        }
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
@@ -506,7 +530,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
                 $('input#nombrefactor', form).attr('readonly', 'readonly');
                 $('input#porcentaje', form).attr('readonly', 'readonly');
                 $('input#valor', form).attr('readonly', 'readonly');
-                $(".EditTable td textarea").css("width", "360");
+                //$(".EditTable td textarea").css("width", "360");
 
                 var grid = $("#" + childGridID);
                 var rowKey = grid.getGridParam("selrow");
@@ -517,6 +541,8 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
                     return [false, result.error_text, ""];
                 }
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+
+
                 //$('input#codigoart', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));

@@ -27,6 +27,13 @@ var cotizacionservicioController = require('../controllers/sic/cotizacionservici
 var matrizevaluacionController = require('../controllers/sic/matrizevaluacion')
 var adjudicacionController = require('../controllers/sic/adjudicacion')
 var solicitudcontratoController = require('../controllers/sic/solicitudcontrato')
+var triadaController = require('../controllers/sic/triada');
+//var triada2Controller = require('../controllers/sic/triada2');
+
+//var plantillaController = require('../controllers/plantilla');
+var detalleplantillaController = require('../controllers/sic/detalleplantilla2');
+var plantillacuiController = require('../controllers/sic/plantillacui2');
+
 
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
@@ -741,6 +748,26 @@ module.exports = function (passport) {
 
     router.route('/sic/BorrarClausulas/:id/:numero')
         .get(isAuthenticated, clausulasController.BorrarClausulas)
+
+    router.route('/sic/getjustificacion/:nombrefactor/:nota')
+        .get(isAuthenticated, serviciosController.getjustificacion);
+
+    //-----------------------------------------------------------------
+
+    router.route('/sic/triada/:id')
+        .get(isAuthenticated, triadaController.list);
+    
+    router.route('/sic/triada/action')
+        .post(isAuthenticated, triadaController.action);
+
+    router.route('/sic/detalleplantilla/:id')
+        .get(isAuthenticated, detalleplantillaController.list);
+
+    router.route('/sic/cuiservicios/:id')
+        .get(isAuthenticated, plantillacuiController.getCuiServicios);
+
+    router.route('/sic/cuiproveedores/:id/:idservicio')
+        .get(isAuthenticated, plantillacuiController.getCuiProveedores);
 
 
     return router;
