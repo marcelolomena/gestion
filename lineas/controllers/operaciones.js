@@ -435,3 +435,17 @@ exports.listcomentarioslinea = function (req, res) {
         res.json({ error: 1 });
     });
 };
+
+exports.actionbloquear = function (req, res) {
+    var idlinea = req.params.id;
+    sequelize.query(`
+    update scl.Linea 
+    set Bloqueado = '`+ req.body.monto + `'   
+    where Id=`+ idlinea).spread((results, metadata) => {
+            return res.json(metadata);
+
+        }).catch(function (err) {
+            logger.error(err);
+            return res.json({ error: 1 });
+        });
+};

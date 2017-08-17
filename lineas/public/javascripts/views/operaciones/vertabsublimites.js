@@ -191,7 +191,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                                     <h4 class="modal-title">Bloqueo de Linea</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="panel panel-primary">...
+                                    <div class="panel panel-primary">
                                         <div class="form-group">
                                             <label class="radio-inline"><input type="radio" name="optradio">Total</label>
                                             <label class="radio-inline"><input type="radio" name="optradio">Parcial</label>
