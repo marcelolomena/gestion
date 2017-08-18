@@ -757,6 +757,7 @@ var gridvertablimites = {
                 $('#botonpost').click(function () {
                     console.log("holapo");
                     var idlineabloqueo = $('#idlineabloqueo').val();
+                    
                     $.ajax({
                         type: "POST",
                         url: "/cargarbloqueo/" + idlineabloqueo,
@@ -772,6 +773,8 @@ var gridvertablimites = {
                  $('#botonpost2').click(function () {
                     console.log("holapo");
                     var idlineabloqueo = $('#idlineabloqueo2').val();
+
+        
                     $.ajax({
                         type: "POST",
                         url: "/cargarbloqueo/" + idlineabloqueo,
@@ -844,11 +847,7 @@ var gridvertablimites = {
             $('#dparcial').click(function () {
                 //$("#montodes").hide();
                 //$("#labelmontodesbloqueo").hide();
-                var bloqueado=$("#Bloqueado").val();
-                var desbloqueado=$("#montodes").val();
-                bloqueado=bloqueado-desbloqueado;
-                console.log("monto bloqueado "+bloqueado);
-                $("#montodes").val(bloqueado);
+               
                 //console.log($("#monto").val);
                 //var idlineabloqueo = $('#idlineabloqueo2').val();
             });
