@@ -33,6 +33,7 @@ object Generics extends Controller {
   def overview() = Action {
     implicit request =>
       request.session.get("username").map { user =>
+        println("por aca")
         val projectTypes = GenericProjectService.findAllProjectTypes();
         val predefinedTasks = GenericProjectService.findAllPredefinedTasks();
         Ok(views.html.frontend.generics.overview(projectTypes, predefinedTasks))

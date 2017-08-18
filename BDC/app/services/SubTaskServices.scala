@@ -607,7 +607,7 @@ object SubTaskServices extends CustomColumns {
         finalString = (hour + "." + mins).toDouble
       }
     } catch {
-      case ex: Exception => return "0"
+      case ex: Exception => {println("error en subtarea : " + sub_task );return "0"}
     }
     /*df.format(finalString)*/ finalString.toString()
 
