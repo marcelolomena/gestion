@@ -440,7 +440,8 @@ exports.actionbloquear = function (req, res) {
     var idlinea = req.params.id;
     sequelize.query(`
     update scl.Linea 
-    set Bloqueado = '`+ req.body.monto + `'   
+    set Bloqueado = '`+ req.body.monto + `',
+    BORRARCOMEN= '`+req.body.comentario+`'
     where Id=`+ idlinea).spread((results, metadata) => {
             return res.json(metadata);
 

@@ -123,7 +123,7 @@
     "local3": {
         "username": "biometria",
         "password": "biometria123",
-        "database": "lineas",
+        "database": "controldelimites",
         "host": "ZRISMART02",
         "dialect": "mssql",
         "dialectOptions": {

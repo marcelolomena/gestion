@@ -4,7 +4,6 @@ var isAuthenticated = require('../policies/isAuthenticated')
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
-
 var carteraController = require('../controllers/cartera')
 var operacionesController = require('../controllers/operaciones')
 var grupoController = require('../controllers/grupo')
@@ -105,6 +104,8 @@ module.exports = function (passport) {
     router.route('/vercomentarioslinea/:id')
         .get(isAuthenticated, operacionesController.listcomentarioslinea);
 
-        
+    router.route('/cargarbloqueo/:id')
+        .post(isAuthenticated, operacionesController.actionbloquear);
+
         return router;
 }

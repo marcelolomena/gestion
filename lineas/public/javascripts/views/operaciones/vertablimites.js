@@ -55,7 +55,27 @@ var gridvertablimites = {
                 { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Disponible', name: 'Disponible2', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
+                formatter: function (cellvalue, options, rowObject) {
+                var bloq=0;
+                var disp=0;
+                $.ajax({
+                            type: "GET",
+                            url: '/verdetalleslim/' + rowObject.Id,
+                            async: false,
+                            success: function (data) {
+                                if (data.length > 0) {
+                                    bloq = data[0].Bloqueado;
+                                    disp=data[0].Disponible;
+                                    //console.log("valor de bloqueo " + bloq);
+                                }
+                            }
+                        })
+                    return (disp-bloq);
+                    }
+                },
+                
+                
                 {
                     label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
@@ -422,34 +442,36 @@ var gridvertablimites = {
                             <div class="modal-content">
                                 <div class="modal-body">
                                     <div class="panel panel-default" >
-                                        <div class="panel-heading" style="background-color: #002464;color: #fff;">Desbloquear Linea</div>
+                                        <div class="panel-heading" style="background-color: #002464;color: #fff;">Bloquear Linea</div>
                                             <div class="panel-body">
-                                                <form id="miprimerform">
 
+                                                <form id="miprimerform2">
+                                                
                                                     <div class="form-group">
-                                                        <input type="checkbox" name="my-checkbox" checked style="background-color: #002464;">
-                                                        <input type="text" class="form-control" id="idlineabloqueo" style="display: none">
+                                                            <label class="radio-inline"><input id="bparcial" type="radio" name="optradio style="background-color: #002464;">Parcial</label>
+                                                            <label class="radio-inline"><input id="btotal" type="radio" name="optradio">Total</label>
+                                                            <input type="text" class="form-control" id="idlineabloqueo2" style="display: none">
+                                                            <input type="text" class="form-control" id="disponible" name="disponible" style="display: none">
                                                     </div>
 
-                                                    <div> Monto Bloqueado: $<span id="MontoBloqueado"></span></div>
-                                                    <p></p>
                                                     <div class="form-group">
-                                                        <label for="monto">Monto:</label>
+                                                        <label for="monto" id="labelmonto">Monto:</label>
                                                         <input type="text" class="form-control" name ="monto" id="monto">
-                                                        <label for="comentario">Comentario:</label>
+                                                        <label for="comentario" id="comentario">Comentario:</label>
                                                         <input type="text" class="form-control" name="comentario" id="comentario">
                                                     </div>
+                                            
                                                     <div class="wrapper" style="text-align: center">
-                                                        <button id="botonpost" type="submit" class="btn btn-default" data-dismiss="modal">Desbloquear</button>
+                                                        <button id="botonpost2" type="submit" class="btn btn-default" data-dismiss="modal">Bloquear</button>
                                                     </div>
+                                                    
                                                 </form>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    
+                    </div>
 
                     <div class="modal fade" id="ModalDesbloqueo" role="dialog" >
                         <div class="modal-dialog modal-sm" >
@@ -461,44 +483,44 @@ var gridvertablimites = {
                                                 <form id="miprimerform">
 
                                                     <div class="form-group">
-                                                        <input type="checkbox" name="my-checkbox" checked style="background-color: #002464;">
+                                                        <label class="radio-inline"><input id="dparcial" type="radio" name="optradio style="background-color: #002464;">Parcial</label>
+                                                        <label class="radio-inline"><input id="dtotal" type="radio" name="optradio">Total</label>
                                                         <input type="text" class="form-control" id="idlineabloqueo" style="display: none">
-                                                    </div>
+                                                        <input type="text" class="form-control" id="Bloqueado" style="display: none">
 
+                                                    </div>
                                                     <div> Monto Bloqueado: $<span id="MontoBloqueado"></span></div>
                                                     <p></p>
                                                     <div class="form-group">
-                                                        <label for="monto">Monto:</label>
-                                                        <input type="text" class="form-control" name ="monto" id="monto">
-                                                        <label for="comentario">Comentario:</label>
-                                                        <input type="text" class="form-control" name="comentario" id="comentario">
+                                                        <label for="monto" id="labelmontodesbloqueo">Monto:</label>
+                                                        <input type="text" class="form-control" name ="monto" id="montodes">
+                                                        <label for="comentario">Bloqueado por: Ejecutivo 1</label>
+                                                        <div> Comentario:<span id="Comentario"></span></div>
                                                     </div>
                                                     <div class="wrapper" style="text-align: center">
                                                         <button id="botonpost" type="submit" class="btn btn-default" data-dismiss="modal">Desbloquear</button>
                                                     </div>
                                                 </form>
-                                            </div>
-                                        
-                                    
+                                            </div>                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>   
                     <div class="modal fade" id="myModalCondicionL" role="dialog">
-                        <div class="modal-dialog modal-lg">
+                        <div class="modal-dialog modal-sm">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Detalle Condicion</h4>
-                                </div>
+                                <div class="panel-heading" style="background-color: #002464;color: #fff;">Detalles Linea</div>
                                 <div class="modal-body">
-                                    <label class="radio-inline"><input type="radio" name="condicion2">Parcial</label>
-                                    <p>hola</p>
+                                    
+
+
                                 </div>
+
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                                 </div>
+
                             </div>
                         </div>
                     </div> 
@@ -741,6 +763,23 @@ var gridvertablimites = {
                         data: $('#miprimerform').serialize(),
                         success: function (msg) {
                             console.log("tremendo exito " + msg)
+                            $gridTab2.trigger( 'reloadGrid' );
+                        }
+                    });
+
+                });
+
+                 $('#botonpost2').click(function () {
+                    console.log("holapo");
+                    var idlineabloqueo = $('#idlineabloqueo2').val();
+                    $.ajax({
+                        type: "POST",
+                        url: "/cargarbloqueo/" + idlineabloqueo,
+                        data: $('#miprimerform2').serialize(),
+                        success: function (msg) {
+                            console.log("tremendo exito " + msg)
+                            $gridTab2.trigger( 'reloadGrid' );
+
                         }
                     });
 
@@ -768,16 +807,20 @@ var gridvertablimites = {
                         success: function (data) {
                             if (data.length > 0) {
                                 var bloq = data[0].Bloqueado;
-                                console.log("valor de bloqueo " + bloq);
+                                //console.log("valor de bloqueo " + bloq);
                             }
 
                             if (bloq > 0) {
-                                $("#MontoBloqueado").html(data[0].Bloqueado)
+                                $("#MontoBloqueado").html(data[0].Bloqueado) //desbloqueo
+                                $("#Bloqueado").val(data[0].Bloqueado)
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
+                                $("#Comentario").html(data[0].BORRARCOMEN)
                             }
                             else {
-
+                                 //Bloqueo
+                                $("#idlineabloqueo2").val(data[0].Id)
+                                $("#disponible").val(data[0].Disponible)
                                 $("#myModalbloqueo").modal();
                             }
 
@@ -785,6 +828,38 @@ var gridvertablimites = {
                     })
                 });
 
+            $('#bparcial').click(function () {
+                //console.log("bloqueo parcial");
+                //var idlineabloqueo = $('#idlineabloqueo2').val();
+            });    
+
+            $('#btotal').click(function () {
+                $("#monto").hide();
+                $("#labelmonto").hide();
+                $("#monto").val($("#disponible").val());
+                //console.log($("#monto").val);
+                //var idlineabloqueo = $('#idlineabloqueo2').val();
+            });
+
+            $('#dparcial').click(function () {
+                //$("#montodes").hide();
+                //$("#labelmontodesbloqueo").hide();
+                var bloqueado=$("#Bloqueado").val();
+                var desbloqueado=$("#montodes").val();
+                bloqueado=bloqueado-desbloqueado;
+                console.log("monto bloqueado "+bloqueado);
+                $("#montodes").val(bloqueado);
+                //console.log($("#monto").val);
+                //var idlineabloqueo = $('#idlineabloqueo2').val();
+            });
+
+            $('#dtotal').click(function () {
+                $("#montodes").hide();
+                $("#labelmontodesbloqueo").hide();
+                $("#montodes").val($("#disponible").val());
+                //console.log($("#monto").val);
+                //var idlineabloqueo = $('#idlineabloqueo2').val();
+            });
 
                 var thisId = $.jgrid.jqID(this.id);
 
