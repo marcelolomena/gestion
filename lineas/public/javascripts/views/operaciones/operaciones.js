@@ -8,7 +8,7 @@ $(document).ready(function () {
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Asignar</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Excepciones</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Reportes</a></li>"
-    tabs += "<li><a href='/operacionmac/" + rut + "' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>MAC</a></li>"
+    tabs += "<li><a href='/operacionmac/" + rut + "' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Aprobaciones</a></li>"
     tabs += "</ul>"
 
     tabs += "<div class='tab-content'>"

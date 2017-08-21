@@ -487,8 +487,8 @@ var gridvertablimites = {
                                                         <label class="radio-inline"><input id="dtotal" type="radio" name="optradio">Total</label>
                                                         <input type="text" class="form-control" id="idlineabloqueo" style="display: none">
                                                         <input type="text" class="form-control" id="Bloqueado" style="display: none">
-
                                                     </div>
+
                                                     <div> Monto Bloqueado: $<span id="MontoBloqueado"></span></div>
                                                     <p></p>
                                                     <div class="form-group">
@@ -510,11 +510,11 @@ var gridvertablimites = {
                     <div class="modal fade" id="myModalCondicionL" role="dialog">
                         <div class="modal-dialog modal-sm">
                             <div class="modal-content">
+
                                 <div class="panel-heading" style="background-color: #002464;color: #fff;">Detalles Linea</div>
                                 <div class="modal-body">
-                                    
-
-
+                                    <div>Condicion: <label for="Condicion" id="Condicion2"> </label>  </div>
+                                    <div>Comentario: <label for="Comentario" id="Condiciones2"> </label>  </div>
                                 </div>
 
                                 <div class="modal-footer">
@@ -736,8 +736,10 @@ var gridvertablimites = {
                         async: false,
                         success: function (data) {
                             if (data.length > 0) {
-                                $("#Condicion2").html(data[0].ColorCondicion)
-                                $("#Condiciones2").html(data[0].Condiciones)
+                                $("#Condicion2").html(data[0].ColorCondicion);
+                                $("#Condiciones2").html(data[0].BORRARCOND);
+                                var condi=$("#Condiciones2").val(data[0].BORRARCOND);
+                                console.log("comentario "+data[0].BORRARCOMEN);
                             }
                             else {
                                 alert("No existe cliente en Base de Datos");
@@ -796,11 +798,7 @@ var gridvertablimites = {
                 });
 
                 $('.abrirbloqueo').click(function () {
-                    $("[name='my-checkbox']").bootstrapSwitch('onText', 'Parcial');
-                    $("[name='my-checkbox']").bootstrapSwitch('offText', 'Total');
-                    $("[name='my-checkbox2']").bootstrapSwitch('onText', 'Parcial');
-                    $("[name='my-checkbox2']").bootstrapSwitch('offText', 'Total');
-
+                  
 
                     var id = $(this).attr('href').substring(1);
                     $.ajax({
