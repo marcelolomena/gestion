@@ -871,7 +871,7 @@ var gridvertablimites = {
                 $('#dtotal').click(function () {
                     $("#montodes").hide();
                     $("#labelmontodesbloqueo").hide();
-                    $("#montodes").val($("#disponible").val());
+                    //$("#montodes").val($("#disponible").val());
                     //console.log($("#monto").val);
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });

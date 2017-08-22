@@ -109,6 +109,12 @@ module.exports = function (passport) {
 
     router.route('/asignar/:id')
         .get(isAuthenticated, operacionesController.listasignar);
+        
+    router.route('/aprobaciones/:id')
+        .get(isAuthenticated, operacionesController.listaprobaciones);
+
+    router.route('/gettiposaprobacion')
+        .get(isAuthenticated, carteraController.gettiposaprobacion);
 
         return router;
 }

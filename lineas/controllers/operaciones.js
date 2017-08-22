@@ -467,5 +467,51 @@ where f.Rut=`+ req.params.id,
     }).catch(function (err) {
         logger.error(err);
         res.json({ error: 1 });
+    })
+}
+exports.listaprobaciones = function (req, res) {
+    //console.dir("***************EN LISTNEW ***************************");
+    var page = req.query.page;
+    var rowspp = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var condition = "";
+
+    if (!sidx) {
+        sidx = "a.Id";
+        sord = "asc";
+    }
+
+
+    var order = sidx + " " + sord;
+
+    var sqlcount = `
+    select count (*) from scl.Aprobacion a
+    join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
+    join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
+    where a.Rut =`+ req.params.id;
+
+    var sqlok = "declare @rowsPerPage as bigint; " +
+        "declare @pageNum as bigint;" +
+        "set @rowsPerPage=" + rowspp + "; " +
+        "set @pageNum=" + page + ";   " +
+        "With SQLPaging As   ( " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+        `as resultNum, a.*, b.Nombre as tipoaprobacion, c.Nombre as estadoaprobacion from scl.Aprobacion a
+        join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
+        join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
+        where a.Rut =`+ req.params.id;
+    sqlok += ") " +
+        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+    sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        console.log("Total:" + total + "recs[0].count:" + recs[0].count);
+        console.log("SQL2:" + sqlok);
+        sequelize.query(sqlok).spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+        });
     });
 };

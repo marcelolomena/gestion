@@ -720,3 +720,17 @@ exports.getmacporrut = function (req, res) {
     });
 
 }
+
+exports.gettiposaprobacion = function (req, res) {
+    sequelize.query(
+        'select * from scl.TipoAprobacion',
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
+}
