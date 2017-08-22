@@ -45,20 +45,22 @@ var gridaprobaciones = {
             },
             loadComplete: function () {
                 // loadcomplete
+                $gridTabAprobaciones.append(`
+                    <button type="submit" id="botoncrear" class="btn btn-default" style="margin-top: 0px;">Crear nueva Aprobación</button>        
+                `);
+                $('#botoncrear').click(function () {
+
+                    window.location.assign("/menu/crearaprobacion/p/" + rut);
+
+                });
             },
 
 
         });
 
-        $gridTabAprobaciones.append(`
-            <button type="submit" id="botoncrear" class="btn btn-default" style="margin-top: 0px;">Crear nueva Aprobación</button>        
-        `);
 
-        $('#botoncrear').click(function () {
 
-            window.location.assign("/menu/crearaprobacion/p/" + rut);
 
-        });
 
 
     }
