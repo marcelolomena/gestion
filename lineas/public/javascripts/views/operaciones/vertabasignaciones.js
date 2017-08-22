@@ -33,15 +33,23 @@ var gridvertabasignaciones = {
                     label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
-                { label: '', name: 'Rut', hidden: true, editable: true, align: 'left' },
-                { label: '', name: 'Nombre', hidden: false, editable: true, align: 'left' },
-                //{ label: 'Tipo Operacion', name: 'TipoOperacion', hidden: true, editable: true,align: 'right' },
-                //{ label: 'Nro Producto', name: 'NumeroProducto', width: 8, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
-                //{ label: 'Fecha Otorgamiento', name: 'FechaOtorgamiento', width: 10, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
-                //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                /*{
-                    label: 'Fecha Prox Vencimiento', name: 'FechaProxVenc', width: 12, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true },
-                },*/
+                { label: 'Descripcion Producto', name: 'DescripcionProducto', width: 6, hidden: false, editable: true, align: 'left' },
+                { label: 'Tipo Operacion', name: 'TipoOperacion', width: 3, hidden: false, editable: true, align: 'center' },
+                { label: 'NumeroProducto', name: 'NumeroProducto', width: 3, hidden: false, editable: true, align: 'center' },
+
+                { label: 'Moneda', name: 'Moneda', width: 3, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Monto Inicial', name: 'MontoInicial', width: 3, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true } },
+                { label: 'Monto Actual', name: 'MontoActual', width: 3, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true } },
+                { label: 'Asignar Operacion', name: 'n', width: 3, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true },
+                
+                formatter: function (cellvalue, options, rowObject) {
+                        var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';
+            
+                        return dato;
+                    }
+                },
+
+                
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                 //{ label: 'Moneda', name: 'Moneda', width: 5, hidden: false, search: true, editable: true,align: 'right', editrules: { required: true } },
                 //{ label: 'Monto Inicial', name: 'MontoInicial', width: 5, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
@@ -50,6 +58,7 @@ var gridvertabasignaciones = {
                 /*{
                     label: 'Monto Actual Equiv. M/N M$', name: 'Condicion', width: 15, hidden: false, search: true, editable: true, align: 'center',
                 */
+
             ],
 
             rowNum: 20,
@@ -95,9 +104,7 @@ var gridvertabasignaciones = {
 
 
         });
-        $gridTab4.closest("div.ui-jqgrid-view")
-            .children("div.ui-jqgrid-hdiv")
-            .hide();
+
 
         $gridTab4.jqGrid('navGrid', '#navGridtabverlimites', { edit: false, add: false, del: false, search: false },
             {
@@ -201,6 +208,14 @@ var gridvertabasignaciones = {
                         return [true, "", ""]
                 }
             });
+
+        $gridTab4.jqGrid('setLabel', 'DescripcionProducto', '', { 'text-align': 'center' });
+        $gridTab4.jqGrid('setLabel', 'TipoOperacion', '', { 'text-align': 'center' });
+        $gridTab4.jqGrid('setLabel', 'NumeroProducto', '', { 'text-align': 'center' });
+        $gridTab4.jqGrid('setLabel', 'Moneda', '', { 'text-align': 'center' });
+        $gridTab4.jqGrid('setLabel', 'MontoInicial', '', { 'text-align': 'center' });
+        $gridTab4.jqGrid('setLabel', 'MontoActual', '', { 'text-align': 'center' });
+        $gridTab4.jqGrid('setLabel', 'n', '', { 'text-align': 'center' });
 
         function subGridOperaciones2(subgrid_id, row_id) {
             gridOperaciones2(subgrid_id, row_id, 'operaciones2');
