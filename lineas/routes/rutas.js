@@ -107,5 +107,11 @@ module.exports = function (passport) {
     router.route('/cargarbloqueo/:id')
         .post(isAuthenticated, operacionesController.actionbloquear);
 
+    router.route('/aprobaciones/:id')
+        .get(isAuthenticated, operacionesController.listaprobaciones);
+
+    router.route('/gettiposaprobacion')
+        .get(isAuthenticated, carteraController.gettiposaprobacion);
+
         return router;
 }

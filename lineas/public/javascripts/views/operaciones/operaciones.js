@@ -2,13 +2,13 @@ $(document).ready(function () {
     var rut = $("#param").text();
 
     var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-    tabs += "<li><a href='/limite/" + rut + "' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Limites</a></li>"
+    tabs += "<li><a href='/limite/" + rut + "' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Límites</a></li>"
     tabs += "<li><a href='/tipooperacion/"+rut+"' data-target='#operacion' id='operacion_tab' data-toggle='tab'>Operaciones</a></li>"
     tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Reservas</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Asignar</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Excepciones</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Reportes</a></li>"
-    tabs += "<li><a href='/operacionmac/" + rut + "' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Aprobaciones</a></li>"
+    tabs += "<li><a href='/aprobaciones/" + rut + "' data-target='#operacionmac' id='operacionmac_tab' data-toggle='tab'>Aprobaciones</a></li>"
     tabs += "</ul>"
 
     tabs += "<div class='tab-content'>"
@@ -105,7 +105,7 @@ $(document).ready(function () {
             loadurl = $this.attr('href'),
             targ = $this.attr('data-target');
         if (targ === '#operacionmac') { //ver macgrupal es la grilla padre
-            gridoperacionmac.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
+            gridaprobaciones.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
         } else if (targ === '#vertablimites') { // target del <li>
             gridvertablimites.renderGrid(loadurl, targ)
         } else if (targ === '#operacion') {
@@ -120,7 +120,7 @@ $(document).ready(function () {
             loadurl = $this.attr('href'),
             targ = $this.attr('data-target');
         if (targ === '#operacionmac') {
-            gridoperacionmac.renderGrid(loadurl, targ)
+            gridaprobaciones.renderGrid(loadurl, targ)
         } else if (targ === '#vertablimites') {
             gridvertablimites.renderGrid(loadurl, targ)
         } else if (targ === '#operacion') {

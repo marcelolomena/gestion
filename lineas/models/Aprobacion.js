@@ -94,7 +94,11 @@ module.exports = function(sequelize, DataTypes) {
 		EstadoAprobacion_Id: {
 			type: DataTypes.INTEGER,
 			allowNull: true
-		}
+		},
+		FechaUltAct: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
 	}, {
 		schema: 'scl', timestamps: false, tableName: 'Aprobacion'
 	});
