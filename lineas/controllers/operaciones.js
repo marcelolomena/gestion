@@ -441,7 +441,7 @@ exports.actionbloquear = function (req, res) {
     sequelize.query(`
     update scl.Linea 
     set Bloqueado = '`+ req.body.monto + `',
-    BORRARCOMEN= '`+req.body.comentario+`'
+    BORRARCOMEN= '`+ req.body.comentario + `'
     where Id=`+ idlinea).spread((results, metadata) => {
             return res.json(metadata);
 
@@ -449,4 +449,23 @@ exports.actionbloquear = function (req, res) {
             logger.error(err);
             return res.json({ error: 1 });
         });
+};
+
+exports.listasignar = function (req, res) {
+    sequelize.query(
+        `select distinct a.Id, f.Rut, a.Nombre from scl.TipoOperacion a
+join scl.Operacion b on a.Codigo = b.TipoOperacion
+join scl.SublineaOperacion c on c.Operacion_Id=b.Id
+join scl.Sublinea d on d.Id = c.Sublinea_Id
+join scl.EmpresaSublinea e on e.Sublinea_Id=d.Id
+join scl.Empresa f on f.Id=e.Empresa_Id
+where f.Rut=`+ req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
 };

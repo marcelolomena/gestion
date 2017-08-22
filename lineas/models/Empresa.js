@@ -50,7 +50,13 @@ module.exports = function(sequelize, DataTypes) {
 		Dv: {
 			type: DataTypes.STRING,
 			allowNull: true
+		},
+		Comportamiento: {
+			type: DataTypes.STRING,
+			allowNull: true
 		}
+
+
 	}, {
 		schema: 'scl', timestamps: false, tableName: 'Empresa'
 	});

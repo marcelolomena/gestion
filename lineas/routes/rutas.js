@@ -107,5 +107,8 @@ module.exports = function (passport) {
     router.route('/cargarbloqueo/:id')
         .post(isAuthenticated, operacionesController.actionbloquear);
 
+    router.route('/asignar/:id')
+        .get(isAuthenticated, operacionesController.listasignar);
+
         return router;
 }
