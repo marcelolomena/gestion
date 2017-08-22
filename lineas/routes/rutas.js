@@ -109,7 +109,7 @@ module.exports = function (passport) {
 
     router.route('/asignar/:id')
         .get(isAuthenticated, operacionesController.listasignar);
-        
+
     router.route('/aprobaciones/:id')
         .get(isAuthenticated, operacionesController.listaprobaciones);
 
@@ -118,3 +118,4 @@ module.exports = function (passport) {
 
         return router;
 }
+    
