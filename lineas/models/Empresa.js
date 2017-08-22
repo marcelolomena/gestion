@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		RazonSocial: {
+		Alias: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},

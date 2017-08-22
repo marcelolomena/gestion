@@ -5,7 +5,7 @@ $(document).ready(function () {
     $(".gcontainer").prepend(`
             <div class="panel panel-primary">
                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
-                    <h3 class="panel-title">Paso 2 de 3 - Configuración Grupo</h3>
+                    <h3 class="panel-title">Configuración Grupo</h3>
                 </div>
                 <div class="panel-body">
                     
@@ -26,8 +26,7 @@ $(document).ready(function () {
                         <div class="row">
                             <div class="col-xs-4" style="font-size:12px"><b>Riesgo: <span id="riesgo"></span> / Rating: <span id="rating"></span></b></div>
                         </div>
-                        <hr class="section-separations"></hr>
-                        <p>Vincule o desvincule las empresas que conforman el grupo segun corresponda</p>
+                        
                     </div>
                     <div id="sinmacgrupal" class="form-group" style="display:none;">
                         <p>
@@ -142,20 +141,14 @@ $(document).ready(function () {
     function grilladegrupo(idgrupo, nombregrupo) {
 
         elcaption = "Grupo: " + nombregrupo;
-        $('#cabecera').html(`<div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
-                    <h3 class="panel-title">Paso 2 de 3 - Configuración Grupo</h3>
-                     </div>
-                    <div class="panel-body">
-                        <p>Vincule o desvincule las empresas que conforman el grupo segun corresponda</p>
-                    </div>
-               `);
+
 
         var template = "<div id='responsive-form' class='clearfix'>";
 
         template += "<div class='form-row'>";
         template += "<div class='column-full'><span style='color:red'>* </span>Rut: {Rut}</div>";
         template += "<div class='column-full'><span style='color:red'>* </span>Nombre: {Nombre}</div>";
-        template += "<div class='column-full'><span style='color:red'>* </span>Razon Social: {RazonSocial}</div>";
+        template += "<div class='column-full'><span style='color:red'>* </span>Alias: {Alias}</div>";
         template += "</div>";
 
         template += "<div class='form-row' style='display: none;'>";
@@ -183,7 +176,7 @@ $(document).ready(function () {
             },
 
             {
-                label: 'Rut', name: 'Rut', width: 80, hidden: false, search: true, editable: true,
+                label: 'Rut', name: 'Rut', width: 70, hidden: false, search: true, editable: true,
                 editrules: { required: true },
                 editoptions: {
                     dataEvents: [{
@@ -201,7 +194,7 @@ $(document).ready(function () {
                                     if (data.length > 0) {
                                         //console.log("glosa:" + data[0].glosaservicio);
                                         $("input#Nombre").val(data[0].Nombre);
-                                        $("input#RazonSocial").val(data[0].Nombre);
+                                        $("input#Alias").val(data[0].Alias);
                                         $("input#Id").val(data[0].Id);
 
                                     } else {
@@ -216,30 +209,31 @@ $(document).ready(function () {
             },
             { label: 'idgrupo', name: 'idgrupo', hidden: true, editable: true },
             { label: 'idrelacion', name: 'idrelacion', hidden: true, editable: true },
-            { label: 'Nombre', name: 'Nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'Razón Social', name: 'RazonSocial', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'Riesgo', name: 'Riesgo', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'R. Grupal', name: 'ratinggrupal', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'Nombre Cliente', name: 'Nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'Alias', name: 'Alias', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'R. Grupo', name: 'ratinggrupal', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
             { label: 'R. Indiv.', name: 'Rating', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'Vig.', name: 'Vigilancia', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'Ejecutivo', name: 'Ejecutivo', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
-            { label: 'Banca', name: 'Ejecutivo', width: 100, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'Clasif', name: 'Riesgo', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'Vig', name: 'Vigilancia', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
+            { label: 'F. Vto MAC', name: 'fechavctomac', width: 60, hidden: false, search: true, editable: true, editrules: { required: true } },
             {
-                label: 'Aprobado', name: 'Aprobado', width: 100, hidden: false, search: true, editable: true,
+                label: 'F. Ult Bal', name: 'fechaultbal', width: 60, hidden: false, search: true, editable: true, editrules: { required: true },
                 formatter: function (cellvalue, options, rowObject) {
-                    dato = Math.floor((Math.random() * 200000) + 1000);
+                    dato = '03-08-2017'
                     return dato
                 }
             },
             {
-                label: 'Cursado', name: 'Cursado', width: 100, hidden: false, search: true, editable: true,
-                formatter: function (cellvalue, options, rowObject) {
-                    dato = Math.floor((Math.random() * 20000) + 1000);
-                    return dato
-                }
+                label: 'Aprobado', name: 'aprobado', width: 100, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }
+
             },
             {
-                label: 'Grupos', name: 'Grupos', width: 50, hidden: false, search: true, editable: true,
+                label: 'Utilizado', name: 'utilizado', width: 80, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }
+
+            },
+            { label: 'Ejecutivo', name: 'Ejecutivo', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },
+            {
+                label: 'N° Grupos', name: 'numerogrupos', width: 60, hidden: false, search: true, editable: true,
                 formatter: function (cellvalue, options, rowObject) {
                     dato = 1
                     return dato
@@ -302,7 +296,7 @@ $(document).ready(function () {
                 },
                 beforeShowForm: function (form) {
                     $("input#Nombre").prop('disabled', true);
-                    $("input#RazonSocial").prop('disabled', true);
+                    $("input#Alias").prop('disabled', true);
                 },
                 afterSubmit: function (response, postdata) {
                     var json = response.responseText;
@@ -353,12 +347,12 @@ $(document).ready(function () {
         $(".gcontainer").append(`
         <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
             <button id="crearmacindividual" type="submit" class="btn neutro border ladda-button ng-scope" >Crear MAC Individuales</button> 
-            <button id="editargrupo" type="submit" class="btn neutro border ladda-button ng-scope" >Editar Grupo</button> 
-            <button id="generarcompgrupo" type="submit" class="btn neutro border ladda-button ng-scope" >Generar Comportamiento Grupo</button> 
+            
+            <button id="consultarcompgrupo" type="submit" class="btn neutro border ladda-button ng-scope" >Consultar Comportamiento Grupo</button> 
         </div>
         `);
 
-        $('#confirmar').click(function () {
+        $('#crearmacindividual').click(function () {
             if (confirm("¿Está seguro de continuar con esta configuración de grupo?")) {
                 window.location.assign("/menu/crearaprobacionmac2" + "/p/" + id);
             }

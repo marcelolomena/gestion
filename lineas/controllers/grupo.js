@@ -292,7 +292,7 @@ exports.listgrupoempresa = function (req, res) {
     var condition = "";
 
     if (!sidx) {
-        sidx = "a.id";
+        sidx = "a.Id";
         sord = "asc";
     }
 
@@ -311,9 +311,12 @@ where a.Empresa_Id=`+ req.params.id;
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, b.Id as idrelacion, b.Grupo_Id as idgrupo, c.* from scl.GrupoEmpresa a
+        `as resultNum, b.Id as idrelacion, b.Grupo_Id as idgrupo, c.*, d.Aprobado as aprobado, d.Utilizado as utilizado, e.Rating as ratinggrupal 
+        from scl.GrupoEmpresa a
         join scl.GrupoEmpresa b on b.Grupo_Id=a.Grupo_Id
         join scl.Empresa c on b.Empresa_Id = c.Id
+        left outer join scl.Aprobacion d on d.Rut=c.Rut and d.EstadoAprobacion_Id=1
+        join scl.Grupo e on e.Id=b.Grupo_Id
         where a.Empresa_Id=`+ req.params.id;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
@@ -348,7 +351,7 @@ exports.actiongrupoempresa = function (req, res) {
 
             models.GrupoEmpresa.destroy({
                 where: {
-                    id: req.body.idrelacion
+                    Id: req.body.idrelacion
                 }
             }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
                 if (rowDeleted === 1) {
