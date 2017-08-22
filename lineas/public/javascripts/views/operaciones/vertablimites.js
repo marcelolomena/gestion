@@ -55,27 +55,28 @@ var gridvertablimites = {
                 { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Disponible', name: 'Disponible2', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
-                formatter: function (cellvalue, options, rowObject) {
-                var bloq=0;
-                var disp=0;
-                $.ajax({
+                {
+                    label: 'Disponible', name: 'Disponible2', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
+                    formatter: function (cellvalue, options, rowObject) {
+                        var bloq = 0;
+                        var disp = 0;
+                        $.ajax({
                             type: "GET",
                             url: '/verdetalleslim/' + rowObject.Id,
                             async: false,
                             success: function (data) {
                                 if (data.length > 0) {
                                     bloq = data[0].Bloqueado;
-                                    disp=data[0].Disponible;
+                                    disp = data[0].Disponible;
                                     //console.log("valor de bloqueo " + bloq);
                                 }
                             }
                         })
-                    return (disp-bloq);
+                        return (disp - bloq);
                     }
                 },
-                
-                
+
+
                 {
                     label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
@@ -444,14 +445,19 @@ var gridvertablimites = {
                                     <div class="panel panel-default" >
                                         <div class="panel-heading" style="background-color: #002464;color: #fff;">Bloquear Linea</div>
                                             <div class="panel-body">
-
+                                            
                                                 <form id="miprimerform2">
-                                                
+                                                    <div class="btn-group">
                                                     <div class="form-group">
-                                                            <label class="radio-inline"><input id="bparcial" type="radio" name="optradio style="background-color: #002464;">Parcial</label>
-                                                            <label class="radio-inline"><input id="btotal" type="radio" name="optradio">Total</label>
-                                                            <input type="text" class="form-control" id="idlineabloqueo2" style="display: none">
+                                                           
+                                                            <input type="text" class="form-control" id="idlineabloqueo2" style="display: none" >
                                                             <input type="text" class="form-control" id="disponible" name="disponible" style="display: none">
+                                                    
+                                                            <div>
+                                                                <input id="btotal" type="radio" name="radio-choice" required checked="checked">Total</input> 
+                                                                <input id="bparcial" type="radio" name="radio-choice" required >Parcial</input>
+                                                            </div>
+                                                    </div>
                                                     </div>
 
                                                     <div class="form-group">
@@ -483,10 +489,17 @@ var gridvertablimites = {
                                                 <form id="miprimerform">
 
                                                     <div class="form-group">
-                                                        <label class="radio-inline"><input id="dparcial" type="radio" name="optradio style="background-color: #002464;">Parcial</label>
-                                                        <label class="radio-inline"><input id="dtotal" type="radio" name="optradio">Total</label>
-                                                        <input type="text" class="form-control" id="idlineabloqueo" style="display: none">
+                                                    <div class="btn-group">    
+                                                        <input type="text" class="form-control" id="idlineabloqueo" style="background-color: #002464;display: none">
                                                         <input type="text" class="form-control" id="Bloqueado" style="display: none">
+
+                                                        <div>
+                                                            <input id="dtotal" type="radio" name="radio-choice" required checked="checked">Total</input>     
+                                                            <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
+                                                        </div> 
+                                                        
+                                                        
+                                                    </div>
                                                     </div>
 
                                                     <div> Monto Bloqueado: $<span id="MontoBloqueado"></span></div>
@@ -738,8 +751,8 @@ var gridvertablimites = {
                             if (data.length > 0) {
                                 $("#Condicion2").html(data[0].ColorCondicion);
                                 $("#Condiciones2").html(data[0].BORRARCOND);
-                                var condi=$("#Condiciones2").val(data[0].BORRARCOND);
-                                console.log("comentario "+data[0].BORRARCOMEN);
+                                var condi = $("#Condiciones2").val(data[0].BORRARCOND);
+                                console.log("comentario " + data[0].BORRARCOMEN);
                             }
                             else {
                                 alert("No existe cliente en Base de Datos");
@@ -759,31 +772,31 @@ var gridvertablimites = {
                 $('#botonpost').click(function () {
                     console.log("holapo");
                     var idlineabloqueo = $('#idlineabloqueo').val();
-                    
+
                     $.ajax({
                         type: "POST",
                         url: "/cargarbloqueo/" + idlineabloqueo,
                         data: $('#miprimerform').serialize(),
                         success: function (msg) {
                             console.log("tremendo exito " + msg)
-                            $gridTab2.trigger( 'reloadGrid' );
+                            $gridTab2.trigger('reloadGrid');
                         }
                     });
 
                 });
 
-                 $('#botonpost2').click(function () {
+                $('#botonpost2').click(function () {
                     console.log("holapo");
                     var idlineabloqueo = $('#idlineabloqueo2').val();
 
-        
+
                     $.ajax({
                         type: "POST",
                         url: "/cargarbloqueo/" + idlineabloqueo,
                         data: $('#miprimerform2').serialize(),
                         success: function (msg) {
                             console.log("tremendo exito " + msg)
-                            $gridTab2.trigger( 'reloadGrid' );
+                            $gridTab2.trigger('reloadGrid');
 
                         }
                     });
@@ -798,8 +811,6 @@ var gridvertablimites = {
                 });
 
                 $('.abrirbloqueo').click(function () {
-                  
-
                     var id = $(this).attr('href').substring(1);
                     $.ajax({
                         type: "GET",
@@ -819,44 +830,51 @@ var gridvertablimites = {
                                 $("#Comentario").html(data[0].BORRARCOMEN)
                             }
                             else {
-                                 //Bloqueo
+                                //Bloqueo
                                 $("#idlineabloqueo2").val(data[0].Id)
                                 $("#disponible").val(data[0].Disponible)
                                 $("#myModalbloqueo").modal();
+                                $("#monto").hide();
+                                $("#labelmonto").hide();
+                                $("#montodes").hide();
+                                $("#labelmontodesbloqueo").hide();
                             }
 
                         }
                     })
                 });
 
-            $('#bparcial').click(function () {
-                //console.log("bloqueo parcial");
-                //var idlineabloqueo = $('#idlineabloqueo2').val();
-            });    
+                $('#bparcial').click(function () {
+                    //console.log("bloqueo parcial");
+                    //var idlineabloqueo = $('#idlineabloqueo2').val();
+                    $("#monto").show();
+                    $("#labelmonto").show();
+                });
 
-            $('#btotal').click(function () {
-                $("#monto").hide();
-                $("#labelmonto").hide();
-                $("#monto").val($("#disponible").val());
-                //console.log($("#monto").val);
-                //var idlineabloqueo = $('#idlineabloqueo2').val();
-            });
+                $('#btotal').click(function () {
+                    $("#monto").hide();
+                    $("#labelmonto").hide();
+                    $("#monto").val($("#disponible").val());
+                    //console.log($("#monto").val);
+                    //var idlineabloqueo = $('#idlineabloqueo2').val();
+                });
 
-            $('#dparcial').click(function () {
-                //$("#montodes").hide();
-                //$("#labelmontodesbloqueo").hide();
-               
-                //console.log($("#monto").val);
-                //var idlineabloqueo = $('#idlineabloqueo2').val();
-            });
+                $('#dparcial').click(function () {
+                    //$("#montodes").hide();
+                    //$("#labelmontodesbloqueo").hide();
+                    $("#montodes").show();
+                    $("#labelmontodesbloqueo").show();
+                    //console.log($("#monto").val);
+                    //var idlineabloqueo = $('#idlineabloqueo2').val();
+                });
 
-            $('#dtotal').click(function () {
-                $("#montodes").hide();
-                $("#labelmontodesbloqueo").hide();
-                $("#montodes").val($("#disponible").val());
-                //console.log($("#monto").val);
-                //var idlineabloqueo = $('#idlineabloqueo2').val();
-            });
+                $('#dtotal').click(function () {
+                    $("#montodes").hide();
+                    $("#labelmontodesbloqueo").hide();
+                    $("#montodes").val($("#disponible").val());
+                    //console.log($("#monto").val);
+                    //var idlineabloqueo = $('#idlineabloqueo2').val();
+                });
 
                 var thisId = $.jgrid.jqID(this.id);
 
