@@ -124,7 +124,6 @@ $(document).ready(function () {
 
 
     $(window).bind('resize', function () {
-        8
         $("#grid").setGridWidth($(".gcontainer").width(), true);
         $("#pager").setGridWidth($(".gcontainer").width(), true);
     });
