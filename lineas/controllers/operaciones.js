@@ -453,13 +453,7 @@ exports.actionbloquear = function (req, res) {
 
 exports.listasignar = function (req, res) {
     sequelize.query(
-        `select distinct a.Id, f.Rut, a.Nombre from scl.TipoOperacion a
-join scl.Operacion b on a.Codigo = b.TipoOperacion
-join scl.SublineaOperacion c on c.Operacion_Id=b.Id
-join scl.Sublinea d on d.Id = c.Sublinea_Id
-join scl.EmpresaSublinea e on e.Sublinea_Id=d.Id
-join scl.Empresa f on f.Id=e.Empresa_Id
-where f.Rut=`+ req.params.id,
+        `select *from scl.Operacion where RutEmpresa=`+ req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)

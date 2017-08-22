@@ -80,11 +80,31 @@ var gridvertablimites = {
                 {
                     label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        rojo = '<span role="button" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
-                        //console.log(rowObject.Id);
-                        amarillo = '<span role="button" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
-                        verde = '<span role="button" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
 
+                        var condi = "";
+                        $.ajax({
+                            type: "GET",
+                            url: '/verdetalleslim/' + rowObject.Id,
+                            async: false,
+                            success: function (data) {
+                                if (data.length > 0) {
+                                    $("#Condicion2").html(data[0].ColorCondicion);
+                                    $("#Condiciones2").html(data[0].BORRARCOND);
+                                    condi = data[0].BORRARCOND;
+                                    console.log(condi);
+                                }
+                                else {
+                                    alert("No existe cliente en Base de Datos");
+                                }
+                            }
+                        });
+                        rojo = '<span role="button" data-toggle="tooltip"  title="'+condi+'" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                        //console.log(rowObject.Id);
+
+                        amarillo = '<span role="button" data-toggle="tooltip" title="'+condi+'" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                        verde = '<span role="button" data-toggle="tooltip" title="'+condi+'" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
+
+    
                         if (cellvalue === 'Rojo') {
                             return rojo
                         }
