@@ -116,7 +116,6 @@ $("#gridMaster").append(`
             
     ` );
 
-<<<<<<< HEAD
 $("#gridMaster").append(tabs);
 $('#vertablimites_tab').addClass('media_node active span') //tab seleccionado
 $('.active[data-toggle="tab"]').each(function (e) {
@@ -124,7 +123,7 @@ $('.active[data-toggle="tab"]').each(function (e) {
         loadurl = $this.attr('href'),
         targ = $this.attr('data-target');
     if (targ === '#operacionmac') { //ver macgrupal es la grilla padre
-        gridoperacionmac.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
+        gridaprobaciones.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
     } else if (targ === '#vertablimites') { // target del <li>
         gridvertablimites.renderGrid(loadurl, targ)
     } else if (targ === '#operacion') {
@@ -141,7 +140,7 @@ $('[data-toggle="tab"]').click(function (e) {
         loadurl = $this.attr('href'),
         targ = $this.attr('data-target');
     if (targ === '#operacionmac') {
-        gridoperacionmac.renderGrid(loadurl, targ)
+        gridaprobaciones.renderGrid(loadurl, targ)
     } else if (targ === '#vertablimites') {
         gridvertablimites.renderGrid(loadurl, targ)
     } else if (targ === '#operacion') {
@@ -149,36 +148,6 @@ $('[data-toggle="tab"]').click(function (e) {
     } else if (targ === '#asignar') {
         gridvertabasignaciones.renderGrid(loadurl, targ)
     }
-=======
-    $("#gridMaster").append(tabs);
-    $('#vertablimites_tab').addClass('media_node active span') //tab seleccionado
-    $('.active[data-toggle="tab"]').each(function (e) {
-        var $this = $(this),
-            loadurl = $this.attr('href'),
-            targ = $this.attr('data-target');
-        if (targ === '#operacionmac') { //ver macgrupal es la grilla padre
-            gridaprobaciones.renderGrid(loadurl, targ)//genera la grilla, la obtiene desde vermac
-        } else if (targ === '#vertablimites') { // target del <li>
-            gridvertablimites.renderGrid(loadurl, targ)
-        } else if (targ === '#operacion') {
-            gridBitacora.renderGrid(loadurl, targ)
-        }
-        $this.tab('show');
-        return false;
-    });
-
-    $('[data-toggle="tab"]').click(function (e) {
-        var $this = $(this),
-            loadurl = $this.attr('href'),
-            targ = $this.attr('data-target');
-        if (targ === '#operacionmac') {
-            gridaprobaciones.renderGrid(loadurl, targ)
-        } else if (targ === '#vertablimites') {
-            gridvertablimites.renderGrid(loadurl, targ)
-        } else if (targ === '#operacion') {
-            gridvertaboperaciones.renderGrid(loadurl, targ)
-        }
->>>>>>> 5b06f95154487ec0b1a5d34acf268c93f1963580
 
     $this.tab('show');
     return false;
