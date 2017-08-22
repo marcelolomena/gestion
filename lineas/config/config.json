@@ -89,7 +89,7 @@
     "local2": {
         "username": "biometria",
         "password": "biometria123",
-        "database": "lineas",
+        "database": "controldelimites",
         "host": "LAPTOP-200U6LCA",
         "dialect": "mssql",
         "dialectOptions": {
