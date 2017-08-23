@@ -534,6 +534,11 @@ var gridvertablimites = {
                                                         <input type="text" class="form-control" name ="monto" id="nuevovalorbloqueo"; style="display: none">
                                                         
                                                     </div>
+
+                                                    <label for="comentariodes" id="labelcomentariodesbloqueo">Comentario:</label>
+                                                    <input type="text" class="form-control" name="comentariodes" id="comentariodesbloqueo">
+                                                    <p></p>
+
                                                     <div class="wrapper" style="text-align: center">
                                                         <button id="botonpost" type="submit" class="btn btn-default" data-dismiss="modal">Desbloquear</button>
                                                     </div>
@@ -859,6 +864,13 @@ var gridvertablimites = {
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
                                 $("#Comentario").html(data[0].BORRARCOMEN)
+                                $("#botonpost").hide();
+                                $("#labelmontodesbloqueo").hide();
+                                $("#montodes").hide();
+                                $("#labelcomentariodesbloqueo").hide();
+                                $("#comentariodesbloqueo").hide();
+                           
+                             
                             }
                             else {
                                 //Bloqueo
@@ -905,6 +917,9 @@ var gridvertablimites = {
                     //$("#labelmontodesbloqueo").hide();
                     $("#montodes").show();
                     $("#labelmontodesbloqueo").show();
+                    $("#botonpost").show();
+                    $("#labelcomentariodesbloqueo").show();
+                    $("#comentariodesbloqueo").show();
                    
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
@@ -913,6 +928,9 @@ var gridvertablimites = {
                     $("#montodes").hide();
                     $("#labelmontodesbloqueo").hide();
                     $("#montodes").val($("#Bloqueado").val());
+                    $("#botonpost").show();
+                    $("#labelcomentariodesbloqueo").show();
+                    $("#comentariodesbloqueo").show();
                     //console.log($("#monto").val);
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
