@@ -474,7 +474,7 @@ var gridvertablimites = {
                                                             <input type="text" class="form-control" id="disponible" name="disponible" style="display: none">
                                                     
                                                             <div>
-                                                                <input id="btotal" type="radio" name="radio-choice" required checked="checked">Total</input> 
+                                                                <input id="btotal" type="radio" name="radio-choice" required>Total</input> 
                                                                 <input id="bparcial" type="radio" name="radio-choice" required >Parcial</input>
                                                             </div>
                                                     </div>
@@ -483,7 +483,7 @@ var gridvertablimites = {
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmonto">Monto:</label>
                                                         <input type="text" class="form-control" name ="monto" id="monto">
-                                                        <label for="comentario" id="comentario">Comentario:</label>
+                                                        <label for="comentario" id="labelcomentario">Comentario:</label>
                                                         <input type="text" class="form-control" name="comentario" id="comentario">
                                                     </div>
                                             
@@ -508,29 +508,37 @@ var gridvertablimites = {
                                             <div class="panel-body">
                                                 <form id="miprimerform">
 
+                                                    <div> 
+                                                        Monto Bloqueado M$ : <span id="MontoBloqueado"></span><p></p>
+                                                        <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
+                                                        <div> Comentario:<span id="Comentario"></span></div>
+                                                    </div>
+                                                    <p></p>
+
+
                                                     <div class="form-group">
-                                                    <div class="btn-group">    
-                                                        <input type="text" class="form-control" id="idlineabloqueo" style="background-color: #002464;display: none">
-                                                        <input type="text" class="form-control" id="Bloqueado" style="display: none">
-
-                                                        <div>
-                                                            <input id="dtotal" type="radio" name="radio-choice" required checked="checked">Total</input>     
-                                                            <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
-                                                        </div> 
-                                                        
-                                                        
-                                                    </div>
+                                                        <div class="btn-group">    
+                                                            <input type="text" class="form-control" id="idlineabloqueo" style="background-color: #002464;display: none">
+                                                            <input type="text" class="form-control" id="Bloqueado" style="display: none">
+                                                                <div>
+                                                                    <input id="dtotal" type="radio" name="radio-choice" required>Total</input>     
+                                                                    <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
+                                                                </div> 
+                                                        </div>
                                                     </div>
 
-                                                    <div> Monto Bloqueado: $<span id="MontoBloqueado"></span></div>
                                                     <p></p>
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmontodesbloqueo">Monto:</label>
                                                         <input type="text" class="form-control" name ="montod" id="montodes">
                                                         <input type="text" class="form-control" name ="monto" id="nuevovalorbloqueo"; style="display: none">
-                                                        <label for="comentario">Bloqueado por: Ejecutivo 1</label>
-                                                        <div> Comentario:<span id="Comentario"></span></div>
+                                                        
                                                     </div>
+
+                                                    <label for="comentariodes" id="labelcomentariodesbloqueo">Comentario:</label>
+                                                    <input type="text" class="form-control" name="comentariodes" id="comentariodesbloqueo">
+                                                    <p></p>
+
                                                     <div class="wrapper" style="text-align: center">
                                                         <button id="botonpost" type="submit" class="btn btn-default" data-dismiss="modal">Desbloquear</button>
                                                     </div>
@@ -848,22 +856,45 @@ var gridvertablimites = {
                                 //console.log("valor de bloqueo " + bloq);
                             }
 
+                            $("#montodes").val("");
+                            $("#monto").val("");
+                            $("#comentariodesbloqueo").val("");
+
                             if (bloq > 0) {
                                 $("#MontoBloqueado").html(data[0].Bloqueado) //desbloqueo
                                 $("#Bloqueado").val(data[0].Bloqueado)
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
+                                $("#montodes").val("");  
+                                $("#comentario").val("");
+                                $("#monto").val("");
+                                $("#comentariodesbloqueo").val("");
                                 $("#Comentario").html(data[0].BORRARCOMEN)
+                                $("#botonpost").hide();
+                                $("#labelmontodesbloqueo").hide();
+                                $("#montodes").hide();
+                                $("#labelcomentariodesbloqueo").hide();
+                                $("#comentariodesbloqueo").hide();
+                           
+                             
                             }
                             else {
                                 //Bloqueo
                                 $("#idlineabloqueo2").val(data[0].Id)
                                 $("#disponible").val(data[0].Disponible)
                                 $("#myModalbloqueo").modal();
+                                $("#montodes").val("");
+                                $("#monto").val("");
+                                $("#comentario").val("");
+                                $("#comentariodesbloqueo").val("");
                                 $("#monto").hide();
                                 $("#labelmonto").hide();
                                 $("#montodes").hide();
                                 $("#labelmontodesbloqueo").hide();
+                                $("#labelcomentario").hide();
+                                $("#comentario").hide();
+                                $("#botonpost2").hide();
+
                             }
 
                         }
@@ -875,11 +906,17 @@ var gridvertablimites = {
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                     $("#monto").show();
                     $("#labelmonto").show();
+                    $("#labelcomentario").show();
+                    $("#comentario").show();
+                    $("#botonpost2").show();
                 });
 
                 $('#btotal').click(function () {
                     $("#monto").hide();
                     $("#labelmonto").hide();
+                    $("#labelcomentario").show();
+                    $("#comentario").show();
+                    $("#botonpost2").show();
                     $("#monto").val($("#disponible").val());
                     //console.log($("#monto").val);
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
@@ -890,6 +927,9 @@ var gridvertablimites = {
                     //$("#labelmontodesbloqueo").hide();
                     $("#montodes").show();
                     $("#labelmontodesbloqueo").show();
+                    $("#botonpost").show();
+                    $("#labelcomentariodesbloqueo").show();
+                    $("#comentariodesbloqueo").show();
                    
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
@@ -898,6 +938,9 @@ var gridvertablimites = {
                     $("#montodes").hide();
                     $("#labelmontodesbloqueo").hide();
                     $("#montodes").val($("#Bloqueado").val());
+                    $("#botonpost").show();
+                    $("#labelcomentariodesbloqueo").show();
+                    $("#comentariodesbloqueo").show();
                     //console.log($("#monto").val);
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
