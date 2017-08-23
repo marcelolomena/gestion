@@ -474,7 +474,7 @@ var gridvertablimites = {
                                                             <input type="text" class="form-control" id="disponible" name="disponible" style="display: none">
                                                     
                                                             <div>
-                                                                <input id="btotal" type="radio" name="radio-choice" required checked="checked">Total</input> 
+                                                                <input id="btotal" type="radio" name="radio-choice" required>Total</input> 
                                                                 <input id="bparcial" type="radio" name="radio-choice" required >Parcial</input>
                                                             </div>
                                                     </div>
@@ -483,7 +483,7 @@ var gridvertablimites = {
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmonto">Monto:</label>
                                                         <input type="text" class="form-control" name ="monto" id="monto">
-                                                        <label for="comentario" id="comentario">Comentario:</label>
+                                                        <label for="comentario" id="labelcomentario">Comentario:</label>
                                                         <input type="text" class="form-control" name="comentario" id="comentario">
                                                     </div>
                                             
@@ -514,7 +514,7 @@ var gridvertablimites = {
                                                         <input type="text" class="form-control" id="Bloqueado" style="display: none">
 
                                                         <div>
-                                                            <input id="dtotal" type="radio" name="radio-choice" required checked="checked">Total</input>     
+                                                            <input id="dtotal" type="radio" name="radio-choice" required>Total</input>     
                                                             <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
                                                         </div> 
                                                         
@@ -866,6 +866,10 @@ var gridvertablimites = {
                                 $("#labelmonto").hide();
                                 $("#montodes").hide();
                                 $("#labelmontodesbloqueo").hide();
+                                $("#labelcomentario").hide();
+                                $("#comentario").hide();
+                                $("#botonpost2").hide();
+
                             }
 
                         }
@@ -877,11 +881,17 @@ var gridvertablimites = {
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                     $("#monto").show();
                     $("#labelmonto").show();
+                    $("#labelcomentario").show();
+                    $("#comentario").show();
+                    $("#botonpost2").show();
                 });
 
                 $('#btotal').click(function () {
                     $("#monto").hide();
                     $("#labelmonto").hide();
+                    $("#labelcomentario").show();
+                    $("#comentario").show();
+                    $("#botonpost2").show();
                     $("#monto").val($("#disponible").val());
                     //console.log($("#monto").val);
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
