@@ -508,28 +508,31 @@ var gridvertablimites = {
                                             <div class="panel-body">
                                                 <form id="miprimerform">
 
+                                                    <div> 
+                                                        Monto Bloqueado M$ : <span id="MontoBloqueado"></span><p></p>
+                                                        <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
+                                                        <div> Comentario:<span id="Comentario"></span></div>
+                                                    </div>
+                                                    <p></p>
+
+
                                                     <div class="form-group">
-                                                    <div class="btn-group">    
-                                                        <input type="text" class="form-control" id="idlineabloqueo" style="background-color: #002464;display: none">
-                                                        <input type="text" class="form-control" id="Bloqueado" style="display: none">
-
-                                                        <div>
-                                                            <input id="dtotal" type="radio" name="radio-choice" required>Total</input>     
-                                                            <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
-                                                        </div> 
-                                                        
-                                                        
-                                                    </div>
+                                                        <div class="btn-group">    
+                                                            <input type="text" class="form-control" id="idlineabloqueo" style="background-color: #002464;display: none">
+                                                            <input type="text" class="form-control" id="Bloqueado" style="display: none">
+                                                                <div>
+                                                                    <input id="dtotal" type="radio" name="radio-choice" required>Total</input>     
+                                                                    <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
+                                                                </div> 
+                                                        </div>
                                                     </div>
 
-                                                    <div> Monto Bloqueado: $<span id="MontoBloqueado"></span></div>
                                                     <p></p>
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmontodesbloqueo">Monto:</label>
                                                         <input type="text" class="form-control" name ="montod" id="montodes">
                                                         <input type="text" class="form-control" name ="monto" id="nuevovalorbloqueo"; style="display: none">
-                                                        <label for="comentario">Bloqueado por: Ejecutivo 1</label>
-                                                        <div> Comentario:<span id="Comentario"></span></div>
+                                                        
                                                     </div>
                                                     <div class="wrapper" style="text-align: center">
                                                         <button id="botonpost" type="submit" class="btn btn-default" data-dismiss="modal">Desbloquear</button>
