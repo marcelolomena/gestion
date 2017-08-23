@@ -858,11 +858,19 @@ var gridvertablimites = {
                                 //console.log("valor de bloqueo " + bloq);
                             }
 
+                            $("#montodes").val("");
+                            $("#monto").val("");
+                            $("#comentariodesbloqueo").val("");
+
                             if (bloq > 0) {
                                 $("#MontoBloqueado").html(data[0].Bloqueado) //desbloqueo
                                 $("#Bloqueado").val(data[0].Bloqueado)
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
+                                $("#montodes").val("");  
+                                $("#comentario").val("");
+                                $("#monto").val("");
+                                $("#comentariodesbloqueo").val("");
                                 $("#Comentario").html(data[0].BORRARCOMEN)
                                 $("#botonpost").hide();
                                 $("#labelmontodesbloqueo").hide();
@@ -877,6 +885,10 @@ var gridvertablimites = {
                                 $("#idlineabloqueo2").val(data[0].Id)
                                 $("#disponible").val(data[0].Disponible)
                                 $("#myModalbloqueo").modal();
+                                $("#montodes").val("");
+                                $("#monto").val("");
+                                $("#comentario").val("");
+                                $("#comentariodesbloqueo").val("");
                                 $("#monto").hide();
                                 $("#labelmonto").hide();
                                 $("#montodes").hide();
