@@ -91,7 +91,7 @@ var gridvertablimites = {
                                     $("#Condicion2").html(data[0].ColorCondicion);
                                     $("#Condiciones2").html(data[0].BORRARCOND);
                                     condi = data[0].BORRARCOND;
-                                    //console.log(condi);
+                                    console.log(condi);
                                 }
                                 else {
                                     alert("No existe cliente en Base de Datos");
@@ -474,16 +474,16 @@ var gridvertablimites = {
                                                             <input type="text" class="form-control" id="disponible" name="disponible" style="display: none">
                                                     
                                                             <div>
-                                                                <input id="btotal" type="radio" name="radio-choice" required checked="checked">Total</input> 
+                                                                <input id="btotal" type="radio" name="radio-choice" required >Total</input> 
                                                                 <input id="bparcial" type="radio" name="radio-choice" required >Parcial</input>
                                                             </div>
-                                                    </div>
+                                                    </div>  
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmonto">Monto:</label>
                                                         <input type="text" class="form-control" name ="monto" id="monto">
-                                                        <label for="comentario" id="comentario">Comentario:</label>
+                                                        <label for="comentario" id="labelcomentario">Comentario:</label>
                                                         <input type="text" class="form-control" name="comentario" id="comentario">
                                                     </div>
                                             
@@ -526,8 +526,7 @@ var gridvertablimites = {
                                                     <p></p>
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmontodesbloqueo">Monto:</label>
-                                                        <input type="text" class="form-control" name ="montod" id="montodes">
-                                                        <input type="text" class="form-control" name ="monto" id="nuevovalorbloqueo"; style="display: none">
+                                                        <input type="text" class="form-control" name ="monto" id="montodes">
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label>
                                                         <div> Comentario:<span id="Comentario"></span></div>
                                                     </div>
@@ -791,15 +790,8 @@ var gridvertablimites = {
                 });
 
                 $('#botonpost').click(function () {
-                    console.log("holapo"); //desbloqueo
+                    console.log("holapo");
                     var idlineabloqueo = $('#idlineabloqueo').val();
-                    
-                    var des=$("#montodes").val();
-                    var bloq=$("#Bloqueado").val();
-                    var nuevovalorbloq=bloq-des;
-                    $("#nuevovalorbloqueo").val(nuevovalorbloq);
-                    //console.log("el valor enviado es: "+nuevovalorbloq);
-
 
                     $.ajax({
                         type: "POST",
@@ -814,7 +806,7 @@ var gridvertablimites = {
                 });
 
                 $('#botonpost2').click(function () {
-                    console.log("holapo"); //BLOQUEO
+                    console.log("holapo");
                     var idlineabloqueo = $('#idlineabloqueo2').val();
 
 
@@ -865,6 +857,9 @@ var gridvertablimites = {
                                 $("#monto").hide();
                                 $("#labelmonto").hide();
                                 $("#montodes").hide();
+                                $("#comentario").hide();
+                                $("#labelcomentario").hide();
+                                $("#botonpost2").hide();
                                 $("#labelmontodesbloqueo").hide();
                             }
 
@@ -877,11 +872,17 @@ var gridvertablimites = {
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                     $("#monto").show();
                     $("#labelmonto").show();
+                    $("#labelcomentario").show();
+                    $("#comentario").show();
+                    $("#botonpost2").show();
                 });
 
                 $('#btotal').click(function () {
                     $("#monto").hide();
                     $("#labelmonto").hide();
+                    $("#botonpost2").show();
+                    $("#labelcomentario").show();
+                    $("#comentario").show();
                     $("#monto").val($("#disponible").val());
                     //console.log($("#monto").val);
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
@@ -892,14 +893,14 @@ var gridvertablimites = {
                     //$("#labelmontodesbloqueo").hide();
                     $("#montodes").show();
                     $("#labelmontodesbloqueo").show();
-                   
+                    //console.log($("#monto").val);
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
 
                 $('#dtotal').click(function () {
                     $("#montodes").hide();
                     $("#labelmontodesbloqueo").hide();
-                    $("#montodes").val($("#Bloqueado").val());
+                    //$("#montodes").val($("#disponible").val());
                     //console.log($("#monto").val);
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
