@@ -816,8 +816,6 @@ var gridvertablimites = {
                 $('#botonpost2').click(function () {
                     console.log("holapo"); //BLOQUEO
                     var idlineabloqueo = $('#idlineabloqueo2').val();
-
-
                     $.ajax({
                         type: "POST",
                         url: "/cargarbloqueo/" + idlineabloqueo,

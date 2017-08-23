@@ -205,10 +205,6 @@ var gridvertaboperaciones = {
         function subGridOperaciones2(subgrid_id, row_id) {
             gridOperaciones2(subgrid_id, row_id, 'operaciones2');
         }
-
-
-
-
     }
 }
 

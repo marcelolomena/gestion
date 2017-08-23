@@ -356,12 +356,12 @@ where f.Rut=`+ req.params.id,
 exports.listoperaciones2 = function (req, res) {
     sequelize.query(
         `select a.*, c.Numero from scl.Operacion a 
-join scl.SublineaOperacion b on b.Operacion_Id=a.Id
-join scl.Sublinea c on c.Id=b.Sublinea_Id
-join scl.EmpresaSublinea d on d.Sublinea_Id=c.Id
-join scl.Empresa e on e.Id=d.Empresa_Id
-join scl.TipoOperacion f on f.Codigo=a.TipoOperacion
-where e.Rut=`+ req.params.rut + ` and f.Id=` + req.params.id,
+        join scl.SublineaOperacion b on b.Operacion_Id=a.Id
+        join scl.Sublinea c on c.Id=b.Sublinea_Id
+        join scl.EmpresaSublinea d on d.Sublinea_Id=c.Id
+        join scl.Empresa e on e.Id=d.Empresa_Id
+        join scl.TipoOperacion f on f.Codigo=a.TipoOperacion
+        where e.Rut=`+ req.params.rut + ` and f.Id=` + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -453,7 +453,9 @@ exports.actionbloquear = function (req, res) {
 
 exports.listasignar = function (req, res) {
     sequelize.query(
-        `select *from scl.Operacion where RutEmpresa=`+ req.params.id,
+       `select distinct a.Id, a.Nombre, b.RutEmpresa as Rut from scl.TipoOperacion a
+        join scl.Operacion b on a.Codigo = b.TipoOperacion
+        where b.RutEmpresa=`+ req.params.id+' and b.Id Not In (select Id from scl.SublineaOperacion)',
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -461,8 +463,9 @@ exports.listasignar = function (req, res) {
     }).catch(function (err) {
         logger.error(err);
         res.json({ error: 1 });
-    })
-}
+    });
+};
+
 exports.listaprobaciones = function (req, res) {
     //console.dir("***************EN LISTNEW ***************************");
     var page = req.query.page;
@@ -509,3 +512,21 @@ exports.listaprobaciones = function (req, res) {
         });
     });
 };
+
+exports.operacionesasignar = function (req, res) {
+    sequelize.query(
+        `select a.* from scl.Operacion a 
+        join scl.TipoOperacion f on f.Codigo=a.TipoOperacion
+        where a.RutEmpresa=`+ req.params.rut + ` and f.Id=` + req.params.id+' and a.Id Not In (select Id from scl.SublineaOperacion)',
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+
+
