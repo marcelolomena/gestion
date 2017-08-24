@@ -2,6 +2,21 @@ var gridvertablimites = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab2 = $(targ + "_t")
+
+        var formatear = 
+        {
+            formatearNumero: function (nStr) {
+                nStr += '';
+                x = nStr.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? ',' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                }
+                return x1 + x2;
+            }
+        }
         /*
         $gridTab2.prepend(`
             <div class='form-row'>
@@ -52,7 +67,7 @@ var gridvertablimites = {
                 { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 {
-                    label: 'Disponible', name: 'Disponible2', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
+                    label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
                         var bloq = 0;
                         var disp = 0;
@@ -67,8 +82,9 @@ var gridvertablimites = {
                                     //console.log("valor de bloqueo " + bloq);
                                 }
                             }
-                        })
-                        return (disp - bloq);
+                        })  
+                        var dispo = disp - bloq;
+                        return (formatear.formatearNumero(dispo));
                     }
                 },
 
@@ -94,13 +110,13 @@ var gridvertablimites = {
                                 }
                             }
                         });
-                        rojo = '<span role="button" data-toggle="tooltip"  title="'+condi+'" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                        rojo = '<span role="button" data-toggle="tooltip"  title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
                         //console.log(rowObject.Id);
 
-                        amarillo = '<span role="button" data-toggle="tooltip" title="'+condi+'" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
-                        verde = '<span role="button" data-toggle="tooltip" title="'+condi+'" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
+                        amarillo = '<span role="button" data-toggle="tooltip" title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                        verde = '<span role="button" data-toggle="tooltip" title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
 
-    
+
                         if (cellvalue === 'Rojo') {
                             return rojo
                         }
@@ -207,15 +223,12 @@ var gridvertablimites = {
 
                 }
 
-                
+
                 var rows = $gridTab2.getDataIDs();
                 for (var i = 0; i < rows.length; i++) {
                     var eldisponible = $gridTab2.getRowData(rows[i]).Disponible;
                     if (parseInt(eldisponible) < 0) {
                         $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { formatter: 'number', color: 'red' });
-                    }
-                    else{
-                        $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { formatter: 'number'});
                     }
                 }
 
@@ -223,10 +236,15 @@ var gridvertablimites = {
                     <div class="modal fade" id="myModal2" role="dialog">
                         <div class="modal-dialog modal-lg" style="width:90%;">
                             <div class="modal-content">
+
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title"><b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span> - <b>Plazo: </b><span id="plazolinea">12 meses</span> meses - <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
+                                    <h4 class="modal-title">
+                                    <b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span>                         
+                                    <b>Plazo: </b><span id="plazolinea">12 meses</span> meses
+                                    <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
                                 </div>
+
                                 <div class="modal-body">
                                     <div id="cuerpo1">
                                         <div style="width:32%;display: inline-block;margin-right: 1%; vertical-align:top">                  
@@ -799,10 +817,10 @@ var gridvertablimites = {
                 $('#botonpost').click(function () {
                     console.log("holapo"); //desbloqueo
                     var idlineabloqueo = $('#idlineabloqueo').val();
-                    
-                    var des=$("#montodes").val();
-                    var bloq=$("#Bloqueado").val();
-                    var nuevovalorbloq=bloq-des;
+
+                    var des = $("#montodes").val();
+                    var bloq = $("#Bloqueado").val();
+                    var nuevovalorbloq = bloq - des;
                     $("#nuevovalorbloqueo").val(nuevovalorbloq);
                     //console.log("el valor enviado es: "+nuevovalorbloq);
 
@@ -863,7 +881,7 @@ var gridvertablimites = {
                                 $("#Bloqueado").val(data[0].Bloqueado)
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
-                                $("#montodes").val("");  
+                                $("#montodes").val("");
                                 $("#comentario").val("");
                                 $("#monto").val("");
                                 $("#comentariodesbloqueo").val("");
@@ -873,8 +891,8 @@ var gridvertablimites = {
                                 $("#montodes").hide();
                                 $("#labelcomentariodesbloqueo").hide();
                                 $("#comentariodesbloqueo").hide();
-                           
-                             
+
+
                             }
                             else {
                                 //Bloqueo
@@ -928,7 +946,7 @@ var gridvertablimites = {
                     $("#botonpost").show();
                     $("#labelcomentariodesbloqueo").show();
                     $("#comentariodesbloqueo").show();
-                   
+
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
 
