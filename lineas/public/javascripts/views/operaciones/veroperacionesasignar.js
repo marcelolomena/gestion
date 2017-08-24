@@ -181,8 +181,8 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                                     }
                                 }
                             })
-                            var dispo = disp - bloq;
-                            return (formatear.formatearNumero(dispo));
+                             var dispo = disp - bloq;
+                        return (formatear.formatearNumero(dispo));
                         }
                     },
 
