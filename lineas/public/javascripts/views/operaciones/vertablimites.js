@@ -23,10 +23,6 @@ var gridvertablimites = {
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
 
-
-
-
-
         $gridTab2.jqGrid({
             url: loadurl,
             datatype: "json",
@@ -211,15 +207,17 @@ var gridvertablimites = {
 
                 }
 
+                
                 var rows = $gridTab2.getDataIDs();
                 for (var i = 0; i < rows.length; i++) {
                     var eldisponible = $gridTab2.getRowData(rows[i]).Disponible;
                     if (parseInt(eldisponible) < 0) {
-                        $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
+                        $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { formatter: 'number', color: 'red' });
+                    }
+                    else{
+                        $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { formatter: 'number'});
                     }
                 }
-
-
 
                 $gridTab2.append(`
                     <div class="modal fade" id="myModal2" role="dialog">
