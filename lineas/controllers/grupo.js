@@ -365,3 +365,120 @@ exports.actiongrupoempresa = function (req, res) {
             break;
     }
 }
+exports.listgrupoempresanew = function (req, res) {
+    //console.dir("***************EN LISTNEW ***************************");
+    var page = req.query.page;
+    var rowspp = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var condition = "";
+
+    if (!sidx) {
+        sidx = "a.Id";
+        sord = "asc";
+    }
+
+
+    var order = sidx + " " + sord;
+
+    var sqlcount = `
+    select count (*) from scl.MacGrupo a
+    join scl.GrupoEmpresa b on a.[GrupoEmpresa_Id]=b.Id
+    join scl.Empresa c on b.Empresa_Id=c.Id
+    where a.[MacGrupo_Id]=`+ req.params.id;
+
+    var sqlok = "declare @rowsPerPage as bigint; " +
+        "declare @pageNum as bigint;" +
+        "set @rowsPerPage=" + rowspp + "; " +
+        "set @pageNum=" + page + ";   " +
+        "With SQLPaging As   ( " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+        `as resultNum, a.Id as idcabecera, a.Acomite, b.Grupo_Id as idgrupo, c.*
+        from scl.MacGrupo a
+        join scl.GrupoEmpresa b on a.[GrupoEmpresa_Id]=b.Id
+        join scl.Empresa c on b.Empresa_Id=c.Id
+        where a.[MacGrupo_Id]=`+ req.params.id;
+    sqlok += ") " +
+        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+    sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        console.log("Total:" + total + "recs[0].count:" + recs[0].count);
+        console.log("SQL2:" + sqlok);
+        sequelize.query(sqlok).spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+        });
+    });
+};
+
+exports.actiongrupoempresanew = function (req, res) {
+    var action = req.body.oper;
+
+    switch (action) {
+        case "add":
+            sequelize.query(
+                'select Id from scl.GrupoEmpresa ' +
+                'where Empresa_Id = ' + req.body.Id,
+                { type: sequelize.QueryTypes.SELECT }
+            ).then(function (valores) {
+                logger.debug(valores)
+                if (valores == "") {
+                    console.log("vacio")
+                    models.GrupoEmpresa.create({
+                        Grupo_Id: req.body.grupo,
+                        Empresa_Id: req.body.Id,
+                        Vigente: 0
+                    }).then(function (grupoempresa) {
+                        logger.debug(grupoempresa.Id)
+                        models.MacGrupo.create({
+                            MacGrupo_Id: req.body.cabecera,
+                            GrupoEmpresa_Id: grupoempresa.Id,
+                            Acomite: 2
+                        }).then(function (grupo) {
+                            return res.json({ error: 0, glosa: '' });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            return res.json({ error: 1, glosa: err.message });
+                        });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        return res.json({ error: 1, glosa: err.message });
+                    });
+                } else {
+                    console.log("lleno")
+                    logger.debug(valores[0].Id)
+                    models.MacGrupo.create({
+                        MacGrupo_Id: req.body.cabecera,
+                        GrupoEmpresa_Id: valores[0].Id,
+                        Acomite: 2
+                    }).then(function (grupo) {
+                        return res.json({ error: 0, glosa: '' });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        return res.json({ error: 1, glosa: err.message });
+                    });
+                }
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1 });
+            });
+            break;
+        case "del":
+            models.MacGrupo.destroy({
+                where: {
+                    Id: req.body.cabecera
+                }
+            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                if (rowDeleted === 1) {
+                    logger.debug('Deleted successfully');
+                }
+                res.json({ success: true, glosa: '' });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ success: false, glosa: err.message });
+            });
+            break;
+    }
+}

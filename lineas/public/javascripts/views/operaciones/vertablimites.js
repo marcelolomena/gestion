@@ -203,7 +203,7 @@ var gridvertablimites = {
                 if (isNaN(recs) || recs == 0) {
                     //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
                     $gridTab2.parent().parent().remove();
-                    $gridTab2PagerID.hide();
+                    //$gridTab2PagerID.hide();
 
                 }
 

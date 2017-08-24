@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.INTEGER,
 			allowNull: true
 		},
-		MacGrupo_Id: {
+		Vigente: {
 			type: DataTypes.INTEGER,
 			allowNull: true
 		}

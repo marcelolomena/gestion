@@ -32,6 +32,12 @@ module.exports = function (passport) {
     router.route('/getdatosclientecongrupo/:id')
         .get(isAuthenticated, carteraController.getdatosclientecongrupo);
 
+    router.route('/getdatosclientecongrupo2/:rut')
+        .get(isAuthenticated, carteraController.getdatosclientecongrupo2);
+
+    router.route('/getdatosclientecongrupo3/:rut')
+        .get(isAuthenticated, carteraController.getdatosclientecongrupo3);
+
     router.route('/buscargrupo/:rut')
         .get(isAuthenticated, carteraController.getgrupo);
 
@@ -121,6 +127,12 @@ module.exports = function (passport) {
 
     router.route('/getoperacionesasignar/:id/:rut')
         .get(isAuthenticated, operacionesController.operacionesasignar);
+
+    router.route('/grupoempresanew/:id')
+        .get(isAuthenticated, grupoController.listgrupoempresanew);
+
+    router.route('/grupoempresanew')
+        .post(isAuthenticated, grupoController.actiongrupoempresanew)
 
 
         return router;

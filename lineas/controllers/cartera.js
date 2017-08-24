@@ -557,6 +557,36 @@ exports.getdatosclientecongrupo = function (req, res) {
 
 }
 
+exports.getdatosclientecongrupo2 = function (req, res) {
+    sequelize.query(`
+        select Grupo_Id
+        from scl.GrupoEmpresa a 
+        join scl.Empresa b on a.Empresa_Id= b.Id
+        where b.Rut = `+ req.params.rut,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
+}
+
+exports.getdatosclientecongrupo3 = function (req, res) {
+    sequelize.query(`EXEC scl.creargruponuevo2 ` + req.params.rut,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
+}
+
 exports.getgrupo = function (req, res) {
     sequelize.query(
         'select a.Id, a.Nombre from scl.Grupo a  ' +
@@ -627,18 +657,19 @@ exports.creargruponuevo = function (req, res) {
         "EXEC scl.creargruponuevo " + req.params.id + ",'" + req.params.nombre + "'",
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
-        //logger.debug(valores)
-        res.json(valores);
+        logger.debug(valores)
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        return res.json({ error: 1 });
     });
 
 }
 
 exports.crearmacgrupal = function (req, res) {
-    models.MacGrupal.create({
-        Grupo_Id: req.params.id
+    var idgrupo = req.params.id;
+    models.MacGrupo.create({
+        FechaCreacion: '23-08-2017'
     }).then(function (macgrupal) {
         //console.log(macgrupal.Id)
         var empresas = req.body.empresas;
@@ -661,8 +692,9 @@ exports.crearmacgrupal = function (req, res) {
 }
 exports.getdatosmacgrupal = function (req, res) {
     sequelize.query(
-        'select a.*, b.Nombre as nombregrupo from scl.MacGrupal a ' +
-        'join scl.Grupo b on a.Grupo_Id = b.Id ' +
+        'select a.*, c.Id as idgrupo, c.Nombre as nombregrupo from scl.MacGrupo a ' +
+        'join scl.GrupoEmpresa b on a.GrupoEmpresa_Id = b.Id ' +
+        'join scl.Grupo c on b.Grupo_Id = c.Id ' +
         'where a.Id =  ' + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {

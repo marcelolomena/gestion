@@ -1,13 +1,14 @@
 /* jshint indent: 1 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
 	return sequelize.define('MacGrupo', {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			primaryKey: true
+			primaryKey: true,
+			autoIncrement: true
 		},
-		AComite: {
+		Acomite: {
 			type: DataTypes.INTEGER,
 			allowNull: true
 		},
@@ -42,8 +43,20 @@ module.exports = function(sequelize, DataTypes) {
 		TotalSometidoAprobacion: {
 			type: DataTypes.STRING,
 			allowNull: true
+		},
+		GrupoEmpresa_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		EstadoAprobacion_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		MacGrupo_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
 		}
 	}, {
-		schema: 'scl', timestamps: false, tableName: 'MacGrupo'
-	});
+			schema: 'scl', timestamps: false, tableName: 'MacGrupo'
+		});
 };

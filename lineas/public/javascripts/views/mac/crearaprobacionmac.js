@@ -5,50 +5,25 @@ $(document).ready(function () {
     $(".gcontainer").prepend(`
             <div class="panel panel-primary">
                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
-                    <h3 class="panel-title">Configuración Grupo</h3>
+                    <h3 class="panel-title">Información Grupo</h3>
                 </div>
                 <div class="panel-body">
-                    
-                    <div id="conmacgrupal" class="form-group" style="display:none;">
+                    <div id="cabecera" class="form-group">
                         <div class="row">
-                        <div class="col-xs-4" style="font-size:12px"><b><span id="rut"></span></b></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-4" style="font-size:18px"><b><span id="nombre"></span></b></div>
-                            <div class="col-xs-4" style="font-size:16px"><b>Grupo: <span id="nombregrupo"></span></b></div>
+                            <div class="col-xs-4" style="font-size:16px"><b>Nombre Grupo:</b> <span id="nombregrupo"></span></div>
+                            <div class="col-xs-4" style="font-size:16px"><b>Ejecutivo:</b> <span id="ejecutivo"></span></div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-4" style="font-size:12px"><b><span id="banca"></span> / <span id="oficina"></span> / <span id="pep"></span></b></div>
+                            <div class="col-xs-4" style="font-size:16px"><b>Fecha Presentación:</b> <span id="fechapresentacion"></span></div>
+                            <div class="col-xs-4" style="font-size:16px"><b>Vcto. Ant:</b> <span id="vencimientoanterior"></span></div>
+                            
                         </div>
-                        <div class="row">    
-                            <div class="col-xs-4" style="font-size:12px"><b>Ejecutivo Control: <span id="ejecutivo"></span></b></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-4" style="font-size:12px"><b>Riesgo: <span id="riesgo"></span> / Rating: <span id="rating"></span></b></div>
-                        </div>
-                        
-                    </div>
-                    <div id="sinmacgrupal" class="form-group" style="display:none;">
-                        <p>
-                            No ha sido posible encontrar MAC de Grupo asociado a este cliente </br>
-                            ¿Desea buscar el grupo por otro RUT cliente o crear grupo nuevo para el cliente seleccionado?
-                        </p>
-                        <button id="si" class="btn btn-default">Buscar Nuevo Cliente</button> 
-                        <button id="no" class="btn btn-default">Crear Nuevo Grupo</button>  
-                    </div>
-                    <div id="buscarrut" class="form-group" style="display:none;">
-                        <form id="paso2" onsubmit="return false;">
-                            <label for="nuevorut">Ingrese RUT de Empresa:</label>
-                            <input id="nuevorut" class="form-control" style="height:auto; width:auto;">
-                            </input>
-                            <button id="elboton" type="submit" class="btn neutro border ladda-button ng-scope" style="margin-top:15px;">Continuar</button>
-                        </form>  
-                    </div>
+                    </div> 
                 </div>
                 
             </div>`);
 
-    var id = $("#param").text();
+    var idcabecera = $("#param").text();
     var nombre = ""
     var rut = ""
     var idgrupo = ""
@@ -56,91 +31,34 @@ $(document).ready(function () {
     var elcaption = ""
     $.ajax({
         type: "GET",
-        url: '/getdatosclientecongrupo/' + id,
+        url: '/getdatosmacgrupal/' + idcabecera,
         async: false,
         success: function (data) {
             if (data.length > 0) {
-                nombre = data[0].Nombre;
-                rut = data[0].Rut;
-                idgrupo = data[0].Idgrupo;
-                nombregrupo = data[0].Grupo;
-                banca = data[0].Banca;
-                oficina = data[0].Oficina;
-                ejecutivo = data[0].Ejecutivo;
-                riesgo = data[0].Riesgo;
-                rating = data[0].Rating;
-                pep = data[0].Pep;
-                $("#rut").html(rut)
-                $("#nombre").html(nombre)
+                nombregrupo = data[0].nombregrupo;
+                idgrupo = data[0].idgrupo;
                 $("#nombregrupo").html(nombregrupo)
-                $("#banca").html(banca)
-                $("#oficina").html(oficina)
                 $("#ejecutivo").html(ejecutivo)
-                $("#riesgo").html(riesgo)
-                $("#rating").html(rating)
-                $("#pep").html(pep)
-                $('#conmacgrupal').css("display", "block");
-                grilladegrupo(idgrupo, nombregrupo);
+                grilladegrupo(idcabecera, nombregrupo);
             } else {
-                $('#sinmacgrupal').css("display", "block");
+                alert("No existe MAC Grupo con ID: "+idcabecera)
             }
         }
     });
 
+    
+    function grilladegrupo(idcabecera, nombregrupo) {
+        $("#gridMaster").prepend(`
+                <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
+                    <button id="crearmacindividual" type="submit" class="btn neutro border ladda-button ng-scope" >Crear MAC Individuales</button> 
+                    
+                    <button id="compgrupo" type="submit" class="btn neutro border ladda-button ng-scope" >Comportamiento Grupo</button> 
 
+                    <button id="modificarmacs" type="submit" class="btn neutro border ladda-button ng-scope" >Modificar MACs</button> 
+                </div>
+                `);
 
-    $('#si').click(function () {
-        $('#sinmacgrupal').css("display", "none");
-        $("#buscarrut").css("display", "block")
-    });
-
-    $('#elboton').click(function () {
-        var nuevorut = $('#nuevorut').val();
-        if (nuevorut != "") {
-            $.ajax({
-                type: "GET",
-                url: '/getdatoscliente/' + nuevorut,
-                async: false,
-                success: function (data) {
-                    if (data.length > 0) {
-                        id = data[0].Id;
-                        window.location.assign("/menu/crearaprobacionmac/p/" + id);
-                    } else {
-                        alert("No existe cliente en Base de Datos");
-                    }
-                }
-            });
-
-        } else {
-            alert("Debe ingresar un RUT");
-        }
-    })
-
-    $('#no').click(function () {
-        var nombregrupo = prompt("Ingrese un nombre para el grupo", nombre);
-        if (nombregrupo == null || nombregrupo == "") {
-            alert("Debe ingresar un nombre de grupo")
-        } else {
-            $.ajax({
-                type: "GET",
-                url: '/creargruponuevo/' + id + '/' + nombregrupo,
-                async: false,
-                success: function (data) {
-                    if (data.length > 0) {
-                        window.location.assign("/menu/crearaprobacionmac/p/" + id);
-                    } else {
-                        alert("Error al crear grupo");
-                    }
-                }
-            });
-        }
-
-
-
-    });
-    function grilladegrupo(idgrupo, nombregrupo) {
-
-        elcaption = "Grupo: " + nombregrupo;
+        elcaption = "Selección de Empresas para: " + nombregrupo;
 
 
         var template = "<div id='responsive-form' class='clearfix'>";
@@ -163,13 +81,13 @@ $(document).ready(function () {
         var modelGrupo = [
             { label: 'Id', name: 'Id', width: 30, key: true, hidden: true, editable: true },
             {
-                label: ' ', name: 'acomite', width: 20, hidden: false, search: true, editable: true, editrules: { required: true },
+                label: ' ', name: 'Acomite', width: 20, hidden: false, search: true, editable: true, editrules: { required: true },
                 formatter: function (cellvalue, options, rowObject) {
-                    if (rowObject.Id == id) {
-                        dato = '<input type="checkbox" name="acomite" value="1" checked/> '
+                    if (cellvalue == 2) { 
+                        dato = '<input type="checkbox" name="acomite" value="1" onclick="$(this).val(this.checked ? 1 : 0)" checked/> '
                     }
                     else {
-                        dato = '<input type="checkbox" name="acomite" value="0" /> '
+                        dato = '<input type="checkbox" name="acomite" value="0" onclick="$(this).val(this.checked ? 1 : 0)" /> '
                     }
                     return dato
                 }
@@ -196,6 +114,7 @@ $(document).ready(function () {
                                         $("input#Nombre").val(data[0].Nombre);
                                         $("input#Alias").val(data[0].Alias);
                                         $("input#Id").val(data[0].Id);
+                                        $("input#grupoid").val(data[0].Id);
 
                                     } else {
                                         alert("No existe cliente en Base de Datos");
@@ -208,7 +127,7 @@ $(document).ready(function () {
                 }
             },
             { label: 'idgrupo', name: 'idgrupo', hidden: true, editable: true },
-            { label: 'idrelacion', name: 'idrelacion', hidden: true, editable: true },
+            { label: 'idcabecera', name: 'idcabecera', hidden: true, editable: true },
             { label: 'Nombre Cliente', name: 'Nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
             { label: 'Alias', name: 'Alias', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
             { label: 'R. Grupo', name: 'ratinggrupal', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
@@ -243,7 +162,7 @@ $(document).ready(function () {
         ];
 
         $("#grid").jqGrid({
-            url: '/grupoempresa/' + id,
+            url: '/grupoempresanew/' + idcabecera,
             mtype: "GET",
             datatype: "json",
             page: 1,
@@ -258,7 +177,7 @@ $(document).ready(function () {
             viewrecords: true,
             rowList: [5, 10, 20, 50],
             styleUI: "Bootstrap",
-            editurl: '/grupoempresa',
+            editurl: '/grupoempresanew',
             loadError: sipLibrary.jqGrid_loadErrorHandler,
             gridComplete: function () {
                 var recs = $("#grid").getGridParam("reccount");
@@ -266,6 +185,64 @@ $(document).ready(function () {
 
                     $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
                 }
+                
+            },
+            loadComplete: function () {
+
+                $('#crearmacindividual').click(function () {
+                    var $grid = $("#grid")
+                    var rows = $grid.getDataIDs();
+                    //console.dir(rows)
+                    var cellValues = [];
+                    var alerta = "Se creará el MAC Grupal y Mac Individuales para las siguientes empresas: \n"
+                    for (var i = 0; i < rows.length; i++) {
+                        var data = $grid.getRowData(rows[i]);
+                        //console.dir(data)
+                        var acomite = data.Acomite.substring(45,46);
+                        //console.log(acomite)
+                        if (parseInt(acomite) == 1) {
+                            alerta += $grid.jqGrid("getCell", rows[i], "Nombre") + "\n";
+                            cellValues.push(
+                                {
+                                    "id": $grid.jqGrid("getCell", rows[i], "Id"),
+                                    "nombre": $grid.jqGrid("getCell", rows[i], "Nombre"),
+                                    "rut": $grid.jqGrid("getCell", rows[i], "Rut")
+                                });
+                        }
+                    }
+                    //console.dir(cellValues)
+                    if (confirm(alerta)) {
+                        $.ajax({
+                            url: '/crearmacgrupal/' + idgrupo,
+                            type: 'POST',
+                            async: false,
+                            data: JSON.stringify({ empresas: cellValues }),
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.error == 0) {
+                                    var idmacgrupal = data.macgrupal.Id;
+                                    console.log(idmacgrupal);
+                                    window.location.href = "/menu/macgrupal/p/" + idmacgrupal;
+                                } else {
+                                    alert("Algo falló :(")
+                                }
+
+                            }
+                        });
+
+                    }
+                    else {
+                        return false;
+                    };
+                    if (confirm("¿Está seguro de continuar con esta configuración de grupo?")) {
+                        window.location.assign("/menu/crearaprobacionmac2" + "/p/" + id);
+                    }
+                    else {
+                        return false;
+                    }
+                });
+                
             }
         });
 
@@ -311,7 +288,7 @@ $(document).ready(function () {
 
                 },
                 onclickSubmit: function (rowid) {
-                    return { grupo: idgrupo };
+                    return { grupo: idgrupo, cabecera: idcabecera };
                 }
             },
             {
@@ -333,8 +310,8 @@ $(document).ready(function () {
                 onclickSubmit: function (rowid) {
                     var rowKey = $("#grid").getGridParam("selrow");
                     var rowData = $("#grid").getRowData(rowKey);
-                    var thissid = rowData.idrelacion;
-                    return { idrelacion: thissid };
+                    var thissid = rowData.idcabecera;
+                    return { cabecera: thissid };
                 }
             },
             {
@@ -344,23 +321,6 @@ $(document).ready(function () {
 
         $("#pager_left").css("width", "");
 
-        $(".gcontainer").append(`
-        <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
-            <button id="crearmacindividual" type="submit" class="btn neutro border ladda-button ng-scope" >Crear MAC Individuales</button> 
-            
-            <button id="consultarcompgrupo" type="submit" class="btn neutro border ladda-button ng-scope" >Consultar Comportamiento Grupo</button> 
-        </div>
-        `);
-
-        $('#crearmacindividual').click(function () {
-            if (confirm("¿Está seguro de continuar con esta configuración de grupo?")) {
-                window.location.assign("/menu/crearaprobacionmac2" + "/p/" + id);
-            }
-            else {
-                return false;
-            }
-        });
-
     }
 
     $(window).bind('resize', function () {
@@ -368,6 +328,111 @@ $(document).ready(function () {
         $("#pager").setGridWidth($(".gcontainer").width(), true);
     });
 
+    var idmacgrupal = $("#param").text();
+    var nombre = ""
+    var rut = ""
+    var idgrupo = ""
+    var nombregrupo = ""
+    var elcaption = ""
+    $("#gridMaster").append(`
+            <div class="panel panel-primary" id="accordion" style="width: 1440px">
+                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161; cursor: pointer;' data-toggle="collapse" data-parent="#accordion" data-target="#contenido" aria-expanded="true">
+                    <h3 class="panel-title"> MAC Individuales</h3>
+                </div>
+                <div class="panel-body" id="contenido">
+                    <hr class="section-separations"></hr>
+                    <ul class='nav nav-tabs tabs-up' id='myTabGrupal'>
+                        <li><a href='/macindividuales/` + idmacgrupal+`' data-target='#vermacgrupal' id='vermacgrupal_tab' data-toggle='tabgrupal'>Grupo</a></li>
+                        <li><a href='/aprobacion/' data-target='#aprobacion' id='aprobacion_tab' data-toggle='tabgrupal'>MAC Individual</a></li>
+                        <li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tabgrupal'>Bitacora</a></li>
+                    </ul>
+                    <div class='tab-content'>
+                        <div class='tab-pane active' id='vermacgrupal'><div class='container-fluid'><table id='vermacgrupal_t'></table><div id='navGridVermacGrupal'></div></div></div>
+                        <div class='tab-pane' id='aprobacion'><table id='aprobacion_t'></table><div id='navGridAprob'></div></div>
+                        <div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>
+                    </div>
+                </div>
+            </div> `)
+
+
+    
+    $('#vermacgrupal_tab').addClass('media_node active span')
+    $('.active[data-toggle="tabgrupal"]').each(function (e) {
+        var $this = $(this),
+            loadurlgrupal = $this.attr('href'),
+            targgrupal = $this.attr('data-target');
+        if (targgrupal === '#vermacgrupal') {
+            //gridVermacgrupal.renderGrid(loadurlgrupal, targgrupal)
+        } else if (targ === '#aprobacion') {
+            //gridAprobacion.renderGrid(loadurlgrupal, targgrupal)
+        }
+        $this.tab('show');
+        return false;
+    });
+
+    $('[data-toggle="tabgrupal"]').click(function (e) {
+        var $this = $(this),
+            loadurlgrupal = $this.attr('href'),
+            targgrupal = $this.attr('data-target');
+        if (targgrupal === '#vermacgrupal') {
+            //gridVermacgrupal.renderGrid(loadurlgrupal, targgrupal)
+        } else if (targgrupal === '#aprobacion') {
+            //gridAprobacion.renderGrid(loadurlgrupal, targgrupal)
+        }
+
+        $this.tab('show');
+        return false;
+    });
+/*
+    $.ajax({
+        type: "GET",
+        url: '/getmacindividuales/' + idmacgrupal,
+        async: false,
+        success: function (data) {
+            if (data.length > 0) {
+                var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
+                for (t in data) {
+                    tabs += "<li><a href='/macindividual/" + data[t].Id + "' data-target='#mac" + data[t].Id + "' id='mac" + data[t].Id + "_tab' data-toggle='tab'>" + data[t].Nombre + "</a></li>"
+                }
+                tabs += "</ul>"
+                tabs += "<div class='tab-content'>"
+                for (t in data) {
+                    if (t == 0) {
+                        tabs += "<div class='tab-pane active' id='mac" + data[t].Id + "'><div class='container-fluid'><table id='mac" + data[t].Id + "_t'></table><div id='navGridmac" + data[t].Id + "'></div></div></div>"
+                    } else {
+                        tabs += "<div class='tab-pane' id='mac" + data[t].Id + "'><div class='container-fluid'><table id='mac" + data[t].Id + "_t'></table><div id='navGridmac" + data[t].Id + "'></div></div></div>"
+                    }
+                }
+                tabs += "</div>"
+                $("#gridMaster").append(tabs);
+                $('#mac' + data[0].Id + '_tab').addClass('media_node active span')
+
+                $('.active[data-toggle="tab"]').each(function (e) {
+                    var $this = $(this),
+                        loadurl = $this.attr('href'),
+                        targ = $this.attr('data-target');
+                    console.log("hola mac " + targ)
+                    gridMacIndividual.renderGrid(loadurl, targ)
+                    $this.tab('show');
+                    return false;
+                });
+
+                $('[data-toggle="tab"]').click(function (e) {
+                    var $this = $(this),
+                        loadurl = $this.attr('href'),
+                        targ = $this.attr('data-target');
+                    console.log("hola mac " + targ)
+                    gridMacIndividual.renderGrid(loadurl, targ)
+                    $this.tab('show');
+                    return false;
+                });
+
+            } else {
+                alert("No existen MAC Individuales")
+            }
+        }
+    });
+*/
 
 });
 

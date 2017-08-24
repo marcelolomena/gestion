@@ -68,6 +68,22 @@ $(document).ready(function () {
                             <div id="warning" class="form-group" style="display: none;">
                                 <span id="mensaje" class="glyphicon glyphicon-exclamation-sign" style="color: red; margin-top:10px;"> Warning</span>     
                             </div>
+                            <div id="sinmacgrupal" class="form-group" style="display:none; padding-top: 10px;">
+                                <p>
+                                    No ha sido posible encontrar MAC de Grupo asociado a este cliente </br>
+                                    ¿Desea buscar el grupo por otro RUT cliente o crear grupo nuevo para el cliente seleccionado?
+                                </p>
+                                <button id="si" class="btn btn-default">Buscar Nuevo Cliente</button> 
+                                <button id="no" class="btn btn-default">Crear Nuevo Grupo</button>  
+                            </div>
+                            <div id="buscarrut" class="form-group" style="display:none;">
+                                <form id="paso2" onsubmit="return false;">
+                                    <label for="nuevorut">Ingrese RUT de Empresa:</label>
+                                    <input id="nuevorut" class="form-control" style="height:auto; width:auto;">
+                                    </input>
+                                    <button id="elboton2" type="submit" class="btn neutro border ladda-button ng-scope" style="margin-top:15px;">Continuar</button>
+                                </form>  
+                            </div>
                             <button id="elboton" type="submit" class="btn neutro border ladda-button ng-scope" style="margin-top:20px;">Crear Aprobación</button>   
                         </div>    
                     </form>        
@@ -88,7 +104,7 @@ $(document).ready(function () {
         success: function (data) {
             if (data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
-                    contenidoselect += "<option value='"+data[i].Id+"'>"+data[i].Nombre+"</option>"
+                    contenidoselect += "<option value='" + data[i].Id + "'>" + data[i].Nombre + "</option>"
                 }
                 $('#tipoaprobacion').html(contenidoselect);
             } else {
@@ -101,11 +117,11 @@ $(document).ready(function () {
         if (this.value == "0") {
             $('#mensaje').html(" Debe seleccionar un tipo de aprobación")
             $('#warning').css("display", "block");
-        } else{
+        } else {
             if (this.value == "1") {
                 $('#warning').css("display", "none");
                 $('#paso2').attr("action", "/menu/crearaprobacionmac");
-            } else{
+            } else {
                 $('#warning').css("display", "block");
                 $('#mensaje').html(" Funcionalidad no desarrollada")
             }
@@ -113,14 +129,80 @@ $(document).ready(function () {
 
     })
     $('#elboton').click(function () {
+        console.log("hola")
         var tipoaprobacion = $('#tipoaprobacion option:selected').val();
 
         if (tipoaprobacion == 1) {
-            window.location.assign("/menu/crearaprobacionmac/p/" + id);
+            $.ajax({
+                type: "GET",
+                url: '/getdatosclientecongrupo2/' + rut,
+                async: false,
+                success: function (data) {
+                    if (data.length > 0) {
+                        /*
+                        var idgrupo = data[0].Grupo_Id
+                        $.ajax({
+                            type: "GET",
+                            url: '/getdatosclientecongrupo3/' + idgrupo,
+                            async: false,
+                            success: function (data2) {
+                                if (data2.length > 0) {
+                                    window.location.assign("/menu/crearaprobacionmac/p/" + data2[0].idcabecera);
+                                } else {
+                                    alert("Error")
+                                }
+                            }
+                        });
+                        var idcabeceraold = data.
+                            window.location.assign("/menu/crearaprobacionmac/p/" + id);
+                            */
+                            alert("Cliente ya tiene MAC Grupal vigente")
+                    } else {
+                        $('#tipoaprobacion').prop('disabled', 'disabled');
+                        $('#sinmacgrupal').css("display", "block");
+                    }
+                }
+            });
+
+
+
+
         } else {
             alert("Funcionalidad no desarrollada");
         }
     })
+
+    $('#si').click(function () {
+        $('#sinmacgrupal').css("display", "none");
+        $("#buscarrut").css("display", "block")
+    });
+
+    $('#no').click(function () {
+        var nombregrupo = prompt("Ingrese un nombre para el grupo", nombre);
+        if (nombregrupo == null || nombregrupo == "") {
+            alert("Debe ingresar un nombre de grupo")
+        } else {
+            $.ajax({
+                type: "GET",
+                url: '/creargruponuevo/' + id + '/' + nombregrupo,
+                async: false,
+                success: function (data) {
+                    var idcabecera = data[0].idcabecera
+                    console.log("primero la data")
+                    console.dir(data);
+                    console.log("la cabecera " + idcabecera)
+                    if (data.length > 0) {
+                        window.location.assign("/menu/crearaprobacionmac/p/" + idcabecera);
+                    } else {
+                        alert("Error al crear grupo");
+                    }
+                }
+            });
+        }
+
+
+
+    });
 
 
     $(window).bind('resize', function () {
@@ -128,6 +210,3 @@ $(document).ready(function () {
         $("#pager").setGridWidth($(".gcontainer").width(), true);
     });
 });
-
-
-
