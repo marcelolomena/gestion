@@ -67,7 +67,7 @@ var gridvertablimites = {
                 { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 {
-                    label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
+                    label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
                         var bloq = 0;
                         var disp = 0;
@@ -79,12 +79,11 @@ var gridvertablimites = {
                                 if (data.length > 0) {
                                     bloq = data[0].Bloqueado;
                                     disp = data[0].Disponible;
-                                    //console.log("valor de bloqueo " + bloq);
                                 }
                             }
                         })  
                         var dispo = disp - bloq;
-                        return (formatear.formatearNumero(dispo));
+                        return formatear.formatearNumero(dispo);
                     }
                 },
 
@@ -185,7 +184,7 @@ var gridvertablimites = {
             height: "auto",
             shrinkToFit: true,
             //autowidth: true,
-            width: 1350,
+            width: 1500,
             subGrid: true,
             subGridRowExpanded: subGridsublimite2, //se llama la funcion de abajo
             subGridOptions: {
@@ -199,6 +198,7 @@ var gridvertablimites = {
             viewrecords: true,
             caption: "Detalle Limites",
             footerrow: true,
+            userDataOnFooter : false,
             gridComplete: function () {
                 $gridTab2.jqGrid('navButtonAdd', '#navGridtabverlimites', {
                     caption: "IMPRIMIR",
@@ -229,12 +229,7 @@ var gridvertablimites = {
                     var eldisponible = $gridTab2.getRowData(rows[i]).Disponible;
                     if (parseInt(eldisponible) < 0) {
                         $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { formatter: 'number', color: 'red' });
-                    }
-
-                    if(i=rows.length-1)
-                    {
-                        $gridTab2.jqGrid('setCell', rows[i], "Disponible", 'hola','hola');
-                    }
+                    }  
                 }
 
                 $gridTab2.append(`
@@ -1017,11 +1012,11 @@ var gridvertablimites = {
                 $gridTab2.jqGrid('footerData', 'set',
                     {
                         Moneda: 'Total (CLP) :',
-                        Aprobado: 7830782,
-                        Utilizado: 25130,
+                        Aprobado: '7.830.782',
+                        Utilizado: '25.130',
                         Reservado: sum3,
-                        Disponible: 3697858,
-                        Bloqueo_N: 'CANDADO'
+                        Disponible: sum4,
+                        Bloqueo_N: '<span role="button" class="fa fa-lock bloqueartodo" aria-hidden="true" href="#" style= "font-size: 20px;"></span>'
                         /*Total : sum5,
                         VarAprobacion : sum6,
                         DeudaBanco: sum7,
@@ -1029,7 +1024,7 @@ var gridvertablimites = {
                         SBIFACHEL: sum9,
                         Penetracion: sum10
                         */
-                    });
+                    },false);
             },
 
 
