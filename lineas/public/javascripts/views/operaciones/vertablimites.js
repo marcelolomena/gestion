@@ -244,7 +244,7 @@ var gridvertablimites = {
 
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title"><b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<b>Plazo: </b><span id="plazolinea">12 meses</span> meses - <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
+                                    <h4 class="modal-title"><b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<b>Plazo: </b><span id="plazolinea">12 meses</span> meses - <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
                                 </div>
 
                                 <div class="modal-body">
@@ -545,21 +545,23 @@ var gridvertablimites = {
                                                 <form id="miprimerform">
 
                                                     <div class="form-group"> 
-                                                        <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span id="MontoBloqueado"></span><p></p>
+                                                        <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span style="font-weight: bold;" id="MontoBloqueado"></span><p></p>
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
-                                                        <label for="fechaBloqueo">Con fecha: 24-08-2017  15:05</label><p></p>
-                                                        <div> Comentario: <input type="text" class="form-control" name ="ValComentari   oDes" id="ValComentarioDes" readonly> </div>
+                                                        <label for="fechaBloqueo">Con fecha: 24-08-2017 / 15:05 hrs.</label><p></p>
+                                                        <div> Comentario: <input type="text" class="form-control" name ="ValComentarioDes" id="ValComentarioDes" readonly> </div>
                                                         
 
                                                     </div>
                                                     <p></p>
 
+                                                    
 
                                                     <div class="form-group">
                                                         <div class="btn-group">    
                                                             <input type="text" class="form-control" id="idlineabloqueo" style="background-color: #002464;display: none">
                                                             <input type="text" class="form-control" id="Bloqueado" style="display: none">
                                                                 <div>
+                                                                   <label for="monto" id="eeee">Desbloquear: </label>
                                                                     <input id="dtotal" type="radio" name="radio-choice" required>Total</input>     
                                                                     <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
                                                                 </div> 
@@ -845,6 +847,8 @@ var gridvertablimites = {
                     var bloq = $("#Bloqueado").val();
                     var nuevovalorbloq = bloq - des;
                     $("#nuevovalorbloqueo").val(nuevovalorbloq);
+
+                    //var comentarioParcial
                     //console.log("el valor enviado es: "+nuevovalorbloq);
 
 
@@ -880,6 +884,7 @@ var gridvertablimites = {
                     var idlimite = $(this).attr('href');
 
                     $("#ModalDesbloqueo").modal();
+                    
 
                 });
 
@@ -895,6 +900,8 @@ var gridvertablimites = {
                                 var disponible = data[0].Disponible;
                                 //console.log("valor de bloqueo " + bloq);
                             }
+                            
+                            $('input[name="radio-choice"]').attr('checked', false);
 
                             $("#montodes").val("");
                             $("#monto").val("");
@@ -952,6 +959,7 @@ var gridvertablimites = {
                     //console.log("bloqueo parcial");
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                     $("#monto").show();
+                    $("#monto").val("");
                     $("#labelmonto").show();
                     $("#labelcomentario").show();
                     $("#comentario").show();
