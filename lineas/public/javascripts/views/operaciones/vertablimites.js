@@ -857,6 +857,7 @@ var gridvertablimites = {
                     var idlimite = $(this).attr('href');
 
                     $("#ModalDesbloqueo").modal();
+                    
 
                 });
 
@@ -872,6 +873,8 @@ var gridvertablimites = {
                                 var disponible = data[0].Disponible;
                                 //console.log("valor de bloqueo " + bloq);
                             }
+                            
+                            $('input[name="radio-choice"]').attr('checked', false);
 
                             $("#montodes").val("");
                             $("#monto").val("");
