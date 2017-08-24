@@ -522,9 +522,9 @@ var gridvertablimites = {
                                                 <form id="miprimerform">
 
                                                     <div class="form-group"> 
-                                                        <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span id="MontoBloqueado"></span><p></p>
+                                                        <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span style="font-weight: bold;" id="MontoBloqueado"></span><p></p>
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
-                                                        <label for="fechaBloqueo">Con fecha: 24-08-2017  15:05</label><p></p>
+                                                        <label for="fechaBloqueo">Con fecha: 24-08-2017 / 15:05 hrs.</label><p></p>
                                                         <div> Comentario: <input type="text" class="form-control" name ="ValComentari   oDes" id="ValComentarioDes" readonly> </div>
                                                         
 
