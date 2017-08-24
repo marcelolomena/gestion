@@ -508,10 +508,13 @@ var gridvertablimites = {
                                             <div class="panel-body">
                                                 <form id="miprimerform">
 
-                                                    <div> 
-                                                        Monto Bloqueado M$ : <span id="MontoBloqueado"></span><p></p>
+                                                    <div class="form-group"> 
+                                                        <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span id="MontoBloqueado"></span><p></p>
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
-                                                        <div> Comentario:<span id="Comentario"></span></div>
+                                                        <label for="fechaBloqueo">Con fecha: 24-08-2017  15:05</label><p></p>
+                                                        <div> Comentario: <input type="text" class="form-control" name ="ValComentari   oDes" id="ValComentarioDes" readonly> </div>
+                                                        
+
                                                     </div>
                                                     <p></p>
 
@@ -853,6 +856,7 @@ var gridvertablimites = {
                         success: function (data) {
                             if (data.length > 0) {
                                 var bloq = data[0].Bloqueado;
+                                var disponible = data[0].Disponible;
                                 //console.log("valor de bloqueo " + bloq);
                             }
 
@@ -866,17 +870,24 @@ var gridvertablimites = {
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
                                 $("#montodes").val("");  
-                                $("#comentario").val("");
+                                $("#ValComentarioDes").val(data[0].BORRARCOMEN);
                                 $("#monto").val("");
                                 $("#comentariodesbloqueo").val("");
-                                $("#Comentario").html(data[0].BORRARCOMEN)
+                                $("#Comentario").html(data[0].BORRARCOMEN);
                                 $("#botonpost").hide();
                                 $("#labelmontodesbloqueo").hide();
                                 $("#montodes").hide();
                                 $("#labelcomentariodesbloqueo").hide();
                                 $("#comentariodesbloqueo").hide();
-                           
-                             
+
+                                
+
+                                if(disponible == bloq){
+                                    $("#tipoBloqueo").html(" Total M$ : ");
+                                }
+                                else{
+                                    $("#tipoBloqueo").html(" Parcial M$ : ");
+                                }
                             }
                             else {
                                 //Bloqueo
