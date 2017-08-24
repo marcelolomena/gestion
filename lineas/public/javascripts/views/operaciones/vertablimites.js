@@ -903,7 +903,7 @@ var gridvertablimites = {
                             $("#comentariodesbloqueo").val("");
 
                             if (bloq > 0) {
-                                $("#MontoBloqueado").html(data[0].Bloqueado) //desbloqueo
+                                $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Bloqueado)) //desbloqueo
                                 $("#Bloqueado").val(data[0].Bloqueado)
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
