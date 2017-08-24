@@ -225,7 +225,7 @@ var gridvertablimites = {
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title"><b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<b>Plazo: </b><span id="plazolinea">12 meses</span> meses - <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
+                                    <h4 class="modal-title"><b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<b>Plazo: </b><span id="plazolinea">12 meses</span> meses - <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
                                 </div>
                                 <div class="modal-body">
                                     <div id="cuerpo1">
@@ -914,6 +914,7 @@ var gridvertablimites = {
                     //console.log("bloqueo parcial");
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                     $("#monto").show();
+                    $("#monto").val("");
                     $("#labelmonto").show();
                     $("#labelcomentario").show();
                     $("#comentario").show();
