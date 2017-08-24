@@ -1,5 +1,6 @@
 function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
     //console.log('hola');
+
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
@@ -118,6 +119,21 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
 
             $('.asignar').click(function () {
 
+                var formatear =
+                    {
+                        formatearNumero: function (nStr) {
+                            nStr += '';
+                            x = nStr.split('.');
+                            x1 = x[0];
+                            x2 = x.length > 1 ? ',' + x[1] : '';
+                            var rgx = /(\d+)(\d{3})/;
+                            while (rgx.test(x1)) {
+                                x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                            }
+                            return x1 + x2;
+                        }
+                    }
+
                 $("#myModalAsignar").modal();
                 var elrutqueviene = $(this).attr('href');
                 var elrutquenecesito = elrutqueviene.substring(1)
@@ -165,7 +181,8 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                                     }
                                 }
                             })
-                            return (disp - bloq);
+                             var dispo = disp - bloq;
+                        return (formatear.formatearNumero(dispo));
                         }
                     },
 
@@ -224,7 +241,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                         }
                     }
                 });
-                
+
 
                 $("#grid").jqGrid('navGrid', "#pager", {
                     edit: false, add: false, del: false, search: false,

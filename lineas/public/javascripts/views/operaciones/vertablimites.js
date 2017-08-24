@@ -2,6 +2,21 @@ var gridvertablimites = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab2 = $(targ + "_t")
+
+        var formatear = 
+        {
+            formatearNumero: function (nStr) {
+                nStr += '';
+                x = nStr.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? ',' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                }
+                return x1 + x2;
+            }
+        }
         /*
         $gridTab2.prepend(`
             <div class='form-row'>
@@ -52,7 +67,7 @@ var gridvertablimites = {
                 { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 {
-                    label: 'Disponible', name: 'Disponible2', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
+                    label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
                         var bloq = 0;
                         var disp = 0;
@@ -64,11 +79,11 @@ var gridvertablimites = {
                                 if (data.length > 0) {
                                     bloq = data[0].Bloqueado;
                                     disp = data[0].Disponible;
-                                    //console.log("valor de bloqueo " + bloq);
                                 }
                             }
-                        })
-                        return (disp - bloq);
+                        })  
+                        var dispo = disp - bloq;
+                        return formatear.formatearNumero(dispo);
                     }
                 },
 
@@ -94,13 +109,13 @@ var gridvertablimites = {
                                 }
                             }
                         });
-                        rojo = '<span role="button" data-toggle="tooltip"  title="'+condi+'" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                        rojo = '<span role="button" data-toggle="tooltip"  title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
                         //console.log(rowObject.Id);
 
-                        amarillo = '<span role="button" data-toggle="tooltip" title="'+condi+'" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
-                        verde = '<span role="button" data-toggle="tooltip" title="'+condi+'" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
+                        amarillo = '<span role="button" data-toggle="tooltip" title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                        verde = '<span role="button" data-toggle="tooltip" title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
 
-    
+
                         if (cellvalue === 'Rojo') {
                             return rojo
                         }
@@ -169,7 +184,7 @@ var gridvertablimites = {
             height: "auto",
             shrinkToFit: true,
             //autowidth: true,
-            width: 1350,
+            width: 1500,
             subGrid: true,
             subGridRowExpanded: subGridsublimite2, //se llama la funcion de abajo
             subGridOptions: {
@@ -183,6 +198,7 @@ var gridvertablimites = {
             viewrecords: true,
             caption: "Detalle Limites",
             footerrow: true,
+            userDataOnFooter : false,
             gridComplete: function () {
                 $gridTab2.jqGrid('navButtonAdd', '#navGridtabverlimites', {
                     caption: "IMPRIMIR",
@@ -207,29 +223,28 @@ var gridvertablimites = {
 
                 }
 
-                
+
                 var rows = $gridTab2.getDataIDs();
                 for (var i = 0; i < rows.length; i++) {
                     var eldisponible = $gridTab2.getRowData(rows[i]).Disponible;
                     if (parseInt(eldisponible) < 0) {
                         $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { formatter: 'number', color: 'red' });
-                    }
-                    else{
-                        $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { formatter: 'number'});
-                    }
+                    }  
                 }
 
                 $gridTab2.append(`
                     <div class="modal fade" id="myModal2" role="dialog">
                         <div class="modal-dialog modal-lg" style="width:90%;">
                             <div class="modal-content">
+
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title"><b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span> - <b>Plazo: </b><span id="plazolinea">12 meses</span> meses - <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
+                                    <h4 class="modal-title"><b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<b>Plazo: </b><span id="plazolinea">12 meses</span> meses - <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
                                 </div>
+
                                 <div class="modal-body">
                                     <div id="cuerpo1">
-                                        <div style="width:32%;display: inline-block;margin-right: 1%; vertical-align:top">                  
+                                        <div style="width:50%;display: inline-block;margin-right: 1%; vertical-align:top">                  
                                             <div class="panel panel-primary">
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Límites</span></div>
                                                 <div class="panel-body" style="max-height: 130px;overflow-y: auto;">
@@ -240,7 +255,7 @@ var gridvertablimites = {
                                                                     <b>Aprobado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ <span id="aprobadolinea">3.000</span>
+                                                                    $ <span id="aprobadolinea2">3.000</span>
                                                                 </div>
                                                             </div> 
                                                             <div class="row">
@@ -248,7 +263,7 @@ var gridvertablimites = {
                                                                     <b>Utilizado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ <span id="utilizadolinea">3.000</span>
+                                                                    $ <span id="utilizadolinea2">3.000</span>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -256,7 +271,7 @@ var gridvertablimites = {
                                                                     <b>Reservado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ <span id="reservadolinea">3.000</span>
+                                                                    $ <span id="reservadolinea2">3.000</span>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -264,7 +279,7 @@ var gridvertablimites = {
                                                                     <b>Bloqueado:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ <span id="bloqueadolinea">0</span>
+                                                                    $ <span id="bloqueadolinea2">0</span>
                                                                 </div>
                                                             </div>
                                                             <div class="row" style="border: 1px solid; border-color: #0B2161;background-color: #0B2161;color: white;">
@@ -272,7 +287,7 @@ var gridvertablimites = {
                                                                     <b>Disponible:</b>
                                                                 </div>
                                                                 <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
-                                                                    $ <span id="disponiblelinea">0</span>
+                                                                    $ <span id="disponiblelinea2">0</span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -280,65 +295,11 @@ var gridvertablimites = {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div style="width:32%;display: inline-block;margin-right: 1%;vertical-align:top;">
-                                            
-                                            <div class="panel panel-primary" >
-                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Productos</div>
-                                                <div id="productoslinea" class="panel-body" style="max-height: 130px;overflow-y: auto;">
-                                                    <div class="table-responsive clear">
-                                                        <table class="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
-                                                                        Tipo
-                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
-                                                                    </th>
-                                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                        Nombre
-                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div> 
-                                        </div> 
-                                        <div style="width:32%;display: inline-block;vertical-align:top;">
-                                            <div class="panel panel-primary" >
-                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Clientes</div>
-                                                <div id="clienteslinea" class="panel-body" style="max-height: 130px;overflow-y: auto;">
-                                                    <div class="table-responsive clear">
-                                                        <table class="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
-                                                                        RUT
-                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
-                                                                    </th>
-                                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
-                                                                        Nombre
-                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div> 
-                                        </div> 
-                                    </div>
-                                    <div id="cuerpo2">
-                                        <div style="width:48%;display: inline-block;margin-right: 2%; vertical-align:top">                  
+
+                                         <div style="width:45%;display: inline-block;margin-right: 2%; vertical-align:top">                  
                                             <div class="panel panel-primary" >
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Condiciones</div>
-                                                <div id="condicioneslinea" class="panel-body" style="max-height: 200px;overflow-y: auto;">
+                                                <div id="condicioneslinea" class="panel-body" style="max-height: 200px; min-height: 130px;overflow-y: auto;">
                                                     <div class="table-responsive clear">
                                                         <table class="table">
                                                             <thead>
@@ -364,14 +325,71 @@ var gridvertablimites = {
                                                     </div>
                                                 </div>
                                             </div>
-                                             
                                         </div>
-                                        <div style="width:48%;display: inline-block;vertical-align:top;"> 
+                                    </div>
+                                    
+                                    <div id="cuerpo2">
+                                        <div style="width:23%;display: inline-block;margin-right: 1%;vertical-align:top;">
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Productos</div>
+                                                <div id="productoslinea" class="panel-body" style="max-height: 130px;; min-height: 130px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                                        Tipo
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                                    </th>
+                                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Nombre
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div> 
+                                        <div style="width:23%;display: inline-block;vertical-align:top;">
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Clientes</div>
+                                                <div id="clienteslinea" class="panel-body" style="max-height: 130px;min-height: 130px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                                        RUT
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                                    </th>
+                                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Nombre
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div> 
+                                    </div>
+                                    <div id="cuerpo3">
+                                        
+                                        <div style="width:98.5%;display: inline-block;vertical-align:top;"> 
                                             <div class="panel panel-primary" >
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Garantías</div>
-                                                <div class="panel-body" style="max-height: 200px;overflow-y: auto;">
+                                                <div class="panel-body" style="max-height: 200px; min-height: 130px;overflow-y: auto;">
                                                     <div class="table-responsive clear">
-                                                        <b>Reales</b>
+                                                        
                                                         <table id="garantiasrealeslinea" class="table">
                                                             <thead>
                                                                 <tr>
@@ -418,17 +436,32 @@ var gridvertablimites = {
                                                         <b>Estatales</b>
                                                         <table class="table">
                                                         </table>
-                                                        <b>Covenants</b>
-                                                        <table class="table">
-                                                            
-                                                        </table>
+                                                        <b>Reales</b>
                                                     </div>
                                                 </div>
                                             </div> 
-                                        </div> 
-                                        
-                                    </div>
-                                    <div id="cuerpo3">
+                                        </div>
+
+                                    <div id="cuerpo5">
+                                         <div style="width:98.5%;display: inline-block;margin-right: 10px; vertical-align:top">                  
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Covenants</div>
+                                                <div class="panel-body">
+                                                    <div class="table-responsive clear">
+                                                        <div id="comentarioslinea" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                   
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+
+                                    <div id="cuerpo4">
                                         <div style="width:98.5%;display: inline-block;margin-right: 10px; vertical-align:top">                  
                                             <div class="panel panel-primary" >
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Comentarios</div>
@@ -445,7 +478,7 @@ var gridvertablimites = {
                                                 </div>
                                             </div>
                                         </div>
-                                         
+                                    </div>     
                                          
                                     </div>
                                 </div>
@@ -506,19 +539,24 @@ var gridvertablimites = {
                                             <div class="panel-body">
                                                 <form id="miprimerform">
 
-                                                    <div> 
-                                                        Monto Bloqueado M$ : <span id="MontoBloqueado"></span><p></p>
+                                                    <div class="form-group"> 
+                                                        <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span style="font-weight: bold;" id="MontoBloqueado"></span><p></p>
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
-                                                        <div> Comentario:<span id="Comentario"></span></div>
+                                                        <label for="fechaBloqueo">Con fecha: 24-08-2017 / 15:05 hrs.</label><p></p>
+                                                        <div> Comentario: <input type="text" class="form-control" name ="ValComentarioDes" id="ValComentarioDes" readonly> </div>
+                                                        
+
                                                     </div>
                                                     <p></p>
 
+                                                    
 
                                                     <div class="form-group">
                                                         <div class="btn-group">    
                                                             <input type="text" class="form-control" id="idlineabloqueo" style="background-color: #002464;display: none">
                                                             <input type="text" class="form-control" id="Bloqueado" style="display: none">
                                                                 <div>
+                                                                   <label for="monto" id="eeee">Desbloquear: </label>
                                                                     <input id="dtotal" type="radio" name="radio-choice" required>Total</input>     
                                                                     <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
                                                                 </div> 
@@ -799,11 +837,13 @@ var gridvertablimites = {
                 $('#botonpost').click(function () {
                     console.log("holapo"); //desbloqueo
                     var idlineabloqueo = $('#idlineabloqueo').val();
-                    
-                    var des=$("#montodes").val();
-                    var bloq=$("#Bloqueado").val();
-                    var nuevovalorbloq=bloq-des;
+
+                    var des = $("#montodes").val();
+                    var bloq = $("#Bloqueado").val();
+                    var nuevovalorbloq = bloq - des;
                     $("#nuevovalorbloqueo").val(nuevovalorbloq);
+
+                    //var comentarioParcial
                     //console.log("el valor enviado es: "+nuevovalorbloq);
 
 
@@ -839,6 +879,7 @@ var gridvertablimites = {
                     var idlimite = $(this).attr('href');
 
                     $("#ModalDesbloqueo").modal();
+                    
 
                 });
 
@@ -851,30 +892,40 @@ var gridvertablimites = {
                         success: function (data) {
                             if (data.length > 0) {
                                 var bloq = data[0].Bloqueado;
+                                var disponible = data[0].Disponible;
                                 //console.log("valor de bloqueo " + bloq);
                             }
+                            
+                            $('input[name="radio-choice"]').attr('checked', false);
 
                             $("#montodes").val("");
                             $("#monto").val("");
                             $("#comentariodesbloqueo").val("");
 
                             if (bloq > 0) {
-                                $("#MontoBloqueado").html(data[0].Bloqueado) //desbloqueo
+                                $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Bloqueado)) //desbloqueo
                                 $("#Bloqueado").val(data[0].Bloqueado)
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
                                 $("#montodes").val("");  
-                                $("#comentario").val("");
+                                $("#ValComentarioDes").val(data[0].BORRARCOMEN);
                                 $("#monto").val("");
                                 $("#comentariodesbloqueo").val("");
-                                $("#Comentario").html(data[0].BORRARCOMEN)
+                                $("#Comentario").html(data[0].BORRARCOMEN);
                                 $("#botonpost").hide();
                                 $("#labelmontodesbloqueo").hide();
                                 $("#montodes").hide();
                                 $("#labelcomentariodesbloqueo").hide();
                                 $("#comentariodesbloqueo").hide();
-                           
-                             
+
+                                
+
+                                if(disponible == bloq){
+                                    $("#tipoBloqueo").html(" Total M$ : ");
+                                }
+                                else{
+                                    $("#tipoBloqueo").html(" Parcial M$ : ");
+                                }
                             }
                             else {
                                 //Bloqueo
@@ -903,6 +954,7 @@ var gridvertablimites = {
                     //console.log("bloqueo parcial");
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                     $("#monto").show();
+                    $("#monto").val("");
                     $("#labelmonto").show();
                     $("#labelcomentario").show();
                     $("#comentario").show();
@@ -928,7 +980,7 @@ var gridvertablimites = {
                     $("#botonpost").show();
                     $("#labelcomentariodesbloqueo").show();
                     $("#comentariodesbloqueo").show();
-                   
+
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
 
@@ -960,11 +1012,11 @@ var gridvertablimites = {
                 $gridTab2.jqGrid('footerData', 'set',
                     {
                         Moneda: 'Total (CLP) :',
-                        Aprobado: sum1,
-                        Utilizado: sum2,
+                        Aprobado: '7.830.782',
+                        Utilizado: '25.130',
                         Reservado: sum3,
                         Disponible: sum4,
-                        Bloqueo_N: 'CANDADO'
+                        Bloqueo_N: '<span role="button" class="fa fa-lock bloqueartodo" aria-hidden="true" href="#" style= "font-size: 20px;"></span>'
                         /*Total : sum5,
                         VarAprobacion : sum6,
                         DeudaBanco: sum7,
@@ -972,7 +1024,7 @@ var gridvertablimites = {
                         SBIFACHEL: sum9,
                         Penetracion: sum10
                         */
-                    });
+                    },false);
             },
 
 
