@@ -223,7 +223,6 @@ var gridvertablimites = {
 
                 }
 
-
                 var rows = $gridTab2.getDataIDs();
                 for (var i = 0; i < rows.length; i++) {
                     var eldisponible = $gridTab2.getRowData(rows[i]).Disponible;
@@ -523,6 +522,7 @@ var gridvertablimites = {
                                 </div>
                             </div>
                         </div>
+                    </div>
 
                     <div class="modal fade" id="ModalDesbloqueo" role="dialog" >
                         <div class="modal-dialog modal-sm" >
@@ -532,53 +532,47 @@ var gridvertablimites = {
                                         <div class="panel-heading" style="background-color: #002464;color: #fff;">Desbloquear Linea</div>
                                             <div class="panel-body">
                                                 <form id="miprimerform">
-
                                                     <div class="form-group"> 
                                                         <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span style="font-weight: bold;" id="MontoBloqueado"></span><p></p>
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
                                                         <label for="fechaBloqueo">Con fecha: 24-08-2017 / 15:05 hrs.</label><p></p>
                                                         <div> Comentario: <input type="text" class="form-control" name ="ValComentarioDes" id="ValComentarioDes" readonly> </div>
-                                                        
-
                                                     </div>
                                                     <p></p>
-
-                                                    
-
                                                     <div class="form-group">
                                                         <div class="btn-group">    
                                                             <input type="text" class="form-control" id="idlineabloqueo" style="background-color: #002464;display: none">
                                                             <input type="text" class="form-control" id="Bloqueado" style="display: none">
-                                                                <div>
-                                                                   <label for="monto" id="eeee">Desbloquear: </label>
-                                                                    <input id="dtotal" type="radio" name="radio-choice" required>Total</input>     
-                                                                    <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
-                                                                </div> 
+                                                            <div>
+                                                                <label for="monto" id="eeee">Desbloquear: </label>
+                                                                <input id="dtotal" type="radio" name="radio-choice" required>Total</input>     
+                                                                <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
+                                                            </div> 
                                                         </div>
                                                     </div>
-
                                                     <p></p>
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmontodesbloqueo">Monto:</label>
                                                         <input type="text" class="form-control" name ="montod" id="montodes">
                                                         <input type="text" class="form-control" name ="monto" id="nuevovalorbloqueo"; style="display: none">
-                                                        
                                                     </div>
-
+                                                    <div class="form-group">
                                                     <label for="comentariodes" id="labelcomentariodesbloqueo">Comentario:</label>
                                                     <input type="text" class="form-control" name="comentariodes" id="comentariodesbloqueo">
                                                     <p></p>
-
+                                                    </div>
                                                     <div class="wrapper" style="text-align: center">
                                                         <button id="botonpost" type="submit" class="btn btn-default" data-dismiss="modal">Desbloquear</button>
                                                     </div>
                                                 </form>
                                             </div>                    
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                             </div>
+                        </div>  
                     </div>
-                </div>  
+                
                     <div class="modal fade" id="myModalCondicionL" role="dialog">
                         <div class="modal-dialog modal-sm">
                             <div class="modal-content">
@@ -593,7 +587,7 @@ var gridvertablimites = {
                             </div>
                         </div>
                     </div> 
-        `);
+                `);
 
                 //BOTÓN DETALLE
                 $('.muestradet').click(function () {
