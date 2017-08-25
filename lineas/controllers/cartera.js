@@ -575,7 +575,7 @@ exports.getdatosclientecongrupo2 = function (req, res) {
 }
 
 exports.getdatosclientecongrupo3 = function (req, res) {
-    sequelize.query(`EXEC scl.creargruponuevo2 ` + req.params.rut,
+    sequelize.query(`EXEC scl.crearmacgrupodegrupo ` + req.params.idgrupo+`, `+ req.params.idempresa ,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)

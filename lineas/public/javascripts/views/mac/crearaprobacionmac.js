@@ -37,24 +37,44 @@ $(document).ready(function () {
             if (data.length > 0) {
                 nombregrupo = data[0].nombregrupo;
                 idgrupo = data[0].idgrupo;
+                ejecutivo = 'Marcela Castro'
+                fechapresentacion = '30-08-2017'
+                vencimientoanterior = '30-08-2016'
                 $("#nombregrupo").html(nombregrupo)
                 $("#ejecutivo").html(ejecutivo)
-                grilladegrupo(idcabecera, nombregrupo);
+                $("#fechapresentacion").html(fechapresentacion)
+                $("#vencimientoanterior").html(vencimientoanterior)
+                grilladegrupo(idcabecera, nombregrupo, idgrupo);
             } else {
-                alert("No existe MAC Grupo con ID: "+idcabecera)
+                alert("No existe MAC Grupo con ID: " + idcabecera)
             }
         }
     });
 
-    
-    function grilladegrupo(idcabecera, nombregrupo) {
-        $("#gridMaster").prepend(`
-                <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
-                    <button id="crearmacindividual" type="submit" class="btn neutro border ladda-button ng-scope" >Crear MAC Individuales</button> 
-                    
-                    <button id="compgrupo" type="submit" class="btn neutro border ladda-button ng-scope" >Comportamiento Grupo</button> 
 
-                    <button id="modificarmacs" type="submit" class="btn neutro border ladda-button ng-scope" >Modificar MACs</button> 
+    function grilladegrupo(idcabecera, nombregrupo, idgrupo) {
+        $("#gridMaster").prepend(`
+                <div class="modal fade" id="modalcomportamiento" role="dialog">
+                    <div class="modal-dialog modal-lg" style="width:75%; >
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="panel panel-default" >
+                                    <div class="panel-heading" style="background-color: #002464;color: #fff;">Comportamiento de Grupo</div>
+                                        <div class="panel-body">
+                                            <div class="gcontainer">
+                                                <table id="grid2"></table>
+                                                <div id="pager"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
+                    <button id="crearmacindividual" type="submit" class="btn neutro border ladda-button ng-scope" >Crear MAC</button> 
+                    <button id="compgrupo" type="submit" class="btn neutro border ladda-button ng-scope" >Comportamiento</button> 
                 </div>
                 `);
 
@@ -83,7 +103,7 @@ $(document).ready(function () {
             {
                 label: ' ', name: 'Acomite', width: 20, hidden: false, search: true, editable: true, editrules: { required: true },
                 formatter: function (cellvalue, options, rowObject) {
-                    if (cellvalue == 2) { 
+                    if (cellvalue == 2) {
                         dato = '<input type="checkbox" name="acomite" value="1" onclick="$(this).val(this.checked ? 1 : 0)" checked/> '
                     }
                     else {
@@ -185,9 +205,102 @@ $(document).ready(function () {
 
                     $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
                 }
-                
+
             },
             loadComplete: function () {
+                function formatearNumero(nStr) {
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? ',' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                    }
+                    return x1 + x2;
+                }
+
+                $('#compgrupo').click(function () {
+                    $("#modalcomportamiento").modal();
+                    var elcaption = "";
+
+                    var template = "";
+                    var modelLimites = [
+                        {
+                            label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
+                            editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
+                        },
+                        {
+                            label: 'Rut', name: 'Rut', width: 33, hidden: false, search: true, editable: true, align: 'left',
+                            formatter: function (cellvalue, options, rowObject) {
+
+                                return formatearNumero(cellvalue)+'-'+rowObject.Dv
+                            }
+                        },
+                        { label: 'Dv', name: 'Dv', width: 30, hidden: true, search: true, editable: true, align: 'center' },
+                        { label: 'Empresa', name: 'Alias', width: 60, hidden: false, search: true, editable: true, align: 'left' },
+                        { label: 'Clas. Riesgo', name: 'Aprobado', width: 40, hidden: false, search: true, editable: true, align: 'center' },
+                        { label: 'Vigil.', name: 'Aprobado', width: 20, hidden: false, search: true, editable: true, align: 'center' },
+                        { label: 'D.Banco', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'center' },
+                        { label: 'D. Sbif', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'center' },
+                        { label: 'D. Achel', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'center' },
+                        { label: 'D. Achef', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'center' },
+                        { label: 'D. Sbif-Achel-Banco', name: 'Aprobado', width: 60, hidden: false, search: true, editable: true, align: 'center' },
+                        { label: 'Castigada', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'center' },
+                        { label: 'Protestos', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'center' },
+                        { label: 'Infracciones', name: 'Aprobado', width: 35, hidden: false, search: true, editable: true, align: 'center' },
+                        { label: 'Comp. Pyme', name: 'Aprobado', width: 40, hidden: false, search: true, editable: true, align: 'center' },
+
+
+
+
+                    ];
+
+                    $("#grid2").jqGrid({
+                        url: '/grupoempresanew/' + idcabecera,
+                        mtype: "GET",
+                        datatype: "json",
+                        rowNum: 20,
+                        height: 'auto',
+                        shrinkToFit: true,
+                        width: 1200,
+                        page: 1,
+                        colModel: modelLimites,
+                        regional: 'es',
+                        //autowidth: true,
+                        //caption: elcaption,
+                        viewrecords: true,
+                        rowList: [5, 10, 20, 50],
+                        styleUI: "Bootstrap",
+                        editurl: '/grupoempresa',
+                        loadError: sipLibrary.jqGrid_loadErrorHandler,
+                        gridComplete: function () {
+                            var recs = $("#grid2").getGridParam("reccount");
+                            if (isNaN(recs) || recs == 0) {
+
+                                $("#grid2").addRowData("blankRow", { "nombre": "No hay datos" });
+                            }
+                        },
+                        loadComplete: function () {
+
+                            var recs = $("#grid2").getGridParam("reccount");
+                            if (isNaN(recs) || recs == 0) {
+                                //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
+                                $("#grid2").parent().parent().remove();
+                                $gridTab2PagerID.hide();
+
+                            }
+
+                            var rows = $("#grid2").getDataIDs();
+                            for (var i = 0; i < rows.length; i++) {
+                                var eldisponible = $("#grid2").getRowData(rows[i]).Disponible;
+                                if (parseInt(eldisponible) < 0) {
+                                    $("#grid2").jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
+                                }
+                            }
+                        }
+                    });
+                });
 
                 $('#crearmacindividual').click(function () {
                     var $grid = $("#grid")
@@ -198,7 +311,7 @@ $(document).ready(function () {
                     for (var i = 0; i < rows.length; i++) {
                         var data = $grid.getRowData(rows[i]);
                         //console.dir(data)
-                        var acomite = data.Acomite.substring(45,46);
+                        var acomite = data.Acomite.substring(45, 46);
                         //console.log(acomite)
                         if (parseInt(acomite) == 1) {
                             alerta += $grid.jqGrid("getCell", rows[i], "Nombre") + "\n";
@@ -242,7 +355,7 @@ $(document).ready(function () {
                         return false;
                     }
                 });
-                
+
             }
         });
 
@@ -342,7 +455,7 @@ $(document).ready(function () {
                 <div class="panel-body" id="contenido">
                     <hr class="section-separations"></hr>
                     <ul class='nav nav-tabs tabs-up' id='myTabGrupal'>
-                        <li><a href='/macindividuales/` + idmacgrupal+`' data-target='#vermacgrupal' id='vermacgrupal_tab' data-toggle='tabgrupal'>Grupo</a></li>
+                        <li><a href='/macindividuales/` + idmacgrupal + `' data-target='#vermacgrupal' id='vermacgrupal_tab' data-toggle='tabgrupal'>Grupo</a></li>
                         <li><a href='/aprobacion/' data-target='#aprobacion' id='aprobacion_tab' data-toggle='tabgrupal'>MAC Individual</a></li>
                         <li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tabgrupal'>Bitacora</a></li>
                     </ul>
@@ -355,7 +468,7 @@ $(document).ready(function () {
             </div> `)
 
 
-    
+
     $('#vermacgrupal_tab').addClass('media_node active span')
     $('.active[data-toggle="tabgrupal"]').each(function (e) {
         var $this = $(this),
@@ -383,56 +496,56 @@ $(document).ready(function () {
         $this.tab('show');
         return false;
     });
-/*
-    $.ajax({
-        type: "GET",
-        url: '/getmacindividuales/' + idmacgrupal,
-        async: false,
-        success: function (data) {
-            if (data.length > 0) {
-                var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-                for (t in data) {
-                    tabs += "<li><a href='/macindividual/" + data[t].Id + "' data-target='#mac" + data[t].Id + "' id='mac" + data[t].Id + "_tab' data-toggle='tab'>" + data[t].Nombre + "</a></li>"
-                }
-                tabs += "</ul>"
-                tabs += "<div class='tab-content'>"
-                for (t in data) {
-                    if (t == 0) {
-                        tabs += "<div class='tab-pane active' id='mac" + data[t].Id + "'><div class='container-fluid'><table id='mac" + data[t].Id + "_t'></table><div id='navGridmac" + data[t].Id + "'></div></div></div>"
-                    } else {
-                        tabs += "<div class='tab-pane' id='mac" + data[t].Id + "'><div class='container-fluid'><table id='mac" + data[t].Id + "_t'></table><div id='navGridmac" + data[t].Id + "'></div></div></div>"
+    /*
+        $.ajax({
+            type: "GET",
+            url: '/getmacindividuales/' + idmacgrupal,
+            async: false,
+            success: function (data) {
+                if (data.length > 0) {
+                    var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
+                    for (t in data) {
+                        tabs += "<li><a href='/macindividual/" + data[t].Id + "' data-target='#mac" + data[t].Id + "' id='mac" + data[t].Id + "_tab' data-toggle='tab'>" + data[t].Nombre + "</a></li>"
                     }
+                    tabs += "</ul>"
+                    tabs += "<div class='tab-content'>"
+                    for (t in data) {
+                        if (t == 0) {
+                            tabs += "<div class='tab-pane active' id='mac" + data[t].Id + "'><div class='container-fluid'><table id='mac" + data[t].Id + "_t'></table><div id='navGridmac" + data[t].Id + "'></div></div></div>"
+                        } else {
+                            tabs += "<div class='tab-pane' id='mac" + data[t].Id + "'><div class='container-fluid'><table id='mac" + data[t].Id + "_t'></table><div id='navGridmac" + data[t].Id + "'></div></div></div>"
+                        }
+                    }
+                    tabs += "</div>"
+                    $("#gridMaster").append(tabs);
+                    $('#mac' + data[0].Id + '_tab').addClass('media_node active span')
+    
+                    $('.active[data-toggle="tab"]').each(function (e) {
+                        var $this = $(this),
+                            loadurl = $this.attr('href'),
+                            targ = $this.attr('data-target');
+                        console.log("hola mac " + targ)
+                        gridMacIndividual.renderGrid(loadurl, targ)
+                        $this.tab('show');
+                        return false;
+                    });
+    
+                    $('[data-toggle="tab"]').click(function (e) {
+                        var $this = $(this),
+                            loadurl = $this.attr('href'),
+                            targ = $this.attr('data-target');
+                        console.log("hola mac " + targ)
+                        gridMacIndividual.renderGrid(loadurl, targ)
+                        $this.tab('show');
+                        return false;
+                    });
+    
+                } else {
+                    alert("No existen MAC Individuales")
                 }
-                tabs += "</div>"
-                $("#gridMaster").append(tabs);
-                $('#mac' + data[0].Id + '_tab').addClass('media_node active span')
-
-                $('.active[data-toggle="tab"]').each(function (e) {
-                    var $this = $(this),
-                        loadurl = $this.attr('href'),
-                        targ = $this.attr('data-target');
-                    console.log("hola mac " + targ)
-                    gridMacIndividual.renderGrid(loadurl, targ)
-                    $this.tab('show');
-                    return false;
-                });
-
-                $('[data-toggle="tab"]').click(function (e) {
-                    var $this = $(this),
-                        loadurl = $this.attr('href'),
-                        targ = $this.attr('data-target');
-                    console.log("hola mac " + targ)
-                    gridMacIndividual.renderGrid(loadurl, targ)
-                    $this.tab('show');
-                    return false;
-                });
-
-            } else {
-                alert("No existen MAC Individuales")
             }
-        }
-    });
-*/
+        });
+    */
 
 });
 

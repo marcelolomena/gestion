@@ -244,7 +244,7 @@ var gridvertablimites = {
 
                                 <div class="modal-body">
                                     <div id="cuerpo1">
-                                        <div style="width:50%;display: inline-block;margin-right: 1%; vertical-align:top">                  
+                                        <div style="width:48%;display: inline-block;margin-right: 1%; vertical-align:top">                  
                                             <div class="panel panel-primary">
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Límites</span></div>
                                                 <div class="panel-body" style="max-height: 130px;overflow-y: auto;">
@@ -296,7 +296,7 @@ var gridvertablimites = {
                                             </div>
                                         </div>
 
-                                         <div style="width:45%;display: inline-block;margin-right: 2%; vertical-align:top">                  
+                                         <div style="width:48%;display: inline-block;margin-right: 2%; vertical-align:top">                  
                                             <div class="panel panel-primary" >
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Condiciones</div>
                                                 <div id="condicioneslinea" class="panel-body" style="max-height: 200px; min-height: 130px;overflow-y: auto;">
@@ -329,7 +329,7 @@ var gridvertablimites = {
                                     </div>
                                     
                                     <div id="cuerpo2">
-                                        <div style="width:23%;display: inline-block;margin-right: 1%;vertical-align:top;">
+                                        <div style="width:48%;display: inline-block;margin-right: 1%;vertical-align:top;">
                                             <div class="panel panel-primary" >
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Productos</div>
                                                 <div id="productoslinea" class="panel-body" style="max-height: 130px;; min-height: 130px;overflow-y: auto;">
@@ -355,7 +355,7 @@ var gridvertablimites = {
                                                 </div>
                                             </div> 
                                         </div> 
-                                        <div style="width:23%;display: inline-block;vertical-align:top;">
+                                        <div style="width:48%;display: inline-block;vertical-align:top;">
                                             <div class="panel panel-primary" >
                                                 <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Clientes</div>
                                                 <div id="clienteslinea" class="panel-body" style="max-height: 130px;min-height: 130px;overflow-y: auto;">

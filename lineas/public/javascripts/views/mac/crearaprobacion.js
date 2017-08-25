@@ -1,6 +1,17 @@
 $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
+    function formatearNumero(nStr) {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? ',' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + '.' + '$2');
+        }
+        return x1 + x2;
+    }
     var rut = $("#param").text();
     var id = ""
     var nombre = ""
@@ -11,6 +22,7 @@ $(document).ready(function () {
     var riesgo = ""
     var rating = ""
     var pep = ""
+    var dv = ""
     $.ajax({
         type: "GET",
         url: '/getdatoscliente/' + rut,
@@ -25,6 +37,7 @@ $(document).ready(function () {
                 riesgo = data[0].Riesgo;
                 rating = data[0].Rating;
                 pep = data[0].Pep;
+                dv = data[0].Dv;
                 if (data[0].grupo) {
                     nombregrupo = data[0].grupo
                 }
@@ -43,7 +56,7 @@ $(document).ready(function () {
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-xs-4" style="font-size:12px"><b>`+ rut + `</b></div>
+                        <div class="col-xs-4" style="font-size:12px"><b>`+ formatearNumero(rut) + `-` + dv + `</b></div>
                     </div>
                     <div class="row">
                         <div class="col-xs-4" style="font-size:18px"><b>`+ nombre + `</b></div>
@@ -139,11 +152,11 @@ $(document).ready(function () {
                 async: false,
                 success: function (data) {
                     if (data.length > 0) {
-                        /*
+
                         var idgrupo = data[0].Grupo_Id
                         $.ajax({
                             type: "GET",
-                            url: '/getdatosclientecongrupo3/' + idgrupo,
+                            url: '/getdatosclientecongrupo3/' + idgrupo + '/' + id,
                             async: false,
                             success: function (data2) {
                                 if (data2.length > 0) {
@@ -153,10 +166,13 @@ $(document).ready(function () {
                                 }
                             }
                         });
+                        /*
                         var idcabeceraold = data.
                             window.location.assign("/menu/crearaprobacionmac/p/" + id);
-                            */
+                        
                             alert("Cliente ya tiene MAC Grupal vigente")
+
+                            */
                     } else {
                         $('#tipoaprobacion').prop('disabled', 'disabled');
                         $('#sinmacgrupal').css("display", "block");
@@ -170,6 +186,11 @@ $(document).ready(function () {
         } else {
             alert("Funcionalidad no desarrollada");
         }
+    })
+
+    $('#elboton2').click(function () {
+        var nuevorut = $("#nuevorut").val()
+        window.location.assign("/menu/crearaprobacion/p/" + nuevorut);
     })
 
     $('#si').click(function () {

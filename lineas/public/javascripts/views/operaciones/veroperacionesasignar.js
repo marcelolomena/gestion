@@ -53,7 +53,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
         { label: 'Monto Actual', name: 'MontoActual', width: 10, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Monto Actual Equiv.M /Linea', name: 'MontoActualMLinea', width: 10, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Monto Actual Equiv. M/N M$', name: 'MontoActualMNac', width: 10, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-        { label: 'Número SubLinea', name: 'Numero', width: 10, hidden: false, search: true, editable: true, align: 'center' },
+        //{ label: 'Número SubLinea', name: 'Numero', width: 10, hidden: false, search: true, editable: true, align: 'center' },
         {
             label: 'Asignar Operacion', name: 'n', width: 5, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true },
 
@@ -198,7 +198,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                     pager: "#pager",
                     height: 'auto',
                     shrinkToFit: true,
-                    width: 1250,
+                    width: 1100,
                     subGrid: true,
                     subGridRowExpanded: subGridversublimiteasignaciones, //se llama la funcion de abajo
                     subGridOptions: {
@@ -322,6 +322,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                     title: "Excel",
                     position: "last",
                     onClickButton: function () {
+                        /*
                         var $grid = $("#grid")
                         var selIds = $grid.jqGrid("getGridParam", "selarrrow")
                         var alerta = "Se asignará la operación _________"
@@ -334,7 +335,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                         } else {
                             alert("No");
                         }
-
+*/
                     }
                 });
 

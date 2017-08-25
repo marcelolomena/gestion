@@ -35,7 +35,7 @@ module.exports = function (passport) {
     router.route('/getdatosclientecongrupo2/:rut')
         .get(isAuthenticated, carteraController.getdatosclientecongrupo2);
 
-    router.route('/getdatosclientecongrupo3/:rut')
+    router.route('/getdatosclientecongrupo3/:idgrupo/:idempresa')
         .get(isAuthenticated, carteraController.getdatosclientecongrupo3);
 
     router.route('/buscargrupo/:rut')
