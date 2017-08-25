@@ -537,8 +537,8 @@ var gridvertablimites = {
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
                                                         <label for="fechaBloqueo">Con fecha: 24-08-2017 / 15:05 hrs.</label><p></p>
                                                             <div class="row">
-                                                                <div class="col-xs-12 col-sm-4">Comentario: </div>
-                                                                <div class="col-xs-12 col-sm-4"><input type="text" class="form-control" name ="ValComentarioDes" id="ValComentarioDes" readonly style="WIDTH:128px;" ></div>
+                                                                <div class="col-xs-12 col-sm-4" style="padding-left:0px;">Comentario: </div>
+                                                                <div class="col-xs-12 col-sm-4" style="padding-left:3px;"><input type="text" class="form-control" name ="ValComentarioDes" id="ValComentarioDes" readonly style="WIDTH:151px; padding-left:5px;" ></div>
                                                              </div>
                                                     </div>
                                                     <p></p>
@@ -546,6 +546,7 @@ var gridvertablimites = {
                                                         <div class="btn-group">    
                                                             <input type="text" class="form-control" id="idlineabloqueo" style="background-color: #002464;display: none">
                                                             <input type="text" class="form-control" id="Bloqueado" style="display: none">
+                                                            <br>
                                                             <div>
                                                                 <label for="monto" id="eeee">Desbloquear: </label>
                                                                 <input id="dtotal" type="radio" name="radio-choice" required>Total</input>     
