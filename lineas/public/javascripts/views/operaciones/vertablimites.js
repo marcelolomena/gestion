@@ -804,6 +804,7 @@ var gridvertablimites = {
                     $("#myModal2").modal();
                 });
 
+                //BOTÓN CONDICIÓN
                 $('.muestracond').click(function () {
                     var idlimite = $(this).attr('href');
                     $('#ellimite3').html(idlimite.substring(1))
@@ -826,6 +827,7 @@ var gridvertablimites = {
                     $("#myModalCondicionL").modal();
                 });
 
+                // BOTÓN DESBLOQUEAR 
                 $('#botonpost').click(function () {
                     console.log("holapo"); //desbloqueo
                     var idlineabloqueo = $('#idlineabloqueo').val();
@@ -833,7 +835,6 @@ var gridvertablimites = {
                     var bloq = $("#Bloqueado").val();
                     var nuevovalorbloq = bloq - des;
                     $("#nuevovalorbloqueo").val(nuevovalorbloq);
-
                     //var comentarioParcial
                     //console.log("el valor enviado es: "+nuevovalorbloq);
 
@@ -848,6 +849,7 @@ var gridvertablimites = {
                     });
                 });
 
+                //BOTÓN BLOQUEAR
                 $('#botonpost2').click(function () {
                     console.log("holapo"); //BLOQUEO
                     var idlineabloqueo = $('#idlineabloqueo2').val();
@@ -862,6 +864,7 @@ var gridvertablimites = {
                     });
                 });
 
+                //BOTÓN CANDADO
                 $('.abrirbloqueo').click(function () {
                     var id = $(this).attr('href').substring(1);
                     $.ajax({
@@ -924,6 +927,7 @@ var gridvertablimites = {
                     })
                 });
 
+                //RADIO BUTTON BLOQUEO PARCIAL
                 $('#bparcial').click(function () {
                     //console.log("bloqueo parcial");
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
@@ -935,6 +939,7 @@ var gridvertablimites = {
                     $("#botonpost2").show();
                 });
 
+                //RADIO BUTTON BLOQUEO TOTAL
                 $('#btotal').click(function () {
                     $("#monto").hide();
                     $("#labelmonto").hide();
@@ -946,6 +951,7 @@ var gridvertablimites = {
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
 
+                //RADIO BUTTON DESBLOQUEO PARCIAL
                 $('#dparcial').click(function () {
                     //$("#montodes").hide();
                     //$("#labelmontodesbloqueo").hide();
@@ -957,6 +963,7 @@ var gridvertablimites = {
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
 
+                //RADIO BUTTON DESBLOQUEO TOTAL
                 $('#dtotal').click(function () {
                     $("#montodes").hide();
                     $("#labelmontodesbloqueo").hide();
@@ -968,8 +975,8 @@ var gridvertablimites = {
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
 
-                var thisId = $.jgrid.jqID(this.id);
 
+                var thisId = $.jgrid.jqID(this.id);
                 var sum1 = $gridTab2.jqGrid('getCol', 'Aprobado', false, 'sum');
                 var sum2 = $gridTab2.jqGrid('getCol', 'Utilizado', false, 'sum');
                 var sum3 = $gridTab2.jqGrid('getCol', 'Reservado', false, 'sum');
