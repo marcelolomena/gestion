@@ -852,7 +852,7 @@ var gridvertablimites = {
                         }
                     });
                 });
-
+   
                 //BOTÓN CANDADO
                 $('.abrirbloqueo').click(function () {
                     var id = $(this).attr('href').substring(1);
