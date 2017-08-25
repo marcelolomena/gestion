@@ -496,39 +496,33 @@ var gridvertablimites = {
                                     <div class="panel panel-default" >
                                         <div class="panel-heading" style="background-color: #002464;color: #fff;">Bloquear Linea</div>
                                             <div class="panel-body">
-                                            
                                                 <form id="miprimerform2">
                                                     <div class="btn-group">
-                                                    <div class="form-group">
-                                                           
-                                                            <input type="text" class="form-control" id="idlineabloqueo2" style="display: none" >
-                                                            <input type="text" class="form-control" id="disponible" name="disponible" style="display: none">
-                                                    
-                                                            <div>
-                                                                <input id="btotal" type="radio" name="radio-choice" required>Total</input> 
-                                                                <input id="bparcial" type="radio" name="radio-choice" required >Parcial</input>
-                                                            </div>
+                                                        <div class="form-group">
+                                                                <input type="text" class="form-control" id="idlineabloqueo2" style="display: none" >
+                                                                <input type="text" class="form-control" id="disponible" name="disponible" style="display: none">
+                                                                <div>
+                                                                    <input id="btotal" type="radio" name="radio-choice" required>Total</input> 
+                                                                    <input id="bparcial" type="radio" name="radio-choice" required >Parcial</input>
+                                                                </div>
+                                                        </div>
                                                     </div>
-                                                    </div>
-
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmonto">Monto:</label>
                                                         <input type="text" class="form-control" name ="monto" id="monto">
                                                         <label for="comentario" id="labelcomentario">Comentario:</label>
                                                         <input type="text" class="form-control" name="comentario" id="comentario">
                                                     </div>
-                                            
                                                     <div class="wrapper" style="text-align: center">
                                                         <button id="botonpost2" type="submit" class="btn btn-default" data-dismiss="modal">Bloquear</button>
                                                     </div>
-                                                    
                                                 </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                     <div class="modal fade" id="ModalDesbloqueo" role="dialog" >
                         <div class="modal-dialog modal-sm" >
@@ -584,27 +578,24 @@ var gridvertablimites = {
                             </div>
                         </div>
                     </div>
-                </div>   
+                </div>  
                     <div class="modal fade" id="myModalCondicionL" role="dialog">
                         <div class="modal-dialog modal-sm">
                             <div class="modal-content">
-
                                 <div class="panel-heading" style="background-color: #002464;color: #fff;">Detalles Linea</div>
                                 <div class="modal-body">
                                     <div>Condicion: <label for="Condicion" id="Condicion2"> </label>  </div>
                                     <div>Comentario: <label for="Comentario" id="Condiciones2"> </label>  </div>
                                 </div>
-
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                                 </div>
-
                             </div>
                         </div>
                     </div> 
-                
         `);
 
+                //BOTÓN DETALLE
                 $('.muestradet').click(function () {
                     var idlimite = $(this).attr('href');
                     $('#idlinea').html(idlimite.substring(1))
