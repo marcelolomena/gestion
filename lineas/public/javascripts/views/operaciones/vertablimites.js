@@ -795,7 +795,6 @@ var gridvertablimites = {
                                         $("#comentarioslinea").html(comentarios)
                                     }
                                 });
-
                             }
                             else {
                                 alert("No existe cliente en Base de Datos");
@@ -827,17 +826,9 @@ var gridvertablimites = {
                     $("#myModalCondicionL").modal();
                 });
 
-                $('.bloqueo').click(function () {
-                    var idlimite = $(this).attr('href');
-
-                    $("#myModalbloqueo").modal();
-
-                });
-
                 $('#botonpost').click(function () {
                     console.log("holapo"); //desbloqueo
                     var idlineabloqueo = $('#idlineabloqueo').val();
-
                     var des = $("#montodes").val();
                     var bloq = $("#Bloqueado").val();
                     var nuevovalorbloq = bloq - des;
@@ -845,7 +836,6 @@ var gridvertablimites = {
 
                     //var comentarioParcial
                     //console.log("el valor enviado es: "+nuevovalorbloq);
-
 
                     $.ajax({
                         type: "POST",
@@ -856,7 +846,6 @@ var gridvertablimites = {
                             $gridTab2.trigger('reloadGrid');
                         }
                     });
-
                 });
 
                 $('#botonpost2').click(function () {
@@ -869,18 +858,8 @@ var gridvertablimites = {
                         success: function (msg) {
                             console.log("tremendo exito " + msg)
                             $gridTab2.trigger('reloadGrid');
-
                         }
                     });
-
-                });
-
-                $('.desbloqueo').click(function () {
-                    var idlimite = $(this).attr('href');
-
-                    $("#ModalDesbloqueo").modal();
-                    
-
                 });
 
                 $('.abrirbloqueo').click(function () {
@@ -897,7 +876,6 @@ var gridvertablimites = {
                             }
                             
                             $('input[name="radio-choice"]').attr('checked', false);
-
                             $("#montodes").val("");
                             $("#monto").val("");
                             $("#comentariodesbloqueo").val("");
@@ -917,8 +895,6 @@ var gridvertablimites = {
                                 $("#montodes").hide();
                                 $("#labelcomentariodesbloqueo").hide();
                                 $("#comentariodesbloqueo").hide();
-
-                                
 
                                 if(disponible == bloq){
                                     $("#tipoBloqueo").html(" Total M$ : ");
@@ -943,9 +919,7 @@ var gridvertablimites = {
                                 $("#labelcomentario").hide();
                                 $("#comentario").hide();
                                 $("#botonpost2").hide();
-
                             }
-
                         }
                     })
                 });
@@ -980,7 +954,6 @@ var gridvertablimites = {
                     $("#botonpost").show();
                     $("#labelcomentariodesbloqueo").show();
                     $("#comentariodesbloqueo").show();
-
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
 
@@ -1026,8 +999,6 @@ var gridvertablimites = {
                         */
                     },false);
             },
-
-
         });
         $gridTab2.jqGrid('setLabel', 'Numero', '', { 'text-align': 'center' });
         $gridTab2.jqGrid('setLabel', 'Riesgo', '', { 'text-align': 'center' });
