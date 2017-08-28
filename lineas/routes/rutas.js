@@ -49,13 +49,13 @@ module.exports = function (passport) {
 
     router.route('/gettiposaprobacion')
         .get(isAuthenticated, externoController.gettiposaprobacion);
-
-
-
-
+    
     router.route('/getsublimitesasignacion/:id')
         .get(isAuthenticated, externoController.listsublimite);
 
+
+
+        
     router.route('/grupoempresa/:id')
         .get(isAuthenticated, grupoController.listgrupoempresa);
 
