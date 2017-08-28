@@ -532,10 +532,10 @@ var gridvertablimites = {
                                         <div class="panel-heading" style="background-color: #002464;color: #fff;">Desbloquear Linea</div>
                                             <div class="panel-body">
                                                 <form id="miprimerform">
-                                                    <div class="form-group"> 
+                                                    <div class="form-group"> tipoBloqueo
                                                         <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span style="font-weight: bold;" id="MontoBloqueado"></span><p></p>
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
-                                                        <label for="fechaBloqueo">Con fecha: 24-08-2017 / 15:05 hrs.</label><p></p>
+                                                        <label for="fechaBloqueo">Con fecha: </label><span style="font-weight: bold;" name="fechaBloqueo"id="fechaBloqueo"></span><p></p>
                                                             <div class="row">
                                                                 <div class="col-xs-12 col-sm-4" style="padding-left:0px;">Comentario: </div>
                                                                 <div class="col-xs-12 col-sm-4" style="padding-left:3px;"><input type="text" class="form-control" name ="ValComentarioDes" id="ValComentarioDes" readonly style="WIDTH:151px; padding-left:5px;" ></div>
@@ -836,6 +836,14 @@ var gridvertablimites = {
                             $gridTab2.trigger('reloadGrid');
                         }
                     });
+
+                    var fecha = new Date();
+                    var fechaGuardada = "";
+                    var fechaCompleta =(fecha.getDate()+"-"+(fecha.getMonth()+1)+"-"+fecha.getFullYear()+"   "+fecha.getHours()+":"+fecha.getMinutes()+":"+fecha.getSeconds());
+                    var fechaGuardada = fechaCompleta;
+                    console.log("tremendo exito " + fechaGuardada);
+                    $("#fechaBloqueo").html(fechaGuardada);
+
                 });
 
                 //BOTÓN BLOQUEAR
@@ -851,6 +859,13 @@ var gridvertablimites = {
                             $gridTab2.trigger('reloadGrid');
                         }
                     });
+                    
+                    var fecha = new Date();
+                    var fechaGuardada = "";
+                    var fechaCompleta =(fecha.getDate()+"-"+(fecha.getMonth()+1)+"-"+fecha.getFullYear()+"   "+fecha.getHours()+":"+fecha.getMinutes()+":"+fecha.getSeconds());
+                    var fechaGuardada = fechaCompleta;
+                    console.log("tremendo exito " + fechaGuardada);
+                    $("#fechaBloqueo").html(fechaGuardada);
                 });
    
                 //BOTÓN CANDADO
@@ -871,7 +886,7 @@ var gridvertablimites = {
                             $("#montodes").val("");
                             $("#monto").val("");
                             $("#comentariodesbloqueo").val("");
-
+                            
                             if (bloq > 0) {
                                 $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Bloqueado)) //desbloqueo
                                 $("#Bloqueado").val(data[0].Bloqueado)
@@ -911,6 +926,8 @@ var gridvertablimites = {
                                 $("#labelcomentario").hide();
                                 $("#comentario").hide();
                                 $("#botonpost2").hide();
+
+                                $("#fechaBloqueo").val(fechaGuardada);
                             }
                         }
                     })
