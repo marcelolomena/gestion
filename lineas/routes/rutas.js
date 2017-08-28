@@ -4,7 +4,7 @@ var isAuthenticated = require('../policies/isAuthenticated')
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
-var carteraController = require('../controllers/cartera')
+var externoController = require('../controllers/dataexterna')
 var operacionesController = require('../controllers/operaciones')
 var grupoController = require('../controllers/grupo')
 var macgrupalController = require('../controllers/macgrupal')
@@ -12,34 +12,64 @@ var macgrupalController = require('../controllers/macgrupal')
 module.exports = function (passport) {
 
     router.route('/getdatoscliente/:rut') 
-        .get(isAuthenticated, carteraController.getdatoscliente);
-
-    router.route('/getdatosclientelimite/:rut') 
-        .get(isAuthenticated, operacionesController.getdatosclientelimite);
+        .get(isAuthenticated, externoController.getdatoscliente);
 
     router.route('/getmacporrut/:rut')
-        .get(isAuthenticated, carteraController.getmacporrut);
-
-    router.route('/limite/:id')
-        .get(isAuthenticated, operacionesController.listlimite);
-
-    router.route('/sublimite/:id')
-        .get(isAuthenticated, operacionesController.listsublimite);
+        .get(isAuthenticated, externoController.getmacporrut);
 
     router.route('/vermac/:id')
-        .get(isAuthenticated, carteraController.listlimite);
+        .get(isAuthenticated, externoController.listlimite);
 
     router.route('/getdatosclientecongrupo/:id')
-        .get(isAuthenticated, carteraController.getdatosclientecongrupo);
+        .get(isAuthenticated, externoController.getdatosclientecongrupo);
 
     router.route('/getdatosclientecongrupo2/:rut')
-        .get(isAuthenticated, carteraController.getdatosclientecongrupo2);
+        .get(isAuthenticated, externoController.getdatosclientecongrupo2);
 
     router.route('/getdatosclientecongrupo3/:idgrupo/:idempresa')
-        .get(isAuthenticated, carteraController.getdatosclientecongrupo3);
+        .get(isAuthenticated, externoController.getdatosclientecongrupo3);
 
     router.route('/buscargrupo/:rut')
-        .get(isAuthenticated, carteraController.getgrupo);
+        .get(isAuthenticated, externoController.getgrupo);
+
+    router.route('/creargruponuevo/:id/:nombre')
+        .get(isAuthenticated, externoController.creargruponuevo);
+
+    router.route('/crearmacgrupal/:id')
+        .post(isAuthenticated, externoController.crearmacgrupal);
+
+    router.route('/getdatosmacgrupal/:id')
+        .get(isAuthenticated, externoController.getdatosmacgrupal);
+
+    router.route('/getmacindividuales/:id')
+        .get(isAuthenticated, externoController.getmacindividuales);
+
+    router.route('/getmacindividual/:id')
+        .get(isAuthenticated, externoController.getmacindividual);
+
+    router.route('/gettiposaprobacion')
+        .get(isAuthenticated, externoController.gettiposaprobacion);
+
+
+
+
+    router.route('/getsublimitesasignacion/:id')
+        .get(isAuthenticated, externoController.listsublimite);
+
+    router.route('/grupoempresa/:id')
+        .get(isAuthenticated, grupoController.listgrupoempresa);
+
+    router.route('/grupoempresa')
+        .post(isAuthenticated, grupoController.actiongrupoempresa)
+
+    router.route('/grupoempresanew/:id')
+        .get(isAuthenticated, grupoController.listgrupoempresanew);
+
+    router.route('/grupoempresanew')
+        .post(isAuthenticated, grupoController.actiongrupoempresanew)
+
+
+
 
     router.route('/vermacgrupal/:id')
         //.post(isAuthenticated, macgrupalController.action)
@@ -49,30 +79,17 @@ module.exports = function (passport) {
         //.post(isAuthenticated, macgrupalController.action)
         .get(isAuthenticated, macgrupalController.listindividuales);
 
-    router.route('/macs/:id')
-        .get(isAuthenticated, carteraController.listmacs);
 
-    router.route('/grupoempresa/:id')
-        .get(isAuthenticated, grupoController.listgrupoempresa);
 
-    router.route('/grupoempresa')
-        .post(isAuthenticated, grupoController.actiongrupoempresa)
 
-    router.route('/creargruponuevo/:id/:nombre')
-        .get(isAuthenticated, carteraController.creargruponuevo);
+    router.route('/getdatosclientelimite/:rut') 
+        .get(isAuthenticated, operacionesController.getdatosclientelimite);
 
-    router.route('/crearmacgrupal/:id')
-        .post(isAuthenticated, carteraController.crearmacgrupal);
+    router.route('/limite/:id')
+        .get(isAuthenticated, operacionesController.listlimite);
 
-    router.route('/getdatosmacgrupal/:id')
-        .get(isAuthenticated, carteraController.getdatosmacgrupal);
-
-    router.route('/getmacindividuales/:id')
-        .get(isAuthenticated, carteraController.getmacindividuales);
-
-    router.route('/getmacindividual/:id')
-        .get(isAuthenticated, carteraController.getmacindividual);
-
+    router.route('/sublimite/:id')
+        .get(isAuthenticated, operacionesController.listsublimite);
 
     router.route('/veroperacionesmodal/:id')
         .get(isAuthenticated, operacionesController.listveroperacionlimite);
@@ -119,20 +136,12 @@ module.exports = function (passport) {
     router.route('/aprobaciones/:id')
         .get(isAuthenticated, operacionesController.listaprobaciones);
 
-    router.route('/gettiposaprobacion')
-        .get(isAuthenticated, carteraController.gettiposaprobacion);
-
-     router.route('/getsublimitesasignacion/:id')
-        .get(isAuthenticated, carteraController.listsublimite);
-
     router.route('/getoperacionesasignar/:id/:rut')
         .get(isAuthenticated, operacionesController.operacionesasignar);
 
-    router.route('/grupoempresanew/:id')
-        .get(isAuthenticated, grupoController.listgrupoempresanew);
+    
 
-    router.route('/grupoempresanew')
-        .post(isAuthenticated, grupoController.actiongrupoempresanew)
+
 
 
         return router;
