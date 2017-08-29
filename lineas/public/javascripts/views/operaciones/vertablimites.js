@@ -562,7 +562,7 @@ var gridvertablimites = {
                                                     </div>
                                                     <div class="form-group">
                                                     <label for="comentariodes" id="labelcomentariodesbloqueo">Comentario:</label>
-                                                    <input type="text" class="form-control" name="comentariodes" id="comentariodesbloqueo">
+                                                    <input type="text" class="form-control" name="comentario" id="comentariodesbloqueo">
                                                     <p></p>
                                                     </div>
                                                     <div class="wrapper" style="text-align: center">
@@ -927,7 +927,7 @@ var gridvertablimites = {
                                 $("#comentario").hide();
                                 $("#botonpost2").hide();
 
-                                $("#fechaBloqueo").val(fechaGuardada);
+                                //$("#fechaBloqueo").val(fechaGuardada);
                             }
                         }
                     })
