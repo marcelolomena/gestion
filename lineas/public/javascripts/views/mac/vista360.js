@@ -55,10 +55,12 @@ $(".gcontainer").prepend(`
     $(".gcontainer").append(`
         
         `);
+        
     $('#camponum').Rut({
-        on_error: function () { alert('Rut incorrecto'); },
+        //on_error: function () { alert('Rut incorrecto'); },
         format_on: 'keyup'
     });
+    
     $(`#camponum`).keypress(function (evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;

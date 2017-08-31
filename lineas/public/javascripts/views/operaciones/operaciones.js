@@ -77,7 +77,7 @@ $(document).ready(function () {
         }
     });
     $('#camponum').Rut({
-        on_error: function () { alert('Rut incorrecto'); },
+        //on_error: function () { alert('Rut incorrecto'); },
         format_on: 'keyup'
     });
     $(`#camponum`).keypress(function (evt) {
@@ -120,6 +120,38 @@ $(document).ready(function () {
 
 
 `);
+$(".cajaRut").append(`
+<div class="tabsheader">
+<div class="tab1">
+  <div class="tab_cajaTop">Segmento - Departamento</div>
+  <div class="tab_cajaBottom">Multinacionales 1</div>
+</div>
+<div class="tab1">
+  <div class="tab_cajaTop">Vinculación - Prioridad</div>
+  <div class="tab_cajaBottom_b">Usuario - 4</div>
+</div>
+<div class="tab1">
+  <div class="tab_cajaTop">Última Visita</div>
+  <div class="tab_cajaBottom_b">23/08/2016</div>
+</div>
+<div class="tab1">
+  <div class="tab_cajaTop">Comp. - Riesgo - Rating</div>
+  <div class="tab_cajaBottom">A5 - 7.5</div>
+</div>
+<div class="tab1">
+  <div class="tab_cajaTop">Cobertura de Garantía</div>
+  <div class="tab_cajaBottom">30%</div>
+</div>
+<div class="tab1">
+  <div class="tab_cajaTop">Rentabilidad</div>
+  <div class="tab_cajaBottom">ROE 20%</div>
+</div>
+<div class="tab1">
+  <div class="tab_cajaTop">Plan Tarifario</div>
+  <div class="tab_cajaBottom">Por Producto</div>
+</div>
+</div>
+`)
     /*
     $("#gridMaster").append(`
                 <div class="panel panel-primary">
