@@ -531,6 +531,20 @@ exports.listaprobaciones = function (req, res) {
     });
 };
 
+
+exports.listverdetallebloqueo = function (req, res) {
+    sequelize.query(
+        'select * from scl.Bloqueo a  ' +
+        'where Linea_Id =  ' + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
  /**
   * FIN TAB APROBACIONES
   */

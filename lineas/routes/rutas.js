@@ -139,8 +139,8 @@ module.exports = function (passport) {
     router.route('/getoperacionesasignar/:id/:rut')
         .get(isAuthenticated, operacionesController.operacionesasignar);
 
-    
-
+     router.route('/verdetallebloqueo/:id')
+        .get(isAuthenticated, operacionesController.listverdetallebloqueo);
 
 
 
