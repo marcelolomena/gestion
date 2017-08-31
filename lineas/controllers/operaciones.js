@@ -23,10 +23,10 @@ exports.listlimite = function (req, res) {
     var order = sidx + " " + sord;
 
     var sqlcount = `
-    select count (*) from scl.Linea a  
-    join scl.Sublinea b on b.Linea_Id = a.Id
-    join scl.Empresa c on c.Id = b.Beneficiario_Id
-    where c.Rut=`+ req.params.id;
+    select count (*) from scl.Linea a 
+    join scl.LineaEmpresa b on a.Id=b.Linea_Id
+    join scl.Empresa c on c.Id=b.Empresa_Id
+    where a.Padre_Id is null and c.Rut=`+ req.params.id;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
@@ -34,10 +34,10 @@ exports.listlimite = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, a.* from scl.Linea a  
-        join scl.Sublinea b on b.Linea_Id = a.Id
-        join scl.Empresa c on c.Id = b.Beneficiario_Id
-        where c.Rut=`+ req.params.id;
+        `as resultNum, a.* from scl.Linea a 
+        join scl.LineaEmpresa b on a.Id=b.Linea_Id
+        join scl.Empresa c on c.Id=b.Empresa_Id
+        where a.Padre_Id is null and c.Rut=`+ req.params.id;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
