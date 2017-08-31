@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
-    $(".gcontainer").prepend(`
+    /*$(".gcontainer").prepend(`
         <div id="cascara" style="background-image: url('../../images/cascaracdn.png'); width: 1266px; height: 95px;">   
                 <div class="panel-body">
                     <form id="vista360" onsubmit="return false;">
@@ -13,31 +13,69 @@ $(document).ready(function () {
                         </div>
                     </form>        
                 </div>              
-        </div>`);
+        </div>`);*/
+        /*
+    $(".cajaRut").html(`
+            <div class="id_rut">61.850.659-7</div>
+            <div class="id_nombre">Comercial Chilena de Servicios Limitada</div>
+            <div class="id_banca">Banca Corporativa / Oficina Moneda / PEP</div>
+
+
+        `);
+*/
+        /*
+$(".gcontainer").prepend(`
+<div class="header_new">
+    <div class="cajaBuscador">
+        <div class="hotspot"></div>
+        <div class="buscador">
+            <div class="campoRut">
+                <div class="clock"></div>
+                    <form id="vista360" onsubmit="return false;">
+                        <input name="" id="camponum" type="text" />
+                        <input name="" type="submit" id="btnenviar" value="" />
+                    </form>
+                </div>
+            </div>
+  
+        <div class="social">
+            <div class="bell"></div>
+            <div class="persona"></div>
+        </div>
+    </div>
+    <div class="cajaRut">
+        <div class="id_rut">61.850.659-7</div>
+        <div class="id_nombre">Comercial Chilena de Servicios Limitada</div>
+        <div class="id_banca">Banca Corporativa / Oficina Moneda / PEP</div>
+    </div>
+</div>
+
+    `);
+    */
     $(".gcontainer").append(`
         
         `);
-    $('#rut').Rut({
+    $('#camponum').Rut({
         on_error: function () { alert('Rut incorrecto'); },
         format_on: 'keyup'
     });
-    $(`#rut`).keypress(function (evt) {
+    $(`#camponum`).keypress(function (evt) {
         evt = (evt) ? evt : window.event;
         var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && ((charCode < 48 || charCode > 57 ) && ( charCode !=75|| charCode !=107)) ) {
+        if (charCode > 31 && ((charCode < 48 || charCode > 57) && (charCode != 75 || charCode != 107))) {
             return false;
         }
         return true;
     })
 
-    $('#elboton').click(function () {
-        var rut = $("#rut").val();
+    $('#btnenviar').click(function () {
+        var rut = $("#camponum").val();
         var aux = "";
-        for(var i=0; i<rut.length - 1 ;i++){
-            if (rut[i] != "." && rut[i]!= "-"){
+        for (var i = 0; i < rut.length - 1; i++) {
+            if (rut[i] != "." && rut[i] != "-") {
                 aux = aux + rut[i];
             }
-        
+
         }
         rut = aux;
 

@@ -440,10 +440,10 @@ exports.listcomentarioslinea = function (req, res) {
 
 exports.actionbloquear = function (req, res) {
     var idlinea = req.params.id;
-    sequelize.query(`
+    console.log("EEEEEEEEE");
+    sequelize.query(`s
     update scl.Linea 
-    set Bloqueado = '`+ req.body.monto + `',
-    BORRARCOMEN= '`+ req.body.comentario + `'
+    set Bloqueado = '`+ req.body.monto + `'
     where Id=`+ idlinea).spread((results, metadata) => {
             return res.json(metadata);
 
@@ -535,6 +535,20 @@ exports.listaprobaciones = function (req, res) {
     });
 };
 
+
+exports.listverdetallebloqueo = function (req, res) {
+    sequelize.query(
+        'select * from scl.Bloqueo a  ' +
+        'where Linea_Id =  ' + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
  /**
   * FIN TAB APROBACIONES
   */

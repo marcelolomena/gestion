@@ -70,19 +70,20 @@ var gridvertablimites = {
                     label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
                         var bloq = 0;
-                        var disp = 0;
+                        //var coment = "";
                         $.ajax({
                             type: "GET",
-                            url: '/verdetalleslim/' + rowObject.Id,
+                            url: '/verdetallebloqueo/' + rowObject.Id,
                             async: false,
                             success: function (data) {
                                 if (data.length > 0) {
-                                    bloq = data[0].Bloqueado;
-                                    disp = data[0].Disponible;
+                                    bloq = data[0].Monto;
+                                   // coment = data[0].Comentario;
                                 }
                             }
                         })  
-                        var dispo = disp - bloq;
+                        var disponible = rowObject.Disponible;
+                        var dispo = disponible - bloq;
                         return formatear.formatearNumero(dispo);
                     }
                 },
@@ -134,23 +135,26 @@ var gridvertablimites = {
                     formatter: function (cellvalue, options, rowObject) {
                         dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                         //dato2 = '<span role="button" class="fa fa-lock" aria-hidden="true abrirdesbloqueo" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
-                        var bloq
+                        var bloq = 0;
 
                         $.ajax({
                             type: "GET",
-                            url: '/verdetalleslim/' + rowObject.Id,
+                            url: '/verdetallebloqueo/' + rowObject.Id,
                             async: false,
                             success: function (data) {
                                 if (data.length > 0) {
-                                    bloq = data[0].Bloqueado;
-                                    //console.log("valor de bloqueo " + bloq);
+                                    bloq = data[0].Monto;
+                                    
                                 }
                             }
-                        })
+
+                            
+                        })  
 
                         if (parseInt(bloq) > 0) {
                             dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato; //bloqueado
+                            
                         }
                         else {
                             dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
