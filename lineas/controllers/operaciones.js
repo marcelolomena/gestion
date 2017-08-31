@@ -436,10 +436,10 @@ exports.listcomentarioslinea = function (req, res) {
 
 exports.actionbloquear = function (req, res) {
     var idlinea = req.params.id;
-    sequelize.query(`
+    console.log("EEEEEEEEE");
+    sequelize.query(`s
     update scl.Linea 
-    set Bloqueado = '`+ req.body.monto + `',
-    BORRARCOMEN= '`+ req.body.comentario + `'
+    set Bloqueado = '`+ req.body.monto + `'
     where Id=`+ idlinea).spread((results, metadata) => {
             return res.json(metadata);
 
