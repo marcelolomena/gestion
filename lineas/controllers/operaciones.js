@@ -453,9 +453,9 @@ exports.actionbloquear = function (req, res) {
 
 exports.listasignar = function (req, res) {
     sequelize.query(
-       `select distinct a.Id, a.Nombre, b.RutEmpresa as Rut from scl.TipoOperacion a
+        `select distinct a.Id, a.Nombre, b.RutEmpresa as Rut from scl.TipoOperacion a
         join scl.Operacion b on a.Codigo = b.TipoOperacion
-        where b.RutEmpresa=`+ req.params.id+' and b.Id Not In (select Id from scl.SublineaOperacion)',
+        where b.RutEmpresa=`+ req.params.id + ' and b.Id Not In (select Id from scl.SublineaOperacion)',
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -466,8 +466,29 @@ exports.listasignar = function (req, res) {
     });
 };
 
+
+
+exports.operacionesasignar = function (req, res) {
+    sequelize.query(
+        `select a.* from scl.Operacion a 
+        join scl.TipoOperacion f on f.Codigo=a.TipoOperacion
+        where a.RutEmpresa=`+ req.params.rut + ` and f.Id=` + req.params.id + ' and a.Id Not In (select Id from scl.SublineaOperacion)',
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+
+/**
+ * INICIO TAB APROBACIONES
+ */
+
 exports.listaprobaciones = function (req, res) {
-    //console.dir("***************EN LISTNEW ***************************");
     var page = req.query.page;
     var rowspp = req.query.rows;
     var filters = req.query.filters;
@@ -480,14 +501,13 @@ exports.listaprobaciones = function (req, res) {
         sord = "asc";
     }
 
-
     var order = sidx + " " + sord;
 
     var sqlcount = `
     select count (*) from scl.Aprobacion a
     join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
     join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
-    where a.Rut =`+ req.params.id;
+    where a.Rut =`+ req.params.id+' and a.EstadoAprobacion_Id='+req.params.estado;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
@@ -498,35 +518,21 @@ exports.listaprobaciones = function (req, res) {
         `as resultNum, a.*, b.Nombre as tipoaprobacion, c.Nombre as estadoaprobacion from scl.Aprobacion a
         join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
         join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
-        where a.Rut =`+ req.params.id;
+        where a.Rut =`+ req.params.id+' and a.EstadoAprobacion_Id='+req.params.estado;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
     sequelize.query(sqlcount).spread(function (recs) {
         var records = recs[0].count;
         var total = Math.ceil(parseInt(recs[0].count) / rowspp);
-        console.log("Total:" + total + "recs[0].count:" + recs[0].count);
-        console.log("SQL2:" + sqlok);
+        //console.log("Total:" + total + "recs[0].count:" + recs[0].count);
+        //console.log("SQL2:" + sqlok);
         sequelize.query(sqlok).spread(function (rows) {
             res.json({ records: records, total: total, page: page, rows: rows });
         });
     });
 };
 
-exports.operacionesasignar = function (req, res) {
-    sequelize.query(
-        `select a.* from scl.Operacion a 
-        join scl.TipoOperacion f on f.Codigo=a.TipoOperacion
-        where a.RutEmpresa=`+ req.params.rut + ` and f.Id=` + req.params.id+' and a.Id Not In (select Id from scl.SublineaOperacion)',
-        { type: sequelize.QueryTypes.SELECT }
-    ).then(function (valores) {
-        //logger.debug(valores)
-        res.json(valores);
-    }).catch(function (err) {
-        logger.error(err);
-        res.json({ error: 1 });
-    });
-};
-
-
-
+ /**
+  * FIN TAB APROBACIONES
+  */

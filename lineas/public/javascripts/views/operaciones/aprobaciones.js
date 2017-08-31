@@ -8,7 +8,7 @@ var gridaprobaciones = {
         console.log("el targ: " + targ)
         var rut = loadurl.substring(14);
         $gridTabAprobaciones.jqGrid({
-            url: loadurl,
+            url: loadurl+'/2',
             datatype: "json",
             mtype: "GET",
             colModel: [
