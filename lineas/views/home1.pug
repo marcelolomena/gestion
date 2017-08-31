@@ -15,11 +15,17 @@ block content
           span.bar
         .content
           header.bg-theme
-            .wrap-header
-              .row
-                a(href='/menu/home1')
-                  img(src='../../images/header.png', width='384', height='95')
-                img(src='../images/vacio.png', width='300', height='4', border='0')
-                //img(src='../images/header_titulo.png', width='384', height='95', border='0')
+          .header_new
+            .cajaBuscador
+              .hotspot
+              .buscador
+                .campoRut
+                  .clock
+                  form#vista360(onsubmit='return false;')
+                    input#camponum(name='', type='text')
+                    input#btnenviar(name='', type='submit', value='')
+              .social
+                .bell
+                .persona
           p(style='color: #f1563a')
           p!= html

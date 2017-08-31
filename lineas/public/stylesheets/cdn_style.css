@@ -1,0 +1,112 @@
+body {
+	margin: 0px;
+}
+.header_new {
+	height: 180px;
+}
+.header_new .cajaBuscador {
+	height: 80px;
+	background-color: #334255;
+	padding-left: 80px;
+}
+.header_new .cajaRut {
+	height: 100px;
+	background-color: #012464;
+	padding-left: 80px;
+	padding-top:20px;
+	background-image: url(../../../images/cuadros.png);
+	background-repeat: no-repeat;
+	background-position: right center;
+	padding-right: 80px;
+}
+.hotspot {
+	height: 80px;
+	width: 55px;
+	background-image: url(../../../images/logo_cdn.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	float: left;
+}
+.buscador {
+	height: 60px;
+	width: 650px;
+	padding-left: 120px;
+	float: left;
+	padding-top: 20px;
+}
+.buscador .campoRut {
+	height: 40px;
+}
+#camponum {
+	font-family: 'Open Sans', sans-serif;
+	font-size:16px;
+	height: 42px;
+	width: 460px;
+	border: 1px solid #d3dae4;
+	float: left;
+	color: #000;
+	padding-left: 60px;
+}
+.campoRut .clock {
+	background-image: url(../../../images/clock.png);
+	float: left;
+	height: 38px;
+	width: 38px;
+	position: absolute;
+	margin-left: 2px;
+	margin-top: 2px;
+}
+#btnenviar {
+	float: left;
+	height: 42px;
+	width: 48px;
+	background-color: #999;
+	background-image: url(../../../images/btnlupa.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}.header_new .cajaBuscador .social {
+	height: 80px;
+	width: 200px;
+	float: left;
+	padding-left: 40px;
+}
+.social .bell {
+	float: left;
+	height: 80px;
+	width: 40px;
+	background-image: url(../../../images/bell1_50g.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.social .persona {
+	background-image: url(../../../images/man1_80g.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	float: left;
+	height: 80px;
+	width: 60px;
+}
+.header_new .cajaRut .id_rut {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+	color: #FFF;
+	width: 400px;
+}
+.header_new .cajaRut .id_nombre {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 21px;
+	color: #FFF;
+	width: 800px;
+	font-weight: 300;
+}
+.header_new .cajaRut .id_banca {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+	color: #FFF;
+	width: 800px;
+	font-weight: 600;
+}
