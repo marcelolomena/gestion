@@ -27,7 +27,8 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/sublimite/" + parentRowKey;
+    var rut = $("#param").text();
+    var childGridURL = "/sublimite/" + parentRowKey+'/'+rut;
 
     var modelSublinea = [
         {

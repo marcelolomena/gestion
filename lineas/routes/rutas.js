@@ -88,7 +88,7 @@ module.exports = function (passport) {
     router.route('/limite/:id')
         .get(isAuthenticated, operacionesController.listlimite);
 
-    router.route('/sublimite/:id')
+    router.route('/sublimite/:id/:rut')
         .get(isAuthenticated, operacionesController.listsublimite);
 
     router.route('/veroperacionesmodal/:id')
