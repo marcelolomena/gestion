@@ -178,7 +178,7 @@ var gridvertablimites = {
                     }
                 },
 
-            ],
+            ], 
 
             rowNum: 20,
             pager: '#navGridtabverlimites2',
@@ -188,7 +188,7 @@ var gridvertablimites = {
             height: "auto",
             shrinkToFit: true,
             //autowidth: true,
-            width: 1500,
+            width: 1348,
             subGrid: true,
             subGridRowExpanded: subGridsublimite2, //se llama la funcion de abajo
             subGridOptions: {
