@@ -1,4 +1,4 @@
-function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
+function gridvertreservasublimites(parentRowID, parentRowKey, suffix) {
     //console.log('hola');
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
@@ -28,7 +28,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
     var rut = $("#param").text();
-    var childGridURL = "/sublimite/" + parentRowKey+'/'+rut;
+    var childGridURL = "/reservasublimites/" + parentRowKey+'/'+rut;
 
     var modelSublinea = [
         {
@@ -42,67 +42,25 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
         //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
         {
-            label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'left', editrules: { required: true },
-            formatter: function (cellvalue, options, rowObject) {
-                var idlimite = rowObject.Id;
-                if (cellvalue != null) {
-                    //var dato = '<a class="muestraop2" href="#' + idlimite + '">' + cellvalue + '</a>';
-                    var dato = cellvalue
-                }
-                else {
-                    var dato = "no existe sub limite";
-                }
-                return dato;
-            }
+            label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'left', editrules: { required: true }
         },
         //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-        { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+        { label: 'Moneda', name: 'Moneda', width: 28, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
         { label: 'Aprobado', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Utilizado', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Reservado', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
         {
-            label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
-            formatter: function (cellvalue, options, rowObject) {
-                rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
-                amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
-                verde = '<span><img src="../../../../images/greencircle.png" width="25px"/></span>';
-                //console.log(" carlos ql " +cellvalue);
-                if (cellvalue === 'Rojo') {
-                    return rojo
-                }
-                else {
-                    if (cellvalue === 'Verde') {
-                        return verde
-                    }
-                    else {
-                        return amarillo
-                    }
-                }
-            }
+            label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: true, search: true, editable: true, align: 'right', align: 'center'
         },
         {
-            label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
-            formatter: function (cellvalue, options, rowObject) {
-                dato = '<span role="button" class="fa fa-unlock-alt bloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>'
-                return dato;
-            }
+            label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: true, search: true, editable: true, align: 'right', align: 'center'
         },
         {
-            label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
-            formatter: function (cellvalue, options, rowObject) {
-                var dato = '<span role="button" class="glyphicon glyphicon-folder-open muestradet2" aria-hidden="true" href="#' + rowObject.Id + '"></span>';
-
-                //dato = `<span role="button" class="glyphicon glyphicon-th-list" aria-hidden="true onclick="yourFunction()"></span>`
-                return dato;
-            }
+            label: 'Detalle', name: 'Detalle_N', width: 15, hidden: true, search: true, editable: true, align: 'right', align: 'center'
         },
         {
-            label: 'Reservar', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
-            formatter: function (cellvalue, options, rowObject) {
-                var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';
-                return dato;
-            }
+            label: 'Reservar', name: 'Detalle_N', width: 15, hidden: true, search: true, editable: true, align: 'right', align: 'center'
         },
 
     ];
@@ -129,7 +87,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
         //pager: "#" + childGridPagerID,
 
         subGrid: true,
-        subGridRowExpanded: showsublimiteoperaciones,
+        subGridRowExpanded: showsublimiteoperaciones2,
         subGridOptions: {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
@@ -366,7 +324,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
     );
 
 
-    function showsublimiteoperaciones(subgrid_id, row_id) {
+    function showsublimiteoperaciones2(subgrid_id, row_id) {
         gridsublimiteoperaciones(subgrid_id, row_id, 'operaciones');
     }
 

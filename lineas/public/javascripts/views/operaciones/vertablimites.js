@@ -187,7 +187,7 @@ var gridvertablimites = {
             //sortorder: "desc",
             height: "auto",
             shrinkToFit: true,
-            //autowidth: true,
+            autowidth: false,
             width: 1500,
             subGrid: true,
             subGridRowExpanded: subGridsublimite2, //se llama la funcion de abajo

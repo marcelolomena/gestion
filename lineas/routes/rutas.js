@@ -142,6 +142,11 @@ module.exports = function (passport) {
      router.route('/verdetallebloqueo/:id')
         .get(isAuthenticated, operacionesController.listverdetallebloqueo);
 
+    router.route('/reservar/:id')
+        .get(isAuthenticated, operacionesController.listlimite);
+
+    router.route('/reservasublimites/:id/:rut')
+        .get(isAuthenticated, operacionesController.listsublimite);
 
 
         return router;

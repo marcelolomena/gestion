@@ -4,7 +4,7 @@ $(document).ready(function () {
     var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
     tabs += "<li><a href='/limite/" + rut + "' data-target='#vertablimites' id='vertablimites_tab' data-toggle='tab'>Límites</a></li>"
     tabs += "<li><a href='/tipooperacion/" + rut + "' data-target='#operacion' id='operacion_tab' data-toggle='tab'>Operaciones</a></li>"
-    tabs += "<li><a href='/reservar/' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Reservas</a></li>"
+    tabs += "<li><a href='/reservar/"+ rut+ "' data-target='#reservar' id='reservar_tab' data-toggle='tab'>Reservas</a></li>"
     tabs += "<li><a href='/asignar/" + rut + "' data-target='#asignar' id='asignar_tab' data-toggle='tab'>Asignar</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Excepciones</a></li>"
     tabs += "<li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tab'>Reportes</a></li>"
@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     tabs += "<div class='tab-pane active' id='vertablimites'><table id='vertablimites_t'></table><div id='navGridtabverlimites'></div></div>"
     tabs += "<div class='tab-pane' id='operacion'><table id='operacion_t'></table><div id='navGridveroperaciones'></div></div>"
-    tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>"
+    tabs += "<div class='tab-pane' id='reservar'><table id='reservar_t'></table><div id='navGridReseravar'></div></div>"
     tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>"
     tabs += "<div class='tab-pane' id='operacionmac'><div class='container-fluid'><table id='operacionmac_t'></table><div id='lol'></div></div></div>"
     tabs += "<div class='tab-pane' id='operacionmac3'><div class='container-fluid'><table id='operacionmac3_t'></table><div id='lol'></div></div></div>"
@@ -210,6 +210,8 @@ $(".cajaRut").append(`
             gridBitacora.renderGrid(loadurl, targ)
         } else if (targ === '#asignar') {
             gridvertabasignaciones.renderGrid(loadurl, targ)
+        } else if (targ === '#reservar') {
+            gridvertabreserva.renderGrid(loadurl, targ)
         }
         //console.log($this)
         $this.tab('show');
@@ -230,6 +232,8 @@ $(".cajaRut").append(`
             gridvertaboperaciones.renderGrid(loadurl, targ)
         } else if (targ === '#asignar') {
             gridvertabasignaciones.renderGrid(loadurl, targ)
+        } else if (targ === '#reservar') {
+            gridvertabreserva.renderGrid(loadurl, targ)
         }
         //console.log($this)
         $this.tab('show');
