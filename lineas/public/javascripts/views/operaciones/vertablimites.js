@@ -178,7 +178,7 @@ var gridvertablimites = {
                     }
                 },
 
-            ],
+            ], 
 
             rowNum: 20,
             pager: '#navGridtabverlimites2',
