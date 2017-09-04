@@ -144,11 +144,8 @@ var gridvertablimites = {
                             success: function (data) {
                                 if (data.length > 0) {
                                     bloq = data[0].Monto;
-                                    
                                 }
                             }
-
-                            
                         })  
 
                         if (parseInt(bloq) > 0) {
@@ -173,7 +170,7 @@ var gridvertablimites = {
                 {
                     label: 'Reservar', name: 'Reservar', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        var dato = '<span role="button" class="glyphicon glyphicon-import" aria-hidden="true"></span>';
+                        var dato = '<span role="button" class="glyphicon glyphicon-import muestrareserva" aria-hidden="true" href="#' + rowObject.Id + '"></span>';
                         return dato;
                     }
                 },
@@ -595,6 +592,21 @@ var gridvertablimites = {
                             </div>
                         </div>
                     </div> 
+
+                    <div class="modal fade" id="modalreservar" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="panel-heading" style="background-color: #002464;color: #fff;">Detalles Linea</div>
+                                <div class="modal-body">
+                                    <div>Condicion: <label for="Condicion" id="Condicion2"> </label>  </div>
+                                    <div>Comentario: <label for="Comentario" id="Condiciones2"> </label>  </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
                 `);
 
                 //BOTÓN DETALLE
@@ -796,6 +808,32 @@ var gridvertablimites = {
                     });
                     $("#myModal2").modal();
                 });
+
+               
+                 //BOTÓN RESERVA
+                $('.muestrareserva').click(function () {
+                    var idlimite = $(this).attr('href');
+                    
+                    $.ajax({
+                        type: "GET",
+                        url: '/verdetalleslim/' + idlimite.substring(1),
+                        async: false,
+                        success: function (data) {
+                            if (data.length > 0) {
+                                $("#Condicion2").html(data[0].ColorCondicion);
+                                $("#Condiciones2").html(data[0].BORRARCOND);
+                                var condi = $("#Condiciones2").val(data[0].BORRARCOND);
+                                console.log("comentario " + data[0].BORRARCOMEN);
+                            }
+                            else {
+                                alert("No existe cliente en Base de Datos");
+                            }
+                        }
+                    });
+                    $("#modalreservar").modal();
+                });
+
+
 
                 //BOTÓN CONDICIÓN
                 $('.muestracond').click(function () {

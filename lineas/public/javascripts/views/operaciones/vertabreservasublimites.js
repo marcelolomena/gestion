@@ -327,7 +327,4 @@ function gridvertreservasublimites(parentRowID, parentRowKey, suffix) {
     function showsublimiteoperaciones2(subgrid_id, row_id) {
         gridsublimiteoperaciones(subgrid_id, row_id, 'operaciones');
     }
-
-
-
 }
