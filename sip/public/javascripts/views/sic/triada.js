@@ -51,9 +51,7 @@ var gridTriada = {
 
         });
 
-        $gridTab.jqGrid('navGrid', '#navGridTriada', { edit: false, add: false, del: false, search: false },
-
-        );
+        $gridTab.jqGrid('navGrid', '#navGridTriada', { edit: false, add: false, del: false, search: false });
         $(window).bind('resize', function () {
             $gridTab.setGridWidth($(".gcontainer").width(), true);
             $("#navGridTriada").setGridWidth($(".gcontainer").width(), true);
