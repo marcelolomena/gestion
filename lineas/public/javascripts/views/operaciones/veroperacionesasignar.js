@@ -135,6 +135,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                     }
 
                 $("#myModalAsignar").modal();
+
                 var elrutqueviene = $(this).attr('href');
                 var elrutquenecesito = elrutqueviene.substring(1)
 
@@ -185,9 +186,6 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                         return (formatear.formatearNumero(dispo));
                         }
                     },
-
-
-
                 ];
 
                 $("#grid").jqGrid({
@@ -344,7 +342,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                 }
 
             });
-        },
+         },
 
         gridComplete: function () {
             //$("#" + childGridID).css("margin-left", "6px");

@@ -3,20 +3,20 @@ var gridvertablimites = {
     renderGrid: function (loadurl, targ) {
         var $gridTab2 = $(targ + "_t")
 
-        var formatear = 
-        {
-            formatearNumero: function (nStr) {
-                nStr += '';
-                x = nStr.split('.');
-                x1 = x[0];
-                x2 = x.length > 1 ? ',' + x[1] : '';
-                var rgx = /(\d+)(\d{3})/;
-                while (rgx.test(x1)) {
-                    x1 = x1.replace(rgx, '$1' + '.' + '$2');
+        var formatear =
+            {
+                formatearNumero: function (nStr) {
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? ',' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                    }
+                    return x1 + x2;
                 }
-                return x1 + x2;
             }
-        }
         /*
         $gridTab2.prepend(`
             <div class='form-row'>
@@ -78,10 +78,10 @@ var gridvertablimites = {
                             success: function (data) {
                                 if (data.length > 0) {
                                     bloq = data[0].Monto;
-                                   // coment = data[0].Comentario;
+                                    // coment = data[0].Comentario;
                                 }
                             }
-                        })  
+                        })
                         var disponible = rowObject.Disponible;
                         var dispo = disponible - bloq;
                         return formatear.formatearNumero(dispo);
@@ -146,12 +146,12 @@ var gridvertablimites = {
                                     bloq = data[0].Monto;
                                 }
                             }
-                        })  
+                        })
 
                         if (parseInt(bloq) > 0) {
                             dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato; //bloqueado
-                            
+
                         }
                         else {
                             dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
@@ -175,7 +175,7 @@ var gridvertablimites = {
                     }
                 },
 
-            ], 
+            ],
 
             rowNum: 20,
             pager: '#navGridtabverlimites2',
@@ -199,7 +199,7 @@ var gridvertablimites = {
             viewrecords: true,
             caption: "Detalle Limites",
             footerrow: true,
-            userDataOnFooter : false,
+            userDataOnFooter: false,
             gridComplete: function () {
                 $gridTab2.jqGrid('navButtonAdd', '#navGridtabverlimites', {
                     caption: "IMPRIMIR",
@@ -229,7 +229,7 @@ var gridvertablimites = {
                     var eldisponible = $gridTab2.getRowData(rows[i]).Disponible;
                     if (parseInt(eldisponible) < 0) {
                         $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { formatter: 'number', color: 'red' });
-                    }  
+                    }
                 }
 
                 $gridTab2.append(`
@@ -593,20 +593,27 @@ var gridvertablimites = {
                         </div>
                     </div> 
 
-                    <div class="modal fade" id="modalreservar" role="dialog">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
+                    <div class="modal fade" id="modalreservar" role="dialog ">
+                        <div class="modal-dialog modal-lg" style="width:1150px">
+                            <div class="modal-content" >
                                 <div class="panel-heading" style="background-color: #002464;color: #fff;">Detalles Linea</div>
                                 <div class="modal-body">
                                     <div>Condicion: <label for="Condicion" id="Condicion2"> </label>  </div>
                                     <div>Comentario: <label for="Comentario" id="Condiciones2"> </label>  </div>
+                                    <div class="gcontainer">
+                                        <table id="gridreserva"></table>
+                                        <div id="pager"></div>
+                                    </div>
                                 </div>
+                                
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                                 </div>
                             </div>
                         </div>
                     </div> 
+
+                    
                 `);
 
                 //BOTÓN DETALLE
@@ -809,29 +816,217 @@ var gridvertablimites = {
                     $("#myModal2").modal();
                 });
 
-               
-                 //BOTÓN RESERVA
+
+                //BOTÓN RESERVA
                 $('.muestrareserva').click(function () {
                     var idlimite = $(this).attr('href');
-                    
-                    $.ajax({
-                        type: "GET",
-                        url: '/verdetalleslim/' + idlimite.substring(1),
-                        async: false,
-                        success: function (data) {
-                            if (data.length > 0) {
-                                $("#Condicion2").html(data[0].ColorCondicion);
-                                $("#Condiciones2").html(data[0].BORRARCOND);
-                                var condi = $("#Condiciones2").val(data[0].BORRARCOND);
-                                console.log("comentario " + data[0].BORRARCOMEN);
+                    $("#modalreservar").modal();
+                    var elrutqueviene = $(this).attr('href');
+                    var elrutquenecesito = elrutqueviene.substring(1)
+
+                    var elcaption = "Límites";
+
+                    var template = "";
+                    var modelLimites = [
+                        {
+                            label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
+                            editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
+                        },
+                        { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
+                        { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
+                        {
+                            label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'left', editrules: { required: true },
+                            formatter: function (cellvalue, options, rowObject) {
+                                var idlimite = rowObject.Id;
+                                var dato = cellvalue;
+                                //var dato = '<a class="muestraop" href="#' + idlimite + '">' + cellvalue + '</a>';
+                                return dato;
                             }
-                            else {
-                                alert("No existe cliente en Base de Datos");
+                        },
+                        //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
+                        { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                        { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                        { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                        {
+                            label: 'Disponible (Miles)', name: 'Disponible2', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
+                            formatter: function (cellvalue, options, rowObject) {
+                                var bloq = 0;
+                                var disp = 0;
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/verdetalleslim/' + rowObject.Id,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data.length > 0) {
+                                            bloq = data[0].Bloqueado;
+                                            disp = data[0].Disponible;
+                                            //console.log("valor de bloqueo " + bloq);
+                                        }
+                                    }
+                                })
+                                var dispo = disp - bloq;
+                                return (formatear.formatearNumero(dispo));
+                            }
+                        },
+                    ];
+                
+
+                $("#gridreserva").jqGrid({
+                    url: '/limite/' + elrutquenecesito,
+                    mtype: "GET",
+                    datatype: "json",
+                    rowNum: 20,
+                    pager: "#pager",
+                    height: 'auto',
+                    shrinkToFit: true,
+                    width: 1100,
+                    subGrid: false,
+                    subGridRowExpanded: subGridversublimiteasignaciones, //se llama la funcion de abajo
+                    subGridOptions: {
+                        plusicon: "glyphicon-hand-right",
+                        minusicon: "glyphicon-hand-down"
+                    },
+                    page: 1,
+                    colModel: modelLimites,
+                    regional: 'es',
+                    //autowidth: true,
+                    caption: elcaption,
+                    viewrecords: true,
+                    rowList: [5, 10, 20, 50],
+                    styleUI: "Bootstrap",
+                    editurl: '/grupoempresa',
+                    loadError: sipLibrary.jqGrid_loadErrorHandler,
+                    gridComplete: function () {
+                        var recs = $("#gridreserva").getGridParam("reccount");
+                        if (isNaN(recs) || recs == 0) {
+
+                            $("#gridreserva").addRowData("blankRow", { "nombre": "No hay datos" });
+                        }
+                    },
+                    loadComplete: function () {
+
+                        var recs = $("#grid").getGridParam("reccount");
+                        if (isNaN(recs) || recs == 0) {
+                            //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
+                            $("#gridreserva").parent().parent().remove();
+                            $gridTab2PagerID.hide();
+
+                        }
+
+                        var rows = $("#gridreserva").getDataIDs();
+                        for (var i = 0; i < rows.length; i++) {
+                            var eldisponible = $("#gridreserva").getRowData(rows[i]).Disponible;
+                            if (parseInt(eldisponible) < 0) {
+                                $("#gridreserva").jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
                             }
                         }
-                    });
-                    $("#modalreservar").modal();
+                    }
                 });
+
+
+                $("#gridreserva").jqGrid('navGrid', "#pager", {
+                    edit: false, add: false, del: false, search: false,
+                    refresh: false, view: false, position: "left", cloneToTop: false
+                },
+                    {
+                        closeAfterEdit: true,
+                        recreateForm: true,
+                        ajaxEditOptions: sipLibrary.jsonOptions,
+                        serializeEditData: sipLibrary.createJSON,
+                        editCaption: "Modifica Grupo",
+                        //template: template,
+                        errorTextFormat: function (data) {
+                            return 'Error: ' + data.responseText
+                        }
+                    },
+                    {
+                        closeAfterAdd: true,
+                        recreateForm: true,
+                        ajaxEditOptions: sipLibrary.jsonOptions,
+                        serializeEditData: sipLibrary.createJSON,
+                        addCaption: "Agregar Empresa",
+                        template: template,
+                        errorTextFormat: function (data) {
+                            return 'Error: ' + data.responseText
+                        },
+                        beforeShowForm: function (form) {
+                            $("input#Nombre").prop('disabled', true);
+                            $("input#RazonSocial").prop('disabled', true);
+                        },
+                        afterSubmit: function (response, postdata) {
+                            var json = response.responseText;
+                            var result = JSON.parse(json);
+                            if (result.error != "0")
+                                return [false, "Error en llamada a Servidor", ""];
+                            else
+                                return [true, "", ""]
+
+                        }, afterShowForm: function (form) {
+                            sipLibrary.centerDialog($("#gridreserva").attr('Id'));
+
+                        },
+                        onclickSubmit: function (rowid) {
+                            return { grupo: "1" };
+                        }
+                    },
+                    {
+                        closeAfterDelete: true,
+                        recreateForm: true,
+                        ajaxEditOptions: sipLibrary.jsonOptions,
+                        serializeEditData: sipLibrary.createJSON,
+                        addCaption: "Eliminar Empresa",
+                        errorTextFormat: function (data) {
+                            return 'Error: ' + data.responseText
+                        }, afterSubmit: function (response, postdata) {
+                            var json = response.responseText;
+                            var result = JSON.parse(json);
+                            if (result.success != true)
+                                return [false, result.error_text, ""];
+                            else
+                                return [true, "", ""]
+                        },
+                        onclickSubmit: function (rowid) {
+                            var rowKey = $("#gridreserva").getGridParam("selrow");
+                            var rowData = $("#gridreserva").getRowData(rowKey);
+                            var thissid = rowData.idrelacion;
+                            return { idrelacion: thissid };
+                        }
+                    },
+                    {
+                        recreateFilter: true
+                    }
+                );
+                $("#pager").css("padding-bottom", "10px");
+                $("#gridreserva").jqGrid('navButtonAdd', "#pager", {
+                    caption: '<button class="btn btn-default">Asignar Linea</button>',
+                    buttonicon: "",
+                    title: "Excel",
+                    position: "last",
+                    onClickButton: function () {
+                        /*
+                        var $grid = $("#grid")
+                        var selIds = $grid.jqGrid("getGridParam", "selarrrow")
+                        var alerta = "Se asignará la operación _________"
+
+                        if (confirm(alerta)) {
+                            alert("Funcionalidad en desarrollo");
+
+
+
+                        } else {
+                            alert("No");
+                        }
+*/
+                    }
+                });
+
+                function subGridversublimiteasignaciones(subgrid_id, row_id) {
+                    //gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
+                }
+            });
 
 
 
@@ -881,7 +1076,7 @@ var gridvertablimites = {
 
                     var fecha = new Date();
                     var fechaGuardada = "";
-                    var fechaCompleta =(fecha.getDate()+"-"+(fecha.getMonth()+1)+"-"+fecha.getFullYear()+"   "+fecha.getHours()+":"+fecha.getMinutes()+":"+fecha.getSeconds());
+                    var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
                     var fechaGuardada = fechaCompleta;
                     console.log("tremendo exito " + fechaGuardada);
                     $("#fechaBloqueo").html(fechaGuardada);
@@ -901,15 +1096,15 @@ var gridvertablimites = {
                             $gridTab2.trigger('reloadGrid');
                         }
                     });
-                    
+
                     var fecha = new Date();
                     var fechaGuardada = "";
-                    var fechaCompleta =(fecha.getDate()+"-"+(fecha.getMonth()+1)+"-"+fecha.getFullYear()+"   "+fecha.getHours()+":"+fecha.getMinutes()+":"+fecha.getSeconds());
+                    var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
                     var fechaGuardada = fechaCompleta;
                     console.log("tremendo exito " + fechaGuardada);
                     $("#fechaBloqueo").html(fechaGuardada);
                 });
-   
+
                 //BOTÓN CANDADO
                 $('.abrirbloqueo').click(function () {
                     var id = $(this).attr('href').substring(1);
@@ -923,18 +1118,18 @@ var gridvertablimites = {
                                 var disponible = data[0].Disponible;
                                 //console.log("valor de bloqueo " + bloq);
                             }
-                            
+
                             $('input[name="radio-choice"]').attr('checked', false);
                             $("#montodes").val("");
                             $("#monto").val("");
                             $("#comentariodesbloqueo").val("");
-                            
+
                             if (bloq > 0) {
                                 $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Bloqueado)) //desbloqueo
                                 $("#Bloqueado").val(data[0].Bloqueado)
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
-                                $("#montodes").val("");  
+                                $("#montodes").val("");
                                 $("#ValComentarioDes").val(data[0].BORRARCOMEN);
                                 $("#monto").val("");
                                 $("#comentariodesbloqueo").val("");
@@ -945,10 +1140,10 @@ var gridvertablimites = {
                                 $("#labelcomentariodesbloqueo").hide();
                                 $("#comentariodesbloqueo").hide();
 
-                                if(disponible == bloq){
+                                if (disponible == bloq) {
                                     $("#tipoBloqueo").html(" Total M$ : ");
                                 }
-                                else{
+                                else {
                                     $("#tipoBloqueo").html(" Parcial M$ : ");
                                 }
                             }
@@ -1052,7 +1247,7 @@ var gridvertablimites = {
                         SBIFACHEL: sum9,
                         Penetracion: sum10
                         */
-                    },false);
+                    }, false);
             },
         });
         $gridTab2.jqGrid('setLabel', 'Numero', '', { 'text-align': 'center' });
