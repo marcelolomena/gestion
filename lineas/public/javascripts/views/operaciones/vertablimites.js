@@ -82,6 +82,9 @@ var gridvertablimites = {
                                 }
                             }
                         })  
+
+
+
                         var disponible = rowObject.Disponible;
                         var dispo = disponible - bloq;
                         return formatear.formatearNumero(dispo);
@@ -147,6 +150,9 @@ var gridvertablimites = {
                                 }
                             }
                         })  
+                        
+
+
 
                         if (parseInt(bloq) > 0) {
                             dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
@@ -157,6 +163,13 @@ var gridvertablimites = {
                             dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato; //desbloqueado
                         }
+
+
+
+                        var disponible = rowObject.Disponible;
+                        var bloqueado = rowObject.Monto;
+                        var dispo = disponible - bloq;
+                        return formatear.formatearNumero(dispo);
                     }
                 },
                 {
