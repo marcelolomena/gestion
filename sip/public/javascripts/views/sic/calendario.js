@@ -37,7 +37,7 @@ var gridCalendario = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Descripcion', 'Fecha Esperada', 'Hora Esperada', 'Fecha Real', 'Hora Real','Observación', 'idtiporesponsable', 'Responsable'],
+            colNames: ['id', 'Descripcion', 'Fecha Esperada', 'Hora Esperada', 'Fecha Real', 'Hora Real', 'Observación', 'idtiporesponsable', 'Responsable'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 { name: 'descripcion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
@@ -74,35 +74,8 @@ var gridCalendario = {
                     editoptions: {
                         dataInit: function (el) {
                             $(el).datetimepicker({
-                                locale: 'es-ES',
-                                format: 'LT',
-                                widgetParent: '#outer'
+                                format: 'LT'
                             });
-                            $(el).bind("dp.show", function () {
-                                var $datepicker = $("#outer .bootstrap-datetimepicker-widget");
-                                if ($datepicker.length > 0) {
-                                    $datepicker.css("top",
-                                        this.getBoundingClientRect().top +
-                                        window.pageYOffset +
-                                        $(this).outerHeight());
-                                }
-                            });
-                            $(el).bind("dp.change", function (e) {
-                                if (e.date.dayOfYear() !== e.oldDate.dayOfYear()) {
-                                    $(this).data("DateTimePicker").hide();
-                                }
-                            });
-
-                            // $(el).bind("dp.show", function () {
-                            //     var $datepicker = $("#outer .bootstrap-datetimepicker-widget");
-                            //     if ($datepicker.length > 0) {
-                            //         $datepicker.css("top",
-                            //             this.getBoundingClientRect().top +
-                            //             window.pageYOffset +
-                            //             $(this).outerHeight());
-                            //     }
-                            // });
-
                         },
                     },
                 },
@@ -134,11 +107,11 @@ var gridCalendario = {
                 },
                 {
                     name: 'horareal', width: 150, align: 'left', search: false, editable: true,
-                    formatoptions: { srcformat: 'ISO8601Long'},
+                    formatoptions: { srcformat: 'ISO8601Long' },
                     editoptions: {
                         dataInit: function (el) {
                             $(el).datetimepicker({
-                                pickDate: false
+                                format: 'LT'
                             });
                         },
                     },
