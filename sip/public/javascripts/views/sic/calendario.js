@@ -1,13 +1,9 @@
 //doc.js
 var gridCalendario = {
 
-
-
     renderGrid: function (loadurl, parentRowKey, targ) {
         //var $gridTab = $(targ + "_t")
         var $gridTab = $(targ + "_t_" + parentRowKey)
-
-
 
         var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
@@ -16,15 +12,17 @@ var gridCalendario = {
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Fecha Esperada<span style='color:red'>*</span>{fechaesperada}</div>";
+        tmplServ += "<div class='column-half'>Fecha Esperada<span style='color:red'>*</span>{fechaesperada}</div>";
+        tmplServ += "<div class='column-half'>Hora Esperada{horaesperada}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Fecha Real<span style='color:red'>*</span>{fechareal}</div>";
+        tmplServ += "<div class='column-half'>Fecha Real{fechareal}</div>";
+        tmplServ += "<div class='column-half'>Hora Real{horareal}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Observación<span style='color:red'>*</span>{observacion}</div>";
+        tmplServ += "<div class='column-full'>Observación{observacion}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
@@ -39,23 +37,24 @@ var gridCalendario = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Descripcion', 'Fecha Esperada', 'Fecha Real', 'Observación', 'idtiporesponsable', 'Responsable'],
+            colNames: ['id', 'Descripcion', 'Fecha Esperada', 'Hora Esperada', 'Fecha Real', 'Hora Real','Observación', 'idtiporesponsable', 'Responsable'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 { name: 'descripcion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
-                    name: 'fechaesperada', width: 150, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d H:i' },
-                    editable: true, editrules: { required: true },
+                    name: 'fechaesperada', width: 150, align: 'center', search: true, editable: true, hidden: false,
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                     searchoptions: {
                         dataInit: function (el) {
-                            $(el).datetimepicker({
-                                format: "yyyy-mm-dd hh:ii",
-                                weekStart: 1,
-                                language: "es",
+                            $(el).datepicker({
+                                language: 'es',
+                                format: 'yyyy-mm-dd',
                                 autoclose: true,
-                                todayHighlight: true,
-                                startDate: todaysDate
+                                onSelect: function (dateText, inst) {
+                                    setTimeout(function () {
+                                        $('#' + subgrid_table_id)[0].triggerToolbar();
+                                    }, 100);
+                                }
                             });
                         },
                         sopt: ["eq", "le", "ge"]
@@ -63,31 +62,64 @@ var gridCalendario = {
                     editoptions: {
                         size: 10, maxlengh: 10,
                         dataInit: function (element) {
-                            //$(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datetimepicker({
-                                format: "yyyy-mm-dd hh:ii",
-                                weekStart: 1,
-                                language: "es",
-                                autoclose: true,
-                                todayHighlight: true
-
-                            });
+                            $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                            $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                         }
+                    }
+                },
+                {
+                    name: 'horaesperada', width: 150, align: 'left', search: false,
+                    formatter: 'date',
+                    editable: true, editrules: { required: false },
+                    editoptions: {
+                        dataInit: function (el) {
+                            $(el).datetimepicker({
+                                locale: 'es-ES',
+                                format: 'LT',
+                                widgetParent: '#outer'
+                            });
+                            $(el).bind("dp.show", function () {
+                                var $datepicker = $("#outer .bootstrap-datetimepicker-widget");
+                                if ($datepicker.length > 0) {
+                                    $datepicker.css("top",
+                                        this.getBoundingClientRect().top +
+                                        window.pageYOffset +
+                                        $(this).outerHeight());
+                                }
+                            });
+                            $(el).bind("dp.change", function (e) {
+                                if (e.date.dayOfYear() !== e.oldDate.dayOfYear()) {
+                                    $(this).data("DateTimePicker").hide();
+                                }
+                            });
+
+                            // $(el).bind("dp.show", function () {
+                            //     var $datepicker = $("#outer .bootstrap-datetimepicker-widget");
+                            //     if ($datepicker.length > 0) {
+                            //         $datepicker.css("top",
+                            //             this.getBoundingClientRect().top +
+                            //             window.pageYOffset +
+                            //             $(this).outerHeight());
+                            //     }
+                            // });
+
+                        },
                     },
                 },
                 {
-                    name: 'fechareal', width: 150, align: 'left', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d H:i' },
-                    editable: true, editrules: { required: false },
+                    name: 'fechareal', width: 150, align: 'center', search: true, editable: true, hidden: false,
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                     searchoptions: {
                         dataInit: function (el) {
-                            $(el).datetimepicker({
-                                format: "yyyy-mm-dd hh:ii",
-                                weekStart: 1,
-                                language: "es",
+                            $(el).datepicker({
+                                language: 'es',
+                                format: 'yyyy-mm-dd',
                                 autoclose: true,
-                                todayHighlight: true,
-                                startDate: todaysDate
+                                onSelect: function (dateText, inst) {
+                                    setTimeout(function () {
+                                        $('#' + subgrid_table_id)[0].triggerToolbar();
+                                    }, 100);
+                                }
                             });
                         },
                         sopt: ["eq", "le", "ge"]
@@ -95,18 +127,23 @@ var gridCalendario = {
                     editoptions: {
                         size: 10, maxlengh: 10,
                         dataInit: function (element) {
-                            //$(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                            $(element).datetimepicker({
-                                format: "yyyy-mm-dd hh:ii",
-                                weekStart: 1,
-                                language: "es",
-                                autoclose: true,
-                                todayHighlight: true
-                            });
+                            $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                            $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                         }
+                    }
+                },
+                {
+                    name: 'horareal', width: 150, align: 'left', search: false, editable: true,
+                    formatoptions: { srcformat: 'ISO8601Long'},
+                    editoptions: {
+                        dataInit: function (el) {
+                            $(el).datetimepicker({
+                                pickDate: false
+                            });
+                        },
                     },
                 },
-                { name: 'observacion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
+                { name: 'observacion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: false } },
                 {
                     name: 'idtiporesponsable', search: false, editable: true, hidden: true,
                     edittype: "select",
@@ -196,6 +233,7 @@ var gridCalendario = {
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
+                    console.log("holapo")
                     //$('input#notacriticidad', form).attr('readonly', 'readonly');
                 },
                 beforeSubmit: function (postdata, formid) {
@@ -235,7 +273,7 @@ var gridCalendario = {
                     */
 
 
-                    return { idsolicitudcotizacion: parentRowKey/*, fechanueva: fechaespe, fechanuevar: fecharea */};
+                    return { idsolicitudcotizacion: parentRowKey/*, fechanueva: fechaespe, fechanuevar: fecharea */ };
                 }
 
             },
