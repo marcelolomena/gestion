@@ -73,7 +73,7 @@ exports.listsublimite = function (req, res) {
     select count (*) from scl.Linea a
     join scl.LineaEmpresa b on b.Linea_Id=a.Id 
     join scl.Empresa c on c.Id = b.Empresa_Id
-    where a.Padre_Id=`+ req.params.id+' and c.Rut='+req.params.rut;
+    where a.Padre_Id=`+ req.params.id + ' and c.Rut=' + req.params.rut;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
@@ -84,7 +84,7 @@ exports.listsublimite = function (req, res) {
         `as resultNum, a.* from scl.Linea a 
         join scl.LineaEmpresa b on b.Linea_Id=a.Id 
         join scl.Empresa c on c.Id = b.Empresa_Id
-        where a.Padre_Id=`+ req.params.id+' and c.Rut='+req.params.rut;
+        where a.Padre_Id=`+ req.params.id + ' and c.Rut=' + req.params.rut;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -509,7 +509,7 @@ exports.listaprobaciones = function (req, res) {
     select count (*) from scl.Aprobacion a
     join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
     join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
-    where a.Rut =`+ req.params.id+' and a.EstadoAprobacion_Id='+req.params.estado;
+    where a.Rut =`+ req.params.id + ' and a.EstadoAprobacion_Id=' + req.params.estado;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
@@ -520,7 +520,7 @@ exports.listaprobaciones = function (req, res) {
         `as resultNum, a.*, b.Nombre as tipoaprobacion, c.Nombre as estadoaprobacion from scl.Aprobacion a
         join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
         join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
-        where a.Rut =`+ req.params.id+' and a.EstadoAprobacion_Id='+req.params.estado;
+        where a.Rut =`+ req.params.id + ' and a.EstadoAprobacion_Id=' + req.params.estado;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -549,6 +549,22 @@ exports.listverdetallebloqueo = function (req, res) {
         res.json({ error: 1 });
     });
 };
- /**
-  * FIN TAB APROBACIONES
-  */
+/**
+ * FIN TAB APROBACIONES
+ */
+
+
+exports.listoperacionesreserva = function (req, res) {
+    sequelize.query( `
+        select * from scl.Operacion a  
+        join scl.LineaOperacion b on a.Id=b.Operacion_Id
+        where Linea_Id =`+ req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};

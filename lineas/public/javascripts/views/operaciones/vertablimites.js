@@ -596,10 +596,8 @@ var gridvertablimites = {
                     <div class="modal fade" id="modalreservar" role="dialog ">
                         <div class="modal-dialog modal-lg" style="width:1150px">
                             <div class="modal-content" >
-                                <div class="panel-heading" style="background-color: #002464;color: #fff;">Detalles Linea</div>
+                                <div class="panel-heading" style="background-color: #002464;color: #fff;">Generar Reserva</div>
                                 <div class="modal-body">
-                                    <div>Condicion: <label for="Condicion" id="Condicion2"> </label>  </div>
-                                    <div>Comentario: <label for="Comentario" id="Condiciones2"> </label>  </div>
                                     <div class="gcontainer">
                                         <table id="gridreserva"></table>
                                         <div id="pager"></div>
@@ -820,213 +818,171 @@ var gridvertablimites = {
                 //BOTÓN RESERVA
                 $('.muestrareserva').click(function () {
                     var idlimite = $(this).attr('href');
+                    console.log("valor id limite sin cortar " + idlimite);
+                    idlimite = idlimite.substring(1, 2);
+                    console.log("valor id cortado " + idlimite);
                     $("#modalreservar").modal();
-                    var elrutqueviene = $(this).attr('href');
-                    var elrutquenecesito = elrutqueviene.substring(1)
+                    //var elrutqueviene = $(this).attr('href');
+                    //var elrutquenecesito = elrutqueviene.substring(1)
 
-                    var elcaption = "Límites";
+                    var elcaption = "Operaciones";
 
                     var template = "";
-                    var modelLimites = [
+                    var modelOperacion = [
                         {
                             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                             editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                         },
-                        { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
-                        { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                        { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+
+                        { label: 'Tipo Operacion', name: 'TipoOperacion', width: 8, hidden: false, editable: true, align: 'center' },
+                        { label: 'Nro Producto', name: 'NumeroProducto', width: 8, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Fecha Otorgamiento', name: 'FechaOtorgamiento', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                         //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                         {
-                            label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'left', editrules: { required: true },
-                            formatter: function (cellvalue, options, rowObject) {
-                                var idlimite = rowObject.Id;
-                                var dato = cellvalue;
-                                //var dato = '<a class="muestraop" href="#' + idlimite + '">' + cellvalue + '</a>';
-                                return dato;
-                            }
+                            label: 'Fecha Prox Vencimiento', name: 'FechaProxVenc', width: 9, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true },
                         },
                         //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                        { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                        { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                        { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                        { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                        { label: 'Moneda', name: 'Moneda', width: 5, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Monto Inicial', name: 'MontoInicial', width: 8, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                        { label: 'Monto Actual', name: 'MontoActual', width: 6, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                        // { label: 'Monto Actual Equiv.M /Linea', name: 'MontoActualMLinea', width: 15, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                         {
-                            label: 'Disponible (Miles)', name: 'Disponible2', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
-                            formatter: function (cellvalue, options, rowObject) {
-                                var bloq = 0;
-                                var disp = 0;
-                                $.ajax({
-                                    type: "GET",
-                                    url: '/verdetalleslim/' + rowObject.Id,
-                                    async: false,
-                                    success: function (data) {
-                                        if (data.length > 0) {
-                                            bloq = data[0].Bloqueado;
-                                            disp = data[0].Disponible;
-                                            //console.log("valor de bloqueo " + bloq);
-                                        }
-                                    }
-                                })
-                                var dispo = disp - bloq;
-                                return (formatear.formatearNumero(dispo));
-                            }
+                            label: 'Monto Actual Equiv. M/N', name: 'MontoActualMNac', width: 10, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
                         },
                     ];
-                
 
-                $("#gridreserva").jqGrid({
-                    url: '/limite/' + elrutquenecesito,
-                    mtype: "GET",
-                    datatype: "json",
-                    rowNum: 20,
-                    pager: "#pager",
-                    height: 'auto',
-                    shrinkToFit: true,
-                    width: 1100,
-                    subGrid: false,
-                    subGridRowExpanded: subGridversublimiteasignaciones, //se llama la funcion de abajo
-                    subGridOptions: {
-                        plusicon: "glyphicon-hand-right",
-                        minusicon: "glyphicon-hand-down"
-                    },
-                    page: 1,
-                    colModel: modelLimites,
-                    regional: 'es',
-                    //autowidth: true,
-                    caption: elcaption,
-                    viewrecords: true,
-                    rowList: [5, 10, 20, 50],
-                    styleUI: "Bootstrap",
-                    editurl: '/grupoempresa',
-                    loadError: sipLibrary.jqGrid_loadErrorHandler,
-                    gridComplete: function () {
-                        var recs = $("#gridreserva").getGridParam("reccount");
-                        if (isNaN(recs) || recs == 0) {
 
-                            $("#gridreserva").addRowData("blankRow", { "nombre": "No hay datos" });
-                        }
-                    },
-                    loadComplete: function () {
+                    $("#gridreserva").jqGrid({
+                        url: '/reservaroperacion/' + idlimite,
+                        mtype: "GET",
+                        datatype: "json",
+                        rowNum: 20,
+                        pager: "#pager",
+                        height: 'auto',
+                        shrinkToFit: true,
+                        width: 1100,
+                        subGrid: false,
+                        subGridRowExpanded: subGridversublimiteasignaciones, //se llama la funcion de abajo
+                        subGridOptions: {
+                            plusicon: "glyphicon-hand-right",
+                            minusicon: "glyphicon-hand-down"
+                        },
+                        page: 1,
+                        colModel: modelOperacion,
+                        regional: 'es',
+                        //autowidth: true,
+                        caption: elcaption,
+                        viewrecords: true,
+                        rowList: [5, 10, 20, 50],
+                        styleUI: "Bootstrap",
+                        editurl: '/grupoempresa',
+                        loadError: sipLibrary.jqGrid_loadErrorHandler,
+                        gridComplete: function () {
+                            var recs = $("#gridreserva").getGridParam("reccount");
+                            if (isNaN(recs) || recs == 0) {
 
-                        var recs = $("#grid").getGridParam("reccount");
-                        if (isNaN(recs) || recs == 0) {
-                            //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
-                            $("#gridreserva").parent().parent().remove();
-                            $gridTab2PagerID.hide();
+                                $("#gridreserva").addRowData("blankRow", { "nombre": "No hay datos" });
+                            }
+                        },
+                        loadComplete: function () {
 
-                        }
+                            var recs = $("#gridreserva").getGridParam("reccount");
+                            if (isNaN(recs) || recs == 0) {
+                                //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
+                                $("#gridreserva").parent().parent().remove();
+                                // $gridTab2PagerID.hide();
 
-                        var rows = $("#gridreserva").getDataIDs();
-                        for (var i = 0; i < rows.length; i++) {
-                            var eldisponible = $("#gridreserva").getRowData(rows[i]).Disponible;
-                            if (parseInt(eldisponible) < 0) {
-                                $("#gridreserva").jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
+                            }
+
+                            var rows = $("#gridreserva").getDataIDs();
+                            for (var i = 0; i < rows.length; i++) {
+                                var eldisponible = $("#gridreserva").getRowData(rows[i]).Disponible;
+                                if (parseInt(eldisponible) < 0) {
+                                    $("#gridreserva").jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
+                                }
                             }
                         }
+                    });
+
+
+                    $("#gridreserva").jqGrid('navGrid', "#pager", {
+                        edit: false, add: false, del: false, search: false,
+                        refresh: false, view: false, position: "left", cloneToTop: false
+                    },
+                        {
+                            closeAfterEdit: true,
+                            recreateForm: true,
+                            ajaxEditOptions: sipLibrary.jsonOptions,
+                            serializeEditData: sipLibrary.createJSON,
+                            editCaption: "Modifica Grupo",
+                            //template: template,
+                            errorTextFormat: function (data) {
+                                return 'Error: ' + data.responseText
+                            }
+                        },
+                        {
+                            closeAfterAdd: true,
+                            recreateForm: true,
+                            ajaxEditOptions: sipLibrary.jsonOptions,
+                            serializeEditData: sipLibrary.createJSON,
+                            addCaption: "Agregar Empresa",
+                            template: template,
+                            errorTextFormat: function (data) {
+                                return 'Error: ' + data.responseText
+                            },
+                            beforeShowForm: function (form) {
+                                $("input#Nombre").prop('disabled', true);
+                                $("input#RazonSocial").prop('disabled', true);
+                            },
+                            afterSubmit: function (response, postdata) {
+                                var json = response.responseText;
+                                var result = JSON.parse(json);
+                                if (result.error != "0")
+                                    return [false, "Error en llamada a Servidor", ""];
+                                else
+                                    return [true, "", ""]
+
+                            }, afterShowForm: function (form) {
+                                sipLibrary.centerDialog($("#gridreserva").attr('Id'));
+
+                            },
+                            onclickSubmit: function (rowid) {
+                                return { grupo: "1" };
+                            }
+                        },
+                        {
+                            closeAfterDelete: true,
+                            recreateForm: true,
+                            ajaxEditOptions: sipLibrary.jsonOptions,
+                            serializeEditData: sipLibrary.createJSON,
+                            addCaption: "Eliminar Empresa",
+                            errorTextFormat: function (data) {
+                                return 'Error: ' + data.responseText
+                            }, afterSubmit: function (response, postdata) {
+                                var json = response.responseText;
+                                var result = JSON.parse(json);
+                                if (result.success != true)
+                                    return [false, result.error_text, ""];
+                                else
+                                    return [true, "", ""]
+                            },
+                            onclickSubmit: function (rowid) {
+                                var rowKey = $("#gridreserva").getGridParam("selrow");
+                                var rowData = $("#gridreserva").getRowData(rowKey);
+                                var thissid = rowData.idrelacion;
+                                return { idrelacion: thissid };
+                            }
+                        },
+                        {
+                            recreateFilter: true
+                        }
+                    );
+                    $("#pager").css("padding-bottom", "10px");
+
+                    function subGridversublimiteasignaciones(subgrid_id, row_id) {
+                        //gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
                     }
                 });
-
-
-                $("#gridreserva").jqGrid('navGrid', "#pager", {
-                    edit: false, add: false, del: false, search: false,
-                    refresh: false, view: false, position: "left", cloneToTop: false
-                },
-                    {
-                        closeAfterEdit: true,
-                        recreateForm: true,
-                        ajaxEditOptions: sipLibrary.jsonOptions,
-                        serializeEditData: sipLibrary.createJSON,
-                        editCaption: "Modifica Grupo",
-                        //template: template,
-                        errorTextFormat: function (data) {
-                            return 'Error: ' + data.responseText
-                        }
-                    },
-                    {
-                        closeAfterAdd: true,
-                        recreateForm: true,
-                        ajaxEditOptions: sipLibrary.jsonOptions,
-                        serializeEditData: sipLibrary.createJSON,
-                        addCaption: "Agregar Empresa",
-                        template: template,
-                        errorTextFormat: function (data) {
-                            return 'Error: ' + data.responseText
-                        },
-                        beforeShowForm: function (form) {
-                            $("input#Nombre").prop('disabled', true);
-                            $("input#RazonSocial").prop('disabled', true);
-                        },
-                        afterSubmit: function (response, postdata) {
-                            var json = response.responseText;
-                            var result = JSON.parse(json);
-                            if (result.error != "0")
-                                return [false, "Error en llamada a Servidor", ""];
-                            else
-                                return [true, "", ""]
-
-                        }, afterShowForm: function (form) {
-                            sipLibrary.centerDialog($("#gridreserva").attr('Id'));
-
-                        },
-                        onclickSubmit: function (rowid) {
-                            return { grupo: "1" };
-                        }
-                    },
-                    {
-                        closeAfterDelete: true,
-                        recreateForm: true,
-                        ajaxEditOptions: sipLibrary.jsonOptions,
-                        serializeEditData: sipLibrary.createJSON,
-                        addCaption: "Eliminar Empresa",
-                        errorTextFormat: function (data) {
-                            return 'Error: ' + data.responseText
-                        }, afterSubmit: function (response, postdata) {
-                            var json = response.responseText;
-                            var result = JSON.parse(json);
-                            if (result.success != true)
-                                return [false, result.error_text, ""];
-                            else
-                                return [true, "", ""]
-                        },
-                        onclickSubmit: function (rowid) {
-                            var rowKey = $("#gridreserva").getGridParam("selrow");
-                            var rowData = $("#gridreserva").getRowData(rowKey);
-                            var thissid = rowData.idrelacion;
-                            return { idrelacion: thissid };
-                        }
-                    },
-                    {
-                        recreateFilter: true
-                    }
-                );
-                $("#pager").css("padding-bottom", "10px");
-                $("#gridreserva").jqGrid('navButtonAdd', "#pager", {
-                    caption: '<button class="btn btn-default">Asignar Linea</button>',
-                    buttonicon: "",
-                    title: "Excel",
-                    position: "last",
-                    onClickButton: function () {
-                        /*
-                        var $grid = $("#grid")
-                        var selIds = $grid.jqGrid("getGridParam", "selarrrow")
-                        var alerta = "Se asignará la operación _________"
-
-                        if (confirm(alerta)) {
-                            alert("Funcionalidad en desarrollo");
-
-
-
-                        } else {
-                            alert("No");
-                        }
-*/
-                    }
-                });
-
-                function subGridversublimiteasignaciones(subgrid_id, row_id) {
-                    //gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
-                }
-            });
 
 
 
