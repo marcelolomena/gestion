@@ -78,7 +78,7 @@ var gridvertablimites = {
                             success: function (data) {
                                 if (data.length > 0) {
                                     bloq = data[0].Monto;
-                                    // coment = data[0].Comentario;
+                                    //coment = data[0].Comentario;
                                 }
                             }
                         })
