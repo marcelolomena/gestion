@@ -81,14 +81,7 @@ var gridvertablimites = {
                                     // coment = data[0].Comentario;
                                 }
                             }
-<<<<<<< HEAD
-                        })  
-
-
-
-=======
                         })
->>>>>>> 4d40a46f84acc76134758c1f62db9a521bd0c34a
                         var disponible = rowObject.Disponible;
                         var dispo = disponible - bloq;
                         return formatear.formatearNumero(dispo);
@@ -153,14 +146,7 @@ var gridvertablimites = {
                                     bloq = data[0].Monto;
                                 }
                             }
-<<<<<<< HEAD
-                        })  
-                        
-
-
-=======
                         })
->>>>>>> 4d40a46f84acc76134758c1f62db9a521bd0c34a
 
                         if (parseInt(bloq) > 0) {
                             dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
