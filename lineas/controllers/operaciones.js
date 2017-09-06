@@ -34,7 +34,7 @@ exports.listlimite = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, a.*, Monto,Activo, Comentario from scl.Linea a
+        `as resultNum, a.*, Monto, Activo, Comentario from scl.Linea a
         join scl.LineaEmpresa b on a.Id=b.Linea_Id
         join scl.Empresa c on c.Id=b.Empresa_Id
 		left join scl.Bloqueo d on d.Linea_Id = b.Linea_Id

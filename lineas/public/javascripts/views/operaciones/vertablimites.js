@@ -69,9 +69,10 @@ var gridvertablimites = {
                 {
                     label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
+                       
                         var bloq = 0;
                         //var coment = "";
-                        $.ajax({
+                      /*  $.ajax({
                             type: "GET",
                             url: '/verdetallebloqueo/' + rowObject.Id,
                             async: false,
@@ -81,10 +82,16 @@ var gridvertablimites = {
                                     //coment = data[0].Comentario;
                                 }
                             }
-                        })
-                        var disponible = rowObject.Disponible;
-                        var dispo = disponible - bloq;
-                        return formatear.formatearNumero(dispo);
+                        })*/
+                        if(rowObject.Activo = 1){
+                            var disponible = rowObject.Disponible;
+                            bloq= rowObject.Monto;
+                            var dispo = disponible - bloq;
+                            return formatear.formatearNumero(dispo);
+                        }else{
+                            var disponible = rowObject.Disponible;
+                            return formatear.formatearNumero(dispnible);
+                        }
                     }
                 },
 
@@ -157,13 +164,6 @@ var gridvertablimites = {
                             dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato; //desbloqueado
                         }
-
-
-
-                        var disponible = rowObject.Disponible;
-                        var bloqueado = rowObject.Monto;
-                        var dispo = disponible - bloq;
-                        return formatear.formatearNumero(dispo);
                     }
                 },
                 {
