@@ -47,6 +47,13 @@ $(document).ready(function () {
             }
         }
     });
+    $(".cajaRut").html(`
+    <div class="id_rut">`+ rut + "-" + dv + `</div>
+    <div class="id_nombre">`+ nombre + `</div>
+    <div class="id_banca">Banca Corporativa / Oficina Moneda / PEP</div>
+
+
+`);
 
 
     $(".gcontainer").prepend(`
@@ -55,23 +62,6 @@ $(document).ready(function () {
                     <h3 class="panel-title">Seleccionar Tipo de Aprobación</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-4" style="font-size:12px"><b>`+ formatearNumero(rut) + `-` + dv + `</b></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4" style="font-size:18px"><b>`+ nombre + `</b></div>
-                        <div class="col-xs-4" style="font-size:16px"><b>Grupo: `+ nombregrupo + `</b></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4" style="font-size:12px"><b>`+ banca + ` / ` + oficina + ` / ` + pep + `</b></div>
-                    </div>
-                    <div class="row">    
-                        <div class="col-xs-4" style="font-size:12px"><b>Ejecutivo Control: `+ ejecutivo + `</b></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4" style="font-size:12px"><b>Riesgo: `+ riesgo + ` / Rating: ` + rating + `</b></div>
-                    </div>
-                    <hr class="section-separations"></hr>
                     <form id="paso2" onsubmit="return false;">
                         <div class="form-group col-lg-6">
                             <label for="tipoaprobacion">Tipo Aprobación:</label>

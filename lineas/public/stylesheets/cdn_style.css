@@ -7,12 +7,12 @@ body {
 .header_new .cajaBuscador {
 	height: 80px;
 	background-color: #334255;
-	padding-left: 80px;
+	padding-left: 40px;
 }
 .header_new .cajaRut {
 	height: 100px;
 	background-color: #012464;
-	padding-left: 80px;
+	padding-left: 40px;
 	padding-top:20px;
 	background-image: url(../../../images/cuadros.png);
 	background-repeat: no-repeat;
@@ -71,11 +71,12 @@ body {
 }.header_new .cajaBuscador .social {
 	height: 80px;
 	width: 200px;
-	float: left;
-	padding-left: 40px;
+	float: right;
+	padding-right: 10px;
+	/* margin-left: 300px; */
 }
 .social .bell {
-	float: left;
+	float: right;
 	height: 80px;
 	width: 40px;
 	background-image: url(../../../images/bell1_50g.png);
@@ -86,7 +87,7 @@ body {
 	background-image: url(../../../images/man1_80g.png);
 	background-repeat: no-repeat;
 	background-position: center center;
-	float: left;
+	float: right;
 	height: 80px;
 	width: 60px;
 }

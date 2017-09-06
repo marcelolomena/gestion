@@ -2,26 +2,28 @@ $(document).ready(function () {
 
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
-    $(".gcontainer").prepend(`
-            <div class="panel panel-primary">
-                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
-                    <h3 class="panel-title">Información Grupo</h3>
-                </div>
-                <div class="panel-body">
-                    <div id="cabecera" class="form-group">
-                        <div class="row">
-                            <div class="col-xs-4" style="font-size:16px"><b>Nombre Grupo:</b> <span id="nombregrupo"></span></div>
-                            <div class="col-xs-4" style="font-size:16px"><b>Ejecutivo:</b> <span id="ejecutivo"></span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-4" style="font-size:16px"><b>Fecha Presentación:</b> <span id="fechapresentacion"></span></div>
-                            <div class="col-xs-4" style="font-size:16px"><b>Vcto. Ant:</b> <span id="vencimientoanterior"></span></div>
-                            
-                        </div>
-                    </div> 
-                </div>
-                
-            </div>`);
+
+
+    // $(".gcontainer").prepend(`
+    //         <div class="panel panel-primary">
+    //             <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
+    //                 <h3 class="panel-title">Información Grupo</h3>
+    //             </div>
+    //             <div class="panel-body">
+    //                 <div id="cabecera" class="form-group">
+    //                     <div class="row">
+    //                         <div class="col-xs-4" style="font-size:16px"><b>Nombre Grupo:</b> <span id="nombregrupo"></span></div>
+    //                         <div class="col-xs-4" style="font-size:16px"><b>Ejecutivo:</b> <span id="ejecutivo"></span></div>
+    //                     </div>
+    //                     <div class="row">
+    //                         <div class="col-xs-4" style="font-size:16px"><b>Fecha Presentación:</b> <span id="fechapresentacion"></span></div>
+    //                         <div class="col-xs-4" style="font-size:16px"><b>Vcto. Ant:</b> <span id="vencimientoanterior"></span></div>
+
+    //                     </div>
+    //                 </div> 
+    //             </div>
+
+    //         </div>`);
 
     var idcabecera = $("#param").text();
     var nombre = ""
@@ -40,16 +42,22 @@ $(document).ready(function () {
                 ejecutivo = 'Marcela Castro'
                 fechapresentacion = '30-08-2017'
                 vencimientoanterior = '30-08-2016'
-                $("#nombregrupo").html(nombregrupo)
-                $("#ejecutivo").html(ejecutivo)
-                $("#fechapresentacion").html(fechapresentacion)
-                $("#vencimientoanterior").html(vencimientoanterior)
+                // $("#nombregrupo").html(nombregrupo)
+                // $("#ejecutivo").html(ejecutivo)
+                // $("#fechapresentacion").html(fechapresentacion)
+                // $("#vencimientoanterior").html(vencimientoanterior)
+                $(".cajaRut").html(`
+                <div class="id_nombre">`+ nombregrupo + `</div>
+                <div class="id_banca">Banca Corporativa / Oficina Moneda / PEP</div>
+                <div class="id_rut">Fecha Presentación: `+ fechapresentacion + ` / Vencimiento Anterior: ` + vencimientoanterior + `</div>
+            `);
                 grilladegrupo(idcabecera, nombregrupo, idgrupo);
             } else {
                 alert("No existe MAC Grupo con ID: " + idcabecera)
             }
         }
     });
+
 
 
     function grilladegrupo(idcabecera, nombregrupo, idgrupo) {
@@ -78,7 +86,7 @@ $(document).ready(function () {
                 </div>
                 `);
 
-        elcaption = "Selección de Empresas para: " + nombregrupo;
+        elcaption = "Selección de Empresas";
 
 
         var template = "<div id='responsive-form' class='clearfix'>";
@@ -116,6 +124,12 @@ $(document).ready(function () {
             {
                 label: 'Rut', name: 'Rut', width: 70, hidden: false, search: true, editable: true,
                 editrules: { required: true },
+                formatter: function (cellvalue, options, rowObject) {
+
+                    dato = cellvalue+'-'+rowObject.Dv
+
+                    return dato
+                },
                 editoptions: {
                     dataEvents: [{
                         type: 'change', fn: function (e) {
@@ -146,6 +160,7 @@ $(document).ready(function () {
                     }],
                 }
             },
+            { label: 'Dv', name: 'Dv', hidden: true, editable: true },
             { label: 'idgrupo', name: 'idgrupo', hidden: true, editable: true },
             { label: 'idcabecera', name: 'idcabecera', hidden: true, editable: true },
             { label: 'Nombre Cliente', name: 'Nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
@@ -181,21 +196,25 @@ $(document).ready(function () {
 
         ];
 
+
         $("#grid").jqGrid({
             url: '/grupoempresanew/' + idcabecera,
             mtype: "GET",
             datatype: "json",
             page: 1,
             colModel: modelGrupo,
-            rowNum: 20,
+            rowNum: 200,
+            width: 1350,
             regional: 'es',
             height: 'auto',
-            autowidth: true,
+            //autowidth: true,
             shrinkToFit: true,
             caption: elcaption,
             pager: "#pager",
-            viewrecords: true,
-            rowList: [5, 10, 20, 50],
+            viewrecords: false,
+            pgtext: null,
+            pgbuttons: false,
+            rowList: [],
             styleUI: "Bootstrap",
             editurl: '/grupoempresanew',
             loadError: sipLibrary.jqGrid_loadErrorHandler,
@@ -234,7 +253,7 @@ $(document).ready(function () {
                             label: 'Rut', name: 'Rut', width: 33, hidden: false, search: true, editable: true, align: 'left',
                             formatter: function (cellvalue, options, rowObject) {
 
-                                return formatearNumero(cellvalue)+'-'+rowObject.Dv
+                                return formatearNumero(cellvalue) + '-' + rowObject.Dv
                             }
                         },
                         { label: 'Dv', name: 'Dv', width: 30, hidden: true, search: true, editable: true, align: 'center' },
@@ -359,6 +378,8 @@ $(document).ready(function () {
             }
         });
 
+        $(".gcontainer").css("padding-left", "40px")
+
         $("#grid").jqGrid('navGrid', "#pager", {
             edit: false, add: true, del: true, search: false,
             refresh: true, view: false, position: "left", cloneToTop: false
@@ -447,25 +468,23 @@ $(document).ready(function () {
     var idgrupo = ""
     var nombregrupo = ""
     var elcaption = ""
+    
     $("#gridMaster").append(`
-            <div class="panel panel-primary" id="accordion" style="width: 1440px">
-                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161; cursor: pointer;' data-toggle="collapse" data-parent="#accordion" data-target="#contenido" aria-expanded="true">
-                    <h3 class="panel-title"> MAC Individuales</h3>
-                </div>
-                <div class="panel-body" id="contenido">
-                    <hr class="section-separations"></hr>
-                    <ul class='nav nav-tabs tabs-up' id='myTabGrupal'>
-                        <li><a href='/macindividuales/` + idmacgrupal + `' data-target='#vermacgrupal' id='vermacgrupal_tab' data-toggle='tabgrupal'>Grupo</a></li>
-                        <li><a href='/aprobacion/' data-target='#aprobacion' id='aprobacion_tab' data-toggle='tabgrupal'>MAC Individual</a></li>
-                        <li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tabgrupal'>Bitacora</a></li>
-                    </ul>
-                    <div class='tab-content'>
-                        <div class='tab-pane active' id='vermacgrupal'><div class='container-fluid'><table id='vermacgrupal_t'></table><div id='navGridVermacGrupal'></div></div></div>
-                        <div class='tab-pane' id='aprobacion'><table id='aprobacion_t'></table><div id='navGridAprob'></div></div>
-                        <div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>
-                    </div>
-                </div>
-            </div> `)
+            
+        <hr class="section-separations"></hr>
+        
+        <ul class='nav nav-tabs tabs-up' id='myTabGrupal'>
+            <li><a href='/vermacgrupal/` + idmacgrupal + `' data-target='#vermacgrupal' id='vermacgrupal_tab' data-toggle='tabgrupal'>Grupo</a></li>
+            <li><a href='/getmacindividual/11' data-target='#aprobacion' id='aprobacion_tab' data-toggle='tabgrupal'>FRUTICOLA S.A</a></li>
+            <li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tabgrupal'>Bitacora</a></li>
+        </ul>
+        <div class='tab-content'>
+            <div class='tab-pane active' id='vermacgrupal'><div class='container-fluid'><table id='vermacgrupal_t'></table><div id='navGridVermacGrupal'></div></div></div>
+            <div class='tab-pane' id='aprobacion'><table id='aprobacion_t'></table><div id='navGridAprob'></div></div>
+            <div class='tab-pane' id='bitacora'><table id='bitacora_t'></table><div id='navGridBita'></div></div>
+        </div>
+                
+        `)
 
 
 
@@ -475,9 +494,9 @@ $(document).ready(function () {
             loadurlgrupal = $this.attr('href'),
             targgrupal = $this.attr('data-target');
         if (targgrupal === '#vermacgrupal') {
-            //gridVermacgrupal.renderGrid(loadurlgrupal, targgrupal)
+            gridVermacgrupal.renderGrid(loadurlgrupal, targgrupal)
         } else if (targ === '#aprobacion') {
-            //gridAprobacion.renderGrid(loadurlgrupal, targgrupal)
+            gridAprobacion.renderGrid(loadurlgrupal, targgrupal)
         }
         $this.tab('show');
         return false;
@@ -488,9 +507,9 @@ $(document).ready(function () {
             loadurlgrupal = $this.attr('href'),
             targgrupal = $this.attr('data-target');
         if (targgrupal === '#vermacgrupal') {
-            //gridVermacgrupal.renderGrid(loadurlgrupal, targgrupal)
+            gridVermacgrupal.renderGrid(loadurlgrupal, targgrupal)
         } else if (targgrupal === '#aprobacion') {
-            //gridAprobacion.renderGrid(loadurlgrupal, targgrupal)
+            gridAprobacion.renderGrid(loadurlgrupal, targgrupal)
         }
 
         $this.tab('show');

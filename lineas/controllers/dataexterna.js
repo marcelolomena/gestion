@@ -258,7 +258,7 @@ exports.getmacindividuales = function (req, res) {
 }
 exports.getmacindividual = function (req, res) {
     sequelize.query(
-        'select * from scl.MacIndividual a  ' +
+        'select * from scl.Aprobacion a  ' +
         'where Id =  ' + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
