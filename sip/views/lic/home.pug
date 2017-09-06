@@ -1,0 +1,23 @@
+extends ../layout2.pug
+block append head
+    script var page = "#{page}"
+    p!= script
+block content
+    #contenedor.contenedor
+      include ../sidebar2.pug
+      .main-content
+        .swipe-area
+        a#sidebar-toggle(href='#', data-toggle='.contenedor')
+          span.bar
+          span.bar
+          span.bar
+        .content
+          header.bg-theme
+            .wrap-header
+              .row
+                a(href='lic/home')
+                  img(src='../../images/header.png', width='384', height='95')
+                img(src='../images/vacio.png', width='300', height='4', border='0')
+                h2(style="font-family:'robotolight', sans-serif; color: #FFFFFF; font-weight:300; text-align:center") SISTEMA DE LICENCIAS
+          p(style='color: #f1563a')
+          p!= html
