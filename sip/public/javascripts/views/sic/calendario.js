@@ -42,13 +42,13 @@ var gridCalendario = {
                 { name: 'id', index: 'id', key: true, hidden: true },
                 { name: 'descripcion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
-                    name: 'fechaesperada', width: 150, align: 'center', search: true, editable: true, hidden: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+                    name: 'fechaesperada', width: 125, align: 'center', search: true, editable: true, hidden: false,
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
                     searchoptions: {
                         dataInit: function (el) {
                             $(el).datepicker({
                                 language: 'es',
-                                format: 'yyyy-mm-dd',
+                                format: 'dd-mm-yyyy',
                                 autoclose: true,
                                 onSelect: function (dateText, inst) {
                                     setTimeout(function () {
@@ -63,13 +63,13 @@ var gridCalendario = {
                         size: 10, maxlengh: 10,
                         dataInit: function (element) {
                             $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                            $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                         }
                     }
                 },
                 {
-                    name: 'horaesperada', width: 150, align: 'left', search: false,
-                    formatter: 'date',
+                    name: 'horaesperada', width: 100, align: 'left', search: false,
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'ShortTime' },
                     editable: true, editrules: { required: false },
                     editoptions: {
                         dataInit: function (el) {
@@ -80,13 +80,13 @@ var gridCalendario = {
                     },
                 },
                 {
-                    name: 'fechareal', width: 150, align: 'center', search: true, editable: true, hidden: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+                    name: 'fechareal', width: 125, align: 'center', search: true, editable: true, hidden: false,
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
                     searchoptions: {
                         dataInit: function (el) {
                             $(el).datepicker({
                                 language: 'es',
-                                format: 'yyyy-mm-dd',
+                                format: 'dd-mm-yyyy',
                                 autoclose: true,
                                 onSelect: function (dateText, inst) {
                                     setTimeout(function () {
@@ -106,8 +106,9 @@ var gridCalendario = {
                     }
                 },
                 {
-                    name: 'horareal', width: 150, align: 'left', search: false, editable: true,
-                    formatoptions: { srcformat: 'ISO8601Long' },
+                    name: 'horareal', width: 100, align: 'left', search: false, editable: true,
+                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'ShortTime' },
+                    editable: true, editrules: { required: false },
                     editoptions: {
                         dataInit: function (el) {
                             $(el).datetimepicker({
