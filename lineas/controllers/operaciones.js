@@ -266,13 +266,8 @@ exports.listveroperacionlimite = function (req, res) {
 
 exports.listverdetallelim = function (req, res) {
     sequelize.query(
-<<<<<<< HEAD
         'select * from scl.Linea a ' +
         'where a.Id = ' + req.params.id,
-=======
-        '  select a.*, Monto, Activo, Comentario from scl.Linea a left join scl.Bloqueo b  on a.Id = b.Linea_Id' +
-        'where Id =  ' + req.params.id,
->>>>>>> 8ff38fe5c3d17da3210f01eba822c9da588dd662
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
