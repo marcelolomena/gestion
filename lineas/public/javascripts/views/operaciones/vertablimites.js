@@ -524,10 +524,10 @@ var gridvertablimites = {
                                         <div class="panel-heading" style="background-color: #002464;color: #fff;">Desbloquear Linea</div>
                                             <div class="panel-body">
                                                 <form id="miprimerform">
-                                                    <div class="form-group"> tipoBloqueo
+                                                    <div class="form-group"> 
                                                         <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span style="font-weight: bold;" id="MontoBloqueado"></span><p></p>
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
-                                                        <label for="fechaBloqueo">Con fecha: </label><span style="font-weight: bold;" name="fechaBloqueo"id="fechaBloqueo"></span><p></p>
+                                                        <label for="fechaBloqueo">Con fecha: &nbsp; </label><span style="font-weight: bold;" name="fechaBloqueo"id="fechaBloqueo"></span><p></p>
                                                             <div class="row">
                                                                 <div class="col-xs-12 col-sm-4" style="padding-left:0px;">Comentario: </div>
                                                                 <div class="col-xs-12 col-sm-4" style="padding-left:3px;"><input type="text" class="form-control" name ="ValComentarioDes" id="ValComentarioDes" readonly style="WIDTH:151px; padding-left:5px;" ></div>
@@ -1016,17 +1016,16 @@ var gridvertablimites = {
                         url: "/cargarbloqueo/" + idlineabloqueo,
                         data: $('#miprimerform').serialize(),
                         success: function (msg) {
-                            console.log("tremendo exito " + msg)
                             $gridTab2.trigger('reloadGrid');
                         }
                     });
 
-                    var fecha = new Date();
+                   /* var fecha = new Date();
                     var fechaGuardada = "";
                     var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
                     var fechaGuardada = fechaCompleta;
                     //console.log("tremendo exito " + fechaGuardada);
-                    $("#fechaBloqueo").html(fechaGuardada);
+                    $("#fechaBloqueo").html(fechaGuardada);*/
 
                 });
 
@@ -1044,12 +1043,12 @@ var gridvertablimites = {
                         }
                     });
 
-                    var fecha = new Date();
+                   /* var fecha = new Date();
                     var fechaGuardada = "";
                     var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
                     var fechaGuardada = fechaCompleta;
                     //console.log("tremendo exito " + fechaGuardada);
-                    $("#fechaBloqueo").html(fechaGuardada);
+                    $("#fechaBloqueo").html(fechaGuardada);*/
                 });
 
                 //BOTÓN CANDADO
@@ -1074,20 +1073,21 @@ var gridvertablimites = {
                             $("#comentariodesbloqueo").val("");
 
                             if (act == 1) {
-                                $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Bloqueado)) //desbloqueo
-                                $("#Bloqueado").val(data[0].Bloqueado)
+                                $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Monto)) //desbloqueo
+                                $("#Bloqueado").val(data[0].Monto)
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
                                 $("#montodes").val("");
-                                $("#ValComentarioDes").val(data[0].BORRARCOMEN);
+                                $("#ValComentarioDes").val(data[0].Comentario);
                                 $("#monto").val("");
                                 $("#comentariodesbloqueo").val("");
-                                $("#Comentario").html(data[0].BORRARCOMEN);
+                                $("#Comentario").html(data[0].Comentario);
                                 $("#botonpost").hide();
                                 $("#labelmontodesbloqueo").hide();
                                 $("#montodes").hide();
                                 $("#labelcomentariodesbloqueo").hide();
                                 $("#comentariodesbloqueo").hide();
+                                $("#fechaBloqueo").html(data[0].FechaBloqueo);
 
                                 if (disponible == bloq) {
                                     $("#tipoBloqueo").html(" Total M$ : ");
