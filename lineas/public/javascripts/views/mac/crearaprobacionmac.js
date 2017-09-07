@@ -269,10 +269,6 @@ $(document).ready(function () {
                         { label: 'Protestos', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'center' },
                         { label: 'Infracciones', name: 'Aprobado', width: 35, hidden: false, search: true, editable: true, align: 'center' },
                         { label: 'Comp. Pyme', name: 'Aprobado', width: 40, hidden: false, search: true, editable: true, align: 'center' },
-
-
-
-
                     ];
 
                     $("#grid2").jqGrid({
