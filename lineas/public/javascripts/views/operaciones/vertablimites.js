@@ -1057,13 +1057,15 @@ var gridvertablimites = {
                     var id = $(this).attr('href').substring(1);
                     $.ajax({
                         type: "GET",
-                        url: '/verdetalleslim/' + id,
+                        url: '/verdetallebloqueo/' + id,
                         async: false,
                         success: function (data) {
+                            
                             if (data.length > 0) {
                                 var bloq = data[0].Monto;
                                 var disponible = data[0].Disponible;
-                                console.log("valor de bloqueo " + bloq + disponible);
+                                var act = data[0].Activo;
+                                //console.log("valor de bloqueo " + bloq + disponible);
                             }
 
                             $('input[name="radio-choice"]').attr('checked', false);
@@ -1071,7 +1073,7 @@ var gridvertablimites = {
                             $("#monto").val("");
                             $("#comentariodesbloqueo").val("");
 
-                            if (bloq > 0) {
+                            if (act == 1) {
                                 $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Bloqueado)) //desbloqueo
                                 $("#Bloqueado").val(data[0].Bloqueado)
                                 $("#idlineabloqueo").val(data[0].Id)

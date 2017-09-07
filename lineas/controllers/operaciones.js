@@ -266,8 +266,8 @@ exports.listveroperacionlimite = function (req, res) {
 
 exports.listverdetallelim = function (req, res) {
     sequelize.query(
-        'select * from scl.Linea a left join scl.Bloqueo b on a.Id = b.Linea_Id' +
-        'where Id =  ' + req.params.id,
+        'select * from scl.Linea a ' +
+        'where a.Id = ' + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -539,9 +539,9 @@ exports.listaprobaciones = function (req, res) {
 
 exports.listverdetallebloqueo = function (req, res) {
     sequelize.query(
-        `select a.Id as LineaID,a.Numero, a.Disponible, Monto,Activo,FechaBloqueo, Comentario from scl.Linea a
+        `select a.Id as LineaID,a.Numero, a.Disponible, d.Id as Bloqueo_Id, d.Monto,d.Activo,d.FechaBloqueo, d.Comentario from scl.Linea a
 		left join scl.Bloqueo d on d.Linea_Id = a.Id
-		where a.Id = 2` + req.params.id,
+		where a.Id =` + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
