@@ -1061,9 +1061,9 @@ var gridvertablimites = {
                         async: false,
                         success: function (data) {
                             if (data.length > 0) {
-                                var bloq = data[0].Bloqueado;
+                                var bloq = data[0].Monto;
                                 var disponible = data[0].Disponible;
-                                //console.log("valor de bloqueo " + bloq);
+                                console.log("valor de bloqueo " + bloq + disponible);
                             }
 
                             $('input[name="radio-choice"]').attr('checked', false);
