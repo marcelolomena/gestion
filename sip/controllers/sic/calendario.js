@@ -14,17 +14,18 @@ exports.action = function (req, res) {
     var fechareal = req.body.fechareal;
     // var horaesperada = req.body.horaesperada;
     // var horareal = req.body.horareal;
+    logger.debug("ESTO ES UNA HORA ESPERADA: " + req.body.horaesperada);
 
-    if (req.body.horaesperada != '00:00:00.0000000') {
-        var horaesperada = null;
-    } else {
+    if (req.body.horaesperada != '') {
         var horaesperada = req.body.horaesperada;
+    } else {
+        var horaesperada = null;
     }
 
-    if (req.body.horareal != '00:00:00.0000000') {
-        var horareal = null;
-    } else {
+    if (req.body.horareal != '') {
         var horareal = req.body.horareal;
+    } else {
+        var horareal = null;
     }
 
 
