@@ -71,26 +71,14 @@ var gridvertablimites = {
                     formatter: function (cellvalue, options, rowObject) {
                        
                         var bloq = 0;
-                        //var coment = "";
-                      /*  $.ajax({
-                            type: "GET",
-                            url: '/verdetallebloqueo/' + rowObject.Id,
-                            async: false,
-                            success: function (data) {
-                                if (data.length > 0) {
-                                    bloq = data[0].Monto;
-                                    //coment = data[0].Comentario;
-                                }
-                            }
-                        })*/
-                        if(rowObject.Activo = 1){
+                        if(rowObject.Activo == "1"){
                             var disponible = rowObject.Disponible;
                             bloq= rowObject.Monto;
                             var dispo = disponible - bloq;
                             return formatear.formatearNumero(dispo);
                         }else{
                             var disponible = rowObject.Disponible;
-                            return formatear.formatearNumero(dispnible);
+                            return formatear.formatearNumero(disponible);
                         }
                     }
                 },
@@ -117,6 +105,7 @@ var gridvertablimites = {
                                 }
                             }
                         });
+                        
                         rojo = '<span role="button" data-toggle="tooltip"  title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
                         //console.log(rowObject.Id);
 
@@ -142,20 +131,15 @@ var gridvertablimites = {
                     formatter: function (cellvalue, options, rowObject) {
                         dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                         //dato2 = '<span role="button" class="fa fa-lock" aria-hidden="true abrirdesbloqueo" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
-                        var bloq = 0;
-
-                        $.ajax({
-                            type: "GET",
-                            url: '/verdetallebloqueo/' + rowObject.Id,
-                            async: false,
-                            success: function (data) {
-                                if (data.length > 0) {
-                                    bloq = data[0].Monto;
-                                }
-                            }
-                        })
-
-                        if (parseInt(bloq) > 0) {
+                        if(rowObject.Activo == "1"){
+                            dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
+                            return dato;
+                        }
+                        else{
+                            dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
+                            return dato; //desbloqueado
+                        }
+                        /*if (parseInt(bloq) > 0) {
                             dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato; //bloqueado
 
@@ -163,7 +147,7 @@ var gridvertablimites = {
                         else {
                             dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato; //desbloqueado
-                        }
+                        }*/
                     }
                 },
                 {
@@ -1018,7 +1002,7 @@ var gridvertablimites = {
 
                 // BOTÓN DESBLOQUEAR 
                 $('#botonpost').click(function () {
-                    console.log("holapo"); //desbloqueo
+                    //console.log("holapo"); //desbloqueo
                     var idlineabloqueo = $('#idlineabloqueo').val();
                     var des = $("#montodes").val();
                     var bloq = $("#Bloqueado").val();
@@ -1041,21 +1025,21 @@ var gridvertablimites = {
                     var fechaGuardada = "";
                     var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
                     var fechaGuardada = fechaCompleta;
-                    console.log("tremendo exito " + fechaGuardada);
+                    //console.log("tremendo exito " + fechaGuardada);
                     $("#fechaBloqueo").html(fechaGuardada);
 
                 });
 
                 //BOTÓN BLOQUEAR
                 $('#botonpost2').click(function () {
-                    console.log("holapo"); //BLOQUEO
+                    //console.log("holapo"); //BLOQUEO
                     var idlineabloqueo = $('#idlineabloqueo2').val();
                     $.ajax({
                         type: "POST",
                         url: "/cargarbloqueo/" + idlineabloqueo,
                         data: $('#miprimerform2').serialize(),
                         success: function (msg) {
-                            console.log("tremendo exito " + msg)
+                            //console.log("tremendo exito " + msg)
                             $gridTab2.trigger('reloadGrid');
                         }
                     });
@@ -1064,7 +1048,7 @@ var gridvertablimites = {
                     var fechaGuardada = "";
                     var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
                     var fechaGuardada = fechaCompleta;
-                    console.log("tremendo exito " + fechaGuardada);
+                    //console.log("tremendo exito " + fechaGuardada);
                     $("#fechaBloqueo").html(fechaGuardada);
                 });
 

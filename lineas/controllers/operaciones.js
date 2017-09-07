@@ -539,8 +539,9 @@ exports.listaprobaciones = function (req, res) {
 
 exports.listverdetallebloqueo = function (req, res) {
     sequelize.query(
-        'select * from scl.Bloqueo a  ' +
-        'where Linea_Id =  ' + req.params.id,
+        `select a.Id as LineaID,a.Numero, a.Disponible, Monto,Activo,FechaBloqueo, Comentario from scl.Linea a
+		left join scl.Bloqueo d on d.Linea_Id = a.Id
+		where a.Id = 2` + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
