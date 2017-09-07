@@ -47,6 +47,21 @@
     };
 
 
+    var zm = window['zs'];
+	if (!page) {
+		window['zs'] = {};
+	}
+	_.assign(window['zs'], {  
+        ModelItemTemplate:ModelItemTemplate,
+        TabTemplate:TabTemplate,
+        SelectTemplate:SelectTemplate
+     }); 
+
+
+
+
+
+
     var initGrid = function ($grid, _url, _colModel, _sortname, tabs) {
 
         $grid.jqGrid({
@@ -231,11 +246,6 @@
             return false;
         });
     }
-
-
-
-
-
 
     $(function () {
         var $grid = $('#gridMaster');

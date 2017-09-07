@@ -20,3 +20,4 @@ sip/npm-debug.log
 sip/docs/*
 sip/public/docs/*
 sip/.vscode/*
+sip/.vscode/settings.json
