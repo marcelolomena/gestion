@@ -70,22 +70,17 @@ var gridvertablimites = {
                 {
                     label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
+                       
                         var bloq = 0;
-                        //var coment = "";
-                        $.ajax({
-                            type: "GET",
-                            url: '/verdetallebloqueo/' + rowObject.Id,
-                            async: false,
-                            success: function (data) {
-                                if (data.length > 0) {
-                                    bloq = data[0].Monto;
-                                    // coment = data[0].Comentario;
-                                }
-                            }
-                        })
-                        var disponible = rowObject.Disponible;
-                        var dispo = disponible - bloq;
-                        return formatear.formatearNumero(dispo);
+                        if(rowObject.Activo == "1"){
+                            var disponible = rowObject.Disponible;
+                            bloq= rowObject.Monto;
+                            var dispo = disponible - bloq;
+                            return formatear.formatearNumero(dispo);
+                        }else{
+                            var disponible = rowObject.Disponible;
+                            return formatear.formatearNumero(disponible);
+                        }
                     }
                 },
 
@@ -111,6 +106,7 @@ var gridvertablimites = {
                                 }
                             }
                         });
+                        
                         rojo = '<span role="button" data-toggle="tooltip"  title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
                         //console.log(rowObject.Id);
 
@@ -136,20 +132,15 @@ var gridvertablimites = {
                     formatter: function (cellvalue, options, rowObject) {
                         dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                         //dato2 = '<span role="button" class="fa fa-lock" aria-hidden="true abrirdesbloqueo" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
-                        var bloq = 0;
-
-                        $.ajax({
-                            type: "GET",
-                            url: '/verdetallebloqueo/' + rowObject.Id,
-                            async: false,
-                            success: function (data) {
-                                if (data.length > 0) {
-                                    bloq = data[0].Monto;
-                                }
-                            }
-                        })
-
-                        if (parseInt(bloq) > 0) {
+                        if(rowObject.Activo == "1"){
+                            dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
+                            return dato;
+                        }
+                        else{
+                            dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
+                            return dato; //desbloqueado
+                        }
+                        /*if (parseInt(bloq) > 0) {
                             dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato; //bloqueado
 
@@ -157,11 +148,15 @@ var gridvertablimites = {
                         else {
                             dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato; //desbloqueado
+<<<<<<< HEAD
                         }
                         var disponible = rowObject.Disponible;
                         var bloqueado = rowObject.Monto;
                         var dispo = disponible - bloq;
                         return formatear.formatearNumero(dispo);
+=======
+                        }*/
+>>>>>>> 8473dbbbe1d27147109747bafc6e5435f5e2e02b
                     }
                 },
                 {
@@ -538,10 +533,10 @@ var gridvertablimites = {
                                         <div class="panel-heading" style="background-color: #002464;color: #fff;">Desbloquear Linea</div>
                                             <div class="panel-body">
                                                 <form id="miprimerform">
-                                                    <div class="form-group"> tipoBloqueo
+                                                    <div class="form-group"> 
                                                         <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span style="font-weight: bold;" id="MontoBloqueado"></span><p></p>
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
-                                                        <label for="fechaBloqueo">Con fecha: </label><span style="font-weight: bold;" name="fechaBloqueo"id="fechaBloqueo"></span><p></p>
+                                                        <label for="fechaBloqueo">Con fecha: &nbsp; </label><span style="font-weight: bold;" name="fechaBloqueo"id="fechaBloqueo"></span><p></p>
                                                             <div class="row">
                                                                 <div class="col-xs-12 col-sm-4" style="padding-left:0px;">Comentario: </div>
                                                                 <div class="col-xs-12 col-sm-4" style="padding-left:3px;"><input type="text" class="form-control" name ="ValComentarioDes" id="ValComentarioDes" readonly style="WIDTH:151px; padding-left:5px;" ></div>
@@ -1029,7 +1024,7 @@ var gridvertablimites = {
 
                 // BOTÓN DESBLOQUEAR 
                 $('#botonpost').click(function () {
-                    console.log("holapo"); //desbloqueo
+                    //console.log("holapo"); //desbloqueo
                     var idlineabloqueo = $('#idlineabloqueo').val();
                     var des = $("#montodes").val();
                     var bloq = $("#Bloqueado").val();
@@ -1043,40 +1038,39 @@ var gridvertablimites = {
                         url: "/cargarbloqueo/" + idlineabloqueo,
                         data: $('#miprimerform').serialize(),
                         success: function (msg) {
-                            console.log("tremendo exito " + msg)
                             $gridTab2.trigger('reloadGrid');
                         }
                     });
 
-                    var fecha = new Date();
+                   /* var fecha = new Date();
                     var fechaGuardada = "";
                     var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
                     var fechaGuardada = fechaCompleta;
-                    console.log("tremendo exito " + fechaGuardada);
-                    $("#fechaBloqueo").html(fechaGuardada);
+                    //console.log("tremendo exito " + fechaGuardada);
+                    $("#fechaBloqueo").html(fechaGuardada);*/
 
                 });
 
                 //BOTÓN BLOQUEAR
                 $('#botonpost2').click(function () {
-                    console.log("holapo"); //BLOQUEO
+                    //console.log("holapo"); //BLOQUEO
                     var idlineabloqueo = $('#idlineabloqueo2').val();
                     $.ajax({
                         type: "POST",
                         url: "/cargarbloqueo/" + idlineabloqueo,
                         data: $('#miprimerform2').serialize(),
                         success: function (msg) {
-                            console.log("tremendo exito " + msg)
+                            //console.log("tremendo exito " + msg)
                             $gridTab2.trigger('reloadGrid');
                         }
                     });
 
-                    var fecha = new Date();
+                   /* var fecha = new Date();
                     var fechaGuardada = "";
                     var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
                     var fechaGuardada = fechaCompleta;
-                    console.log("tremendo exito " + fechaGuardada);
-                    $("#fechaBloqueo").html(fechaGuardada);
+                    //console.log("tremendo exito " + fechaGuardada);
+                    $("#fechaBloqueo").html(fechaGuardada);*/
                 });
 
                 //BOTÓN CANDADO
@@ -1084,13 +1078,15 @@ var gridvertablimites = {
                     var id = $(this).attr('href').substring(1);
                     $.ajax({
                         type: "GET",
-                        url: '/verdetalleslim/' + id,
+                        url: '/verdetallebloqueo/' + id,
                         async: false,
                         success: function (data) {
+                            
                             if (data.length > 0) {
-                                var bloq = data[0].Bloqueado;
+                                var bloq = data[0].Monto;
                                 var disponible = data[0].Disponible;
-                                //console.log("valor de bloqueo " + bloq);
+                                var act = data[0].Activo;
+                                //console.log("valor de bloqueo " + bloq + disponible);
                             }
 
                             $('input[name="radio-choice"]').attr('checked', false);
@@ -1098,21 +1094,22 @@ var gridvertablimites = {
                             $("#monto").val("");
                             $("#comentariodesbloqueo").val("");
 
-                            if (bloq > 0) {
-                                $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Bloqueado)) //desbloqueo
-                                $("#Bloqueado").val(data[0].Bloqueado)
+                            if (act == 1) {
+                                $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Monto)) //desbloqueo
+                                $("#Bloqueado").val(data[0].Monto)
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
                                 $("#montodes").val("");
-                                $("#ValComentarioDes").val(data[0].BORRARCOMEN);
+                                $("#ValComentarioDes").val(data[0].Comentario);
                                 $("#monto").val("");
                                 $("#comentariodesbloqueo").val("");
-                                $("#Comentario").html(data[0].BORRARCOMEN);
+                                $("#Comentario").html(data[0].Comentario);
                                 $("#botonpost").hide();
                                 $("#labelmontodesbloqueo").hide();
                                 $("#montodes").hide();
                                 $("#labelcomentariodesbloqueo").hide();
                                 $("#comentariodesbloqueo").hide();
+                                $("#fechaBloqueo").html(data[0].FechaBloqueo);
 
                                 if (disponible == bloq) {
                                     $("#tipoBloqueo").html(" Total M$ : ");

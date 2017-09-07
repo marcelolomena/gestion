@@ -12,6 +12,22 @@ exports.action = function (req, res) {
     var action = req.body.oper;
     var fechaesperada = req.body.fechaesperada;
     var fechareal = req.body.fechareal;
+    // var horaesperada = req.body.horaesperada;
+    // var horareal = req.body.horareal;
+    logger.debug("ESTO ES UNA HORA ESPERADA: " + req.body.horaesperada);
+
+    if (req.body.horaesperada != '') {
+        var horaesperada = req.body.horaesperada;
+    } else {
+        var horaesperada = null;
+    }
+
+    if (req.body.horareal != '') {
+        var horareal = req.body.horareal;
+    } else {
+        var horareal = null;
+    }
+
 
     /* if (req.body.fechaesperada != "") {
          var d = new Date(req.body.fechaesperada)
@@ -65,7 +81,9 @@ exports.action = function (req, res) {
                 observacion: req.body.observacion,
                 idtiporesponsable: req.body.idtiporesponsable,
                 borrado: 1,
-                fechareal: fechareal
+                fechareal: fechareal,
+                horaesperada: horaesperada,
+                horareal: horareal
             }).then(function (calendariosolicitud) {
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
@@ -157,6 +175,8 @@ exports.action = function (req, res) {
                             observacion: req.body.observacion,
                             idtiporesponsable: req.body.idtiporesponsable,
                             fechareal: fechareal,
+                            horaesperada: horaesperada,
+                            horareal: horareal
                         }, {
                                 where: {
                                     id: req.body.id
@@ -170,7 +190,7 @@ exports.action = function (req, res) {
 
                     } else {
                         logger.error("->" + err)
-                        return res.json({ message: err.message, success: false});
+                        return res.json({ message: err.message, success: false });
                     }
                 });
 

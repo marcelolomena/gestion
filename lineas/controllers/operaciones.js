@@ -34,10 +34,11 @@ exports.listlimite = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, a.* from scl.Linea a 
+        `as resultNum, a.*, Monto, Activo, Comentario from scl.Linea a
         join scl.LineaEmpresa b on a.Id=b.Linea_Id
         join scl.Empresa c on c.Id=b.Empresa_Id
-        where a.Padre_Id is null and c.Rut=`+ req.params.id;
+		left join scl.Bloqueo d on d.Linea_Id = b.Linea_Id
+		where a.Padre_Id is null and c.Rut=`+ req.params.id;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -265,8 +266,8 @@ exports.listveroperacionlimite = function (req, res) {
 
 exports.listverdetallelim = function (req, res) {
     sequelize.query(
-        'select * from scl.Linea a  ' +
-        'where Id =  ' + req.params.id,
+        'select * from scl.Linea a ' +
+        'where a.Id = ' + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -442,8 +443,8 @@ exports.actionbloquear = function (req, res) {
     var idlinea = req.params.id;
     console.log("EEEEEEEEE");
     sequelize.query(`s
-    update scl.Linea 
-    set Bloqueado = '`+ req.body.monto + `'
+    update scl.Bloqueo 
+    set Monto = '`+ req.body.monto + `'
     where Id=`+ idlinea).spread((results, metadata) => {
             return res.json(metadata);
 
@@ -538,8 +539,9 @@ exports.listaprobaciones = function (req, res) {
 
 exports.listverdetallebloqueo = function (req, res) {
     sequelize.query(
-        'select * from scl.Bloqueo a  ' +
-        'where Linea_Id =  ' + req.params.id,
+        `select a.Id as LineaID,a.Numero, a.Disponible, d.Id as Bloqueo_Id, d.Monto,d.Activo,d.FechaBloqueo, d.Comentario from scl.Linea a
+		left join scl.Bloqueo d on d.Linea_Id = a.Id
+		where a.Id =` + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)

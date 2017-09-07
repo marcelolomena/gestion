@@ -43,6 +43,14 @@ module.exports = function (sequelize, DataTypes) {
         fechareal: {
             type: DataTypes.DATE,
             allowNull: true
+        },
+        horaesperada: {
+            type: DataTypes.TIME,
+            allowNull: true
+        },
+        horareal: {
+            type: DataTypes.TIME,
+            allowNull: true
         }
     }, {
             schema: 'sic', timestamps: false, tableName: 'calendariosolicitud'
