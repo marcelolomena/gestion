@@ -555,7 +555,7 @@ exports.listverdetallebloqueo = function (req, res) {
 
 
 exports.listoperacionesreserva = function (req, res) {
-    sequelize.query( `
+    sequelize.query(`
         select * from scl.Operacion a  
         join scl.LineaOperacion b on a.Id=b.Operacion_Id
         where Linea_Id =`+ req.params.id,
@@ -568,3 +568,55 @@ exports.listoperacionesreserva = function (req, res) {
         res.json({ error: 1 });
     });
 };
+
+exports.actionoperacionesreserva = function (req, res) {
+    var action = req.body.oper;
+    console.log('valor de tipo operacion es :' + req.body.TipoOperacion)
+
+    switch (action) {
+        case "add":
+
+            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,`+req.body.FechaOtorgamiento+`,`+req.body.FechaProxVenc+`,`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
+            // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
+            sequelize.query(sql).spread((results, metadata) => {
+                return res.json({ error: 0 });
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1 });
+            });
+
+            break;
+
+        case "edit":
+
+            var sql=`update scl.Operacion set TipoOperacion ='`+req.body.TipoOperacion+`',NumeroProducto=`+req.body.NumeroProducto+`,FechaOtorgamiento=`+req.body.FechaOtorgamiento+`,FechaProxVenc=`+req.body.FechaProxVenc+`,Moneda='`+req.body.Moneda+`',MontoInicial=`+req.body.MontoInicial+`,MontoActual=`+req.body.MontoActual+`,MontoActualMNac=`+req.body.MontoActualMNac+` WHERE Id=`+req.body.Idlim
+            sequelize.query(sql).spread((results, metadata) => {
+                return res.json({ error: 0 });
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1 });
+            });
+    
+
+            break;
+
+        case "del":
+            models.limite.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                if (rowDeleted === 1) {
+                    logger.debug('Deleted successfully');
+                }
+                res.json({ success: true, glosa: '' });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ success: false, glosa: err.message });
+            });
+
+            break;
+
+    }
+};
+

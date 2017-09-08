@@ -148,8 +148,11 @@ module.exports = function (passport) {
     router.route('/reservasublimites/:id/:rut')
         .get(isAuthenticated, operacionesController.listsublimite);
 
-    router.route('/reservaroperacion/:id/')
+    router.route('/reservaroperacion/:id')
         .get(isAuthenticated, operacionesController.listoperacionesreserva);
+
+    router.route('/postreservaroperacion')
+        .post(isAuthenticated, operacionesController.actionoperacionesreserva);
 
 
 

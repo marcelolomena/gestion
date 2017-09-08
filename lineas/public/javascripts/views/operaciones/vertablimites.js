@@ -2,7 +2,8 @@ var gridvertablimites = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab2 = $(targ + "_t")
-
+        var rut= loadurl.substring(8,loadurl.length);
+        //console.log('valor de rut '+largorut)
         var formatear =
             {
                 formatearNumero: function (nStr) {
@@ -45,7 +46,7 @@ var gridvertablimites = {
             //colNames: ['Id', 'Nombre', 'Rut', 'ActividadEconomica','RatingGrupal', 'NivelAtribucion','RatingIndividual', 'Clasificacion', 'Vigilancia','FechaInformacionFinanciera', 'PromedioSaldoVista', 'DeudaSbif', 'AprobadoVinculado','EquipoCobertura','Oficina','FechaCreacion','FechaVencimiento','FechaVencimientoMacAnterior','Empresa_Id'],
             colModel: [
                 {
-                    label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
+                    label   : 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
                 { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
@@ -584,12 +585,14 @@ var gridvertablimites = {
                         </div>
                     </div> 
 
-                    <div class="modal fade" id="modalreservar" role="dialog ">
-                        <div class="modal-dialog modal-lg" style="width:1150px">
+                    <div class="modal fade" id="modalreservar" role="dialog " data-backdrop="false" style="z-index:500">
+                        <div class="modal-dialog modal-lg" style="width:1150px;z-index:500;">
                             <div class="modal-content" >
                                 <div class="panel-heading" style="background-color: #002464;color: #fff;">Generar Reserva</div>
-                                <div class="modal-body">
+                                <div class="modal-body" style="z-index:500">
+
                                     <div class="gcontainer">
+                                        <input type="text" class="form-control" id="rut" name="rut" style="background-color: #002464;display: none">
                                         <table id="gridreserva"></table>
                                         <div id="pager"></div>
                                     </div>
@@ -598,6 +601,7 @@ var gridvertablimites = {
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                                 </div>
+
                             </div>
                         </div>
                     </div> 
@@ -811,14 +815,15 @@ var gridvertablimites = {
                     var idlimite = $(this).attr('href');
                     console.log("valor id limite sin cortar " + idlimite);
                     idlimite = idlimite.substring(1, 2);
-                    console.log("valor id cortado " + idlimite);
+                    console.log("valor cortado "+ idlimite)
                     $("#modalreservar").modal();
                     //var elrutqueviene = $(this).attr('href');
                     //var elrutquenecesito = elrutqueviene.substring(1)
 
                     var elcaption = "Operaciones";
+                    //console.log("el valor del rut es "+rut)
+                     var template = "";
 
-                    var template = "";
                     var modelOperacion = [
                         {
                             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
@@ -839,6 +844,10 @@ var gridvertablimites = {
                         // { label: 'Monto Actual Equiv.M /Linea', name: 'MontoActualMLinea', width: 15, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                         {
                             label: 'Monto Actual Equiv. M/N', name: 'MontoActualMNac', width: 10, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                        },
+                        {
+                            label: 'Rut Empresa', name: 'RutEmpresa', width: 10, hidden: true, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                        
                         },
                     ];
 
@@ -866,7 +875,7 @@ var gridvertablimites = {
                         viewrecords: true,
                         rowList: [5, 10, 20, 50],
                         styleUI: "Bootstrap",
-                        editurl: '/grupoempresa',
+                        editurl: '/postreservaroperacion',
                         loadError: sipLibrary.jqGrid_loadErrorHandler,
                         gridComplete: function () {
                             var recs = $("#gridreserva").getGridParam("reccount");
@@ -897,8 +906,8 @@ var gridvertablimites = {
 
 
                     $("#gridreserva").jqGrid('navGrid', "#pager", {
-                        edit: false, add: false, del: false, search: false,
-                        refresh: false, view: false, position: "left", cloneToTop: false
+                        edit: true, add: true, del: true, search: false,
+                        refresh: true, view: false, position: "left", cloneToTop: false
                     },
                         {
                             closeAfterEdit: true,
@@ -909,6 +918,9 @@ var gridvertablimites = {
                             //template: template,
                             errorTextFormat: function (data) {
                                 return 'Error: ' + data.responseText
+                            },
+                            onclickSubmit: function (rowid) {
+                                return { RutEmpresa: rut, Idlim:idlimite };
                             }
                         },
                         {
@@ -916,7 +928,7 @@ var gridvertablimites = {
                             recreateForm: true,
                             ajaxEditOptions: sipLibrary.jsonOptions,
                             serializeEditData: sipLibrary.createJSON,
-                            addCaption: "Agregar Empresa",
+                            addCaption: "Agregar Operación",
                             template: template,
                             errorTextFormat: function (data) {
                                 return 'Error: ' + data.responseText
@@ -928,17 +940,17 @@ var gridvertablimites = {
                             afterSubmit: function (response, postdata) {
                                 var json = response.responseText;
                                 var result = JSON.parse(json);
-                                if (result.error != "0")
+                                if (result.error == "2")
                                     return [false, "Error en llamada a Servidor", ""];
                                 else
-                                    return [true, "", ""]
+                                    return [true, "Operacion Reservada"];
 
                             }, afterShowForm: function (form) {
                                 sipLibrary.centerDialog($("#gridreserva").attr('Id'));
 
                             },
                             onclickSubmit: function (rowid) {
-                                return { grupo: "1" };
+                                return { RutEmpresa: rut, Idlim:idlimite };
                             }
                         },
                         {
@@ -969,6 +981,8 @@ var gridvertablimites = {
                         }
                     );
                     $("#pager").css("padding-bottom", "10px");
+                   // $("#rut").val(rut);
+                   // console.log(rut)
 
                     function subGridversublimiteasignaciones(subgrid_id, row_id) {
                         //gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
