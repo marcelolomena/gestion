@@ -2,7 +2,8 @@ var gridvertablimites = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab2 = $(targ + "_t")
-
+        var rut= loadurl.substring(8,loadurl.length);
+        //console.log('valor de rut '+largorut)
         var formatear =
             {
                 formatearNumero: function (nStr) {
@@ -45,7 +46,7 @@ var gridvertablimites = {
             //colNames: ['Id', 'Nombre', 'Rut', 'ActividadEconomica','RatingGrupal', 'NivelAtribucion','RatingIndividual', 'Clasificacion', 'Vigilancia','FechaInformacionFinanciera', 'PromedioSaldoVista', 'DeudaSbif', 'AprobadoVinculado','EquipoCobertura','Oficina','FechaCreacion','FechaVencimiento','FechaVencimientoMacAnterior','Empresa_Id'],
             colModel: [
                 {
-                    label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
+                    label   : 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
                 { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
@@ -524,10 +525,10 @@ var gridvertablimites = {
                                         <div class="panel-heading" style="background-color: #002464;color: #fff;">Desbloquear Linea</div>
                                             <div class="panel-body">
                                                 <form id="miprimerform">
-                                                    <div class="form-group"> tipoBloqueo
+                                                    <div class="form-group"> 
                                                         <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span style="font-weight: bold;" id="MontoBloqueado"></span><p></p>
                                                         <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
-                                                        <label for="fechaBloqueo">Con fecha: </label><span style="font-weight: bold;" name="fechaBloqueo"id="fechaBloqueo"></span><p></p>
+                                                        <label for="fechaBloqueo">Con fecha: &nbsp; </label><span style="font-weight: bold;" name="fechaBloqueo"id="fechaBloqueo"></span><p></p>
                                                             <div class="row">
                                                                 <div class="col-xs-12 col-sm-4" style="padding-left:0px;">Comentario: </div>
                                                                 <div class="col-xs-12 col-sm-4" style="padding-left:3px;"><input type="text" class="form-control" name ="ValComentarioDes" id="ValComentarioDes" readonly style="WIDTH:151px; padding-left:5px;" ></div>
@@ -584,12 +585,14 @@ var gridvertablimites = {
                         </div>
                     </div> 
 
-                    <div class="modal fade" id="modalreservar" role="dialog ">
-                        <div class="modal-dialog modal-lg" style="width:1150px">
+                    <div class="modal fade" id="modalreservar" role="dialog " data-backdrop="false" style="z-index:500">
+                        <div class="modal-dialog modal-lg" style="width:1150px;z-index:500;">
                             <div class="modal-content" >
                                 <div class="panel-heading" style="background-color: #002464;color: #fff;">Generar Reserva</div>
-                                <div class="modal-body">
+                                <div class="modal-body" style="z-index:500">
+
                                     <div class="gcontainer">
+                                        <input type="text" class="form-control" id="rut" name="rut" style="background-color: #002464;display: none">
                                         <table id="gridreserva"></table>
                                         <div id="pager"></div>
                                     </div>
@@ -598,6 +601,7 @@ var gridvertablimites = {
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                                 </div>
+
                             </div>
                         </div>
                     </div> 
@@ -811,14 +815,15 @@ var gridvertablimites = {
                     var idlimite = $(this).attr('href');
                     console.log("valor id limite sin cortar " + idlimite);
                     idlimite = idlimite.substring(1, 2);
-                    console.log("valor id cortado " + idlimite);
+                    console.log("valor cortado "+ idlimite)
                     $("#modalreservar").modal();
                     //var elrutqueviene = $(this).attr('href');
                     //var elrutquenecesito = elrutqueviene.substring(1)
 
                     var elcaption = "Operaciones";
+                    //console.log("el valor del rut es "+rut)
+                     var template = "";
 
-                    var template = "";
                     var modelOperacion = [
                         {
                             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
@@ -839,6 +844,10 @@ var gridvertablimites = {
                         // { label: 'Monto Actual Equiv.M /Linea', name: 'MontoActualMLinea', width: 15, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                         {
                             label: 'Monto Actual Equiv. M/N', name: 'MontoActualMNac', width: 10, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                        },
+                        {
+                            label: 'Rut Empresa', name: 'RutEmpresa', width: 10, hidden: true, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                        
                         },
                     ];
 
@@ -866,7 +875,7 @@ var gridvertablimites = {
                         viewrecords: true,
                         rowList: [5, 10, 20, 50],
                         styleUI: "Bootstrap",
-                        editurl: '/grupoempresa',
+                        editurl: '/postreservaroperacion',
                         loadError: sipLibrary.jqGrid_loadErrorHandler,
                         gridComplete: function () {
                             var recs = $("#gridreserva").getGridParam("reccount");
@@ -897,8 +906,8 @@ var gridvertablimites = {
 
 
                     $("#gridreserva").jqGrid('navGrid', "#pager", {
-                        edit: false, add: false, del: false, search: false,
-                        refresh: false, view: false, position: "left", cloneToTop: false
+                        edit: true, add: true, del: true, search: false,
+                        refresh: true, view: false, position: "left", cloneToTop: false
                     },
                         {
                             closeAfterEdit: true,
@@ -909,6 +918,9 @@ var gridvertablimites = {
                             //template: template,
                             errorTextFormat: function (data) {
                                 return 'Error: ' + data.responseText
+                            },
+                            onclickSubmit: function (rowid) {
+                                return { RutEmpresa: rut, Idlim:idlimite };
                             }
                         },
                         {
@@ -916,7 +928,7 @@ var gridvertablimites = {
                             recreateForm: true,
                             ajaxEditOptions: sipLibrary.jsonOptions,
                             serializeEditData: sipLibrary.createJSON,
-                            addCaption: "Agregar Empresa",
+                            addCaption: "Agregar Operación",
                             template: template,
                             errorTextFormat: function (data) {
                                 return 'Error: ' + data.responseText
@@ -928,17 +940,17 @@ var gridvertablimites = {
                             afterSubmit: function (response, postdata) {
                                 var json = response.responseText;
                                 var result = JSON.parse(json);
-                                if (result.error != "0")
+                                if (result.error == "2")
                                     return [false, "Error en llamada a Servidor", ""];
                                 else
-                                    return [true, "", ""]
+                                    return [true, "Operacion Reservada"];
 
                             }, afterShowForm: function (form) {
                                 sipLibrary.centerDialog($("#gridreserva").attr('Id'));
 
                             },
                             onclickSubmit: function (rowid) {
-                                return { grupo: "1" };
+                                return { RutEmpresa: rut, Idlim:idlimite };
                             }
                         },
                         {
@@ -969,6 +981,8 @@ var gridvertablimites = {
                         }
                     );
                     $("#pager").css("padding-bottom", "10px");
+                   // $("#rut").val(rut);
+                   // console.log(rut)
 
                     function subGridversublimiteasignaciones(subgrid_id, row_id) {
                         //gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
@@ -1016,40 +1030,56 @@ var gridvertablimites = {
                         url: "/cargarbloqueo/" + idlineabloqueo,
                         data: $('#miprimerform').serialize(),
                         success: function (msg) {
-                            console.log("tremendo exito " + msg)
                             $gridTab2.trigger('reloadGrid');
                         }
                     });
-
-                    var fecha = new Date();
-                    var fechaGuardada = "";
-                    var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
-                    var fechaGuardada = fechaCompleta;
-                    //console.log("tremendo exito " + fechaGuardada);
-                    $("#fechaBloqueo").html(fechaGuardada);
 
                 });
 
                 //BOTÓN BLOQUEAR
                 $('#botonpost2').click(function () {
-                    //console.log("holapo"); //BLOQUEO
+                    
                     var idlineabloqueo = $('#idlineabloqueo2').val();
+                    var montoBase = 0;
+                    var insert = 0;
+                    var monto = parseInt($('#monto').val());
+
                     $.ajax({
-                        type: "POST",
-                        url: "/cargarbloqueo/" + idlineabloqueo,
-                        data: $('#miprimerform2').serialize(),
-                        success: function (msg) {
-                            //console.log("tremendo exito " + msg)
-                            $gridTab2.trigger('reloadGrid');
+                        type: "GET",
+                        url: '/verdetallebloqueo/' + idlineabloqueo,
+                        async: false,
+                        success: function (data) {
+
+                            if (data.length > 0) {
+                                insert = 1;
+                                 montoBase = data[0].Disponible;
+                                                                                              
+                            }
                         }
                     });
+                    if(montoBase<monto){
+                        alert("El monto ingresado es superior al disponible");
+                    }
+                   else {
 
-                    var fecha = new Date();
+                        $.ajax({
+                            type: "POST",
+                            url: "/cargarbloqueo/" + idlineabloqueo,
+                            data: $('#miprimerform2').serialize(),
+                            success: function (msg) {
+                                //console.log("tremendo exito " + msg)
+                                $gridTab2.trigger('reloadGrid');
+                            }
+                        });
+                   }
+                    
+
+                   /* var fecha = new Date();
                     var fechaGuardada = "";
                     var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
                     var fechaGuardada = fechaCompleta;
                     //console.log("tremendo exito " + fechaGuardada);
-                    $("#fechaBloqueo").html(fechaGuardada);
+                    $("#fechaBloqueo").html(fechaGuardada);*/
                 });
 
                 //BOTÓN CANDADO
@@ -1057,13 +1087,15 @@ var gridvertablimites = {
                     var id = $(this).attr('href').substring(1);
                     $.ajax({
                         type: "GET",
-                        url: '/verdetalleslim/' + id,
+                        url: '/verdetallebloqueo/' + id,
                         async: false,
                         success: function (data) {
+                            
                             if (data.length > 0) {
-                                var bloq = data[0].Bloqueado;
+                                var bloq = data[0].Monto;
                                 var disponible = data[0].Disponible;
-                                //console.log("valor de bloqueo " + bloq);
+                                var act = data[0].Activo;
+                                //console.log("valor de bloqueo " + bloq + disponible);
                             }
 
                             $('input[name="radio-choice"]').attr('checked', false);
@@ -1071,21 +1103,22 @@ var gridvertablimites = {
                             $("#monto").val("");
                             $("#comentariodesbloqueo").val("");
 
-                            if (bloq > 0) {
-                                $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Bloqueado)) //desbloqueo
-                                $("#Bloqueado").val(data[0].Bloqueado)
+                            if (act == 1) {
+                                $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Monto)) //desbloqueo
+                                $("#Bloqueado").val(data[0].Monto)
                                 $("#idlineabloqueo").val(data[0].Id)
                                 $("#ModalDesbloqueo").modal();
                                 $("#montodes").val("");
-                                $("#ValComentarioDes").val(data[0].BORRARCOMEN);
+                                $("#ValComentarioDes").val(data[0].Comentario);
                                 $("#monto").val("");
                                 $("#comentariodesbloqueo").val("");
-                                $("#Comentario").html(data[0].BORRARCOMEN);
+                                $("#Comentario").html(data[0].Comentario);
                                 $("#botonpost").hide();
                                 $("#labelmontodesbloqueo").hide();
                                 $("#montodes").hide();
                                 $("#labelcomentariodesbloqueo").hide();
                                 $("#comentariodesbloqueo").hide();
+                                $("#fechaBloqueo").html(data[0].FechaBloqueo);
 
                                 if (disponible == bloq) {
                                     $("#tipoBloqueo").html(" Total M$ : ");
@@ -1096,7 +1129,7 @@ var gridvertablimites = {
                             }
                             else {
                                 //Bloqueo
-                                $("#idlineabloqueo2").val(data[0].Id)
+                                $("#idlineabloqueo2").val(id)
                                 $("#disponible").val(data[0].Disponible)
                                 $("#myModalbloqueo").modal();
                                 $("#montodes").val("");

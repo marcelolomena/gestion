@@ -11,7 +11,7 @@ var macgrupalController = require('../controllers/macgrupal')
 
 module.exports = function (passport) {
 
-    router.route('/getdatoscliente/:rut') 
+    router.route('/getdatoscliente/:rut')
         .get(isAuthenticated, externoController.getdatoscliente);
 
     router.route('/getmacporrut/:rut')
@@ -49,7 +49,7 @@ module.exports = function (passport) {
 
     router.route('/gettiposaprobacion')
         .get(isAuthenticated, externoController.gettiposaprobacion);
-    
+
     router.route('/getsublimitesasignacion/:id')
         .get(isAuthenticated, externoController.listsublimite);
 
@@ -82,7 +82,7 @@ module.exports = function (passport) {
 
 
 
-    router.route('/getdatosclientelimite/:rut') 
+    router.route('/getdatosclientelimite/:rut')
         .get(isAuthenticated, operacionesController.getdatosclientelimite);
 
     router.route('/limite/:id')
@@ -93,19 +93,19 @@ module.exports = function (passport) {
 
     router.route('/veroperacionesmodal/:id')
         .get(isAuthenticated, operacionesController.listveroperacionlimite);
-    
+
     router.route('/verdetalleslim/:id')
         .get(isAuthenticated, operacionesController.listverdetallelim);
-    
+
     router.route('/veroperacionesmodal2/:id')
         .get(isAuthenticated, operacionesController.listveroperacionsublimite);
-    
+
     router.route('/verdetalleslim2/:id')
         .get(isAuthenticated, operacionesController.listverdetallelim2);
 
     router.route('/getultimomac/:id')
         .get(isAuthenticated, operacionesController.listultimomac);
-   
+
     router.route('/getsublimitesoperaciones/:id')
         .get(isAuthenticated, operacionesController.listsublimop);
 
@@ -139,7 +139,7 @@ module.exports = function (passport) {
     router.route('/getoperacionesasignar/:id/:rut')
         .get(isAuthenticated, operacionesController.operacionesasignar);
 
-     router.route('/verdetallebloqueo/:id')
+    router.route('/verdetallebloqueo/:id')
         .get(isAuthenticated, operacionesController.listverdetallebloqueo);
 
     router.route('/reservar/:id')
@@ -148,10 +148,13 @@ module.exports = function (passport) {
     router.route('/reservasublimites/:id/:rut')
         .get(isAuthenticated, operacionesController.listsublimite);
 
-    router.route('/reservaroperacion/:id/')
+    router.route('/reservaroperacion/:id')
         .get(isAuthenticated, operacionesController.listoperacionesreserva);
 
+    router.route('/postreservaroperacion')
+        .post(isAuthenticated, operacionesController.actionoperacionesreserva);
 
-        return router;
+
+
+    return router;
 }
-    
