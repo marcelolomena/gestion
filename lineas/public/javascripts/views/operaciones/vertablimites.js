@@ -148,15 +148,7 @@ var gridvertablimites = {
                         else {
                             dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato; //desbloqueado
-<<<<<<< HEAD
-                        }
-                        var disponible = rowObject.Disponible;
-                        var bloqueado = rowObject.Monto;
-                        var dispo = disponible - bloq;
-                        return formatear.formatearNumero(dispo);
-=======
                         }*/
->>>>>>> 8473dbbbe1d27147109747bafc6e5435f5e2e02b
                     }
                 },
                 {
