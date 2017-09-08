@@ -1020,28 +1020,45 @@ var gridvertablimites = {
                         }
                     });
 
-                   /* var fecha = new Date();
-                    var fechaGuardada = "";
-                    var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
-                    var fechaGuardada = fechaCompleta;
-                    //console.log("tremendo exito " + fechaGuardada);
-                    $("#fechaBloqueo").html(fechaGuardada);*/
-
                 });
 
                 //BOTÓN BLOQUEAR
                 $('#botonpost2').click(function () {
-                    //console.log("holapo"); //BLOQUEO
+                    
                     var idlineabloqueo = $('#idlineabloqueo2').val();
+                    var montoBase = 0;
+                    var insert = 0;
+                    var monto = parseInt($('#monto').val());
+
                     $.ajax({
-                        type: "POST",
-                        url: "/cargarbloqueo/" + idlineabloqueo,
-                        data: $('#miprimerform2').serialize(),
-                        success: function (msg) {
-                            //console.log("tremendo exito " + msg)
-                            $gridTab2.trigger('reloadGrid');
+                        type: "GET",
+                        url: '/verdetallebloqueo/' + idlineabloqueo,
+                        async: false,
+                        success: function (data) {
+
+                            if (data.length > 0) {
+                                insert = 1;
+                                 montoBase = data[0].Disponible;
+                                                                                              
+                            }
                         }
                     });
+                    if(montoBase<monto){
+                        alert("El monto ingresado es superior al disponible");
+                    }
+                   else {
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/cargarbloqueo/" + idlineabloqueo,
+                            data: $('#miprimerform2').serialize(),
+                            success: function (msg) {
+                                //console.log("tremendo exito " + msg)
+                                $gridTab2.trigger('reloadGrid');
+                            }
+                        });
+                   }
+                    
 
                    /* var fecha = new Date();
                     var fechaGuardada = "";
@@ -1098,7 +1115,7 @@ var gridvertablimites = {
                             }
                             else {
                                 //Bloqueo
-                                $("#idlineabloqueo2").val(data[0].Id)
+                                $("#idlineabloqueo2").val(id)
                                 $("#disponible").val(data[0].Disponible)
                                 $("#myModalbloqueo").modal();
                                 $("#montodes").val("");

@@ -441,9 +441,7 @@ exports.listcomentarioslinea = function (req, res) {
 
 exports.actionbloquear = function (req, res) {
     var idlinea = req.params.id;
-    console.log("EEEEEEEEE");
-    sequelize.query(`s
-    update scl.Bloqueo 
+    sequelize.query(`update scl.Bloqueo 
     set Monto = '`+ req.body.monto + `'
     where Id=`+ idlinea).spread((results, metadata) => {
             return res.json(metadata);
