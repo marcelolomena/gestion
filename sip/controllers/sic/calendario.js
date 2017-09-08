@@ -11,10 +11,13 @@ var co = require('co');
 exports.action = function (req, res) {
     var action = req.body.oper;
     var fechaesperada = req.body.fechaesperada;
-    var fechareal = req.body.fechareal;
+    
     // var horaesperada = req.body.horaesperada;
     // var horareal = req.body.horareal;
+    logger.debug("ESTO ES UNA FECHA ESPERADA: " + req.body.fechaesperada);
     logger.debug("ESTO ES UNA HORA ESPERADA: " + req.body.horaesperada);
+    logger.debug("ESTO ES UNA FECHA REAL: " + req.body.fechareal);
+    logger.debug("ESTO ES UNA HORA REAL: " + req.body.horareal);
 
     if (req.body.horaesperada != '') {
         var horaesperada = req.body.horaesperada;
@@ -28,6 +31,11 @@ exports.action = function (req, res) {
         var horareal = null;
     }
 
+    if(req.body.fechareal != ''){
+        var fechareal = req.body.fechareal;
+    }else{
+        var fechareal = null;
+    }
 
     /* if (req.body.fechaesperada != "") {
          var d = new Date(req.body.fechaesperada)
