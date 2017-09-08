@@ -62,7 +62,7 @@ var gridCalendario = {
                     editoptions: {
                         size: 10, maxlengh: 10,
                         dataInit: function (element) {
-                            $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
                             $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                         }
                     }
@@ -100,8 +100,8 @@ var gridCalendario = {
                     editoptions: {
                         size: 10, maxlengh: 10,
                         dataInit: function (element) {
-                            $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                            $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                            $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                            $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
                         }
                     }
                 },
