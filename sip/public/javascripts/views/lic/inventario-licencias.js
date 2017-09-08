@@ -1,6 +1,19 @@
 (function ($, _) {
     'use strict';
 
+    var licLibrary = {
+        jsonOptions: {
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        },
+        createJSON: function (postdata) {
+            if (postdata.id === '_empty')
+                postdata.id = null;
+            return JSON.stringify(postdata)
+        }
+    };
+
     function ModelItemTemplate(model) {
         var result = '<div id="responsive-form" class="clearfix">';
         var editables = _.filter(model, function (item) {
@@ -18,8 +31,8 @@
         result += '<hr style="width:100%"/>';
         result += '<div> {sData} {cData} </div>';
         result += '</div>';
-        this.template =  result;
-    };
+        this.template = result;
+    }
 
     function TabTemplate(parentRowID, parentRowKey, tabs) {
         var nav = '<ul class="nav nav-tabs tabs-up" id="myTab">';
@@ -28,11 +41,11 @@
         _.each(tabs, function (item, key) {
             paneClass = key ? 'tab-pane' : 'tab-pane active';
             nav += '<li><a href="/lic/' + item.id + '/' + parentRowKey + '" data-target="#' + item.id + '" id="' + item.id + '_tab_' + parentRowKey + '" data-toggle="tab_' + parentRowKey + '">' + item.nom + '</a></li>';
-            pane += '<div class="' + paneClass + '" id="' + item.id + '"><div class="container-fluid"><table id="' + item.id + '_t_' + parentRowKey + '"></table><div id="navGridEst"></div></div></div>';
+            pane += '<div class="' + paneClass + '" id="' + item.id + '"><div class="container-fluid"><table id="' + item.id + '_t_' + parentRowKey + '"></table><div id="navGrid' + item.id + '"></div></div></div>';
         });
         nav += '</ul>';
         pane += '</div>';
-        this.template =  nav + pane;
+        this.template = nav + pane;
     }
 
     function SelectTemplate(data, caption, selectedId) {
@@ -44,212 +57,217 @@
             s += '<option value="' + item.id + selected + item.nombre + '</option>';
         });
         this.template = s + '</select>';
-    };
+    }
 
+    function SimpleGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles) {
+     var   tableId = '#' + tableName;
+     var   $table = $(tableId);
 
-    var zm = window['zs'];
-	if (!page) {
-		window['zs'] = {};
-	}
-	_.assign(window['zs'], {  
-        ModelItemTemplate:ModelItemTemplate,
-        TabTemplate:TabTemplate,
-        SelectTemplate:SelectTemplate
-     }); 
+        function errorTextFormat (data) {
+            return 'Error: ' + data.responseText
+        }
 
-
-
-
-
-
-    var initGrid = function ($grid, _url, _colModel, _sortname, tabs) {
-
-        $grid.jqGrid({
-            url: _url,
+        this.loadComplete = function (data) {
+            var thisId = $.jgrid.jqID(this.id);
+            $.get(sessionUrl, function (data) {
+                if (!_.intersection(authorizedRoles, _.map(data, function (item) {
+                        return item.glosarol;
+                    }))) {
+                    $("#add_" + thisId).addClass('ui-disabled');
+                    $("#edit_" + thisId).addClass('ui-disabled');
+                    $("#del_" + thisId).addClass('ui-disabled');
+                }
+            });
+        }
+        this.config = {
+            url: url,
             datatype: "json",
             mtype: "GET",
-            colModel: _colModel,
-            page: 1,
+            colModel: viewModel,
+            pager: '#' + pagerName,
             rowNum: 10,
-            regional: 'es',
-            height: 'auto',
+            sortname: sortField,
+            viewrecords: true,
+            caption: caption,
             autowidth: true,
-            sortname: _sortname,
+            page: 1,
+            forceFit: true,
+            height: 'auto',
+            regional: 'es',
             sortorder: "desc",
             shrinkToFit: false,
-            forceFit: true,
-            viewrecords: true,
-            caption: 'Inventario de licencias',
             styleUI: "Bootstrap",
-            pager: "#pagerMaster",
-            subGrid: true,
-            subGridRowExpanded: function (divid, rowid) {
-                showChildGrid(divid, rowid, tabs);
-            },
-            subGridBeforeExpand: function (divid, rowid) {
-                var expanded = $("td.sgexpanded", "#gridMaster")[0];
-                if (expanded) {
-                    setTimeout(function () {
-                        $(expanded).trigger("click");
-                    }, 100);
-                }
-            },
-            loadComplete: function (data) {
-                var thisId = $.jgrid.jqID(this.id);
-                $.get('/lic/getsession', function (data) {
-                    $.each(data, function (i, item) {
-                        if (item.glosarol != 'Administrador LIC') {
-                            $("#add_" + thisId).addClass('ui-disabled');
-                            $("#edit_" + thisId).addClass('ui-disabled');
-                            $("#del_" + thisId).addClass('ui-disabled');
-                        }
-                    });
-                });
+            loadComplete: this.loadComplete
+        };
+        this.beforeSubmit =errorTextFormat;
+        this.itemTemplate = new ModelItemTemplate(viewModel);
+        this.editErrorTextFormat = function (data) {
+            return 'Error: ' + data.responseText
+        };
+        this.editBeforeShowForm =function (form) {
+            var rowData = $table.getRowData($table.getGridParam("selrow"));
+        };
+        this.editAfterSubmit =  function (response, postdata) {
+            var json = response.responseText;
+            var result = JSON.parse(json);
+            if (result.error != 0) {
+                return [false, result.glosa, ""];
+            } else {
+                var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
+                $table.jqGrid('setGridParam', {
+                    search: true,
+                    postData: {
+                        filters
+                    }
+                }).trigger("reloadGrid");
+                return [true, "", ""];
             }
-        });
-
-        $grid.jqGrid('filterToolbar', {
-            stringResult: true,
-            searchOperators: true,
-            searchOnEnter: false,
-            defaultSearch: 'cn'
-        });
-
-        var itemTemplate = new ModelItemTemplate(_colModel).template;
-
-        $grid.jqGrid('navGrid', '#pagerMaster', {
-            edit: true,
-            add: true,
-            del: true,
-            search: false
-        }, {
-            editCaption: "Modifica Licencia",
-            closeAfterEdit: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: itemTemplate,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {
-                //valido formulario
-            },
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error != 0) {
-                    return [false, result.glosa, ""];
-                } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                    $grid.jqGrid('setGridParam', {
-                        search: true,
-                        postData: {
-                            filters
-                        }
-                    }).trigger("reloadGrid");
-                    return [true, "", ""];
-                }
-            },
-            beforeShowForm: function (form) {
-                var grid = $("#grid");
-                var rowKey = $grid.getGridParam("selrow");
-                var rowData = $grid.getRowData(rowKey);
-                var tipocontrato = rowData.tipocontrato;
-                var thisidcui = rowData.idcui;
-                var thisidtecnico = rowData.idtecnico;
+        };
+        this.addErrorTextFormat = errorTextFormat;
+        this.addBeforeSubmit = function (postdata, formid) {
+            //valido formulario
+        };
+        this.addAfterSubmit= function (response, postdata) {
+            var json = response.responseText;
+            var result = JSON.parse(json);
+            if (result.error != 0) {
+                return [false, result.glosa, ""];
+            } else {
+                var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"descripcion\",\"op\":\"cn\",\"data\":\"" + postdata.descripcion + "\"}]}";
+                $table.jqGrid('setGridParam', {
+                    search: true,
+                    postData: {
+                        filters
+                    }
+                }).trigger("reloadGrid");
+                return [true, "", ""];
             }
-        }, {
-            addCaption: "Agrega Licencia",
-            closeAfterAdd: true,
-            recreateForm: true,
-            mtype: 'POST',
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: itemTemplate,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            beforeSubmit: function (postdata, formid) {
-                //valido formulario
-            },
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error != 0) {
-                    return [false, result.glosa, ""];
-                } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"descripcion\",\"op\":\"cn\",\"data\":\"" + postdata.descripcion + "\"}]}";
-                    $grid.jqGrid('setGridParam', {
-                        search: true,
-                        postData: {
-                            filters
-                        }
-                    }).trigger("reloadGrid");
-                    return [true, "", ""];
-                }
-            },
-            beforeShowForm: function (form) {}
-        }, {
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            mtype: 'POST',
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (!result.success)
-                    return [false, result.message, ""];
-                else
-                    return [true, "", ""]
+        };
+        this.addBeforeShowForm= function (form) {};
+        this.addAfterSubmit= function (response, postdata) {
+            var json = response.responseText;
+            var result = JSON.parse(json);
+            if (!result.success)
+                return [false, result.message, ""];
+            else
+                return [true, "", ""]
+        };
+        this.build = function () {
+            $table.jqGrid(this.config);
+            $table.jqGrid('filterToolbar', {
+                stringResult: true,
+                searchOperators: true,
+                searchOnEnter: false,
+                defaultSearch: 'cn'
+            });
+            $table.jqGrid('navGrid', this.config.pager, {
+                edit: true,
+                add: true,
+                del: true,
+                search: false
+            }, {
+                editCaption: editCaption,
+                closeAfterEdit: true,
+                recreateForm: true,
+                ajaxEditOptions: licLibrary.jsonOptions,
+                serializeEditData: licLibrary.createJSON,
+                template: this.itemTemplate.template,
+                errorTextFormat: this.editErrorTextFormat,
+                beforeSubmit: this.editBeforeSubmit,
+                afterSubmit:this.editAfterSubmit,
+                beforeShowForm: this.editBeforeShowForm
+            }, {
+                addCaption: addCaption,
+                closeAfterAdd: true,
+                recreateForm: true,
+                mtype: 'POST',
+                ajaxEditOptions: licLibrary.jsonOptions,
+                serializeEditData: licLibrary.createJSON,
+                template: this.itemTemplate.template,
+                errorTextFormat: this.addErrorTextFormat,
+                beforeSubmit: this.addBeforeSubmit ,
+                afterSubmit: this.addAfterSubmit,
+                beforeShowForm: this.addBeforeShowForm
+            }, {
+                ajaxEditOptions: licLibrary.jsonOptions,
+                serializeEditData: licLibrary.createJSON,
+                mtype: 'POST',
+                afterSubmit: this.addAfterSubmit
+            });
+        };
+    }
+
+    var zs = window['zs'];
+    if (!zs) {
+        window['zs'] = {};
+    }
+    _.assign(window['zs'], {
+        ModelItemTemplate: ModelItemTemplate,
+        TabTemplate: TabTemplate,
+        SelectTemplate: SelectTemplate,
+        SimpleGrid: SimpleGrid
+    });
+
+    var zs = window.zs;
+
+    var initMainGrid = function (_url, _colModel, _sortname, tabs) {
+        var table = 'gridMaster';
+        var tableId = '#'+table;
+        var grid = new zs.SimpleGrid(table,'pagerMaster', 'Inventario de licencias', 'Modificar Licencia', 'Agtregar Licencia', _url, _colModel, _sortname, '/lic/getsession', ['Administrador LIC']);
+        grid.config.subGrid = true;
+        grid.config.subGridRowExpanded = function (divid, rowid) {
+            showChildGrid(divid, rowid, tabs);
+        };
+        grid.config.subGridBeforeExpand = function (divid, rowid) {
+            //JPS:bad selector not working
+            var expanded = $('td.sgexpanded',tableId )[0];
+            if (expanded) {
+                setTimeout(function () {
+                    $(expanded).trigger("click");
+                }, 100);
             }
-        });
+        };
+        grid.build();
     };
-
 
     function selectTabGrid(targ) {
         switch (targ) {
-            case compra:
+            case '#compra':
                 return compraGrid;
-            case instalacion:
+            case '#instalacion':
                 return instalacionGrid;
-            case ajuste:
+            case '#ajuste':
                 return ajusteGrid;
-            case traduccion:
+            case '#traduccion':
                 return traduccionGrid;
-            case bitacora:
+            case '#bitacora':
                 return bitacoraGrid;
         }
     };
 
+    function selectTab (e) {
+        var $this = $(this),
+        loadurl = $this.attr('href'),
+        targ = $this.attr('data-target'),
+        tabGrid = selectTabGrid(targ);
+    tabGrid.renderGrid(loadurl, parentRowKey, targ);
+    $this.tab('show');
+    return false;
+    };
 
     function showChildGrid(parentRowID, parentRowKey, tabs) {
         var tabTemplate = new TabTemplate(parentRowID, parentRowKey, tabs).template;
         $('#' + parentRowID).append(tabTemplate);
-        $('#estadosolicitud_tab_' + parentRowKey).addClass('media_node active span')
-        $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function (e) {
-            var $this = $(this),
-                loadurl = $this.attr('href'),
-                targ = $this.attr('data-target'),
-            tabGrid = selectTabGrid(targ);
-            tabGrid.renderGrid(loadurl, parentRowKey, targ);
-            $this.tab('show');
-            return false;
-        });
-
-        $('[data-toggle="tab_' + parentRowKey + '"]').click(function (e) {
-            var $this = $(this),
-                loadurl = $this.attr('href'),
-                targ = $this.attr('data-target'),
-                tabGrid = selectTabGrid(targ);
-                tabGrid.renderGrid(loadurl, parentRowKey, targ);
-            $this.tab('show');
-            return false;
-        });
+        $('#' + tabs[0].id + '_tab_' + parentRowKey).addClass('media_node active span')
+        $('.active[data-toggle="tab_' + parentRowKey + '"]').each(selectTab);
+        $('[data-toggle="tab_' + parentRowKey + '"]').click(selectTab);
     }
 
     $(function () {
-        var $grid = $('#gridMaster');
-        var licenciasModel = [{
+
+        var $table = $('#gridMaster');
+        var licenciasModel = [
+        {
             label: 'ID',
             name: 'id',
             key: true,
@@ -263,7 +281,7 @@
             editoptions: {
                 dataUrl: '/lic/fabricante',
                 buildSelect: function (response) {
-                    var rowData = $grid.getRowData($grid.getGridParam("selrow"));
+                    var rowData = $table.getRowData($table.getGridParam("selrow"));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
                     return new SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
@@ -281,7 +299,7 @@
             editoptions: {
                 dataUrl: '/lic/tipoInstalacion',
                 buildSelect: function (response) {
-                    var rowData = $grid.getRowData($grid.getGridParam("selrow"));
+                    var rowData = $table.getRowData($table.getGridParam("selrow"));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
                     return new SelectTemplate(data, 'Seleccione', thissid).template;
@@ -295,7 +313,7 @@
             editoptions: {
                 dataUrl: '/lic/clasificacion',
                 buildSelect: function (response) {
-                    var rowData = $grid.getRowData($grid.getGridParam("selrow"));
+                    var rowData = $table.getRowData($table.getGridParam("selrow"));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
                     return new SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
@@ -309,7 +327,7 @@
             editoptions: {
                 dataUrl: '/lic/tipoLicenciamiento',
                 buildSelect: function (response) {
-                    var rowData = $grid.getRowData($grid.getGridParam("selrow"));
+                    var rowData = $table.getRowData($table.getGridParam("selrow"));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
                     return new SelectTemplate(data, 'Seleccione Tipo de Licencia', thissid).template;
@@ -343,7 +361,8 @@
             hidden: true,
             editable: true,
             edittype: "textarea"
-        }];
+        }
+    ];
 
         var tabs = [{
                 id: 'compra',
@@ -360,13 +379,9 @@
             {
                 id: 'traduccion',
                 nom: 'Traducciones'
-            },
-            {
-                id: 'bitacora',
-                nom: 'Bitácora'
             }
         ];
 
-        initGrid($grid, '/lic/grid_inventario', licenciasModel, 'fabricante', tabs);
-    })
+        initMainGrid('/lic/grid_inventario', licenciasModel, 'fabricante', tabs);
+    });
 })(jQuery, _);
