@@ -11,9 +11,9 @@ var traduccionGrid = {
             key: true,
             hidden: true,
             editable: false
-        },{
-            label:'Nombre',
-            name:'nombre',
+        }, {
+            label: 'Nombre',
+            name: 'nombre',
             editable: true
         }, {
             label: 'Tipo',
@@ -24,14 +24,14 @@ var traduccionGrid = {
                 dataUrl: '/lic/traduccion',
                 buildSelect: function (response) {
                     var rowData = $grid.getRowData($grid.getGridParam('selrow'));
-                    var thissid = rowData.fabricante;
+                    var thissid = rowData.traduccion;
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione Tipo', thissid).template;
                 }
             }
         }];
 
-        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Traducciones', 'Editar Traducción', 'Agregar Traducción', 'lic/' + tabName, viewModel, 'fabricante', '/lic/getsession', ['Administrador LIC']);
+        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Traducciones', 'Editar Traducción', 'Agregar Traducción', '/lic/' + tabName, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         tabGrid.build();
     }
 };

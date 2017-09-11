@@ -94,18 +94,11 @@ exports.action = function (req, res) {
 }
 
 exports.list = function (req, res) {
-
     var page = req.query.page;
     var rows = req.query.rows;
     var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    if (!sidx)
-        sidx = "numerorfp";
-
-    if (!sord)
-        sord = "desc";
+    var sidx = req.query.sidx || 'numerorfp';
+    var sord = req.query.sord || 'desc';
 
     var orden = "[solicitudcotizacion]." + sidx + " " + sord;
 

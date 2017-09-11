@@ -11,24 +11,24 @@ var instalacionGrid = {
             key: true,
             hidden: true,
             editable: false
-        },{
-            label:'CUI',
-            name:'cui',
+        }, {
+            label: 'CUI',
+            name: 'cui',
             editable: true
-        },{
-            label:'Usuario',
-            name:'usuario',
+        }, {
+            label: 'Usuario',
+            name: 'usuario',
             editable: true
-        },{
-            label:'Cantidad',
-            name:'cantidad',
+        }, {
+            label: 'Cantidad',
+            name: 'cantidad',
             editable: true
-        }  
-    
-    
-    ];
+        }
 
-        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Instalaciones', 'Editar Instalación', 'Agregar Instalación', 'lic/' + tabName, viewModel, 'fabricante', '/lic/getsession', ['Administrador LIC']);
+
+        ];
+
+        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Instalaciones', 'Editar Instalación', 'Agregar Instalación', '/lic/' + tabName, viewModel, 'fabricante', '/lic/getsession', ['Administrador LIC']);
         tabGrid.build();
     }
 };

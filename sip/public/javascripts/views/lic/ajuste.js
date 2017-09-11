@@ -11,31 +11,28 @@ var ajusteGrid = {
             key: true,
             hidden: true,
             editable: false
-        },{
-            label:'Fecha',
-            name:'fecha',
+        }, {
+            label: 'Fecha',
+            name: 'fecha',
             editable: true,
-            edittype:'date'
-        },{
-            label:'Usuario',
-            name:'usuario',
+            edittype: 'date'
+        }, {
+            label: 'Usuario',
+            name: 'usuario',
             editable: true
-        },{
-            label:'Cantidad',
-            name:'cantidad',
+        }, {
+            label: 'Cantidad',
+            name: 'cantidad',
             editable: true
-        },{
-            label:'Observación',
-            name:'observacion',
+        }, {
+            label: 'Observación',
+            name: 'observacion',
             editable: true,
             edittype: 'textarea'
-        }  
-    
-    
-    
-    ];
+        }
+        ];
 
-        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Ajustes', 'Editar Ajuste', 'Agregar Ajuste', 'lic/' + tabName, viewModel, 'Fabricante', '/lic/getsession', ['Administrador LIC']);
+        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Ajustes', 'Editar Ajuste', 'Agregar Ajuste', '/lic/' + tabName, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         tabGrid.build();
     }
 };

@@ -18,7 +18,7 @@ var compraGrid = {
             editable: true
         }, {
             label: 'O.C.',
-            name: 'OrdenCompra',
+            name: 'ordenCompra',
             editable: true
         }, {
             label: 'CUI',
@@ -37,7 +37,7 @@ var compraGrid = {
                 dataUrl: '/lic/proveedor',
                 buildSelect: function (response) {
                     var rowData = $grid.getRowData($grid.getGridParam('selrow'));
-                    var thissid = rowData.fabricante;
+                    var thissid = rowData.proveedor;
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
                 }
@@ -46,12 +46,12 @@ var compraGrid = {
             label: 'Area',
             name: 'area',
             editable: true,
-            edittype: "select",
+            edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/area',
                 buildSelect: function (response) {
                     var rowData = $grid.getRowData($grid.getGridParam('selrow'));
-                    var thissid = rowData.fabricante;
+                    var thissid = rowData.area;
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione Área', thissid).template;
                 }
@@ -72,12 +72,12 @@ var compraGrid = {
             label: 'Moneda',
             name: 'moneda',
             editable: true,
-            edittype: "select",
+            edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/moneda',
                 buildSelect: function (response) {
                     var rowData = $grid.getRowData($grid.getGridParam('selrow'));
-                    var thissid = rowData.fabricante;
+                    var thissid = rowData.moneda;
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
                 }
@@ -101,7 +101,7 @@ var compraGrid = {
             editable: true
         }];
 
-        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Compras', 'Editar Compra', 'Agregar compra', 'lic/' + tabName, viewModel, 'fabricante', '/lic/getsession', ['Administrador LIC']);
+        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Compras', 'Editar Compra', 'Agregar compra', '/lic/' + tabName, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         tabGrid.build();
     }
 };

@@ -24,6 +24,12 @@ module.exports = function (passport) {
         }, {
             id: 6,
             nombre: 'Microsoft'
+        }, {
+            id: 7,
+            nombre: 'Tableau Software'
+        }, {
+            id: 8,
+            nombre: 'Adobe'
         }]);
     });
     router.get('/lic/proveedor', function (req, res) {
@@ -86,13 +92,12 @@ module.exports = function (passport) {
     });
     router.get('/lic/moneda', function (req, res) {
         return res.json([{
-                id: 1,
-                nombre: 'Versión'
-            }, {
-                id: 2,
-                nombre: 'Suite'
-            }
-        ]);
+            id: 1,
+            nombre: 'Versión'
+        }, {
+            id: 2,
+            nombre: 'Suite'
+        }]);
     });
     router.get('/lic/tipoInstalacion', function (req, res) {
         return res.json([{
@@ -141,12 +146,12 @@ module.exports = function (passport) {
     router.route('/lic/grid_inventario')
         .get(isAuthenticated, function (req, res) {
             var data = [{
-                id: 1,
+                id: '1',
                 fabricante: 'Tableau Software',
                 software: 'Tableau',
                 tipoInstalacion: 'PC',
-                clasificacion: 'Software de aplicación',
-                tipoLicenciamiento: 'Usuario',
+                clasificacion: 'SW de aplicación',
+                tipoLicenciamiento: 'Usuarios concurrentes',
                 licStock: '16',
                 licDisponibles: '0',
                 alertaRenovacion: 'Al Día',
@@ -157,8 +162,8 @@ module.exports = function (passport) {
                 fabricante: 'Adobe',
                 software: 'Adobe LiveCycle',
                 tipoInstalacion: 'PC',
-                clasificacion: 'Software de aplicación',
-                tipoLicenciamiento: 'Usuario',
+                clasificacion: 'SW de aplicación',
+                tipoLicenciamiento: 'Usuarios concurrentes',
                 licStock: '16',
                 licDisponibles: '0',
                 alertaRenovacion: 'Al Día',
@@ -169,8 +174,8 @@ module.exports = function (passport) {
                 fabricante: 'Atlassian',
                 software: 'Licencias Jira',
                 tipoInstalacion: 'PC',
-                clasificacion: 'Software de aplicación',
-                tipoLicenciamiento: 'Usuario',
+                clasificacion: 1,
+                tipoLicenciamiento: 'Usuarios concurrentes',
                 licStock: '16',
                 licDisponibles: '0',
                 alertaRenovacion: 'Al Día',
@@ -189,16 +194,20 @@ module.exports = function (passport) {
         .get(isAuthenticated, function (req, res) {
             var data = [{
                 id: 1,
-                fabricante: 'Tableau Software',
-                software: 'Tableau',
-                tipoInstalacion: 'PC',
-                clasificacion: 'Software de aplicación',
-                tipoLicenciamiento: 'Usuario',
-                licStock: '16',
-                licDisponibles: '0',
-                alertaRenovacion: 'Al Día',
-                utilidad: 'Compra licencia Tableau Desktop para Alejandro Arriagada',
-                comentarios: '02.08.17 corresponde a la compra de una licencia tableau para Alejandro Arriagada Espinoza, autorizado por Javier Largo Gajardo'
+                contrato: 111,
+                ordenCompra: 222,
+                cui: 123,
+                sap: 333,
+                proveedor: 1,
+                area: 1,
+                anoCompra: 2017,
+                anoExpiracion: 2018,
+                licenciasCompradas: 2,
+                moneda: 1,
+                valorLicencias: 99,
+                valorSoporte: 0,
+                fechaRenovacionSoporte: null,
+                factura: 999
             }];
             return res.json({
                 records: 1,
@@ -207,5 +216,69 @@ module.exports = function (passport) {
                 rows: data
             });
         });
+
+    router.route('/lic/instalacion')
+        .get(isAuthenticated, function (req, res) {
+            var data = [{
+                    id: 1,
+                    cui: 123,
+                    usuario: 'Juan Pérez',
+                    cantidad: 3
+                },
+                {
+                    id: 2,
+                    cui: 321,
+                    usuario: 'José Pérez',
+                    cantidad: 3
+                }
+            ];
+            return res.json({
+                records: 1,
+                total: 1,
+                page: 1,
+                rows: data
+            });
+        });
+
+    router.route('/lic/ajuste')
+        .get(isAuthenticated, function (req, res) {
+            var data = [{
+                    id: 1,
+                    fecha: '21-11-2017',
+                    usuario: 'Juan Pérez',
+                    cantidad: 3,
+                    observacion: 'Snow'
+                },
+                {
+                    id: 1,
+                    fecha: '21-12-2017',
+                    usuario: 'Juan Pérez',
+                    cantidad: 3,
+                    observacion: 'Snow'
+                }
+            ];
+            return res.json({
+                records: 1,
+                total: 1,
+                page: 1,
+                rows: data
+            });
+        });
+
+    router.route('/lic/traduccion')
+        .get(isAuthenticated, function (req, res) {
+            var data = [{
+                id: 1,
+                nombre: 'otro',
+                tipo: 1
+            }];
+            return res.json({
+                records: 1,
+                total: 1,
+                page: 1,
+                rows: data
+            });
+        });
+
     return router;
 };
