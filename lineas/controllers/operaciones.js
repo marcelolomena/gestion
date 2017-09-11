@@ -440,9 +440,11 @@ exports.listcomentarioslinea = function (req, res) {
 };
 
 exports.actionbloquear = function (req, res) {
+    //fecha de hoy
+
     var hoy = new Date();
     var dd = hoy.getDate();
-    var mm = hoy.getMonth()+1; //hoy es 0!
+    var mm = hoy.getMonth()+1; 
     var yyyy = hoy.getFullYear();
     if(dd<10) {
         dd='0'+dd
@@ -451,7 +453,9 @@ exports.actionbloquear = function (req, res) {
         mm='0'+mm
     } 
     hoy = dd+'-'+mm+'-'+yyyy;
+    
     var idlinea = req.params.id;
+    
     sequelize.query(`update scl.Bloqueo 
         set Monto = `+ req.body.monto + `, Activo = 1, Comentario ='`+req.body.comentario+`', FechaBloqueo = '`+hoy+`'
         where Linea_Id= `+ idlinea).spread((results, metadata) => {
@@ -554,7 +558,7 @@ exports.listaprobaciones = function (req, res) {
 
 exports.listverdetallebloqueo = function (req, res) {
     sequelize.query(
-        `select a.Id as LineaID,a.Numero, a.Disponible, d.Id as Bloqueo_Id, d.Monto,d.Activo,d.FechaBloqueo, d.Comentario from scl.Linea a
+        `select a.Id, a.Numero, a.Disponible, d.Id as Bloqueo_Id, d.Monto,d.Activo,d.FechaBloqueo, d.Comentario from scl.Linea a
 		left join scl.Bloqueo d on d.Linea_Id = a.Id
 		where a.Id =` + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
