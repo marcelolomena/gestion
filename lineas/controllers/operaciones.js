@@ -577,7 +577,7 @@ exports.actionoperacionesreserva = function (req, res) {
     switch (action) {
         case "add":
 
-            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,`+req.body.FechaOtorgamiento+`,`+req.body.FechaProxVenc+`,`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
+            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,'`+req.body.FechaOtorgamiento+`','`+req.body.FechaProxVenc+`',`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
             // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
@@ -602,20 +602,14 @@ exports.actionoperacionesreserva = function (req, res) {
             break;
 
         case "del":
-            models.limite.destroy({
-                where: {
-                    id: req.body.id
-                }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                res.json({ success: true, glosa: '' });
+            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,`+req.body.FechaOtorgamiento+`,`+req.body.FechaProxVenc+`,`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
+            // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
+            sequelize.query(sql).spread((results, metadata) => {
+                return res.json({ error: 0 });
             }).catch(function (err) {
-                logger.error(err)
-                res.json({ success: false, glosa: err.message });
+                logger.error(err);
+                return res.json({ error: 1 });
             });
-
             break;
 
     }
