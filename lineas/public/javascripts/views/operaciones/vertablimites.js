@@ -1016,7 +1016,6 @@ var gridvertablimites = {
 
                 // BOTÓN DESBLOQUEAR 
                 $('#botonpost').click(function () {
-                    //console.log("holapo"); //desbloqueo
                     var idlineabloqueo = $('#idlineabloqueo').val();
                     var des = $("#montodes").val();
                     var bloq = $("#Bloqueado").val();
@@ -1051,7 +1050,7 @@ var gridvertablimites = {
                         success: function (data) {
 
                             if (data.length > 0) {
-                                insert = 1;
+                                 insert = 1;
                                  montoBase = data[0].Disponible;
                                                                                               
                             }
@@ -1074,12 +1073,8 @@ var gridvertablimites = {
                    }
                     
 
-                   /* var fecha = new Date();
-                    var fechaGuardada = "";
-                    var fechaCompleta = (fecha.getDate() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getFullYear() + "   " + fecha.getHours() + ":" + fecha.getMinutes() + ":" + fecha.getSeconds());
-                    var fechaGuardada = fechaCompleta;
-                    //console.log("tremendo exito " + fechaGuardada);
-                    $("#fechaBloqueo").html(fechaGuardada);*/
+                    
+                    //$("#fechaBloqueo").html(fechaGuardada);
                 });
 
                 //BOTÓN CANDADO
@@ -1143,8 +1138,7 @@ var gridvertablimites = {
                                 $("#labelcomentario").hide();
                                 $("#comentario").hide();
                                 $("#botonpost2").hide();
-
-                                //$("#fechaBloqueo").val(fechaGuardada);
+                                $("#fechaBloqueo").val();
                             }
                         }
                     })

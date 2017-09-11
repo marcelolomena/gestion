@@ -440,10 +440,21 @@ exports.listcomentarioslinea = function (req, res) {
 };
 
 exports.actionbloquear = function (req, res) {
+    var hoy = new Date();
+    var dd = hoy.getDate();
+    var mm = hoy.getMonth()+1; //hoy es 0!
+    var yyyy = hoy.getFullYear();
+    if(dd<10) {
+        dd='0'+dd
+    } 
+    if(mm<10) {
+        mm='0'+mm
+    } 
+    hoy = dd+'-'+mm+'-'+yyyy;
     var idlinea = req.params.id;
     sequelize.query(`update scl.Bloqueo 
-    set Monto = '`+ req.body.monto + `'
-    where Id=`+ idlinea).spread((results, metadata) => {
+        set Monto = `+ req.body.monto + `, Activo = 1, Comentario ='`+req.body.comentario+`', FechaBloqueo = '`+hoy+`'
+        where Linea_Id= `+ idlinea).spread((results, metadata) => {
             return res.json(metadata);
 
         }).catch(function (err) {
