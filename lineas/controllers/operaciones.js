@@ -536,6 +536,11 @@ exports.listaprobaciones = function (req, res) {
 };
 
 
+
+/**
+ * FIN TAB APROBACIONES
+ */
+
 exports.listverdetallebloqueo = function (req, res) {
     sequelize.query(
         `select a.Id as LineaID,a.Numero, a.Disponible, d.Id as Bloqueo_Id, d.Monto,d.Activo,d.FechaBloqueo, d.Comentario from scl.Linea a
@@ -550,10 +555,6 @@ exports.listverdetallebloqueo = function (req, res) {
         res.json({ error: 1 });
     });
 };
-/**
- * FIN TAB APROBACIONES
- */
-
 
 exports.listoperacionesreserva = function (req, res) {
     sequelize.query(`
