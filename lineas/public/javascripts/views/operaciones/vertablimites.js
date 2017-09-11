@@ -1020,9 +1020,26 @@ var gridvertablimites = {
                     var des = $("#montodes").val();
                     var bloq = $("#Bloqueado").val();
                     var nuevovalorbloq = bloq - des;
-                    $("#nuevovalorbloqueo").val(nuevovalorbloq);
-                    //var comentarioParcial
-                    //console.log("el valor enviado es: "+nuevovalorbloq);
+                    $("#monto").val(nuevovalorbloq);
+                    var montoBase = 0;
+                    var insert = 0;
+                    var monto = parseInt($('#monto').val());
+                    console.log(idlineabloqueo);
+                    /*$.ajax({
+                        type: "GET",
+                        url: '/verdetallebloqueo/' + idlineabloqueo,
+                        async: false,
+                        success: function (data) {
+
+                            if (data.length > 0) {
+                                 insert = 1;
+                                 montoBase = data[0].Disponible;
+                                                                                              
+                            }
+                        }
+                    });
+                    var montoBase = 0;
+                    var insert = 0;*/
 
                     $.ajax({
                         type: "POST",

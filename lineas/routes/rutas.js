@@ -79,6 +79,10 @@ module.exports = function (passport) {
         //.post(isAuthenticated, macgrupalController.action)
         .get(isAuthenticated, macgrupalController.listindividuales);
 
+    router.route('/tipolimite')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.tipolimite);
+
 
 
 

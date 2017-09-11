@@ -2,21 +2,21 @@ var gridAprobacion = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab = $(targ + "_t")
-        var idmac = 25//targ.substring(4)
+        var idmac = 24//targ.substring(4)
         var formatear =
-        {
-            formatearNumero: function (nStr) {
-                nStr += '';
-                x = nStr.split('.');
-                x1 = x[0];
-                x2 = x.length > 1 ? ',' + x[1] : '';
-                var rgx = /(\d+)(\d{3})/;
-                while (rgx.test(x1)) {
-                    x1 = x1.replace(rgx, '$1' + '.' + '$2');
+            {
+                formatearNumero: function (nStr) {
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? ',' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                    }
+                    return x1 + x2;
                 }
-                return x1 + x2;
             }
-        }
 
         if (document.getElementById("cabecera") == null) {
 
@@ -145,6 +145,7 @@ var gridAprobacion = {
                 success: function (data) {
                     if (data.length > 0) {
                         //console.log("nombre"+idmac+" es "+data[0].Nombre)
+                        $("#nombregrupo" + idmac).html('COMFRUT')
                         $("#nombre" + idmac).html(data[0].Nombre)
                         $("#rut" + idmac).html(data[0].Rut)
                         $("#actividad" + idmac).html(data[0].Actividad)
@@ -159,7 +160,7 @@ var gridAprobacion = {
                         //$("#nivelatribucion" + idmac).html(data[0].NivelAtribucion)
                         $("#promediosaldovista" + idmac).html(data[0].PromSaldoVista)
                         $("#deudasbif" + idmac).html(data[0].DeudaSbif)
-                        $("#fechacreacion"+idmac).html(data[0].FechaCreacion)
+                        $("#fechacreacion" + idmac).html(data[0].FechaCreacion)
 
                     } else {
                         alert("Error con datos del Mac Grupal")
@@ -171,13 +172,58 @@ var gridAprobacion = {
 
             var elcaption = "Límites";
 
-            var template = "";
+            var template = "<div id='responsive-form' class='clearfix'>";
+
+            template += "<div class='form-row'>";
+            template += "<div class='column-full'>Tipo Límite {Tipo_Id}</div>";
+            template += "</div>";
+
+            template += "<div class='form-row'>";
+            template += "<div class='column-full'>Monto Aprobación {Aprobado}</div>";
+            template += "</div>";
+
+            template += "<div class='form-row' style='display: none;'>";
+            template += "</div>";
+
+            template += "<hr style='width:100%;'/>";
+            template += "<div> {sData} {cData}  </div>";
+            template += "</div>";
             var modelLimites = [
                 {
                     label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
                 { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
+                {
+                    label: 'Tipo Límite', name: 'Tipo_Id', search: false, editable: true, hidden: true,
+                    edittype: "select",
+                    editoptions: {
+                        dataUrl: '/tipolimite',
+                        buildSelect: function (response) {
+                            var grid = $("#gridlimites");
+                            //console.log(grid);
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var thissid = rowData.Tipo_Id;
+                            var data = JSON.parse(response);
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Escoger Tipo Límite--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].id == thissid) {
+                                    s += '<option value="' + data[i].Id + '" selected>' + data[i].Nombre + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].Id + '">' + data[i].Nombre + '</option>';
+                                }
+                            });
+                            return s + "</select>";
+                        },
+                        dataEvents: [{
+                            type: 'change', fn: function (e) {
+                                //$("input#rol").val($('option:selected', this).text());
+                            }
+                        }],
+                    }, dataInit: function (elem) { $(elem).width(200); }
+                },
                 { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 { label: 'Riesgo', name: 'Riesgo', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
@@ -193,10 +239,19 @@ var gridAprobacion = {
                 { label: 'P. Residual', name: 'PlazoResidual', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                { label: 'Aprobación Ant (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                {
+                    label: 'Aprobación Ant (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right',
+                    formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                    editoptions: {
+                        dataInit: function (el) {
+                            $(el).mask('000.000.000.000.000', { reverse: true });
+                        }
+                    },
+                    editrules: { required: true }
+                },
                 { label: 'Deuda (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Sometido Aprobación (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                
+
 
 
 
@@ -277,7 +332,7 @@ var gridAprobacion = {
                     recreateForm: true,
                     ajaxEditOptions: sipLibrary.jsonOptions,
                     serializeEditData: sipLibrary.createJSON,
-                    addCaption: "Agregar Empresa",
+                    addCaption: "Agregar Límite",
                     template: template,
                     errorTextFormat: function (data) {
                         return 'Error: ' + data.responseText
