@@ -2,7 +2,7 @@ var gridAprobacion = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab = $(targ + "_t")
-        var idmac = 11//targ.substring(4)
+        var idmac = 25//targ.substring(4)
         var formatear =
         {
             formatearNumero: function (nStr) {
@@ -40,57 +40,65 @@ var gridAprobacion = {
                         <h5>I. IDENTIFICACIÓN</h5>
                         <div class="panel panel-primary">
                             <div class="row">
+                                <div class="col-xs-1"><b>GRUPO</b></div>
+                                <div class="col-xs-3"><span id="nombregrupo`+ idmac + `"></span></div>
+                                <div class="col-xs-2"><b>RATING GRUPO</b></div>
+                                <div class="col-xs-2"><span id="ratinggrupo`+ idmac + `">7</span></div>
+                                <div class="col-xs-2"><b>NIVEL ATRIBUCIÓN</b></div>
+                                <div class="col-xs-1"><span id="nivelatribucion`+ idmac + `">R2</span></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-1">&nbsp;</div>
+                            </div>
+                            <div class="row">
                                 <div class="col-xs-1"><b>NOMBRE</b></div>
                                 <div class="col-xs-5"><span id="nombre`+ idmac + `"></span></div>
-                                <div class="col-xs-2"></div>
-                                <div class="col-xs-2"><b>RATING GRUPO</b></div>
-                                <div class="col-xs-1">7</div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-1"><b>RUT</b></div>
                                 <div class="col-xs-3"><span id="rut`+ idmac + `"></span></div>
-                                <div class="col-xs-2"></div>
-                                <div class="col-xs-2"></div>
-                                <div class="col-xs-2"><b>NIVEL ATRIBUCIÓN</b></div>
-                                <div class="col-xs-1"><span id="nivelatribucion`+ idmac + `"></span></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-1"><b>ACTIVIDAD</b></div>
-                                <div class="col-xs-3"><span id="actividad`+ idmac + `"></span></div>
-                                <div class="col-xs-2"></div>
-                                <div class="col-xs-2"></div>
+                                <div class="col-xs-2"><b>FECHA CREACIÓN</b></div>
+                                <div class="col-xs-2"><span id="fechacreacion`+ idmac + `"></span></div>
                                 <div class="col-xs-2"><b>RATING INDIVIDUAL</b></div>
                                 <div class="col-xs-1"><span id="ratingindividual`+ idmac + `"></span></div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-1"><b>OFIC/EJEC</b></div>
-                                <div class="col-xs-3">Mayorista 1 / Marcela Castro C.</div>
+                                <div class="col-xs-1"><b>ACTIVIDAD</b></div>
+                                <div class="col-xs-3"><span id="actividad`+ idmac + `"></span></div>
                                 <div class="col-xs-2"><b>FECHA PROX. VENC.</b></div>
                                 <div class="col-xs-2"><span id="fechaproxvenc`+ idmac + `"></span></div>
                                 <div class="col-xs-2"><b>CLASIFICACIÓN</b></div>
                                 <div class="col-xs-1"><span id="clasificacion`+ idmac + `"></span></div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-1"><b>FECHA</b></div>
-                                <div class="col-xs-3"><span id="fecha`+ idmac + `"></span></div>
+                                <div class="col-xs-1"><b>EJECUTIVO</b></div>
+                                <div class="col-xs-3">Marcela Castro C.</div>
                                 <div class="col-xs-2"><b>FECHA VENC. ANT.</b></div>
                                 <div class="col-xs-2"><span id="fechavencant`+ idmac + `"></span></div>
                                 <div class="col-xs-2"><b>VIGILANCIA</b></div>
                                 <div class="col-xs-1"><span id="vigilancia`+ idmac + `"></span></div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-1"></div>
-                                <div class="col-xs-3"></div>
-                                <div class="col-xs-2"></div>
-                                <div class="col-xs-2"></div>
-                                <div class="col-xs-2"><b>FECHA INFORMACIÓN</br>FINANCIERA</b></div>
-                                <div class="col-xs-1"><span id="fechainfo`+ idmac + `"></span></div>
+                                <div class="col-xs-1"><b>OFICINA</b></div>
+                                <div class="col-xs-3"><span id="oficina`+ idmac + `">Mayorista 1</span></div>
+                                <div class="col-xs-2"><b>FECHA INF. FINANCIERA</b></div>
+                                <div class="col-xs-2"><span id="fechainfo`+ idmac + `"></span></div>
+                                <div class="col-xs-2"><b>COMPORTAMIENTO</b></div>
+                                <div class="col-xs-1"><span id="comportamiento`+ idmac + `">VERDE</span></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-1"><b>PEP</b></div>
+                                <div class="col-xs-3"><span id="pep`+ idmac + `"></span></div>
+                                <div class="col-xs-2"><b>FECHA VCTO. FICHA PEP</b></div>
+                                <div class="col-xs-2"><span id="fechafichapep`+ idmac + `"></span></div>
+                                <div class="col-xs-2"><b>RIESGO REPUTACIONAL</b></div>
+                                <div class="col-xs-1"><span id="riesgoreputacional`+ idmac + `">SI</span></div>
                             </div>
                         </div>
                         <h5>II. ANTECEDENTES (M$ a 31/05/2017)</h5>
                         <div class="panel panel-primary">
                             <div class="row">
-                                <div class="col-xs-1"></div>
+                                <div class="col-xs-2"></div>
                                 <div class="col-xs-1"></div>
                                 <div class="col-xs-2"><b>DEUDA SBIF</b></div>
                                 <div class="col-xs-1"><b>DIRECTA</b></div>
@@ -99,13 +107,21 @@ var gridAprobacion = {
                                 <div class="col-xs-1"><b>DIRECTA</b></div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-1"><b>P. SALDO </br>VISTA</br><span style="font-size:10px">(Ultimos 12 Meses)</span></b></div>
-                                <div class="col-xs-1"><u><span id="promediosaldovista`+ idmac + `"></span></u></div>
+                                <div class="col-xs-2"><b>F.APER. C.CTE.</b></div>
+                                <div class="col-xs-1"><span id="fechaaperturaccte`+ idmac + `">05-04-2012</span></div>
                                 <div class="col-xs-2">SIST. FINANCIERO</div>
-                                <div class="col-xs-1"><u><span id="deudasbif`+ idmac + `"></span></u></div>
+                                <div class="col-xs-1"><u><span id="deudasbif`+ idmac + `">934.152</span></u></div>
                                 <div class="col-xs-2"><u>0</u></div>
                                 <div class="col-xs-2">LEASING ACHEL</div>
                                 <div class="col-xs-1"><u>65.983</u></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-2"><b>P. SALDO VISTA</br><span style="font-size:10px">(Ultimos 12 Meses MN y MX)</span></b></div>
+                                <div class="col-xs-1"><span id="promediosaldovista`+ idmac + `"></span></div>
+                                <div class="col-xs-2">PENETRACIÓN</div>
+                                <div class="col-xs-1"><span id="penetracion`+ idmac + `">65%</span></div>
+                                <div class="col-xs-2"></div>
+
                             </div>
                         </div>
                         
@@ -131,17 +147,19 @@ var gridAprobacion = {
                         //console.log("nombre"+idmac+" es "+data[0].Nombre)
                         $("#nombre" + idmac).html(data[0].Nombre)
                         $("#rut" + idmac).html(data[0].Rut)
-                        $("#actividad" + idmac).html(data[0].ActividadEconomica)
-                        $("#fecha" + idmac).html(data[0].FechaCreacion)
-                        $("#fechaproxvenc" + idmac).html(data[0].FechaVencimiento)
-                        $("#fechavencant" + idmac).html(data[0].FechaVencimientoMacAnterior)
-                        $("#ratingindividual" + idmac).html(data[0].RatingIndividual)
+                        $("#actividad" + idmac).html(data[0].Actividad)
+                        $("#pep" + idmac).html(data[0].Vigilancia)
+                        $("#fechaproxvenc" + idmac).html(data[0].FechaVenc)
+                        $("#fechafichapep" + idmac).html(data[0].FechaVenc)
+                        $("#fechavencant" + idmac).html(data[0].FechaVencAnt)
+                        $("#ratingindividual" + idmac).html(data[0].RatingInd)
                         $("#clasificacion" + idmac).html(data[0].Clasificacion)
                         $("#vigilancia" + idmac).html(data[0].Vigilancia)
-                        $("#fechainfo" + idmac).html(data[0].FechaInformacionFinanciera)
-                        $("#nivelatribucion" + idmac).html(data[0].NivelAtribucion)
-                        $("#promediosaldovista" + idmac).html(data[0].PromedioSaldoVista)
+                        $("#fechainfo" + idmac).html(data[0].FechaInfFin)
+                        //$("#nivelatribucion" + idmac).html(data[0].NivelAtribucion)
+                        $("#promediosaldovista" + idmac).html(data[0].PromSaldoVista)
                         $("#deudasbif" + idmac).html(data[0].DeudaSbif)
+                        $("#fechacreacion"+idmac).html(data[0].FechaCreacion)
 
                     } else {
                         alert("Error con datos del Mac Grupal")
@@ -161,7 +179,7 @@ var gridAprobacion = {
                 },
                 { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
                 { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Riesgo', name: 'Riesgo', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                 {
                     label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'left', editrules: { required: true },
@@ -172,32 +190,13 @@ var gridAprobacion = {
                         return dato;
                     }
                 },
+                { label: 'P. Residual', name: 'PlazoResidual', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                 { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                {
-                    label: 'Disponible (Miles)', name: 'Disponible2', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },
-                    formatter: function (cellvalue, options, rowObject) {
-                        var bloq = 0;
-                        var disp = 0;
-                        $.ajax({
-                            type: "GET",
-                            url: '/verdetalleslim/' + rowObject.Id,
-                            async: false,
-                            success: function (data) {
-                                if (data.length > 0) {
-                                    bloq = data[0].Bloqueado;
-                                    disp = data[0].Disponible;
-                                    //console.log("valor de bloqueo " + bloq);
-                                }
-                            }
-                        })
-                        var dispo = disp - bloq;
-                        return (formatear.formatearNumero(dispo));
-                    }
-                },
+                { label: 'Aprobación Ant (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Deuda (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Sometido Aprobación (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                
 
 
 

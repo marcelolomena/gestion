@@ -14,8 +14,8 @@ $(document).ready(function () {
                 nombregrupo = data[0].nombregrupo;
                 idgrupo = data[0].idgrupo;
                 ejecutivo = 'Marcela Castro'
-                fechapresentacion = '30-08-2017'
-                vencimientoanterior = '30-08-2016'
+                fechapresentacion = data[0].FechaPresentacion;
+                vencimientoanterior = data[0].FechaCreacion;
                 $(".cajaRut").html(`
                 <div class="id_nombre">`+ nombregrupo + `</div>
                 <div class="id_banca">Banca Corporativa / Oficina Moneda / PEP</div>

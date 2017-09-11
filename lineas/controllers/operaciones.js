@@ -508,7 +508,7 @@ exports.listaprobaciones = function (req, res) {
     select count (*) from scl.Aprobacion a
     join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
     join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
-    where a.Rut =`+ req.params.id + ' and a.EstadoAprobacion_Id=' + req.params.estado;
+    where a.Rut =`+ req.params.id ;//+ ' and a.EstadoAprobacion_Id=' + req.params.estado;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
@@ -516,10 +516,11 @@ exports.listaprobaciones = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, a.*, b.Nombre as tipoaprobacion, c.Nombre as estadoaprobacion from scl.Aprobacion a
+        `as resultNum, a.*, b.Nombre as tipoaprobacion, c.Nombre as estadoaprobacion, d.MacGrupo_Id as idmacgrupal from scl.Aprobacion a
         join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
         join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
-        where a.Rut =`+ req.params.id + ' and a.EstadoAprobacion_Id=' + req.params.estado;
+        join scl.MacGrupo d on d.Aprobacion_Id=a.Id
+        where a.Rut =`+ req.params.id ;//+ ' and a.EstadoAprobacion_Id=' + req.params.estado;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 

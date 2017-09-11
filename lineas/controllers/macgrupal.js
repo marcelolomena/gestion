@@ -132,10 +132,22 @@ exports.list = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, a.Id as idcabecera, a.Acomite, b.Grupo_Id as idgrupo, c.*
+        `as resultNum, a.Id as idcabecera, a.Acomite, b.Grupo_Id as idgrupo, 
+        c.*
+        ,d.[Directo]
+        ,d.[Contingente]
+        ,d.[Derivados]
+        ,d.[EntregaDiferida]
+        ,d.[TotalCliente]
+        ,d.[VariacionAprobacion]
+        ,d.[DeudaBancoDirecta]
+        ,d.[GarantiaRealTopada]
+        ,d.[SbifAchel]
+        ,d.[Penetracion]
         from scl.MacGrupo a
         join scl.GrupoEmpresa b on a.[GrupoEmpresa_Id]=b.Id
         join scl.Empresa c on b.Empresa_Id=c.Id
+        left outer join scl.Aprobacion d on a.Aprobacion_Id=d.Id
         where a.[MacGrupo_Id]=`+ req.params.id;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
