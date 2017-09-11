@@ -519,7 +519,7 @@ exports.listaprobaciones = function (req, res) {
     select count (*) from scl.Aprobacion a
     join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
     join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
-    where a.Rut =`+ req.params.id + ' and a.EstadoAprobacion_Id=' + req.params.estado;
+    where a.Rut =`+ req.params.id ;//+ ' and a.EstadoAprobacion_Id=' + req.params.estado;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
@@ -527,10 +527,11 @@ exports.listaprobaciones = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, a.*, b.Nombre as tipoaprobacion, c.Nombre as estadoaprobacion from scl.Aprobacion a
+        `as resultNum, a.*, b.Nombre as tipoaprobacion, c.Nombre as estadoaprobacion, d.MacGrupo_Id as idmacgrupal from scl.Aprobacion a
         join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
         join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
-        where a.Rut =`+ req.params.id + ' and a.EstadoAprobacion_Id=' + req.params.estado;
+        join scl.MacGrupo d on d.Aprobacion_Id=a.Id
+        where a.Rut =`+ req.params.id ;//+ ' and a.EstadoAprobacion_Id=' + req.params.estado;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -546,6 +547,11 @@ exports.listaprobaciones = function (req, res) {
 };
 
 
+
+/**
+ * FIN TAB APROBACIONES
+ */
+
 exports.listverdetallebloqueo = function (req, res) {
     sequelize.query(
         `select a.Id as LineaID,a.Numero, a.Disponible, d.Id as Bloqueo_Id, d.Monto,d.Activo,d.FechaBloqueo, d.Comentario from scl.Linea a
@@ -560,10 +566,6 @@ exports.listverdetallebloqueo = function (req, res) {
         res.json({ error: 1 });
     });
 };
-/**
- * FIN TAB APROBACIONES
- */
-
 
 exports.listoperacionesreserva = function (req, res) {
     sequelize.query(`
@@ -587,7 +589,7 @@ exports.actionoperacionesreserva = function (req, res) {
     switch (action) {
         case "add":
 
-            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,`+req.body.FechaOtorgamiento+`,`+req.body.FechaProxVenc+`,`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
+            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,'`+req.body.FechaOtorgamiento+`','`+req.body.FechaProxVenc+`',`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
             // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
@@ -600,7 +602,7 @@ exports.actionoperacionesreserva = function (req, res) {
 
         case "edit":
 
-            var sql=`update scl.Operacion set TipoOperacion ='`+req.body.TipoOperacion+`',NumeroProducto=`+req.body.NumeroProducto+`,FechaOtorgamiento=`+req.body.FechaOtorgamiento+`,FechaProxVenc=`+req.body.FechaProxVenc+`,Moneda='`+req.body.Moneda+`',MontoInicial=`+req.body.MontoInicial+`,MontoActual=`+req.body.MontoActual+`,MontoActualMNac=`+req.body.MontoActualMNac+` WHERE Id=`+req.body.Idlim
+            var sql=`update scl.Operacion set TipoOperacion ='`+req.body.TipoOperacion+`',NumeroProducto=`+req.body.NumeroProducto+`,FechaOtorgamiento='`+req.body.FechaOtorgamiento+`',FechaProxVenc='`+req.body.FechaProxVenc+`',Moneda='`+req.body.Moneda+`',MontoInicial=`+req.body.MontoInicial+`,MontoActual=`+req.body.MontoActual+`,MontoActualMNac=`+req.body.MontoActualMNac+` WHERE Id=`+req.body.Idlim
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
             }).catch(function (err) {
@@ -612,20 +614,14 @@ exports.actionoperacionesreserva = function (req, res) {
             break;
 
         case "del":
-            models.limite.destroy({
-                where: {
-                    id: req.body.id
-                }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                res.json({ success: true, glosa: '' });
+            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,`+req.body.FechaOtorgamiento+`,`+req.body.FechaProxVenc+`,`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
+            // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
+            sequelize.query(sql).spread((results, metadata) => {
+                return res.json({ error: 0 });
             }).catch(function (err) {
-                logger.error(err)
-                res.json({ success: false, glosa: err.message });
+                logger.error(err);
+                return res.json({ error: 1 });
             });
-
             break;
 
     }
