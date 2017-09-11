@@ -11,21 +11,29 @@ var ajusteGrid = {
             key: true,
             hidden: true,
             editable: false
-        }, {
-            label: 'Fabricante',
-            name: 'fabricante',
+        },{
+            label:'Fecha',
+            name:'fecha',
             editable: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/lic/fabricante',
-                buildSelect: function (response) {
-                    var rowData = $grid.getRowData($grid.getGridParam("selrow"));
-                    var thissid = rowData.fabricante;
-                    var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
-                }
-            }
-        }];
+            edittype:'date'
+        },{
+            label:'Usuario',
+            name:'usuario',
+            editable: true
+        },{
+            label:'Cantidad',
+            name:'cantidad',
+            editable: true
+        },{
+            label:'Observación',
+            name:'observacion',
+            editable: true,
+            edittype: 'textarea'
+        }  
+    
+    
+    
+    ];
 
         var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Ajustes', 'Editar Ajuste', 'Agregar Ajuste', 'lic/' + tabName, viewModel, 'Fabricante', '/lic/getsession', ['Administrador LIC']);
         tabGrid.build();

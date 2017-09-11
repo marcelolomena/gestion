@@ -11,18 +11,22 @@ var traduccionGrid = {
             key: true,
             hidden: true,
             editable: false
+        },{
+            label:'Nombre',
+            name:'nombre',
+            editable: true
         }, {
-            label: 'Fabricante',
-            name: 'fabricante',
+            label: 'Tipo',
+            name: 'tipo',
             editable: true,
-            edittype: "select",
+            edittype: 'select',
             editoptions: {
-                dataUrl: '/lic/fabricante',
+                dataUrl: '/lic/traduccion',
                 buildSelect: function (response) {
-                    var rowData = $grid.getRowData($grid.getGridParam("selrow"));
+                    var rowData = $grid.getRowData($grid.getGridParam('selrow'));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
+                    return new zs.SelectTemplate(data, 'Seleccione Tipo', thissid).template;
                 }
             }
         }];

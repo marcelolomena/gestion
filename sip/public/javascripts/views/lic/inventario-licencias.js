@@ -60,10 +60,10 @@
     }
 
     function SimpleGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles) {
-     var   tableId = '#' + tableName;
-     var   $table = $(tableId);
+        var tableId = '#' + tableName;
+        var $table = $(tableId);
 
-        function errorTextFormat (data) {
+        function errorTextFormat(data) {
             return 'Error: ' + data.responseText
         }
 
@@ -99,15 +99,15 @@
             styleUI: "Bootstrap",
             loadComplete: this.loadComplete
         };
-        this.beforeSubmit =errorTextFormat;
+        this.beforeSubmit = errorTextFormat;
         this.itemTemplate = new ModelItemTemplate(viewModel);
         this.editErrorTextFormat = function (data) {
             return 'Error: ' + data.responseText
         };
-        this.editBeforeShowForm =function (form) {
-            var rowData = $table.getRowData($table.getGridParam("selrow"));
+        this.editBeforeShowForm = function (form) {
+            var rowData = $table.getRowData($table.getGridParam('selrow'));
         };
-        this.editAfterSubmit =  function (response, postdata) {
+        this.editAfterSubmit = function (response, postdata) {
             var json = response.responseText;
             var result = JSON.parse(json);
             if (result.error != 0) {
@@ -127,7 +127,7 @@
         this.addBeforeSubmit = function (postdata, formid) {
             //valido formulario
         };
-        this.addAfterSubmit= function (response, postdata) {
+        this.addAfterSubmit = function (response, postdata) {
             var json = response.responseText;
             var result = JSON.parse(json);
             if (result.error != 0) {
@@ -143,8 +143,8 @@
                 return [true, "", ""];
             }
         };
-        this.addBeforeShowForm= function (form) {};
-        this.addAfterSubmit= function (response, postdata) {
+        this.addBeforeShowForm = function (form) {};
+        this.addAfterSubmit = function (response, postdata) {
             var json = response.responseText;
             var result = JSON.parse(json);
             if (!result.success)
@@ -174,7 +174,7 @@
                 template: this.itemTemplate.template,
                 errorTextFormat: this.editErrorTextFormat,
                 beforeSubmit: this.editBeforeSubmit,
-                afterSubmit:this.editAfterSubmit,
+                afterSubmit: this.editAfterSubmit,
                 beforeShowForm: this.editBeforeShowForm
             }, {
                 addCaption: addCaption,
@@ -185,7 +185,7 @@
                 serializeEditData: licLibrary.createJSON,
                 template: this.itemTemplate.template,
                 errorTextFormat: this.addErrorTextFormat,
-                beforeSubmit: this.addBeforeSubmit ,
+                beforeSubmit: this.addBeforeSubmit,
                 afterSubmit: this.addAfterSubmit,
                 beforeShowForm: this.addBeforeShowForm
             }, {
@@ -212,15 +212,15 @@
 
     var initMainGrid = function (_url, _colModel, _sortname, tabs) {
         var table = 'gridMaster';
-        var tableId = '#'+table;
-        var grid = new zs.SimpleGrid(table,'pagerMaster', 'Inventario de licencias', 'Modificar Licencia', 'Agtregar Licencia', _url, _colModel, _sortname, '/lic/getsession', ['Administrador LIC']);
+        var tableId = '#' + table;
+        var grid = new zs.SimpleGrid(table, 'pagerMaster', 'Inventario de licencias', 'Modificar Licencia', 'Agtregar Licencia', _url, _colModel, _sortname, '/lic/getsession', ['Administrador LIC']);
         grid.config.subGrid = true;
         grid.config.subGridRowExpanded = function (divid, rowid) {
             showChildGrid(divid, rowid, tabs);
         };
         grid.config.subGridBeforeExpand = function (divid, rowid) {
             //JPS:bad selector not working
-            var expanded = $('td.sgexpanded',tableId )[0];
+            var expanded = $('td.sgexpanded', tableId)[0];
             if (expanded) {
                 setTimeout(function () {
                     $(expanded).trigger("click");
@@ -245,29 +245,34 @@
         }
     };
 
-    function selectTab (e) {
-        var $this = $(this),
-        loadurl = $this.attr('href'),
-        targ = $this.attr('data-target'),
-        tabGrid = selectTabGrid(targ);
-    tabGrid.renderGrid(loadurl, parentRowKey, targ);
-    $this.tab('show');
-    return false;
-    };
-
     function showChildGrid(parentRowID, parentRowKey, tabs) {
         var tabTemplate = new TabTemplate(parentRowID, parentRowKey, tabs).template;
         $('#' + parentRowID).append(tabTemplate);
         $('#' + tabs[0].id + '_tab_' + parentRowKey).addClass('media_node active span')
-        $('.active[data-toggle="tab_' + parentRowKey + '"]').each(selectTab);
-        $('[data-toggle="tab_' + parentRowKey + '"]').click(selectTab);
+        $('.active[data-toggle="tab_' + parentRowKey + '"]').each( function (item) {
+            var $this = $(this),
+                loadurl = $this.attr('href'),
+                targ = $this.attr('data-target'),
+                tabGrid = selectTabGrid(targ);
+            tabGrid.renderGrid(loadurl, parentRowKey, targ);
+            $this.tab('show');
+            return false;
+        });
+        $('[data-toggle="tab_' + parentRowKey + '"]').click(function (e) {
+            var $this = $(this),
+                loadurl = $this.attr('href'),
+                targ = $this.attr('data-target'),
+                tabGrid = selectTabGrid(targ);
+            tabGrid.renderGrid(loadurl, parentRowKey, targ);
+            $this.tab('show');
+            return false;
+        });
     }
 
     $(function () {
 
         var $table = $('#gridMaster');
-        var licenciasModel = [
-        {
+        var licenciasModel = [{
             label: 'ID',
             name: 'id',
             key: true,
@@ -277,11 +282,11 @@
             label: 'Fabricante',
             name: 'fabricante',
             editable: true,
-            edittype: "select",
+            edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/fabricante',
                 buildSelect: function (response) {
-                    var rowData = $table.getRowData($table.getGridParam("selrow"));
+                    var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
                     return new SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
@@ -295,11 +300,11 @@
             label: '¿Donde está instalada?',
             name: 'tipoInstalacion',
             editable: true,
-            edittype: "select",
+            edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/tipoInstalacion',
                 buildSelect: function (response) {
-                    var rowData = $table.getRowData($table.getGridParam("selrow"));
+                    var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
                     return new SelectTemplate(data, 'Seleccione', thissid).template;
@@ -309,11 +314,11 @@
             label: 'Clasificacion',
             name: 'clasificacion',
             editable: true,
-            edittype: "select",
+            edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/clasificacion',
                 buildSelect: function (response) {
-                    var rowData = $table.getRowData($table.getGridParam("selrow"));
+                    var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
                     return new SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
@@ -323,11 +328,11 @@
             label: 'Tipo de Licenciamiento',
             name: 'tipoLicenciamiento',
             editable: true,
-            edittype: "select",
+            edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/tipoLicenciamiento',
                 buildSelect: function (response) {
-                    var rowData = $table.getRowData($table.getGridParam("selrow"));
+                    var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
                     return new SelectTemplate(data, 'Seleccione Tipo de Licencia', thissid).template;
@@ -361,8 +366,7 @@
             hidden: true,
             editable: true,
             edittype: "textarea"
-        }
-    ];
+        }];
 
         var tabs = [{
                 id: 'compra',
