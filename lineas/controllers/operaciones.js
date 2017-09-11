@@ -576,7 +576,7 @@ exports.actionoperacionesreserva = function (req, res) {
     switch (action) {
         case "add":
 
-            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,`+req.body.FechaOtorgamiento+`,`+req.body.FechaProxVenc+`,`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
+            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,'`+req.body.FechaOtorgamiento+`','`+req.body.FechaProxVenc+`',`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
             // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
