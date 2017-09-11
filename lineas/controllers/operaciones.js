@@ -589,7 +589,7 @@ exports.actionoperacionesreserva = function (req, res) {
 
         case "edit":
 
-            var sql=`update scl.Operacion set TipoOperacion ='`+req.body.TipoOperacion+`',NumeroProducto=`+req.body.NumeroProducto+`,FechaOtorgamiento=`+req.body.FechaOtorgamiento+`,FechaProxVenc=`+req.body.FechaProxVenc+`,Moneda='`+req.body.Moneda+`',MontoInicial=`+req.body.MontoInicial+`,MontoActual=`+req.body.MontoActual+`,MontoActualMNac=`+req.body.MontoActualMNac+` WHERE Id=`+req.body.Idlim
+            var sql=`update scl.Operacion set TipoOperacion ='`+req.body.TipoOperacion+`',NumeroProducto=`+req.body.NumeroProducto+`,FechaOtorgamiento='`+req.body.FechaOtorgamiento+`',FechaProxVenc='`+req.body.FechaProxVenc+`',Moneda='`+req.body.Moneda+`',MontoInicial=`+req.body.MontoInicial+`,MontoActual=`+req.body.MontoActual+`,MontoActualMNac=`+req.body.MontoActualMNac+` WHERE Id=`+req.body.Idlim
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
             }).catch(function (err) {
