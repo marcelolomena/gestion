@@ -202,8 +202,6 @@ $(".cajaRut").append(`
             targ = $this.attr('data-target');
         if (targ === '#operacionmac') { //ver macgrupal es la grilla padre
             gridaprobaciones.renderGrid(loadurl, targ)  //genera la grilla, la obtiene desde vermac
-            //gridaprobaciones2.renderGrid(loadurl, targ + '3')
-            //$("a#operacionmac3_tab").tab('show');
         } else if (targ === '#vertablimites') { // target del <li>
             gridvertablimites.renderGrid(loadurl, targ)
         } else if (targ === '#operacion') {

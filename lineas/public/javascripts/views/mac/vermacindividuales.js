@@ -13,6 +13,18 @@ var gridVermacgrupal = {
         var modelmacgrupal = [
             { label: 'ID', name: 'Id', key: true, hidden: true },
             {
+                label: ' ', name: 'Acomite', width: 20, hidden: false, search: true, editable: true, editrules: { required: true },
+                formatter: function (cellvalue, options, rowObject) {
+                    if (cellvalue == 2) {
+                        dato = '<span class="glyphicon glyphicon-certificate"></span>'
+                    }
+                    else {
+                        dato = ' '
+                    }
+                    return dato
+                }
+            },
+            {
                 label: 'Rut',
                 name: 'Rut',
                 width: 60,
@@ -29,7 +41,7 @@ var gridVermacgrupal = {
             },
             { label: 'Dv', name: 'Dv', hidden: true, editable: true },
             {
-                label: 'Nombre', name: 'Nombre', width: 150, hidden: false, search: true, editable: true, editrules: { required: true }
+                label: 'Cliente', name: 'Nombre', width: 150, hidden: false, search: true, editable: true, editrules: { required: true }
             },
 
             { label: 'A. Económica', name: 'ActividadEconomica', width: 80, hidden: false, search: true, editable: true, editrules: { required: true } },

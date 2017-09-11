@@ -1,33 +1,7 @@
 $(document).ready(function () {
-
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
-
-
-    // $(".gcontainer").prepend(`
-    //         <div class="panel panel-primary">
-    //             <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
-    //                 <h3 class="panel-title">Información Grupo</h3>
-    //             </div>
-    //             <div class="panel-body">
-    //                 <div id="cabecera" class="form-group">
-    //                     <div class="row">
-    //                         <div class="col-xs-4" style="font-size:16px"><b>Nombre Grupo:</b> <span id="nombregrupo"></span></div>
-    //                         <div class="col-xs-4" style="font-size:16px"><b>Ejecutivo:</b> <span id="ejecutivo"></span></div>
-    //                     </div>
-    //                     <div class="row">
-    //                         <div class="col-xs-4" style="font-size:16px"><b>Fecha Presentación:</b> <span id="fechapresentacion"></span></div>
-    //                         <div class="col-xs-4" style="font-size:16px"><b>Vcto. Ant:</b> <span id="vencimientoanterior"></span></div>
-
-    //                     </div>
-    //                 </div> 
-    //             </div>
-
-    //         </div>`);
-
     var idcabecera = $("#param").text();
-    var nombre = ""
-    var rut = ""
     var idgrupo = ""
     var nombregrupo = ""
     var elcaption = ""
@@ -42,10 +16,6 @@ $(document).ready(function () {
                 ejecutivo = 'Marcela Castro'
                 fechapresentacion = '30-08-2017'
                 vencimientoanterior = '30-08-2016'
-                // $("#nombregrupo").html(nombregrupo)
-                // $("#ejecutivo").html(ejecutivo)
-                // $("#fechapresentacion").html(fechapresentacion)
-                // $("#vencimientoanterior").html(vencimientoanterior)
                 $(".cajaRut").html(`
                 <div class="id_nombre">`+ nombregrupo + `</div>
                 <div class="id_banca">Banca Corporativa / Oficina Moneda / PEP</div>
@@ -459,11 +429,6 @@ $(document).ready(function () {
     });
 
     var idmacgrupal = $("#param").text();
-    var nombre = ""
-    var rut = ""
-    var idgrupo = ""
-    var nombregrupo = ""
-    var elcaption = ""
     
     $("#gridMaster").append(`
             
@@ -472,6 +437,8 @@ $(document).ready(function () {
         <ul class='nav nav-tabs tabs-up' id='myTabGrupal'>
             <li><a href='/vermacgrupal/` + idmacgrupal + `' data-target='#vermacgrupal' id='vermacgrupal_tab' data-toggle='tabgrupal'>Grupo</a></li>
             <li><a href='/getmacindividual/11' data-target='#aprobacion' id='aprobacion_tab' data-toggle='tabgrupal'>FRUTICOLA S.A</a></li>
+            <li><a href='#' data-target='#set' id='set_tab' data-toggle='tabgrupal'>Set</a></li>
+            <li><a href='#' data-target='#comentarios' id='comentarios_tab' data-toggle='tabgrupal'>Comentarios</a></li>
             <li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tabgrupal'>Bitacora</a></li>
         </ul>
         <div class='tab-content'>
@@ -481,8 +448,6 @@ $(document).ready(function () {
         </div>
                 
         `)
-
-
 
     $('#vermacgrupal_tab').addClass('media_node active span')
     $('.active[data-toggle="tabgrupal"]').each(function (e) {
