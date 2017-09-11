@@ -14,5 +14,5 @@ module.exports = {
         var orden = "[licencia]." + sidx + " " + sord;
 
     },
-    action:function(req,res){},
+    action:function(req,res){}
 };
