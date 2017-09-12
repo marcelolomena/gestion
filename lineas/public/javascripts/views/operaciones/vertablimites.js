@@ -505,6 +505,7 @@ var gridvertablimites = {
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmonto">Monto:</label>
                                                         <input type="text" class="form-control" name ="monto" id="monto">
+                                                        <input type="text" class="form-control" name ="desbloquear" id="desbloquear" style="display: none">
                                                         <label for="comentario" id="labelcomentario">Comentario:</label>
                                                         <input type="text" class="form-control" name="comentario" id="comentario">
                                                     </div>
@@ -554,7 +555,7 @@ var gridvertablimites = {
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmontodesbloqueo">Monto:</label>
                                                         <input type="text" class="form-control" name ="montod" id="montodes">
-                                                        <input type="text" class="form-control" name ="desbloquear" id="desbloquear">
+                                                        <input type="text" class="form-control" name ="desbloquear" id="desbloquear2" style="display: none">
                                                         <input type="text" class="form-control" name ="monto" id="monto2"; style="display: none">
                                                     </div>
                                                     <div class="form-group">
@@ -1024,7 +1025,8 @@ var gridvertablimites = {
                     var nuevovalorbloq = bloq - des;
                     $("#monto2").val(nuevovalorbloq);
                     $("#monto2").html(nuevovalorbloq);
-                    $("#desbloquear").val(2)
+                    $("#desbloquear2").val(2)
+                    //$("#desbloquear").html(2)
                     var montoBase = 0;
                     var insert = 0;
                     var monto = parseInt($('#monto2').val());
@@ -1033,7 +1035,8 @@ var gridvertablimites = {
                     if (monto <= 0) {
 
                         if (monto == 0) {
-                            $("#desbloquear").val(1);
+                            $("#desbloquear2").val(1);
+                            //$("#desbloquear").html(1);
                             $.ajax({
                                 type: "POST",
                                 url: "/cargarbloqueo/" + idlineabloqueo,
@@ -1048,7 +1051,8 @@ var gridvertablimites = {
                         }
 
                     }
-                    else {
+                    else { //bloqueado
+                         
                         $.ajax({
                             type: "POST",
                             url: "/cargarbloqueo/" + idlineabloqueo,
@@ -1067,7 +1071,6 @@ var gridvertablimites = {
                     var montoBase = 0;
                     var insert = 0;
                     var monto = parseInt($('#monto').val());
-
                     $.ajax({
                         type: "GET",
                         url: '/verdetallebloqueo/' + idlineabloqueo,
@@ -1085,15 +1088,18 @@ var gridvertablimites = {
                         alert("El monto ingresado es superior al disponible");
                     }
                     else {
+                        
+
                         $.ajax({
                             type: "POST",
                             url: "/cargarbloqueo/" + idlineabloqueo,
                             data: $('#miprimerform2').serialize(),
                             success: function (msg) {
-                                //console.log("tremendo exito " + msg)
+                                console.log("tremendo exito " + msg)
                                 $gridTab2.trigger('reloadGrid');
                             }
                         });
+                        //console.log("llegue al bloqueo")
                     }
 
 
@@ -1121,6 +1127,8 @@ var gridvertablimites = {
                             $("#monto").val("");
                             $("#comentariodesbloqueo").val("");
                             $("#desbloquear").hide();
+                            $("#desbloquear").val(0);
+                            //$("#desbloquear").html(0);
 
                             if (act == 1) {
                                 $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Monto)) //desbloqueo
@@ -1129,7 +1137,6 @@ var gridvertablimites = {
                                 $("#ModalDesbloqueo").modal();
                                 $("#montodes").val("");
                                 $("#desbloquear").hide();
-                                $("#desbloquear").val(0);
                                 $("#ValComentarioDes").val(data[0].Comentario);
                                 $("#monto").val("");
                                 $("#comentariodesbloqueo").val("");

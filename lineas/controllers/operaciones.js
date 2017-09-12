@@ -447,49 +447,52 @@ exports.actionbloquear = function (req, res) {
     //fecha de hoy    
     var hoy = new Date();
     var dd = hoy.getDate();
-    var mm = hoy.getMonth()+1; 
+    var mm = hoy.getMonth() + 1;
     var yyyy = hoy.getFullYear();
-    if(dd<10) {
-        dd='0'+dd
-    } 
-    if(mm<10) {
-        mm='0'+mm
-    } 
-    hoy = dd+'-'+mm+'-'+yyyy;
-    
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+    hoy = dd + '-' + mm + '-' + yyyy;
+
     var idlinea = req.params.id;
     var desbloquear = parseInt(req.body.desbloquear);
-    if(desbloquear == 2){
-        
-        sequelize.query(`update scl.Bloqueo 
-        set Monto = `+ req.body.monto + `, Activo = 1, Comentario = '`+req.body.comentario+`', FechaBloqueo = '`+hoy+`'
-        where Linea_Id= `+ idlinea).spread((results, metadata) => {
-            return res.json(metadata);
+    console.log("valor desbloquear: " + desbloquear)
+    if (desbloquear == 2) {//desbloqueo parcial
 
-        }).catch(function (err) {
-            logger.error(err);
-            return res.json({ error: 1 });
-        });
-    }
-    else{
-        if(desbloquear == 1){
-            sequelize.query(`delete from scl.Bloqueo where Linea_Id = `+ idlinea).spread((results, metadata) => {
+        sequelize.query(`update scl.Bloqueo 
+        set Monto = `+ req.body.monto + `, Activo = 1, Comentario = '` + req.body.comentario + `', FechaBloqueo = '` + hoy + `'
+        where Linea_Id= `+ idlinea).spread((results, metadata) => {
                 return res.json(metadata);
-    
+
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1 });
+            });
+    }
+    else {
+        if (desbloquear == 1) { //desbloqueo total
+            sequelize.query(`delete from scl.Bloqueo where Linea_Id = ` + idlinea).spread((results, metadata) => {
+                return res.json(metadata);
+
             }).catch(function (err) {
                 logger.error(err);
                 return res.json({ error: 1 });
             })
         }
-        else{
-            sequelize.query(`insert into scl.Bloqueo (Monto,Activo,Linea_Id,Comentario,FechaBloqueo) values ( `+ req.body.monto + `,1,`+idlinea+`,'`+req.body.comentario+`', '`+hoy+`')`).spread((results, metadata) => {
-                return res.json(metadata);
+        else {
+            if (desbloquear == 0) {
+                sequelize.query(`insert into scl.Bloqueo (Monto,Activo,Linea_Id,Comentario,FechaBloqueo) values ( ` + req.body.monto + `,1,` + idlinea + `,'` + req.body.comentario + `', '` + hoy + `')`).spread((results, metadata) => {
+                    return res.json(metadata);
                 }).catch(function (err) {
-                logger.error(err);
-                return res.json({ error: 1 });
+                    logger.error(err);
+                    return res.json({ error: 1 });
                 });
+            }
         }
-                
+
     }
 };
 
@@ -549,7 +552,7 @@ exports.listaprobaciones = function (req, res) {
     select count (*) from scl.Aprobacion a
     join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
     join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
-    where a.Rut =`+ req.params.id ;//+ ' and a.EstadoAprobacion_Id=' + req.params.estado;
+    where a.Rut =`+ req.params.id;//+ ' and a.EstadoAprobacion_Id=' + req.params.estado;
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
@@ -561,7 +564,7 @@ exports.listaprobaciones = function (req, res) {
         join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
         join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
         join scl.MacGrupo d on d.Aprobacion_Id=a.Id
-        where a.Rut =`+ req.params.id ;//+ ' and a.EstadoAprobacion_Id=' + req.params.estado;
+        where a.Rut =`+ req.params.id;//+ ' and a.EstadoAprobacion_Id=' + req.params.estado;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -619,7 +622,7 @@ exports.actionoperacionesreserva = function (req, res) {
     switch (action) {
         case "add":
 
-            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,'`+req.body.FechaOtorgamiento+`','`+req.body.FechaProxVenc+`',`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
+            var sql = `exec scl.nuevareserva ` + req.body.Idlim + `,` + req.body.TipoOperacion + `,` + req.body.NumeroProducto + `,'` + req.body.FechaOtorgamiento + `','` + req.body.FechaProxVenc + `',` + req.body.Moneda + `,` + req.body.MontoInicial + `,` + req.body.MontoActual + `,` + req.body.MontoActualMNac + `,` + req.body.RutEmpresa + ``
             // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
@@ -632,25 +635,25 @@ exports.actionoperacionesreserva = function (req, res) {
 
         case "edit":
 
-            var sql=`update scl.Operacion set TipoOperacion ='`+req.body.TipoOperacion+`',NumeroProducto=`+req.body.NumeroProducto+`,FechaOtorgamiento='`+req.body.FechaOtorgamiento+`',FechaProxVenc='`+req.body.FechaProxVenc+`',Moneda='`+req.body.Moneda+`',MontoInicial=`+req.body.MontoInicial+`,MontoActual=`+req.body.MontoActual+`,MontoActualMNac=`+req.body.MontoActualMNac+` WHERE Id=`+req.body.Idlim
+            var sql = `update scl.Operacion set TipoOperacion ='` + req.body.TipoOperacion + `',NumeroProducto=` + req.body.NumeroProducto + `,FechaOtorgamiento='` + req.body.FechaOtorgamiento + `',FechaProxVenc='` + req.body.FechaProxVenc + `',Moneda='` + req.body.Moneda + `',MontoInicial=` + req.body.MontoInicial + `,MontoActual=` + req.body.MontoActual + `,MontoActualMNac=` + req.body.MontoActualMNac + ` WHERE Id=` + req.body.Idlim
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
             }).catch(function (err) {
                 logger.error(err);
                 return res.json({ error: 1 });
             });
-    
+
 
             break;
 
         case "del":
-            var sql=`exec scl.borrarreserva `+parseInt(req.body.Idlim)+`,`+parseInt(req.body.id)+``
+            var sql = `exec scl.borrarreserva ` + parseInt(req.body.Idlim) + `,` + parseInt(req.body.id) + ``
             // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
             }).catch(function (err) {
                 logger.error(err);
-                return res.json({ error: 1 , error_text: err});
+                return res.json({ error: 1, error_text: err });
             });
             break;
 
