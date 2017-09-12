@@ -7,8 +7,8 @@ module.exports = function (sequelize, DataTypes) {
             autoIncrement: true
         },
         nombre: {
-            type: DateTypes.STRING,
-            allowNull: false
+            type: DataTypes.STRING,
+            allowNull: true
 
         },
         borrado: {
@@ -18,6 +18,6 @@ module.exports = function (sequelize, DataTypes) {
     }, {
             schema: 'lic',
             timestamps: false,
-            tableName: 'clasificacion'
+            tableName: 'clasificacion' 
         });
 };

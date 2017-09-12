@@ -17,6 +17,6 @@ module.exports = function (sequelize, DataTypes) {
     }, {
             schema: 'lic',
             timestamps: false,
-            tableName: 'fabricante'
+            tableName: 'fabricante' 
         });
 };

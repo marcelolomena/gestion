@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('licencias', {
+    return sequelize.define('licencia', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -65,8 +65,12 @@ module.exports = function (sequelize, DataTypes) {
         borrado: {
             type: DataTypes.STRING,
             allowNull: true
+        },
+        software: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
     }, {
-            schema: 'lic', timestamps: false, tableName: 'licencias'
+            schema: 'lic', timestamps: false, tableName: 'licencia'
         });
 };

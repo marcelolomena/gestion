@@ -7,8 +7,8 @@ module.exports = function (sequelize, DataTypes) {
             autoIncrement: true
         },
         nombre: {
-            type: DateTypes.STRING(120),
-            allowNull:false
+            type: DataTypes.STRING,
+            allowNull:true
 
         },
         borrado: {
