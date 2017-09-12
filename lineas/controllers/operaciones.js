@@ -34,11 +34,15 @@ exports.listlimite = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, a.*, Monto, Activo, Comentario from scl.Linea a
-        join scl.LineaEmpresa b on a.Id=b.Linea_Id
-        join scl.Empresa c on c.Id=b.Empresa_Id
-		left join scl.Bloqueo d on d.Linea_Id = b.Linea_Id
-		where a.Padre_Id is null and c.Rut=`+ req.params.id;
+        `as resultNum, a.*, Monto, Activo, Comentario , 
+        IIF(a.Moneda = 'USD' , a.Disponible*623, IIF(a.Moneda = 'UF' , a.Disponible*26628, IIF(a.Moneda = 'EURO' , a.Disponible*744, a.Disponible))) AS DisponiblePesos,
+        IIF(a.Moneda = 'USD' , a.Aprobado*623, IIF(a.Moneda = 'UF' , a.Aprobado*26628, IIF(a.Moneda = 'EURO' , a.Aprobado*744, a.Aprobado))) AS AprobadoPesos,
+        IIF(a.Moneda = 'USD' , a.Utilizado*623, IIF(a.Moneda = 'UF' , a.Utilizado*26628, IIF(a.Moneda = 'EURO' , a.Utilizado*744, a.Utilizado))) AS UtilizadoPesos
+              from scl.Linea a
+              join scl.LineaEmpresa b on a.Id=b.Linea_Id
+              join scl.Empresa c on c.Id=b.Empresa_Id
+              left join scl.Bloqueo d on d.Linea_Id = b.Linea_Id
+              where a.Padre_Id is null and c.Rut=`+ req.params.id;
     sqlok += ") " +
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
@@ -589,9 +593,9 @@ exports.listverdetallebloqueo = function (req, res) {
 
 exports.listoperacionesreserva = function (req, res) {
     sequelize.query(`
-        select * from scl.Operacion a  
+        select a.* from scl.Operacion a  
         join scl.LineaOperacion b on a.Id=b.Operacion_Id
-        where Linea_Id =`+ req.params.id,
+        where b.Linea_Id =`+ req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -634,13 +638,13 @@ exports.actionoperacionesreserva = function (req, res) {
             break;
 
         case "del":
-            var sql=`exec scl.nuevareserva `+req.body.Idlim+`,`+req.body.TipoOperacion+`,`+req.body.NumeroProducto+`,`+req.body.FechaOtorgamiento+`,`+req.body.FechaProxVenc+`,`+req.body.Moneda+`,`+req.body.MontoInicial+`,`+req.body.MontoActual+`,`+req.body.MontoActualMNac+`,`+req.body.RutEmpresa+``
+            var sql=`exec scl.borrarreserva `+parseInt(req.body.Idlim)+`,`+parseInt(req.body.id)+``
             // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
             }).catch(function (err) {
                 logger.error(err);
-                return res.json({ error: 1 });
+                return res.json({ error: 1 , error_text: err});
             });
             break;
 
