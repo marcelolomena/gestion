@@ -325,8 +325,8 @@ exports.listultimomac = function (req, res) {
 exports.listsublimop = function (req, res) {
     sequelize.query(
         `select *from scl.Operacion a 
-          join scl.SublineaOperacion b on a.Id = b.Operacion_Id
-          where b.Sublinea_Id=` + req.params.id,
+          join scl.LineaOperacion b on a.Id = b.Operacion_Id
+          where b.Linea_Id=` + req.params.id,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -341,9 +341,9 @@ exports.listtipooperaciones = function (req, res) {
     sequelize.query(
         `select distinct a.Id, f.Rut, a.Nombre from scl.TipoOperacion a
 join scl.Operacion b on a.Codigo = b.TipoOperacion
-join scl.SublineaOperacion c on c.Operacion_Id=b.Id
-join scl.Sublinea d on d.Id = c.Sublinea_Id
-join scl.EmpresaSublinea e on e.Sublinea_Id=d.Id
+join scl.LineaOperacion c on c.Operacion_Id=b.Id
+join scl.Linea d on d.Id = c.Linea_Id
+join scl.LineaEmpresa e on e.Linea_Id=d.Id
 join scl.Empresa f on f.Id=e.Empresa_Id
 where f.Rut=`+ req.params.id,
         { type: sequelize.QueryTypes.SELECT }
@@ -472,7 +472,7 @@ exports.listasignar = function (req, res) {
     sequelize.query(
         `select distinct a.Id, a.Nombre, b.RutEmpresa as Rut from scl.TipoOperacion a
         join scl.Operacion b on a.Codigo = b.TipoOperacion
-        where b.RutEmpresa=`+ req.params.id + ' and b.Id Not In (select Id from scl.SublineaOperacion)',
+        where b.RutEmpresa=`+ req.params.id + ' and b.Id Not In (select Id from scl.LineaOperacion)',
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)

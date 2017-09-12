@@ -2,21 +2,21 @@ var gridAprobacion = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab = $(targ + "_t")
-        var idmac = 25//targ.substring(4)
+        var idmac = 24//targ.substring(4)
         var formatear =
-        {
-            formatearNumero: function (nStr) {
-                nStr += '';
-                x = nStr.split('.');
-                x1 = x[0];
-                x2 = x.length > 1 ? ',' + x[1] : '';
-                var rgx = /(\d+)(\d{3})/;
-                while (rgx.test(x1)) {
-                    x1 = x1.replace(rgx, '$1' + '.' + '$2');
+            {
+                formatearNumero: function (nStr) {
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? ',' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                    }
+                    return x1 + x2;
                 }
-                return x1 + x2;
             }
-        }
 
         if (document.getElementById("cabecera") == null) {
 
@@ -66,7 +66,7 @@ var gridAprobacion = {
                                 <div class="col-xs-1"><b>ACTIVIDAD</b></div>
                                 <div class="col-xs-3"><span id="actividad`+ idmac + `"></span></div>
                                 <div class="col-xs-2"><b>FECHA PROX. VENC.</b></div>
-                                <div class="col-xs-2"><span id="fechaproxvenc`+ idmac + `"></span></div>
+                                <div class="col-xs-2"><span id="fechaproxvenc`+ idmac + `" style="border-style: solid; padding: 1px;"></span></div>
                                 <div class="col-xs-2"><b>CLASIFICACIÓN</b></div>
                                 <div class="col-xs-1"><span id="clasificacion`+ idmac + `"></span></div>
                             </div>
@@ -110,10 +110,10 @@ var gridAprobacion = {
                                 <div class="col-xs-2"><b>F.APER. C.CTE.</b></div>
                                 <div class="col-xs-1"><span id="fechaaperturaccte`+ idmac + `">05-04-2012</span></div>
                                 <div class="col-xs-2">SIST. FINANCIERO</div>
-                                <div class="col-xs-1"><u><span id="deudasbif`+ idmac + `">934.152</span></u></div>
-                                <div class="col-xs-2"><u>0</u></div>
+                                <div class="col-xs-1"><span id="deudasbif`+ idmac + `">934.152</span></div>
+                                <div class="col-xs-2">0</div>
                                 <div class="col-xs-2">LEASING ACHEL</div>
-                                <div class="col-xs-1"><u>65.983</u></div>
+                                <div class="col-xs-1">65.983</div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-2"><b>P. SALDO VISTA</br><span style="font-size:10px">(Ultimos 12 Meses MN y MX)</span></b></div>
@@ -145,6 +145,7 @@ var gridAprobacion = {
                 success: function (data) {
                     if (data.length > 0) {
                         //console.log("nombre"+idmac+" es "+data[0].Nombre)
+                        $("#nombregrupo" + idmac).html('COMFRUT')
                         $("#nombre" + idmac).html(data[0].Nombre)
                         $("#rut" + idmac).html(data[0].Rut)
                         $("#actividad" + idmac).html(data[0].Actividad)
@@ -159,7 +160,7 @@ var gridAprobacion = {
                         //$("#nivelatribucion" + idmac).html(data[0].NivelAtribucion)
                         $("#promediosaldovista" + idmac).html(data[0].PromSaldoVista)
                         $("#deudasbif" + idmac).html(data[0].DeudaSbif)
-                        $("#fechacreacion"+idmac).html(data[0].FechaCreacion)
+                        $("#fechacreacion" + idmac).html(data[0].FechaCreacion)
 
                     } else {
                         alert("Error con datos del Mac Grupal")
@@ -171,13 +172,58 @@ var gridAprobacion = {
 
             var elcaption = "Límites";
 
-            var template = "";
+            var template = "<div id='responsive-form' class='clearfix'>";
+
+            template += "<div class='form-row'>";
+            template += "<div class='column-full'>Tipo Límite {Tipo_Id}</div>";
+            template += "</div>";
+
+            template += "<div class='form-row'>";
+            template += "<div class='column-full'>Monto Aprobación {Aprobado}</div>";
+            template += "</div>";
+
+            template += "<div class='form-row' style='display: none;'>";
+            template += "</div>";
+
+            template += "<hr style='width:100%;'/>";
+            template += "<div> {sData} {cData}  </div>";
+            template += "</div>";
             var modelLimites = [
                 {
                     label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
                 { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
+                {
+                    label: 'Tipo Límite', name: 'Tipo_Id', search: false, editable: true, hidden: true,
+                    edittype: "select",
+                    editoptions: {
+                        dataUrl: '/tipolimite',
+                        buildSelect: function (response) {
+                            var grid = $("#gridlimites");
+                            //console.log(grid);
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var thissid = rowData.Tipo_Id;
+                            var data = JSON.parse(response);
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Escoger Tipo Límite--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].Id == thissid) {
+                                    s += '<option value="' + data[i].Id + '" selected>' + data[i].Nombre + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].Id + '">' + data[i].Nombre + '</option>';
+                                }
+                            });
+                            return s + "</select>";
+                        },
+                        dataEvents: [{
+                            type: 'change', fn: function (e) {
+                                //$("input#rol").val($('option:selected', this).text());
+                            }
+                        }],
+                    }, dataInit: function (elem) { $(elem).width(200); }
+                },
                 { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 { label: 'Riesgo', name: 'Riesgo', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
@@ -192,11 +238,23 @@ var gridAprobacion = {
                 },
                 { label: 'P. Residual', name: 'PlazoResidual', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                { label: 'Aprobación Ant (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Deuda (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Sometido Aprobación (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                
+                { label: 'Moneda', name: 'MonedaAprobado', width: 12, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                {
+                    label: 'Monto (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right',
+                    formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                    editoptions: {
+                        dataInit: function (el) {
+                            $(el).mask('000.000.000.000.000', { reverse: true });
+                        }
+                    },
+                    editrules: { required: true }
+                },
+                { label: 'Moneda', name: 'MonedaUtilizado', width: 12, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Monto (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Moneda', name: 'MonedaSometido', width: 12, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Monto (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Monto (MM$)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+
 
 
 
@@ -256,6 +314,16 @@ var gridAprobacion = {
                 }
             });
 
+            $("#gridlimites").jqGrid('setGroupHeaders', {
+                useColSpanStyle: false, 
+                groupHeaders:[
+                  {startColumnName: 'MonedaAprobado', numberOfColumns: 2, titleText: 'Aprobación Actual'},
+                  {startColumnName: 'MonedaUtilizado', numberOfColumns: 2, titleText: 'Deuda Actual'},
+                  {startColumnName: 'MonedaSometido', numberOfColumns: 3, titleText: 'Sometido Aprobación'},
+                  //{startColumnName: 'closed', numberOfColumns: 2, titleText: 'Shiping'}
+                ]
+              });
+
 
             $("#gridlimites").jqGrid('navGrid', "#pagerlimites", {
                 edit: true, add: true, del: true, search: false,
@@ -266,25 +334,42 @@ var gridAprobacion = {
                     recreateForm: true,
                     ajaxEditOptions: sipLibrary.jsonOptions,
                     serializeEditData: sipLibrary.createJSON,
-                    editCaption: "Modifica Grupo",
+                    editCaption: "Modifica Límite",
                     //template: template,
                     errorTextFormat: function (data) {
                         return 'Error: ' + data.responseText
-                    }
+                    },
+                    beforeShowForm: function (form) {
+                        //$("input#Nombre").prop('disabled', true);
+                        //$("input#RazonSocial").prop('disabled', true);
+                       
+
+                    },
                 },
                 {
                     closeAfterAdd: true,
                     recreateForm: true,
                     ajaxEditOptions: sipLibrary.jsonOptions,
                     serializeEditData: sipLibrary.createJSON,
-                    addCaption: "Agregar Empresa",
+                    addCaption: "Agregar Límite",
                     template: template,
                     errorTextFormat: function (data) {
                         return 'Error: ' + data.responseText
                     },
                     beforeShowForm: function (form) {
-                        $("input#Nombre").prop('disabled', true);
-                        $("input#RazonSocial").prop('disabled', true);
+                        //$("input#Nombre").prop('disabled', true);
+                        //$("input#RazonSocial").prop('disabled', true);
+                        var dlgDiv = $("#editmod" + $("#gridlimites")[0].id);
+                        var parentDiv = dlgDiv.parent();
+                        var dlgWidth = dlgDiv.width();
+                        var parentWidth = parentDiv.width();
+                        var dlgHeight = dlgDiv.height();
+                        var parentHeight = parentDiv.height();
+                        // TODO: change parentWidth and parentHeight in case of the grid
+                        //       is larger as the browser window
+                        dlgDiv[0].style.top = Math.round((parentHeight-dlgHeight)/2) + "px";
+                        dlgDiv[0].style.left = Math.round((parentWidth-dlgWidth)/2) + "px";
+
                     },
                     afterSubmit: function (response, postdata) {
                         var json = response.responseText;

@@ -91,7 +91,10 @@ var gridvertabasignaciones = {
                 });
             },
 
-            loadComplete: function () {},
+            loadComplete: function () {
+
+                //console.log("la url es: "+loadurl)
+            },
             
         });
 

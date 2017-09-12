@@ -91,6 +91,7 @@ var gridvertaboperaciones = {
                 });
             },
             loadComplete: function () {
+                //console.log("la url es: "+loadurl)
             }
 
 

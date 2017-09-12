@@ -814,7 +814,7 @@ var gridvertablimites = {
                 $('.muestrareserva').click(function () {
                     var idlimite = $(this).attr('href');
                     console.log("valor id limite sin cortar " + idlimite);
-                    idlimite = idlimite.substring(1, 2);
+                    idlimite = idlimite.substring(1, 3);
                     console.log("valor cortado "+ idlimite)
                     $("#modalreservar").modal();
                     //var elrutqueviene = $(this).attr('href');

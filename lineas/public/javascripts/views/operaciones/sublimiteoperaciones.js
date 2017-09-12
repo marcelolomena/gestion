@@ -83,6 +83,7 @@ function gridsublimiteoperaciones(parentRowID, parentRowKey, suffix) {
 
         editurl: '/limite/action3',
         loadComplete: function () {
+            //console.log("la url es: "+childGridURL)
             
         },
 
