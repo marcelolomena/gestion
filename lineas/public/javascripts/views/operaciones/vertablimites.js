@@ -67,9 +67,9 @@ var gridvertablimites = {
                 { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'DisponiblePesos', name: 'DisponiblePesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },},
-                { label: 'AprobadoPesos', name: 'AprobadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },},
-                { label: 'UtilizadoPesos', name: 'UtilizadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },},
+                { label: 'DisponiblePesos', name: 'DisponiblePesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
+                { label: 'AprobadoPesos', name: 'AprobadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
+                { label: 'UtilizadoPesos', name: 'UtilizadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
 
                 {
                     label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
@@ -603,7 +603,7 @@ var gridvertablimites = {
                                 </div>
                                 
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+                                    <button id="btnCerrar" type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                                 </div>
 
                             </div>
@@ -974,7 +974,7 @@ var gridvertablimites = {
                                     return [true, "", ""]
                             },
                             onclickSubmit: function (rowid) {
-                                return { RutEmpresa: rut, Idlim: idlimite};
+                                return { RutEmpresa: rut, Idlim: idlimite };
                             }
                         },
                         {
@@ -1028,11 +1028,11 @@ var gridvertablimites = {
                     var montoBase = 0;
                     var insert = 0;
                     var monto = parseInt($('#monto2').val());
-                    
 
-                    if(monto<=0){
 
-                        if(monto==0){
+                    if (monto <= 0) {
+
+                        if (monto == 0) {
                             $("#desbloquear").val(1);
                             $.ajax({
                                 type: "POST",
@@ -1043,12 +1043,12 @@ var gridvertablimites = {
                                 }
                             });
                         }
-                        else{
+                        else {
                             alert("El monto a desbloquear supera al monto bloqueado");
                         }
-                        
+
                     }
-                    else{
+                    else {
                         $.ajax({
                             type: "POST",
                             url: "/cargarbloqueo/" + idlineabloqueo,
@@ -1058,8 +1058,6 @@ var gridvertablimites = {
                             }
                         });
                     }
-                    
-
                 });
 
                 //BOTÓN BLOQUEAR
@@ -1221,13 +1219,21 @@ var gridvertablimites = {
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
 
+                $("#btnCerrar").on("click", function (e) {
+                    
+                    console.log("llegue a la funcion!!")
+                    e.preventDefault();
+                    location.reload();
+
+                });
+
 
                 var thisId = $.jgrid.jqID(this.id);
                 var sum1 = $gridTab2.jqGrid('getCol', 'AprobadoPesos', false, 'sum');
                 var sum2 = $gridTab2.jqGrid('getCol', 'UtilizadoPesos', false, 'sum');
                 var sum3 = $gridTab2.jqGrid('getCol', 'Reservado', false, 'sum');
                 var sum4 = $gridTab2.jqGrid('getCol', 'DisponiblePesos', false, 'sum');
-            
+
                 /*var sum5 = $("#" + childGridID).jqGrid('getCol', 'Total', false, 'sum');
                 var sum6 = $("#" + childGridID).jqGrid('getCol', 'VarAprobacion', false, 'sum');
                 var sum7 = $("#" + childGridID).jqGrid('getCol', 'DeudaBanco', false, 'sum');
@@ -1239,10 +1245,10 @@ var gridvertablimites = {
                 $gridTab2.jqGrid('footerData', 'set',
                     {
                         Moneda: 'Total (CLP) :',
-                        Aprobado:  (formatear.formatearNumero(sum1)),
+                        Aprobado: (formatear.formatearNumero(sum1)),
                         Utilizado: (formatear.formatearNumero(sum2)),
                         Reservado: (formatear.formatearNumero(sum3)),
-                        Disponible:(formatear.formatearNumero(sum4)),
+                        Disponible: (formatear.formatearNumero(sum4)),
                         Bloqueo_N: '<span role="button" class="fa fa-lock bloqueartodo" aria-hidden="true" href="#" style= "font-size: 20px;"></span>'
                         /*Total : sum5,
                         VarAprobacion : sum6,
