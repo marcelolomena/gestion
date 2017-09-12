@@ -441,7 +441,8 @@ exports.listcomentarioslinea = function (req, res) {
 
 exports.actionbloquear = function (req, res) {
     //fecha de hoy
-
+    console.log("llegue al controlador");
+    
     var hoy = new Date();
     var dd = hoy.getDate();
     var mm = hoy.getMonth()+1; 
@@ -457,7 +458,7 @@ exports.actionbloquear = function (req, res) {
     var idlinea = req.params.id;
     
     sequelize.query(`update scl.Bloqueo 
-        set Monto = `+ req.body.monto + `, Activo = 1, Comentario ='`+req.body.comentario+`', FechaBloqueo = '`+hoy+`'
+        set Monto = `+ req.body.monto + `, Activo = 1, Comentario = '`+req.body.comentario+`', FechaBloqueo = '`+hoy+`'
         where Linea_Id= `+ idlinea).spread((results, metadata) => {
             return res.json(metadata);
 

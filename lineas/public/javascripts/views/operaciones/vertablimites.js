@@ -551,7 +551,7 @@ var gridvertablimites = {
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmontodesbloqueo">Monto:</label>
                                                         <input type="text" class="form-control" name ="montod" id="montodes">
-                                                        <input type="text" class="form-control" name ="monto" id="nuevovalorbloqueo"; style="display: none">
+                                                        <input type="text" class="form-control" name ="monto" id="monto2"; style="display: none">
                                                     </div>
                                                     <div class="form-group">
                                                     <label for="comentariodes" id="labelcomentariodesbloqueo">Comentario:</label>
@@ -1020,11 +1020,12 @@ var gridvertablimites = {
                     var des = $("#montodes").val();
                     var bloq = $("#Bloqueado").val();
                     var nuevovalorbloq = bloq - des;
-                    $("#monto").val(nuevovalorbloq);
+                    $("#monto2").val(nuevovalorbloq);
+                    $("#monto2").html(nuevovalorbloq);
                     var montoBase = 0;
                     var insert = 0;
-                    var monto = parseInt($('#monto').val());
-                    console.log(idlineabloqueo);
+                    var monto = parseInt($('#monto2').val());
+                    console.log(monto);
                     /*$.ajax({
                         type: "GET",
                         url: '/verdetallebloqueo/' + idlineabloqueo,
