@@ -981,6 +981,7 @@ var gridvertablimites = {
                             recreateFilter: true
                         }
                     );
+                    //$("#gridreserva").reload();
                     $("#pager").css("padding-bottom", "10px");
                     // $("#rut").val(rut);
                     // console.log(rut)
