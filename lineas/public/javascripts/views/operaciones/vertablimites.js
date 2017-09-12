@@ -1024,7 +1024,7 @@ var gridvertablimites = {
                     var nuevovalorbloq = bloq - des;
                     $("#monto2").val(nuevovalorbloq);
                     $("#monto2").html(nuevovalorbloq);
-                    $("desbloquear").val(0)
+                    $("#desbloquear").val(0)
                     var montoBase = 0;
                     var insert = 0;
                     var monto = parseInt($('#monto2').val());
@@ -1085,7 +1085,6 @@ var gridvertablimites = {
                         alert("El monto ingresado es superior al disponible");
                     }
                     else {
-
                         $.ajax({
                             type: "POST",
                             url: "/cargarbloqueo/" + idlineabloqueo,
@@ -1115,13 +1114,13 @@ var gridvertablimites = {
                                 var bloq = data[0].Monto;
                                 var disponible = data[0].Disponible;
                                 var act = data[0].Activo;
-                                //console.log("valor de bloqueo " + bloq + disponible);
                             }
 
                             $('input[name="radio-choice"]').attr('checked', false);
                             $("#montodes").val("");
                             $("#monto").val("");
                             $("#comentariodesbloqueo").val("");
+                            $("#desbloquear").hide();
 
                             if (act == 1) {
                                 $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Monto)) //desbloqueo
@@ -1150,6 +1149,7 @@ var gridvertablimites = {
                                 }
                             }
                             else {
+                               
                                 //Bloqueo
                                 $("#idlineabloqueo2").val(id)
                                 $("#disponible").val(data[0].Disponible)
