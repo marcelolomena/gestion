@@ -456,8 +456,22 @@ exports.actionbloquear = function (req, res) {
     hoy = dd+'-'+mm+'-'+yyyy;
     
     var idlinea = req.params.id;
-    
-    sequelize.query(`update scl.Bloqueo 
+    var desbloquear = parseInt(req.body.desbloquear);
+    if(desbloquear == 1){
+        
+        sequelize.query(`update scl.Bloqueo 
+        set Monto = `+ req.body.monto + `, Activo = 0, Comentario = '`+req.body.comentario+`', FechaBloqueo = '`+hoy+`'
+        where Linea_Id= `+ idlinea).spread((results, metadata) => {
+            return res.json(metadata);
+
+        }).catch(function (err) {
+            logger.error(err);
+            return res.json({ error: 1 });
+        });
+    }
+    else{
+        
+        sequelize.query(`update scl.Bloqueo 
         set Monto = `+ req.body.monto + `, Activo = 1, Comentario = '`+req.body.comentario+`', FechaBloqueo = '`+hoy+`'
         where Linea_Id= `+ idlinea).spread((results, metadata) => {
             return res.json(metadata);
@@ -466,6 +480,7 @@ exports.actionbloquear = function (req, res) {
             logger.error(err);
             return res.json({ error: 1 });
         });
+    }
 };
 
 exports.listasignar = function (req, res) {
