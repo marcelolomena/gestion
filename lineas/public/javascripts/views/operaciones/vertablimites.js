@@ -2,7 +2,7 @@ var gridvertablimites = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab2 = $(targ + "_t")
-        var rut= loadurl.substring(8,loadurl.length);
+        var rut = loadurl.substring(8, loadurl.length);
         //console.log('valor de rut '+largorut)
         var formatear =
             {
@@ -46,7 +46,7 @@ var gridvertablimites = {
             //colNames: ['Id', 'Nombre', 'Rut', 'ActividadEconomica','RatingGrupal', 'NivelAtribucion','RatingIndividual', 'Clasificacion', 'Vigilancia','FechaInformacionFinanciera', 'PromedioSaldoVista', 'DeudaSbif', 'AprobadoVinculado','EquipoCobertura','Oficina','FechaCreacion','FechaVencimiento','FechaVencimientoMacAnterior','Empresa_Id'],
             colModel: [
                 {
-                    label   : 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
+                    label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
                 { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
@@ -70,14 +70,14 @@ var gridvertablimites = {
                 {
                     label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
-                       
+
                         var bloq = 0;
-                        if(rowObject.Activo == "1"){
+                        if (rowObject.Activo == "1") {
                             var disponible = rowObject.Disponible;
-                            bloq= rowObject.Monto;
+                            bloq = rowObject.Monto;
                             var dispo = disponible - bloq;
                             return formatear.formatearNumero(dispo);
-                        }else{
+                        } else {
                             var disponible = rowObject.Disponible;
                             return formatear.formatearNumero(disponible);
                         }
@@ -106,7 +106,7 @@ var gridvertablimites = {
                                 }
                             }
                         });
-                        
+
                         rojo = '<span role="button" data-toggle="tooltip"  title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
                         //console.log(rowObject.Id);
 
@@ -132,11 +132,11 @@ var gridvertablimites = {
                     formatter: function (cellvalue, options, rowObject) {
                         dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                         //dato2 = '<span role="button" class="fa fa-lock" aria-hidden="true abrirdesbloqueo" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
-                        if(rowObject.Activo == "1"){
+                        if (rowObject.Activo == "1") {
                             dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato;
                         }
-                        else{
+                        else {
                             dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
                             return dato; //desbloqueado
                         }
@@ -815,19 +815,19 @@ var gridvertablimites = {
                     var idlimite = $(this).attr('href');
                     console.log("valor id limite sin cortar " + idlimite);
                     idlimite = idlimite.substring(1, 3);
-                    console.log("valor cortado "+ idlimite)
+                    console.log("valor cortado " + idlimite)
                     $("#modalreservar").modal();
                     //var elrutqueviene = $(this).attr('href');
                     //var elrutquenecesito = elrutqueviene.substring(1)
 
                     var elcaption = "Operaciones";
                     //console.log("el valor del rut es "+rut)
-                     var template = "";
+                    var template = "";
 
                     var modelOperacion = [
                         {
                             label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
-                            editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
+                            editable: true, hidedlg: true, sortable: false
                         },
 
                         { label: 'Tipo Operacion', name: 'TipoOperacion', width: 8, hidden: false, editable: true, align: 'center' },
@@ -847,7 +847,7 @@ var gridvertablimites = {
                         },
                         {
                             label: 'Rut Empresa', name: 'RutEmpresa', width: 10, hidden: true, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
-                        
+
                         },
                     ];
 
@@ -920,7 +920,7 @@ var gridvertablimites = {
                                 return 'Error: ' + data.responseText
                             },
                             onclickSubmit: function (rowid) {
-                                return { RutEmpresa: rut, Idlim:idlimite };
+                                return { RutEmpresa: rut, Idlim: idlimite };
                             }
                         },
                         {
@@ -950,7 +950,7 @@ var gridvertablimites = {
 
                             },
                             onclickSubmit: function (rowid) {
-                                return { RutEmpresa: rut, Idlim:idlimite };
+                                return { RutEmpresa: rut, Idlim: idlimite };
                             }
                         },
                         {
@@ -964,16 +964,13 @@ var gridvertablimites = {
                             }, afterSubmit: function (response, postdata) {
                                 var json = response.responseText;
                                 var result = JSON.parse(json);
-                                if (result.success != true)
+                                if (result.error != "0")
                                     return [false, result.error_text, ""];
                                 else
                                     return [true, "", ""]
                             },
                             onclickSubmit: function (rowid) {
-                                var rowKey = $("#gridreserva").getGridParam("selrow");
-                                var rowData = $("#gridreserva").getRowData(rowKey);
-                                var thissid = rowData.idrelacion;
-                                return { idrelacion: thissid };
+                                return { RutEmpresa: rut, Idlim: idlimite};
                             }
                         },
                         {
@@ -981,8 +978,8 @@ var gridvertablimites = {
                         }
                     );
                     $("#pager").css("padding-bottom", "10px");
-                   // $("#rut").val(rut);
-                   // console.log(rut)
+                    // $("#rut").val(rut);
+                    // console.log(rut)
 
                     function subGridversublimiteasignaciones(subgrid_id, row_id) {
                         //gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
@@ -1054,7 +1051,7 @@ var gridvertablimites = {
 
                 //BOTÓN BLOQUEAR
                 $('#botonpost2').click(function () {
-                    
+
                     var idlineabloqueo = $('#idlineabloqueo2').val();
                     var montoBase = 0;
                     var insert = 0;
@@ -1067,16 +1064,16 @@ var gridvertablimites = {
                         success: function (data) {
 
                             if (data.length > 0) {
-                                 insert = 1;
-                                 montoBase = data[0].Disponible;
-                                                                                              
+                                insert = 1;
+                                montoBase = data[0].Disponible;
+
                             }
                         }
                     });
-                    if(montoBase<monto){
+                    if (montoBase < monto) {
                         alert("El monto ingresado es superior al disponible");
                     }
-                   else {
+                    else {
 
                         $.ajax({
                             type: "POST",
@@ -1087,10 +1084,10 @@ var gridvertablimites = {
                                 $gridTab2.trigger('reloadGrid');
                             }
                         });
-                   }
-                    
+                    }
 
-                    
+
+
                     //$("#fechaBloqueo").html(fechaGuardada);
                 });
 
@@ -1102,7 +1099,7 @@ var gridvertablimites = {
                         url: '/verdetallebloqueo/' + id,
                         async: false,
                         success: function (data) {
-                            
+
                             if (data.length > 0) {
                                 var bloq = data[0].Monto;
                                 var disponible = data[0].Disponible;
