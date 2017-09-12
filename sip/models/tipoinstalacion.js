@@ -7,17 +7,16 @@ module.exports = function (sequelize, DataTypes) {
             autoIncrement: true
         },
         nombre: {
-            type: DateTypes.STRING(120),
-            allowNull:false
-
+            type: DataTypes.STRING,
+            allowNull: true
         },
         borrado: {
             type: DataTypes.INTEGER,
             allowNull: true
         }
     }, {
-        schema: 'lic',
-        timestamps: false,
-        tableName: 'tipoinstalacion'
-    });
+            schema: 'lic',
+            timestamps: false,
+            tableName: 'tipoinstalacion'
+        });
 };
