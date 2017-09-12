@@ -444,9 +444,7 @@ exports.listcomentarioslinea = function (req, res) {
 };
 
 exports.actionbloquear = function (req, res) {
-    //fecha de hoy
-    console.log("llegue al controlador");
-    
+    //fecha de hoy    
     var hoy = new Date();
     var dd = hoy.getDate();
     var mm = hoy.getMonth()+1; 
@@ -474,16 +472,13 @@ exports.actionbloquear = function (req, res) {
         });
     }
     else{
-        
-        sequelize.query(`update scl.Bloqueo 
-        set Monto = `+ req.body.monto + `, Activo = 1, Comentario = '`+req.body.comentario+`', FechaBloqueo = '`+hoy+`'
-        where Linea_Id= `+ idlinea).spread((results, metadata) => {
-            return res.json(metadata);
 
+        sequelize.query(`insert into scl.Bloqueo (Monto,Activo,Linea_Id,Comentario,FechaBloqueo) values ( `+ req.body.monto + `,1,`+idlinea+`,'`+req.body.comentario+`', '`+hoy+`')`).spread((results, metadata) => {
+        return res.json(metadata);
         }).catch(function (err) {
-            logger.error(err);
-            return res.json({ error: 1 });
-        });
+        logger.error(err);
+        return res.json({ error: 1 });
+        });        
     }
 };
 
