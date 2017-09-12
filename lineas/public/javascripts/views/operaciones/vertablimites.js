@@ -67,9 +67,9 @@ var gridvertablimites = {
                 { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'DisponiblePesos', name: 'DisponiblePesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },},
-                { label: 'AprobadoPesos', name: 'AprobadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },},
-                { label: 'UtilizadoPesos', name: 'UtilizadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true },},
+                { label: 'DisponiblePesos', name: 'DisponiblePesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
+                { label: 'AprobadoPesos', name: 'AprobadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
+                { label: 'UtilizadoPesos', name: 'UtilizadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
 
                 {
                     label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
@@ -505,6 +505,7 @@ var gridvertablimites = {
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmonto">Monto:</label>
                                                         <input type="text" class="form-control" name ="monto" id="monto">
+                                                        <input type="text" class="form-control" name ="desbloquear" id="desbloquear" style="display: none">
                                                         <label for="comentario" id="labelcomentario">Comentario:</label>
                                                         <input type="text" class="form-control" name="comentario" id="comentario">
                                                     </div>
@@ -554,7 +555,7 @@ var gridvertablimites = {
                                                     <div class="form-group">
                                                         <label for="monto" id="labelmontodesbloqueo">Monto:</label>
                                                         <input type="text" class="form-control" name ="montod" id="montodes">
-                                                        <input type="text" class="form-control" name ="desbloquear" id="desbloquear">
+                                                        <input type="text" class="form-control" name ="desbloquear" id="desbloquear2" style="display: none">
                                                         <input type="text" class="form-control" name ="monto" id="monto2"; style="display: none">
                                                     </div>
                                                     <div class="form-group">
@@ -603,7 +604,7 @@ var gridvertablimites = {
                                 </div>
                                 
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+                                    <button id="btnCerrar" type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                                 </div>
 
                             </div>
@@ -974,7 +975,7 @@ var gridvertablimites = {
                                     return [true, "", ""]
                             },
                             onclickSubmit: function (rowid) {
-                                return { RutEmpresa: rut, Idlim: idlimite};
+                                return { RutEmpresa: rut, Idlim: idlimite };
                             }
                         },
                         {
@@ -1024,16 +1025,18 @@ var gridvertablimites = {
                     var nuevovalorbloq = bloq - des;
                     $("#monto2").val(nuevovalorbloq);
                     $("#monto2").html(nuevovalorbloq);
-                    $("desbloquear").val(0)
+                    $("#desbloquear2").val(2)
+                    //$("#desbloquear").html(2)
                     var montoBase = 0;
                     var insert = 0;
                     var monto = parseInt($('#monto2').val());
-                    
 
-                    if(monto<=0){
 
-                        if(monto==0){
-                            $("#desbloquear").val(1);
+                    if (monto <= 0) {
+
+                        if (monto == 0) {
+                            $("#desbloquear2").val(1);
+                            //$("#desbloquear").html(1);
                             $.ajax({
                                 type: "POST",
                                 url: "/cargarbloqueo/" + idlineabloqueo,
@@ -1043,12 +1046,13 @@ var gridvertablimites = {
                                 }
                             });
                         }
-                        else{
+                        else {
                             alert("El monto a desbloquear supera al monto bloqueado");
                         }
-                        
+
                     }
-                    else{
+                    else { //bloqueado
+                         
                         $.ajax({
                             type: "POST",
                             url: "/cargarbloqueo/" + idlineabloqueo,
@@ -1058,8 +1062,6 @@ var gridvertablimites = {
                             }
                         });
                     }
-                    
-
                 });
 
                 //BOTÓN BLOQUEAR
@@ -1069,7 +1071,6 @@ var gridvertablimites = {
                     var montoBase = 0;
                     var insert = 0;
                     var monto = parseInt($('#monto').val());
-
                     $.ajax({
                         type: "GET",
                         url: '/verdetallebloqueo/' + idlineabloqueo,
@@ -1087,16 +1088,18 @@ var gridvertablimites = {
                         alert("El monto ingresado es superior al disponible");
                     }
                     else {
+                        
 
                         $.ajax({
                             type: "POST",
                             url: "/cargarbloqueo/" + idlineabloqueo,
                             data: $('#miprimerform2').serialize(),
                             success: function (msg) {
-                                //console.log("tremendo exito " + msg)
+                                console.log("tremendo exito " + msg)
                                 $gridTab2.trigger('reloadGrid');
                             }
                         });
+                        //console.log("llegue al bloqueo")
                     }
 
 
@@ -1117,13 +1120,15 @@ var gridvertablimites = {
                                 var bloq = data[0].Monto;
                                 var disponible = data[0].Disponible;
                                 var act = data[0].Activo;
-                                //console.log("valor de bloqueo " + bloq + disponible);
                             }
 
                             $('input[name="radio-choice"]').attr('checked', false);
                             $("#montodes").val("");
                             $("#monto").val("");
                             $("#comentariodesbloqueo").val("");
+                            $("#desbloquear").hide();
+                            $("#desbloquear").val(0);
+                            //$("#desbloquear").html(0);
 
                             if (act == 1) {
                                 $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Monto)) //desbloqueo
@@ -1132,7 +1137,6 @@ var gridvertablimites = {
                                 $("#ModalDesbloqueo").modal();
                                 $("#montodes").val("");
                                 $("#desbloquear").hide();
-                                $("#desbloquear").val(0);
                                 $("#ValComentarioDes").val(data[0].Comentario);
                                 $("#monto").val("");
                                 $("#comentariodesbloqueo").val("");
@@ -1152,6 +1156,7 @@ var gridvertablimites = {
                                 }
                             }
                             else {
+                               
                                 //Bloqueo
                                 $("#idlineabloqueo2").val(id)
                                 $("#disponible").val(data[0].Disponible)
@@ -1221,13 +1226,21 @@ var gridvertablimites = {
                     //var idlineabloqueo = $('#idlineabloqueo2').val();
                 });
 
+                $("#btnCerrar").on("click", function (e) {
+                    
+                    console.log("llegue a la funcion!!")
+                    e.preventDefault();
+                    location.reload();
+
+                });
+
 
                 var thisId = $.jgrid.jqID(this.id);
                 var sum1 = $gridTab2.jqGrid('getCol', 'AprobadoPesos', false, 'sum');
                 var sum2 = $gridTab2.jqGrid('getCol', 'UtilizadoPesos', false, 'sum');
                 var sum3 = $gridTab2.jqGrid('getCol', 'Reservado', false, 'sum');
                 var sum4 = $gridTab2.jqGrid('getCol', 'DisponiblePesos', false, 'sum');
-            
+
                 /*var sum5 = $("#" + childGridID).jqGrid('getCol', 'Total', false, 'sum');
                 var sum6 = $("#" + childGridID).jqGrid('getCol', 'VarAprobacion', false, 'sum');
                 var sum7 = $("#" + childGridID).jqGrid('getCol', 'DeudaBanco', false, 'sum');
@@ -1239,10 +1252,10 @@ var gridvertablimites = {
                 $gridTab2.jqGrid('footerData', 'set',
                     {
                         Moneda: 'Total (CLP) :',
-                        Aprobado:  (formatear.formatearNumero(sum1)),
+                        Aprobado: (formatear.formatearNumero(sum1)),
                         Utilizado: (formatear.formatearNumero(sum2)),
                         Reservado: (formatear.formatearNumero(sum3)),
-                        Disponible:(formatear.formatearNumero(sum4)),
+                        Disponible: (formatear.formatearNumero(sum4)),
                         Bloqueo_N: '<span role="button" class="fa fa-lock bloqueartodo" aria-hidden="true" href="#" style= "font-size: 20px;"></span>'
                         /*Total : sum5,
                         VarAprobacion : sum6,

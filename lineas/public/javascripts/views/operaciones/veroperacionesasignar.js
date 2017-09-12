@@ -105,7 +105,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                                     <div class="panel-heading" style="background-color: #002464;color: #fff;">Asignar Operaciones</div>
                                         <div class="panel-body">
                                             <div class="gcontainer">
-                                                <table id="grid"></table>
+                                                <table id="gridasignar"></table>
                                                 <div id="pager"></div>
                                             </div>
                                         </div>
@@ -182,13 +182,13 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                                     }
                                 }
                             })
-                             var dispo = disp - bloq;
-                        return (formatear.formatearNumero(dispo));
+                            var dispo = disp - bloq;
+                            return (formatear.formatearNumero(dispo));
                         }
                     },
                 ];
 
-                $("#grid").jqGrid({
+                $("#gridasignar").jqGrid({
                     url: '/limite/' + elrutquenecesito,
                     mtype: "GET",
                     datatype: "json",
@@ -220,28 +220,12 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                             $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
                         }
                     },
-                    loadComplete: function () {
-
-                        var recs = $("#grid").getGridParam("reccount");
-                        if (isNaN(recs) || recs == 0) {
-                            //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
-                            $("#grid").parent().parent().remove();
-                            $gridTab2PagerID.hide();
-
-                        }
-
-                        var rows = $("#grid").getDataIDs();
-                        for (var i = 0; i < rows.length; i++) {
-                            var eldisponible = $("#grid").getRowData(rows[i]).Disponible;
-                            if (parseInt(eldisponible) < 0) {
-                                $("#grid").jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
-                            }
-                        }
-                    }
+                    loadComplete: function () {}
+                    
                 });
 
 
-                $("#grid").jqGrid('navGrid', "#pager", {
+                $("#gridasignar").jqGrid('navGrid', "#pager", {
                     edit: false, add: false, del: false, search: false,
                     refresh: false, view: false, position: "left", cloneToTop: false
                 },
@@ -279,7 +263,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                                 return [true, "", ""]
 
                         }, afterShowForm: function (form) {
-                            sipLibrary.centerDialog($("#grid").attr('Id'));
+                            sipLibrary.centerDialog($("#gridasignar").attr('Id'));
 
                         },
                         onclickSubmit: function (rowid) {
@@ -303,8 +287,8 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                                 return [true, "", ""]
                         },
                         onclickSubmit: function (rowid) {
-                            var rowKey = $("#grid").getGridParam("selrow");
-                            var rowData = $("#grid").getRowData(rowKey);
+                            var rowKey = $("#gridasignar").getGridParam("selrow");
+                            var rowData = $("#gridasignar").getRowData(rowKey);
                             var thissid = rowData.idrelacion;
                             return { idrelacion: thissid };
                         }
@@ -314,35 +298,40 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                     }
                 );
                 $("#pager").css("padding-bottom", "10px");
-                $("#grid").jqGrid('navButtonAdd', "#pager", {
-                    caption: '<button class="btn btn-default">Asignar Linea</button>',
-                    buttonicon: "",
-                    title: "Excel",
-                    position: "last",
-                    onClickButton: function () {
-                        /*
-                        var $grid = $("#grid")
-                        var selIds = $grid.jqGrid("getGridParam", "selarrrow")
-                        var alerta = "Se asignará la operación _________"
 
-                        if (confirm(alerta)) {
-                            alert("Funcionalidad en desarrollo");
+                if (document.getElementById("#botonasignar44") == null) {
 
+                    console.log(document.getElementById("#botonasignar44"))
 
-
-                        } else {
-                            alert("No");
+                    $("#gridasignar").jqGrid('navButtonAdd', "#pager", {
+                        caption: '<button id=botonasignar44 class="btn btn-default">Asignar Linea</button>',
+                        buttonicon: "",
+                        title: "Excel",
+                        position: "last",
+                        onClickButton: function () {
+                            /*
+                            var $grid = $("#grid")
+                            var selIds = $grid.jqGrid("getGridParam", "selarrrow")
+                            var alerta = "Se asignará la operación _________"
+    
+                            if (confirm(alerta)) {
+                                alert("Funcionalidad en desarrollo");
+    
+    
+    
+                            } else {
+                                alert("No");
+                            }
+    */
                         }
-*/
-                    }
-                });
-
+                    });
+                }
                 function subGridversublimiteasignaciones(subgrid_id, row_id) {
                     gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
                 }
 
             });
-         },
+        },
 
         gridComplete: function () {
             //$("#" + childGridID).css("margin-left", "6px");
