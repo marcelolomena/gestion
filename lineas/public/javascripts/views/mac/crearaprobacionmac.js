@@ -96,7 +96,7 @@ $(document).ready(function () {
                 editrules: { required: true },
                 formatter: function (cellvalue, options, rowObject) {
 
-                    dato = cellvalue+'-'+rowObject.Dv
+                    dato = cellvalue + '-' + rowObject.Dv
 
                     return dato
                 },
@@ -429,16 +429,30 @@ $(document).ready(function () {
     });
 
     var idmacgrupal = $("#param").text();
-    
+    var idmac1 = ""
+    $.ajax({
+        type: "GET",
+        url: '/getmac/' + idmacgrupal,
+        async: false,
+        success: function (data) {
+            if (data.length > 0) {
+                idmac1 = data[0].Id
+            }else {
+                alert("No existen MAC Individuales")
+            }
+        }
+    });
+
     $("#gridMaster").append(`
             
         <hr class="section-separations"></hr>
         
         <ul class='nav nav-tabs tabs-up' id='myTabGrupal'>
             <li><a href='/vermacgrupal/` + idmacgrupal + `' data-target='#vermacgrupal' id='vermacgrupal_tab' data-toggle='tabgrupal'>Grupo</a></li>
-            <li><a href='/getmacindividual/11' data-target='#aprobacion' id='aprobacion_tab' data-toggle='tabgrupal'>FRUTICOLA S.A</a></li>
+            <li><a href='`+idmac1+`' data-target='#aprobacion' id='aprobacion_tab' data-toggle='tabgrupal'>FRUTICOLA S.A</a></li>
             <li><a href='#' data-target='#set' id='set_tab' data-toggle='tabgrupal'>Set</a></li>
             <li><a href='#' data-target='#comentarios' id='comentarios_tab' data-toggle='tabgrupal'>Comentarios</a></li>
+            <li><a href='#' data-target='#comitentes' id='comitentes_tab' data-toggle='tabgrupal'>Comitentes</a></li>
             <li><a href='/bitacora/' data-target='#bitacora' id='bitacora_tab' data-toggle='tabgrupal'>Bitacora</a></li>
         </ul>
         <div class='tab-content'>

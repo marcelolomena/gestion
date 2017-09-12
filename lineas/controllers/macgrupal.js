@@ -540,3 +540,161 @@ exports.tipolimite = function (req, res) {
     });
 
 }
+
+exports.getmac = function (req, res) {
+    sequelize.query(
+        `select a.Id from scl.Aprobacion a
+        join scl.MacGrupo b on b.Aprobacion_Id=a.Id
+        where b.MacGrupo_Id=`+ req.params.idmacgrupal,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
+}
+
+exports.limitemac = function (req, res) {
+    //console.dir("***************EN LISTNEW ***************************");
+    var page = req.query.page;
+    var rowspp = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var condition = "";
+
+    if (!sidx) {
+        sidx = "a.Numero";
+        sord = "asc";
+    }
+
+
+    var order = sidx + " " + sord;
+
+    var sqlcount = `
+    select count (*) from scl.Linea a 
+    join scl.AprobacionLinea b on a.Id=b.Linea_Id
+    join scl.Aprobacion c on c.Id=b.Aprobacion_Id
+    where a.Padre_Id is null and c.Id=`+ req.params.idmac;
+
+    var sqlok = "declare @rowsPerPage as bigint; " +
+        "declare @pageNum as bigint;" +
+        "set @rowsPerPage=" + rowspp + "; " +
+        "set @pageNum=" + page + ";   " +
+        "With SQLPaging As   ( " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+        `as resultNum, a.* ,a.Aprobado-a.Disponible as Deuda
+              from scl.Linea a
+              join scl.AprobacionLinea b on a.Id=b.Linea_Id
+              join scl.Aprobacion c on c.Id=b.Aprobacion_Id
+              where a.Padre_Id is null and c.Id=`+ req.params.idmac;
+    sqlok += ") " +
+        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+    sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        console.log("Total:" + total + "recs[0].count:" + recs[0].count);
+        console.log("SQL2:" + sqlok);
+        sequelize.query(sqlok).spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+        });
+    });
+};
+
+exports.lamoneda = function (req, res) {
+    sequelize.query(
+        'select * from scl.Moneda ',
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
+}
+
+exports.actionlimitemac = function (req, res) {
+    var action = req.body.oper;
+
+    switch (action) {
+        case "add":
+            models.Linea.create({
+                Tipo_Id: req.body.Tipo_Id,
+                Numero: '999',
+                Riesgo: req.body.Riesgo,
+                Descripcion: req.body.Descripcion,
+                Moneda: req.body.MonedaSometido,
+                Aprobado: 0,
+                MonedaDisponible: req.body.MonedaSometido,
+                Disponible: 0,
+                MonedaSometido: req.body.MonedaSometido,
+                Sometido: req.body.Sometido,
+                MonedaSometido: req.body.MonedaSometido,
+            }).then(function (linea) {
+                models.AprobacionLinea.create({
+                    Aprobacion_Id: req.body.mac,
+                    Linea_Id: linea.Id
+                    
+                }).then(function (grupo) {
+                    res.json({ error: 0, glosa: '' });
+                }).catch(function (err) {
+                    logger.error(err)
+                    res.json({ error: 1, glosa: err.message });
+                });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ error: 1, glosa: err.message });
+            });
+            break;
+
+        case "edit":
+            models.Linea.update({
+                Tipo_Id: req.body.Tipo_Id,
+                Riesgo: req.body.Riesgo,
+                Descripcion: req.body.Descripcion,
+                Moneda: req.body.MonedaSometido,
+                Aprobado: 0,
+                MonedaDisponible: req.body.MonedaSometido,
+                Disponible: 0,
+                MonedaSometido: req.body.MonedaSometido,
+                Sometido: req.body.Sometido,
+                MonedaSometido: req.body.MonedaSometido,
+
+            }, {
+                    where: {
+                        id: req.body.Id
+                    }
+                }).then(function (solicitudcotizacion) {
+                    res.json({ error: 0, glosa: '' });
+                }).catch(function (err) {
+                    logger.error(err)
+                    res.json({ error: 1, glosa: err.message });
+                });
+
+
+
+            break;
+        case "del":
+
+            models.Linea.destroy({
+                where: {
+                    Id: req.body.idrelacion
+                }
+            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                if (rowDeleted === 1) {
+                    logger.debug('Deleted successfully');
+                }
+                res.json({ success: true, glosa: '' });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({ success: false, glosa: err.message });
+            });
+            break;
+    }
+}

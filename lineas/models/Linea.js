@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			primaryKey: true
+			primaryKey: true,
+			autoIncrement: true
 		},
 		Numero: {
 			type: DataTypes.STRING,
@@ -24,15 +25,15 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		},
 		Aprobado: {
-			type: DataTypes.STRING,
+			type: DataTypes.FLOAT,
 			allowNull: true
 		},
 		Utilizado: {
-			type: DataTypes.STRING,
+			type: DataTypes.FLOAT,
 			allowNull: true
 		},
 		Reservado: {
-			type: DataTypes.STRING,
+			type: DataTypes.FLOAT,
 			allowNull: true
 		},
 		ColorCondicion: {
@@ -40,11 +41,11 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true
 		},
 		Disponible: {
-			type: DataTypes.STRING,
+			type: DataTypes.FLOAT,
 			allowNull: true
 		},
 		Bloqueado: {
-			type: DataTypes.STRING,
+			type: DataTypes.FLOAT,
 			allowNull: true
 		},
 		Plazo: {
@@ -55,12 +56,96 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		BORRARCOMEN: {
+		Padre_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		Estado: {
+			type: DataTypes.FLOAT,
+			allowNull: true
+		},
+		Cuotas: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		CalendarioPago: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		BORRARCOND: {
+		OpcionCompra: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		Financiamiento: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		Alzamiento: {
 			type: DataTypes.STRING,
+			allowNull: true
+		},
+		AportePrevio: {
+			type: DataTypes.FLOAT,
+			allowNull: true
+		},
+		AportePariPasu: {
+			type: DataTypes.FLOAT,
+			allowNull: true
+		},
+		Anticipo: {
+			type: DataTypes.FLOAT,
+			allowNull: true
+		},
+		DestinoFondo: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Cleanup: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		CondicionesGTA: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		VctoLinea: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		VctoCurse: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		PlazoMaxOP: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		PeriodoGracia: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		Prorrogas: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Tipo_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		Riesgo_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		MonedaSometido: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		MonedaDisponible: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		Sometido: {
+			type: DataTypes.FLOAT,
 			allowNull: true
 		}
 	}, {

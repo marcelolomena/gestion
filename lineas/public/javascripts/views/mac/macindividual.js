@@ -2,7 +2,7 @@ var gridAprobacion = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab = $(targ + "_t")
-        var idmac = 24//targ.substring(4)
+        var idmac = loadurl
         var formatear =
             {
                 formatearNumero: function (nStr) {
@@ -178,8 +178,20 @@ var gridAprobacion = {
             template += "<div class='column-full'>Tipo Límite {Tipo_Id}</div>";
             template += "</div>";
 
+            template += "<div class='form-row' style='display: none;'>";
+            template += "<div class='column-full'>Descripcion {Descripcion}</div>";
+            template += "</div>";
+
             template += "<div class='form-row'>";
-            template += "<div class='column-full'>Monto Aprobación {Aprobado}</div>";
+            template += "<div class='column-full'>Tipo de Riesgo {Riesgo}</div>";
+            template += "</div>";
+
+            template += "<div class='form-row'>";
+            template += "<div class='column-full'>Moneda {MonedaSometido}</div>";
+            template += "</div>";
+
+            template += "<div class='form-row'>";
+            template += "<div class='column-full'>Monto Sometido Aprobación {Sometido}</div>";
             template += "</div>";
 
             template += "<div class='form-row' style='display: none;'>";
@@ -219,7 +231,7 @@ var gridAprobacion = {
                         },
                         dataEvents: [{
                             type: 'change', fn: function (e) {
-                                //$("input#rol").val($('option:selected', this).text());
+                                $("input#Descripcion").val($('option:selected', this).text());
                             }
                         }],
                     }, dataInit: function (elem) { $(elem).width(200); }
@@ -238,7 +250,11 @@ var gridAprobacion = {
                 },
                 { label: 'P. Residual', name: 'PlazoResidual', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Moneda', name: 'MonedaAprobado', width: 12, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                {
+                    label: 'Moneda', name: 'Moneda', width: 12, hidden: false, search: true, editable: true,
+                    align: 'center', editrules: { required: true },
+
+                },
                 {
                     label: 'Monto (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right',
                     formatter: 'number', formatoptions: { decimalPlaces: 0 },
@@ -249,11 +265,40 @@ var gridAprobacion = {
                     },
                     editrules: { required: true }
                 },
-                { label: 'Moneda', name: 'MonedaUtilizado', width: 12, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Moneda', name: 'MonedaDisponible', width: 12, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 { label: 'Monto (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Moneda', name: 'MonedaSometido', width: 12, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                { label: 'Monto (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Monto (MM$)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                {
+                    label: 'Moneda', name: 'MonedaSometido', width: 12, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true },
+                    edittype: "select",
+                    editoptions: {
+                        dataUrl: '/lamoneda',
+                        buildSelect: function (response) {
+                            var grid = $("#gridlimites");
+                            //console.log(grid);
+                            var rowKey = grid.getGridParam("selrow");
+                            var rowData = grid.getRowData(rowKey);
+                            var thissid = rowData.MonedaSometido;
+                            var data = JSON.parse(response);
+                            var s = "<select>";//el default
+                            s += '<option value="0">--Escoger Moneda--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].Nombre == thissid) {
+                                    s += '<option value="' + data[i].Nombre + '" selected>' + data[i].Nombre + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].Nombre + '">' + data[i].Nombre + '</option>';
+                                }
+                            });
+                            return s + "</select>";
+                        },
+                        dataEvents: [{
+                            type: 'change', fn: function (e) {
+                                //$("input#rol").val($('option:selected', this).text());
+                            }
+                        }],
+                    }, dataInit: function (elem) { $(elem).width(200); }
+                },
+                { label: 'Monto (Miles)', name: 'Sometido', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Monto (MM$)', name: 'Sometido', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
 
 
 
@@ -261,7 +306,7 @@ var gridAprobacion = {
             ];
 
             $("#gridlimites").jqGrid({
-                url: '/limite/' + elrutquenecesito,
+                url: '/limitemac/' + idmac,
                 mtype: "GET",
                 datatype: "json",
                 rowNum: 200,
@@ -285,7 +330,7 @@ var gridAprobacion = {
                 pgbuttons: false,
                 rowList: [],
                 styleUI: "Bootstrap",
-                editurl: '/grupoempresa',
+                editurl: '/limitemac',
                 loadError: sipLibrary.jqGrid_loadErrorHandler,
                 gridComplete: function () {
                     var recs = $("#gridlimites").getGridParam("reccount");
@@ -315,14 +360,14 @@ var gridAprobacion = {
             });
 
             $("#gridlimites").jqGrid('setGroupHeaders', {
-                useColSpanStyle: false, 
-                groupHeaders:[
-                  {startColumnName: 'MonedaAprobado', numberOfColumns: 2, titleText: 'Aprobación Actual'},
-                  {startColumnName: 'MonedaUtilizado', numberOfColumns: 2, titleText: 'Deuda Actual'},
-                  {startColumnName: 'MonedaSometido', numberOfColumns: 3, titleText: 'Sometido Aprobación'},
-                  //{startColumnName: 'closed', numberOfColumns: 2, titleText: 'Shiping'}
+                useColSpanStyle: false,
+                groupHeaders: [
+                    { startColumnName: 'Moneda', numberOfColumns: 2, titleText: 'Aprobación Actual' },
+                    { startColumnName: 'MonedaDisponible', numberOfColumns: 2, titleText: 'Deuda Actual' },
+                    { startColumnName: 'MonedaSometido', numberOfColumns: 3, titleText: 'Sometido Aprobación' },
+                    //{startColumnName: 'closed', numberOfColumns: 2, titleText: 'Shiping'}
                 ]
-              });
+            });
 
 
             $("#gridlimites").jqGrid('navGrid', "#pagerlimites", {
@@ -334,15 +379,15 @@ var gridAprobacion = {
                     recreateForm: true,
                     ajaxEditOptions: sipLibrary.jsonOptions,
                     serializeEditData: sipLibrary.createJSON,
-                    editCaption: "Modifica Límite",
-                    //template: template,
+                    editCaption: "Modificar Límite",
+                    template: template,
                     errorTextFormat: function (data) {
                         return 'Error: ' + data.responseText
                     },
                     beforeShowForm: function (form) {
                         //$("input#Nombre").prop('disabled', true);
                         //$("input#RazonSocial").prop('disabled', true);
-                       
+
 
                     },
                 },
@@ -367,8 +412,8 @@ var gridAprobacion = {
                         var parentHeight = parentDiv.height();
                         // TODO: change parentWidth and parentHeight in case of the grid
                         //       is larger as the browser window
-                        dlgDiv[0].style.top = Math.round((parentHeight-dlgHeight)/2) + "px";
-                        dlgDiv[0].style.left = Math.round((parentWidth-dlgWidth)/2) + "px";
+                        dlgDiv[0].style.top = Math.round((parentHeight - dlgHeight) / 2) + "px";
+                        dlgDiv[0].style.left = Math.round((parentWidth - dlgWidth) / 2) + "px";
 
                     },
                     afterSubmit: function (response, postdata) {
@@ -384,7 +429,7 @@ var gridAprobacion = {
 
                     },
                     onclickSubmit: function (rowid) {
-                        return { grupo: "1" };
+                        return { mac: idmac};
                     }
                 },
                 {
@@ -392,7 +437,7 @@ var gridAprobacion = {
                     recreateForm: true,
                     ajaxEditOptions: sipLibrary.jsonOptions,
                     serializeEditData: sipLibrary.createJSON,
-                    addCaption: "Eliminar Empresa",
+                    addCaption: "Eliminar Limite",
                     errorTextFormat: function (data) {
                         return 'Error: ' + data.responseText
                     }, afterSubmit: function (response, postdata) {
@@ -403,12 +448,12 @@ var gridAprobacion = {
                         else
                             return [true, "", ""]
                     },
-                    onclickSubmit: function (rowid) {
-                        var rowKey = $("#gridlimites").getGridParam("selrow");
-                        var rowData = $("#gridlimites").getRowData(rowKey);
-                        var thissid = rowData.idrelacion;
-                        return { idrelacion: thissid };
-                    }
+                    // onclickSubmit: function (rowid) {
+                    //     var rowKey = $("#gridlimites").getGridParam("selrow");
+                    //     var rowData = $("#gridlimites").getRowData(rowKey);
+                    //     var thissid = rowData.idrelacion;
+                    //     return { idrelacion: thissid };
+                    // }
                 },
                 {
                     recreateFilter: true

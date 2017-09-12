@@ -83,6 +83,21 @@ module.exports = function (passport) {
         //.post(isAuthenticated, macgrupalController.action)
         .get(isAuthenticated, macgrupalController.tipolimite);
 
+    router.route('/getmac/:idmacgrupal')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.getmac);
+
+    router.route('/limitemac/:idmac')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.limitemac);
+
+    router.route('/limitemac')
+        .post(isAuthenticated, macgrupalController.actionlimitemac)
+
+    router.route('/lamoneda')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.lamoneda);
+
 
 
 
