@@ -1024,7 +1024,7 @@ var gridvertablimites = {
                     var nuevovalorbloq = bloq - des;
                     $("#monto2").val(nuevovalorbloq);
                     $("#monto2").html(nuevovalorbloq);
-                    $("#desbloquear").val(0)
+                    $("#desbloquear").val(2)
                     var montoBase = 0;
                     var insert = 0;
                     var monto = parseInt($('#monto2').val());
