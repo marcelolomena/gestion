@@ -224,7 +224,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                             </div>
                             
                             <div class="modal-footer">
-                                <button id="btnCerrar" type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+                                <button id="btnCerrarSub" type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                             </div>
 
                         </div>
@@ -444,6 +444,14 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                 function subGridversublimiteasignaciones(subgrid_id, row_id) {
                     //gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
                 }
+            });
+
+            $("#btnCerrar").on("click", function (e) {
+                
+             console.log("llegue a la funcion!!")
+             e.preventDefault();
+             location.reload();
+                
             });
         },
 
