@@ -1107,7 +1107,22 @@ var gridvertablimites = {
                     $('#miprimerform2')[0].reset();
                     //$("#fechaBloqueo").html(fechaGuardada);
                 });
-
+                $(`#monto`).keypress(function (evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if (charCode > 31 && ((charCode < 48 || charCode > 57) && (charCode != 75 || charCode != 107))) {
+                        return false;
+                    }
+                    return true;
+                })
+                $(`#montodes`).keypress(function (evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if (charCode > 31 && ((charCode < 48 || charCode > 57) && (charCode != 75 || charCode != 107))) {
+                        return false;
+                    }
+                    return true;
+                })
                 //BOTÓN CANDADO
                 $('.abrirbloqueo').click(function () {
                     var id = $(this).attr('href').substring(1);
