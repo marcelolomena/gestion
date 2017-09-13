@@ -305,8 +305,6 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                 );
                 $("#pager").css("padding-bottom", "10px");
 
-            
-                }
                 function subGridversublimiteasignaciones(subgrid_id, row_id) {
                     gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
                 }
