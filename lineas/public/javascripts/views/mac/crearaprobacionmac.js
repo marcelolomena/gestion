@@ -1,4 +1,18 @@
 $(document).ready(function () {
+    var formatear =
+        {
+            formatearNumero: function (nStr) {
+                nStr += '';
+                x = nStr.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? ',' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                }
+                return x1 + x2;
+            }
+        }
     $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
     var idcabecera = $("#param").text();
@@ -15,7 +29,7 @@ $(document).ready(function () {
                 idgrupo = data[0].idgrupo;
                 ejecutivo = 'Marcela Castro'
                 fechapresentacion = data[0].FechaPresentacion;
-                vencimientoanterior = data[0].FechaCreacion;
+                vencimientoanterior = '20-09-2017';
                 $(".cajaRut").html(`
                 <div class="id_nombre">`+ nombregrupo + `</div>
                 <div class="id_banca">Banca Corporativa / Oficina Moneda / PEP</div>
@@ -51,7 +65,7 @@ $(document).ready(function () {
                     </div>
                 </div>
                 <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
-                    <button id="crearmacindividual" type="submit" class="btn neutro border ladda-button ng-scope" >Crear MAC</button> 
+                    <button id="crearmacindividual" type="submit" class="btn neutro border ladda-button ng-scope" >Crear/Eliminar MAC</button> 
                     <button id="compgrupo" type="submit" class="btn neutro border ladda-button ng-scope" >Comportamiento</button> 
                 </div>
                 `);
@@ -96,7 +110,7 @@ $(document).ready(function () {
                 editrules: { required: true },
                 formatter: function (cellvalue, options, rowObject) {
 
-                    dato = cellvalue + '-' + rowObject.Dv
+                    dato = formatear.formatearNumero(cellvalue) + '-' + rowObject.Dv
 
                     return dato
                 },
@@ -133,7 +147,19 @@ $(document).ready(function () {
             { label: 'Dv', name: 'Dv', hidden: true, editable: true },
             { label: 'idgrupo', name: 'idgrupo', hidden: true, editable: true },
             { label: 'idcabecera', name: 'idcabecera', hidden: true, editable: true },
-            { label: 'Nombre Cliente', name: 'Nombre', width: 250, hidden: false, search: true, editable: true, editrules: { required: true } },
+            {
+                label: 'Nombre Cliente', name: 'Nombre', width: 250, hidden: false, search: true, editable: true,
+                editrules: { required: true },
+                formatter: function (cellvalue, options, rowObject) {
+                    if (rowObject.Acomite == 2) {
+                        dato = '<a id="empresamadre" href="#">' + cellvalue + '</a>'
+                    }
+                    else {
+                        dato = cellvalue
+                    }
+                    return dato
+                }
+            },
             { label: 'Alias', name: 'Alias', width: 120, hidden: false, search: true, editable: true, editrules: { required: true } },
             { label: 'R. Grupo', name: 'ratinggrupal', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
             { label: 'R. Indiv.', name: 'Rating', width: 50, hidden: false, search: true, editable: true, editrules: { required: true } },
@@ -430,6 +456,7 @@ $(document).ready(function () {
 
     var idmacgrupal = $("#param").text();
     var idmac1 = ""
+    var nombremac1 = ""
     $.ajax({
         type: "GET",
         url: '/getmac/' + idmacgrupal,
@@ -437,7 +464,8 @@ $(document).ready(function () {
         success: function (data) {
             if (data.length > 0) {
                 idmac1 = data[0].Id
-            }else {
+                nombremac1 = data[0].Alias
+            } else {
                 alert("No existen MAC Individuales")
             }
         }
@@ -449,7 +477,7 @@ $(document).ready(function () {
         
         <ul class='nav nav-tabs tabs-up' id='myTabGrupal'>
             <li><a href='/vermacgrupal/` + idmacgrupal + `' data-target='#vermacgrupal' id='vermacgrupal_tab' data-toggle='tabgrupal'>Grupo</a></li>
-            <li><a href='`+idmac1+`' data-target='#aprobacion' id='aprobacion_tab' data-toggle='tabgrupal'>FRUTICOLA S.A</a></li>
+            <li><a href='`+ idmac1 + `' data-target='#aprobacion' id='aprobacion_tab' data-toggle='tabgrupal'>` + nombremac1 + `</a></li>
             <li><a href='#' data-target='#set' id='set_tab' data-toggle='tabgrupal'>Set</a></li>
             <li><a href='#' data-target='#comentarios' id='comentarios_tab' data-toggle='tabgrupal'>Comentarios</a></li>
             <li><a href='#' data-target='#comitentes' id='comitentes_tab' data-toggle='tabgrupal'>Comitentes</a></li>

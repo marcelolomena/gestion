@@ -1,4 +1,4 @@
-function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
+function gridOperacionesAsignar(parentRowID, parentRowKey, suffix,rut) {
     //console.log('hola');
 
     var subgrid_id = parentRowID;
@@ -306,7 +306,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                 $("#pager").css("padding-bottom", "10px");
 
                 function subGridversublimiteasignaciones(subgrid_id, row_id) {
-                    gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
+                    gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones',rut);
                 }
 
             });
