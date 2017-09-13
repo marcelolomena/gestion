@@ -394,7 +394,7 @@ exports.listgrupoempresanew = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, a.Id as idcabecera, a.Acomite, b.Grupo_Id as idgrupo, c.*
+        `as resultNum, a.Id as idcabecera, a.Acomite, b.Grupo_Id as idgrupo, c.*, a.RatingGrupo as ratinggrupal
         from scl.MacGrupo a
         join scl.GrupoEmpresa b on a.[GrupoEmpresa_Id]=b.Id
         join scl.Empresa c on b.Empresa_Id=c.Id

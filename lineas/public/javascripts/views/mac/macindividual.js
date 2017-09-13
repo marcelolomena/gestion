@@ -95,7 +95,7 @@ var gridAprobacion = {
                                 <div class="col-xs-1"><span id="riesgoreputacional`+ idmac + `">SI</span></div>
                             </div>
                         </div>
-                        <h5>II. ANTECEDENTES (M$ a 31/05/2017)</h5>
+                        <h5>II. ANTECEDENTES (M$ a 31/07/2017)</h5>
                         <div class="panel panel-primary">
                             <div class="row">
                                 <div class="col-xs-2"></div>
@@ -110,17 +110,19 @@ var gridAprobacion = {
                                 <div class="col-xs-2"><b>F.APER. C.CTE.</b></div>
                                 <div class="col-xs-1"><span id="fechaaperturaccte`+ idmac + `">05-04-2012</span></div>
                                 <div class="col-xs-2">SIST. FINANCIERO</div>
-                                <div class="col-xs-1"><span id="deudasbif`+ idmac + `">934.152</span></div>
+                                <div class="col-xs-1"><span id="deudasbif`+ idmac + `"></span></div>
                                 <div class="col-xs-2">0</div>
                                 <div class="col-xs-2">LEASING ACHEL</div>
-                                <div class="col-xs-1">65.983</div>
+                                <div class="col-xs-1">766.367</div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-2"><b>P. SALDO VISTA</br><span style="font-size:10px">(Ultimos 12 Meses MN y MX)</span></b></div>
                                 <div class="col-xs-1"><span id="promediosaldovista`+ idmac + `"></span></div>
                                 <div class="col-xs-2">PENETRACIÓN</div>
-                                <div class="col-xs-1"><span id="penetracion`+ idmac + `">65%</span></div>
+                                <div class="col-xs-1"><span id="penetracion`+ idmac + `"></span></div>
                                 <div class="col-xs-2"></div>
+                                <div class="col-xs-2">(30-08-2017)</div>
+                                <div class="col-xs-1"></div>
 
                             </div>
                         </div>
@@ -152,7 +154,7 @@ var gridAprobacion = {
                         //console.log("nombre"+idmac+" es "+data[0].Nombre)
                         $("#nombregrupo" + idmac).html('COMFRUT')
                         $("#nombre" + idmac).html(data[0].Nombre)
-                        $("#rut" + idmac).html(data[0].Rut)
+                        $("#rut" + idmac).html(formatear.formatearNumero(data[0].Rut) + '-7')
                         $("#actividad" + idmac).html(data[0].Actividad)
                         $("#pep" + idmac).html(data[0].Vigilancia)
                         $("#fechaproxvenc" + idmac).html(data[0].FechaVenc)
@@ -163,8 +165,9 @@ var gridAprobacion = {
                         $("#vigilancia" + idmac).html(data[0].Vigilancia)
                         $("#fechainfo" + idmac).html(data[0].FechaInfFin)
                         //$("#nivelatribucion" + idmac).html(data[0].NivelAtribucion)
-                        $("#promediosaldovista" + idmac).html(data[0].PromSaldoVista)
-                        $("#deudasbif" + idmac).html(data[0].DeudaSbif)
+                        $("#promediosaldovista" + idmac).html(formatear.formatearNumero(data[0].PromSaldoVista))
+                        $("#penetracion" + idmac).html(data[0].Penetracion)
+                        $("#deudasbif" + idmac).html(formatear.formatearNumero(data[0].DeudaSbifDirecta))
                         $("#fechacreacion" + idmac).html(data[0].FechaCreacion)
 
                     } else {
@@ -187,7 +190,7 @@ var gridAprobacion = {
             template += "<div class='column-full'>Descripcion {Descripcion}</div>";
             template += "</div>";
 
-            template += "<div class='form-row'>";
+            template += "<div class='form-row' style='display: none;'>";
             template += "<div class='column-full'>Tipo de Riesgo {Riesgo}</div>";
             template += "</div>";
 
@@ -242,7 +245,7 @@ var gridAprobacion = {
                     }, dataInit: function (elem) { $(elem).width(200); }
                 },
                 { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                { label: 'Riesgo', name: 'Riesgo', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Riesgo', name: 'Riesgo', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: false } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
                 {
                     label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'left', editrules: { required: true },
@@ -272,6 +275,9 @@ var gridAprobacion = {
                 },
                 { label: 'Moneda', name: 'MonedaDisponible', width: 12, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 { label: 'Monto (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'UtilizadoPesos (Miles)', name: 'UtilizadoPesos', width: 30, hidden: true, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'AprobadoPesos (Miles)', name: 'AprobadoPesos', width: 30, hidden: true, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+
                 {
                     label: 'Moneda', name: 'MonedaSometido', width: 12, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true },
                     edittype: "select",
@@ -303,7 +309,7 @@ var gridAprobacion = {
                     }, dataInit: function (elem) { $(elem).width(200); }
                 },
                 { label: 'Monto (Miles)', name: 'Sometido', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Monto (MM$)', name: 'Sometido', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Monto (MM$)', name: 'SometidoPesos', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
 
 
 
@@ -334,6 +340,8 @@ var gridAprobacion = {
                 pgtext: null,
                 pgbuttons: false,
                 rowList: [],
+                footerrow: true,
+                userDataOnFooter: false,
                 styleUI: "Bootstrap",
                 editurl: '/limitemac',
                 loadError: sipLibrary.jqGrid_loadErrorHandler,
@@ -361,6 +369,19 @@ var gridAprobacion = {
                             $("#grid").jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
                         }
                     }
+                    var sum1 = $("#gridlimites").jqGrid('getCol', 'AprobadoPesos', false, 'sum');
+                    var sum2 = $("#gridlimites").jqGrid('getCol', 'UtilizadoPesos', false, 'sum');
+                    var sum3 = $("#gridlimites").jqGrid('getCol', 'SometidoPesos', false, 'sum');
+                    console.log(sum1)
+                    console.log(sum2)
+                    console.log(sum3)
+                    $("#gridlimites").jqGrid('footerData', 'set',
+                    {
+                        PlazoResidual: 'Total (M$) :',
+                        Aprobado: (formatear.formatearNumero(sum1)),
+                        Utilizado: (formatear.formatearNumero(sum2)),
+                        SometidoPesos: (formatear.formatearNumero(sum3))
+                    }, false);
                 }
             });
 
@@ -373,6 +394,7 @@ var gridAprobacion = {
                     //{startColumnName: 'closed', numberOfColumns: 2, titleText: 'Shiping'}
                 ]
             });
+            
 
 
             $("#gridlimites").jqGrid('navGrid', "#pagerlimites", {
@@ -464,12 +486,23 @@ var gridAprobacion = {
                     recreateFilter: true
                 }
             );
-
-        //     $(".gcontainer").append(`
-        //     <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
             
-        //     <button id="confirmar" type="submit" class="btn neutro border ladda-button ng-scope" >Confirmar</button> 
-        // </div>`);
+
+            /*var sum5 = $("#" + childGridID).jqGrid('getCol', 'Total', false, 'sum');
+            var sum6 = $("#" + childGridID).jqGrid('getCol', 'VarAprobacion', false, 'sum');
+            var sum7 = $("#" + childGridID).jqGrid('getCol', 'DeudaBanco', false, 'sum');
+            var sum8 = $("#" + childGridID).jqGrid('getCol', 'GarantiaReal', false, 'sum');
+            var sum9 = $("#" + childGridID).jqGrid('getCol', 'SBIFACHEL', false, 'sum');
+            var sum10 = $("#" + childGridID).jqGrid('getCol', 'Penetracion', false, 'avg');
+            */
+
+            
+
+            //     $(".gcontainer").append(`
+            //     <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
+
+            //     <button id="confirmar" type="submit" class="btn neutro border ladda-button ng-scope" >Confirmar</button> 
+            // </div>`);
         }
     }
 }
