@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('tipolicanciemiento', {
+    return sequelize.define('tipolicenciamiento', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -18,6 +18,6 @@ module.exports = function (sequelize, DataTypes) {
     }, {
         schema: 'lic',
         timestamps: false,
-        tableName: 'tipolicanciemiento'
+        tableName: 'tipolicenciamiento'
     });
 };

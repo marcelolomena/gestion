@@ -73,7 +73,7 @@
             editable: false
         }, {
             label: 'Fabricante',
-            name: 'fabricante',
+            name: 'idfabricante',
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -91,7 +91,7 @@
             editable: true
         }, {
             label: '¿Donde está instalada?',
-            name: 'tipoInstalacion',
+            name: 'idtipoinstalacion',
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -105,7 +105,7 @@
             }
         }, {
             label: 'Clasificacion',
-            name: 'clasificacion',
+            name: 'idclasificacion',
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -119,7 +119,7 @@
             }
         }, {
             label: 'Tipo de Licenciamiento',
-            name: 'tipoLicenciamiento',
+            name: 'idtipolicenciamiento',
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -133,13 +133,13 @@
             }
         }, {
             label: 'Cantidad Lic. Compradas',
-            name: 'licStock',
+            name: 'licstock',
             search: false,
             formatter: 'integer',
             editable: false
         }, {
             label: 'Licencias Disponibles',
-            name: 'licDisponibles',
+            name: 'licdisponibles',
             search: false,
             formatter: 'integer',
             editable: false
@@ -164,21 +164,17 @@
         var tabs = [{
             id: 'compra',
             nom: 'Compras'
-        },
-        {
+        }, {
             id: 'instalacion',
             nom: 'Instalaciones'
-        },
-        {
+        }, {
             id: 'ajuste',
             nom: 'Ajustes'
-        },
-        {
+        }, {
             id: 'traduccion',
             nom: 'Traducciones'
-        }
-        ];
+        }];
 
-        initMainGrid('/lic/grid_inventario', licenciasModel, 'fabricante', tabs);
+        initMainGrid('/lic/grid_inventario', licenciasModel, 'idfabricante', tabs);
     });
 })(jQuery, _);

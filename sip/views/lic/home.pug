@@ -1,10 +1,10 @@
-extends ../layout2.pug
+extends layout.pug
 block append head
     script var page = "#{page}"
     p!= script
 block content
     #contenedor.contenedor
-      include ../sidebar2.pug
+      include sidebar.pug
       .main-content
         .swipe-area
         a#sidebar-toggle(href='#', data-toggle='.contenedor')
