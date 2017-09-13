@@ -100,6 +100,8 @@
         this.addErrorTextFormat = function (data) {
             return 'Error: ' + data.responseText
         };
+        this.addBeforeShowForm = function (form) {
+        };
         this.addBeforeSubmit = function (postdata, formid) {
             //valido formulario
             return [true, '', ''];
@@ -120,23 +122,13 @@
                 return [true, "", ""];
             }
         };
-        this.addBeforeShowForm = function (form) {
-        };
-        this.addAfterSubmit = function (response, postdata) {
-            var json = response.responseText;
-            var result = JSON.parse(json);
-            if (!result.success)
-                return [false, result.message, ""];
-            else
-                return [true, "", ""]
-        };
         this.editErrorTextFormat = function (data) {
             return 'Error: ' + data.responseText
         };
         this.editBeforeShowForm = function (form) {
             var rowData = $table.getRowData($table.getGridParam('selrow'));
         };
-        this.esitBeforeSubmit = function (postdata, formid) {
+        this.editBeforeSubmit = function (postdata, formid) {
             //valido formulario
             return [true, '', ''];
         };
@@ -155,6 +147,14 @@
                 }).trigger("reloadGrid");
                 return [true, "", ""];
             }
+        };
+        this.deleteAfterSubmit = function (response, postdata) {
+            var json = response.responseText;
+            var result = JSON.parse(json);
+            if (!result.success)
+                return [false, result.message, ""];
+            else
+                return [true, "", ""]
         };
         this.build = function () {
             $table.jqGrid(this.config);
@@ -178,10 +178,10 @@
                     ajaxEditOptions: licLibrary.jsonOptions,
                     serializeEditData: licLibrary.createJSON,
                     template: this.itemTemplate.template,
+                    beforeShowForm: this.editBeforeShowForm,
                     errorTextFormat: this.editErrorTextFormat,
                     beforeSubmit: this.editBeforeSubmit,
-                    afterSubmit: this.editAfterSubmit,
-                    beforeShowForm: this.editBeforeShowForm
+                    afterSubmit: this.editAfterSubmit
                 }, {
                     addCaption: addCaption,
                     closeAfterAdd: true,
@@ -191,16 +191,17 @@
                     ajaxEditOptions: licLibrary.jsonOptions,
                     serializeEditData: licLibrary.createJSON,
                     template: this.itemTemplate.template,
+                    beforeShowForm: this.addBeforeShowForm,
                     errorTextFormat: this.addErrorTextFormat,
                     beforeSubmit: this.addBeforeSubmit,
-                    afterSubmit: this.addAfterSubmit,
-                    beforeShowForm: this.addBeforeShowForm
+                    afterSubmit: this.addAfterSubmit
+                    
                 }, {
                     mtype: 'POST',
                     url: this.config.url,
                     ajaxEditOptions: licLibrary.jsonOptions,
                     serializeEditData: licLibrary.createJSON,
-                    afterSubmit: this.addAfterSubmit
+                    afterSubmit: this.deleteAfterSubmit
                 });
         };
     }

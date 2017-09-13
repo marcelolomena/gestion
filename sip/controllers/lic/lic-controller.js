@@ -4,10 +4,10 @@ var logger = require('../../utils/logger');
 function create(entity,data,res){
     entity.create(data)
     .then( function(created){
-         res.json({ error: 0, glosa: '' });
+        return res.json({ error: 0, glosa: '' });
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1, glosa: err.message });
+        return  res.json({ error: 1, glosa: err.message });
     });
 }
 function update(entity,data,res){
@@ -17,10 +17,10 @@ function update(entity,data,res){
         }
     })
     .then(function (updated) {
-        res.json({ error: 0, glosa: '' });
+        return res.json({ error: 0, glosa: '' });
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1, glosa: err.message });
+        return res.json({ error: 1, glosa: err.message });
     });
 }
 function destroy(entity,id,res){
@@ -32,10 +32,10 @@ function destroy(entity,id,res){
         if (rowDeleted === 1) {
             logger.debug('Deleted successfully');
         }
-        res.json({ success: true, glosa: '' });
+        return  res.json({ success: true, glosa: '' });
     }).catch(function (err) {
         logger.error(err);
-        res.json({ success: false, glosa: err.message });
+      return  res.json({ success: false, glosa: err.message });
     });
 }
 
