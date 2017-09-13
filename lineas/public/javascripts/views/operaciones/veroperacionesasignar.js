@@ -104,10 +104,16 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                                 <div class="panel panel-default" >
                                     <div class="panel-heading" style="background-color: #002464;color: #fff;">Asignar Operaciones</div>
                                         <div class="panel-body">
+
                                             <div class="gcontainer">
                                                 <table id="gridasignar"></table>
                                                 <div id="pager"></div>
                                             </div>
+
+                                            <div class="form-group" id="botonrql" style="padding-top: 10px; padding-left: 15px;">
+                                                <button id="botonasignacionmundial" type="submit" class="btn neutro border ladda-button ng-scope" >Asignar Linea</button> 
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -214,10 +220,10 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                     editurl: '/grupoempresa',
                     loadError: sipLibrary.jqGrid_loadErrorHandler,
                     gridComplete: function () {
-                        var recs = $("#grid").getGridParam("reccount");
+                        var recs = $("#gridasignar").getGridParam("reccount");
                         if (isNaN(recs) || recs == 0) {
 
-                            $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
+                            $("#gridasignar").addRowData("blankRow", { "nombre": "No hay datos" });
                         }
                     },
                     loadComplete: function () {}
@@ -299,32 +305,7 @@ function gridOperacionesAsignar(parentRowID, parentRowKey, suffix) {
                 );
                 $("#pager").css("padding-bottom", "10px");
 
-                if (document.getElementById("#botonasignar44") == null) {
-
-                    console.log(document.getElementById("#botonasignar44"))
-
-                    $("#gridasignar").jqGrid('navButtonAdd', "#pager", {
-                        caption: '<button id=botonasignar44 class="btn btn-default">Asignar Linea</button>',
-                        buttonicon: "",
-                        title: "Excel",
-                        position: "last",
-                        onClickButton: function () {
-                            /*
-                            var $grid = $("#grid")
-                            var selIds = $grid.jqGrid("getGridParam", "selarrrow")
-                            var alerta = "Se asignará la operación _________"
-    
-                            if (confirm(alerta)) {
-                                alert("Funcionalidad en desarrollo");
-    
-    
-    
-                            } else {
-                                alert("No");
-                            }
-    */
-                        }
-                    });
+            
                 }
                 function subGridversublimiteasignaciones(subgrid_id, row_id) {
                     gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
