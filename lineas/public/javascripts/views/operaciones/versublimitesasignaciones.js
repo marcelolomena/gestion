@@ -1,4 +1,4 @@
-function gridversublimitesasignaciones(parentRowID, parentRowKey, suffix) {
+function gridversublimitesasignaciones(parentRowID, parentRowKey, suffix,rut) {
     //console.log('hola');
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
@@ -27,7 +27,7 @@ function gridversublimitesasignaciones(parentRowID, parentRowKey, suffix) {
     tmplPF += "</div>";
     var childGridID = subgrid_table_id;
     var childGridPagerID = pager_id;
-    var childGridURL = "/getsublimitesasignacion/" + parentRowKey;
+    var childGridURL = "/getsublimitesasignacion/" + parentRowKey +"/"+rut;
 
     var modelSublinea = [
         {

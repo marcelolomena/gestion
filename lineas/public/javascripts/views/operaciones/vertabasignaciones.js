@@ -2,7 +2,7 @@ var gridvertabasignaciones = {
 
     renderGrid: function (loadurl, targ) {
         var $gridTab4 = $(targ + "_t")
-       
+        var rut = loadurl.substring(9, loadurl.length);
         var formatear = 
         {
             formatearNumero: function (nStr) {
@@ -211,7 +211,7 @@ var gridvertabasignaciones = {
         $gridTab4.jqGrid('setLabel', 'n', '', { 'text-align': 'center' });
 
         function subGridoperacionesasignar(subgrid_id, row_id) {
-            gridOperacionesAsignar(subgrid_id, row_id, 'operaciones2');
+            gridOperacionesAsignar(subgrid_id, row_id, 'operaciones2',rut);
         }
 
     }

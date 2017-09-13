@@ -50,8 +50,8 @@ module.exports = function (passport) {
     router.route('/gettiposaprobacion')
         .get(isAuthenticated, externoController.gettiposaprobacion);
 
-    router.route('/getsublimitesasignacion/:id')
-        .get(isAuthenticated, externoController.listsublimite);
+    router.route('/getsublimitesasignacion/:id/:rut')
+        .get(isAuthenticated, operacionesController.listsublimite);
 
 
 
