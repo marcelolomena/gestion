@@ -62,7 +62,6 @@
     function SimpleGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles) {
         var tableId = '#' + tableName;
         var $table = $(tableId);
-
         this.loadComplete = function (data) {
             var thisId = $.jgrid.jqID(this.id);
             $.get(sessionUrl, function (data) {
@@ -95,8 +94,12 @@
             styleUI: "Bootstrap",
             loadComplete: this.loadComplete
         };
-        this.itemTemplate = new ModelItemTemplate(viewModel);
-
+        this.filterOptions = {
+            stringResult: true,
+            searchOperators: true,
+            searchOnEnter: false,
+            defaultSearch: 'cn'
+        };
         this.addErrorTextFormat = function (data) {
             return 'Error: ' + data.responseText
         };
@@ -156,53 +159,53 @@
             else
                 return [true, "", ""]
         };
+        this.navParameters = {
+            edit: true,
+            add: true,
+            del: true,
+            search: false
+        };
+        this.itemTemplate = new ModelItemTemplate(viewModel);
+        this.prmEdit = {
+            editCaption: editCaption,
+            closeAfterEdit: true,
+            recreateForm: true,
+            mtype: 'POST',
+            url: this.config.url,
+            ajaxEditOptions: licLibrary.jsonOptions,
+            serializeEditData: licLibrary.createJSON,
+            template: this.itemTemplate.template,
+            beforeShowForm: this.editBeforeShowForm,
+            errorTextFormat: this.editErrorTextFormat,
+            beforeSubmit: this.editBeforeSubmit,
+            afterSubmit: this.editAfterSubmit
+        }; 
+        this.prmAdd = {
+            addCaption: addCaption,
+            closeAfterAdd: true,
+            recreateForm: true,
+            mtype: 'POST',
+            url: this.config.url,
+            ajaxEditOptions: licLibrary.jsonOptions,
+            serializeEditData: licLibrary.createJSON,
+            template: this.itemTemplate.template,
+            beforeShowForm: this.addBeforeShowForm,
+            errorTextFormat: this.addErrorTextFormat,
+            beforeSubmit: this.addBeforeSubmit,
+            afterSubmit: this.addAfterSubmit
+            
+        };
+        this.prmDel = {
+            mtype: 'POST',
+            url: this.config.url,
+            ajaxEditOptions: licLibrary.jsonOptions,
+            serializeEditData: licLibrary.createJSON,
+            afterSubmit: this.deleteAfterSubmit
+        };
         this.build = function () {
             $table.jqGrid(this.config);
-            $table.jqGrid('filterToolbar', {
-                stringResult: true,
-                searchOperators: true,
-                searchOnEnter: false,
-                defaultSearch: 'cn'
-            });
-            $table.jqGrid('navGrid', this.config.pager, {
-                edit: true,
-                add: true,
-                del: true,
-                search: false
-            }, {
-                    editCaption: editCaption,
-                    closeAfterEdit: true,
-                    recreateForm: true,
-                    mtype: 'POST',
-                    url: this.config.url,
-                    ajaxEditOptions: licLibrary.jsonOptions,
-                    serializeEditData: licLibrary.createJSON,
-                    template: this.itemTemplate.template,
-                    beforeShowForm: this.editBeforeShowForm,
-                    errorTextFormat: this.editErrorTextFormat,
-                    beforeSubmit: this.editBeforeSubmit,
-                    afterSubmit: this.editAfterSubmit
-                }, {
-                    addCaption: addCaption,
-                    closeAfterAdd: true,
-                    recreateForm: true,
-                    mtype: 'POST',
-                    url: this.config.url,
-                    ajaxEditOptions: licLibrary.jsonOptions,
-                    serializeEditData: licLibrary.createJSON,
-                    template: this.itemTemplate.template,
-                    beforeShowForm: this.addBeforeShowForm,
-                    errorTextFormat: this.addErrorTextFormat,
-                    beforeSubmit: this.addBeforeSubmit,
-                    afterSubmit: this.addAfterSubmit
-                    
-                }, {
-                    mtype: 'POST',
-                    url: this.config.url,
-                    ajaxEditOptions: licLibrary.jsonOptions,
-                    serializeEditData: licLibrary.createJSON,
-                    afterSubmit: this.deleteAfterSubmit
-                });
+            $table.jqGrid('filterToolbar',this.filterOptions );
+            $table.jqGrid('navGrid', this.config.pager,this.navParameters ,this.prmEdit ,this.prmAdd ,this.prmDel );
         };
     }
 
