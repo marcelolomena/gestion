@@ -1062,6 +1062,7 @@ var gridvertablimites = {
                             }
                         });
                     }
+                    $('#miprimerform2')[0].reset();
                 });
 
                 //BOTÓN BLOQUEAR
@@ -1103,7 +1104,7 @@ var gridvertablimites = {
                     }
 
 
-
+                    $('#miprimerform2')[0].reset();
                     //$("#fechaBloqueo").html(fechaGuardada);
                 });
 
