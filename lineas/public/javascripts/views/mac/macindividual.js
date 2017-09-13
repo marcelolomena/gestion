@@ -131,6 +131,10 @@ var gridAprobacion = {
                             <table id="gridlimites"></table>
                             <div id="pagerlimites"></div>
                         </div>
+                        <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
+                        
+                            <button id="confirmar" type="submit" class="btn neutro border ladda-button ng-scope" >Garantías</button> 
+                        </div>
 
                     </div>         
                 </div>
@@ -138,6 +142,7 @@ var gridAprobacion = {
             </div>
         
         `)
+
             $.ajax({
                 type: "GET",
                 url: '/getmacindividual/' + idmac,
@@ -429,7 +434,7 @@ var gridAprobacion = {
 
                     },
                     onclickSubmit: function (rowid) {
-                        return { mac: idmac};
+                        return { mac: idmac };
                     }
                 },
                 {
@@ -460,7 +465,11 @@ var gridAprobacion = {
                 }
             );
 
-
+        //     $(".gcontainer").append(`
+        //     <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
+            
+        //     <button id="confirmar" type="submit" class="btn neutro border ladda-button ng-scope" >Confirmar</button> 
+        // </div>`);
         }
     }
 }

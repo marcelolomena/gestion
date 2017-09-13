@@ -1052,7 +1052,7 @@ var gridvertablimites = {
 
                     }
                     else { //bloqueado
-                         
+
                         $.ajax({
                             type: "POST",
                             url: "/cargarbloqueo/" + idlineabloqueo,
@@ -1089,7 +1089,7 @@ var gridvertablimites = {
                         alert("El monto ingresado es superior al disponible");
                     }
                     else {
-                        
+
 
                         $.ajax({
                             type: "POST",
@@ -1157,7 +1157,7 @@ var gridvertablimites = {
                                 }
                             }
                             else {
-                               
+
                                 //Bloqueo
                                 $("#idlineabloqueo2").val(id)
                                 $("#disponible").val(data[0].Disponible)
@@ -1228,7 +1228,7 @@ var gridvertablimites = {
                 });
 
                 $("#btnCerrar").on("click", function (e) {
-                    
+
                     console.log("llegue a la funcion!!")
                     e.preventDefault();
                     location.reload();
@@ -1382,14 +1382,12 @@ var gridvertablimites = {
                         return [true, "", ""]
                 }
             });
-
-
-
-
     }
 }
 
 function subGridsublimite2(subgrid_id, row_id) {//cambiar el nombre a la funcion si se copia la plantilla!!!!
     //console.log('hola');
+
     gridvertabsublimites(subgrid_id, row_id, 'sublimite'); //sublimite es el nombre con el que quedaran los divs en la subgrilla (/verlimite.js)
+    gridsublimiteoperaciones(subgrid_id, row_id, 'operaciones');
 }
