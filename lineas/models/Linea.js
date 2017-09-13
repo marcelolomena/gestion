@@ -147,6 +147,10 @@ module.exports = function(sequelize, DataTypes) {
 		Sometido: {
 			type: DataTypes.FLOAT,
 			allowNull: true
+		},
+		PlazoResidual: {
+			type: DataTypes.STRING,
+			allowNull: true
 		}
 	}, {
 		schema: 'scl', timestamps: false, tableName: 'Linea'

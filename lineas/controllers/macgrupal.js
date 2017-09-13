@@ -543,8 +543,9 @@ exports.tipolimite = function (req, res) {
 
 exports.getmac = function (req, res) {
     sequelize.query(
-        `select a.Id from scl.Aprobacion a
+        `select a.Id, c.Alias from scl.Aprobacion a
         join scl.MacGrupo b on b.Aprobacion_Id=a.Id
+        join scl.Empresa c on c.Id = a.Empresa_Id
         where b.MacGrupo_Id=`+ req.params.idmacgrupal,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
@@ -567,7 +568,7 @@ exports.limitemac = function (req, res) {
     var condition = "";
 
     if (!sidx) {
-        sidx = "a.Numero";
+        sidx = "a.Id";
         sord = "asc";
     }
 
@@ -586,7 +587,10 @@ exports.limitemac = function (req, res) {
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
-        `as resultNum, a.* ,a.Aprobado-a.Disponible as Deuda
+        `as resultNum, a.* ,a.Aprobado-a.Disponible as Deuda ,
+        IIF(a.MonedaSometido = 'USD' , a.Sometido*628, IIF(a.MonedaSometido = 'UF' , a.Sometido*26628, IIF(a.MonedaSometido = 'EURO' , a.Sometido*744, a.Sometido))) AS SometidoPesos,
+        IIF(a.Moneda = 'USD' , a.Aprobado*628, IIF(a.Moneda = 'UF' , a.Aprobado*26628, IIF(a.Moneda = 'EURO' , a.Aprobado*744, a.Aprobado))) AS AprobadoPesos,
+        IIF(a.MonedaDisponible = 'USD' , a.Utilizado*628, IIF(a.MonedaDisponible = 'UF' , a.Utilizado*26628, IIF(a.MonedaDisponible = 'EURO' , a.Utilizado*744, a.Utilizado))) AS UtilizadoPesos
               from scl.Linea a
               join scl.AprobacionLinea b on a.Id=b.Linea_Id
               join scl.Aprobacion c on c.Id=b.Aprobacion_Id
@@ -621,80 +625,91 @@ exports.lamoneda = function (req, res) {
 
 exports.actionlimitemac = function (req, res) {
     var action = req.body.oper;
+    sequelize.query(
+        'select Numero from scl.Linea order by Numero desc ',
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        switch (action) {
+            case "add":
+                models.Linea.create({
+                    Tipo_Id: req.body.Tipo_Id,
+                    Numero: parseInt(valores[0].Numero)+1,
+                    Riesgo: 'D',
+                    Descripcion: req.body.Descripcion,
+                    Moneda: req.body.MonedaSometido,
+                    Aprobado: 0,
+                    MonedaDisponible: req.body.MonedaSometido,
+                    Disponible: 0,
+                    MonedaSometido: req.body.MonedaSometido,
+                    Sometido: req.body.Sometido,
+                    MonedaSometido: req.body.MonedaSometido,
+                    PlazoResidual: '0-1'
+                }).then(function (linea) {
+                    models.AprobacionLinea.create({
+                        Aprobacion_Id: req.body.mac,
+                        Linea_Id: linea.Id
 
-    switch (action) {
-        case "add":
-            models.Linea.create({
-                Tipo_Id: req.body.Tipo_Id,
-                Numero: '999',
-                Riesgo: req.body.Riesgo,
-                Descripcion: req.body.Descripcion,
-                Moneda: req.body.MonedaSometido,
-                Aprobado: 0,
-                MonedaDisponible: req.body.MonedaSometido,
-                Disponible: 0,
-                MonedaSometido: req.body.MonedaSometido,
-                Sometido: req.body.Sometido,
-                MonedaSometido: req.body.MonedaSometido,
-            }).then(function (linea) {
-                models.AprobacionLinea.create({
-                    Aprobacion_Id: req.body.mac,
-                    Linea_Id: linea.Id
-                    
-                }).then(function (grupo) {
-                    res.json({ error: 0, glosa: '' });
+                    }).then(function (grupo) {
+                        res.json({ error: 0, glosa: '' });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({ error: 1, glosa: err.message });
+                    });
                 }).catch(function (err) {
                     logger.error(err)
                     res.json({ error: 1, glosa: err.message });
                 });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ error: 1, glosa: err.message });
-            });
-            break;
+                break;
 
-        case "edit":
-            models.Linea.update({
-                Tipo_Id: req.body.Tipo_Id,
-                Riesgo: req.body.Riesgo,
-                Descripcion: req.body.Descripcion,
-                Moneda: req.body.MonedaSometido,
-                Aprobado: 0,
-                MonedaDisponible: req.body.MonedaSometido,
-                Disponible: 0,
-                MonedaSometido: req.body.MonedaSometido,
-                Sometido: req.body.Sometido,
-                MonedaSometido: req.body.MonedaSometido,
+            case "edit":
+                models.Linea.update({
+                    Tipo_Id: req.body.Tipo_Id,
+                    Riesgo: req.body.Riesgo,
+                    Descripcion: req.body.Descripcion,
+                    Moneda: req.body.MonedaSometido,
+                    Aprobado: 0,
+                    MonedaDisponible: req.body.MonedaSometido,
+                    Disponible: 0,
+                    MonedaSometido: req.body.MonedaSometido,
+                    Sometido: req.body.Sometido,
+                    MonedaSometido: req.body.MonedaSometido,
 
-            }, {
+                }, {
+                        where: {
+                            id: req.body.Id
+                        }
+                    }).then(function (solicitudcotizacion) {
+                        res.json({ error: 0, glosa: '' });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({ error: 1, glosa: err.message });
+                    });
+
+
+
+                break;
+            case "del":
+
+                models.Linea.destroy({
                     where: {
-                        id: req.body.Id
+                        Id: req.body.idrelacion
                     }
-                }).then(function (solicitudcotizacion) {
-                    res.json({ error: 0, glosa: '' });
+                }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                    if (rowDeleted === 1) {
+                        logger.debug('Deleted successfully');
+                    }
+                    res.json({ success: true, glosa: '' });
                 }).catch(function (err) {
                     logger.error(err)
-                    res.json({ error: 1, glosa: err.message });
+                    res.json({ success: false, glosa: err.message });
                 });
+                break;
+        }
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
 
 
-
-            break;
-        case "del":
-
-            models.Linea.destroy({
-                where: {
-                    Id: req.body.idrelacion
-                }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                res.json({ success: true, glosa: '' });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ success: false, glosa: err.message });
-            });
-            break;
-    }
 }
