@@ -30,7 +30,7 @@ exports.listlimite = function (req, res) {
 
     var sqlok = "declare @rowsPerPage as bigint; " +
         "declare @pageNum as bigint;" +
-        "set @rowsPerPage=" + rowspp + "; " +s
+        "set @rowsPerPage=" + rowspp + "; " +
         "set @pageNum=" + page + ";   " +
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +

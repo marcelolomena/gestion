@@ -224,7 +224,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                             </div>
                             
                             <div class="modal-footer">
-                                <button id="btnCerrarSub" type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+                                <button id="btnCerrar2" type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
                             </div>
 
                         </div>
@@ -446,7 +446,7 @@ function gridvertabsublimites(parentRowID, parentRowKey, suffix) {
                 }
             });
 
-            $("#btnCerrar").on("click", function (e) {
+            $("#btnCerrar2").on("click", function (e) {
                 
              console.log("llegue a la funcion!!")
              e.preventDefault();
