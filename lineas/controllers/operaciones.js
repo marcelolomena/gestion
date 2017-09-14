@@ -617,7 +617,7 @@ exports.listoperacionesreserva = function (req, res) {
 
 exports.actionoperacionesreserva = function (req, res) {
     var action = req.body.oper;
-    console.log('valor de tipo operacion es :' + req.body.TipoOperacion)
+    //console.log('valor de tipo operacion es :' + req.body.TipoOperacion)
 
     switch (action) {
         case "add":
@@ -647,8 +647,8 @@ exports.actionoperacionesreserva = function (req, res) {
             break;
 
         case "del":
-            var sql = `exec scl.borrarreserva ` + parseInt(req.body.Idlim) + `,` + parseInt(req.body.id) + ``
-            // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
+            var sql = `exec scl.borrarreserva ` + parseInt(req.body.Idlim) + `,` + req.body.id + ``
+             console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" )
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
             }).catch(function (err) {

@@ -830,16 +830,15 @@ var gridvertablimites = {
                     var template = "";
 
                     var modelOperacion = [
-                        { label: 'Producto', name: 'Producto', width: 8, hidden: false, editable: true, align: 'center' },
+                        {
+                            label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,editable: true, hidedlg: true, sortable: false
+                        },                        { label: 'Producto', name: 'Producto', width: 8, hidden: false, editable: true, align: 'center' },
                         { label: 'Monto', name: 'MontoInicial', width: 8, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                         { label: 'Plazo', name: 'Plazo', width: 8, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                         { label: 'Moneda', name: 'Moneda', width: 8, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },                        
                         { label: 'Fecha Reserva', name: 'FechaReserva', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                         { label: 'Fecha Desembolso', name: 'FechaDesembolso', width: 9, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                         { label: 'Fecha Vencimiento', name: 'FechaVencimiento', width: 6, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                        {
-                            label: 'Rut Empresa', name: 'RutEmpresa', width: 10, hidden: true, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
-                        },
                     ];
 
 
