@@ -75,6 +75,7 @@
             label: 'Fabricante',
             name: 'idFabricante',
             editable: true,
+            jsonmap:'fabricante.nombre',
             edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/fabricante',
@@ -85,14 +86,15 @@
                     return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
                 }
             }
-        }, {
+        }, { 
             label: 'Software',
             name: 'software',
             editable: true
         }, {
             label: '¿Donde está instalada?',
-            name: 'idtipoinstalacion',
+            name: 'idTipoInstalacion',
             editable: true,
+            jsonmap:'tipoInstalacion.nombre',
             edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/tipoInstalacion',
@@ -107,6 +109,7 @@
             label: 'Clasificacion',
             name: 'idClasificacion',
             editable: true,
+            jsonmap:'clasificacion.nombre',
             edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/clasificacion',
@@ -121,6 +124,7 @@
             label: 'Tipo de Licenciamiento',
             name: 'idTipoLicenciamiento',
             editable: true,
+            jsonmap:'tipoLicenciamiento.nombre',
             edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/tipoLicenciamiento',

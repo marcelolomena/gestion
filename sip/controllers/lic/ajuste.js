@@ -19,7 +19,7 @@ function map(req) {
         utilidad: req.body.utilidad,
         comentarios: req.body.comentarios,
         software: req.body.software,
-        borrado: req.boq.borrado || 1
+        borrado: req.body.borrado || 1
     }
 }
 

@@ -19,7 +19,7 @@ function map(req) {
         utilidad: req.body.utilidad,
         comentarios: req.body.comentarios,
         software: req.body.software,
-        borrado: req.boq.borrado || 1
+        borrado: req.body.borrado || 1
     }
 }
 
@@ -30,7 +30,7 @@ function list(req, res) {
     var sidx = req.query.sidx || 'numerorfp';
     var sord = req.query.sord || 'desc';
 
-    var orden = "[licencia]." + sidx + " " + sord;
+    var orden = entity.name + '.' + sidx + ' ' + sord;
     utilSeq.buildConditionFilter(filters, function (err, data) {
         if (err) {
             logger.debug("->>> " + err)
@@ -43,14 +43,7 @@ function list(req, res) {
             // models.solicitudcotizacion.belongsTo(models.tipoclausula, { foreignKey: 'idtipo' });
             // models.solicitudcotizacion.belongsTo(models.valores, { as: 'grupo', foreignKey: 'idgrupo' });
             entity.count({
-                // where: filter_one,
-                // include: [{
-                //     model: models.estructuracui, where: filter_two
-                // }, {
-                //     model: models.user, as: 'tecnico', where: filter_three
-                // }, {
-                //     model: models.user, as: 'negociador', where: filter_four
-                // }]
+                // where: filter_one
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 entity.findAll({
