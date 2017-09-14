@@ -622,7 +622,7 @@ exports.actionoperacionesreserva = function (req, res) {
     switch (action) {
         case "add":
 
-            var sql = `exec scl.nuevareserva ` + req.body.Idlim + `,` + req.body.TipoOperacion + `,` + req.body.NumeroProducto + `,'` + req.body.FechaOtorgamiento + `','` + req.body.FechaProxVenc + `',` + req.body.Moneda + `,` + req.body.MontoInicial + `,` + req.body.MontoActual + `,` + req.body.MontoActualMNac + `,` + req.body.RutEmpresa + ``
+            var sql = `exec scl.nuevareserva ` + req.body.Idlim + `,'` + req.body.Producto + `',` + req.body.MontoInicial + `,'` + req.body.Moneda + `','` + req.body.Plazo + `','` + req.body.FechaReserva + `','` + req.body.FechaDesembolso + `','` + req.body.FechaVencimiento + `',` + req.body.RutEmpresa + ``
             // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
@@ -635,7 +635,7 @@ exports.actionoperacionesreserva = function (req, res) {
 
         case "edit":
 
-            var sql = `update scl.Operacion set TipoOperacion ='` + req.body.TipoOperacion + `',NumeroProducto=` + req.body.NumeroProducto + `,FechaOtorgamiento='` + req.body.FechaOtorgamiento + `',FechaProxVenc='` + req.body.FechaProxVenc + `',Moneda='` + req.body.Moneda + `',MontoInicial=` + req.body.MontoInicial + `,MontoActual=` + req.body.MontoActual + `,MontoActualMNac=` + req.body.MontoActualMNac + ` WHERE Id=` + req.body.Idlim
+            var sql = `update scl.Operacion set Producto ='` + req.body.Producto + `',MontoInicial=` + req.body.MontoInicial + `,Moneda='` + req.body.Moneda + `',Plazo='` + req.body.Plazo + `',FechaReserva='` + req.body.FechaReserva + `',FechaDesembolso=` + req.body.FechaDesembolso + `,FechaVencimiento=` + req.body.FechaVencimiento + ` WHERE Id=` + req.body.Id
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
             }).catch(function (err) {

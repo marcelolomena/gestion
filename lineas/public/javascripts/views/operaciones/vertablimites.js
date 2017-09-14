@@ -835,20 +835,16 @@ var gridvertablimites = {
                             editable: true, hidedlg: true, sortable: false
                         },
 
-                        { label: 'Tipo Operacion', name: 'TipoOperacion', width: 8, hidden: false, editable: true, align: 'center' },
-                        { label: 'Nro Producto', name: 'NumeroProducto', width: 8, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                        { label: 'Fecha Otorgamiento', name: 'FechaOtorgamiento', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                        //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                        {
-                            label: 'Fecha Prox Vencimiento', name: 'FechaProxVenc', width: 9, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true },
-                        },
-                        //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
+                        { label: 'Producto', name: 'Producto', width: 8, hidden: false, editable: true, align: 'center' },
+                        { label: 'Monto', name: 'MontoInicial', width: 8, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                         { label: 'Moneda', name: 'Moneda', width: 5, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                        { label: 'Monto Inicial', name: 'MontoInicial', width: 8, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                        { label: 'Monto Actual', name: 'MontoActual', width: 6, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                        { label: 'Plazo', name: 'Plazo', width: 8, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Fecha Reserva', name: 'FechaReserva', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Fecha Desembolso', name: 'FechaDesembolso', width: 9, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true }},
+                        { label: 'Fecha Vencimiento', name: 'FechaVencimiento', width: 6, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                         // { label: 'Monto Actual Equiv.M /Linea', name: 'MontoActualMLinea', width: 15, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                         {
-                            label: 'Monto Actual Equiv. M/N', name: 'MontoActualMNac', width: 10, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
+                            label: 'Monto Actual Equiv. M/N', name: 'Observaciob', width: 10, hidden: true, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
                         },
                         {
                             label: 'Rut Empresa', name: 'RutEmpresa', width: 10, hidden: true, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
