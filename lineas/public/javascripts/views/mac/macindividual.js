@@ -30,6 +30,7 @@ var gridAprobacion = {
                 <ul class='nav nav-tabs tabs-up' id='myTabmac'>
                 <li><a data-target='#limite' id='limite_tab' data-toggle='tabmac'>Anverso</a></li>
                 <li><a data-target='#garantia' id='aprobacion_tab' data-toggle='tabgrupal'>Reverso</a></li>
+                <li><a data-target='#garantia' id='aprobacion_tab' data-toggle='tabgrupal'>Comentarios</a></li>
                 
             </ul>
             <div class='tab-content'>
@@ -199,7 +200,7 @@ var gridAprobacion = {
             template += "</div>";
 
             template += "<div class='form-row'>";
-            template += "<div class='column-full'>Monto Sometido Aprobación {Sometido}</div>";
+            template += "<div class='column-full'>Monto Sometido Aprobación (Miles) {Sometido}</div>";
             template += "</div>";
 
             template += "<div class='form-row' style='display: none;'>";
@@ -309,7 +310,7 @@ var gridAprobacion = {
                     }, dataInit: function (elem) { $(elem).width(200); }
                 },
                 { label: 'Monto (Miles)', name: 'Sometido', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Monto (MM$)', name: 'SometidoPesos', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Monto (M$)', name: 'SometidoPesos', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
 
 
 
