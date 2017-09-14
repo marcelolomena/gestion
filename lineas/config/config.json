@@ -90,7 +90,7 @@
         "username": "biometria",
         "password": "biometria123",
         "database": "controldelimites",
-        "host": "DESKTOP-S5JBBQ5",
+        "host": "LAPTOP-200U6LCA",
         "dialect": "mssql",
         "dialectOptions": {
             "instanceName": "SQLEXPRESS"
