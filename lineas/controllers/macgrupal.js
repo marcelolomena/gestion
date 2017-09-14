@@ -634,7 +634,7 @@ exports.actionlimitemac = function (req, res) {
             case "add":
                 models.Linea.create({
                     Tipo_Id: req.body.Tipo_Id,
-                    Numero: parseInt(valores[0].Numero) + 1,
+                    Numero: parseInt(valores[0].Numero)+1,
                     Riesgo: 'D',
                     Descripcion: req.body.Descripcion,
                     Moneda: req.body.MonedaSometido,
@@ -693,25 +693,13 @@ exports.actionlimitemac = function (req, res) {
 
                 models.Linea.destroy({
                     where: {
-                        Id: req.body.id
+                        Id: req.body.idrelacion
                     }
                 }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
                     if (rowDeleted === 1) {
-                        models.AprobacionLinea.destroy({
-                            where: {
-                                Linea_Id: req.body.id
-                            }
-                        }).then(function (grupo) {
-                            res.json({ success: true, glosa: '' });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({ success: false, glosa: err.message });
-                        });
-                        //logger.debug('Deleted successfully');
-                    }else{
-                        res.json({ success: true, glosa: '' });
+                        logger.debug('Deleted successfully');
                     }
-                    //res.json({ success: true, glosa: '' });
+                    res.json({ success: true, glosa: '' });
                 }).catch(function (err) {
                     logger.error(err)
                     res.json({ success: false, glosa: err.message });
