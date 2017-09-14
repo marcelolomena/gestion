@@ -1,12 +1,15 @@
+'use strict';
+var Sequelize = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
     return sequelize.define('licencia', {
         id: {
-            type: DataTypes.INTEGER,
+            type:Sequelize.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
         },
-        idfabricante: {
+        idFabricante: {
+            field:'idfabricante',
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
@@ -14,15 +17,17 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        idtipoinstalacion: {
+        idTipoInstalacion: {
+            field:'idtipoinstalacion',
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
-                model: 'tipoinstalacion',
+                model: 'tipoInstalacion',
                 key: 'id'
             }
         },
-        idclasificacion: {
+        idClasificacion: {
+            field:'idclasificacion',
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
@@ -30,23 +35,27 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        idtipolicenciamiento: {
+        idTipoLicenciamiento: {
+            field:'idtipolicenciamiento',
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
-                model: 'tipolicenciamiento',
+                model: 'tipoLicenciamiento',
                 key: 'id'
             }
         },
-        licstock: {
+        licStock: {
+            field:'licstock',
             type: DataTypes.INTEGER,
             allowNull: true
         },
-        licdisponible: {
+        licDisponible: {
+            field:'licdisponible',
             type: DataTypes.INTEGER,
             allowNull: true
         },
-        idalertarenovacion: {
+        idalertaRenovacion: {
+            field:'idalertarenovacion',
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {

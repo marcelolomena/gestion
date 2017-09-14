@@ -1,11 +1,10 @@
 'use strict';
 var models = require('../../models');
-var sequelize = require('../../models/index').sequelize;
 var logger = require('../../utils/logger');
-var _ = require('lodash');
+var base = require('./lic-controller');
 
 
-var entity = models.fabricante;
+var entity = models.moneda;
 
 function listAll(req, res) {
     entity.findAll()
@@ -13,7 +12,7 @@ function listAll(req, res) {
             return res.json(_.map(rows, function (item) {
                 return {
                     id: item.id,
-                    nombre: item.nombre
+                    nombre: item.moneda
                 };
             }));
         })
@@ -24,8 +23,6 @@ function listAll(req, res) {
             });
         });
 }
-
-
 module.exports = {
     listAll: listAll
 };

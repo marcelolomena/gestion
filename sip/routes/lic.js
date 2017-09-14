@@ -7,7 +7,10 @@ var fabricanteController = require('../controllers/lic/fabricante');
 var tipoInstalacionController = require('../controllers/lic/tipoInstalacion');
 var tipoLicenciamientoController = require('../controllers/lic/tipoLicenciamiento');
 var licenciaController = require('../controllers/lic/licencia');
-
+var proveedorController = require('../controllers/lic/proveedor');
+var areaController = require('../controllers/lic/area');
+var monedaController = require('../controllers/lic/moneda');
+var tipoController = require('../controllers/lic/tipo');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -23,73 +26,10 @@ module.exports = function (passport) {
     .post(isAuthenticated, licenciaController.action);
     
     
-    router.get('/lic/proveedor', function (req, res) {
-        return res.json([{
-                id: 1,
-                nombre: 'NOVARED CHILE S.A.'
-            }, {
-                id: 2,
-                nombre: 'E-SIGN S.A.'
-            }, {
-                id: 3,
-                nombre: 'Experian'
-            }, {
-                id: 4,
-                nombre: 'HEWLETT PACKARD CHILE COMERCIAL LTDA.'
-            }, {
-                id: 5,
-                nombre: 'Sistemas Oracle de Chile S.A'
-            }
-
-        ]);
-    });
-    router.get('/lic/area', function (req, res) {
-        return res.json([{
-            id: 1,
-            nombre: 'Infraestructura'
-        }, {
-            id: 2,
-            nombre: 'Operaciones'
-        }, {
-            id: 3,
-            nombre: 'Seguridad'
-        }, {
-            id: 4,
-            nombre: 'Gestión'
-        }, {
-            id: 5,
-            nombre: 'Mobile'
-        }, {
-            id: 6,
-            nombre: 'Cumplimiento'
-        }]);
-    });
-    router.get('/lic/moneda', function (req, res) {
-        return res.json([{
-                id: 1,
-                nombre: 'CLP'
-            }, {
-                id: 2,
-                nombre: 'USD'
-            }, {
-                id: 3,
-                nombre: 'UF'
-            }, {
-                id: 4,
-                nombre: 'EUR'
-            }
-
-        ]);
-    });
-    router.get('/lic/tipo', function (req, res) {
-        return res.json([{
-            id: 1,
-            nombre: 'Versión'
-        }, {
-            id: 2,
-            nombre: 'Suite'
-        }]);
-    });
+    router.get('/lic/proveedor', proveedorController.listAll);
+    router.get('/lic/area', areaController.listAll);
+    router.get('/lic/moneda', monedaController.listAll);
+    router.get('/lic/tipo', tipoController.listAll);
 
 
   

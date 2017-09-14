@@ -1,7 +1,5 @@
 'use strict';
 var models = require('../../models');
-var sequelize = require('../../models/index').sequelize;
-var utilSeq = require('../../utils/seq');
 var logger = require('../../utils/logger');
 var _ = require('lodash');
 

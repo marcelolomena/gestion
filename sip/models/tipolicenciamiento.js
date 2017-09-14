@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('tipolicenciamiento', {
+    return sequelize.define('tipoLicenciamiento', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,

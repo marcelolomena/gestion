@@ -73,7 +73,7 @@
             editable: false
         }, {
             label: 'Fabricante',
-            name: 'idfabricante',
+            name: 'idFabricante',
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -105,7 +105,7 @@
             }
         }, {
             label: 'Clasificacion',
-            name: 'idclasificacion',
+            name: 'idClasificacion',
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -119,7 +119,7 @@
             }
         }, {
             label: 'Tipo de Licenciamiento',
-            name: 'idtipolicenciamiento',
+            name: 'idTipoLicenciamiento',
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -133,19 +133,19 @@
             }
         }, {
             label: 'Cantidad Lic. Compradas',
-            name: 'licstock',
+            name: 'licStock',
             search: false,
             formatter: 'integer',
             editable: false
         }, {
             label: 'Licencias Disponibles',
-            name: 'licdisponibles',
+            name: 'licDisponibles',
             search: false,
             formatter: 'integer',
             editable: false
         }, {
             label: 'Alerta de Renovación',
-            name: 'alertaRenovacion',
+            name: 'idAlertaRenovacion',
             editable: false
         }, {
             label: 'Utilidad',
