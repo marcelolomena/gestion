@@ -27,55 +27,29 @@ function list(req, res) {
     var page = req.query.page;
     var rows = req.query.rows;
     var filters = req.query.filters;
-    var sidx = req.query.sidx || 'numerorfp';
+    var sidx = req.query.sidx || 'id';
     var sord = req.query.sord || 'desc';
-
     var orden = entity.name + '.' + sidx + ' ' + sord;
-    utilSeq.buildConditionFilter(filters, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
-            // models.solicitudcotizacion.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
-            // models.solicitudcotizacion.belongsTo(models.programa, { foreignKey: 'program_id' });
-            // models.solicitudcotizacion.belongsTo(models.user, { as: 'tecnico', foreignKey: 'idtecnico' });
-            // models.solicitudcotizacion.belongsTo(models.valores, { as: 'clasificacion', foreignKey: 'idclasificacionsolicitud' });
-            // models.solicitudcotizacion.belongsTo(models.user, { as: 'negociador', foreignKey: 'idnegociador' });
-            // models.solicitudcotizacion.belongsTo(models.tipoclausula, { foreignKey: 'idtipo' });
-            // models.solicitudcotizacion.belongsTo(models.valores, { as: 'grupo', foreignKey: 'idgrupo' });
-            entity.count({
-                // where: filter_one
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                entity.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    order: orden,
-                    // where: filter_one,
-                    // include: [{
-                    //     model: models.estructuracui, where: filter_two
-                    // }, {
-                    //     model: models.programa
-                    // }, {
-                    //     model: models.user, as: 'tecnico', where: filter_three
-                    // }, {
-                    //     model: models.valores, as: 'clasificacion'
-                    // }, {
-                    //     model: models.user, as: 'negociador', where: filter_four
-                    // }, {
-                    //     model: models.tipoclausula
-                    // }, {
-                    //     model: models.valores, as: 'grupo'
-                    // }
-                    // ]
-                }).then(function (data) {
-                    return res.json({ records: records, total: total, page: page, rows: data });
-                }).catch(function (err) {
-                    logger.error(err.message);
-                    res.json({ error_code: 1 });
-                });
+    var whereClause = base.where(filters);
+
+    entity.count({
+        where: whereClause
+    })
+        .then(function (records) {
+            var total = Math.ceil(records / rows);
+            entity.findAll({
+                offset: parseInt(rows * (page - 1)),
+                limit: parseInt(rows),
+                order: orden,
+                where: whereClause
+            }).then(function (data) {
+                return res.json({ records: records, total: total, page: page, rows: data });
             })
-        }
-    });
+        })
+        .catch(function (err) {
+            logger.error(err.message);
+            res.json({ error_code: 1 });
+        });
 }
 
 function action(req, res) {

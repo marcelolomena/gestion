@@ -31,6 +31,7 @@ function list(req, res) {
     var sidx = req.query.sidx || 'id';
     var sord = req.query.sord || 'desc';
     var orden = entity.name + '.' + sidx + ' ' + sord;
+    var whereClause = base.where(filters);
 
     entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
     entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
@@ -38,7 +39,7 @@ function list(req, res) {
     entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
 
     entity.count({
-        // where: filter_one,
+        where: whereClause
     })
     .then(function (records) {
         var total = Math.ceil(records / rows);
@@ -46,7 +47,7 @@ function list(req, res) {
         offset: parseInt(rows * (page - 1)),
         limit: parseInt(rows),
         order: orden,
-        // where: filter_one,
+        where: whereClause,
         include: [{
             model: models.fabricante
         }, {

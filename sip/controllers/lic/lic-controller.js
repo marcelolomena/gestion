@@ -1,5 +1,6 @@
 'use strict';
 var logger = require('../../utils/logger');
+var _ = require('lodash');
 
 function create(entity, data, res) {
     entity.create(data)
@@ -42,9 +43,30 @@ function destroy(entity, id, res) {
 module.exports = {
     create: create,
     update: update,
-    destroy: destroy
+    destroy: destroy,
+    getFilters:getFilters
 };
 
-var pp =  { 'eq' :'==', 'ne':'!', 'lt':'<', 'le':'<=', 'gt':'>', 'ge':'>=', 'bw':'^', 
-'bn':'!^', 'in':'=', 'ni':'!=', 'ew':'\|', 'en':'!@', 'cn':'~', 
-'nc':'!~', 'nu':'#', 'nn':'!#', 'bt':'...'};
+function getFilters(filters) {
+    var jsonObj = JSON.parse(filters || {});
+    var conditions = _.map(jsonObj.rules || [], function (item) {
+        switch (item.op) {
+            case 'eq':
+                return { [item.field]: item.data };
+            case 'cn':
+                return { [item.field]: { $like: '%' + item.data + '%' } };
+            case 'ge':
+                return { [item.field]: { $gte: item.data } };
+            case "le":
+                return { [item.field]: { $lte: item.data } };
+            case "ne":
+                return { [item.field]: { $ne: item.data } };
+        }
+    });
+    return conditions;
+}
+var pp = {
+    'eq': '==', 'ne': '!', 'lt': '<', 'le': '<=', 'gt': '>', 'ge': '>=', 'bw': '^',
+    'bn': '!^', 'in': '=', 'ni': '!=', 'ew': '\|', 'en': '!@', 'cn': '~',
+    'nc': '!~', 'nu': '#', 'nn': '!#', 'bt': '...'
+};
