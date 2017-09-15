@@ -44,18 +44,6 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    idfabricante: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'fabricante',
-        key: 'id'
-      }
-    },
-    software: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     fechacompra: {
       type: DataTypes.DATE,
       allowNull: true
