@@ -44,3 +44,7 @@ module.exports = {
     update: update,
     destroy: destroy
 };
+
+var pp =  { 'eq' :'==', 'ne':'!', 'lt':'<', 'le':'<=', 'gt':'>', 'ge':'>=', 'bw':'^', 
+'bn':'!^', 'in':'=', 'ni':'!=', 'ew':'\|', 'en':'!@', 'cn':'~', 
+'nc':'!~', 'nu':'#', 'nn':'!#', 'bt':'...'};

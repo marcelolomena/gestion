@@ -28,44 +28,42 @@ function list(req, res) {
     var page = req.query.page;
     var rows = req.query.rows;
     var filters = req.query.filters;
-    var sidx = req.query.sidx || 'numerorfp';
+    var sidx = req.query.sidx || 'id';
     var sord = req.query.sord || 'desc';
     var orden = entity.name + '.' + sidx + ' ' + sord;
 
-    utilSeq.buildConditionFilter(filters, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
-            entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
-            entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
-            entity.belongsTo(models.tipoInstalacion, {  foreignKey: 'idTipoInstalacion' });
-            entity.belongsTo(models.tipoLicenciamiento, {  foreignKey: 'idTipoLicenciamiento' });
-            entity.count({
-                // where: filter_one,
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                entity.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    order: orden,
-                    // where: filter_one,
-                     include: [{
-                        model: models.fabricante
-                    }, {
-                        model: models.clasificacion
-                    }, {
-                        model: models.tipoInstalacion
-                    }, {
-                        model: models.tipoLicenciamiento
-                    }]
-                }).then(function (data) {
-                    return res.json({ records: records, total: total, page: page, rows: data });
-                }).catch(function (err) {
-                    logger.error(err.message);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
+    entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
+    entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
+    entity.belongsTo(models.tipoInstalacion, { foreignKey: 'idTipoInstalacion' });
+    entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
+
+    entity.count({
+        // where: filter_one,
+    })
+    .then(function (records) {
+        var total = Math.ceil(records / rows);
+    entity.findAll({
+        offset: parseInt(rows * (page - 1)),
+        limit: parseInt(rows),
+        order: orden,
+        // where: filter_one,
+        include: [{
+            model: models.fabricante
+        }, {
+            model: models.clasificacion
+        }, {
+            model: models.tipoInstalacion
+        }, {
+            model: models.tipoLicenciamiento
+        }]
+    })
+    .then(function (data) {
+        return res.json({ records: records, total: total, page: page, rows: data });
+    })
+    })
+    .catch(function (err) {
+        logger.error(err.message);
+        res.json({ error_code: 1 });
     });
 }
 
@@ -84,4 +82,4 @@ function action(req, res) {
 module.exports = {
     list: list,
     action: action
-};
+}
