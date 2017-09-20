@@ -8,7 +8,8 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    idlicencia: {
+    idLicencia: {
+      field:'idlicencia',
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -20,11 +21,13 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    ordencompra: {
+    ordenCompra: {
+      field:'ordencompra',
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    idcui: {
+    idCui: {
+      field:'idcui',
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -36,7 +39,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    idproveedor: {
+    idProveedor: {
+      field:'idproveedor',
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -44,23 +48,28 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    fechacompra: {
+    fechaCompra: {
+      field:'fechacompra',
       type: DataTypes.DATE,
       allowNull: true
     },
-    fechaexpiracion: {
+    fechaExpiracion: {
+      field:'fechaexpiracion',
       type: DataTypes.DATE,
       allowNull: true
     },
-    liccompradas: {
+    licCompradas: {
+      field:'liccompradas',
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    cantidadsoporte: {
+    cantidadSoporte: {
+      field:'cantidadsoporte',
       type: DataTypes.INTEGER,
       allowNull: true
     },
     idmoneda: {
+      field:'idMoneda',
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -68,15 +77,18 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    valorlicencia: {
+    valorLicencia: {
+      field:'valorlicencia',
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    valorsoporte: {
+    valorSoporte: {
+      field:'valorsoporte',
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    fecharenovasoporte: {
+    fechaRenovaSoporte: {
+      field:'fecharenovasoporte',
       type: DataTypes.DATE,
       allowNull: true
     },
@@ -88,7 +100,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    correocomprador: {
+    correoComprador: {
+      field:'correocomprador',
       type: DataTypes.STRING,
       allowNull: true
     }

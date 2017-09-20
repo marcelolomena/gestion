@@ -27,7 +27,7 @@ function list(req, res) {
     var page = req.query.page;
     var rows = req.query.rows;
     var filters = req.query.filters;
-    var sidx = req.query.sidx || 'numerorfp';
+    var sidx = req.query.sidx || 'id';
     var sord = req.query.sord || 'desc';
 
     var orden = "[licencia]." + sidx + " " + sord;

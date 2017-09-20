@@ -48,7 +48,8 @@ module.exports = {
 };
 
 function getFilters(filters) {
-    var jsonObj = JSON.parse(filters || {});
+   if (filters) {
+    var jsonObj = JSON.parse(filters);
     var conditions = _.map(jsonObj.rules || [], function (item) {
         switch (item.op) {
             case 'eq':
@@ -64,6 +65,8 @@ function getFilters(filters) {
         }
     });
     return conditions;
+}
+return{};
 }
 var pp = {
     'eq': '==', 'ne': '!', 'lt': '<', 'le': '<=', 'gt': '>', 'ge': '>=', 'bw': '^',

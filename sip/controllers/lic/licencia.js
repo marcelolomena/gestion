@@ -31,7 +31,7 @@ function list(req, res) {
     var sidx = req.query.sidx || 'id';
     var sord = req.query.sord || 'desc';
     var orden = entity.name + '.' + sidx + ' ' + sord;
-    var whereClause = base.where(filters);
+    var whereClause = base.getFilters(filters);
 
     entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
     entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });

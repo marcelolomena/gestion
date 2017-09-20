@@ -7,7 +7,8 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    idlicencia: {
+    idLicencia: {
+      field:'idlicencia',
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
