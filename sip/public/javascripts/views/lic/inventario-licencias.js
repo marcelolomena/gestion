@@ -88,7 +88,7 @@
             }
         }, { 
             label: 'Software',
-            name: 'software',
+            name: 'nombre',
             editable: true
         }, {
             label: '¿Donde está instalada?',
@@ -142,8 +142,8 @@
             formatter: 'integer',
             editable: false
         }, {
-            label: 'Licencias Disponibles',
-            name: 'licDisponibles',
+            label: 'Licencias Instaladas',
+            name: 'licOcupadas',
             search: false,
             formatter: 'integer',
             editable: false
@@ -168,13 +168,13 @@
         var tabs = [{
             id: 'compra',
             nom: 'Compras'
-        }, {
+        } ,/*  {
             id: 'instalacion',
             nom: 'Instalaciones'
         }, {
             id: 'ajuste',
             nom: 'Ajustes'
-        }, {
+        }, */ {
             id: 'traduccion',
             nom: 'Traducciones'
         }];

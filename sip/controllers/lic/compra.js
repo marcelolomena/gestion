@@ -7,7 +7,7 @@ var entity = models.compra;
 function map(req) {
     return {
         id: req.body.id || 0,
-        idLicencia: req.body.idLicencia,
+        idProducto: req.body.idProducto,
         contrato: req.body.contrato,
         ordenCompra: req.body.ordenCompra,
         idCui: req.body.idCui,

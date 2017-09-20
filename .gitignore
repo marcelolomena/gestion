@@ -21,3 +21,5 @@ sip/docs/*
 sip/public/docs/*
 sip/.vscode/*
 sip/.vscode/settings.json
+sip/lic.njsproj
+sip/lic.sln

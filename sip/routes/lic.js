@@ -10,7 +10,7 @@ var proveedorController = require('../controllers/lic/proveedor');
 var monedaController = require('../controllers/lic/moneda');
 var tipoController = require('../controllers/lic/tipo');
 
-var licenciaController = require('../controllers/lic/licencia');
+var productoController = require('../controllers/lic/producto');
 var compraController = require('../controllers/lic/compra');
 var instalacionController = require('../controllers/lic/instalacion');
 var ajusteController = require('../controllers/lic/ajuste');
@@ -28,8 +28,8 @@ module.exports = function (passport) {
     router.get('/lic/tipoLicenciamiento', tipoLicenciamientoController.listAll);
 
     router.route('/lic/grid_inventario')
-        .get(isAuthenticated, licenciaController.list)
-        .post(isAuthenticated, licenciaController.action);
+        .get(isAuthenticated, productoController.list)
+        .post(isAuthenticated, productoController.action);
 
 
     router.get('/lic/proveedor', proveedorController.listAll);
