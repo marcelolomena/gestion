@@ -42,5 +42,8 @@
     "tedious": "latest",
     "winston": "2.2.0",
     "winston-daily-rotate-file": "1.3.1"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^3.0.0-3"
   }
 }

@@ -1,4 +1,5 @@
 'use strict';
+var models = require('../../models');
 var logger = require('../../utils/logger');
 var _ = require('lodash');
 
@@ -39,12 +40,65 @@ function destroy(entity, id, res) {
         return res.json({ success: false, glosa: err.message });
     });
 }
+function list(req, res, entity,includes, transformer ) {
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx || 'id';
+    var sord = req.query.sord || 'desc';
+    var orden = entity.name + '.' + sidx + ' ' + sord;
+    var whereClause = getFilters(filters);
 
+    entity.count({
+        where: whereClause
+    })
+        .then(function (records) {
+            var total = Math.ceil(records / rows);
+           return entity.findAll({
+                offset: parseInt(rows * (page - 1)),
+                limit: parseInt(rows),
+                // order: orden,
+                where: whereClause,
+                include: [{
+                    model: models.estructuracui
+                }, {
+                    model: models.moneda
+                }, {
+                    model: models.proveedor
+                }]
+            })
+                .then(function (data) {
+                    var resultData = transformer(data);
+                    return res.json({ records: records, total: total, page: page, rows: resultData });
+                })
+                .catch(function (err) {
+                        logger.error(err.message);
+                    return res.json({ error_code: 1 });
+                })
+        })
+        .catch(function (err) {
+            logger.error(err.message);
+            return res.json({ error_code: 1 });
+        });
+}
+function listAll(req, res, entity, mapper) {
+    entity.findAll()
+        .then(function (rows) {
+            return res.json(_.map(rows, mapper));
+        })
+        .catch(function (err) {
+            logger.error(err.message);
+            res.json({
+                error_code: 1
+            });
+        });
+}
 module.exports = {
     create: create,
     update: update,
     destroy: destroy,
-    getFilters:getFilters
+    list:list,
+    listAll:listAll
 };
 
 function getFilters(filters) {

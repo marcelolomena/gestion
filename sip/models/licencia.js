@@ -1,9 +1,9 @@
-'use strict';
+'use strict'; 
 var Sequelize = require('sequelize');
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('licencia', {
+    return sequelize.define('producto', {
         id: {
-            type:Sequelize.INTEGER,
+            type:DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
@@ -11,11 +11,15 @@ module.exports = function (sequelize, DataTypes) {
         idFabricante: {
             field:'idfabricante',
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             references: {
                 model: 'fabricante',
                 key: 'id'
             }
+        },
+        nombre: {
+            type: DataTypes.STRING(120),
+            allowNull: false
         },
         idTipoInstalacion: {
             field:'idtipoinstalacion',
@@ -47,36 +51,27 @@ module.exports = function (sequelize, DataTypes) {
         licStock: {
             field:'licstock',
             type: DataTypes.INTEGER,
-            allowNull: true
+            allowNull: false,
+            defaultValue:0
         },
-        licDisponible: {
-            field:'licdisponible',
+        licOcupadas: {
+            field:'licocupadas',
             type: DataTypes.INTEGER,
-            allowNull: true
+            allowNull: false,
+            defaultValue:0
         },
-        idalertaRenovacion: {
-            field:'idalertarenovacion',
+        alertaRenovacion: {
+            field:'alertarenovacion',
             type: DataTypes.INTEGER,
-            allowNull: true,
-            references: {
-                model: 'parametro',
-                key: 'id'
-            }
+            allowNull: false,
+            defaultValue:0
         },
         utilidad: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(255),
             allowNull: true
         },
         comentarios: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        borrado: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        software: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(255),
             allowNull: true
         }
     }, {

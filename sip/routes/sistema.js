@@ -108,7 +108,8 @@ module.exports = function (passport) {
                 where: {
                     id: idsistema
                 }
-            }).then(function (home) {
+            })
+            .then(function (home) {
 
                 return models.pagina.findOne({
                     where: {
@@ -121,7 +122,8 @@ module.exports = function (passport) {
                             model: models.contenido
                         }
                     ]
-                }).then(function (pagina) {
+                })
+                .then(function (pagina) {
                     var tmpl = pug.renderFile(pagina.contenido.plantilla, {
                         title: pagina.title
                     });

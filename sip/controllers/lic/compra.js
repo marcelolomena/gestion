@@ -1,7 +1,5 @@
 'use strict';
 var models = require('../../models');
-var utilSeq = require('../../utils/seq');
-var logger = require('../../utils/logger');
 var base = require('./lic-controller');
 
 
@@ -30,44 +28,22 @@ function map(req) {
 }
 
 function list(req, res) {
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx || 'id';
-    var sord = req.query.sord || 'desc';
-    var orden = entity.name + '.' + sidx + ' ' + sord;
-    var whereClause = base.getFilters(filters);
 
     entity.belongsTo(models.estructuracui, { foreignKey: 'idCui' });
     entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
     entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
 
-    entity.count({
-        where: whereClause
-    })
-        .then(function (records) {
-            var total = Math.ceil(records / rows);
-            entity.findAll({
-                offset: parseInt(rows * (page - 1)),
-                limit: parseInt(rows),
-                order: orden,
-                where: whereClause,
-                include: [{
-                    model: models.estructuracui
-                }, {
-                    model: models.moneda
-                }, {
-                    model: models.proveedor
-                }]
-            })
-                .then(function (data) {
-                    return res.json({ records: records, total: total, page: page, rows: data });
-                })
-        })
-        .catch(function (err) {
-            logger.error(err.message);
-            res.json({ error_code: 1 });
-        });
+    var includes = [{
+        model: models.estructuracui
+    }, {
+        model: models.moneda
+    }, {
+        model: models.proveedor
+    }];
+
+    base.list(req, res, entity,includes, function (data) {
+        return data;
+    });
 }
 
 function action(req, res) {

@@ -7,28 +7,22 @@ module.exports = function (sequelize, DataTypes) {
             primaryKey: true,
             autoIncrement: true
         },
-        idlicencia: {
+        idProducto: {
+            field:'idproducto',
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             references: {
-                model: 'licencia',
-                key: 'id'
+              model: 'producto',
+              key: 'id'
             }
-        },
-        software: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        cantidadinstalada: {
+          },
+        cantidadInstalada: {
+            field:'cantidadinstalada',
             type: DataTypes.INTEGER,
-            allowNull: true
+            allowNull: false
         },
         observacion: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        borrado: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(255),
             allowNull: true
         }
     }, {

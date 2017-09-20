@@ -8,17 +8,17 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    idLicencia: {
-      field:'idlicencia',
+    idProducto: {
+      field:'idproducto',
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
-        model: 'licencia',
+        model: 'producto',
         key: 'id'
       }
     },
     contrato: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(10),
       allowNull: true
     },
     ordenCompra: {
@@ -42,7 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     idProveedor: {
       field:'idproveedor',
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'proveedor',
         key: 'id'
@@ -61,17 +61,19 @@ module.exports = function(sequelize, DataTypes) {
     licCompradas: {
       field:'liccompradas',
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: false,
+      defaultValue:0
     },
     cantidadSoporte: {
       field:'cantidadsoporte',
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: false,
+      defaultValue:0
     },
-    idmoneda: {
-      field:'idMoneda',
+    idMoneda: {
+      field:'idmoneda',
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'moneda',
         key: 'id'
@@ -79,12 +81,12 @@ module.exports = function(sequelize, DataTypes) {
     },
     valorLicencia: {
       field:'valorlicencia',
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10,2),
       allowNull: true
     },
     valorSoporte: {
       field:'valorsoporte',
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10,2),
       allowNull: true
     },
     fechaRenovaSoporte: {
@@ -97,12 +99,12 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     comprador: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(60),
       allowNull: true
     },
     correoComprador: {
       field:'correocomprador',
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(120),
       allowNull: true
     }
   }, {

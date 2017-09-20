@@ -1,9 +1,6 @@
 'use strict';
 var models = require('../../models');
-var utilSeq = require('../../utils/seq');
-var logger = require('../../utils/logger');
 var base = require('./lic-controller');
-
 
 var entity = models.ajuste;
 function map(req) {
@@ -24,64 +21,8 @@ function map(req) {
 }
 
 function list(req, res) {
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx || 'id';
-    var sord = req.query.sord || 'desc';
-
-    var orden = "[licencia]." + sidx + " " + sord;
-    utilSeq.buildConditionFilter(filters, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
-            // models.solicitudcotizacion.belongsTo(models.estructuracui, { foreignKey: 'idcui' });
-            // models.solicitudcotizacion.belongsTo(models.programa, { foreignKey: 'program_id' });
-            // models.solicitudcotizacion.belongsTo(models.user, { as: 'tecnico', foreignKey: 'idtecnico' });
-            // models.solicitudcotizacion.belongsTo(models.valores, { as: 'clasificacion', foreignKey: 'idclasificacionsolicitud' });
-            // models.solicitudcotizacion.belongsTo(models.user, { as: 'negociador', foreignKey: 'idnegociador' });
-            // models.solicitudcotizacion.belongsTo(models.tipoclausula, { foreignKey: 'idtipo' });
-            // models.solicitudcotizacion.belongsTo(models.valores, { as: 'grupo', foreignKey: 'idgrupo' });
-            entity.count({
-                // where: filter_one,
-                // include: [{
-                //     model: models.estructuracui, where: filter_two
-                // }, {
-                //     model: models.user, as: 'tecnico', where: filter_three
-                // }, {
-                //     model: models.user, as: 'negociador', where: filter_four
-                // }]
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                entity.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    order: orden,
-                    // where: filter_one,
-                    // include: [{
-                    //     model: models.estructuracui, where: filter_two
-                    // }, {
-                    //     model: models.programa
-                    // }, {
-                    //     model: models.user, as: 'tecnico', where: filter_three
-                    // }, {
-                    //     model: models.valores, as: 'clasificacion'
-                    // }, {
-                    //     model: models.user, as: 'negociador', where: filter_four
-                    // }, {
-                    //     model: models.tipoclausula
-                    // }, {
-                    //     model: models.valores, as: 'grupo'
-                    // }
-                    // ]
-                }).then(function (data) {
-                    return res.json({ records: records, total: total, page: page, rows: data });
-                }).catch(function (err) {
-                    logger.error(err.message);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
+    base.list(req, res, entity, [], function (data) {
+        return data;
     });
 }
 
