@@ -3,21 +3,20 @@ var models = require('../../models');
 var base = require('./lic-controller');
 
 
-var entity = models.licencia;
+var entity = models.producto;
 function map(req) {
     return {
         id: req.body.id || 0,
         idFabricante: req.body.idFabricante,
+        nombre :req.body.nombre,
         idTipoInstalacion: req.body.idTipoInstalacion,
         idClasificacion: req.body.idClasificacion,
         idTipoLicenciamiento: req.body.idTipoLicenciamiento,
         licStock: req.body.licStock,
-        licDisponible: req.body.licDisponible,
-        idAlertaRenovacion: req.body.idAlertaRenovacion,
+        licOcupadas: req.body.licOcupadas,
+        alertaRenovacion: req.body.alertaRenovacion,
         utilidad: req.body.utilidad,
-        comentarios: req.body.comentarios,
-        software: req.body.software,
-        borrado: req.body.borrado || 1
+        comentarios: req.body.comentarios
     }
 }
 
