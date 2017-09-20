@@ -75,6 +75,6 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
         }
     }, {
-            schema: 'lic', timestamps: false, tableName: 'licencia'
+            schema: 'lic', timestamps: false, tableName: 'producto'
         });
 };

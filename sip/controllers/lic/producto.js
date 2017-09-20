@@ -1,14 +1,14 @@
 'use strict';
 var models = require('../../models');
 var base = require('./lic-controller');
-
+var _ = require('lodash');
 
 var entity = models.producto;
 function map(req) {
     return {
         id: req.body.id || 0,
         idFabricante: req.body.idFabricante,
-        nombre :req.body.nombre,
+        nombre: req.body.nombre,
         idTipoInstalacion: req.body.idTipoInstalacion,
         idClasificacion: req.body.idClasificacion,
         idTipoLicenciamiento: req.body.idTipoLicenciamiento,
@@ -38,7 +38,25 @@ function list(req, res) {
     }];
 
     base.list(req, res, entity, includes, function (data) {
-        return data;
+        return _.map(data, function (item) {
+            return {
+                id: item.id,
+                idFabricante: item.idFabricante,
+                nombre: item.nombre,
+                idTipoInstalacion: item.idTipoInstalacion,
+                idClasificacion: item.idClasificacion,
+                idTipoLicenciamiento: item.idTipoLicenciamiento,
+                licStock: item.licStock,
+                licOcupadas: item.licOcupadas,
+                alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
+                utilidad: item.utilidad,
+                comentarios: item.comentarios,
+                fabricante: { nombre: item.fabricante.nombre },
+                clasificacion: { nombre: item.clasificacion.nombre },
+                tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
+                tipoLicenciamiento: { nombre: item.tipoLicenciamiento.nombre }
+            }
+        });
     });
 }
 

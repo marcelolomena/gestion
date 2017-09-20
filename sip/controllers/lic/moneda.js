@@ -5,7 +5,7 @@ var base = require('./lic-controller');
 var entity = models.moneda;
 
 function listAll(req, res) {
-    base.findAll(req, res, entity, function (item) {
+    base.listAll(req, res, entity, function (item) {
         return {
             id: item.id,
             nombre: item.moneda

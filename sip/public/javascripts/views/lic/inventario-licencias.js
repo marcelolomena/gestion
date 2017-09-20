@@ -149,7 +149,7 @@
             editable: false
         }, {
             label: 'Alerta de Renovación',
-            name: 'idAlertaRenovacion',
+            name: 'alertaRenovacion',
             editable: false
         }, {
             label: 'Utilidad',

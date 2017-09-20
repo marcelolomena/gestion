@@ -13,6 +13,12 @@ var compraGrid = {
             hidden: true,
             editable: false
         }, {
+            label: 'Id Producto',
+            name: 'idProducto',
+            key: true,
+            hidden: true,
+            editable: false
+        }, {
             label: 'Contrato',
             name: 'contrato',
             editable: true
@@ -22,16 +28,28 @@ var compraGrid = {
             editable: true
         }, {
             label: 'CUI',
-            name: 'cui',
-            editable: true
+            name: 'idCui',
+            editable: true,
+            jsonmap: 'estructuracui.razonSocial',
+            edittype: 'select',
+            editoptions: {
+                dataUrl: '/lic/cui',
+                buildSelect: function (response) {
+                    var rowData = $grid.getRowData($grid.getGridParam('selrow'));
+                    var thissid = rowData.proveedor;
+                    var data = JSON.parse(response);
+                    return new zs.SelectTemplate(data, 'Seleccione CUI', thissid).template;
+                }
+            }
         }, {
             label: 'SAP',
             name: 'sap',
             editable: true
         }, {
             label: 'Proveedor',
-            name: 'proveedor',
+            name: 'idProveedor',
             editable: true,
+            jsonmap: 'proveedor.razonSocial',
             edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/proveedor',
@@ -43,26 +61,12 @@ var compraGrid = {
                 }
             }
         }, {
-            label: 'Area',
-            name: 'area',
-            editable: true,
-            edittype: 'select',
-            editoptions: {
-                dataUrl: '/lic/area',
-                buildSelect: function (response) {
-                    var rowData = $grid.getRowData($grid.getGridParam('selrow'));
-                    var thissid = rowData.area;
-                    var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Área', thissid).template;
-                }
-            }
-        }, {
-            label: 'Año Compra',
-            name: 'anoCompra',
+            label: 'Mes/Año Compra',
+            name: 'fechaCompra',
             editable: true
         }, {
-            label: 'Año Expriación',
-            name: 'anoExpiracion',
+            label: 'Mes/Año Expriación',
+            name: 'fechaExpiracion',
             editable: true
         }, {
             label: 'Cantidad Lic. Compradas',
@@ -72,6 +76,7 @@ var compraGrid = {
             label: 'Moneda',
             name: 'moneda',
             editable: true,
+            jsonmap:'moneda.moneda',
             edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/moneda',

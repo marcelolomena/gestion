@@ -59,13 +59,7 @@ function list(req, res, entity,includes, transformer ) {
                 limit: parseInt(rows),
                 // order: orden,
                 where: whereClause,
-                include: [{
-                    model: models.estructuracui
-                }, {
-                    model: models.moneda
-                }, {
-                    model: models.proveedor
-                }]
+                include: includes
             })
                 .then(function (data) {
                     var resultData = transformer(data);
@@ -88,7 +82,7 @@ function listAll(req, res, entity, mapper) {
         })
         .catch(function (err) {
             logger.error(err.message);
-            res.json({
+          return  res.json({
                 error_code: 1
             });
         });

@@ -110,18 +110,18 @@
             return [true, '', ''];
         };
         this.addAfterSubmit = function (response, postdata) {
-            var json = response.responseText;
-            var result = JSON.parse(json);
+            // var json = response.responseText;
+            var result = response.responseJSON;//JSON.parse(json);
             if (result.error != 0) {
                 return [false, result.glosa, ""];
             } else {
-                var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"descripcion\",\"op\":\"cn\",\"data\":\"" + postdata.descripcion + "\"}]}";
-                $table.jqGrid('setGridParam', {
-                    search: true,
-                    postData: {
-                        filters
-                    }
-                }).trigger("reloadGrid");
+                // var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"descripcion\",\"op\":\"cn\",\"data\":\"" + postdata.descripcion + "\"}]}";
+                // $table.jqGrid('setGridParam', {
+                //     search: true,
+                //     postData: {
+                //         filters
+                //     }
+                // }).trigger("reloadGrid");
                 return [true, "", ""];
             }
         };
@@ -136,18 +136,17 @@
             return [true, '', ''];
         };
         this.editAfterSubmit = function (response, postdata) {
-            var json = response.responseText;
-            var result = JSON.parse(json);
+            var result = response.responseJSON;//JSON.parse(json);
             if (result.error != 0) {
                 return [false, result.glosa, ""];
             } else {
-                var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                $table.jqGrid('setGridParam', {
-                    search: true,
-                    postData: {
-                        filters
-                    }
-                }).trigger("reloadGrid");
+                // var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"descripcion\",\"op\":\"cn\",\"data\":\"" + postdata.descripcion + "\"}]}";
+                // $table.jqGrid('setGridParam', {
+                //     search: true,
+                //     postData: {
+                //         filters
+                //     }
+                // }).trigger("reloadGrid");
                 return [true, "", ""];
             }
         };
