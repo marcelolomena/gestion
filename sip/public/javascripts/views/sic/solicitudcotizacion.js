@@ -687,6 +687,7 @@ $(document).ready(function () {
         tabs += "<li><a href='/sic/anexos/" + parentRowKey + "' data-target='#anexos' id='anexos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Anexos</a></li>"
         tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#preguntasrfp' id='preguntasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas al Proveedor</a></li>"
         tabs += "<li><a href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
+        tabs += "<li><a href='/sic/triada/" + parentRowKey + "' data-target='#triada' id='triada_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Triada</a></li>"
         //tabs += "<li><a href='/sic/genrfc/" + parentRowKey + "' data-target='#genrfc' id='genrfc_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Generar RFC</a></li>"
         tabs += "</ul>"
 
@@ -702,6 +703,7 @@ $(document).ready(function () {
         tabs += "<div class='tab-pane' id='anexos'><div class='container-fluid'><table id='anexos_t_" + parentRowKey + "'></table><div id='navGridAnexos'></div></div></div>"
         tabs += "<div class='tab-pane' id='preguntasrfp'><table id='preguntasrfp_t_" + parentRowKey + "'></table><div id='navGridPreg'></div></div>"
         tabs += "<div class='tab-pane' id='bitacora'><table id='bitacora_t_" + parentRowKey + "'></table><div id='navGridBita'></div></div>"
+        tabs += "<div class='tab-pane' id='triada'><table id='triada_t_" + parentRowKey + "'></table><div id='navGridTriada'></div></div>"
         //tabs += "<div class='tab-pane' id='genrfc'><table id='genrfc_t_" + parentRowKey + "'></table><div id='navGridGen'></div></div>"
         tabs += "</div>"
 
@@ -733,7 +735,10 @@ $(document).ready(function () {
                 gridCriterios.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#bitacora') {
                 gridBitacora.renderGrid(loadurl, parentRowKey, targ)
-            } /*else if (targ === '#genrfc') {
+            } else if (targ === '#triada') {
+                gridTriada.renderGrid(loadurl, parentRowKey, targ)
+            }
+            /*else if (targ === '#genrfc') {
                 gridGenrfc.renderGrid(loadurl, parentRowKey, targ)
             }*/
 
@@ -767,6 +772,8 @@ $(document).ready(function () {
                 gridCriterios.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#bitacora') {
                 gridBitacora.renderGrid(loadurl, parentRowKey, targ)
+            } else if (targ === '#triada') {
+                gridTriada.renderGrid(loadurl, parentRowKey, targ)
             } /*else if (targ === '#genrfc') {
                 gridGenrfc.renderGrid(loadurl, parentRowKey, targ)
             }*/

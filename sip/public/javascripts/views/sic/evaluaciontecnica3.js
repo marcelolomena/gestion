@@ -225,7 +225,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
+        edit: true, add: false, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
     },
         {
             closeAfterEdit: true,

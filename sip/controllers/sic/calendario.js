@@ -10,52 +10,41 @@ var co = require('co');
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    var fechaesperada = req.body.fechaesperada;
-    var fechareal = req.body.fechareal;
 
-    /* if (req.body.fechaesperada != "") {
-         var d = new Date(req.body.fechaesperada)
-         logger.debug("la fecha rql antes: " + d)
+    // var horaesperada = req.body.horaesperada;
+    // var horareal = req.body.horareal;
+    // logger.debug("ESTO ES UNA FECHA ESPERADA: " + req.body.fechaesperada);
+    // logger.debug("ESTO ES UNA HORA ESPERADA: " + req.body.horaesperada);
+    // logger.debug("ESTO ES UNA FECHA REAL: " + req.body.fechareal);
+    // logger.debug("ESTO ES UNA HORA REAL: " + req.body.horareal);
 
-         //d.setUTCHours(1)
-         logger.debug("la fecha rql convertida: " + d)
-         var dformat = [d.getDate(),
-         d.getMonth() + 1,
-         d.getFullYear()].join('-') + ' ' +
-             [d.getHours(),
-             d.getMinutes(),
-             d.getSeconds()].join(':');
+    if (req.body.horaesperada != '') {
+        var horaesperada = req.body.horaesperada;
+    } else {
+        var horaesperada = null;
+    }
 
-         var fechaintermedia = new Date(dformat + ' UTC')
+    if (req.body.horareal != '') {
+        var horareal = req.body.horareal;
+    } else {
+        var horareal = null;
+    }
 
-         fechaesperada = fechaintermedia
+    if (req.body.fechaesperada != '') {
+        
+        var d1 = new Date(req.body.fechaesperada)
+        d1.setUTCHours(3);
+        var fechaesperada = d1
 
-         logger.debug("la fecha rql despues: " + fechaesperada)
-     }
-     if (req.body.fechareal != "") {
-         var d2 = new Date(req.body.fechareal)
-         logger.debug("la fecha rql antes: " + d2)
+    }
 
-         //d2.setUTCHours(1)
-         logger.debug("la fecha rql convertida: " + d2)
-         var dformat2 = [d2.getDate(),
-         d2.getMonth() + 1,
-         d2.getFullYear()].join('-') + ' ' +
-             [d2.getHours(),
-             d2.getMinutes(),
-             d2.getSeconds()].join(':');
-
-         var fechaintermedia2 = new Date(dformat2 + ' UTC')
-
-         fechareal = fechaintermedia2
-
-         logger.debug("la fecha rql despues: " + fechareal)
-
-     }*/
-
-
-    //logger.debug("la fecha 1: " + fechaesperada)
-    //logger.debug("la fecha 2: " + fechareal)
+    if (req.body.fechareal != '') {
+        var d2 = new Date(req.body.fechareal)
+        d2.setUTCHours(3);
+        var fechareal = d2;
+    } else {
+        var fechareal = null;
+    }
     switch (action) {
         case "add":
             models.calendariosolicitud.create({
@@ -65,7 +54,9 @@ exports.action = function (req, res) {
                 observacion: req.body.observacion,
                 idtiporesponsable: req.body.idtiporesponsable,
                 borrado: 1,
-                fechareal: fechareal
+                fechareal: fechareal,
+                horaesperada: horaesperada,
+                horareal: horareal
             }).then(function (calendariosolicitud) {
                 bitacora.registrar(
                     req.body.idsolicitudcotizacion,
@@ -157,6 +148,8 @@ exports.action = function (req, res) {
                             observacion: req.body.observacion,
                             idtiporesponsable: req.body.idtiporesponsable,
                             fechareal: fechareal,
+                            horaesperada: horaesperada,
+                            horareal: horareal
                         }, {
                                 where: {
                                     id: req.body.id
@@ -170,7 +163,7 @@ exports.action = function (req, res) {
 
                     } else {
                         logger.error("->" + err)
-                        return res.json({ message: err.message, success: false});
+                        return res.json({ message: err.message, success: false });
                     }
                 });
 

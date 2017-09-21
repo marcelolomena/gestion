@@ -720,7 +720,8 @@ exports.getnotasdefactor = function (req, res) {
         'from sic.valores a ' +
         'join sic.desglosenotas b on a.id=b.idnota ' +
         'join sic.factorescriticidad c on b.iddesglosefactores=c.iddesglosefactores ' +
-        'where c.id=:id ',
+        'where c.id=:id ' +
+        'order by nombre asc',
         { replacements: { id: id }, type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
         //logger.debug(valores)
@@ -764,6 +765,29 @@ exports.actualizacolorfactor = function (req, res) {
                 logger.error(err)
                 return res.json({ id: 0, message: err.message, success: false });
             });
+    }).catch(function (err) {
+        logger.error(err);
+        return res.json({ error: 1 });
+    });
+}
+
+exports.getjustificacion = function (req, res) {
+
+    var nombrefactor = req.params.nombrefactor;
+    var nota = req.params.nota;
+    sequelize.query(
+        'select e.nombrenota ' +
+		'from sic.factorescriticidad a ' +
+        'join sic.serviciosrequeridos b on a.idserviciorequerido = b.id ' +
+		'join sic.desglosefactores c on a.iddesglosefactores = c.id ' +
+		'join sic.clasecriticidad d on c.idclasecriticidad = d.id ' +
+		'join sic.desglosenotas e on e.iddesglosefactores = c.id ' +
+		'join sic.valores f on f.id = e.idnota ' +
+		'where c.nombrefactor=:nombrefactor and f.nombre=:nota',
+        { replacements: { nombrefactor: nombrefactor, nota: nota }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        return res.json(valores);
     }).catch(function (err) {
         logger.error(err);
         return res.json({ error: 1 });
