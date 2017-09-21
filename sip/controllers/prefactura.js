@@ -264,7 +264,7 @@ exports.lista = function (req, res) {
             JOIN sip.detallecompromiso C ON B.id = C.iddetalleserviciocto
             JOIN sip.estructuracui D ON B.idcui = D.id
             JOIN sip.proveedor E ON A.idproveedor = E.id
-            WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND C.periodo = :periodo` + condition
+            WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND A.tipocontrato=1 AND C.periodo = :periodo` + condition
 
     var sql = `
             SELECT  C.periodo,
@@ -282,7 +282,7 @@ exports.lista = function (req, res) {
                     JOIN sip.estructuracui D ON B.idcui   = D.id
                     JOIN sip.proveedor E ON A.idproveedor = E.id
                     JOIN sip.moneda M ON B.idmoneda = M.id
-                    WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND C.periodo = :periodo` + condition + order +
+                    WHERE C.estadopago IS NULL AND C.montoorigen != 0 AND A.tipocontrato=1 AND  C.periodo = :periodo` + condition + order +
         `OFFSET :rows * (:page - 1) ROWS FETCH NEXT :rows ROWS ONLY`
 
     sequelize.query(count,
@@ -433,6 +433,7 @@ exports.generar = function (req, res) {
 				 C.periodo = :periodo AND
 				 F.periodo = :periodo AND
 				C.montoorigen != 0 AND
+                A.tipocontrato=1 AND
 				E.numrut != 1
 UNION               
  SELECT
@@ -470,6 +471,7 @@ UNION
 				 C.periodo < :periodo AND
 				 F.periodo = :periodo AND
 				C.montoorigen != 0 AND
+                A.tipocontrato=1 AND
 				E.numrut != 1 AND
 				(C.estadopago = 'ABONADO' OR C.estadopago = 'GENERADO') and
                 C.id NOT IN (SELECT a.iddetallecompromiso FROM sip.solicitudaprobacion a

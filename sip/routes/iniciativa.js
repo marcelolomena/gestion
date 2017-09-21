@@ -122,6 +122,9 @@ module.exports = function (passport) {
 
     router.route('/iniciativafecha/action')
         .post(isAuthenticated, iniciativafechaController.action);
+        
+    router.route('/iniciativafecha/actionfp')
+        .post(isAuthenticated, iniciativafechaController.actionfp);        
 
     router.route('/iniciativafecha/:id')
         .post(isAuthenticated, iniciativafechaController.list);

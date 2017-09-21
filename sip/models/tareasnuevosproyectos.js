@@ -99,7 +99,11 @@ module.exports = function(sequelize, DataTypes) {
     idcotizacion: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }       
+    },
+    extension: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }     
   }, {
     schema: 'sip',timestamps: false,tableName: 'tareasnuevosproyectos'
   });
