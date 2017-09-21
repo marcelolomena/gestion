@@ -40,9 +40,10 @@ function destroy(entity, id, res) {
         return res.json({ success: false, glosa: err.message });
     });
 }
-function list(req, res, entity,includes, transformer ) {
+function list(req, res, entity, includes, transformer) {
     var page = req.query.page;
     var rows = req.query.rows;
+
     var filters = req.query.filters;
     var sidx = req.query.sidx || 'id';
     var sord = req.query.sord || 'desc';
@@ -54,7 +55,7 @@ function list(req, res, entity,includes, transformer ) {
     })
         .then(function (records) {
             var total = Math.ceil(records / rows);
-           return entity.findAll({
+            return entity.findAll({
                 offset: parseInt(rows * (page - 1)),
                 limit: parseInt(rows),
                 // order: orden,
@@ -66,7 +67,7 @@ function list(req, res, entity,includes, transformer ) {
                     return res.json({ records: records, total: total, page: page, rows: resultData });
                 })
                 .catch(function (err) {
-                        logger.error(err.message);
+                    logger.error(err.message);
                     return res.json({ error_code: 1 });
                 })
         })
@@ -75,7 +76,7 @@ function list(req, res, entity,includes, transformer ) {
             return res.json({ error_code: 1 });
         });
 }
-function listChilds(req, res, entity, pIdName,includes, transformer ) {
+function listChilds(req, res, entity, pIdName, includes, transformer) {
     var page = req.query.page;
     var rows = req.query.rows;
     var filters = req.query.filters;
@@ -84,19 +85,19 @@ function listChilds(req, res, entity, pIdName,includes, transformer ) {
     var orden = entity.name + '.' + sidx + ' ' + sord;
     var whereClause = getFilters(filters);
     var pFilter = {
-		field: pIdName,
-		op: "eq",
-		data: req.params.pId
-	};
+        field: pIdName,
+        op: "eq",
+        data: req.params.pId
+    };
     whereClause.push(translateFilter(pFilter));
-    
+
 
     entity.count({
         where: whereClause
     })
         .then(function (records) {
             var total = Math.ceil(records / rows);
-           return entity.findAll({
+            return entity.findAll({
                 offset: parseInt(rows * (page - 1)),
                 limit: parseInt(rows),
                 // order: orden,
@@ -108,7 +109,7 @@ function listChilds(req, res, entity, pIdName,includes, transformer ) {
                     return res.json({ records: records, total: total, page: page, rows: resultData });
                 })
                 .catch(function (err) {
-                        logger.error(err.message);
+                    logger.error(err.message);
                     return res.json({ error_code: 1 });
                 })
         })
@@ -124,7 +125,7 @@ function listAll(req, res, entity, mapper) {
         })
         .catch(function (err) {
             logger.error(err.message);
-          return  res.json({
+            return res.json({
                 error_code: 1
             });
         });
@@ -133,12 +134,12 @@ module.exports = {
     create: create,
     update: update,
     destroy: destroy,
-    list:list,
-    listChilds:listChilds,
-    listAll:listAll
+    list: list,
+    listChilds: listChilds,
+    listAll: listAll
 };
 
-function translateFilter(item){
+function translateFilter(item) {
     switch (item.op) {
         case 'eq':
             return { [item.field]: item.data };
@@ -153,14 +154,14 @@ function translateFilter(item){
     }
 }
 function getFilters(filters) {
-   if (filters) {
-    var jsonObj = JSON.parse(filters);
-    var conditions = _.map(jsonObj.rules || [], function (item) {
-        translateFilter(item);
-    });
-    return conditions;
-}
-return[];
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+        var conditions = _.map(jsonObj.rules || [], function (item) {
+            translateFilter(item);
+        });
+        return conditions;
+    }
+    return [];
 }
 var pp = {
     'eq': '==', 'ne': '!', 'lt': '<', 'le': '<=', 'gt': '>', 'ge': '>=', 'bw': '^',
