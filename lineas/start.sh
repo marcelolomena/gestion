@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 ###  ------------------------------- ###
-###  script de partida App NODE  SIP ###
+###  script de partida App NODE  LIN ###
 ###  ------------------------------- ###
-echo "Starting SIP"
-export NODE_ENV=testing
+echo "Starting LIN"
+export NODE_ENV=development
 echo $NODE_ENV
 nohup npm start > /dev/null & 

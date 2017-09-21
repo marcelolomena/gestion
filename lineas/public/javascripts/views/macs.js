@@ -59,7 +59,7 @@ function gridMacIndividual(parentRowID, parentRowKey, suffix) {
         {
             label: 'Directo', name: 'Directo', width: 100, hidden: false, search: true, editable: true,
             formatter: function (cellvalue, options, rowObject) {
-                dato = Math.floor((Math.random() * 200000) + 1000);
+                dato = parseInt(Math.floor((Math.random() * 200000) + 1000));
                 return dato
             }
         },

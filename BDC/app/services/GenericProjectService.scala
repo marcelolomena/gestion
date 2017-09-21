@@ -75,6 +75,7 @@ object GenericProjectService extends CustomColumns {
   }
 
   def findAllProjectTypes(): Seq[ProjectType] = {
+    println("Por aca")
     val sqlSting = "select * from art_project_type_master where states=0"
     DB.withConnection { implicit connection =>
       SQL(sqlSting).as(ProjectType.projectDisplay *)

@@ -5,432 +5,125 @@ var logger = require("../utils/logger");
 var path = require('path');
 var fs = require('fs');
 
-exports.action = function (req, res) {
-    var action = req.body.oper;
-    var fechacreacion = req.body.fechacreacion
-    var fechaproxvenc = req.body.fechaproxvenc
-    var fechavencant = req.body.fechavencant
-    var fechainf = req.body.fechainf
-
-    if (action != "del") {
-        if (req.body.fechacreacion != "")
-            fechacreacion = req.body.fechacreacion.split("-").reverse().join("-")
-        if (req.body.fechaproxvenc != "")
-            fechaproxvenc = req.body.fechaproxvenc.split("-").reverse().join("-")
-        if (req.body.fechavencant != "")
-            fechavencant = req.body.fechavencant.split("-").reverse().join("-")
-        if (req.body.fechainf != "")
-            fechainf = req.body.fechainf.split("-").reverse().join("-")
-    }
-
-    switch (action) {
-        case "add":
-            models.mac.create({
-                rut: req.body.rut,
-                nombre: req.body.nombre,
-                actividad: req.body.actividad,
-                oficina: req.body.oficina,
-                ejecutivo: req.body.ejecutivo,
-                fechacreacion: fechacreacion,
-                fechaproxvenc: fechaproxvenc,
-                fechavencant: fechavencant,
-                ratinggrupo: req.body.ratinggrupo,
-                nivelatr: req.body.nivelatr,
-                ratingind: req.body.ratingind,
-                clasificacion: req.body.clasificacion,
-                vigilancia: req.body.vigilancia,
-                fechainf: fechainf,
-                promediosaldovista: req.body.promediosaldovista,
-                deudasbif: req.body.deudasbif,
-                aprobvinculado: req.body.aprobvinculado
-            }).then(function (solicitudcotizacion) {
-                res.json({ error: 0, glosa: '' });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ error: 1, glosa: err.message });
-            });
-
-            break;
-        case "edit":
-            models.mac.update({
-                rut: req.body.rut,
-                nombre: req.body.nombre,
-                actividad: req.body.actividad,
-                oficina: req.body.oficina,
-                ejecutivo: req.body.ejecutivo,
-                fechacreacion: fechacreacion,
-                fechaproxvenc: fechaproxvenc,
-                fechavencant: fechavencant,
-                ratinggrupo: req.body.ratinggrupo,
-                nivelatr: req.body.nivelatr,
-                ratingind: req.body.ratingind,
-                clasificacion: req.body.clasificacion,
-                vigilancia: req.body.vigilancia,
-                fechainf: fechainf,
-                promediosaldovista: req.body.promediosaldovista,
-                deudasbif: req.body.deudasbif,
-                aprobvinculado: req.body.aprobvinculado
-            }, {
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (solicitudcotizacion) {
-                    res.json({ error: 0, glosa: '' });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({ error: 1, glosa: err.message });
-                });
-
-
-
-            break;
-        case "del":
-            models.mac.destroy({
-                where: {
-                    id: req.body.id
-                }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                res.json({ success: true, glosa: '' });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ success: false, glosa: err.message });
-            });
-
-            break;
-
-    }
-}
-
-exports.list = function (req, res) {
-
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    if (!sidx)
-        sidx = "Rut";
-
-    if (!sord)
-        sord = "asc";
-
-    var orden = "[MacIndividual]." + sidx + " " + sord;
-
-    var filter_one = []
-    var filter_two = []
-    var filter_three = []
-    var filter_four = []
-
-    if (filters != undefined) {
-        //logger.debug(filters)
-        var item = {}
-        var jsonObj = JSON.parse(filters);
-
-        jsonObj.rules.forEach(function (item) {
-            if (item.field) {
-                filter_one.push({ [item.field]: { $like: '%' + item.data + '%' } });
-            }
-        })
-    }
-
-    utilSeq.buildConditionFilter(filters, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
-            models.MacIndividual.belongsTo(models.MacGrupalMacIndividual, { foreignKey: 'Id' });
-            models.MacGrupalMacIndividual.belongsTo(models.MacGrupal, { foreignKey: 'MacGrupal_Id' });
-            models.MacGrupal.belongsTo(models.Grupo, { foreignKey: 'Grupo_Id' });
-            models.MacIndividual.count({
-                where: filter_one
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-
-                models.MacIndividual.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    order: orden,
-                    where: filter_one,
-                    include: [{
-                        model: models.MacGrupalMacIndividual,
-                        include: [{
-                            model: models.MacGrupal,
-                            include: [{
-                                model: models.Grupo
-                            }]
-                        }]
-                    }]
-                }).then(function (mac) {
-                    return res.json({ records: records, total: total, page: page, rows: mac });
-                }).catch(function (err) {
-                    logger.error(err.message);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
-
-}
-
-exports.actionlimite = function (req, res) {
-    var action = req.body.oper;
-    var fechavencimiento = req.body.fechavencimiento
-    if (action != "del") {
-        if (req.body.fechavencimiento != "")
-            fechavencimiento = req.body.fechavencimiento.split("-").reverse().join("-")
-    }
-
-    switch (action) {
-        case "add":
-            models.limite.create({
-                idmac: req.body.parent_id,
-                numero: req.body.numero,
-                tipolimite: req.body.tipolimite,
-                tiporiesgo: req.body.tiporiesgo,
-                plazoresidual: req.body.plazoresidual,
-                abrobactual: req.body.abrobactual,
-                deudaactual: req.body.deudaactual,
-                someaprob: req.body.someaprob,
-                moneda: req.body.moneda,
-                garantiaestatal: req.body.garantiaestatal,
-                aprobacionpuntual: req.body.aprobacionpuntual,
-                fechavencimiento: fechavencimiento,
-                comentario: req.body.comentario,
-            }).then(function (limite) {
-                res.json({ error: 0, glosa: '' });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ error: 1, glosa: err.message });
-            });
-
-            break;
-        case "edit":
-            models.limite.update({
-                numero: req.body.numero,
-                tipolimite: req.body.tipolimite,
-                tiporiesgo: req.body.tiporiesgo,
-                plazoresidual: req.body.plazoresidual,
-                abrobactual: req.body.abrobactual,
-                deudaactual: req.body.deudaactual,
-                someaprob: req.body.someaprob,
-                moneda: req.body.moneda,
-                garantiaestatal: req.body.garantiaestatal,
-                aprobacionpuntual: req.body.aprobacionpuntual,
-                fechavencimiento: fechavencimiento,
-                comentario: req.body.comentario,
-            }, {
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (solicitudcotizacion) {
-                    res.json({ error: 0, glosa: '' });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({ error: 1, glosa: err.message });
-                });
-
-
-
-            break;
-        case "del":
-            models.limite.destroy({
-                where: {
-                    id: req.body.id
-                }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                res.json({ success: true, glosa: '' });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ success: false, glosa: err.message });
-            });
-
-            break;
-
-    }
-}
-
 exports.listlimite = function (req, res) {
-
+    //console.dir("***************EN LISTNEW ***************************");
     var page = req.query.page;
-    var rows = req.query.rows;
+    var rowspp = req.query.rows;
     var filters = req.query.filters;
     var sidx = req.query.sidx;
     var sord = req.query.sord;
+    var condition = "";
 
-    var additional = [{
-        "field": "MacIndividual_Id",
-        "op": "eq",
-        "data": req.params.id
-    }];
-
-    if (!sidx)
-        sidx = "Numero";
-
-    if (!sord)
+    if (!sidx) {
+        sidx = "a.Numero";
         sord = "asc";
+    }
 
-    var orden = "[Linea]." + sidx + " " + sord;
 
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.Linea.belongsTo(models.MacIndividual, { foreignKey: 'MacIndividual_Id' });
-            models.Linea.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.Linea.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    include: [{
-                        model: models.MacIndividual
-                    }]
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
+    var order = sidx + " " + sord;
+
+    var sqlcount = `
+    select count (*) from scl.Linea a 
+    join scl.LineaEmpresa b on a.Id=b.Linea_Id
+    join scl.Empresa c on c.Id=b.Empresa_Id
+    where a.Padre_Id is null and c.Rut=`+ req.params.id;
+
+    var sqlok = "declare @rowsPerPage as bigint; " +
+        "declare @pageNum as bigint;" +
+        "set @rowsPerPage=" + rowspp + "; " +
+        "set @pageNum=" + page + ";   " +
+        "With SQLPaging As   ( " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+        `as resultNum, a.*, Monto, Activo, Comentario , 
+        IIF(a.Moneda = 'USD' , a.Disponible*628, IIF(a.Moneda = 'UF' , a.Disponible*26628, IIF(a.Moneda = 'EURO' , a.Disponible*744, a.Disponible))) AS DisponiblePesos,
+        IIF(a.Moneda = 'USD' , a.Aprobado*628, IIF(a.Moneda = 'UF' , a.Aprobado*26628, IIF(a.Moneda = 'EURO' , a.Aprobado*744, a.Aprobado))) AS AprobadoPesos,
+        IIF(a.Moneda = 'USD' , a.Utilizado*628, IIF(a.Moneda = 'UF' , a.Utilizado*26628, IIF(a.Moneda = 'EURO' , a.Utilizado*744, a.Utilizado))) AS UtilizadoPesos
+              from scl.Linea a
+              join scl.LineaEmpresa b on a.Id=b.Linea_Id
+              join scl.Empresa c on c.Id=b.Empresa_Id
+              left join scl.Bloqueo d on d.Linea_Id = b.Linea_Id
+              where a.Padre_Id is null and c.Rut=`+ req.params.id;
+    sqlok += ") " +
+        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+    sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        console.log("Total:" + total + "recs[0].count:" + recs[0].count);
+        console.log("SQL2:" + sqlok);
+        sequelize.query(sqlok).spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+        });
     });
 };
 
-exports.actiongarantia = function (req, res) {
-    var action = req.body.oper;
+exports.listsublimite = function (req, res) {
+    //console.dir("***************EN LISTNEW ***************************");
+    var page = req.query.page;
+    var rowspp = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var condition = "";
 
-    switch (action) {
-        case "add":
-            models.limite.create({
-                idmac: req.body.parent_id,
-                numero: req.body.numero,
-                tipolimite: req.body.tipolimite,
-                tiporiesgo: req.body.tiporiesgo,
-                plazoresidual: req.body.plazoresidual,
-                abrobactual: req.body.abrobactual,
-                deudaactual: req.body.deudaactual,
-                someaprob: req.body.someaprob,
-                moneda: req.body.moneda,
-                garantiaestatal: req.body.garantiaestatal,
-                aprobacionpuntual: req.body.aprobacionpuntual,
-                fechavencimiento: fechavencimiento,
-                comentario: req.body.comentario,
-            }).then(function (limite) {
-                res.json({ error: 0, glosa: '' });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ error: 1, glosa: err.message });
-            });
-
-            break;
-        case "edit":
-            models.limite.update({
-                numero: req.body.numero,
-                tipolimite: req.body.tipolimite,
-                tiporiesgo: req.body.tiporiesgo,
-                plazoresidual: req.body.plazoresidual,
-                abrobactual: req.body.abrobactual,
-                deudaactual: req.body.deudaactual,
-                someaprob: req.body.someaprob,
-                moneda: req.body.moneda,
-                garantiaestatal: req.body.garantiaestatal,
-                aprobacionpuntual: req.body.aprobacionpuntual,
-                fechavencimiento: fechavencimiento,
-                comentario: req.body.comentario,
-            }, {
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (solicitudcotizacion) {
-                    res.json({ error: 0, glosa: '' });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({ error: 1, glosa: err.message });
-                });
-
-
-
-            break;
-        case "del":
-            models.limite.destroy({
-                where: {
-                    id: req.body.id
-                }
-            }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
-                if (rowDeleted === 1) {
-                    logger.debug('Deleted successfully');
-                }
-                res.json({ success: true, glosa: '' });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({ success: false, glosa: err.message });
-            });
-
-            break;
-
+    if (!sidx) {
+        sidx = "a.Numero";
+        sord = "asc";
     }
+
+
+    var order = sidx + " " + sord;
+
+    var sqlcount = `
+    select count (*) from scl.Linea a
+    join scl.LineaEmpresa b on b.Linea_Id=a.Id 
+    join scl.Empresa c on c.Id = b.Empresa_Id
+    where a.Padre_Id=`+ req.params.id + ' and c.Rut=' + req.params.rut;
+
+    var sqlok = "declare @rowsPerPage as bigint; " +
+        "declare @pageNum as bigint;" +
+        "set @rowsPerPage=" + rowspp + "; " +
+        "set @pageNum=" + page + ";   " +
+        "With SQLPaging As   ( " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+        `as resultNum, a.* from scl.Linea a 
+        join scl.LineaEmpresa b on b.Linea_Id=a.Id 
+        join scl.Empresa c on c.Id = b.Empresa_Id
+        where a.Padre_Id=`+ req.params.id + ' and c.Rut=' + req.params.rut;
+    sqlok += ") " +
+        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
+
+    sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        console.log("Total:" + total + "recs[0].count:" + recs[0].count);
+        console.log("SQL2:" + sqlok);
+        sequelize.query(sqlok).spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+        });
+    });
+};
+
+exports.getdatosclientelimite = function (req, res) {
+    sequelize.query(
+        'select a.*, c.Nombre as nombregrupo, c.Id as idgrupo, c.Rating as ratinggrupal from scl.Empresa a ' +
+        'left outer join scl.GrupoEmpresa b on b.Empresa_Id=a.Id ' +
+        'left outer join scl.Grupo c on c.Id=b.Grupo_Id ' +
+        'where a.Rut =  ' + req.params.rut,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+
 }
 
-exports.listgarantia = function (req, res) {
-
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    var additional = [{
-        "field": "rutcliente",
-        "op": "eq",
-        "data": req.params.id
-    }];
-
-    if (!sidx)
-        sidx = "rutcliente";
-
-    if (!sord)
-        sord = "asc";
-
-    var orden = "[clientegarantia]." + sidx + " " + sord;
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.clientegarantia.belongsTo(models.cliente, { foreignKey: 'rutcliente' });
-            models.clientegarantia.belongsTo(models.garantia, { foreignKey: 'idgarantia' });
-            models.clientegarantia.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.clientegarantia.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    include: [{
-                        model: models.cliente
-                    }, {
-                        model: models.garantia
-                    }]
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
-};
 exports.getdatoscliente = function (req, res) {
     sequelize.query(
-        'select * from dbo.Empresa ' +
+        'select * from scl.Empresa ' +
         'where rut =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
@@ -445,9 +138,9 @@ exports.getdatoscliente = function (req, res) {
 
 exports.getgrupo = function (req, res) {
     sequelize.query(
-        'select a.Id, a.Nombre from dbo.Grupo a  ' +
-        'join dbo.GrupoEmpresa b on b.Grupo_Id=a.Id  ' +
-        'join dbo.Empresa c on c.Id = b.Empresa_Id  ' +
+        'select a.Id, a.Nombre from scl.Grupo a  ' +
+        'join scl.GrupoEmpresa b on b.Grupo_Id=a.Id  ' +
+        'join scl.Empresa c on c.Id = b.Empresa_Id  ' +
         'where c.rut =  ' + req.params.rut,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
@@ -508,101 +201,6 @@ exports.listmacs = function (req, res) {
     });
 };
 
-exports.listsublimite = function (req, res) {
-
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    var additional = [{
-        "field": "Linea_Id",
-        "op": "eq",
-        "data": req.params.id
-    }];
-
-    if (!sidx)
-        sidx = "Numero";
-
-    if (!sord)
-        sord = "asc";
-
-    var orden = "[Sublinea]." + sidx + " " + sord;
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.Sublinea.belongsTo(models.Linea, { foreignKey: 'Linea_Id' });
-            models.Sublinea.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.Sublinea.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    include: [{
-                        model: models.Linea
-                    }]
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
-};
-
-exports.listoperacion = function (req, res) {
-
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    var additional = [{
-        "field": "Sublinea_Id",
-        "op": "eq",
-        "data": req.params.id
-    }];
-
-    if (!sidx)
-        sidx = "Plazo";
-
-    if (!sord)
-        sord = "asc";
-
-    var orden = "[Operacion]." + sidx + " " + sord; //modelo
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.Operacion.belongsTo(models.Sublinea, { foreignKey: 'Sublinea_Id' });
-            models.Operacion.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.Operacion.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    include: [{
-                        model: models.Sublinea
-                    }]
-                }).then(function (lineas) {//revisar
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
-    });
-};
 
 exports.listoperacionmac = function (req, res) {
 
@@ -613,7 +211,7 @@ exports.listoperacionmac = function (req, res) {
     var sord = req.query.sord;
 
     var additional = [{
-        "field": "id",
+        "field": "Id",
         "op": "eq",
         "data": req.params.id
     }];
@@ -652,191 +250,413 @@ exports.listoperacionmac = function (req, res) {
 };
 
 
-exports.listverlmite = function (req, res) {
 
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
+exports.listveroperacionlimite = function (req, res) {
+    sequelize.query(
+        `select * from scl.Operacion a 
+        join scl.SublineaOperacion b on a.Id = b.Operacion_Id
+        join scl.Sublinea c on c.Id = b.Sublinea_Id
+        join scl.Linea d on d.Id = c.Linea_Id
+        where d.Id=` + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
 
-    var additional = [{
-        "field": "id",
-        "op": "eq",
-        "data": req.params.id
-    }];
+exports.listverdetallelim = function (req, res) {
+    sequelize.query(
+        'select * from scl.Linea a ' +
+        'where a.Id = ' + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
 
-    if (!sidx)
-        sidx = "Numero";  //ordenar por variable
+exports.listveroperacionsublimite = function (req, res) {
+    sequelize.query(
+        `select * from scl.Operacion a 
+        join scl.SublineaOperacion b on a.Id = b.Operacion_Id
+        join scl.Sublinea c on c.Id = b.Sublinea_Id
+        where c.Id=` + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
 
-    if (!sord)
-        sord = "asc"; //ordenar por asc
+exports.listverdetallelim2 = function (req, res) {
+    sequelize.query(
+        'select * from scl.Sublinea a  ' +
+        'where Id =  ' + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
 
-    var orden = "[Linea]." + sidx + " " + sord;
+exports.listultimomac = function (req, res) {
+    sequelize.query(
+        'select * from scl.Aprobacion a  ' +
+        'where Rut = ' + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
 
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.Linea.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.Linea.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    /*include: [{
-                        model: models.MacIndividual
-                    }]*/
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
+exports.listsublimop = function (req, res) {
+    sequelize.query(
+        `select *from scl.Operacion a 
+          join scl.LineaOperacion b on a.Id = b.Operacion_Id
+          where b.Linea_Id=` + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.listtipooperaciones = function (req, res) {
+    sequelize.query(
+        `select distinct a.Id, f.Rut, a.Nombre from scl.TipoOperacion a
+join scl.Operacion b on a.Codigo = b.TipoOperacion
+join scl.LineaOperacion c on c.Operacion_Id=b.Id
+join scl.Linea d on d.Id = c.Linea_Id
+join scl.LineaEmpresa e on e.Linea_Id=d.Id
+join scl.Empresa f on f.Id=e.Empresa_Id
+where f.Rut=`+ req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.listoperaciones2 = function (req, res) {
+    sequelize.query(
+        `select a.*, c.Numero from scl.Operacion a 
+        join scl.LineaOperacion b on b.Operacion_Id=a.Id
+        join scl.Linea c on c.Id=b.Linea_Id
+        join scl.LineaEmpresa d on d.Linea_Id=c.Id
+        join scl.Empresa e on e.Id=d.Empresa_Id
+        join scl.TipoOperacion f on f.Codigo=a.TipoOperacion
+        where e.Rut=`+ req.params.rut + ` and f.Id=` + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.listproductoslinea = function (req, res) {
+    sequelize.query(
+        `select * from scl.TipoOperacion
+            where TipoRiesgo='`+ req.params.id + `'`,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.listcondicioneslinea = function (req, res) {
+    sequelize.query(
+        `select a.* from scl.Condicion a 
+join scl.Sublinea b on a.Sublinea_Id=b.Id
+join scl.Linea c on b.Linea_Id=c.Id
+            where c.Id=`+ req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.listgarantiaslinea = function (req, res) {
+    sequelize.query(
+        `select a.* from scl.Garantias a 
+        join scl.GarantiasSublinea b on b.Garantias_Id=a.Id
+        join scl.Sublinea c on b.Sublinea_Id=c.Id
+        join scl.Linea d on c.Linea_Id=d.Id
+            where d.Id=`+ req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.listcomentarioslinea = function (req, res) {
+    sequelize.query(
+        `select a.* from scl.Comentario a 
+        join scl.ComentarioSublinea b on b.Comentario_Id=a.Id
+        join scl.Sublinea c on b.Sublinea_Id=c.Id
+        join scl.Linea d on c.Linea_Id=d.Id
+            where d.Id=`+ req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.actionbloquear = function (req, res) {
+    //fecha de hoy    
+    var hoy = new Date();
+    var dd = hoy.getDate();
+    var mm = hoy.getMonth() + 1;
+    var yyyy = hoy.getFullYear();
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+    hoy = dd + '-' + mm + '-' + yyyy;
+
+    var idlinea = req.params.id;
+    var desbloquear = parseInt(req.body.desbloquear);
+    console.log("valor desbloquear: " + desbloquear)
+    if (desbloquear == 2) {//desbloqueo parcial
+
+        sequelize.query(`update scl.Bloqueo 
+        set Monto = `+ req.body.monto + `, Activo = 1, Comentario = '` + req.body.comentario + `', FechaBloqueo = '` + hoy + `'
+        where Linea_Id= `+ idlinea).spread((results, metadata) => {
+                return res.json(metadata);
+
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1 });
+            });
+    }
+    else {
+        if (desbloquear == 1) { //desbloqueo total
+            sequelize.query(`delete from scl.Bloqueo where Linea_Id = ` + idlinea).spread((results, metadata) => {
+                return res.json(metadata);
+
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1 });
             })
         }
+        else {
+            if (desbloquear == 0) {
+                sequelize.query(`insert into scl.Bloqueo (Monto,Activo,Linea_Id,Comentario,FechaBloqueo) values ( ` + req.body.monto + `,1,` + idlinea + `,'` + req.body.comentario + `', '` + hoy + `')`).spread((results, metadata) => {
+                    return res.json(metadata);
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({ error: 1 });
+                });
+            }
+        }
+
+    }
+};
+
+exports.listasignar = function (req, res) {
+    sequelize.query(
+        `select distinct a.Id, a.Nombre, b.RutEmpresa as Rut from scl.TipoOperacion a
+        join scl.Operacion b on a.Codigo = b.TipoOperacion
+        where b.RutEmpresa=`+ req.params.id + ' and b.Id Not In (select Id from scl.LineaOperacion)',
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
     });
 };
 
 
-exports.listverlimite = function (req, res) {
 
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-
-    var additional = [{
-        "field": "id",
-        "op": "eq",
-        "data": req.params.id
-    }];
-
-    if (!sidx)
-        sidx = "Numero";  //ordenar por variable
-
-    if (!sord)
-        sord = "asc"; //ordenar por asc
-
-    var orden = "[Linea]." + sidx + " " + sord;
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.Linea.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.Linea.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    /*include: [{
-                        model: models.MacIndividual
-                    }]*/
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
+exports.operacionesasignar = function (req, res) {
+    sequelize.query(
+        `select a.* from scl.Operacion a 
+        join scl.TipoOperacion f on f.Codigo=a.TipoOperacion
+        where a.RutEmpresa=`+ req.params.rut + ` and f.Id=` + req.params.id + ' and a.Id Not In (select Id from scl.SublineaOperacion)',
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
     });
 };
 
-exports.listtabverlimite = function (req, res) {
 
+/**
+ * INICIO TAB APROBACIONES
+ */
+
+exports.listaprobaciones = function (req, res) {
     var page = req.query.page;
-    var rows = req.query.rows;
+    var rowspp = req.query.rows;
     var filters = req.query.filters;
     var sidx = req.query.sidx;
     var sord = req.query.sord;
+    var condition = "";
 
-    var additional = [{
-        "field": "MacIndividual_Id",
-        "op": "eq",
-        "data": req.params.id
-    }];
+    if (!sidx) {
+        sidx = "a.Id";
+        sord = "asc";
+    }
 
-    if (!sidx)
-        sidx = "Numero";  //ordenar por variable
+    var order = sidx + " " + sord;
 
-    if (!sord)
-        sord = "asc"; //ordenar por asc
+    var sqlcount = `
+    select count (*) from scl.Aprobacion a
+    join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
+    join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
+    where a.Rut =`+ req.params.id;//+ ' and a.EstadoAprobacion_Id=' + req.params.estado;
 
-    var orden = "[Linea]." + sidx + " " + sord;
+    var sqlok = "declare @rowsPerPage as bigint; " +
+        "declare @pageNum as bigint;" +
+        "set @rowsPerPage=" + rowspp + "; " +
+        "set @pageNum=" + page + ";   " +
+        "With SQLPaging As   ( " +
+        "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
+        `as resultNum, a.*, b.Nombre as tipoaprobacion, c.Nombre as estadoaprobacion, d.MacGrupo_Id as idmacgrupal from scl.Aprobacion a
+        join scl.TipoAprobacion b on a.TipoAprobacion_Id=b.Id
+        join scl.EstadoAprobacion c on a.EstadoAprobacion_Id=c.Id
+        join scl.MacGrupo d on d.Aprobacion_Id=a.Id
+        where a.Rut =`+ req.params.id;//+ ' and a.EstadoAprobacion_Id=' + req.params.estado;
+    sqlok += ") " +
+        "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.Linea.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.Linea.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    /*include: [{
-                        model: models.MacIndividual
-                    }]*/
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
+    sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        //console.log("Total:" + total + "recs[0].count:" + recs[0].count);
+        //console.log("SQL2:" + sqlok);
+        sequelize.query(sqlok).spread(function (rows) {
+            res.json({ records: records, total: total, page: page, rows: rows });
+        });
     });
 };
 
-exports.listtabversublimite = function (req, res) {
 
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
 
-    var additional = [{
-        "field": "MacIndividual_Id",
-        "op": "eq",
-        "data": req.params.id
-    }];
+/**
+ * FIN TAB APROBACIONES
+ */
 
-    if (!sidx)
-        sidx = "Numero";  //ordenar por variable
-
-    if (!sord)
-        sord = "asc"; //ordenar por asc
-
-    var orden = "[Sublinea]." + sidx + " " + sord;
-
-    utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
-        if (data) {
-            models.Sublinea.count({
-                where: data
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.Sublinea.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    where: data,
-                    order: orden,
-                    /*include: [{
-                        model: models.MacIndividual
-                    }]*/
-                }).then(function (lineas) {
-                    return res.json({ records: records, total: total, page: page, rows: lineas });
-                }).catch(function (err) {
-                    logger.error(err);
-                    res.json({ error_code: 1 });
-                });
-            })
-        }
+exports.listverdetallebloqueo = function (req, res) {
+    sequelize.query(
+        `select a.Id, a.Numero, a.Disponible, d.Id as Bloqueo_Id, d.Monto,d.Activo,d.FechaBloqueo, d.Comentario from scl.Linea a
+		left join scl.Bloqueo d on d.Linea_Id = a.Id
+		where a.Id =` + req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
     });
 };
+
+exports.listoperacionesreserva = function (req, res) {
+    sequelize.query(`
+        select a.* from scl.Operacion a  
+        join scl.LineaOperacion b on a.Id=b.Operacion_Id
+        where b.Linea_Id =`+ req.params.id,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        //logger.debug(valores)
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+};
+
+exports.actionoperacionesreserva = function (req, res) {
+    var action = req.body.oper;
+    //console.log('valor de tipo operacion es :' + req.body.TipoOperacion)
+
+    switch (action) {
+        case "add":
+
+            var sql = `exec scl.nuevareserva ` + req.body.Idlim + `,'` + req.body.Producto + `',` + req.body.MontoInicial + `,'` + req.body.Moneda + `','` + req.body.Plazo + `','` + req.body.FechaReserva + `','` + req.body.FechaDesembolso + `','` + req.body.FechaVencimiento + `',` + req.body.RutEmpresa + ``
+            sequelize.query(sql).spread((results, metadata) => {
+                return res.json({ error: 0 });
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1 });
+            });
+
+            break;
+
+        case "edit":
+
+            
+            var sql = `update scl.Operacion set Producto ='` + req.body.Producto + `',MontoInicial=` + req.body.MontoInicial + `,Moneda='` + req.body.Moneda + `',Plazo='` + req.body.Plazo + `',FechaReserva='` + req.body.FechaReserva + `',FechaDesembolso=` + req.body.FechaDesembolso + `,FechaVencimiento=` + req.body.FechaVencimiento + ` WHERE Id=` + req.body.Id
+            sequelize.query(sql).spread((results, metadata) => {
+                return res.json({ error: 0 });
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1 });
+            });
+
+
+            break;
+
+        case "del":
+            var sql = `exec scl.borrarreserva ` + parseInt(req.body.Idlim) + `,` + req.body.id + ``
+             console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" )
+            sequelize.query(sql).spread((results, metadata) => {
+                return res.json({ error: 0 });
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({ error: 1, error_text: err });
+            });
+            break;
+
+    }
+};
+

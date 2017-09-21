@@ -55,8 +55,8 @@ object SubTaskServices extends CustomColumns {
       test.last
     }
   }
-  
-  def insertSubTaskFromTemplate(plan_start_date:String,plan_end_date:String,task_id: String,project_mode: String): Option[ErrorIncident] = {
+
+  def insertSubTaskFromTemplate(plan_start_date: String, plan_end_date: String, task_id: String, project_mode: String): Option[ErrorIncident] = {
 
     var sqlString = """
       EXEC art.insert_subtask_template {plan_start_date},{plan_end_date},{task_id},{project_mode}
@@ -64,38 +64,38 @@ object SubTaskServices extends CustomColumns {
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).on(
-          'plan_start_date -> plan_start_date,
-          'plan_end_date -> plan_end_date,
-          'task_id -> task_id.toInt,
+        'plan_start_date -> plan_start_date,
+        'plan_end_date -> plan_end_date,
+        'task_id -> task_id.toInt,
         'project_mode -> project_mode.toInt).executeQuery() as (ErrorIncident.error.singleOpt)
     }
-  }  
-  
-  def insertSubTaskFromTemplatePert(
-      holiday: Boolean,
-      fecha_inicio:String,
-      id_platilla:String,
-      title: String,
-      id_tarea: String,
-      extended_description:String) = {
+  }
 
-    var sqlString:String=null
-    
-    if(holiday)
-        sqlString = "EXEC art.pert_discontinuo {fecha_inicio},{id_platilla},{tipo},{title},{id_tarea},{extended_description}"
+  def insertSubTaskFromTemplatePert(
+    holiday: Boolean,
+    fecha_inicio: String,
+    id_platilla: String,
+    title: String,
+    id_tarea: String,
+    extended_description: String) = {
+
+    var sqlString: String = null
+
+    if (holiday)
+      sqlString = "EXEC art.pert_discontinuo {fecha_inicio},{id_platilla},{tipo},{title},{id_tarea},{extended_description}"
     else
-        sqlString = "EXEC art.incident_pert {fecha_inicio},{id_platilla},{tipo},{title},{id_tarea},{extended_description}"
+      sqlString = "EXEC art.incident_pert {fecha_inicio},{id_platilla},{tipo},{title},{id_tarea},{extended_description}"
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).on(
-          'fecha_inicio -> fecha_inicio,
-          'id_platilla -> id_platilla.toInt,
-          'tipo -> 2,
-          'title -> title,
-          'id_tarea -> id_tarea.toInt,
-          'extended_description -> extended_description).executeUpdate() 
+        'fecha_inicio -> fecha_inicio,
+        'id_platilla -> id_platilla.toInt,
+        'tipo -> 2,
+        'title -> title,
+        'id_tarea -> id_tarea.toInt,
+        'extended_description -> extended_description).executeUpdate()
     }
-  }    
+  }
 
   def updateSubTask(task: SubTaskMaster): Int = {
     var actual_end_date: Date = null
@@ -250,8 +250,8 @@ object SubTaskServices extends CustomColumns {
           'status -> subtask.status).executeUpdate()
     }
   }
-  
-    def updateSubTaskAdvanceRate(sub_task_id: String,completion_percentage: String): Int = {
+
+  def updateSubTaskAdvanceRate(sub_task_id: String, completion_percentage: String): Int = {
 
     DB.withConnection { implicit connection =>
       SQL(
@@ -299,10 +299,7 @@ object SubTaskServices extends CustomColumns {
       null
     }
   }
-  
-  
-  
-  
+
   def findSubTaskDetailsByTaskIDs(taskIds: String): Seq[SubTasks] = {
     var sql = ""
     sql = "select t.* from art_sub_task t where is_deleted=1 and t.task_id IN (" + taskIds + ") order by t.added_date desc"
@@ -575,40 +572,44 @@ object SubTaskServices extends CustomColumns {
   }
 
   def findTotalAllocatedHoursForSubTask(sub_task: String): String = {
-    var sqlSting = "SELECT * FROM art_sub_task_allocation WHERE is_deleted=1 and sub_task_id=" + sub_task
-    var hours: Double = 0
-    val df = new DecimalFormat("00.00")
-    val df2 = new DecimalFormat("00")
-    DB.withConnection { implicit connection =>
-      val result = SQL(sqlSting).as(SubTaskAllocation.taskAllocation *)
-      for (r <- result) {
-        hours += r.estimated_time
-      }
-    }
-
-    sqlSting = "SELECT * FROM art_sub_task_allocation_external WHERE is_deleted=1 AND sub_task_id=" + sub_task
-    DB.withConnection { implicit connection =>
-      val result = SQL(sqlSting).as(SubTaskAllocationExternal.taskAllocationExternal *)
-      for (r <- result) {
-        hours += r.estimated_time
-      }
-    }
-
-    /*val finalResult = df.format(hours).replace(".", ":").split(":")*/val finalResult = hours.toString().replace(".", ":").split(":")
     var finalString: Double = 0
-    var hour = df2.format(finalResult(0).toInt).toInt
-    var mins = df2.format(finalResult(1).toInt).toInt
+    try {
+      var sqlSting = "SELECT * FROM art_sub_task_allocation WHERE is_deleted=1 and sub_task_id=" + sub_task
+      var hours: Double = 0
+      val df = new DecimalFormat("00.00")
+      val df2 = new DecimalFormat("00")
+      DB.withConnection { implicit connection =>
+        val result = SQL(sqlSting).as(SubTaskAllocation.taskAllocation *)
+        for (r <- result) {
+          hours += r.estimated_time
+        }
+      }
 
-    var index = 1
-    if (mins > 59) {
-      mins = mins - 60
-      hour = hour + 1
-      finalString = (hour + "." + mins).toDouble
-    } else {
-      finalString = (hour + "." + mins).toDouble
+      sqlSting = "SELECT * FROM art_sub_task_allocation_external WHERE is_deleted=1 AND sub_task_id=" + sub_task
+      DB.withConnection { implicit connection =>
+        val result = SQL(sqlSting).as(SubTaskAllocationExternal.taskAllocationExternal *)
+        for (r <- result) {
+          hours += r.estimated_time
+        }
+      }
+
+      /*val finalResult = df.format(hours).replace(".", ":").split(":")*/ val finalResult = hours.toString().replace(".", ":").split(":")
+
+      var hour = df2.format(finalResult(0).toInt).toInt
+      var mins = df2.format(finalResult(1).toInt).toInt
+
+      var index = 1
+      if (mins > 59) {
+        mins = mins - 60
+        hour = hour + 1
+        finalString = (hour + "." + mins).toDouble
+      } else {
+        finalString = (hour + "." + mins).toDouble
+      }
+    } catch {
+      case ex: Exception => {println("error en subtarea : " + sub_task );return "0"}
     }
-
-    /*df.format(finalString)*/finalString.toString()
+    /*df.format(finalString)*/ finalString.toString()
 
   }
 
@@ -873,13 +874,13 @@ object SubTaskServices extends CustomColumns {
       result
     }
   }
-  
+
   def sin_avance_en_tareas(uid: String, pid: String): Seq[SubTasks] = {
     var sqlString = "EXEC art.subtarea_sin_avance {uid},{pid}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('uid -> uid.toInt,'pid -> pid.toInt).executeQuery() as (SubTasks.subTask *)
+      SQL(sqlString).on('uid -> uid.toInt, 'pid -> pid.toInt).executeQuery() as (SubTasks.subTask *)
     }
-  }   
+  }
 
   def findAllocatedSubTasksByTask(task_id: String): Seq[SubTasks] = {
 
@@ -939,7 +940,7 @@ object SubTaskServices extends CustomColumns {
 
   def checkSubTaskValidDependency(sub_task_id: String): Boolean = {
     var isValid = true
-/*
+    /*
     DB.withConnection { implicit connection =>
       val result = SQL(
         "select * from art_timesheet where  (sub_task_id={sub_task_id} AND task_type=1)").on(
@@ -1070,11 +1071,11 @@ object SubTaskServices extends CustomColumns {
           if (!subtask.isEmpty) {
             val minD = subtask.get.plan_start_date.getTime()
             val maxD = subtask.get.plan_end_date.getTime()
-             //println("subtask.get.plan_start_date : " + subtask.get.plan_start_date)
-             //println("subtask.get.plan_end_date : " + subtask.get.plan_end_date)
-             //println("compara con : " + plan_start_date)
+            //println("subtask.get.plan_start_date : " + subtask.get.plan_start_date)
+            //println("subtask.get.plan_end_date : " + subtask.get.plan_end_date)
+            //println("compara con : " + plan_start_date)
             //if ((maxD - 86400) >= (plan_start_date.getTime())) {
-              if ((minD - 86400) >= (plan_start_date.getTime())) {
+            if ((minD - 86400) >= (plan_start_date.getTime())) {
               //newform = form.withError("planned_start_date", "Enter valid start date")
               newform = form.withError("planned_start_date", "No puede iniciar antes que sub tarea dependiente ")
               newform.fill(form.get)
@@ -1152,7 +1153,7 @@ object SubTaskServices extends CustomColumns {
       SQL(sqlString).as(SubTaskStatus.stStatus.singleOpt)
     }
   }
-  
+
   def findAllSubTaskStatus(sub_task_id: String): Seq[SubTaskStatus] = {
     var sqlString = ""
     sqlString = "SELECT * from  art_sub_task_status where sub_task_id=" + sub_task_id + " order by status_for_date DESC"
@@ -1278,7 +1279,7 @@ object SubTaskServices extends CustomColumns {
 
     result
   }
-/*
+  /*
   def findActualStartDateForSubTask(subtask_id: String): Option[Date] = {
     var result: Option[Date] = null
     var date1: Option[Date] = null
@@ -1326,7 +1327,7 @@ object SubTaskServices extends CustomColumns {
     var result: Option[Date] = null
 
     var sql = "SELECT MIN(task_for_date) FROM (select MIN(task_for_date) task_for_date from  art_timesheet  where sub_task_id= " + subtask_id + " AND is_deleted=1 AND task_type=1 UNION ALL select MIN(task_for_date) from  art_timesheet_external  where sub_task_id= " + subtask_id + " AND is_deleted=1 AND task_type=1) AS FECHA"
-	//println(sql)
+    //println(sql)
     try {
       DB.withConnection { implicit connection =>
         result = SQL(sql).as(scalar[Date].singleOpt)
@@ -1337,8 +1338,8 @@ object SubTaskServices extends CustomColumns {
 
     result
   }
-  
-   def findActualStartDateForSubTask2(subtask_id: String): Option[String] = {
+
+  def findActualStartDateForSubTask2(subtask_id: String): Option[String] = {
     var result: Option[String] = null
 
     //var sql = "SELECT ISNULL(CONVERT(nVarChar(10),MIN(task_for_date), 110), 'NA') FROM (select MIN(task_for_date) task_for_date from  art_timesheet  where sub_task_id= " + subtask_id + " AND is_deleted=1 AND task_type=1 UNION ALL select MIN(task_for_date) from  art_timesheet_external  where sub_task_id= " + subtask_id + " AND is_deleted=1 AND task_type=1) AS FECHA"
@@ -1369,8 +1370,8 @@ object SubTaskServices extends CustomColumns {
     }
 
     result
-  }	
-  
+  }
+
   def findActualEndDateForSubTask2(subtask_id: String): Option[String] = {
     var result: Option[String] = null
 
@@ -1386,8 +1387,8 @@ object SubTaskServices extends CustomColumns {
     }
 
     result
-  }	
-  
+  }
+
   def validateSubTasksDependency(task_id: String, sub_task_id: String) = {
 
     var project_id = ""
@@ -1440,9 +1441,8 @@ object SubTaskServices extends CustomColumns {
           'sub_task_id -> sub_task_id, 'sub_task_depend -> sub_task_depends).executeUpdate()
     }
   }
-  
-  
-  def updateCompletionPercentage(sub_task_id: String, completion_percentage: String,plan_start_date:String,plan_end_date:String): Int = {
+
+  def updateCompletionPercentage(sub_task_id: String, completion_percentage: String, plan_start_date: String, plan_end_date: String): Int = {
 
     DB.withConnection { implicit connection =>
       SQL(
@@ -1459,7 +1459,7 @@ object SubTaskServices extends CustomColumns {
           'plan_start_date -> plan_start_date,
           'plan_end_date -> plan_end_date).executeUpdate()
     }
-  }    
+  }
 
   def findSubTasksforDependentTasks(tasks_ids: String): String = {
     var sql = "SELECT SUBSTRING((SELECT ',' + CONVERT(VARCHAR(12), sub_task_id) from art_sub_task where task_id IN (  " + tasks_ids + " ) AND is_deleted=1 FOR XML PATH('')),2,200000) AS CSV"

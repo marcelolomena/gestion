@@ -16,7 +16,7 @@ var logger = new (winston.Logger)({
       json: false,
     }),
     new (require('winston-daily-rotate-file'))({
-      filename: `${logDirectory}` + path.sep + `sip.log`,
+      filename: `${logDirectory}` + path.sep + `lin.log`,
       timestamp: tsFormat,
       handleExceptions: true,
       json: false,

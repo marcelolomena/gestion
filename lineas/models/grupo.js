@@ -5,14 +5,17 @@ module.exports = function(sequelize, DataTypes) {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			primaryKey: true,
-			autoIncrement: true
+			primaryKey: true
 		},
 		Nombre: {
 			type: DataTypes.STRING,
 			allowNull: true
+		},
+		Rating: {
+			type: DataTypes.STRING,
+			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'Grupo'
+		schema: 'scl', timestamps: false, tableName: 'Grupo'
 	});
 };

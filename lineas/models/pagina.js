@@ -40,6 +40,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'pagina'
+    schema: 'lin',timestamps: false,tableName: 'pagina'
   });
 };

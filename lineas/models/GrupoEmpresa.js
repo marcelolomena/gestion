@@ -10,21 +10,17 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		Empresa_Id: {
 			type: DataTypes.INTEGER,
-			allowNull: true,
-			references: {
-				model: 'Empresa',
-				key: 'Id'
-			}
+			allowNull: true
 		},
 		Grupo_Id: {
 			type: DataTypes.INTEGER,
-			allowNull: true,
-			references: {
-				model: 'Grupo',
-				key: 'Id'
-			}
+			allowNull: true
+		},
+		Vigente: {
+			type: DataTypes.INTEGER,
+			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'GrupoEmpresa'
+		schema: 'scl', timestamps: false, tableName: 'GrupoEmpresa'
 	});
 };

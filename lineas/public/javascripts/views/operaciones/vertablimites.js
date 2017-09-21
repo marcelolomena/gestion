@@ -1,9 +1,25 @@
 var gridvertablimites = {
 
     renderGrid: function (loadurl, targ) {
-        var $gridTab = $(targ + "_t")
+        var $gridTab2 = $(targ + "_t")
+        var rut = loadurl.substring(8, loadurl.length);
+        //console.log('valor de rut '+largorut)
+        var formatear =
+            {
+                formatearNumero: function (nStr) {
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? ',' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                    }
+                    return x1 + x2;
+                }
+            }
         /*
-        $gridTab.prepend(`
+        $gridTab2.prepend(`
             <div class='form-row'>
                 <div class="panel-body">
                     <button type="button" class="btn btn-primary btn-md">Medium</button>
@@ -23,7 +39,7 @@ var gridvertablimites = {
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
 
-        $gridTab.jqGrid({
+        $gridTab2.jqGrid({
             url: loadurl,
             datatype: "json",
             mtype: "GET",
@@ -33,48 +49,123 @@ var gridvertablimites = {
                     label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
-                { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true },
-                { label: 'N°', name: 'Numero', width: 15, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'Mac Individual', name: 'MacIndividual_Id', hidden: true, editable: true, align: 'right' },
+                { label: 'N°', name: 'Numero', width: 6, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Riesgo', name: 'Riesgo', width: 20, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
                 //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, editrules: { required: true } },
-                //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, editrules: { required: true } },
-                { label: 'Aprobado', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Utilizado', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Reservado', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                { label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 {
-                    label: 'Condicion', name: 'Condicion', width: 20, hidden: false, search: true, editable: true, align: 'center',
+                    label: 'Descripcion', name: 'Descripcion', width: 40, hidden: false, search: true, editable: true, align: 'left', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
-                        dato = '<span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: Green ; font-size: 15px; text-align: center;"></span>';
-                        dato2 = '<span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: Red ; font-size: 15px"></span>';
-                        dato3 = '<span class="glyphicon glyphicon-asterisk" aria-hidden="true" style="color: Yellow ; font-size: 15px"></span>';
-                        console.log(cellvalue);
+                        var idlimite = rowObject.Id;
+                        var dato = cellvalue;
+                        //var dato = '<a class="muestraop" href="#' + idlimite + '">' + cellvalue + '</a>';
+                        return dato;
+                    }
+                },
+                //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
+                { label: 'Moneda', name: 'Moneda', width: 25, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'DisponiblePesos', name: 'DisponiblePesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
+                { label: 'AprobadoPesos', name: 'AprobadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
+                { label: 'UtilizadoPesos', name: 'UtilizadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
+
+                {
+                    label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
+                    formatter: function (cellvalue, options, rowObject) {
+
+                        var bloq = 0;
+                        if (rowObject.Activo == "1") {
+                            var disponible = rowObject.Disponible;
+                            bloq = rowObject.Monto;
+                            var dispo = disponible - bloq;
+                            return formatear.formatearNumero(dispo);
+                        } else {
+                            var disponible = rowObject.Disponible;
+                            return formatear.formatearNumero(disponible);
+                        }
+                    }
+                },
+
+                {
+                    label: 'Condicion', name: 'ColorCondicion', width: 20, hidden: false, search: true, editable: true, align: 'right', align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+
+                        var condi = "";
+                        $.ajax({
+                            type: "GET",
+                            url: '/verdetalleslim/' + rowObject.Id,
+                            async: false,
+                            success: function (data) {
+                                if (data.length > 0) {
+                                    $("#Condicion2").html(data[0].ColorCondicion);
+                                    $("#Condiciones2").html(data[0].BORRARCOND);
+                                    condi = data[0].BORRARCOND;
+                                    //console.log(condi);
+                                }
+                                else {
+                                    alert("No existe cliente en Base de Datos");
+                                }
+                            }
+                        });
+
+                        rojo = '<span role="button" data-toggle="tooltip"  title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                        //console.log(rowObject.Id);
+
+                        amarillo = '<span role="button" data-toggle="tooltip" title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                        verde = '<span role="button" data-toggle="tooltip" title="' + condi + '" class="muestracond" href="#' + rowObject.Id + '" aria-hidden="true" ><img src="../../../../images/greencircle.png" width="25px"/></span>';
+
+
                         if (cellvalue === 'Rojo') {
-                            return dato2
+                            return rojo
                         }
                         else {
                             if (cellvalue === 'Verde') {
-                                return dato
+                                return verde
                             }
                             else {
-                                return dato3
+                                return amarillo
                             }
                         }
                     }
                 },
                 {
-                    label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
+                    label: 'Bloqueo', name: 'Bloqueo_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        dato = '<span class="glyphicon glyphicon-lock" aria-hidden="true" style= "font-size: 15px"></span>'
+                        dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
+                        //dato2 = '<span role="button" class="fa fa-lock" aria-hidden="true abrirdesbloqueo" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
+                        if (rowObject.Activo == "1") {
+                            dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
+                            return dato;
+                        }
+                        else {
+                            dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
+                            return dato; //desbloqueado
+                        }
+                        /*if (parseInt(bloq) > 0) {
+                            dato = '<span role="button" class="fa fa-lock abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
+                            return dato; //bloqueado
+
+                        }
+                        else {
+                            dato = '<span role="button" class="fa fa-unlock-alt abrirbloqueo" aria-hidden="true" href="#' + rowObject.Id + '" style= "font-size: 19px;"></span>';
+                            return dato; //desbloqueado
+                        }*/
+                    }
+                },
+                {
+                    label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        var dato = '<span role="button" class="glyphicon glyphicon-folder-open muestradet" aria-hidden="true" href="#' + rowObject.Id + '"></span>';
+                        //dato = `<span role="button" class="glyphicon glyphicon-th-list" aria-hidden="true onclick="yourFunction()"></span>`
                         return dato;
                     }
                 },
                 {
-                    label: 'Detalle', name: 'Detalle_N', width: 15, hidden: false, search: true, editable: true, align: 'center',
+                    label: 'Reservar', name: 'Reservar', width: 15, hidden: false, search: true, editable: true, align: 'right', align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        dato = '<span class="glyphicon glyphicon-align-justify" aria-hidden="true" style= "font-size: 15px"></span>'
+                        var dato = '<span role="button" class="glyphicon glyphicon-import muestrareserva" aria-hidden="true" href="#' + rowObject.Id + '"></span>';
                         return dato;
                     }
                 },
@@ -82,14 +173,14 @@ var gridvertablimites = {
             ],
 
             rowNum: 20,
-            pager: '#navGridtabverlimites',
+            pager: '#navGridtabverlimites2',
             styleUI: "Bootstrap",
             //sortname: 'fecha',
             //sortorder: "desc",
             height: "auto",
-            //shrinkToFit: true,
-            //autowidth: true,
-            width: 1350,
+            shrinkToFit: true,
+            autowidth: false,
+            width: 1500,
             subGrid: true,
             subGridRowExpanded: subGridsublimite2, //se llama la funcion de abajo
             subGridOptions: {
@@ -103,13 +194,1054 @@ var gridvertablimites = {
             viewrecords: true,
             caption: "Detalle Limites",
             footerrow: true,
+            userDataOnFooter: false,
+            gridComplete: function () {
+                $gridTab2.jqGrid('navButtonAdd', '#navGridtabverlimites', {
+                    caption: "IMPRIMIR",
+                    buttonicon: "",
+                    title: "Imprimir",
+                    position: "last",
+                    onClickButton: function () {
+                        var grid = $gridTab2
+                        var rowKey = grid.getGridParam("selrow");
+                        var url = '#';
+                        $gridTab2.jqGrid('excelExport', { "url": url });
+                    }
+                });
+            },
             loadComplete: function () {
+
+                var recs = $gridTab2.getGridParam("reccount");
+                if (isNaN(recs) || recs == 0) {
+                    //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
+                    $gridTab2.parent().parent().remove();
+                    //$gridTab2PagerID.hide();
+
+                }
+
+                var rows = $gridTab2.getDataIDs();
+                for (var i = 0; i < rows.length; i++) {
+                    var eldisponible = $gridTab2.getRowData(rows[i]).Disponible;
+                    if (parseInt(eldisponible) < 0) {
+                        $gridTab2.jqGrid('setCell', rows[i], "Disponible", "", { formatter: 'number', color: 'red' });
+                    }
+                }
+
+                $gridTab2.append(`
+                    <div class="modal fade" id="myModal2" role="dialog">
+                        <div class="modal-dialog modal-lg" style="width:90%;">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title"><b>Linea <span id="idlinea">1</span></b>: <span id="nombrelinea">Linea Capital de Trabajo</span> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<b>Plazo: </b><span id="plazolinea">12 meses</span> meses - <b>F. Venc: </b><span id="fechavenclinea">15-11-2018</span></h4>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div id="cuerpo1">
+                                        <div style="width:48%;display: inline-block;margin-right: 1%; vertical-align:top">                  
+                                            <div class="panel panel-primary">
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Límites</span></div>
+                                                <div class="panel-body" style="max-height: 130px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        <div style="margin-left: 50px;">
+                                                            <div class="row">
+                                                                <div class="col-lg-1">
+                                                                    <b>Aprobado:</b>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
+                                                                    $ <span id="aprobadolinea2">3.000</span>
+                                                                </div>
+                                                            </div> 
+                                                            <div class="row">
+                                                                <div class="col-lg-1">
+                                                                    <b>Utilizado:</b>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
+                                                                    $ <span id="utilizadolinea2">3.000</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-1">
+                                                                    <b>Reservado:</b>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
+                                                                    $ <span id="reservadolinea2">3.000</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-1">
+                                                                    <b>Bloqueado:</b>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
+                                                                    $ <span id="bloqueadolinea2">0</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row" style="border: 1px solid; border-color: #0B2161;background-color: #0B2161;color: white;">
+                                                                <div class="col-lg-1">
+                                                                    <b>Disponible:</b>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-6 text-right ">
+                                                                    $ <span id="disponiblelinea2">0</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                         <div style="width:48%;display: inline-block;margin-right: 2%; vertical-align:top">                  
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Condiciones</div>
+                                                <div id="condicioneslinea" class="panel-body" style="max-height: 200px; min-height: 130px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="40%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                                        Tipo Condición
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                                    </th>
+                                                                    <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        RUT
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="40%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Nombre
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="cuerpo2">
+                                        <div style="width:48%;display: inline-block;margin-right: 1%;vertical-align:top;">
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Productos</div>
+                                                <div id="productoslinea" class="panel-body" style="max-height: 130px;; min-height: 130px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                                        Tipo
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                                    </th>
+                                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Nombre
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div> 
+                                        <div style="width:48%;display: inline-block;vertical-align:top;">
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Clientes</div>
+                                                <div id="clienteslinea" class="panel-body" style="max-height: 130px;min-height: 130px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                                        RUT
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                                    </th>
+                                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Nombre
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div> 
+                                    </div>
+                                    <div id="cuerpo3">
+                                        
+                                        <div style="width:98.5%;display: inline-block;vertical-align:top;"> 
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Garantías</div>
+                                                <div class="panel-body" style="max-height: 200px; min-height: 130px;overflow-y: auto;">
+                                                    <div class="table-responsive clear">
+                                                        
+                                                        <table id="garantiasrealeslinea" class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="5%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Folio
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Tipo
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="30%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Descripción
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        Estado
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        V.Comercial
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                    <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                                        V.Liquidación
+                                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                                    <td>01</td>
+                                                                    <td>Leasing</td>
+                                                                    <td>50% sobre vehículo</td>
+                                                                    <td>Constituida</td>
+                                                                    <td align="right">8.599</td>
+                                                                    <td align="right">4.299</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <b>Acciones</b>
+                                                        <table class="table">
+                                                        </table>
+                                                        <b>Estatales</b>
+                                                        <table class="table">
+                                                        </table>
+                                                        <b>Reales</b>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+
+                                    <div id="cuerpo5">
+                                         <div style="width:98.5%;display: inline-block;margin-right: 10px; vertical-align:top">                  
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Covenants</div>
+                                                <div class="panel-body">
+                                                    <div class="table-responsive clear">
+                                                        <div id="comentarioslinea" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                   
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+
+                                    <div id="cuerpo4">
+                                        <div style="width:98.5%;display: inline-block;margin-right: 10px; vertical-align:top">                  
+                                            <div class="panel panel-primary" >
+                                                <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>Comentarios</div>
+                                                <div class="panel-body">
+                                                    <div class="table-responsive clear">
+                                                        <div id="comentarioslinea" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                   
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>     
+                                         
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="myModalbloqueo" role="dialog">
+                        <div class="modal-dialog modal-sm" >
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="panel panel-default" >
+                                        <div class="panel-heading" style="background-color: #002464;color: #fff;">Bloquear Linea</div>
+                                            <div class="panel-body">
+                                                <form id="miprimerform2">
+                                                    <div class="btn-group">
+                                                        <div class="form-group">
+                                                                <input type="text" class="form-control" id="idlineabloqueo2" style="display: none" >
+                                                                <input type="text" class="form-control" id="disponible" name="disponible" style="display: none">
+                                                                <div>
+                                                                    <input id="btotal" type="radio" name="radio-choice" required>Total</input> 
+                                                                    <input id="bparcial" type="radio" name="radio-choice" required >Parcial</input>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="monto" id="labelmonto">Monto:</label>
+                                                        <input type="text" class="form-control" name ="monto" id="monto">
+                                                        <input type="text" class="form-control" name ="desbloquear" id="desbloquear" style="display: none">
+                                                        <label for="comentario" id="labelcomentario">Comentario:</label>
+                                                        <input type="text" class="form-control" name="comentario" id="comentario">
+                                                    </div>
+                                                    <div class="wrapper" style="text-align: center">
+                                                        <button id="botonpost2" type="submit" class="btn btn-default" data-dismiss="modal">Bloquear</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="ModalDesbloqueo" role="dialog" >
+                        <div class="modal-dialog modal-sm" >
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="panel panel-default" >
+                                        <div class="panel-heading" style="background-color: #002464;color: #fff;">Desbloquear Linea</div>
+                                            <div class="panel-body">
+                                                <form id="miprimerform">
+                                                    <div class="form-group"> 
+                                                        <label for="bloq" id="labelTipoBloqueo">Bloqueo </label><span style="font-weight: bold;" name="tipoBloqueo"id="tipoBloqueo"></span><span style="font-weight: bold;" id="MontoBloqueado"></span><p></p>
+                                                        <label for="comentario">Bloqueado por: Ejecutivo 1</label><p></p>
+                                                        <label for="fechaBloqueo">Con fecha: &nbsp; </label><span style="font-weight: bold;" name="fechaBloqueo"id="fechaBloqueo"></span><p></p>
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-sm-4" style="padding-left:0px;">Comentario: </div>
+                                                                <div class="col-xs-12 col-sm-4" style="padding-left:3px;"><input type="text" class="form-control" name ="ValComentarioDes" id="ValComentarioDes" readonly style="WIDTH:151px; padding-left:5px;" ></div>
+                                                             </div>
+                                                    </div>
+                                                    <p></p>
+                                                    <div class="form-group">
+                                                        <div class="btn-group">    
+                                                            <input type="text" class="form-control" id="idlineabloqueo" style="background-color: #002464;display: none">
+                                                            <input type="text" class="form-control" id="Bloqueado" style="display: none">
+                                                            <br>
+                                                            <div>
+                                                                <label for="monto" id="eeee">Desbloquear: </label>
+                                                                <input id="dtotal" type="radio" name="radio-choice" required>Total</input>     
+                                                                <input id="dparcial" type="radio" name="radio-choice" required style="background-color: #002464;">Parcial</input>  
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+                                                    <p></p>
+                                                    <div class="form-group">
+                                                        <label for="monto" id="labelmontodesbloqueo">Monto:</label>
+                                                        <input type="text" class="form-control" name ="montod" id="montodes">
+                                                        <input type="text" class="form-control" name ="desbloquear" id="desbloquear2" style="display: none">
+                                                        <input type="text" class="form-control" name ="monto" id="monto2"; style="display: none">
+                                                    </div>
+                                                    <div class="form-group">
+                                                    <label for="comentariodes" id="labelcomentariodesbloqueo">Comentario:</label>
+                                                    <input type="text" class="form-control" name="comentario" id="comentariodesbloqueo">
+                                                    <p></p>
+                                                    </div>
+                                                    <div class="wrapper" style="text-align: center">
+                                                        <button id="botonpost" type="submit" class="btn btn-default" data-dismiss="modal">Desbloquear</button>
+                                                    </div>
+                                                </form>
+                                            </div>                    
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>  
+                    </div>
+                
+                    <div class="modal fade" id="myModalCondicionL" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="panel-heading" style="background-color: #002464;color: #fff;">Detalles Linea</div>
+                                <div class="modal-body">
+                                    <div>Condicion: <label for="Condicion" id="Condicion2"> </label>  </div>
+                                    <div>Comentario: <label for="Comentario" id="Condiciones2"> </label>  </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+
+                    <div class="modal fade" id="modalreservar" role="dialog " data-backdrop="false" style="z-index:500">
+                        <div class="modal-dialog modal-lg" style="width:1150px;z-index:500;">
+                            <div class="modal-content" >
+                                <div class="panel-heading" style="background-color: #002464;color: #fff;">Generar Reserva</div>
+                                <div class="modal-body" style="z-index:500">
+
+                                    <div class="gcontainer">
+                                        <input type="text" class="form-control" id="rut" name="rut" style="background-color: #002464;display: none">
+                                        <table id="gridreserva"></table>
+                                        <div id="pager"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="modal-footer">
+                                    <button id="btnCerrar" type="button" class="btn btn-default" data-dismiss="modal">Aceptar</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div> 
+
+                    
+                `);
+
+                //BOTÓN DETALLE
+                $('.muestradet').click(function () {
+                    var idlimite = $(this).attr('href');
+                    $('#idlinea').html(idlimite.substring(1))
+                    $.ajax({
+                        type: "GET",
+                        url: '/verdetalleslim/' + idlimite.substring(1),
+                        async: false,
+                        success: function (data) {
+                            if (data.length > 0) {
+                                $("#nombrelinea").html(data[0].Descripcion)
+                                $("#aprobadolinea").html(data[0].Aprobado)
+                                $("#utilizadolinea").html(data[0].Utilizado)
+                                $("#reservadolinea").html(data[0].Reservado)
+                                $("#disponiblelinea").html(data[0].Disponible)
+                                $("#bloqueadolinea").html(0)
+                                $("#plazolinea").html(data[0].Plazo)
+                                var fechavenclinea = data[0].FechaVencimiento.split('-').reverse().join('-');
+                                $("#fechavenclinea").html(data[0].FechaVencimiento)
+                                var productos = `
+                                    <div class="table-responsive clear">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                        Tipo
+                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                    </th>
+                                                    <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                        Nombre
+                                                        <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>`
+                                var tipolinea = data[0].Riesgo;
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/verproductoslinea/' + tipolinea,
+                                    async: false,
+                                    success: function (data2) {
+                                        for (var i = 0; i < data2.length; i++) {
+                                            productos += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
+                                            productos += "<td>" + data2[i].Codigo + "</td>"
+                                            productos += "<td>" + data2[i].Nombre + "</td>"
+                                            productos += "</tr>"
+                                        }
+                                        productos += "</tbody>"
+                                        productos += "</table>"
+                                        productos += "</div>"
+                                        $("#productoslinea").html(productos)
+                                    }
+                                });
+
+
+                                var clientes = `
+                                <div class="table-responsive clear">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                    RUT
+                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                </th>
+                                                <th width="80%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                    Nombre
+                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                `
+                                $("#clienteslinea").html(clientes)
+
+                                var condiciones = `
+                                <div class="table-responsive clear">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="40%" ng-click="predicate = 'dato1'; reverse=!reverse">
+                                                    Tipo Condición
+                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato1', 'ion-ios-arrow-up': predicate == 'dato1'}"></i>
+                                                </th>
+                                                <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                    RUT
+                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                </th>
+                                                <th width="40%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                                    Nombre
+                                                    <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                `
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/vercondicioneslinea/' + idlimite.substring(1),
+                                    async: false,
+                                    success: function (data3) {
+                                        for (var i = 0; i < data3.length; i++) {
+                                            condiciones += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
+                                            condiciones += "<td>" + data3[i].TipoCondicion + "</td>"
+                                            condiciones += "<td>" + data3[i].Rut + "-" + data3[i].DV + "</td>"
+                                            condiciones += "<td>" + data3[i].Nombre + "</td>"
+                                            condiciones += "</tr>"
+                                        }
+                                        condiciones += "</tbody>"
+                                        condiciones += "</table>"
+                                        condiciones += "</div>"
+                                        console.log(condiciones)
+                                        $("#condicioneslinea").html(condiciones)
+                                    }
+                                });
+                                var garantiasreales = `
+                                <thead>
+                                    <tr>
+                                        <th width="5%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                            Folio
+                                            <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                        </th>
+                                        <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                            Tipo
+                                            <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                        </th>
+                                        <th width="30%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                            Descripción
+                                            <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                        </th>
+                                        <th width="20%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                            Estado
+                                            <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                        </th>
+                                        <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                            V.Comercial
+                                            <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                        </th>
+                                        <th width="15%" ng-click="predicate = 'dato2'; reverse=!reverse">
+                                            V.Liquidación
+                                            <i class="pull-right" ng-class="{'ion-ios-arrow-down': predicate != 'dato2', 'ion-ios-arrow-up': predicate == 'dato2'}"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                `
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/vergarantiaslinea/' + idlimite.substring(1),
+                                    async: false,
+                                    success: function (data4) {
+                                        for (var i = 0; i < data4.length; i++) {
+                                            garantiasreales += "<tr ng-repeat='dato in manual.demoListado | orderBy:predicate:reverse'>"
+                                            garantiasreales += "<td>" + data4[i].Folio + "</td>"
+                                            garantiasreales += "<td>" + data4[i].Tipo + "</td>"
+                                            garantiasreales += "<td>" + data4[i].Descripcion + "</td>"
+                                            garantiasreales += "<td>" + data4[i].Estado + "</td>"
+                                            garantiasreales += "<td>" + data4[i].ValorComercial + "</td>"
+                                            garantiasreales += "<td>" + data4[i].ValorLiquidacion + "</td>"
+                                            garantiasreales += "</tr>"
+                                        }
+                                        garantiasreales += "</tbody>"
+                                        garantiasreales += "</table>"
+                                        garantiasreales += "</div>"
+                                        $("#garantiasrealeslinea").html(garantiasreales)
+                                    }
+                                });
+                                var comentarios = "";
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/vercomentarioslinea/' + idlimite.substring(1),
+                                    async: false,
+                                    success: function (data5) {
+                                        for (var i = 0; i < data5.length; i++) {
+                                            comentarios += "<div class='row'>";
+                                            comentarios += "<div class='col-lg-12'>"
+                                            comentarios += data5[i].Comentario
+                                            comentarios += "</div>";
+                                            comentarios += "</div>";
+                                        }
+
+                                        $("#comentarioslinea").html(comentarios)
+                                    }
+                                });
+                            }
+                            else {
+                                alert("No existe cliente en Base de Datos");
+                            }
+                        }
+                    });
+                    $("#myModal2").modal();
+                });
+
+
+                //BOTÓN RESERVA
+                $('.muestrareserva').click(function () {
+                    var idlimite = $(this).attr('href');
+                    console.log("valor id limite sin cortar " + idlimite);
+                    idlimite = idlimite.substring(1, 3);
+                    console.log("valor cortado " + idlimite)
+                    $("#modalreservar").modal();
+                    //var elrutqueviene = $(this).attr('href');
+                    //var elrutquenecesito = elrutqueviene.substring(1)
+
+                    var elcaption = "Operaciones";
+                    //console.log("el valor del rut es "+rut)
+                    var template = "";
+
+                    var modelOperacion = [
+                        {
+                            label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,editable: true, hidedlg: true, sortable: false
+                        },                        { label: 'Producto', name: 'Producto', width: 8, hidden: false, editable: true, align: 'center' },
+                        { label: 'Monto', name: 'MontoInicial', width: 8, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                        { label: 'Plazo', name: 'Plazo', width: 8, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Moneda', name: 'Moneda', width: 8, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },                        
+                        { label: 'Fecha Reserva', name: 'FechaReserva', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Fecha Desembolso', name: 'FechaDesembolso', width: 9, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Fecha Vencimiento', name: 'FechaVencimiento', width: 6, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                    ];
+
+
+                    $("#gridreserva").jqGrid({
+                        url: '/reservaroperacion/' + idlimite,
+                        mtype: "GET",
+                        datatype: "json",
+                        rowNum: 20,
+                        pager: "#pager",
+                        height: 'auto',
+                        shrinkToFit: true,
+                        width: 1100,
+                        subGrid: false,
+                        subGridRowExpanded: subGridversublimiteasignaciones, //se llama la funcion de abajo
+                        subGridOptions: {
+                            plusicon: "glyphicon-hand-right",
+                            minusicon: "glyphicon-hand-down"
+                        },
+                        page: 1,
+                        colModel: modelOperacion,
+                        regional: 'es',
+                        //autowidth: true,
+                        caption: elcaption,
+                        viewrecords: true,
+                        rowList: [5, 10, 20, 50],
+                        styleUI: "Bootstrap",
+                        editurl: '/postreservaroperacion',
+                        loadError: sipLibrary.jqGrid_loadErrorHandler,
+                        gridComplete: function () {
+                            var recs = $("#gridreserva").getGridParam("reccount");
+                            if (isNaN(recs) || recs == 0) {
+
+                                $("#gridreserva").addRowData("blankRow", { "nombre": "No hay datos" });
+                            }
+                        },
+                        loadComplete: function () {
+
+                            var recs = $("#gridreserva").getGridParam("reccount");
+                            if (isNaN(recs) || recs == 0) {
+                                //$("#" + childGridID).addRowData("blankRow", { "id": 0, "Descripcion": " ", "Aprobado": "0" });
+                                $("#gridreserva").parent().parent().remove();
+                                // $gridTab2PagerID.hide();
+
+                            }
+
+                            var rows = $("#gridreserva").getDataIDs();
+                            for (var i = 0; i < rows.length; i++) {
+                                var eldisponible = $("#gridreserva").getRowData(rows[i]).Disponible;
+                                if (parseInt(eldisponible) < 0) {
+                                    $("#gridreserva").jqGrid('setCell', rows[i], "Disponible", "", { color: 'red' });
+                                }
+                            }
+                        }
+                    });
+
+
+                    $("#gridreserva").jqGrid('navGrid', "#pager", {
+                        edit: true, add: true, del: true, search: false,
+                        refresh: true, view: false, position: "left", cloneToTop: false
+                    },
+                        {
+                            closeAfterEdit: true,
+                            recreateForm: true,
+                            ajaxEditOptions: sipLibrary.jsonOptions,
+                            serializeEditData: sipLibrary.createJSON,
+                            editCaption: "Modifica Grupo",
+                            //template: template,
+                            errorTextFormat: function (data) {
+                                return 'Error: ' + data.responseText
+                            },
+                            onclickSubmit: function (rowid) {
+                                return { RutEmpresa: rut, Idlim: idlimite };
+                            }
+                        },
+                        {
+                            closeAfterAdd: true,
+                            recreateForm: true,
+                            ajaxEditOptions: sipLibrary.jsonOptions,
+                            serializeEditData: sipLibrary.createJSON,
+                            addCaption: "Agregar Operación",
+                            template: template,
+                            errorTextFormat: function (data) {
+                                return 'Error: ' + data.responseText
+                            },
+                            beforeShowForm: function (form) {
+                                $("input#Nombre").prop('disabled', true);
+                                $("input#RazonSocial").prop('disabled', true);
+                            },
+                            afterSubmit: function (response, postdata) {
+                                var json = response.responseText;
+                                var result = JSON.parse(json);
+                                if (result.error == "2")
+                                    return [false, "Error en llamada a Servidor", ""];
+                                else
+                                    return [true, "Operacion Reservada"];
+
+                            }, afterShowForm: function (form) {
+                                sipLibrary.centerDialog($("#gridreserva").attr('Id'));
+
+                            },
+                            onclickSubmit: function (rowid) {
+                                return { RutEmpresa: rut, Idlim: idlimite };
+                            }
+                        },
+                        {
+                            closeAfterDelete: true,
+                            recreateForm: true,
+                            ajaxEditOptions: sipLibrary.jsonOptions,
+                            serializeEditData: sipLibrary.createJSON,
+                            addCaption: "Eliminar Empresa",
+                            errorTextFormat: function (data) {
+                                return 'Error: ' + data.responseText
+                            }, afterSubmit: function (response, postdata) {
+                                var json = response.responseText;
+                                var result = JSON.parse(json);
+                                if (result.error != "0")
+                                    return [false, result.error_text, ""];
+                                else
+                                    return [true, "", ""]
+                            },
+                            onclickSubmit: function (rowid) {
+                                return { RutEmpresa: rut, Idlim: idlimite };
+                            }
+                        },
+                        {
+                            recreateFilter: true
+                        }
+                    );
+                    //$("#gridreserva").reload();
+                    $("#pager").css("padding-bottom", "10px");
+                    // $("#rut").val(rut);
+                    // console.log(rut)
+
+                    function subGridversublimiteasignaciones(subgrid_id, row_id) {
+                        //gridversublimitesasignaciones(subgrid_id, row_id, 'asignaciones');
+                    }
+                });
+
+
+
+                //BOTÓN CONDICIÓN
+                $('.muestracond').click(function () {
+                    var idlimite = $(this).attr('href');
+                    $('#ellimite3').html(idlimite.substring(1))
+                    $.ajax({
+                        type: "GET",
+                        url: '/verdetalleslim/' + idlimite.substring(1),
+                        async: false,
+                        success: function (data) {
+                            if (data.length > 0) {
+                                $("#Condicion2").html(data[0].ColorCondicion);
+                                $("#Condiciones2").html(data[0].BORRARCOND);
+                                var condi = $("#Condiciones2").val(data[0].BORRARCOND);
+                                console.log("comentario " + data[0].BORRARCOMEN);
+                            }
+                            else {
+                                alert("No existe cliente en Base de Datos");
+                            }
+                        }
+                    });
+                    $("#myModalCondicionL").modal();
+                });
+
+                // BOTÓN DESBLOQUEAR 
+                $('#botonpost').click(function () {
+                    var idlineabloqueo = $('#idlineabloqueo').val();
+                    var des = $("#montodes").val();
+                    var bloq = $("#Bloqueado").val();
+                    var nuevovalorbloq = bloq - des;
+                    $("#monto2").val(nuevovalorbloq);
+                    $("#monto2").html(nuevovalorbloq);
+                    $("#desbloquear2").val(2)
+                    //$("#desbloquear").html(2)
+                    var montoBase = 0;
+                    var insert = 0;
+                    var monto = parseInt($('#monto2').val());
+
+
+                    if (monto <= 0) {
+
+                        if (monto == 0) {
+                            $("#desbloquear2").val(1);
+                            //$("#desbloquear").html(1);
+                            $.ajax({
+                                type: "POST",
+                                url: "/cargarbloqueo/" + idlineabloqueo,
+                                data: $('#miprimerform').serialize(),
+                                success: function (msg) {
+                                    $gridTab2.trigger('reloadGrid');
+                                }
+                            });
+                        }
+                        else {
+                            alert("El monto a desbloquear supera al monto bloqueado");
+                        }
+
+                    }
+                    else { //bloqueado
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/cargarbloqueo/" + idlineabloqueo,
+                            data: $('#miprimerform').serialize(),
+                            success: function (msg) {
+                                $gridTab2.trigger('reloadGrid');
+                            }
+                        });
+                    }
+                    $('#miprimerform2')[0].reset();
+                });
+
+                //BOTÓN BLOQUEAR
+                $('#botonpost2').click(function () {
+
+                    var idlineabloqueo = $('#idlineabloqueo2').val();
+                    var montoBase = 0;
+                    var insert = 0;
+                    var monto = parseInt($('#monto').val());
+                    $.ajax({
+                        type: "GET",
+                        url: '/verdetallebloqueo/' + idlineabloqueo,
+                        async: false,
+                        success: function (data) {
+
+                            if (data.length > 0) {
+                                insert = 1;
+                                montoBase = data[0].Disponible;
+
+                            }
+                        }
+                    });
+                    if (montoBase < monto) {
+                        alert("El monto ingresado es superior al disponible");
+                    }
+                    else {
+
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/cargarbloqueo/" + idlineabloqueo,
+                            data: $('#miprimerform2').serialize(),
+                            success: function (msg) {
+                                console.log("tremendo exito " + msg)
+                                $gridTab2.trigger('reloadGrid');
+                            }
+                        });
+                        //console.log("llegue al bloqueo")
+                    }
+
+
+                    $('#miprimerform2')[0].reset();
+                    //$("#fechaBloqueo").html(fechaGuardada);
+                });
+                $(`#monto`).keypress(function (evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if (charCode > 31 && ((charCode < 48 || charCode > 57) && (charCode != 75 || charCode != 107))) {
+                        return false;
+                    }
+                    return true;
+                })
+                $(`#montodes`).keypress(function (evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if (charCode > 31 && ((charCode < 48 || charCode > 57) && (charCode != 75 || charCode != 107))) {
+                        return false;
+                    }
+                    return true;
+                })
+                //BOTÓN CANDADO
+                $('.abrirbloqueo').click(function () {
+                    var id = $(this).attr('href').substring(1);
+                    $.ajax({
+                        type: "GET",
+                        url: '/verdetallebloqueo/' + id,
+                        async: false,
+                        success: function (data) {
+
+                            if (data.length > 0) {
+                                var bloq = data[0].Monto;
+                                var disponible = data[0].Disponible;
+                                var act = data[0].Activo;
+                            }
+
+                            $('input[name="radio-choice"]').attr('checked', false);
+                            $("#montodes").val("");
+                            $("#monto").val("");
+                            $("#comentariodesbloqueo").val("");
+                            $("#desbloquear").hide();
+                            $("#desbloquear").val(0);
+                            //$("#desbloquear").html(0);
+
+                            if (act == 1) {
+                                $("#MontoBloqueado").html(formatear.formatearNumero(data[0].Monto)) //desbloqueo
+                                $("#Bloqueado").val(data[0].Monto)
+                                $("#idlineabloqueo").val(data[0].Id)
+                                $("#ModalDesbloqueo").modal();
+                                $("#montodes").val("");
+                                $("#desbloquear").hide();
+                                $("#ValComentarioDes").val(data[0].Comentario);
+                                $("#monto").val("");
+                                $("#comentariodesbloqueo").val("");
+                                $("#Comentario").html(data[0].Comentario);
+                                $("#botonpost").hide();
+                                $("#labelmontodesbloqueo").hide();
+                                $("#montodes").hide();
+                                $("#labelcomentariodesbloqueo").hide();
+                                $("#comentariodesbloqueo").hide();
+                                $("#fechaBloqueo").html(data[0].FechaBloqueo);
+
+                                if (disponible == bloq) {
+                                    $("#tipoBloqueo").html(" Total M$ : ");
+                                }
+                                else {
+                                    $("#tipoBloqueo").html(" Parcial M$ : ");
+                                }
+                            }
+                            else {
+
+                                //Bloqueo
+                                $("#idlineabloqueo2").val(id)
+                                $("#disponible").val(data[0].Disponible)
+                                $("#myModalbloqueo").modal();
+                                $("#montodes").val("");
+                                $("#monto").val("");
+                                $("#comentario").val("");
+                                $("#comentariodesbloqueo").val("");
+                                $("#monto").hide();
+                                $("#labelmonto").hide();
+                                $("#montodes").hide();
+                                $("#labelmontodesbloqueo").hide();
+                                $("#labelcomentario").hide();
+                                $("#comentario").hide();
+                                $("#botonpost2").hide();
+                                $("#fechaBloqueo").val();
+                            }
+                        }
+                    })
+                });
+
+                //RADIO BUTTON BLOQUEO PARCIAL
+                $('#bparcial').click(function () {
+                    //console.log("bloqueo parcial");
+                    //var idlineabloqueo = $('#idlineabloqueo2').val();
+                    $("#monto").show();
+                    $("#monto").val("");
+                    $("#labelmonto").show();
+                    $("#labelcomentario").show();
+                    $("#comentario").show();
+                    $("#botonpost2").show();
+                });
+
+                //RADIO BUTTON BLOQUEO TOTAL
+                $('#btotal').click(function () {
+                    $("#monto").hide();
+                    $("#labelmonto").hide();
+                    $("#labelcomentario").show();
+                    $("#comentario").show();
+                    $("#botonpost2").show();
+                    $("#monto").val($("#disponible").val());
+                    //console.log($("#monto").val);
+                    //var idlineabloqueo = $('#idlineabloqueo2').val();
+                });
+
+                //RADIO BUTTON DESBLOQUEO PARCIAL
+                $('#dparcial').click(function () {
+                    //$("#montodes").hide();
+                    //$("#labelmontodesbloqueo").hide();
+                    $("#montodes").show();
+                    $("#labelmontodesbloqueo").show();
+                    $("#botonpost").show();
+                    $("#labelcomentariodesbloqueo").show();
+                    $("#comentariodesbloqueo").show();
+                    //var idlineabloqueo = $('#idlineabloqueo2').val();
+                });
+
+                //RADIO BUTTON DESBLOQUEO TOTAL
+                $('#dtotal').click(function () {
+                    $("#montodes").hide();
+                    $("#labelmontodesbloqueo").hide();
+                    $("#montodes").val($("#Bloqueado").val());
+                    $("#botonpost").show();
+                    $("#labelcomentariodesbloqueo").show();
+                    $("#comentariodesbloqueo").show();
+                    //console.log($("#monto").val);
+                    //var idlineabloqueo = $('#idlineabloqueo2').val();
+                });
+
+                $("#btnCerrar").on("click", function (e) {
+
+                    console.log("llegue a la funcion!!")
+                    e.preventDefault();
+                    location.reload();
+
+                });
+
+
                 var thisId = $.jgrid.jqID(this.id);
-                console.log("estamos listos")
-                var sum1 = $gridTab.jqGrid('getCol', 'Aprobado', false, 'sum');
-                var sum2 = $gridTab.jqGrid('getCol', 'Utilizado', false, 'sum');
-                var sum3 = $gridTab.jqGrid('getCol', 'Reservado', false, 'sum');
-                var sum4 = $gridTab.jqGrid('getCol', 'Disponible', false, 'sum');
+                var sum1 = $gridTab2.jqGrid('getCol', 'AprobadoPesos', false, 'sum');
+                var sum2 = $gridTab2.jqGrid('getCol', 'UtilizadoPesos', false, 'sum');
+                var sum3 = $gridTab2.jqGrid('getCol', 'Reservado', false, 'sum');
+                var sum4 = $gridTab2.jqGrid('getCol', 'DisponiblePesos', false, 'sum');
+
                 /*var sum5 = $("#" + childGridID).jqGrid('getCol', 'Total', false, 'sum');
                 var sum6 = $("#" + childGridID).jqGrid('getCol', 'VarAprobacion', false, 'sum');
                 var sum7 = $("#" + childGridID).jqGrid('getCol', 'DeudaBanco', false, 'sum');
@@ -118,13 +1250,14 @@ var gridvertablimites = {
                 var sum10 = $("#" + childGridID).jqGrid('getCol', 'Penetracion', false, 'avg');
                 */
 
-                $gridTab.jqGrid('footerData', 'set',
+                $gridTab2.jqGrid('footerData', 'set',
                     {
-                        Moneda: 'Total (MM$) :',
-                        Aprobado: sum1,
-                        Utilizado: sum2,
-                        Reservado: sum3,
-                        Disponible: sum4
+                        Moneda: 'Total (CLP) :',
+                        Aprobado: (formatear.formatearNumero(sum1)),
+                        Utilizado: (formatear.formatearNumero(sum2)),
+                        Reservado: (formatear.formatearNumero(sum3)),
+                        Disponible: (formatear.formatearNumero(sum4)),
+                        Bloqueo_N: '<span role="button" class="fa fa-lock bloqueartodo" aria-hidden="true" href="#" style= "font-size: 20px;"></span>'
                         /*Total : sum5,
                         VarAprobacion : sum6,
                         DeudaBanco: sum7,
@@ -132,13 +1265,22 @@ var gridvertablimites = {
                         SBIFACHEL: sum9,
                         Penetracion: sum10
                         */
-                    });
+                    }, false);
             },
-
-
         });
+        $gridTab2.jqGrid('setLabel', 'Numero', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Riesgo', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Descripcion', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Moneda', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Aprobado', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Utilizado', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Disponible', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'ColorCondicion', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Bloqueo_N', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Detalle_N', '', { 'text-align': 'center' });
+        $gridTab2.jqGrid('setLabel', 'Reservar', '', { 'text-align': 'center' });
 
-        $gridTab.jqGrid('navGrid', '#navGridtabverlimites', { edit: false, add: false, del: false, search: false },
+        $gridTab2.jqGrid('navGrid', '#navGridtabverlimites', { edit: false, add: false, del: false, search: false },
             {
                 editCaption: "Modificar Límite",
                 closeAfterEdit: true,
@@ -149,8 +1291,8 @@ var gridvertablimites = {
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
-                    var rowKey = $gridTab.getGridParam("selrow");
-                    var rowData = $gridTab.getRowData(rowKey);
+                    var rowKey = $gridTab2.getGridParam("selrow");
+                    var rowData = $gridTab2.getRowData(rowKey);
                     var thissid = rowData.fecha;
                     $('#mensajefecha').html("<div class='column-full'>Estado con fecha: " + thissid + "</div>");
                 },
@@ -227,7 +1369,7 @@ var gridvertablimites = {
                     return { idsolicitudcotizacion: parentRowKey };
                 },
                 beforeShowForm: function (form) {
-                    ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
+                    ret = $gridTab2.getRowData($gridTab2.jqGrid('getGridParam', 'selrow'));
                     $("td.delmsg", form).html("<b>Usted borrará el limite:</b><br><b>" + ret.tipolimite + "</b> ?");
 
                 },
@@ -240,26 +1382,12 @@ var gridvertablimites = {
                         return [true, "", ""]
                 }
             });
-        $gridTab.jqGrid('navButtonAdd', '#navGridtabverlimites', {
-            caption: "IMPRIMIR",
-            buttonicon: "",
-            title: "Imprimir",
-            position: "last",
-            onClickButton: function () {
-                var grid = $gridTab
-                var rowKey = grid.getGridParam("selrow");
-                var url = '#';
-                $gridTab.jqGrid('excelExport', { "url": url });
-            }
-        });
-
-
     }
 }
 
 function subGridsublimite2(subgrid_id, row_id) {//cambiar el nombre a la funcion si se copia la plantilla!!!!
-    console.log('hola');
+    //console.log('hola');
+
     gridvertabsublimites(subgrid_id, row_id, 'sublimite'); //sublimite es el nombre con el que quedaran los divs en la subgrilla (/verlimite.js)
-    //gridOperacion(subgrid_id, row_id, 'veroperacion');
-    //gridGarantias(subgrid_id, row_id, 'vergarantias');
+    gridsublimiteoperaciones(subgrid_id, row_id, 'operaciones');
 }

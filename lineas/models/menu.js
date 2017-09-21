@@ -36,6 +36,6 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   }, {
-    schema: 'sip',timestamps: false,tableName: 'menu'
+    schema: 'lin',timestamps: false,tableName: 'menu'
   });
 };

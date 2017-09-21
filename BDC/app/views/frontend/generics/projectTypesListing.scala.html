@@ -38,7 +38,9 @@
 						    							"historic"
 					    					}
 					    				 }'></span>
+					    				 @if(!GenericProjectTypeService.findGenericProjectTypeById(pType.project_type.toString).isEmpty){
 					    				 @GenericProjectTypeService.findGenericProjectTypeById(pType.project_type.toString).get.generic_project_type
+					    				 }
 					    				 
 					    			</span>
 					    			

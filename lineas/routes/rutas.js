@@ -4,57 +4,72 @@ var isAuthenticated = require('../policies/isAuthenticated')
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
-
-var carteraController = require('../controllers/cartera')
+var externoController = require('../controllers/dataexterna')
 var operacionesController = require('../controllers/operaciones')
 var grupoController = require('../controllers/grupo')
 var macgrupalController = require('../controllers/macgrupal')
 
 module.exports = function (passport) {
 
-    router.route('/grid_cartera')
-        .post(isAuthenticated, carteraController.action)
-        .get(isAuthenticated, carteraController.list);
+    router.route('/getdatoscliente/:rut')
+        .get(isAuthenticated, externoController.getdatoscliente);
 
-    router.route('/limite/:id')
-        .get(isAuthenticated, carteraController.listlimite);
-
-    router.route('/sublimite/:id')
-        .get(isAuthenticated, carteraController.listsublimite);
-
-    router.route('/garantiareallimite/:id')
-        .get(isAuthenticated, carteraController.listgarantiareallimite);
+    router.route('/getmacporrut/:rut')
+        .get(isAuthenticated, externoController.getmacporrut);
 
     router.route('/vermac/:id')
-        .get(isAuthenticated, carteraController.listlimite);
-
-    router.route('/limite')
-        .post(isAuthenticated, carteraController.actionlimite);
-
-    router.route('/garantia/:id')
-        .get(isAuthenticated, carteraController.listgarantia);
-
-    router.route('/garantia')
-        .post(isAuthenticated, carteraController.actiongarantia);
-    /*
-        router.route('/grupo')
-            .post(isAuthenticated, grupoController.action)
-            .get(isAuthenticated, grupoController.list);
-    
-        router.route('/grupodesglose/:id')
-            .get(isAuthenticated, grupoController.listdesglose);
-    
-        router.route('/grupodesglose')
-            .post(isAuthenticated, grupoController.actiondesglose);
-    */
-    router.route('/getdatoscliente/:rut')
-        .get(isAuthenticated, carteraController.getdatoscliente);
+        .get(isAuthenticated, externoController.listlimite);
 
     router.route('/getdatosclientecongrupo/:id')
-        .get(isAuthenticated, carteraController.getdatosclientecongrupo);
+        .get(isAuthenticated, externoController.getdatosclientecongrupo);
+
+    router.route('/getdatosclientecongrupo2/:rut')
+        .get(isAuthenticated, externoController.getdatosclientecongrupo2);
+
+    router.route('/getdatosclientecongrupo3/:idgrupo/:idempresa')
+        .get(isAuthenticated, externoController.getdatosclientecongrupo3);
 
     router.route('/buscargrupo/:rut')
-        .get(isAuthenticated, carteraController.getgrupo);
+        .get(isAuthenticated, externoController.getgrupo);
+
+    router.route('/creargruponuevo/:id/:nombre')
+        .get(isAuthenticated, externoController.creargruponuevo);
+
+    router.route('/crearmacgrupal/:id')
+        .post(isAuthenticated, externoController.crearmacgrupal);
+
+    router.route('/getdatosmacgrupal/:id')
+        .get(isAuthenticated, externoController.getdatosmacgrupal);
+
+    router.route('/getmacindividuales/:id')
+        .get(isAuthenticated, externoController.getmacindividuales);
+
+    router.route('/getmacindividual/:id')
+        .get(isAuthenticated, externoController.getmacindividual);
+
+    router.route('/gettiposaprobacion')
+        .get(isAuthenticated, externoController.gettiposaprobacion);
+
+    router.route('/getsublimitesasignacion/:id/:rut')
+        .get(isAuthenticated, operacionesController.listsublimite);
+
+
+
+
+    router.route('/grupoempresa/:id')
+        .get(isAuthenticated, grupoController.listgrupoempresa);
+
+    router.route('/grupoempresa')
+        .post(isAuthenticated, grupoController.actiongrupoempresa)
+
+    router.route('/grupoempresanew/:id')
+        .get(isAuthenticated, grupoController.listgrupoempresanew);
+
+    router.route('/grupoempresanew')
+        .post(isAuthenticated, grupoController.actiongrupoempresanew)
+
+
+
 
     router.route('/vermacgrupal/:id')
         //.post(isAuthenticated, macgrupalController.action)
@@ -64,51 +79,101 @@ module.exports = function (passport) {
         //.post(isAuthenticated, macgrupalController.action)
         .get(isAuthenticated, macgrupalController.listindividuales);
 
-    router.route('/macs/:id')
-        .get(isAuthenticated, carteraController.listmacs);
+    router.route('/tipolimite')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.tipolimite);
+
+    router.route('/getmac/:idmacgrupal')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.getmac);
+
+    router.route('/limitemac/:idmac')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.limitemac);
+
+    router.route('/limitemac')
+        .post(isAuthenticated, macgrupalController.actionlimitemac)
+
+    router.route('/lamoneda')
+        //.post(isAuthenticated, macgrupalController.action)
+        .get(isAuthenticated, macgrupalController.lamoneda);
+
+
+
+
+    router.route('/getdatosclientelimite/:rut')
+        .get(isAuthenticated, operacionesController.getdatosclientelimite);
 
     router.route('/limite/:id')
         .get(isAuthenticated, operacionesController.listlimite);
 
-    router.route('/sublimite/:id')
+    router.route('/sublimite/:id/:rut')
         .get(isAuthenticated, operacionesController.listsublimite);
 
-    router.route('/operaciones/:id')
-        .get(isAuthenticated, operacionesController.listoperacion);
+    router.route('/veroperacionesmodal/:id')
+        .get(isAuthenticated, operacionesController.listveroperacionlimite);
 
-    router.route('/grupoempresa/:id')
-        .get(isAuthenticated, grupoController.listgrupoempresa);
+    router.route('/verdetalleslim/:id')
+        .get(isAuthenticated, operacionesController.listverdetallelim);
 
-    router.route('/grupoempresa')
-        .post(isAuthenticated, grupoController.actiongrupoempresa)
+    router.route('/veroperacionesmodal2/:id')
+        .get(isAuthenticated, operacionesController.listveroperacionsublimite);
 
-    router.route('/operacionmac/:id')
-        .get(isAuthenticated, operacionesController.listoperacionmac);
+    router.route('/verdetalleslim2/:id')
+        .get(isAuthenticated, operacionesController.listverdetallelim2);
 
-    router.route('/creargruponuevo/:id/:nombre')
-        .get(isAuthenticated, carteraController.creargruponuevo);
+    router.route('/getultimomac/:id')
+        .get(isAuthenticated, operacionesController.listultimomac);
 
-    router.route('/crearmacgrupal/:id')
-        .post(isAuthenticated, carteraController.crearmacgrupal);
+    router.route('/getsublimitesoperaciones/:id')
+        .get(isAuthenticated, operacionesController.listsublimop);
 
-    router.route('/getdatosmacgrupal/:id')
-        .get(isAuthenticated, carteraController.getdatosmacgrupal);
+    router.route('/tipooperacion/:id') //grilla operaciones
+        .get(isAuthenticated, operacionesController.listtipooperaciones);
 
-    
-    router.route('/verlimite/:id')
-        .get(isAuthenticated, operacionesController.listverlmite);
+    router.route('/getoperaciones2/:id/:rut') //subgrilla operaciones
+        .get(isAuthenticated, operacionesController.listoperaciones2);
 
-    router.route('/vertablimites/:id')
-        .get(isAuthenticated, operacionesController.listtabverlimite);
+    router.route('/verproductoslinea/:id')
+        .get(isAuthenticated, operacionesController.listproductoslinea);
 
-    router.route('/getmacindividuales/:id')
-        .get(isAuthenticated, carteraController.getmacindividuales);
+    router.route('/vercondicioneslinea/:id')
+        .get(isAuthenticated, operacionesController.listcondicioneslinea);
 
-    router.route('/getmacindividual/:id')
-        .get(isAuthenticated, carteraController.getmacindividual);
+    router.route('/vergarantiaslinea/:id')
+        .get(isAuthenticated, operacionesController.listgarantiaslinea);
 
-    router.route('/vertabsublimites/:id')
-        .get(isAuthenticated, operacionesController.listtabversublimite);
+    router.route('/vercomentarioslinea/:id')
+        .get(isAuthenticated, operacionesController.listcomentarioslinea);
+
+    router.route('/cargarbloqueo/:id')
+        .post(isAuthenticated, operacionesController.actionbloquear);
+
+    router.route('/asignar/:id')
+        .get(isAuthenticated, operacionesController.listasignar);
+
+    router.route('/aprobaciones/:id/:estado')
+        .get(isAuthenticated, operacionesController.listaprobaciones);
+
+    router.route('/getoperacionesasignar/:id/:rut')
+        .get(isAuthenticated, operacionesController.operacionesasignar);
+
+    router.route('/verdetallebloqueo/:id')
+        .get(isAuthenticated, operacionesController.listverdetallebloqueo);
+
+    router.route('/reservar/:id')
+        .get(isAuthenticated, operacionesController.listlimite);
+
+    router.route('/reservasublimites/:id/:rut')
+        .get(isAuthenticated, operacionesController.listsublimite);
+
+    router.route('/reservaroperacion/:id')
+        .get(isAuthenticated, operacionesController.listoperacionesreserva);
+
+    router.route('/postreservaroperacion')
+        .post(isAuthenticated, operacionesController.actionoperacionesreserva);
+
+
 
     return router;
 }

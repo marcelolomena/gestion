@@ -6,20 +6,27 @@ block append head
     p!= script
 block content
     #contenedor.contenedor
-      include sidebar.pug
+      //- include sidebar.pug
       .main-content
-        .swipe-area
-        a#sidebar-toggle(href='#', data-toggle='.contenedor')
-          span.bar
-          span.bar
-          span.bar
+        //- .swipe-area
+        //- a#sidebar-toggle(href='#', data-toggle='.contenedor')
+        //-   span.bar
+        //-   span.bar
+        //-   span.bar
         .content
           header.bg-theme
-            .wrap-header
-              .row
-                a(href='/menu/home1')
-                  img(src='../../../images/header.png', width='384', height='95')
-                img(src='../../../images/vacio.png', width='300', height='4', border='0')
-                //img(src='../../images/header_titulo.png', width='384', height='95', border='0')
+          .header_new
+            .cajaBuscador
+              a.hotspot(href='/menu/vista360')
+              .buscador
+                .campoRut
+                  .clock
+                  form#vista360(onsubmit='return false;')
+                    input#camponum(name='', type='text')
+                    input#btnenviar(name='', type='submit', value='')
+              .social
+                .bell
+                .persona
+            .cajaRut
           p(style='color: #f1563a')
           p!= html

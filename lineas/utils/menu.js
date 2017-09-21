@@ -13,11 +13,11 @@ module.exports = (function () {
 
                 var NeoSubMenu = function (op, uid, menu, callback) {
                     var sql_submenu = `
-											select distinct e.id,e.descripcion,e.url from art_user a
-											join sip.usr_rol b on a.uid = b.uid
-											join sip.rol c on b.rid = c.id
-											join sip.rol_func d on d.rid = c.id
-											join sip.menu e on e.id = d.mid
+											select distinct e.id,e.descripcion,e.url from lin.art_user a
+											join lin.usr_rol b on a.uid = b.uid
+											join lin.rol c on b.rid = c.id
+											join lin.rol_func d on d.rid = c.id
+											join lin.menu e on e.id = d.mid
 											where a.uid=:uid and pid=:pid and e.idsistema =:idsys 
 										  `
                     sequelize.query(sql_submenu,
@@ -46,11 +46,11 @@ module.exports = (function () {
                 var NeoMenu = function (uid, callback) {
                     var promises = []
                     var sql_menu = `
-											select distinct e.id,e.descripcion from art_user a
-											join sip.usr_rol b on a.uid = b.uid
-											join sip.rol c on b.rid = c.id
-											join sip.rol_func d on d.rid = c.id
-											join sip.menu e on e.id = d.mid
+											select distinct e.id,e.descripcion from lin.art_user a
+											join lin.usr_rol b on a.uid = b.uid
+											join lin.rol c on b.rid = c.id
+											join lin.rol_func d on d.rid = c.id
+											join lin.menu e on e.id = d.mid
 											where a.uid=:uid and pid is null and e.idsistema =:idsys
 										  `
                     co(function* () {
@@ -114,10 +114,10 @@ module.exports = (function () {
                     logger.debug("cantidad : " + _countQuestion)
                     */
                     var sqlrol = `
-                        select c.id, c.glosarol from art_user a 
-                        join sip.usr_rol b on a.uid = b.uid
-                        join sip.rol c on b.rid = c.id
-                        join sip.sistema d on b.idsistema = d.id
+                        select c.id, c.glosarol from lin.art_user a 
+                        join lin.usr_rol b on a.uid = b.uid
+                        join lin.rol c on b.rid = c.id
+                        join lin.sistema d on b.idsistema = d.id
                         where a.uid =:uid and d.id =:idsys
 	                `
 
@@ -131,12 +131,12 @@ module.exports = (function () {
 
                     //logger.debug('Usuario ------>> ' + user.uid);
                     var sql = `
-                        select a.*,c.* from art_user a 
-                        join sip.usr_rol b on a.uid = b.uid
-                        join sip.rol c on b.rid = c.id
-                        join sip.sistema d on b.idsistema = d.id
-                        join sip.rol_func e on c.id = e.rid
-                        join sip.menu f on e.mid=f.id
+                        select a.*,c.* from lin.art_user a 
+                        join lin.usr_rol b on a.uid = b.uid
+                        join lin.rol c on b.rid = c.id
+                        join lin.sistema d on b.idsistema = d.id
+                        join lin.rol_func e on c.id = e.rid
+                        join lin.menu f on e.mid=f.id
                         where a.uid =:uid and f.pid is null and f.idsistema =:idsys
 	                `
 

@@ -2,7 +2,7 @@
     "development": {
         "username": "biometria",
         "password": "biometria123",
-        "database": "art_live",
+        "database": "controldelimites",
         "host": "200.14.166.182",
         "dialect": "mssql",
         "port": "1433",
@@ -89,7 +89,7 @@
     "local2": {
         "username": "biometria",
         "password": "biometria123",
-        "database": "lineas",
+        "database": "controldelimites",
         "host": "LAPTOP-200U6LCA",
         "dialect": "mssql",
         "dialectOptions": {
@@ -123,7 +123,39 @@
     "local3": {
         "username": "biometria",
         "password": "biometria123",
-        "database": "lineas",
+        "database": "controldelimites",
+        "host": "ZRISMART02",
+        "dialect": "mssql",
+        "dialectOptions": {
+            "instanceName": "SQLEXPRESS"
+        },
+        "pool": {
+            "min": 5,
+            "max": 100,
+            "idle": 500000
+        },
+        "timezone": "-03:00"
+    },
+    "localnew": {
+        "username": "biometria",
+        "password": "biometria123",
+        "database": "art_live",
+        "host": "LAPTOP-200U6LCA",
+        "dialect": "mssql",
+        "dialectOptions": {
+            "instanceName": "SQLEXPRESS"
+        },
+        "pool": {
+            "min": 5,
+            "max": 100,
+            "idle": 500000
+        },
+        "timezone": "-03:00"
+    },
+    "localnew2": {
+        "username": "biometria",
+        "password": "biometria123",
+        "database": "art_live",
         "host": "ZRISMART02",
         "dialect": "mssql",
         "dialectOptions": {

@@ -60,11 +60,13 @@ object GenericProjectTypeService extends CustomColumns{
   def findGenericProjectTypeById(id: String): Option[GenericProjectTypes] = {
     if (!id.isEmpty()) {
       var sql = "select t.* from art_program_generic_project_type t where t.id='" + id + "'"
+      println(sql)
       DB.withConnection { implicit connection =>
         val result = SQL(sql).as(GenericProjectTypes.pTypes.singleOpt)
         result
       }
     } else {
+      println("nunca puede entrar aca")
       null
     }
   }

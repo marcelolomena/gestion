@@ -5,14 +5,21 @@ module.exports = function(sequelize, DataTypes) {
 		Id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			primaryKey: true,
-			autoIncrement: true
+			primaryKey: true
 		},
-		Plazo: {
+		TipoOperacion: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		TipoCredito: {
+		NumeroProducto: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaOtorgamiento: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaProxVenc: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
@@ -24,43 +31,35 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Tasa: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		Vencimiento: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		Curse: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},
-		Sublinea_Id: {
-			type: DataTypes.INTEGER,
-			allowNull: true
-		},
 		MontoActual: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Otorgamiento: {
+		MontoActualMLinea: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		FechaIngreso: {
+		MontoActualMNac: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		VencimientoCurse: {
+		EstadoOperacion_Id: {
+			type: DataTypes.INTEGER,
+			allowNull: true
+		},
+		NumeroOperacion: {
 			type: DataTypes.STRING,
 			allowNull: true
 		},
-		Citidoc: {
+		DescripcionProducto: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		FechaDesembolso: {
 			type: DataTypes.STRING,
 			allowNull: true
 		}
 	}, {
-		schema: 'dbo', timestamps: false, tableName: 'Operacion'
+		schema: 'scl', timestamps: false, tableName: 'Operacion'
 	});
 };

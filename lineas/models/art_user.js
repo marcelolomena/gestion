@@ -118,6 +118,6 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-      schema: 'dbo', timestamps: false, tableName: 'art_user'
+      schema: 'lin', timestamps: false, tableName: 'art_user'
     });
 };
