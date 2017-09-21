@@ -75,6 +75,48 @@ function list(req, res, entity,includes, transformer ) {
             return res.json({ error_code: 1 });
         });
 }
+function listChilds(req, res, entity, pIdName,includes, transformer ) {
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx || 'id';
+    var sord = req.query.sord || 'desc';
+    var orden = entity.name + '.' + sidx + ' ' + sord;
+    var whereClause = getFilters(filters);
+    var pFilter = {
+		field: pIdName,
+		op: "eq",
+		data: req.params.pId
+	};
+    whereClause.push(translateFilter(pFilter));
+    
+
+    entity.count({
+        where: whereClause
+    })
+        .then(function (records) {
+            var total = Math.ceil(records / rows);
+           return entity.findAll({
+                offset: parseInt(rows * (page - 1)),
+                limit: parseInt(rows),
+                // order: orden,
+                where: whereClause,
+                include: includes
+            })
+                .then(function (data) {
+                    var resultData = transformer(data);
+                    return res.json({ records: records, total: total, page: page, rows: resultData });
+                })
+                .catch(function (err) {
+                        logger.error(err.message);
+                    return res.json({ error_code: 1 });
+                })
+        })
+        .catch(function (err) {
+            logger.error(err.message);
+            return res.json({ error_code: 1 });
+        });
+}
 function listAll(req, res, entity, mapper) {
     entity.findAll()
         .then(function (rows) {
@@ -92,29 +134,33 @@ module.exports = {
     update: update,
     destroy: destroy,
     list:list,
+    listChilds:listChilds,
     listAll:listAll
 };
 
+function translateFilter(item){
+    switch (item.op) {
+        case 'eq':
+            return { [item.field]: item.data };
+        case 'cn':
+            return { [item.field]: { $like: '%' + item.data + '%' } };
+        case 'ge':
+            return { [item.field]: { $gte: item.data } };
+        case "le":
+            return { [item.field]: { $lte: item.data } };
+        case "ne":
+            return { [item.field]: { $ne: item.data } };
+    }
+}
 function getFilters(filters) {
    if (filters) {
     var jsonObj = JSON.parse(filters);
     var conditions = _.map(jsonObj.rules || [], function (item) {
-        switch (item.op) {
-            case 'eq':
-                return { [item.field]: item.data };
-            case 'cn':
-                return { [item.field]: { $like: '%' + item.data + '%' } };
-            case 'ge':
-                return { [item.field]: { $gte: item.data } };
-            case "le":
-                return { [item.field]: { $lte: item.data } };
-            case "ne":
-                return { [item.field]: { $ne: item.data } };
-        }
+        translateFilter(item);
     });
     return conditions;
 }
-return{};
+return[];
 }
 var pp = {
     'eq': '==', 'ne': '!', 'lt': '<', 'le': '<=', 'gt': '>', 'ge': '>=', 'bw': '^',

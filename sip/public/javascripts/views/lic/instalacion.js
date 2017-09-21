@@ -28,7 +28,7 @@ var instalacionGrid = {
 
         ];
 
-        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Instalaciones', 'Editar Instalación', 'Agregar Instalación', '/lic/' + tabName, viewModel, 'fabricante', '/lic/getsession', ['Administrador LIC']);
+        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Instalaciones', 'Editar Instalación', 'Agregar Instalación', loadurl, viewModel, 'fabricante', '/lic/getsession', ['Administrador LIC']);
         tabGrid.build();
     }
 };

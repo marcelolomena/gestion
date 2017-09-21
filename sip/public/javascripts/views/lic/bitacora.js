@@ -24,7 +24,7 @@ var bitacoraGrid = {
             }
         }];
 
-        var tabGrid = new zs.SimpleGrid(table,'navGridcompra' , 'Compras', 'Editar Compra', 'Agregar compra', 'lic/compra', compraModel, 'Fabricante', '/lic/getsession', ['Administrador LIC']);
+        var tabGrid = new zs.SimpleGrid(table,'navGridcompra' , 'Compras', 'Editar Compra', 'Agregar compra', loadurl, compraModel, 'Fabricante', '/lic/getsession', ['Administrador LIC']);
         tabGrid.build();
     }
 };

@@ -36,6 +36,8 @@ module.exports = function (passport) {
     router.get('/lic/moneda', monedaController.listAll);
     router.get('/lic/tipo', tipoController.listAll);
 
+    router.route('/lic/compra/:pId')
+        .get(isAuthenticated, compraController.list);
 
     router.route('/lic/compra')
         .get(isAuthenticated, compraController.list)
@@ -49,6 +51,8 @@ module.exports = function (passport) {
         .get(isAuthenticated, ajusteController.list)
         .post(isAuthenticated, ajusteController.action);
 
+        router.route('/lic/traduccion/:pId')
+        .get(isAuthenticated, traduccionController.list);
 
     router.route('/lic/traduccion')
         .get(isAuthenticated, traduccionController.list)

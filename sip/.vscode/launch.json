@@ -15,7 +15,7 @@
             "request": "launch",
             "name": "Chrome",
             "url": "http://localhost:3000",
-            "webRoot": "${workspaceRoot}/public/javascripts/views/lic"
+            "webRoot": "${workspaceRoot}\\public"
         },
         {
             "type": "node",

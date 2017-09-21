@@ -32,7 +32,7 @@ var ajusteGrid = {
         }
         ];
 
-        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Ajustes', 'Editar Ajuste', 'Agregar Ajuste', '/lic/' + tabName, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Ajustes', 'Editar Ajuste', 'Agregar Ajuste', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         tabGrid.build();
     }
 };

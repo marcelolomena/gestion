@@ -14,7 +14,7 @@ function map(req) {
 }
 
 function list(req, res) {
-    base.list(req, res, entity, [], function (data) {
+    base.listChilds(req, res, entity, 'idProducto', [], function (data) {
         return data;
     });
 }

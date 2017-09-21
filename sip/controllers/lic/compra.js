@@ -41,7 +41,7 @@ function list(req, res) {
         model: models.proveedor
     }];
 
-    base.list(req, res, entity,includes, function (data) {
+    base.listChilds(req, res, entity, 'idProducto', includes, function (data) {
         return data;
     });
 }
