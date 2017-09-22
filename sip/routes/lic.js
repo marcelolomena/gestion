@@ -55,6 +55,9 @@ module.exports = function (passport) {
         .get(isAuthenticated, planillaController.list) 
         .post(isAuthenticated, planillaController.action);
 
+    router.route('lic/exportplanilla' )
+        .get(isAuthenticated, planillaController.excel);
+
     router.route('/lic/traduccion')
         .get(isAuthenticated, traduccionController.list);
 

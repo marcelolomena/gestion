@@ -3,9 +3,9 @@
 
     var licLibrary = {
         jsonOptions: {
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json"
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json'
         },
         createJSON: function (postdata) {
             if (postdata.id === '_empty')
@@ -68,16 +68,16 @@
                 if (!_.intersection(authorizedRoles, _.map(data, function (item) {
                     return item.glosarol;
                 }))) {
-                    $("#add_" + thisId).addClass('ui-disabled');
-                    $("#edit_" + thisId).addClass('ui-disabled');
-                    $("#del_" + thisId).addClass('ui-disabled');
+                    $('#add_' + thisId).addClass('ui-disabled');
+                    $('#edit_' + thisId).addClass('ui-disabled');
+                    $('#del_' + thisId).addClass('ui-disabled');
                 }
             });
         }
         this.config = {
             url: url,
-            datatype: "json",
-            mtype: "GET",
+            datatype: 'json',
+            mtype: 'GET',
             colModel: viewModel,
             pager: '#' + pagerName,
             rowNum: 10,
@@ -89,9 +89,9 @@
             forceFit: true,
             height: 'auto',
             regional: 'es',
-            sortorder: "desc",
+            sortorder: 'desc',
             shrinkToFit: false,
-            styleUI: "Bootstrap",
+            styleUI: 'Bootstrap',
             loadComplete: this.loadComplete
         };
         this.filterOptions = {
@@ -203,9 +203,28 @@
             afterSubmit: this.deleteAfterSubmit
         };
         this.build = function () {
-            $table.jqGrid(this.config);
-            $table.jqGrid('filterToolbar', this.filterOptions);
-            $table.jqGrid('navGrid', this.config.pager, this.navParameters, this.prmEdit, this.prmAdd, this.prmDel);
+            var uno = $table.jqGrid(this.config);
+            var filtro = $table.jqGrid('filterToolbar', this.filterOptions);
+            var navegador = $table.jqGrid('navGrid', this.config.pager, this.navParameters, this.prmEdit, this.prmAdd, this.prmDel);
+        };
+        this.addExportButton = function (title, icon, url) {
+            $table.jqGrid('navButtonAdd', this.config.pager, {
+                caption: '',
+                // id: 'download_' + $(targ + '_t_' + parentRowKey).attr('id'),
+                buttonicon: icon,
+                title: title,
+                position: 'last',
+                onClickButton: function (e) {
+                    try {
+                        $table.jqGrid('excelExport', { 'url': url });
+                    } catch (e) {
+                        console.log('error: ' + e)
+                    }
+                }
+            });
+
+
+
         };
     }
 

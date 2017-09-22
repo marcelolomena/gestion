@@ -1,6 +1,7 @@
 'use strict';
 var models = require('../../models');
 var base = require('./lic-controller');
+var logger = require('../../utils/logger');
 var _ = require('lodash');
 
 var entity = models.producto;
@@ -106,8 +107,12 @@ function action(req, res) {
             return base.destroy(entity, req.body.id, res);
     }
 }
-
+function excel(req, res) {
+    logger.error(err);
+    return res.json({ error_code: 1 });
+};
 module.exports = {
     list: list,
-    action: action
+    action: action,
+    excel:excel
 }
