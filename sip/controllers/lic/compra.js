@@ -2,12 +2,15 @@
 var models = require('../../models');
 var base = require('./lic-controller');
 
-
 var entity = models.compra;
+entity.belongsTo(models.estructuracui, { foreignKey: 'idCui' });
+entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
+entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
+
 function map(req) {
     return {
         id: req.body.id || 0,
-        idProducto: req.body.idProducto,
+        idProducto: req.body.idProducto || req.params.pId,
         contrato: req.body.contrato,
         ordenCompra: req.body.ordenCompra,
         idCui: req.body.idCui,
@@ -26,26 +29,26 @@ function map(req) {
         correoComprador: req.body.correoComprador
     }
 }
+function mapper(data){
+    return data;
+}
 
-function list(req, res) {
-
-    entity.belongsTo(models.estructuracui, { foreignKey: 'idCui' });
-    entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
-    entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
-
-    var includes = [{
+var includes = [
+    {
         model: models.estructuracui
     }, {
         model: models.moneda
     }, {
         model: models.proveedor
-    }];
+    }
+];
 
-    base.listChilds(req, res, entity, 'idProducto', includes, function (data) {
-        return data;
-    });
+function listChilds(req, res) {
+    base.listChilds(req, res, entity, 'idProducto', includes, mapper);
 }
-
+function list(req, res) {
+    base.list(req, res, entity,  includes, mapper);
+}
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
@@ -57,8 +60,8 @@ function action(req, res) {
     }
 }
 
-
 module.exports = {
     list: list,
+    listChilds: listChilds,
     action: action
 };

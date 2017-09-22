@@ -20,28 +20,36 @@ var traduccionController = require('../controllers/lic/traduccion');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
-        return req.session.passport.sidebar[0].rol ? res.json(req.session.passport.sidebar[0].rol) : res.send("no session value stored in DB ");
+        return req.session.passport.sidebar[0].rol 
+            ? res.json(req.session.passport.sidebar[0].rol) 
+            : res.send("no session value stored in DB ");
     });
     router.get('/lic/clasificacion', clasificacionController.listAll);
     router.get('/lic/fabricante', fabricanteController.listAll);
     router.get('/lic/tipoInstalacion', tipoInstalacionController.listAll);
     router.get('/lic/tipoLicenciamiento', tipoLicenciamientoController.listAll);
+    router.get('/lic/proveedor', proveedorController.listAll);
+    router.get('/lic/moneda', monedaController.listAll);
+    router.get('/lic/tipo', tipoController.listAll);
+
 
     router.route('/lic/grid_inventario')
         .get(isAuthenticated, productoController.list)
         .post(isAuthenticated, productoController.action);
 
-
-    router.get('/lic/proveedor', proveedorController.listAll);
-    router.get('/lic/moneda', monedaController.listAll);
-    router.get('/lic/tipo', tipoController.listAll);
-
     router.route('/lic/compra/:pId')
-        .get(isAuthenticated, compraController.list);
+        .get(isAuthenticated, compraController.listChilds)
+        .post(isAuthenticated, compraController.action);
 
     router.route('/lic/compra')
-        .get(isAuthenticated, compraController.list)
-        .post(isAuthenticated, compraController.action);
+        .get(isAuthenticated, compraController.list);
+
+    router.route('/lic/traduccion/:pId')
+        .get(isAuthenticated, traduccionController.listChilds) 
+        .post(isAuthenticated, traduccionController.action);
+
+    router.route('/lic/traduccion')
+        .get(isAuthenticated, traduccionController.list);
 
     router.route('/lic/instalacion')
         .get(isAuthenticated, instalacionController.list)
@@ -50,13 +58,6 @@ module.exports = function (passport) {
     router.route('/lic/ajuste')
         .get(isAuthenticated, ajusteController.list)
         .post(isAuthenticated, ajusteController.action);
-
-        router.route('/lic/traduccion/:pId')
-        .get(isAuthenticated, traduccionController.list);
-
-    router.route('/lic/traduccion')
-        .get(isAuthenticated, traduccionController.list)
-        .post(isAuthenticated, traduccionController.action);
 
     return router;
 };

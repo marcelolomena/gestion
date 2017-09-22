@@ -12,6 +12,11 @@ var traduccionGrid = {
             hidden: true,
             editable: false
         }, {
+            label: 'Id Producto',
+            name: 'idProducto',
+            hidden: true,
+            editable: false
+        }, {
             label: 'Nombre',
             name: 'nombre',
             editable: true
@@ -21,7 +26,7 @@ var traduccionGrid = {
             editable: true,
             edittype: 'select',
             editoptions: {
-                dataUrl: '/lic/traduccion',
+                dataUrl: '/lic/tipo',
                 buildSelect: function (response) {
                     var rowData = $grid.getRowData($grid.getGridParam('selrow'));
                     var thissid = rowData.traduccion;

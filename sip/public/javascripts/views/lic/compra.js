@@ -16,7 +16,6 @@ var compraGrid = {
             }, {
                 label: 'Id Producto',
                 name: 'idProducto',
-                key: true,
                 hidden: true,
                 editable: false
             }, {

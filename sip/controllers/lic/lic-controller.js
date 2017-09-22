@@ -130,6 +130,7 @@ function listAll(req, res, entity, mapper) {
             });
         });
 }
+
 module.exports = {
     create: create,
     update: update,

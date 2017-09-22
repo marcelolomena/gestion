@@ -178,7 +178,7 @@
             errorTextFormat: this.editErrorTextFormat,
             beforeSubmit: this.editBeforeSubmit,
             afterSubmit: this.editAfterSubmit
-        }; 
+        };
         this.prmAdd = {
             addCaption: addCaption,
             closeAfterAdd: true,
@@ -192,7 +192,7 @@
             errorTextFormat: this.addErrorTextFormat,
             beforeSubmit: this.addBeforeSubmit,
             afterSubmit: this.addAfterSubmit
-            
+
         };
         this.prmDel = {
             mtype: 'POST',
@@ -203,8 +203,8 @@
         };
         this.build = function () {
             $table.jqGrid(this.config);
-            $table.jqGrid('filterToolbar',this.filterOptions );
-            $table.jqGrid('navGrid', this.config.pager,this.navParameters ,this.prmEdit ,this.prmAdd ,this.prmDel );
+            $table.jqGrid('filterToolbar', this.filterOptions);
+            $table.jqGrid('navGrid', this.config.pager, this.navParameters, this.prmEdit, this.prmAdd, this.prmDel);
         };
     }
 
