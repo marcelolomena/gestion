@@ -8,6 +8,7 @@ entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
 entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
 entity.belongsTo(models.tipoInstalacion, { foreignKey: 'idTipoInstalacion' });
 entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
+entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' })
 function map(req) {
     return {
         id: req.body.id || 0,
@@ -24,25 +25,51 @@ function map(req) {
     }
 }
 function mapper(data) {
-    return _.map(data, function (item) {
-        return {
-            id: item.id,
-            idFabricante: item.idFabricante,
-            nombre: item.nombre,
-            idTipoInstalacion: item.idTipoInstalacion,
-            idClasificacion: item.idClasificacion,
-            idTipoLicenciamiento: item.idTipoLicenciamiento,
-            licStock: item.licStock,
-            licOcupadas: item.licOcupadas,
-            alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
-            utilidad: item.utilidad,
-            comentarios: item.comentarios,
-            fabricante: { nombre: item.fabricante.nombre },
-            clasificacion: { nombre: item.clasificacion.nombre },
-            tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
-            tipoLicenciamiento: { nombre: item.tipoLicenciamiento.nombre }
-        };
+    var result = [];
+    _.each(data, function (item) {
+        if (item.compras) {
+            _.each(item.compras, function (sItem) {
+                result.push( {
+                    id: sItem.id,
+                    contrato: sItem.contrato,
+                    ordenCompra: sItem.ordenCompra,
+                    idCui: sItem.idCui,
+                    sap: sItem.sap,
+                    idFabricante: item.idFabricante,
+                    idProveedor: sItem.idProveedor,
+                    nombre: item.nombre,
+                    idTipoInstalacion: item.idTipoInstalacion,
+                    idClasificacion: item.idClasificacion,
+                    idTipoLicenciamiento: item.idTipoLicenciamiento,
+                    licStock: item.licStock,
+                    licOcupadas: item.licOcupadas,
+                    fechaCompra: sItem.fechaCompra,
+                    fechaExpiracion: sItem.fechaExpiracion,
+                    licCompradas: sItem.licCompradas,
+                    cantidadSoporte: sItem.cantidadSoporte,
+                    idMoneda: sItem.idMoneda,
+                    valorLicencia: sItem.valorLicencia,
+                    valorSoporte: sItem.valorSoporte,
+                    fechaRenovaSoporte: sItem.fechaRenovaSoporte,
+                    factura: sItem.factura,
+                    comprador: sItem.comprador,
+                    correoComprador: sItem.correoComprador,
+
+                    alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
+                    utilidad: item.utilidad,
+                    comentarios: item.comentarios,
+                    fabricante: { nombre: item.fabricante.nombre },
+                    clasificacion: { nombre: item.clasificacion.nombre },
+                    tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
+                    tipoLicenciamiento: { nombre: item.tipoLicenciamiento.nombre },
+                    moneda: { nombre: sItem.moneda.moneda },
+                    estructuracui: { nombre: sItem.estructuracui ? sItem.estructuracui.cui : ''},
+                    proveedor: { nombre: sItem.proveedor.razonsocial }
+                });
+            });
+        }
     });
+    return result;
 }
 var includes = [
     {
@@ -53,6 +80,17 @@ var includes = [
         model: models.tipoInstalacion
     }, {
         model: models.tipoLicenciamiento
+    }, {
+        model: models.compra,
+        include: [
+            {
+                model: models.estructuracui
+            }, {
+                model: models.moneda
+            }, {
+                model: models.proveedor
+            }
+        ]
     }
 ];
 function list(req, res) {
