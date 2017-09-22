@@ -41,7 +41,7 @@ function mapper(data) {
             clasificacion: { nombre: item.clasificacion.nombre },
             tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
             tipoLicenciamiento: { nombre: item.tipoLicenciamiento.nombre }
-        }
+        };
     });
 }
 var includes = [
@@ -55,11 +55,9 @@ var includes = [
         model: models.tipoLicenciamiento
     }
 ];
-
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
 }
-
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':

@@ -7,15 +7,18 @@ var fabricanteController = require('../controllers/lic/fabricante');
 var tipoInstalacionController = require('../controllers/lic/tipoInstalacion');
 var tipoLicenciamientoController = require('../controllers/lic/tipoLicenciamiento');
 var proveedorController = require('../controllers/lic/proveedor');
+var cuiController = require('../controllers/lic/cui');
 var monedaController = require('../controllers/lic/moneda');
 var tipoController = require('../controllers/lic/tipo');
 
 var productoController = require('../controllers/lic/producto');
 var compraController = require('../controllers/lic/compra');
-var instalacionController = require('../controllers/lic/instalacion');
-var ajusteController = require('../controllers/lic/ajuste');
 var traduccionController = require('../controllers/lic/traduccion');
 
+var planillaController = require('../controllers/lic/planilla');
+
+var instalacionController = require('../controllers/lic/instalacion');
+var ajusteController = require('../controllers/lic/ajuste');
 
 
 module.exports = function (passport) {
@@ -29,9 +32,9 @@ module.exports = function (passport) {
     router.get('/lic/tipoInstalacion', tipoInstalacionController.listAll);
     router.get('/lic/tipoLicenciamiento', tipoLicenciamientoController.listAll);
     router.get('/lic/proveedor', proveedorController.listAll);
+    router.get('/lic/cui', cuiController.listAll);
     router.get('/lic/moneda', monedaController.listAll);
     router.get('/lic/tipo', tipoController.listAll);
-
 
     router.route('/lic/grid_inventario')
         .get(isAuthenticated, productoController.list)
@@ -47,6 +50,10 @@ module.exports = function (passport) {
     router.route('/lic/traduccion/:pId')
         .get(isAuthenticated, traduccionController.listChilds) 
         .post(isAuthenticated, traduccionController.action);
+
+    router.route('/lic/planilla')
+        .get(isAuthenticated, planillaController.list) 
+        .post(isAuthenticated, planillaController.action);
 
     router.route('/lic/traduccion')
         .get(isAuthenticated, traduccionController.list);
