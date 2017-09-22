@@ -136,7 +136,7 @@
                 editable: true
             }, {
                 label: 'Moneda',
-                name: 'moneda',
+                name: 'idMoneda',
                 editable: true,
                 jsonmap: 'moneda.nombre',
                 edittype: 'select',

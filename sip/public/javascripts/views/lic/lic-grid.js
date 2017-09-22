@@ -162,7 +162,8 @@
             edit: true,
             add: true,
             del: true,
-            search: false
+            search: false,
+            view: false
         };
         this.itemTemplate = new ModelItemTemplate(viewModel);
         this.prmEdit = {

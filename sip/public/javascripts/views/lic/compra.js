@@ -74,9 +74,9 @@ var compraGrid = {
                 editable: true
             }, {
                 label: 'Moneda',
-                name: 'moneda',
+                name: 'idMoneda',
                 editable: true,
-                jsonmap:'moneda.moneda',
+                jsonmap: 'moneda.moneda',
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/moneda',
@@ -107,7 +107,12 @@ var compraGrid = {
             }
         ];
 
-        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Compras', 'Editar Compra', 'Agregar compra', loadurl , viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Compras', 'Editar Compra', 'Agregar compra', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        tabGrid.navParameters.edit = false;
+        tabGrid.navParameters.add = false;
+        tabGrid.navParameters.del = false;
+        tabGrid.navParameters.view = true;
+
         tabGrid.build();
     }
 };

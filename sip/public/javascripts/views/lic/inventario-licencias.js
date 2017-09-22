@@ -7,6 +7,10 @@
         var table = 'gridMaster';
         var tableId = '#' + table;
         var grid = new zs.SimpleGrid(table, 'pagerMaster', 'Inventario de licencias', 'Modificar Licencia', 'Agtregar Licencia', _url, _colModel, _sortname, '/lic/getsession', ['Administrador LIC']);
+        grid.navParameters.edit= false;
+        grid.navParameters.add= false;
+        grid.navParameters.del= false;
+        grid.navParameters.view= true;
         grid.config.subGrid = true;
         grid.config.subGridRowExpanded = function (divid, rowid) {
             showChildGrid(divid, rowid, tabs);
