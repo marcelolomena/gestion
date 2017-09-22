@@ -30,13 +30,13 @@ var compraGrid = {
                 label: 'CUI',
                 name: 'idCui',
                 editable: true,
-                jsonmap: 'estructuracui.razonSocial',
+                jsonmap: 'estructuracui.cui',
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/cui',
                     buildSelect: function (response) {
                         var rowData = $grid.getRowData($grid.getGridParam('selrow'));
-                        var thissid = rowData.proveedor;
+                        var thissid = rowData.idcui;
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione CUI', thissid).template;
                     }
@@ -49,7 +49,7 @@ var compraGrid = {
                 label: 'Proveedor',
                 name: 'idProveedor',
                 editable: true,
-                jsonmap: 'proveedor.razonSocial',
+                jsonmap: 'proveedor.razonsocial',
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/proveedor',
@@ -70,7 +70,7 @@ var compraGrid = {
                 editable: true
             }, {
                 label: 'Cantidad Lic. Compradas',
-                name: 'licenciasCompradas',
+                name: 'licCompradas',
                 editable: true
             }, {
                 label: 'Moneda',
