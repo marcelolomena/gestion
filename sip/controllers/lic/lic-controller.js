@@ -1,6 +1,7 @@
 'use strict';
 var models = require('../../models');
 var logger = require('../../utils/logger');
+var nodeExcel = require('excel-export');
 var _ = require('lodash');
 
 function create(entity, data, res) {
@@ -130,14 +131,44 @@ function listAll(req, res, entity, mapper) {
             });
         });
 }
+function exportList(req, res, entity, includes, transformer, cols) {
+    var page = req.query.page;
+    var rows = req.query.rows;
 
+    var filters = req.query.filters;
+    var sidx = req.query.sidx || 'id';
+    var sord = req.query.sord || 'desc';
+    var orden = entity.name + '.' + sidx + ' ' + sord;
+    var whereClause = getFilters(filters);
+
+
+    return entity.findAll({
+        where: whereClause,
+        include: includes
+    })
+        .then(function (data) {
+            var conf = {}
+            con.cols = cols;
+            conf.rows = transformer(data);
+            var result = nodeExcel.execute(conf);
+            res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+            res.setHeader("Content-Disposition", "attachment;filename=" + "preguntasolicitud_" + + Math.floor(Date.now()) + ".xlsx");
+            return res.end(result, 'binary');
+        })
+        .catch(function (err) {
+            logger.error(err.message);
+            return res.json({ error_code: 1 });
+        })
+
+}
 module.exports = {
     create: create,
     update: update,
     destroy: destroy,
     list: list,
     listChilds: listChilds,
-    listAll: listAll
+    listAll: listAll,
+    exportList: exportList
 };
 
 function translateFilter(item) {

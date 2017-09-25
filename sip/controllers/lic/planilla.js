@@ -108,8 +108,19 @@ function action(req, res) {
     }
 }
 function excel(req, res) {
-    logger.error(err);
-    return res.json({ error_code: 1 });
+   var cols = [
+        {
+            caption: 'Id',
+            type: 'string',
+            width: 30
+        },
+        {
+            caption: 'pregunta',
+            type: 'string',
+            width: 600
+        }
+    ];
+    base.exportList(req,res,entity,includes,mapper,cols);
 };
 module.exports = {
     list: list,
