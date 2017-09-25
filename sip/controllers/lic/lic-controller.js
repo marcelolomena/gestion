@@ -132,16 +132,8 @@ function listAll(req, res, entity, mapper) {
         });
 }
 function exportList(req, res, entity, includes, transformer, cols) {
-    var page = req.query.page;
-    var rows = req.query.rows;
-
     var filters = req.query.filters;
-    var sidx = req.query.sidx || 'id';
-    var sord = req.query.sord || 'desc';
-    var orden = entity.name + '.' + sidx + ' ' + sord;
     var whereClause = getFilters(filters);
-
-
     return entity.findAll({
         where: whereClause,
         include: includes

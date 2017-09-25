@@ -199,7 +199,8 @@
 
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         grid.build();
-        grid.addExportButton('Excel','glyphicon glyphicon-download-alt','/lic/exportplanilla' )
+        grid.addExportButton('Excel','glyphicon glyphicon-download-alt','/lic/exportplanilla' );
+        
     });
 
 
