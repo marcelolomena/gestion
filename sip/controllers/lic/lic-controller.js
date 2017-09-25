@@ -54,28 +54,28 @@ function list(req, res, entity, includes, transformer) {
     entity.count({
         where: whereClause
     })
-        .then(function (records) {
-            var total = Math.ceil(records / rows);
-            return entity.findAll({
-                offset: parseInt(rows * (page - 1)),
-                limit: parseInt(rows),
-                // order: orden,
-                where: whereClause,
-                include: includes
-            })
-                .then(function (data) {
-                    var resultData = transformer(data);
-                    return res.json({ records: records, total: total, page: page, rows: resultData });
-                })
-                .catch(function (err) {
-                    logger.error(err.message);
-                    return res.json({ error_code: 1 });
-                })
+    .then(function (records) {
+        var total = Math.ceil(records / rows);
+        return entity.findAll({
+            offset: parseInt(rows * (page - 1)),
+            limit: parseInt(rows),
+            // order: orden,
+            where: whereClause,
+            include: includes
         })
-        .catch(function (err) {
-            logger.error(err.message);
-            return res.json({ error_code: 1 });
-        });
+            .then(function (data) {
+                var resultData = transformer(data);
+                return res.json({ records: records, total: total, page: page, rows: resultData });
+            })
+            .catch(function (err) {
+                logger.error(err.message);
+                return res.json({ error_code: 1 });
+            })
+    })
+    .catch(function (err) {
+        logger.error(err.message);
+        return res.json({ error_code: 1 });
+    });
 }
 function listChilds(req, res, entity, pIdName, includes, transformer) {
     var page = req.query.page;
