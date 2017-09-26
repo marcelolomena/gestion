@@ -9,7 +9,11 @@ entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
 entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
 entity.belongsTo(models.tipoInstalacion, { foreignKey: 'idTipoInstalacion' });
 entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
-entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' })
+entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' }); 
+
+function date2ma (fecha){
+return fecha ? fecha.getMonth() + 1 + '-' + fecha.getFullYear(): '';
+}
 function map(req) {
     return {
         id: req.body.id || 0,
@@ -44,14 +48,14 @@ function mapper(data) {
                     idTipoLicenciamiento: item.idTipoLicenciamiento,
                     licStock: item.licStock,
                     licOcupadas: item.licOcupadas,
-                    fechaCompra: sItem.fechaCompra,
-                    fechaExpiracion: sItem.fechaExpiracion,
+                    fechaCompra: date2ma(sItem.fechaCompra),
+                    fechaExpiracion: date2ma(sItem.fechaExpiracion),
                     licCompradas: sItem.licCompradas,
                     cantidadSoporte: sItem.cantidadSoporte,
                     idMoneda: sItem.idMoneda,
                     valorLicencia: sItem.valorLicencia,
                     valorSoporte: sItem.valorSoporte,
-                    fechaRenovaSoporte: sItem.fechaRenovaSoporte,
+                    fechaRenovaSoporte:  date2ma(sItem.fechaRenovaSoporte),
                     factura: sItem.factura,
                     comprador: sItem.comprador,
                     correoComprador: sItem.correoComprador,
@@ -64,7 +68,7 @@ function mapper(data) {
                     tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
                     tipoLicenciamiento: { nombre: item.tipoLicenciamiento.nombre },
                     moneda: { nombre: sItem.moneda.moneda },
-                    estructuracui: { nombre: sItem.estructuracui ? sItem.estructuracui.cui : ''},
+                    estructuracui: { nombre: sItem.estructuracui ? sItem.estructuracui.cui + ' - ' + sItem.estructuracui.nombre : ''},
                     proveedor: { nombre: sItem.proveedor.razonsocial }
                 });
             });

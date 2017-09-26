@@ -34,13 +34,13 @@
                 editable: true,
                 width: 80, 
                 align: 'center',
-                jsonmap: 'estructuracui.cui',
+                jsonmap: 'estructuracui.nombre',
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/cui',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.idcui;
+                        var thissid = rowData.idCui;
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione CUI', thissid).template;
                     }
@@ -222,6 +222,16 @@
                 editable: false,
                 width: 140, 
                 align: 'center'
+            }, {
+                label: 'Comprador',
+                name: 'comprador',
+                editable: true,
+                align: 'left'
+            },{
+                label: 'Correo Comprador',
+                name: 'correoComprador',
+                editable: true,
+                align: 'left'
             }, {
                 label: 'Utilidad',
                 name: 'utilidad',

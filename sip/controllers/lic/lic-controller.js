@@ -122,7 +122,7 @@ function listChilds(req, res, entity, pIdName, includes, transformer) {
 function listAll(req, res, entity, mapper) {
     entity.findAll()
         .then(function (rows) {
-            return res.json(_.map(rows, mapper));
+            return res.json(_.orderBy(_.map(rows, mapper),['nombre']));
         })
         .catch(function (err) {
             logger.error(err.message);
