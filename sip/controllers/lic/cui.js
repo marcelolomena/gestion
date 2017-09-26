@@ -9,7 +9,7 @@ function listAll(req, res) {
     base.listAll(req, res, entity, function (item) {
         return {
             id: item.id,
-            nombre: item.cui
+            nombre: item.cui + ' - ' + item.nombre
         };
     });
 }
