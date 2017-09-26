@@ -19,15 +19,21 @@
             }, {
                 label: 'Contrato',
                 name: 'contrato',
-                editable: true
+                editable: true,
+                width: 80, 
+                align: 'center'
             }, {
                 label: 'O.C.',
                 name: 'ordenCompra',
-                editable: true
+                editable: true,
+                width: 80, 
+                align: 'center'
             }, {
                 label: 'CUI',
                 name: 'idCui',
                 editable: true,
+                width: 80, 
+                align: 'center',
                 jsonmap: 'estructuracui.cui',
                 edittype: 'select',
                 editoptions: {
@@ -42,11 +48,15 @@
             }, {
                 label: 'SAP',
                 name: 'sap',
-                editable: true
+                editable: true,
+                width: 80, 
+                align: 'center'
             }, {
                 label: 'Fabricante',
                 name: 'idFabricante',
                 editable: true,
+                width: 180, 
+                align: 'center',
                 jsonmap: 'fabricante.nombre',
                 edittype: 'select',
                 editoptions: {
@@ -62,6 +72,8 @@
                 label: 'Proveedor',
                 name: 'idProveedor',
                 editable: true,
+                width: 300, 
+                align: 'center',
                 jsonmap: 'proveedor.nombre',
                 edittype: 'select',
                 editoptions: {
@@ -76,11 +88,15 @@
             }, {
                 label: 'Software',
                 name: 'nombre',
-                editable: true
+                editable: true,
+                width: 200, 
+                align: 'center'
             }, {
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
                 editable: true,
+                width: 160, 
+                align: 'center',
                 jsonmap: 'tipoInstalacion.nombre',
                 edittype: 'select',
                 editoptions: {
@@ -93,9 +109,11 @@
                     }
                 }
             }, {
-                label: 'Clasificacion',
+                label: 'Clasificación',
                 name: 'idClasificacion',
                 editable: true,
+                width: 150, 
+                align: 'center',
                 jsonmap: 'clasificacion.nombre',
                 edittype: 'select',
                 editoptions: {
@@ -111,6 +129,8 @@
                 label: 'Tipo de Licenciamiento',
                 name: 'idTipoLicenciamiento',
                 editable: true,
+                width: 170, 
+                align: 'center',
                 jsonmap: 'tipoLicenciamiento.nombre',
                 edittype: 'select',
                 editoptions: {
@@ -125,19 +145,25 @@
             }, {
                 label: 'Mes/Año Compra',
                 name: 'fechaCompra',
-                editable: true
+                editable: true,
+                width: 200, 
+                align: 'center'
             }, {
-                label: 'Mes/Año Expriación',
+                label: 'Mes/Año Expiración',
                 name: 'fechaExpiracion',
                 editable: true
             }, {
-                label: 'Cantidad Lic. Compradas',
+                label: 'N° Lic Compradas',
                 name: 'licCompradas',
-                editable: true
+                editable: true,
+                width: 125, 
+                align: 'center'
             }, {
                 label: 'Moneda',
                 name: 'idMoneda',
                 editable: true,
+                width: 70, 
+                align: 'center',
                 jsonmap: 'moneda.nombre',
                 edittype: 'select',
                 editoptions: {
@@ -152,36 +178,50 @@
             }, {
                 label: 'Valor Licencias',
                 name: 'valorLicencias',
-                editable: true
+                editable: true,
+                width: 110, 
+                align: 'center'
             }, {
-                label: 'Valor Soporte',
+                label: 'Valor Soportes',
                 name: 'valorSoporte',
-                editable: true
+                editable: true,
+                width: 110, 
+                align: 'center'
             }, {
                 label: 'Fecha Renovación Soporte',
                 name: 'fechaRenovacionSoporte',
                 editable: true,
-                edittype: 'date'
+                edittype: 'date',
+                width: 125, 
+                align: 'center'
             }, {
                 label: 'Factura',
                 name: 'factura',
-                editable: true
+                editable: true,
+                width: 80, 
+                align: 'center'
             }, {
-                label: 'Cantidad Lic. Compradas',
+                label: 'N° Lic. Compradas',
                 name: 'licStock',
                 search: false,
                 formatter: 'integer',
-                editable: false
+                editable: false,
+                width: 125, 
+                align: 'center'
             }, {
-                label: 'Licencias Instaladas',
+                label: 'N° Lic. Instaladas',
                 name: 'licOcupadas',
                 search: false,
                 formatter: 'integer',
-                editable: false
+                editable: false,
+                width: 125, 
+                align: 'center'
             }, {
                 label: 'Alerta de Renovación',
                 name: 'alertaRenovacion',
-                editable: false
+                editable: false,
+                width: 140, 
+                align: 'center'
             }, {
                 label: 'Utilidad',
                 name: 'utilidad',
@@ -194,7 +234,7 @@
                 hidden: true,
                 editable: true,
                 edittype: 'textarea'
-            }
+            },
         ];
 
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
