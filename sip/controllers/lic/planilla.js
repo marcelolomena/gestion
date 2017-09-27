@@ -2,6 +2,7 @@
 var models = require('../../models');
 var base = require('./lic-controller');
 var logger = require('../../utils/logger');
+var nodeExcel = require('excel-export');
 var _ = require('lodash');
 
 var entity = models.producto;
@@ -158,18 +159,18 @@ function listxxx(req, res, entity, includes, transformer) {
 }
 function exportList(req, res, entity, includes, transformer, cols) {
     var filters = req.query.filters;
-    var whereClause = getFilters(filters);
+    var whereClause = base.getFilters(filters);
     return entity.findAll({
         where: whereClause,
         include: includes
     })
     .then(function (data) {
         var conf = {}
-        con.cols = cols;
+        conf.cols = cols;
         conf.rows = transformer(data);
         var result = nodeExcel.execute(conf);
         res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-        res.setHeader("Content-Disposition", "attachment;filename=" + "preguntasolicitud_" + + Math.floor(Date.now()) + ".xlsx");
+        res.setHeader("Content-Disposition", "attachment;filename=" + "preguntasolicitud_" + Math.floor(Date.now()) + ".xlsx");
         return res.end(result, 'binary');
     })
     .catch(function (err) {
