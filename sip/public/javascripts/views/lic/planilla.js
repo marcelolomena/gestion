@@ -55,6 +55,7 @@
                 label: 'Fabricante',
                 name: 'idFabricante',
                 editable: true,
+                stype: 'select',
                 width: 180, 
                 align: 'center',
                 jsonmap: 'fabricante.nombre',
@@ -72,6 +73,7 @@
                 label: 'Proveedor',
                 name: 'idProveedor',
                 editable: true,
+                stype: 'select',
                 width: 300, 
                 align: 'center',
                 jsonmap: 'proveedor.nombre',
@@ -95,6 +97,7 @@
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
                 editable: true,
+                stype: 'select',
                 width: 160, 
                 align: 'center',
                 jsonmap: 'tipoInstalacion.nombre',
@@ -112,6 +115,7 @@
                 label: 'Clasificación',
                 name: 'idClasificacion',
                 editable: true,
+                stype: 'select',
                 width: 150, 
                 align: 'center',
                 jsonmap: 'clasificacion.nombre',
@@ -129,6 +133,7 @@
                 label: 'Tipo de Licenciamiento',
                 name: 'idTipoLicenciamiento',
                 editable: true,
+                stype: 'select',
                 width: 170, 
                 align: 'center',
                 jsonmap: 'tipoLicenciamiento.nombre',
@@ -156,12 +161,14 @@
                 label: 'N° Lic Compradas',
                 name: 'licCompradas',
                 editable: true,
+                search: false,
                 width: 125, 
                 align: 'center'
             }, {
                 label: 'Moneda',
                 name: 'idMoneda',
                 editable: true,
+                stype: 'select',
                 width: 70, 
                 align: 'center',
                 jsonmap: 'moneda.nombre',
@@ -179,12 +186,14 @@
                 label: 'Valor Licencias',
                 name: 'valorLicencias',
                 editable: true,
+                search: false,
                 width: 110, 
                 align: 'center'
             }, {
                 label: 'Valor Soportes',
                 name: 'valorSoporte',
                 editable: true,
+                search: false,
                 width: 110, 
                 align: 'center'
             }, {
@@ -216,13 +225,30 @@
                 editable: false,
                 width: 125, 
                 align: 'center'
-            }, {
+            }, 
+            {
                 label: 'Alerta de Renovación',
                 name: 'alertaRenovacion',
                 editable: false,
+                stype: 'select',
                 width: 140, 
                 align: 'center'
-            }, {
+            },
+            // {
+            //     name: 'alertaRenovacion', label: 'Alerta de Renovación', width: 140, search: true, editable: false, stype: 'select', searchoptions: {
+            //         dataUrl: '/lic/alerta',
+            //         buildSelect: function (response) {
+            //             var data = JSON.parse(response);
+            //             var s = "<select>";
+            //             s += '<option value="0">--Escoger Alerta--</option>';
+            //             $.each(data, function (i, item) {
+            //                 s += '<option value="' + data[i].alertarenovacion + '">' + data[i].alertarenovacion + '</option>';
+            //             });
+            //             return s + "</select>";
+            //         }
+            //     }
+            // }, 
+            {
                 label: 'Comprador',
                 name: 'comprador',
                 editable: true,
