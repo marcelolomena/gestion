@@ -182,7 +182,7 @@ function getFilters(filters) {
     if (filters) {
         var jsonObj = JSON.parse(filters);
         var conditions = _.map(jsonObj.rules || [], function (item) {
-            translateFilter(item);
+            return translateFilter(item);
         });
         return conditions;
     }

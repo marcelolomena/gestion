@@ -78,8 +78,10 @@
             }, {
                 label: 'Fabricante',
                 name: 'idFabricante',
-                editable: true,
                 jsonmap: 'fabricante.nombre',
+                width: 180,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/fabricante',
@@ -89,18 +91,44 @@
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
                     }
+                }, 
+                search: true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/fabricante',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.idFabricante;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
                 }
             }, {
                 label: 'Software',
                 name: 'nombre',
+                width: 200,
+                align: 'center',
                 editable: true
             }, {
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
-                editable: true,
                 jsonmap: 'tipoInstalacion.nombre',
+                width: 160,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
+                    dataUrl: '/lic/tipoInstalacion',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.tipoInstalacion;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
+                },
+                search: true,
+                stype: 'select',
+                searchoptions: {
                     dataUrl: '/lic/tipoInstalacion',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
@@ -112,8 +140,10 @@
             }, {
                 label: 'Clasificacion',
                 name: 'idClasificacion',
-                editable: true,
                 jsonmap: 'clasificacion.nombre',
+                width: 150,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/clasificacion',
@@ -123,12 +153,25 @@
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
                     }
+                },
+                search: true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/clasificacion',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.clasificacion;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
                 }
             }, {
                 label: 'Tipo de Licenciamiento',
                 name: 'idTipoLicenciamiento',
-                editable: true,
                 jsonmap: 'tipoLicenciamiento.nombre',
+                width: 170,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/tipoLicenciamiento',
@@ -138,23 +181,39 @@
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Tipo de Licencia', thissid).template;
                     }
+                },
+                search: true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/tipoLicenciamiento',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.tipoLicenciamiento;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
                 }
             }, {
                 label: 'Cantidad Lic. Compradas',
                 name: 'licStock',
-                search: false,
+                width: 125,
+                align: 'center',
                 formatter: 'integer',
-                editable: false
+                editable: false,
+                search: false
             }, {
                 label: 'Licencias Instaladas',
                 name: 'licOcupadas',
-                search: false,
+                width: 125,
+                align: 'center',
                 formatter: 'integer',
-                editable: false
+                editable: false,
+                search: false
             }, {
                 label: 'Alerta de Renovación',
                 name: 'alertaRenovacion',
-                editable: false
+                editable: false,
+                search: false
             }, {
                 label: 'Utilidad',
                 name: 'utilidad',

@@ -11,6 +11,8 @@ entity.belongsTo(models.tipoInstalacion, { foreignKey: 'idTipoInstalacion' });
 entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
 entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' });
 
+var childEntity = models.compra;
+
 function date2ma(fecha) {
     return fecha ? fecha.getMonth() + 1 + '-' + fecha.getFullYear() : '';
 }
@@ -80,10 +82,9 @@ function mapper(data) {
                     factura: sItem.factura,
                     comprador: sItem.comprador,
                     correoComprador: sItem.correoComprador,
-
                     alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
                     utilidad: item.utilidad,
-                    comentarios: item.comentarios,
+                    
                     fabricante: { nombre: item.fabricante.nombre },
                     clasificacion: { nombre: item.clasificacion.nombre },
                     tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
@@ -132,28 +133,28 @@ function listxxx(req, res, entity, includes, transformer) {
     entity.count({
         where: whereClause
     })
-        .then(function (records) {
-            var total = Math.ceil(records / rows);
-            return entity.findAll({
-                offset: parseInt(rows * (page - 1)),
-                limit: parseInt(rows),
-                // order: orden,
-                where: whereClause,
-                include: includes
-            })
-                .then(function (data) {
-                    var resultData = transformer(data);
-                    return res.json({ records: records, total: total, page: page, rows: resultData });
-                })
-                .catch(function (err) {
-                    logger.error(err.message);
-                    return res.json({ error_code: 1 });
-                })
+    .then(function (records) {
+        var total = Math.ceil(records / rows);
+        return entity.findAll({
+            offset: parseInt(rows * (page - 1)),
+            limit: parseInt(rows),
+            // order: orden,
+            where: whereClause,
+            include: includes
         })
-        .catch(function (err) {
-            logger.error(err.message);
-            return res.json({ error_code: 1 });
-        });
+            .then(function (data) {
+                var resultData = transformer(data);
+                return res.json({ records: records, total: total, page: page, rows: resultData });
+            })
+            .catch(function (err) {
+                logger.error(err.message);
+                return res.json({ error_code: 1 });
+            })
+    })
+    .catch(function (err) {
+        logger.error(err.message);
+        return res.json({ error_code: 1 });
+    });
 }
 function exportList(req, res, entity, includes, transformer, cols) {
     var filters = req.query.filters;
@@ -162,20 +163,19 @@ function exportList(req, res, entity, includes, transformer, cols) {
         where: whereClause,
         include: includes
     })
-        .then(function (data) {
-            var conf = {}
-            con.cols = cols;
-            conf.rows = transformer(data);
-            var result = nodeExcel.execute(conf);
-            res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-            res.setHeader("Content-Disposition", "attachment;filename=" + "preguntasolicitud_" + + Math.floor(Date.now()) + ".xlsx");
-            return res.end(result, 'binary');
-        })
-        .catch(function (err) {
-            logger.error(err.message);
-            return res.json({ error_code: 1 });
-        })
-
+    .then(function (data) {
+        var conf = {}
+        con.cols = cols;
+        conf.rows = transformer(data);
+        var result = nodeExcel.execute(conf);
+        res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+        res.setHeader("Content-Disposition", "attachment;filename=" + "preguntasolicitud_" + + Math.floor(Date.now()) + ".xlsx");
+        return res.end(result, 'binary');
+    })
+    .catch(function (err) {
+        logger.error(err.message);
+        return res.json({ error_code: 1 });
+    })
 }
 function create(entity, data, res) {
     entity.create(data)
