@@ -72,7 +72,7 @@
                         return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
                     }
                 },
-                search:true,
+                search: true,
                 stype: 'select',
                 searchoptions: {
                     dataUrl: '/lic/fabricante',
@@ -100,14 +100,14 @@
                         return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
                     }
                 },
-                search:false
+                search: false
             }, {
                 label: 'Software',
                 name: 'nombre',
                 width: 200,
                 align: 'center',
                 editable: true,
-                search:true
+                search: true
             }, {
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
@@ -125,7 +125,7 @@
                         return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
                     }
                 },
-                search:true,
+                search: true,
                 stype: 'select',
                 searchoptions: {
                     dataUrl: '/lic/tipoInstalacion',
@@ -153,7 +153,7 @@
                         return new zs.SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
                     }
                 },
-                search:true,
+                search: true,
                 stype: 'select',
                 searchoptions: {
                     dataUrl: '/lic/clasificacion',
@@ -181,7 +181,7 @@
                         return new zs.SelectTemplate(data, 'Seleccione Tipo de Licencia', thissid).template;
                     }
                 },
-                search:true,
+                search: true,
                 stype: 'select',
                 searchoptions: {
                     dataUrl: '/lic/tipoLicenciamiento',
@@ -198,12 +198,12 @@
                 width: 200,
                 align: 'center',
                 editable: true,
-                search:false
+                search: false
             }, {
                 label: 'Mes/Año Expiración',
                 name: 'fechaExpiracion',
                 editable: true,
-                search:false
+                search: false
             }, {
                 label: 'N° Lic Compradas',
                 name: 'licCompradas',
@@ -228,7 +228,7 @@
                         return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
                     }
                 },
-                search:false
+                search: false
             }, {
                 label: 'Valor Licencias',
                 name: 'valorLicencias',
@@ -274,16 +274,14 @@
                 align: 'center',
                 editable: true,
                 search: false
-            },
-            {
+            }, {
                 label: 'Alerta de Renovación',
                 name: 'alertaRenovacion',
                 width: 140,
                 align: 'center',
                 editable: false,
                 search: false
-            },
-            {
+            }, {
                 label: 'Comprador',
                 name: 'comprador',
                 align: 'left',
@@ -311,12 +309,8 @@
                 search: false
             },
         ];
-
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         grid.build();
         grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
-
     });
-
-
 })(jQuery, _);
