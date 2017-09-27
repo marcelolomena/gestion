@@ -9,10 +9,10 @@ entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
 entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
 entity.belongsTo(models.tipoInstalacion, { foreignKey: 'idTipoInstalacion' });
 entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
-entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' }); 
+entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' });
 
-function date2ma (fecha){
-return fecha ? fecha.getMonth() + 1 + '-' + fecha.getFullYear(): '';
+function date2ma(fecha) {
+    return fecha ? fecha.getMonth() + 1 + '-' + fecha.getFullYear() : '';
 }
 function map(req) {
     return {
@@ -26,15 +26,36 @@ function map(req) {
         licOcupadas: req.body.licOcupadas,
         alertaRenovacion: req.body.alertaRenovacion,
         utilidad: req.body.utilidad,
-        comentarios: req.body.comentarios
-    }
+        comentarios: req.body.comentarios,
+        compra: {
+            id: req.body.id || 0,
+            idProducto: req.body.idProducto || req.params.pId,
+            contrato: req.body.contrato,
+            ordenCompra: req.body.ordenCompra,
+            idCui: req.body.idCui,
+            sap: req.body.sap,
+            idProveedor: req.body.idProveedor,
+            fechaCompra: req.body.fechaCompra,
+            fechaExpiracion: req.body.fechaExpiracion,
+            licCompradas: req.body.licCompradas,
+            canSoporte: req.body.canSoporte,
+            idMoneda: req.body.idMoneda,
+            valorLicencia: req.body.valorLicencia,
+            valorSoporte: req.body.valorSoporte,
+            fechaRenovaSoporte: req.body.fechaRenovaSoporte,
+            factura: req.body.factura,
+            comprador: req.body.comprador,
+            correoComprador: req.body.correoComprador
+        }
+    };
+
 }
 function mapper(data) {
     var result = [];
     _.each(data, function (item) {
         if (item.compras) {
             _.each(item.compras, function (sItem) {
-                result.push( {
+                result.push({
                     id: sItem.id,
                     contrato: sItem.contrato,
                     ordenCompra: sItem.ordenCompra,
@@ -55,7 +76,7 @@ function mapper(data) {
                     idMoneda: sItem.idMoneda,
                     valorLicencia: sItem.valorLicencia,
                     valorSoporte: sItem.valorSoporte,
-                    fechaRenovaSoporte:  date2ma(sItem.fechaRenovaSoporte),
+                    fechaRenovaSoporte: date2ma(sItem.fechaRenovaSoporte),
                     factura: sItem.factura,
                     comprador: sItem.comprador,
                     correoComprador: sItem.correoComprador,
@@ -68,7 +89,7 @@ function mapper(data) {
                     tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
                     tipoLicenciamiento: { nombre: item.tipoLicenciamiento.nombre },
                     moneda: { nombre: sItem.moneda.moneda },
-                    estructuracui: { nombre: sItem.estructuracui ? sItem.estructuracui.cui + ' - ' + sItem.estructuracui.nombre : ''},
+                    estructuracui: { nombre: sItem.estructuracui ? sItem.estructuracui.cui + ' - ' + sItem.estructuracui.nombre : '' },
                     proveedor: { nombre: sItem.proveedor.razonsocial }
                 });
             });
@@ -98,21 +119,116 @@ var includes = [
         ]
     }
 ];
+function listxxx(req, res, entity, includes, transformer) {
+    var page = req.query.page;
+    var rows = req.query.rows;
+
+    var filters = req.query.filters;
+    var sidx = req.query.sidx || 'id';
+    var sord = req.query.sord || 'desc';
+    var orden = entity.name + '.' + sidx + ' ' + sord;
+    var whereClause = base.getFilters(filters);
+
+    entity.count({
+        where: whereClause
+    })
+        .then(function (records) {
+            var total = Math.ceil(records / rows);
+            return entity.findAll({
+                offset: parseInt(rows * (page - 1)),
+                limit: parseInt(rows),
+                // order: orden,
+                where: whereClause,
+                include: includes
+            })
+                .then(function (data) {
+                    var resultData = transformer(data);
+                    return res.json({ records: records, total: total, page: page, rows: resultData });
+                })
+                .catch(function (err) {
+                    logger.error(err.message);
+                    return res.json({ error_code: 1 });
+                })
+        })
+        .catch(function (err) {
+            logger.error(err.message);
+            return res.json({ error_code: 1 });
+        });
+}
+function exportList(req, res, entity, includes, transformer, cols) {
+    var filters = req.query.filters;
+    var whereClause = getFilters(filters);
+    return entity.findAll({
+        where: whereClause,
+        include: includes
+    })
+        .then(function (data) {
+            var conf = {}
+            con.cols = cols;
+            conf.rows = transformer(data);
+            var result = nodeExcel.execute(conf);
+            res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+            res.setHeader("Content-Disposition", "attachment;filename=" + "preguntasolicitud_" + + Math.floor(Date.now()) + ".xlsx");
+            return res.end(result, 'binary');
+        })
+        .catch(function (err) {
+            logger.error(err.message);
+            return res.json({ error_code: 1 });
+        })
+
+}
+function create(entity, data, res) {
+    entity.create(data)
+        .then(function (created) {
+            return res.json({ error: 0, glosa: '' });
+        }).catch(function (err) {
+            logger.error(err);
+            return res.json({ error: 1, glosa: err.message });
+        });
+}
+function update(entity, data, res) {
+    entity.update(data, {
+        where: {
+            id: data.id
+        }
+    })
+        .then(function (updated) {
+            return res.json({ error: 0, glosa: '' });
+        }).catch(function (err) {
+            logger.error(err);
+            return res.json({ error: 1, glosa: err.message });
+        });
+}
+function destroy(entity, id, res) {
+    entity.destroy({
+        where: {
+            id: id
+        }
+    }).then(function (rowDeleted) {
+        if (rowDeleted === 1) {
+            logger.debug('Deleted successfully');
+        }
+        return res.json({ success: true, glosa: '' });
+    }).catch(function (err) {
+        logger.error(err);
+        return res.json({ success: false, glosa: err.message });
+    });
+}
 function list(req, res) {
-    base.list(req, res, entity, includes, mapper);
+    listxxx(req, res, entity, includes, mapper);
 }
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
-            return base.create(entity, map(req), res);
+            return create(entity, map(req), res);
         case 'edit':
-            return base.update(entity, map(req), res);
+            return update(entity, map(req), res);
         case 'del':
-            return base.destroy(entity, req.body.id, res);
+            return destroy(entity, req.body.id, res);
     }
 }
 function excel(req, res) {
-   var cols = [
+    var cols = [
         {
             caption: 'Contrato',
             type: 'int',
@@ -229,28 +345,10 @@ function excel(req, res) {
             width: 200
         },
     ];
-    base.exportList(req,res,entity,includes,mapper,cols);
-}
-
-// function alerta(req, res){
-//     models.entity.findAll({
-//         attributes: [
-//             [sequelize.fn('DISTINCT', sequelize.col('alertarenovacion')), 'alertarenovacion']
-//         ],
-//         order: 'alertarenovacion'
-//       }).then(function (alertaReno) {
-//         //iniciativas.forEach(log)
-//         console.log(alertaReno);
-//         return res.json(alertaReno);
-//       }).catch(function (err) {
-//         logger.error(err);
-//         return res.json({ error_code: 1 });
-//       });
-// }
-
+    exportList(req, res, entity, includes, mapper, cols);
+};
 module.exports = {
     list: list,
     action: action,
-    excel:excel,
-    // alerta:alerta
+    excel: excel
 }
