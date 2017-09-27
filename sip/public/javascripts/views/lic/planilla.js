@@ -19,22 +19,24 @@
             }, {
                 label: 'Contrato',
                 name: 'contrato',
+                width: 80,
+                align: 'center',
                 editable: true,
-                width: 80, 
-                align: 'center'
+                search: false
             }, {
                 label: 'O.C.',
                 name: 'ordenCompra',
+                width: 80,
+                align: 'center',
                 editable: true,
-                width: 80, 
-                align: 'center'
+                search: false
             }, {
                 label: 'CUI',
                 name: 'idCui',
-                editable: true,
-                width: 80, 
+                width: 80,
                 align: 'center',
                 jsonmap: 'estructuracui.nombre',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/cui',
@@ -44,21 +46,22 @@
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione CUI', thissid).template;
                     }
-                }
+                },
+                search: false
             }, {
                 label: 'SAP',
                 name: 'sap',
+                width: 80,
+                align: 'center',
                 editable: true,
-                width: 80, 
-                align: 'center'
+                search: false
             }, {
                 label: 'Fabricante',
                 name: 'idFabricante',
-                editable: true,
-                stype: 'select',
-                width: 180, 
-                align: 'center',
                 jsonmap: 'fabricante.nombre',
+                width: 180,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/fabricante',
@@ -68,15 +71,25 @@
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
                     }
+                },
+                search:true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/fabricante',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.fabricante;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
                 }
             }, {
                 label: 'Proveedor',
                 name: 'idProveedor',
-                editable: true,
-                stype: 'select',
-                width: 300, 
-                align: 'center',
                 jsonmap: 'proveedor.nombre',
+                width: 300,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/proveedor',
@@ -86,23 +99,35 @@
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
                     }
-                }
+                },
+                search:false
             }, {
                 label: 'Software',
                 name: 'nombre',
+                width: 200,
+                align: 'center',
                 editable: true,
-                width: 200, 
-                align: 'center'
+                search:true
             }, {
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
-                editable: true,
-                stype: 'select',
-                width: 160, 
-                align: 'center',
                 jsonmap: 'tipoInstalacion.nombre',
+                width: 160,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
+                    dataUrl: '/lic/tipoInstalacion',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.tipoInstalacion;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
+                },
+                search:true,
+                stype: 'select',
+                searchoptions: {
                     dataUrl: '/lic/tipoInstalacion',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
@@ -114,11 +139,10 @@
             }, {
                 label: 'Clasificación',
                 name: 'idClasificacion',
-                editable: true,
-                stype: 'select',
-                width: 150, 
-                align: 'center',
                 jsonmap: 'clasificacion.nombre',
+                width: 150,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/clasificacion',
@@ -128,15 +152,25 @@
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
                     }
+                },
+                search:true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/clasificacion',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.clasificacion;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
                 }
             }, {
                 label: 'Tipo de Licenciamiento',
                 name: 'idTipoLicenciamiento',
-                editable: true,
-                stype: 'select',
-                width: 170, 
-                align: 'center',
                 jsonmap: 'tipoLicenciamiento.nombre',
+                width: 170,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/tipoLicenciamiento',
@@ -146,32 +180,44 @@
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Tipo de Licencia', thissid).template;
                     }
+                },
+                search:true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/tipoLicenciamiento',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.tipoLicenciamiento;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
                 }
             }, {
                 label: 'Mes/Año Compra',
                 name: 'fechaCompra',
+                width: 200,
+                align: 'center',
                 editable: true,
-                width: 200, 
-                align: 'center'
+                search:false
             }, {
                 label: 'Mes/Año Expiración',
                 name: 'fechaExpiracion',
-                editable: true
+                editable: true,
+                search:false
             }, {
                 label: 'N° Lic Compradas',
                 name: 'licCompradas',
+                width: 125,
+                align: 'center',
                 editable: true,
-                search: false,
-                width: 125, 
-                align: 'center'
+                search: false
             }, {
                 label: 'Moneda',
                 name: 'idMoneda',
-                editable: true,
-                stype: 'select',
-                width: 70, 
-                align: 'center',
                 jsonmap: 'moneda.nombre',
+                width: 70,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/moneda',
@@ -181,102 +227,95 @@
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
                     }
-                }
+                },
+                search:false
             }, {
                 label: 'Valor Licencias',
                 name: 'valorLicencias',
+                width: 110,
+                align: 'center',
                 editable: true,
-                search: false,
-                width: 110, 
-                align: 'center'
+                search: false
             }, {
                 label: 'Valor Soportes',
                 name: 'valorSoporte',
+                width: 110,
+                align: 'center',
                 editable: true,
                 search: false,
-                width: 110, 
-                align: 'center'
             }, {
                 label: 'Fecha Renovación Soporte',
                 name: 'fechaRenovacionSoporte',
+                width: 125,
+                align: 'center',
                 editable: true,
                 edittype: 'date',
-                width: 125, 
-                align: 'center'
+                search: false
             }, {
                 label: 'Factura',
                 name: 'factura',
+                width: 80,
+                align: 'center',
                 editable: true,
-                width: 80, 
-                align: 'center'
+                search: false
             }, {
                 label: 'N° Lic. Compradas',
                 name: 'licStock',
-                search: false,
                 formatter: 'integer',
-                editable: false,
-                width: 125, 
-                align: 'center'
+                width: 125,
+                align: 'center',
+                editable: true,
+                search: false
             }, {
                 label: 'N° Lic. Instaladas',
                 name: 'licOcupadas',
-                search: false,
                 formatter: 'integer',
-                editable: false,
-                width: 125, 
-                align: 'center'
-            }, 
+                width: 125,
+                align: 'center',
+                editable: true,
+                search: false
+            },
             {
                 label: 'Alerta de Renovación',
                 name: 'alertaRenovacion',
+                width: 140,
+                align: 'center',
                 editable: false,
-                stype: 'select',
-                width: 140, 
-                align: 'center'
+                search: false
             },
-            // {
-            //     name: 'alertaRenovacion', label: 'Alerta de Renovación', width: 140, search: true, editable: false, stype: 'select', searchoptions: {
-            //         dataUrl: '/lic/alerta',
-            //         buildSelect: function (response) {
-            //             var data = JSON.parse(response);
-            //             var s = "<select>";
-            //             s += '<option value="0">--Escoger Alerta--</option>';
-            //             $.each(data, function (i, item) {
-            //                 s += '<option value="' + data[i].alertarenovacion + '">' + data[i].alertarenovacion + '</option>';
-            //             });
-            //             return s + "</select>";
-            //         }
-            //     }
-            // }, 
             {
                 label: 'Comprador',
                 name: 'comprador',
+                align: 'left',
                 editable: true,
-                align: 'left'
-            },{
+                search: false
+            }, {
                 label: 'Correo Comprador',
                 name: 'correoComprador',
+                align: 'left',
                 editable: true,
-                align: 'left'
+                search: false
             }, {
                 label: 'Utilidad',
                 name: 'utilidad',
                 hidden: true,
                 editable: true,
-                edittype: 'textarea'
+                edittype: 'textarea',
+                search: false
             }, {
                 label: 'Comentaios',
                 name: 'comentarios',
                 hidden: true,
                 editable: true,
-                edittype: 'textarea'
+                edittype: 'textarea',
+                search: false
             },
         ];
 
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         grid.build();
-        grid.addExportButton('Excel','glyphicon glyphicon-download-alt','/lic/exportplanilla' );
-        
+        grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
+
     });
 
 

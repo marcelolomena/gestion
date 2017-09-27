@@ -127,22 +127,6 @@ function excel(req, res) {
     base.exportList(req,res,entity,includes,mapper,cols);
 }
 
-// function alerta(req, res){
-//     models.entity.findAll({
-//         attributes: [
-//             [sequelize.fn('DISTINCT', sequelize.col('alertarenovacion')), 'alertarenovacion']
-//         ],
-//         order: 'alertarenovacion'
-//       }).then(function (alertaReno) {
-//         //iniciativas.forEach(log)
-//         console.log(alertaReno);
-//         return res.json(alertaReno);
-//       }).catch(function (err) {
-//         logger.error(err);
-//         return res.json({ error_code: 1 });
-//       });
-// }
-
 module.exports = {
     list: list,
     action: action,
