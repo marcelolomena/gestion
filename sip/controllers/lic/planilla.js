@@ -230,15 +230,120 @@ function action(req, res) {
 function excel(req, res) {
     var cols = [
         {
-            caption: 'Id',
-            type: 'string',
-            width: 30
+            caption: 'Contrato',
+            type: 'int',
+            width: 80
         },
         {
-            caption: 'pregunta',
+            caption: 'OrdenCompra',
+            type: 'int',
+            width: 80
+        },
+        {
+            caption: 'CUI',
+            type: 'int',
+            width: 80
+        },
+        {
+            caption: 'SAP',
+            type: 'int',
+            width: 80
+        },
+        {
+            caption: 'Fabricante',
             type: 'string',
-            width: 600
-        }
+            width: 180
+        },
+        {
+            caption: 'Proveedor',
+            type: 'string',
+            width: 300
+        },
+        {
+            caption: 'Software',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'DondeestaInstalada',
+            type: 'string',
+            width: 160
+        },
+        {
+            caption: 'Clasificacion',
+            type: 'string',
+            width: 170
+        },
+        {
+            caption: 'TipodeLicenciamiento',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'Mes/AñoCompra',
+            type: 'string',
+            width: 125
+        },
+        {
+            caption: 'Mes/AñoExpiracion',
+            type: 'string',
+            width: 70
+        },
+        {
+            caption: 'NLicenciaCompradas',
+            type: 'int',
+            width: 110
+        },
+        {
+            caption: 'Moneda',
+            type: 'string',
+            width: 110
+        },
+        {
+            caption: 'ValorLicencias',
+            type: 'string',
+            width: 125
+        },
+        {
+            caption: 'ValorSoportes',
+            type: 'string',
+            width: 80
+        },
+        {
+            caption: 'FechaRenovacion',
+            type: 'string',
+            width: 125
+        },
+        {
+            caption: 'Factura',
+            type: 'string',
+            width: 125
+        },
+        {
+            caption: 'NLicenciaCompradas',
+            type: 'int',
+            width: 100
+        },
+        {
+            caption: 'NLicenciaInstaladas',
+            type: 'int',
+            width: 100
+        },
+        {
+            caption: 'AlertaRenovacion',
+            type: 'string',
+            width: 40
+        },
+        {
+            caption: 'Comprador',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'CorreoComprador',
+            type: 'string',
+            width: 200
+        },
     ];
     exportList(req, res, entity, includes, mapper, cols);
 };
