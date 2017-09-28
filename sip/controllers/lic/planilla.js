@@ -19,11 +19,11 @@ function date2ma(fecha) {
 }
 function ma2Date(ma) {
     var kk = _.split(ma, '-');
-    return kk[1] + '-' + kk[0] + '-01';
+    return kk[0] + '-' + kk[1] + '-01';
 }
 function toDate(ma) {
     var kk = _.split(ma, '-');
-    return kk[2] + '-' + kk[1] + '-' + kk[0];
+    return kk[0] + '-' + kk[1] + '-' + kk[2];
 }
 function map(req) {
     return {
@@ -42,7 +42,7 @@ function map(req) {
             idProducto: req.body.idProducto,
             contrato: req.body.contrato,
             ordenCompra: req.body.ordenCompra,
-            idCui: req.body.idCui,
+            idCui: req.body.idCui|| null,
             sap: req.body.sap,
             idProveedor: req.body.idProveedor,
             fechaCompra: ma2Date(req.body.fechaCompra),

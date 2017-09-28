@@ -17,7 +17,7 @@
     function ModelItemTemplate(model) {
         var result = '<div id="responsive-form" class="clearfix">';
         var editables = _.filter(model, function (item) {
-            return item.editable;
+            return item.editable && !item.zsHidden;
         })
         // if (editables.length > 12) {
         //     _.each(editables, function (item, key) {
@@ -44,7 +44,7 @@
         result += '<div> {sData} {cData} </div>';
         result += '</div>';
         var hiddens = _.filter(model, function(item){
-            return !item.editable && item.hidden;
+            return item.zsHidden;
         });
         _.each(hiddens, function(item){
             result += '<div style="display: none;">{' + item.name + '}</div>';

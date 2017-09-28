@@ -14,7 +14,8 @@
             label: 'Id Producto',
             name: 'idProducto',
             hidden: true,
-            editable: false
+            editable: true,
+            zsHidden:true
         }, {
             label: 'Contrato',
             name: 'contrato',
@@ -304,8 +305,8 @@
                 size: 10,
                 maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask('0000-00', {
-                        placeholder: 'YYYY-MM'
+                    $(element).mask('0000-00-00', {
+                        placeholder: 'YYYY-MM-DD'
                     });
                 }
             },
@@ -415,6 +416,7 @@
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         grid.prmEdit.beforeSubmit = beforeSubmit;
         grid.prmAdd.beforeSubmit = beforeSubmit;
+        grid.navParameters.del = false;
         grid.build();
         grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
     });
