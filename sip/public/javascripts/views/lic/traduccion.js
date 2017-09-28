@@ -24,14 +24,16 @@ var traduccionGrid = {
         }, {
             label: 'Tipo',
             name: 'tipo',
+            jsonmap: 'tipos.nombre',
             width: 300,
+
             editable: true,
             edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/tipo',
                 buildSelect: function (response) {
                     var rowData = $grid.getRowData($grid.getGridParam('selrow'));
-                    var thissid = rowData.traduccion;
+                    var thissid = rowData.tipo;
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione Tipo', thissid).template;
                 }

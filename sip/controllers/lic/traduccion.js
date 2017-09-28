@@ -1,6 +1,7 @@
 'use strict';
 var models = require('../../models');
 var base = require('./lic-controller');
+var _ = require('lodash');
 
 var entity = models.traduccion;
 function map(req) {
@@ -12,7 +13,11 @@ function map(req) {
     }
 }
 function mapper(data) {
-    return data;
+   var result =  _.map(data,function(item){
+        item.dataValues.tipos = {nombre: item.tipo===1?'Versión':'Suite'};
+        return item;
+   });
+   return result;
 }
 
 var includes = [];
