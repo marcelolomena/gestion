@@ -89,7 +89,11 @@ exports.list = function (req, res) {
     "field": "idiniciativaprograma",
     "op": "eq",
     "data": req.params.id
-  }];
+  }, {
+        "field": "idpresupuestoiniciativa",
+        "op": "eq",
+        "data": null
+    }];
 
   utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
     if (err) {
@@ -248,20 +252,27 @@ exports.actionfp = function (req, res) {
 
   switch (action) {
     case "add":
-      models.iniciativafecha.create({
-        idpresupuestoiniciativa: req.body.parent_id,
-        tipofecha: req.body.tipofecha,
-        fecha: fecha,
-        comentario: req.body.comentario,
-        idtipofecha:req.body.idtipofecha,
-        borrado: 1
-      }).then(function (iniciativa) {
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        //logger.error(err);
-        res.json({ error_code: 1 });
+      var sql="SELECT a.id FROM sip.iniciativaprograma a "+
+        "JOIN sip.presupuestoiniciativa b ON a.id=b.idiniciativaprograma "+
+        "WHERE b.id="+req.body.parent_id;
+      sequelize.query(sql)
+        .spread(function (rows) { 
+          var idiniprog =  rows[0].id;  
+          models.iniciativafecha.create({
+            idiniciativaprograma: idiniprog,
+            idpresupuestoiniciativa: req.body.parent_id,
+            tipofecha: req.body.tipofecha,
+            fecha: fecha,
+            comentario: req.body.comentario,
+            idtipofecha:req.body.idtipofecha,
+            borrado: 1
+          }).then(function (iniciativa) {
+            res.json({ error_code: 0 });
+          }).catch(function (err) {
+            //logger.error(err);
+            res.json({ error_code: 1 });
+          });
       });
-    
       break;
     case "edit":
       models.iniciativafecha.update({
