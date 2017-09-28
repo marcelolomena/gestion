@@ -4,7 +4,7 @@ var compraGrid = {
         var tabName = 'compra';
         var tableName = tabName + '_t_' + parentRowKey;
         var table = targ + '_t_' + parentRowKey;
-        var $grid = $(table);
+        var $table = $(table);
 
         var viewModel = [
             {
@@ -21,40 +21,65 @@ var compraGrid = {
             }, {
                 label: 'Contrato',
                 name: 'contrato',
-                editable: true
+                width: 80,
+                align: 'center',
+                editable: true,
+                search: false
             }, {
                 label: 'O.C.',
                 name: 'ordenCompra',
-                editable: true
+                width: 80,
+                align: 'center',
+                editable: true,
+                search: false
             }, {
                 label: 'CUI',
                 name: 'idCui',
+                width: 80,
+                align: 'center',
                 editable: true,
                 jsonmap: 'estructuracui.cui',
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/cui',
                     buildSelect: function (response) {
-                        var rowData = $grid.getRowData($grid.getGridParam('selrow'));
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.idcui;
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione CUI', thissid).template;
                     }
-                }
+                },
+                search: false
             }, {
                 label: 'SAP',
                 name: 'sap',
-                editable: true
+                width: 80,
+                align: 'center',
+                editable: true,
+                search: false
             }, {
                 label: 'Proveedor',
                 name: 'idProveedor',
+                jsonmap: 'proveedor.nombre',
+                width: 500,
+                align: 'center',
                 editable: true,
-                jsonmap: 'proveedor.razonsocial',
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/proveedor',
                     buildSelect: function (response) {
-                        var rowData = $grid.getRowData($grid.getGridParam('selrow'));
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.proveedor;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
+                    }
+                },
+                search: true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/proveedor',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.proveedor;
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
@@ -63,47 +88,71 @@ var compraGrid = {
             }, {
                 label: 'Mes/Año Compra',
                 name: 'fechaCompra',
-                editable: true
+                width: 200,
+                align: 'center',
+                editable: true,
+                search:false
             }, {
-                label: 'Mes/Año Expriación',
+                label: 'Mes/Año Expiración',
                 name: 'fechaExpiracion',
-                editable: true
+                width: 200,
+                align: 'center',
+                editable: true,
+                search: false
             }, {
-                label: 'Cantidad Lic. Compradas',
+                label: 'N° Lic. Compradas',
                 name: 'licCompradas',
-                editable: true
+                width: 125,
+                align: 'center',
+                editable: true,
+                search: false
             }, {
                 label: 'Moneda',
                 name: 'idMoneda',
-                editable: true,
                 jsonmap: 'moneda.moneda',
+                width: 70,
+                align: 'center',
+                editable: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/moneda',
                     buildSelect: function (response) {
-                        var rowData = $grid.getRowData($grid.getGridParam('selrow'));
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.moneda;
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
                     }
-                }
+                },
+                search: false
             }, {
                 label: 'Valor Licencias',
                 name: 'valorLicencias',
-                editable: true
+                width: 110,
+                align: 'center',
+                editable: true,
+                search: false
             }, {
-                label: 'Valor Soporte',
+                label: 'Valor Soportes',
                 name: 'valorSoporte',
-                editable: true
+                width: 110,
+                align: 'center',
+                editable: true,
+                search: false,
             }, {
                 label: 'Fecha Renovación Soporte',
                 name: 'fechaRenovacionSoporte',
+                width: 125,
+                align: 'center',
                 editable: true,
-                edittype: 'date'
+                edittype: 'date',
+                search: false
             }, {
                 label: 'Factura',
                 name: 'factura',
-                editable: true
+                width: 80,
+                align: 'center',
+                editable: true,
+                search: false
             }
         ];
 
