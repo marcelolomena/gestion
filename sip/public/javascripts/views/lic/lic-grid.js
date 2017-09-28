@@ -43,6 +43,13 @@
         result += '<hr style="width:100%"/>';
         result += '<div> {sData} {cData} </div>';
         result += '</div>';
+        var hiddens = _.filter(model, function(item){
+            return !item.editable && item.hidden;
+        });
+        _.each(hiddens, function(item){
+            result += '<div style="display: none;">{' + item.name + '}</div>';
+        });
+
         this.template = result;
     }
 

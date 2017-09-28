@@ -23,7 +23,7 @@ function ma2Date(ma) {
 }
 function toDate(ma) {
     var kk = _.split(ma, '-');
-    return kk[2] + '-' + kk[2] + '-' + kk[2];
+    return kk[2] + '-' + kk[1] + '-' + kk[0];
 }
 function map(req) {
     return {
@@ -35,12 +35,11 @@ function map(req) {
         idTipoLicenciamiento: req.body.idTipoLicenciamiento,
         licStock: req.body.licStock,
         licOcupadas: req.body.licOcupadas,
-        alertaRenovacion: req.body.alertaRenovacion,
         utilidad: req.body.utilidad,
         comentarios: req.body.comentarios,
         compra: {
             id: req.body.id || 0,
-            idProducto: req.body.idProducto || req.params.pId,
+            idProducto: req.body.idProducto,
             contrato: req.body.contrato,
             ordenCompra: req.body.ordenCompra,
             idCui: req.body.idCui,
@@ -49,9 +48,9 @@ function map(req) {
             fechaCompra: ma2Date(req.body.fechaCompra),
             fechaExpiracion: ma2Date(req.body.fechaExpiracion),
             licCompradas: req.body.licCompradas,
-            canSoporte: req.body.canSoporte,
+            //canSoporte: req.body.canSoporte, //
             idMoneda: req.body.idMoneda,
-            valorLicencia: req.body.valorLicencia,
+            valorLicencia: req.body.valorLicencias,
             valorSoporte: req.body.valorSoporte,
             fechaRenovaSoporte: toDate(req.body.fechaRenovacionSoporte),
             factura: req.body.factura,
@@ -68,6 +67,7 @@ function mapper(data) {
             _.each(item.compras, function (sItem) {
                 result.push({
                     id: sItem.id,
+                    idProducto: item.id,
                     contrato: sItem.contrato,
                     ordenCompra: sItem.ordenCompra,
                     idCui: sItem.idCui,
@@ -223,29 +223,25 @@ function exportList(req, res, entity, includes, transformer, cols) {
         })
 }
 function create(entity, data, res) {
-    entity.create(data)
-        .then(function (created) {
-            data.compra.idProducto = created.id;
-            childEntity.create(data.compra)
-                .then(function (created) {
-                    return res.json({ error: 0, glosa: '' });
-                })
-                .catch(function (err) {
-                    logger.error(err);
-                    return res.json({ error: 1, glosa: err.message });
-                });
+    entity.create(data).then(function (created) {
+        data.compra.idProducto = created.id;
+        childEntity.create(data.compra).then(function (created) {
+            return res.json({ error: 0, glosa: '' });
         }).catch(function (err) {
             logger.error(err);
             return res.json({ error: 1, glosa: err.message });
         });
+    }).catch(function (err) {
+        logger.error(err);
+        return res.json({ error: 1, glosa: err.message });
+    });
 }
 function update(entity, data, res) {
-    entity.update(data, {
-        where: {
-            id: data.id
-        }
-    })
-        .then(function (updated) {
+    childEntity.update(data.compra, {
+            where: {
+                id: data.id
+            }
+        }).then(function (updated) {
             return res.json({ error: 0, glosa: '' });
         }).catch(function (err) {
             logger.error(err);
@@ -286,118 +282,95 @@ function excel(req, res) {
             caption: 'Contrato',
             type: 'int',
             width: 80
-        },
-        {
+        }, {
             caption: 'OrdenCompra',
             type: 'int',
             width: 80
-        },
-        {
+        }, {
             caption: 'CUI',
             type: 'int',
             width: 80
-        },
-        {
+        }, {
             caption: 'SAP',
             type: 'int',
             width: 80
-        },
-        {
+        }, {
             caption: 'Fabricante',
             type: 'string',
             width: 180
-        },
-        {
+        }, {
             caption: 'Proveedor',
             type: 'string',
             width: 300
-        },
-        {
+        }, {
             caption: 'Software',
             type: 'string',
             width: 200
-        },
-        {
-            caption: 'DondeestaInstalada',
+        }, {
+            caption: 'DondeEstaInstalada',
             type: 'string',
             width: 160
-        },
-        {
+        }, {
             caption: 'Clasificacion',
             type: 'string',
             width: 170
-        },
-        {
-            caption: 'TipodeLicenciamiento',
+        }, {
+            caption: 'TipoLicenciamiento',
             type: 'string',
             width: 200
-        },
-        {
+        }, {
             caption: 'Mes/AñoCompra',
             type: 'string',
             width: 125
-        },
-        {
+        }, {
             caption: 'Mes/AñoExpiracion',
             type: 'string',
             width: 70
-        },
-        {
-            caption: 'NLicenciaCompradas',
-            type: 'int',
+        }, {
+            caption: 'LicenciaCompradas',
+            type: 'string',
             width: 110
-        },
-        {
-            caption: 'soporte',
-            type: 'int',
+        }, {
+            caption: 'Soporte',
+            type: 'string',
             width: 110
-        },
-        {
+        }, {
             caption: 'Moneda',
             type: 'string',
             width: 110
-        },
-        {
+        }, {
             caption: 'ValorLicencias',
             type: 'string',
             width: 125
-        },
-        {
+        }, {
             caption: 'ValorSoportes',
             type: 'string',
             width: 80
-        },
-        {
+        }, {
             caption: 'FechaRenovacion',
             type: 'string',
             width: 125
-        },
-        {
+        }, {
             caption: 'Factura',
             type: 'string',
             width: 125
-        },
-        {
+        }, {
             caption: 'NLicenciaCompradas',
-            type: 'int',
+            type: 'string',
             width: 100
-        },
-        {
+        }, {
             caption: 'NLicenciaInstaladas',
-            type: 'int',
+            type: 'string',
             width: 100
-        },
-        {
+        }, {
             caption: 'AlertaRenovacion',
             type: 'string',
             width: 40
-        },
-        {
+        }, {
             caption: 'Comprador',
             type: 'string',
             width: 200
-        },
-        {
+        }, {
             caption: 'CorreoComprador',
             type: 'string',
             width: 200
