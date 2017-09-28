@@ -50,7 +50,7 @@
 
     function SelectTemplate(data, caption, selectedId) {
         selectedId = selectedId || 0;
-        var s = '<select><option value="0">--' + caption + '--</option>';
+        var s = '<select><option value="">--' + caption + '--</option>';
         var selected;
         _.each(data, function (item, key) {
             selected = item.id == selectedId ? '" selected>' : '">';

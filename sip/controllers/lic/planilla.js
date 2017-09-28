@@ -2,6 +2,7 @@
 var models = require('../../models');
 var base = require('./lic-controller');
 var logger = require('../../utils/logger');
+var nodeExcel = require('excel-export');
 var _ = require('lodash');
 
 var entity = models.producto;
@@ -84,7 +85,7 @@ function mapper(data) {
                     correoComprador: sItem.correoComprador,
                     alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
                     utilidad: item.utilidad,
-                    
+
                     fabricante: { nombre: item.fabricante.nombre },
                     clasificacion: { nombre: item.clasificacion.nombre },
                     tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
@@ -93,6 +94,42 @@ function mapper(data) {
                     estructuracui: { nombre: sItem.estructuracui ? sItem.estructuracui.cui + ' - ' + sItem.estructuracui.nombre : '' },
                     proveedor: { nombre: sItem.proveedor.razonsocial }
                 });
+            });
+        }
+    });
+    return result;
+}
+
+function excelMapper(data) {
+    var result = [];
+    _.each(data, function (item) {
+        if (item.compras) {
+            _.each(item.compras, function (sItem) {
+                result.push([sItem.contrato,
+                sItem.ordenCompra,
+                sItem.estructuracui ? sItem.estructuracui.cui + ' - ' + sItem.estructuracui.nombre : '',
+                sItem.sap,
+                item.fabricante.nombre,
+                sItem.proveedor.razonsocial,
+                item.nombre,
+                item.tipoInstalacion.nombre,
+                item.clasificacion.nombre,
+                item.tipoLicenciamiento.nombre,
+                date2ma(sItem.fechaCompra),
+                date2ma(sItem.fechaExpiracion),
+                sItem.licCompradas,
+                sItem.cantidadSoporte,
+                sItem.moneda.moneda,
+                sItem.valorLicencia,
+                sItem.valorSoporte,
+                date2ma(sItem.fechaRenovaSoporte),
+                sItem.factura,
+                item.licStock,
+                item.licOcupadas,
+                item.alertaRenovacion ? 'Al día' : 'Vencida',
+                sItem.comprador,
+                sItem.correoComprador]
+                );
             });
         }
     });
@@ -133,49 +170,49 @@ function listxxx(req, res, entity, includes, transformer) {
     entity.count({
         where: whereClause
     })
-    .then(function (records) {
-        var total = Math.ceil(records / rows);
-        return entity.findAll({
-            offset: parseInt(rows * (page - 1)),
-            limit: parseInt(rows),
-            // order: orden,
-            where: whereClause,
-            include: includes
+        .then(function (records) {
+            var total = Math.ceil(records / rows);
+            return entity.findAll({
+                offset: parseInt(rows * (page - 1)),
+                limit: parseInt(rows),
+                // order: orden,
+                where: whereClause,
+                include: includes
+            })
+                .then(function (data) {
+                    var resultData = transformer(data);
+                    return res.json({ records: records, total: total, page: page, rows: resultData });
+                })
+                .catch(function (err) {
+                    logger.error(err.message);
+                    return res.json({ error_code: 1 });
+                })
         })
-            .then(function (data) {
-                var resultData = transformer(data);
-                return res.json({ records: records, total: total, page: page, rows: resultData });
-            })
-            .catch(function (err) {
-                logger.error(err.message);
-                return res.json({ error_code: 1 });
-            })
-    })
-    .catch(function (err) {
-        logger.error(err.message);
-        return res.json({ error_code: 1 });
-    });
+        .catch(function (err) {
+            logger.error(err.message);
+            return res.json({ error_code: 1 });
+        });
 }
 function exportList(req, res, entity, includes, transformer, cols) {
     var filters = req.query.filters;
-    var whereClause = getFilters(filters);
+    var whereClause = base.getFilters(filters);
     return entity.findAll({
         where: whereClause,
         include: includes
     })
-    .then(function (data) {
-        var conf = {}
-        con.cols = cols;
-        conf.rows = transformer(data);
-        var result = nodeExcel.execute(conf);
-        res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-        res.setHeader("Content-Disposition", "attachment;filename=" + "preguntasolicitud_" + + Math.floor(Date.now()) + ".xlsx");
-        return res.end(result, 'binary');
-    })
-    .catch(function (err) {
-        logger.error(err.message);
-        return res.json({ error_code: 1 });
-    })
+        .then(function (data) {
+            var conf = {}
+            conf.cols = cols;
+            conf.rows = transformer(data);
+            var result = nodeExcel.execute(conf);
+            res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+            res.setHeader("Content-Disposition", "attachment;filename=" + "preguntasolicitud_" + Math.floor(Date.now()) + ".xlsx");
+            return res.end(result, 'binary');
+        })
+        .catch(function (err) {
+            logger.error(err.message);
+            return res.json({ error_code: 1 });
+        })
 }
 function create(entity, data, res) {
     entity.create(data)
@@ -295,6 +332,11 @@ function excel(req, res) {
             width: 110
         },
         {
+            caption: 'soporte',
+            type: 'int',
+            width: 110
+        },
+        {
             caption: 'Moneda',
             type: 'string',
             width: 110
@@ -345,7 +387,7 @@ function excel(req, res) {
             width: 200
         },
     ];
-    exportList(req, res, entity, includes, mapper, cols);
+    exportList(req, res, entity, includes, excelMapper, cols);
 };
 module.exports = {
     list: list,
