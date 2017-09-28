@@ -19,15 +19,27 @@
         var editables = _.filter(model, function (item) {
             return item.editable;
         })
-        _.each(editables, function (item, key) {
-            if (key + 1 % 2) {
-                result += '<div class="form-row">';
-                result += '<div class="column-half" id="d_' + item.name + '">' + item.label + '{' + item.name + '}</div>';
-            } else {
-                result += '<div class="column-half" id="d_' + item.name + '">' + item.label + '{' + item.name + '}</div>';
-                result += '</div>';
-            }
-        });
+        // if (editables.length > 12) {
+        //     _.each(editables, function (item, key) {
+        //         if (key + 1 % 4 == 1) {
+        //             result += '<div class="form-row">';
+        //         } 
+        //         result += '<div class="column-four" id="d_' + item.name + '">' + item.label + '{' + item.name + '}</div>';
+        //         if (!(key + 1 % 4) ) {
+        //             result += '</div>';
+        //         }
+        //     });
+        // } else {
+            _.each(editables, function (item, key) {
+                if (key + 1 % 2) {
+                    result += '<div class="form-row">';
+                    result += '<div class="column-half" id="d_' + item.name + '">' + item.label + '{' + item.name + '}</div>';
+                } else {
+                    result += '<div class="column-half" id="d_' + item.name + '">' + item.label + '{' + item.name + '}</div>';
+                    result += '</div>';
+                }
+            });
+        // }
         result += '<hr style="width:100%"/>';
         result += '<div> {sData} {cData} </div>';
         result += '</div>';

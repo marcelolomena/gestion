@@ -309,8 +309,7 @@
                 search: false
             },
         ];
-        function kk(postdata, formid) {
-
+        function beforeSubmit(postdata, formid) {
             if (parseInt(postdata.idFabricante) == 0) {
                 return [false, "Fabricante: Debe escoger un valor.", ""];
             } else if (parseInt(postdata.idProveedor) == 0) {
@@ -342,8 +341,8 @@
             }
         }
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
-        grid.prmEdit.beforeSubmit = kk;
-        grid.prmAdd.beforeSubmit = kk;
+        grid.prmEdit.beforeSubmit = beforeSubmit;
+        grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.build();
         grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
     });

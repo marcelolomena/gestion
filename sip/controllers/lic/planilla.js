@@ -17,6 +17,14 @@ var childEntity = models.compra;
 function date2ma(fecha) {
     return fecha ? fecha.getMonth() + 1 + '-' + fecha.getFullYear() : '';
 }
+function ma2Date(ma) {
+    var kk = _.split(ma, '-');
+    return kk[1] + '-' + kk[0] + '-01';
+}
+function toDate(ma) {
+    var kk = _.split(ma, '-');
+    return kk[2] + '-' + kk[2] + '-' + kk[2];
+}
 function map(req) {
     return {
         id: req.body.id || 0,
@@ -38,14 +46,14 @@ function map(req) {
             idCui: req.body.idCui,
             sap: req.body.sap,
             idProveedor: req.body.idProveedor,
-            fechaCompra: req.body.fechaCompra,
-            fechaExpiracion: req.body.fechaExpiracion,
+            fechaCompra: ma2Date(req.body.fechaCompra),
+            fechaExpiracion: ma2Date(req.body.fechaExpiracion),
             licCompradas: req.body.licCompradas,
             canSoporte: req.body.canSoporte,
             idMoneda: req.body.idMoneda,
             valorLicencia: req.body.valorLicencia,
             valorSoporte: req.body.valorSoporte,
-            fechaRenovaSoporte: req.body.fechaRenovaSoporte,
+            fechaRenovaSoporte: toDate(req.body.fechaRenovacionSoporte),
             factura: req.body.factura,
             comprador: req.body.comprador,
             correoComprador: req.body.correoComprador
@@ -167,7 +175,7 @@ function listxxx(req, res, entity, includes, transformer) {
     var orden = entity.name + '.' + sidx + ' ' + sord;
     var whereClause = base.getFilters(filters);
 
-    entity.count({
+    childEntity.count({
         where: whereClause
     })
         .then(function (records) {
@@ -217,7 +225,15 @@ function exportList(req, res, entity, includes, transformer, cols) {
 function create(entity, data, res) {
     entity.create(data)
         .then(function (created) {
-            return res.json({ error: 0, glosa: '' });
+            data.compra.idProducto = created.id;
+            childEntity.create(data.compra)
+                .then(function (created) {
+                    return res.json({ error: 0, glosa: '' });
+                })
+                .catch(function (err) {
+                    logger.error(err);
+                    return res.json({ error: 1, glosa: err.message });
+                });
         }).catch(function (err) {
             logger.error(err);
             return res.json({ error: 1, glosa: err.message });
