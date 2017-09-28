@@ -249,7 +249,7 @@
                 width: 125,
                 align: 'center',
                 editable: true,
-                edittype: 'date',
+                // edittype: 'date',
                 search: false
             }, {
                 label: 'Factura',
@@ -309,7 +309,41 @@
                 search: false
             },
         ];
+        function kk(postdata, formid) {
+
+            if (parseInt(postdata.idFabricante) == 0) {
+                return [false, "Fabricante: Debe escoger un valor.", ""];
+            } else if (parseInt(postdata.idProveedor) == 0) {
+                return [false, "Proveedor: Debe escoger un valor.", ""];
+            } else if (postdata.nombre.trim().length == 0) {
+                return [false, "Software: Debe ingresar un software.", ""];
+            } else if (parseInt(postdata.idTipoInstalacion) == 0) {
+                return [false, "Tipo de Instalación: Debe escoger un valor.", ""];
+            } else if (parseInt(postdata.idClasificacion) == 0) {
+                return [false, "Clasificación: Debe escoger un valor.", ""];
+            } else if (parseInt(postdata.idTipoLicenciamiento) == 0) {
+                return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
+            } else if (postdata.fechaCompra.trim().length == 0) {
+                return [false, "Mes/Año Compra: Debe ingresar una fecha.", ""];
+            } else if (postdata.fechaExpiracion.trim().length == 0) {
+                return [false, "Mes/Año Expiración: Debe escoger un valor.", ""];
+            } else if (postdata.licCompradas.trim().length == 0) {
+                return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
+            } else if (parseInt(postdata.idMoneda) == 0) {
+                return [false, "Moneda: Debe escoger un valor.", ""];
+            } else if (postdata.valorLicencias.trim().length == 0) {
+                return [false, "Valor Licencias: Debe ingresar un valor.", ""];
+            } else if (postdata.valorSoporte.trim().length == 0) {
+                return [false, "Valor Soportes: Debe ingresar un valor.", ""];
+            } else if (postdata.fechaRenovacionSoporte.trim().length == 0) {
+                return [false, "Fecha Renovación Soporte: Debe ingresar una fecha.", ""];
+            } else {
+                return [true, "", ""];
+            }
+        }
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        grid.prmEdit.beforeSubmit = kk;
+        grid.prmAdd.beforeSubmit = kk;
         grid.build();
         grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
     });
