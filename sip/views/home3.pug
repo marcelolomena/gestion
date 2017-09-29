@@ -1,10 +1,10 @@
-extends layout.pug
+extends layout3.pug
 block append head
     script var page = "#{page}"
     p!= script
 block content
     #contenedor.contenedor
-      include sidebar.pug
+      include sidebar3.pug
       .main-content
         .swipe-area
         a#sidebar-toggle(href='#', data-toggle='.contenedor')
@@ -15,7 +15,7 @@ block content
           header.bg-theme
             .wrap-header
               .row
-                a(href='lic/home')
+                a(href='/home3')
                   img(src='../../images/header.png', width='384', height='95')
                 img(src='../images/vacio.png', width='300', height='4', border='0')
                 h2(style="font-family:'robotolight', sans-serif; color: #FFFFFF; font-weight:300; text-align:center") SISTEMA DE LICENCIAS
