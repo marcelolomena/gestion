@@ -382,17 +382,17 @@
         }, ];
 
         function beforeSubmit(postdata, formid) {
-            if (parseInt(postdata.idFabricante) == 0) {
+            if (!postdata.idFabricante) {
                 return [false, "Fabricante: Debe escoger un valor.", ""];
-            } else if (parseInt(postdata.idProveedor) == 0) {
+            } else if (!postdata.idProveedor) {
                 return [false, "Proveedor: Debe escoger un valor.", ""];
             } else if (postdata.nombre.trim().length == 0) {
                 return [false, "Software: Debe ingresar un software.", ""];
-            } else if (parseInt(postdata.idTipoInstalacion) == 0) {
+            } else if (!postdata.idTipoInstalacion) {
                 return [false, "Tipo de Instalación: Debe escoger un valor.", ""];
-            } else if (parseInt(postdata.idClasificacion) == 0) {
+            } else if (!postdata.idClasificacion) {
                 return [false, "Clasificación: Debe escoger un valor.", ""];
-            } else if (parseInt(postdata.idTipoLicenciamiento) == 0) {
+            } else if (!postdata.idTipoLicenciamiento) {
                 return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
             } else if (postdata.fechaCompra.trim().length == 0) {
                 return [false, "Mes/Año Compra: Debe ingresar una fecha.", ""];
@@ -400,7 +400,7 @@
                 return [false, "Mes/Año Expiración: Debe escoger un valor.", ""];
             } else if (postdata.licCompradas.trim().length == 0) {
                 return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
-            } else if (parseInt(postdata.idMoneda) == 0) {
+            } else if (!postdata.idMoneda) {
                 return [false, "Moneda: Debe escoger un valor.", ""];
             } else if (postdata.valorLicencias.trim().length == 0) {
                 return [false, "Valor Licencias: Debe ingresar un valor.", ""];
@@ -411,7 +411,7 @@
             } else {
                 return [true, "", ""];
             }
-        }
+        };
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         grid.prmEdit.beforeSubmit = beforeSubmit;
         grid.prmAdd.beforeSubmit = beforeSubmit;
