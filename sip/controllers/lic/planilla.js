@@ -42,7 +42,7 @@ function map(req) {
             idProducto: req.body.idProducto,
             contrato: req.body.contrato,
             ordenCompra: req.body.ordenCompra,
-            idCui: req.body.idCui|| null,
+            idCui: req.body.idCui || null,
             sap: req.body.sap,
             idProveedor: req.body.idProveedor,
             fechaCompra: ma2Date(req.body.fechaCompra),
@@ -166,8 +166,8 @@ var includes = [
     }
 ];
 function listxxx(req, res, entity, includes, transformer) {
-    var page = req.query.page;
-    var rows = req.query.rows;
+    var page = parseInt(req.query.page);
+    var rows = parseInt(req.query.rows);
 
     var filters = req.query.filters;
     var sidx = req.query.sidx || 'id';
@@ -175,31 +175,23 @@ function listxxx(req, res, entity, includes, transformer) {
     var orden = entity.name + '.' + sidx + ' ' + sord;
     var whereClause = base.getFilters(filters);
 
-    childEntity.count({
-        where: whereClause
-    })
-        .then(function (records) {
-            var total = Math.ceil(records / rows);
-            return entity.findAll({
-                offset: parseInt(rows * (page - 1)),
-                limit: parseInt(rows),
-                // order: orden,
-                where: whereClause,
-                include: includes
-            })
-                .then(function (data) {
-                    var resultData = transformer(data);
-                    return res.json({ records: records, total: total, page: page, rows: resultData });
-                })
-                .catch(function (err) {
-                    logger.error(err.message);
-                    return res.json({ error_code: 1 });
-                })
-        })
-        .catch(function (err) {
-            logger.error(err.message);
-            return res.json({ error_code: 1 });
+    return entity.findAll({
+        where: whereClause,
+        include: includes
+    }).then(function (data) {
+        var resultData = transformer(data);
+        var records = resultData.length;
+        var total = Math.ceil(records / rows);
+        var ini = rows * (page - 1);
+        var fin = ini + rows;
+        var result = _.filter(resultData, function(item, index){
+            return index >= ini && index < fin;
         });
+        return res.json({ records: records, total: total, page: page, rows: result });
+    }).catch(function (err) {
+        logger.error(err.message);
+        return res.json({ error_code: 1 });
+    });
 }
 function exportList(req, res, entity, includes, transformer, cols) {
     var filters = req.query.filters;
@@ -238,15 +230,15 @@ function create(entity, data, res) {
 }
 function update(entity, data, res) {
     childEntity.update(data.compra, {
-            where: {
-                id: data.id
-            }
-        }).then(function (updated) {
-            return res.json({ error: 0, glosa: '' });
-        }).catch(function (err) {
-            logger.error(err);
-            return res.json({ error: 1, glosa: err.message });
-        });
+        where: {
+            id: data.id
+        }
+    }).then(function (updated) {
+        return res.json({ error: 0, glosa: '' });
+    }).catch(function (err) {
+        logger.error(err);
+        return res.json({ error: 1, glosa: err.message });
+    });
 }
 function destroy(entity, id, res) {
     entity.destroy({
