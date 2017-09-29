@@ -74,8 +74,8 @@
             editable: true,
             editoptions: {
                 dataInit: function (element) {
-                    $(element).mask("000000", {
-                        placeholder: "000000"
+                    $(element).mask("00000", {
+                        placeholder: "00000"
                     });
                 }
             },
@@ -178,7 +178,7 @@
             }
         }, {
             label: 'Clasificación',
-            name: 'idClasificacion',
+            name: 'idClasificación',
             jsonmap: 'clasificacion.nombre',
             width: 150,
             align: 'center',
@@ -241,7 +241,7 @@
                 }
             }
         }, {
-            label: 'Año/Mes Compra',
+            label: 'Año-Mes de Compra',
             name: 'fechaCompra',
             width: 200,
             align: 'center',
@@ -261,7 +261,7 @@
             },
             search: false
         }, {
-            label: 'Año/Mes Expiración',
+            label: 'Año-Mes de Expiración',
             name: 'fechaExpiracion',
             sortable: false,
             editable: true,
@@ -379,7 +379,7 @@
             },
             search: false
         }, {
-            label: 'N° Lic. Compradas',
+            label: 'N° Lic. Adquiridas',
             name: 'licStock',
             width: 125,
             align: 'center',
@@ -433,7 +433,7 @@
             edittype: 'textarea',
             search: false
         }, {
-            label: 'Comentaios',
+            label: 'Comentarios',
             name: 'comentarios',
             hidden: true,
             sortable: false,
@@ -450,15 +450,15 @@
             } else if (postdata.nombre.trim().length == 0) {
                 return [false, "Software: Debe ingresar un software.", ""];
             } else if (!postdata.idTipoInstalacion) {
-                return [false, "Tipo de Instalación: Debe escoger un valor.", ""];
+                return [false, "¿Donde está instalada?: Debe escoger un valor.", ""];
             } else if (!postdata.idClasificacion) {
                 return [false, "Clasificación: Debe escoger un valor.", ""];
             } else if (!postdata.idTipoLicenciamiento) {
                 return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
             } else if (postdata.fechaCompra.trim().length == 0) {
-                return [false, "Mes/Año Compra: Debe ingresar una fecha.", ""];
+                return [false, "Año/Mes Compra: Debe ingresar una fecha.", ""];
             } else if (postdata.fechaExpiracion.trim().length == 0) {
-                return [false, "Mes/Año Expiración: Debe escoger un valor.", ""];
+                return [false, "Año/Mes Expiración: Debe escoger un valor.", ""];
             } else if (postdata.licCompradas.trim().length == 0) {
                 return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
             } else if (!postdata.idMoneda) {

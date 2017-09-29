@@ -10,7 +10,7 @@
         grid.navParameters.edit = false;
         grid.navParameters.add = false;
         grid.navParameters.del = false;
-        grid.navParameters.view = true;
+        grid.navParameters.view = false;
         grid.config.subGrid = true;
         grid.config.subGridRowExpanded = function (divid, rowid) {
             showChildGrid(divid, rowid, tabs);
@@ -141,7 +141,7 @@
                     }
                 }
             }, {
-                label: 'Clasificacion',
+                label: 'Clasificación',
                 name: 'idClasificacion',
                 jsonmap: 'clasificacion.nombre',
                 width: 150,
@@ -228,7 +228,7 @@
                 editable: true,
                 edittype: 'textarea'
             }, {
-                label: 'Comentaios',
+                label: 'Comentarios',
                 name: 'comentarios',
                 hidden: true,
                 sortable: false,

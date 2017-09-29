@@ -91,7 +91,7 @@ var compraGrid = {
                     }
                 }
             }, {
-                label: 'Mes/Año Compra',
+                label: 'Año-Mes de Compra',
                 name: 'fechaCompra',
                 width: 200,
                 align: 'center',
@@ -99,7 +99,7 @@ var compraGrid = {
                 editable: true,
                 search:false
             }, {
-                label: 'Mes/Año Expiración',
+                label: 'Año-Mes de Expiración',
                 name: 'fechaExpiracion',
                 width: 200,
                 align: 'center',
@@ -173,7 +173,7 @@ var compraGrid = {
         tabGrid.navParameters.edit = false;
         tabGrid.navParameters.add = false;
         tabGrid.navParameters.del = false;
-        tabGrid.navParameters.view = true;
+        tabGrid.navParameters.view = false;
 
         tabGrid.build();
     }
