@@ -21,6 +21,7 @@
             name: 'contrato',
             width: 80,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 dataInit: function (element) {
@@ -35,6 +36,7 @@
             name: 'ordenCompra',
             width: 80,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 dataInit: function (element) {
@@ -50,6 +52,7 @@
             width: 80,
             align: 'center',
             jsonmap: 'estructuracui.nombre',
+            sortable:false,
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -67,6 +70,7 @@
             name: 'sap',
             width: 80,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 dataInit: function (element) {
@@ -111,6 +115,7 @@
             jsonmap: 'proveedor.nombre',
             width: 300,
             align: 'center',
+            sortable:false,
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -164,6 +169,7 @@
             jsonmap: 'clasificacion.nombre',
             width: 150,
             align: 'center',
+            sortable:false,
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -192,6 +198,7 @@
             jsonmap: 'tipoLicenciamiento.nombre',
             width: 170,
             align: 'center',
+            sortable:false,
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -219,6 +226,7 @@
             name: 'fechaCompra',
             width: 200,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 size: 10,
@@ -233,6 +241,7 @@
         }, {
             label: 'Año/Mes Expiración',
             name: 'fechaExpiracion',
+            sortable:false,
             editable: true,
             editoptions: {
                 size: 10,
@@ -249,6 +258,7 @@
             name: 'licCompradas',
             width: 125,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 defaultValue: '0'
@@ -261,6 +271,7 @@
             jsonmap: 'moneda.nombre',
             width: 70,
             align: 'center',
+            sortable:false,
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -278,6 +289,7 @@
             name: 'valorLicencias',
             width: 110,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 defaultValue: '0'
@@ -289,6 +301,7 @@
             name: 'valorSoporte',
             width: 110,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 defaultValue: '0'
@@ -300,6 +313,7 @@
             name: 'fechaRenovacionSoporte',
             width: 125,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 size: 10,
@@ -316,6 +330,7 @@
             name: 'factura',
             width: 80,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 dataInit: function (element) {
@@ -330,6 +345,7 @@
             name: 'licStock',
             width: 125,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 defaultValue: '0'
@@ -341,6 +357,7 @@
             name: 'licOcupadas',
             width: 125,
             align: 'center',
+            sortable:false,
             editable: true,
             editoptions: {
                 defaultValue: '0'
@@ -352,24 +369,28 @@
             name: 'alertaRenovacion',
             width: 140,
             align: 'center',
+            sortable:false,
             editable: false,
             search: false
         }, {
             label: 'Comprador',
             name: 'comprador',
             align: 'left',
+            sortable:false,
             editable: true,
             search: false
         }, {
             label: 'Correo Comprador',
             name: 'correoComprador',
             align: 'left',
+            sortable:false,
             editable: true,
             search: false
         }, {
             label: 'Utilidad',
             name: 'utilidad',
             hidden: true,
+            sortable:false,
             editable: true,
             edittype: 'textarea',
             search: false
@@ -377,6 +398,7 @@
             label: 'Comentaios',
             name: 'comentarios',
             hidden: true,
+            sortable:false,
             editable: true,
             edittype: 'textarea',
             search: false

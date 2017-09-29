@@ -7,10 +7,10 @@
         var table = 'gridMaster';
         var tableId = '#' + table;
         var grid = new zs.SimpleGrid(table, 'pagerMaster', 'Inventario de licencias', 'Modificar Licencia', 'Agtregar Licencia', _url, _colModel, _sortname, '/lic/getsession', ['Administrador LIC']);
-        grid.navParameters.edit= false;
-        grid.navParameters.add= false;
-        grid.navParameters.del= false;
-        grid.navParameters.view= true;
+        grid.navParameters.edit = false;
+        grid.navParameters.add = false;
+        grid.navParameters.del = false;
+        grid.navParameters.view = true;
         grid.config.subGrid = true;
         grid.config.subGridRowExpanded = function (divid, rowid) {
             showChildGrid(divid, rowid, tabs);
@@ -81,6 +81,7 @@
                 jsonmap: 'fabricante.nombre',
                 width: 180,
                 align: 'center',
+                sortable: false,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
@@ -91,7 +92,7 @@
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
                     }
-                }, 
+                },
                 search: true,
                 stype: 'select',
                 searchoptions: {
@@ -108,6 +109,7 @@
                 name: 'nombre',
                 width: 200,
                 align: 'center',
+                sortable: false,
                 editable: true
             }, {
                 label: '¿Donde está instalada?',
@@ -115,6 +117,7 @@
                 jsonmap: 'tipoInstalacion.nombre',
                 width: 160,
                 align: 'center',
+                sortable: false,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
@@ -143,6 +146,7 @@
                 jsonmap: 'clasificacion.nombre',
                 width: 150,
                 align: 'center',
+                sortable: false,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
@@ -171,6 +175,7 @@
                 jsonmap: 'tipoLicenciamiento.nombre',
                 width: 170,
                 align: 'center',
+                sortable: false,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
@@ -212,18 +217,21 @@
             }, {
                 label: 'Alerta de Renovación',
                 name: 'alertaRenovacion',
+                sortable: false,
                 editable: false,
                 search: false
             }, {
                 label: 'Utilidad',
                 name: 'utilidad',
                 hidden: true,
+                sortable: false,
                 editable: true,
                 edittype: 'textarea'
             }, {
                 label: 'Comentaios',
                 name: 'comentarios',
                 hidden: true,
+                sortable: false,
                 editable: true,
                 edittype: 'textarea'
             }

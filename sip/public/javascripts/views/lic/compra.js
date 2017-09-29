@@ -23,6 +23,7 @@ var compraGrid = {
                 name: 'contrato',
                 width: 80,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 search: false
             }, {
@@ -30,6 +31,7 @@ var compraGrid = {
                 name: 'ordenCompra',
                 width: 80,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 search: false
             }, {
@@ -37,6 +39,7 @@ var compraGrid = {
                 name: 'idCui',
                 width: 80,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 jsonmap: 'estructuracui.cui',
                 edittype: 'select',
@@ -55,6 +58,7 @@ var compraGrid = {
                 name: 'sap',
                 width: 80,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 search: false
             }, {
@@ -63,6 +67,7 @@ var compraGrid = {
                 jsonmap: 'proveedor.nombre',
                 width: 500,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
@@ -90,6 +95,7 @@ var compraGrid = {
                 name: 'fechaCompra',
                 width: 200,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 search:false
             }, {
@@ -97,6 +103,7 @@ var compraGrid = {
                 name: 'fechaExpiracion',
                 width: 200,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 search: false
             }, {
@@ -104,6 +111,7 @@ var compraGrid = {
                 name: 'licCompradas',
                 width: 125,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 search: false
             }, {
@@ -112,6 +120,7 @@ var compraGrid = {
                 jsonmap: 'moneda.moneda',
                 width: 70,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
@@ -129,6 +138,7 @@ var compraGrid = {
                 name: 'valorLicencias',
                 width: 110,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 search: false
             }, {
@@ -136,6 +146,7 @@ var compraGrid = {
                 name: 'valorSoporte',
                 width: 110,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 search: false,
             }, {
@@ -143,6 +154,7 @@ var compraGrid = {
                 name: 'fechaRenovacionSoporte',
                 width: 125,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 edittype: 'date',
                 search: false
@@ -151,6 +163,7 @@ var compraGrid = {
                 name: 'factura',
                 width: 80,
                 align: 'center',
+                sortable:false,
                 editable: true,
                 search: false
             }
