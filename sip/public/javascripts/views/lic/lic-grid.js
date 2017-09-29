@@ -14,32 +14,31 @@
         }
     };
 
+    function DecoraleLabel(item){
+        if(item.editrules && item.editrules.required){
+            return item.label + '<span style="color:red">*</span>';
+        } else{
+            return item.label;
+        }
+
+    }
+
     function ModelItemTemplate(model) {
         var result = '<div id="responsive-form" class="clearfix">';
         var editables = _.filter(model, function (item) {
             return item.editable && !item.zsHidden;
         })
-        // if (editables.length > 12) {
-        //     _.each(editables, function (item, key) {
-        //         if (key + 1 % 4 == 1) {
-        //             result += '<div class="form-row">';
-        //         } 
-        //         result += '<div class="column-four" id="d_' + item.name + '">' + item.label + '{' + item.name + '}</div>';
-        //         if (!(key + 1 % 4) ) {
-        //             result += '</div>';
-        //         }
-        //     });
-        // } else {
+        var req = '<span style="color:red">*</span>';
+
             _.each(editables, function (item, key) {
                 if (key + 1 % 2) {
                     result += '<div class="form-row">';
-                    result += '<div class="column-half" id="d_' + item.name + '">' + item.label + '{' + item.name + '}</div>';
+                    result += '<div class="column-half" id="d_' + item.name + '">' + DecoraleLabel(item)  + '{' + item.name + '}</div>';
                 } else {
-                    result += '<div class="column-half" id="d_' + item.name + '">' + item.label + '{' + item.name + '}</div>';
+                    result += '<div class="column-half" id="d_' + item.name + '">' + DecoraleLabel(item) + '{' + item.name + '}</div>';
                     result += '</div>';
                 }
             });
-        // }
         result += '<hr style="width:100%"/>';
         result += '<div> {sData} {cData} </div>';
         result += '</div>';

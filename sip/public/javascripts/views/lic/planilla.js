@@ -15,13 +15,13 @@
             name: 'idProducto',
             hidden: true,
             editable: true,
-            zsHidden:true
+            zsHidden: true
         }, {
             label: 'Contrato',
             name: 'contrato',
             width: 80,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             editoptions: {
                 dataInit: function (element) {
@@ -36,7 +36,7 @@
             name: 'ordenCompra',
             width: 80,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             editoptions: {
                 dataInit: function (element) {
@@ -52,7 +52,7 @@
             width: 80,
             align: 'center',
             jsonmap: 'estructuracui.nombre',
-            sortable:false,
+            sortable: false,
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -70,7 +70,7 @@
             name: 'sap',
             width: 80,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             editoptions: {
                 dataInit: function (element) {
@@ -98,6 +98,9 @@
                     return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
                 }
             },
+            editrules: {
+                required: true
+            },
             search: true,
             stype: 'select',
             searchoptions: {
@@ -115,7 +118,7 @@
             jsonmap: 'proveedor.nombre',
             width: 300,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -127,6 +130,9 @@
                     return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
                 }
             },
+            editrules: {
+                required: true
+            },
             search: false
         }, {
             label: 'Software',
@@ -134,6 +140,9 @@
             width: 200,
             align: 'center',
             editable: true,
+            editrules: {
+                required: true
+            },
             search: true
         }, {
             label: '¿Donde está instalada?',
@@ -152,6 +161,10 @@
                     return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
                 }
             },
+            editrules: {
+                required: true
+            },
+            
             search: true,
             stype: 'select',
             searchoptions: {
@@ -169,7 +182,7 @@
             jsonmap: 'clasificacion.nombre',
             width: 150,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -180,6 +193,9 @@
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
                 }
+            },
+            editrules: {
+                required: true
             },
             search: true,
             stype: 'select',
@@ -198,7 +214,7 @@
             jsonmap: 'tipoLicenciamiento.nombre',
             width: 170,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -209,6 +225,9 @@
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione Tipo de Licencia', thissid).template;
                 }
+            },
+            editrules: {
+                required: true
             },
             search: true,
             stype: 'select',
@@ -226,7 +245,7 @@
             name: 'fechaCompra',
             width: 200,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             editoptions: {
                 size: 10,
@@ -237,11 +256,14 @@
                     });
                 }
             },
+            editrules: {
+                required: true
+            },
             search: false
         }, {
             label: 'Año/Mes Expiración',
             name: 'fechaExpiracion',
-            sortable:false,
+            sortable: false,
             editable: true,
             editoptions: {
                 size: 10,
@@ -251,6 +273,9 @@
                         placeholder: 'YYYY-MM'
                     });
                 }
+            },
+            editrules: {
+                required: true
             },
             search: false
         }, {
@@ -258,12 +283,16 @@
             name: 'licCompradas',
             width: 125,
             align: 'center',
-            sortable:false,
+            formatter: 'integer',
+            sortable: false,
             editable: true,
             editoptions: {
                 defaultValue: '0'
             },
-            formatter: 'integer',
+            editrules: {
+                required: true
+            },
+            
             search: false
         }, {
             label: 'Moneda',
@@ -271,7 +300,7 @@
             jsonmap: 'moneda.nombre',
             width: 70,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             edittype: 'select',
             editoptions: {
@@ -283,13 +312,16 @@
                     return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
                 }
             },
+            editoptions: {
+                defaultValue: '0'
+            },
             search: false
         }, {
             label: 'Valor Licencias',
             name: 'valorLicencias',
             width: 110,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             editoptions: {
                 defaultValue: '0'
@@ -301,8 +333,11 @@
             name: 'valorSoporte',
             width: 110,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
+            editoptions: {
+                defaultValue: '0'
+            },
             editoptions: {
                 defaultValue: '0'
             },
@@ -313,7 +348,7 @@
             name: 'fechaRenovacionSoporte',
             width: 125,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             editoptions: {
                 size: 10,
@@ -324,13 +359,16 @@
                     });
                 }
             },
+            editoptions: {
+                defaultValue: '0'
+            },
             search: false
         }, {
             label: 'Factura',
             name: 'factura',
             width: 80,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             editoptions: {
                 dataInit: function (element) {
@@ -345,7 +383,7 @@
             name: 'licStock',
             width: 125,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             editoptions: {
                 defaultValue: '0'
@@ -357,7 +395,7 @@
             name: 'licOcupadas',
             width: 125,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: true,
             editoptions: {
                 defaultValue: '0'
@@ -369,28 +407,28 @@
             name: 'alertaRenovacion',
             width: 140,
             align: 'center',
-            sortable:false,
+            sortable: false,
             editable: false,
             search: false
         }, {
             label: 'Comprador',
             name: 'comprador',
             align: 'left',
-            sortable:false,
+            sortable: false,
             editable: true,
             search: false
         }, {
             label: 'Correo Comprador',
             name: 'correoComprador',
             align: 'left',
-            sortable:false,
+            sortable: false,
             editable: true,
             search: false
         }, {
             label: 'Utilidad',
             name: 'utilidad',
             hidden: true,
-            sortable:false,
+            sortable: false,
             editable: true,
             edittype: 'textarea',
             search: false
@@ -398,11 +436,11 @@
             label: 'Comentaios',
             name: 'comentarios',
             hidden: true,
-            sortable:false,
+            sortable: false,
             editable: true,
             edittype: 'textarea',
             search: false
-        }, ];
+        },];
 
         function beforeSubmit(postdata, formid) {
             if (!postdata.idFabricante) {
