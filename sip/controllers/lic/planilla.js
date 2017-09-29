@@ -136,7 +136,9 @@ function excelMapper(data) {
                 item.licOcupadas,
                 item.alertaRenovacion ? 'Al día' : 'Vencida',
                 sItem.comprador,
-                sItem.correoComprador]
+                sItem.correoComprador,
+                item.utilidad,
+                item.comentarios]
                 );
             });
         }
@@ -367,6 +369,16 @@ function excel(req, res) {
             type: 'string',
             width: 200
         },
+        {
+            caption: 'Utilidad',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'Comentarios',
+            type: 'string',
+            width: 200
+        }
     ];
     exportList(req, res, entity, includes, excelMapper, cols);
 };
