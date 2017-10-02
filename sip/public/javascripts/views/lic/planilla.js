@@ -338,7 +338,7 @@
                 search: false,
             }, {
                 label: 'Fecha Renovación Soporte',
-                name: 'fechaRenovacionSoporte',
+                name: 'fechaRenovaSoporte',
                 width: 125,
                 align: 'center',
                 sortable: false,

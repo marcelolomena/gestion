@@ -13,9 +13,12 @@ entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento'
 entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' });
 
 var childEntity = models.compra;
+function getMonth(date) {
+    return date.getMonth() + 1;
+}   
 
 function date2ma(fecha) {
-    return fecha ? fecha.getMonth() + 1 + '-' + fecha.getFullYear() : '';
+    return fecha ? fecha.getFullYear() + '-' + getMonth(fecha) : '';
 }
 function ma2Date(ma) {
     var kk = _.split(ma, '-');
@@ -24,6 +27,10 @@ function ma2Date(ma) {
 function toDate(ma) {
     var kk = _.split(ma, '-');
     return kk[0] + '-' + kk[1] + '-' + kk[2];
+}
+
+function fromDate(fecha){
+    return fecha ? fecha.getFullYear() + '-' + getMonth(fecha) + '-' + fecha.getUTCDate() : '';
 }
 function map(req) {
     return {
@@ -48,7 +55,6 @@ function map(req) {
             fechaCompra: ma2Date(req.body.fechaCompra),
             fechaExpiracion: ma2Date(req.body.fechaExpiracion),
             licCompradas: req.body.licCompradas,
-            //canSoporte: req.body.canSoporte, //
             idMoneda: req.body.idMoneda,
             valorLicencia: req.body.valorLicencias,
             valorSoporte: req.body.valorSoporte,
@@ -87,7 +93,7 @@ function mapper(data) {
                     idMoneda: sItem.idMoneda,
                     valorLicencia: sItem.valorLicencia,
                     valorSoporte: sItem.valorSoporte,
-                    fechaRenovaSoporte: date2ma(sItem.fechaRenovaSoporte),
+                    fechaRenovaSoporte: fromDate(sItem.fechaRenovaSoporte),
                     factura: sItem.factura,
                     comprador: sItem.comprador,
                     correoComprador: sItem.correoComprador,
@@ -130,7 +136,7 @@ function excelMapper(data) {
                 sItem.moneda.moneda,
                 sItem.valorLicencia,
                 sItem.valorSoporte,
-                date2ma(sItem.fechaRenovaSoporte),
+                fromDate(sItem.fechaRenovaSoporte),
                 sItem.factura,
                 item.licStock,
                 item.licOcupadas,
@@ -186,7 +192,7 @@ function listxxx(req, res, entity, includes, transformer) {
         var total = Math.ceil(records / rows);
         var ini = rows * (page - 1);
         var fin = ini + rows;
-        var result = _.filter(resultData, function(item, index){
+        var result = _.filter(resultData, function (item, index) {
             return index >= ini && index < fin;
         });
         return res.json({ records: records, total: total, page: page, rows: result });
