@@ -102,9 +102,9 @@ function excelMapper(data) {
         if (item.compras) {
             _.each(item.compras, function (sItem) {
                 result.push([sItem.contrato,
-                sItem.ordenCompra,
+                sItem.ordenCompra || '',
                 sItem.estructuracui ? sItem.estructuracui.cui + ' - ' + sItem.estructuracui.nombre : '',
-                sItem.sap,
+                sItem.sap || '',
                 item.fabricante.nombre,
                 sItem.proveedor.razonsocial,
                 item.nombre,
@@ -113,20 +113,20 @@ function excelMapper(data) {
                 item.tipoLicenciamiento.nombre,
                 base.fromDate(sItem.fechaCompra),
                 base.fromDate(sItem.fechaExpiracion),
-                sItem.licCompradas,
-                sItem.cantidadSoporte,
+                sItem.licCompradas || 0,
+                sItem.cantidadSoporte || 0,
                 sItem.moneda.moneda,
-                sItem.valorLicencia,
-                sItem.valorSoporte,
+                sItem.valorLicencia || 0,
+                sItem.valorSoporte || 0,
                 base.fromDate(sItem.fechaRenovaSoporte),
-                sItem.factura,
-                item.licStock,
-                item.licOcupadas,
+                sItem.factura || '',
+                item.licStock || 0,
+                item.licOcupadas || 0,
                 item.alertaRenovacion ? 'Al día' : 'Vencida',
-                sItem.comprador,
-                sItem.correoComprador,
-                item.utilidad,
-                item.comentarios]
+                sItem.comprador || '',
+                sItem.correoComprador || '',
+                item.utilidad || '',
+                item.comentarios || '']
                 );
             });
         }
@@ -155,16 +155,12 @@ var includes = [
         ]
     }
 ];
+
 function listxxx(req, res, entity, includes, transformer) {
     var page = parseInt(req.query.page);
     var rows = parseInt(req.query.rows);
-
-    var filters = req.query.filters;
-    var sidx = req.query.sidx || 'id';
-    var sord = req.query.sord || 'desc';
-    //var orden = entity.name + '.' + sidx + ' ' + sord;
-    var orden = [[sidx, sord]];
-    var whereClause = base.getFilters(filters);
+    var orden = [[req.query.sidx || 'id', req.query.sord || 'desc']];
+    var whereClause = base.getFilters(req.query.filters);
 
     return entity.findAll({
         where: whereClause,
@@ -198,7 +194,7 @@ function exportList(req, res, entity, includes, transformer, cols) {
             conf.rows = transformer(data);
             var result = nodeExcel.execute(conf);
             res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-            res.setHeader("Content-Disposition", "attachment;filename=" + "preguntasolicitud_" + Math.floor(Date.now()) + ".xlsx");
+            res.setHeader("Content-Disposition", "attachment;filename=" + "InventarioLicencias_" + Math.floor(Date.now()) + ".xlsx");
             return res.end(result, 'binary');
         })
         .catch(function (err) {
@@ -264,19 +260,19 @@ function excel(req, res) {
     var cols = [
         {
             caption: 'Contrato',
-            type: 'int',
+            type: 'string',
             width: 80
         }, {
             caption: 'OrdenCompra',
-            type: 'int',
+            type: 'string',
             width: 80
         }, {
             caption: 'CUI',
-            type: 'int',
+            type: 'string',
             width: 80
         }, {
             caption: 'SAP',
-            type: 'int',
+            type: 'string',
             width: 80
         }, {
             caption: 'Fabricante',
@@ -303,11 +299,11 @@ function excel(req, res) {
             type: 'string',
             width: 200
         }, {
-            caption: 'Mes/AñoCompra',
+            caption: 'FechaCompra',
             type: 'string',
             width: 125
         }, {
-            caption: 'Mes/AñoExpiracion',
+            caption: 'FechaExpiracion',
             type: 'string',
             width: 70
         }, {
