@@ -153,6 +153,23 @@ function exportList(req, res, entity, includes, transformer, cols) {
         })
 
 }
+
+
+function getMonth(date) {
+    return _.padStart(date.getMonth() + 1,2,'0');
+}   
+
+function toDate(ma) {
+    if (!ma) {
+        return null;
+    }
+    var kk = _.split(ma, '-');
+    return new Date(Date.UTC(parseInt(kk[2]), parseInt(kk[1])-1, parseInt(kk[0])));
+}
+function fromDate(fecha){
+    return fecha ? _.padStart(fecha.getUTCDate(),2,'0') + '-' + getMonth(fecha) + '-' + fecha.getFullYear() : '';
+}
+
 module.exports = {
     create: create,
     update: update,
@@ -161,7 +178,9 @@ module.exports = {
     listChilds: listChilds,
     listAll: listAll,
     exportList: exportList,
-    getFilters: getFilters
+    getFilters: getFilters,
+    toDate:toDate,
+    fromDate:fromDate
 };
 
 function translateFilter(item) {

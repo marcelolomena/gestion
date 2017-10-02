@@ -13,25 +13,7 @@ entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento'
 entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' });
 
 var childEntity = models.compra;
-function getMonth(date) {
-    return _.padStart(date.getMonth() + 1,2,'0');
-}   
-// function date2ma(fecha) {
-//     return fecha ? fecha.getFullYear() + '-' + getMonth(fecha) : '';
-// }
-// function ma2Date(ma) {
-//     var kk = _.split(ma, '-');
-//     var  pp = new Date(parseInt(kk[0]), parseInt(kk[1]));
-//     return kk[0] + '-' + kk[1] + '-01';
-// }
-function toDate(ma) {
-    var kk = _.split(ma, '-');
-    return new Date(Date.UTC(parseInt(kk[2]), parseInt(kk[1])-1, parseInt(kk[0])));
-    //return kk[2] + '-' + kk[1] + '-' + kk[0];
-}
-function fromDate(fecha){
-    return fecha ? _.padStart(fecha.getUTCDate(),2,'0') + '-' + getMonth(fecha) + '-' + fecha.getFullYear() : '';
-}
+
 function map(req) {
     return {
         id: req.body.id || 0,
@@ -52,13 +34,13 @@ function map(req) {
             idCui: req.body.idCui || null,
             sap: req.body.sap,
             idProveedor: req.body.idProveedor,
-            fechaCompra: toDate(req.body.fechaCompra),
-            fechaExpiracion: toDate(req.body.fechaExpiracion),
+            fechaCompra: base.toDate(req.body.fechaCompra),
+            fechaExpiracion: base.toDate(req.body.fechaExpiracion),
             licCompradas: req.body.licCompradas,
             idMoneda: req.body.idMoneda,
             valorLicencia: req.body.valorLicencias,
             valorSoporte: req.body.valorSoporte,
-            fechaRenovaSoporte: toDate(req.body.fechaRenovaSoporte),
+            fechaRenovaSoporte: base.toDate(req.body.fechaRenovaSoporte),
             factura: req.body.factura,
             comprador: req.body.comprador,
             correoComprador: req.body.correoComprador
@@ -86,14 +68,14 @@ function mapper(data) {
                     idTipoLicenciamiento: item.idTipoLicenciamiento,
                     licStock: item.licStock,
                     licOcupadas: item.licOcupadas,
-                    fechaCompra: fromDate(sItem.fechaCompra),
-                    fechaExpiracion: fromDate(sItem.fechaExpiracion),
+                    fechaCompra: base.fromDate(sItem.fechaCompra),
+                    fechaExpiracion: base.fromDate(sItem.fechaExpiracion),
                     licCompradas: sItem.licCompradas,
                     cantidadSoporte: sItem.cantidadSoporte,
                     idMoneda: sItem.idMoneda,
                     valorLicencia: sItem.valorLicencia,
                     valorSoporte: sItem.valorSoporte,
-                    fechaRenovaSoporte: fromDate(sItem.fechaRenovaSoporte),
+                    fechaRenovaSoporte: base.fromDate(sItem.fechaRenovaSoporte),
                     factura: sItem.factura,
                     comprador: sItem.comprador,
                     correoComprador: sItem.correoComprador,
@@ -129,14 +111,14 @@ function excelMapper(data) {
                 item.tipoInstalacion.nombre,
                 item.clasificacion.nombre,
                 item.tipoLicenciamiento.nombre,
-                fromDate(sItem.fechaCompra),
-                fromDate(sItem.fechaExpiracion),
+                base.fromDate(sItem.fechaCompra),
+                base.fromDate(sItem.fechaExpiracion),
                 sItem.licCompradas,
                 sItem.cantidadSoporte,
                 sItem.moneda.moneda,
                 sItem.valorLicencia,
                 sItem.valorSoporte,
-                fromDate(sItem.fechaRenovaSoporte),
+                base.fromDate(sItem.fechaRenovaSoporte),
                 sItem.factura,
                 item.licStock,
                 item.licOcupadas,

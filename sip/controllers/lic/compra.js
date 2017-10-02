@@ -8,10 +8,6 @@ entity.belongsTo(models.estructuracui, { foreignKey: 'idCui' });
 entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
 entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
 
-function date2ma(fecha) {
-    return fecha ? fecha.getMonth() + 1 + '-' + fecha.getFullYear() : '';
-}
-
 function map(req) {
     return {
         id: req.body.id || 0,
@@ -21,14 +17,14 @@ function map(req) {
         idCui: req.body.idCui,
         sap: req.body.sap,
         idProveedor: req.body.idProveedor,
-        fechaCompra: req.body.fechaCompra,
-        fechaExpiracion: req.body.fechaExpiracion,
+        fechaCompra: base.toDate(req.body.fechaCompra),
+        fechaExpiracion: base.toDate(req.body.fechaExpiracion),
         licCompradas: req.body.licCompradas,
         canSoporte: req.body.canSoporte,
         idMoneda: req.body.idMoneda,
         valorLicencia: req.body.valorLicencia,
         valorSoporte: req.body.valorSoporte,
-        fechaRenovaSoporte: req.body.fechaRenovaSoporte,
+        fechaRenovaSoporte: base.toDate(req.body.fechaRenovaSoporte),
         factura: req.body.factura,
         comprador: req.body.comprador,
         correoComprador: req.body.correoComprador
@@ -36,10 +32,7 @@ function map(req) {
 }
 
 function mapper(data) {
-    // return data;
-    // var result = [];
     return _.map(data, function (item) {
-        // result.push({
         return {
             id: item.id,
             contrato: item.contrato,
@@ -47,22 +40,20 @@ function mapper(data) {
             idCui: item.idCui,
             sap: item.sap,
             idProveedor: item.idProveedor,
-            fechaCompra: date2ma(item.fechaCompra),
-            fechaExpiracion: date2ma(item.fechaExpiracion),
+            fechaCompra: base.fromDate(item.fechaCompra),
+            fechaExpiracion: base.fromDate(item.fechaExpiracion),
             licCompradas: item.licCompradas,
             canSoporte: item.canSoporte,
             idMoneda: item.idMoneda,
             valorLicencia: item.valorLicencia,
             valorSoporte: item.valorSoporte,
-            fechaRenovaSoporte: date2ma(item.fechaRenovaSoporte),
+            fechaRenovaSoporte: base.fromDate(item.fechaRenovaSoporte),
             factura: item.factura,
             comprador: item.comprador,
             correoComprador: item.correoComprador,
             proveedor: { nombre: item.proveedor.razonsocial }
-            // });
         }
     });
-    // return result;
 }
 
 var includes = [

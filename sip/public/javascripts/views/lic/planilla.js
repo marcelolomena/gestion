@@ -256,6 +256,8 @@
             }, {
                 label: 'Fecha Expiración',
                 name: 'fechaExpiracion',
+                align: 'center',
+                width: 200,
                 sortable: false,
                 editable: true,
                 editoptions: {
