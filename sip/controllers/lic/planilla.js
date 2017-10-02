@@ -162,11 +162,13 @@ function listxxx(req, res, entity, includes, transformer) {
     var filters = req.query.filters;
     var sidx = req.query.sidx || 'id';
     var sord = req.query.sord || 'desc';
-    var orden = entity.name + '.' + sidx + ' ' + sord;
+    //var orden = entity.name + '.' + sidx + ' ' + sord;
+    var orden = [[sidx, sord]];
     var whereClause = base.getFilters(filters);
 
     return entity.findAll({
         where: whereClause,
+        order: orden,
         include: includes
     }).then(function (data) {
         var resultData = transformer(data);

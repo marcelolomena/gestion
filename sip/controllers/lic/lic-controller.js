@@ -48,7 +48,7 @@ function list(req, res, entity, includes, transformer) {
     var filters = req.query.filters;
     var sidx = req.query.sidx || 'id';
     var sord = req.query.sord || 'desc';
-    var orden = entity.name + '.' + sidx + ' ' + sord;
+    var orden = [[sidx , sord]];
     var whereClause = getFilters(filters);
 
     entity.count({
@@ -59,7 +59,7 @@ function list(req, res, entity, includes, transformer) {
             return entity.findAll({
                 offset: parseInt(rows * (page - 1)),
                 limit: parseInt(rows),
-                // order: orden,
+                 order: orden,
                 where: whereClause,
                 include: includes
             })

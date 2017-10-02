@@ -251,6 +251,6 @@
             nom: 'Traducciones'
         }];
 
-        initMainGrid('/lic/grid_inventario', licenciasModel, 'idfabricante', tabs);
+        initMainGrid('/lic/grid_inventario', licenciasModel, 'nombre', tabs);
     });
 })(jQuery, _);
