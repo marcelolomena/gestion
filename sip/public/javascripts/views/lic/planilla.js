@@ -234,7 +234,7 @@
                     }
                 }
             }, {
-                label: 'Año-Mes Compra',
+                label: 'Fecha Compra',
                 name: 'fechaCompra',
                 width: 200,
                 align: 'center',
@@ -244,8 +244,8 @@
                     size: 10,
                     maxlengh: 10,
                     dataInit: function (element) {
-                        $(element).mask('0000-00', {
-                            placeholder: 'YYYY-MM'
+                        $(element).mask('00-00-0000', {
+                            placeholder: 'DD-MM-YYYY'
                         });
                     }
                 },
@@ -254,7 +254,7 @@
                 },
                 search: false
             }, {
-                label: 'Año-Mes Expiración',
+                label: 'Fecha Expiración',
                 name: 'fechaExpiracion',
                 sortable: false,
                 editable: true,
@@ -262,8 +262,8 @@
                     size: 10,
                     maxlengh: 10,
                     dataInit: function (element) {
-                        $(element).mask('0000-00', {
-                            placeholder: 'YYYY-MM'
+                        $(element).mask('00-00-0000', {
+                            placeholder: 'DD-MM-AAAA'
                         });
                     }
                 },
@@ -347,8 +347,8 @@
                     size: 10,
                     maxlengh: 10,
                     dataInit: function (element) {
-                        $(element).mask('0000-00-00', {
-                            placeholder: 'YYYY-MM-DD'
+                        $(element).mask('00-00-0000', {
+                            placeholder: 'DD-MM-AAAA'
                         });
                     }
                 },
