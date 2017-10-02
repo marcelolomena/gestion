@@ -26,8 +26,8 @@ function getMonth(date) {
 // }
 function toDate(ma) {
     var kk = _.split(ma, '-');
-    var pp = new Date(parseInt(kk[2]), parseInt(kk[1])-1, parseInt(kk[0]))
-    return kk[2] + '-' + kk[1] + '-' + kk[0];
+    return new Date(Date.UTC(parseInt(kk[2]), parseInt(kk[1])-1, parseInt(kk[0])));
+    //return kk[2] + '-' + kk[1] + '-' + kk[0];
 }
 function fromDate(fecha){
     return fecha ? _.padStart(fecha.getUTCDate(),2,'0') + '-' + getMonth(fecha) + '-' + fecha.getFullYear() : '';
