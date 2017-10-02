@@ -110,27 +110,23 @@ function listAll(req, res, entity, mapper) {
         });
     });
 }
-function exportList(req, res, entity, includes, transformer, cols) {
-    var filters = req.query.filters;
-    var whereClause = getFilters(filters);
+function exportList(req, res, entity, includes, transformer, cols, fileName) {
+    var whereClause = getFilters(req.query.filters);
     return entity.findAll({
         where: whereClause,
         include: includes
     }).then(function (data) {
-        var conf = {}
-        con.cols = cols;
-        conf.rows = transformer(data);
-        var result = nodeExcel.execute(conf);
+        var result = nodeExcel.execute({ cols: cols, rows: transformer(data) });
         res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-        res.setHeader("Content-Disposition", "attachment;filename=" + "preguntasolicitud_" + + Math.floor(Date.now()) + ".xlsx");
+        var ts = new Date(Date.now());
+        var sts = ts.getFullYear().toString() + _.padStart((ts.getMonth() + 1).toString(), 2, '0') + _.padStart(ts.getUTCDate().toString(), 2, '0');
+        res.setHeader('Content-Disposition', 'attachment;filename=' + fileName + '_' + sts + '.xlsx');
         return res.end(result, 'binary');
     }).catch(function (err) {
         logger.error(err.message);
         return res.json({ error_code: 1 });
     })
-
 }
-
 function toDate(ma) {
     if (!ma) {
         return null;
@@ -138,7 +134,6 @@ function toDate(ma) {
     var kk = _.split(ma, '-');
     return new Date(Date.UTC(parseInt(kk[2]), parseInt(kk[1]) - 1, parseInt(kk[0])));
 }
-
 function fromDate(fecha) {
     return fecha ? _.padStart(fecha.getUTCDate(), 2, '0') + '-' + getMonth(fecha) + '-' + fecha.getFullYear() : '';
 }
@@ -159,7 +154,6 @@ module.exports = {
 function getMonth(date) {
     return _.padStart(date.getMonth() + 1, 2, '0');
 }
-
 function translateFilter(item) {
     switch (item.op) {
         case 'eq':

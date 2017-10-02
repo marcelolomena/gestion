@@ -95,7 +95,6 @@ function mapper(data) {
     });
     return result;
 }
-
 function excelMapper(data) {
     var result = [];
     _.each(data, function (item) {
@@ -180,27 +179,6 @@ function listxxx(req, res, entity, includes, transformer) {
         logger.error(err.message);
         return res.json({ error_code: 1 });
     });
-}
-function exportList(req, res, entity, includes, transformer, cols) {
-    var filters = req.query.filters;
-    var whereClause = base.getFilters(filters);
-    return entity.findAll({
-        where: whereClause,
-        include: includes
-    })
-        .then(function (data) {
-            var conf = {}
-            conf.cols = cols;
-            conf.rows = transformer(data);
-            var result = nodeExcel.execute(conf);
-            res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-            res.setHeader("Content-Disposition", "attachment;filename=" + "InventarioLicencias_" + Math.floor(Date.now()) + ".xlsx");
-            return res.end(result, 'binary');
-        })
-        .catch(function (err) {
-            logger.error(err.message);
-            return res.json({ error_code: 1 });
-        })
 }
 function create(entity, data, res) {
     entity.create(data).then(function (created) {
@@ -354,20 +332,18 @@ function excel(req, res) {
             caption: 'CorreoComprador',
             type: 'string',
             width: 200
-        },
-        {
+        }, {
             caption: 'Utilidad',
             type: 'string',
             width: 200
-        },
-        {
+        }, {
             caption: 'Comentarios',
             type: 'string',
             width: 200
         }
     ];
-    exportList(req, res, entity, includes, excelMapper, cols);
-};
+    base.exportList(req, res, entity, includes, excelMapper, cols, 'InventarioLicencias');
+}
 module.exports = {
     list: list,
     action: action,
