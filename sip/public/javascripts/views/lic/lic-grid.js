@@ -243,6 +243,21 @@
         };
     }
 
+    function TabGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles){
+        this = new SimpleGrid(tableName,pagerName,caption,editCaption,addCaption,url,viewModel,sortField,sessionUrl,authorizedRoles,showChildGrid, tabs);
+        this.config.subGrid = true;
+        this.config.subGridRowExpanded = function (divid, rowid) {
+            showChildGrid(divid, rowid, tabs);
+        };
+        this.config.subGridBeforeExpand = function (divid, rowid) {
+            var expanded = $('td.sgexpanded', tableId)[0];
+            if (expanded) {
+                setTimeout(function () {
+                    $(expanded).trigger('click');
+                }, 100);
+            }
+        };
+    }
     var zs = window['zs'];
     if (!zs) {
         window['zs'] = {};
@@ -251,6 +266,7 @@
         ModelItemTemplate: ModelItemTemplate,
         TabTemplate: TabTemplate,
         SelectTemplate: SelectTemplate,
-        SimpleGrid: SimpleGrid
+        SimpleGrid: SimpleGrid,
+        TabGrid :TabGrid
     });
 })(jQuery, _);

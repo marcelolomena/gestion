@@ -6,23 +6,11 @@
     var initMainGrid = function (_url, _colModel, _sortname, tabs) {
         var table = 'gridMaster';
         var tableId = '#' + table;
-        var grid = new zs.SimpleGrid(table, 'pagerMaster', 'Inventario de licencias', 'Modificar Licencia', 'Agtregar Licencia', _url, _colModel, _sortname, '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.TabGrid(table, 'pagerMaster', 'Inventario de licencias', 'Modificar Licencia', 'Agtregar Licencia', _url, _colModel, _sortname, '/lic/getsession', ['Administrador LIC'], showChildGrid, tabs);
         grid.navParameters.edit = false;
         grid.navParameters.add = false;
         grid.navParameters.del = false;
         grid.navParameters.view = false;
-        grid.config.subGrid = true;
-        grid.config.subGridRowExpanded = function (divid, rowid) {
-            showChildGrid(divid, rowid, tabs);
-        };
-        grid.config.subGridBeforeExpand = function (divid, rowid) {
-            var expanded = $('td.sgexpanded', tableId)[0];
-            if (expanded) {
-                setTimeout(function () {
-                    $(expanded).trigger('click');
-                }, 100);
-            }
-        };
         grid.build();
     };
 
@@ -237,19 +225,15 @@
             }
         ];
 
-        var tabs = [{
-            id: 'compra',
-            nom: 'Compras'
-        },/*  {
-            id: 'instalacion',
-            nom: 'Instalaciones'
-        }, {
-            id: 'ajuste',
-            nom: 'Ajustes'
-        }, */ {
-            id: 'traduccion',
-            nom: 'Traducciones'
-        }];
+        var tabs = [
+            {
+                id: 'compra',
+                nom: 'Compras'
+            },{
+                id: 'traduccion',
+                nom: 'Traducciones'
+            }
+        ];
 
         initMainGrid('/lic/grid_inventario', licenciasModel, 'nombre', tabs);
     });
