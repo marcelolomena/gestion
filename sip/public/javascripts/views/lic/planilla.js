@@ -269,9 +269,6 @@
                         });
                     }
                 },
-                editrules: {
-                    required: true
-                },
                 search: false
             }, {
                 label: 'N° Lic Compradas',
@@ -353,6 +350,9 @@
                             placeholder: 'DD-MM-AAAA'
                         });
                     }
+                },
+                editrules: {
+                    required: true
                 },
                 search: false
             }, {
@@ -450,9 +450,7 @@
             } else if (!postdata.idTipoLicenciamiento) {
                 return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
             } else if (postdata.fechaCompra.trim().length == 0) {
-                return [false, "Año-Mes Compra: Debe ingresar una fecha.", ""];
-            } else if (postdata.fechaExpiracion.trim().length == 0) {
-                return [false, "Año-Mes Expiración: Debe escoger un valor.", ""];
+                return [false, "Fecha Compra: Debe ingresar una fecha.", ""];
             } else if (postdata.licCompradas.trim().length == 0) {
                 return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
             } else if (!postdata.idMoneda) {
@@ -461,9 +459,12 @@
                 return [false, "Valor Licencias: Debe ingresar un valor.", ""];
             } else if (postdata.valorSoporte.trim().length == 0) {
                 return [false, "Valor Soportes: Debe ingresar un valor.", ""];
+            } else if (postdata.fechaRenovaSoporte.trim().length == 0) {
+                return [false, "Fecha Expiración: Debe escoger un valor.", ""];
             } else {
                 return [true, "", ""];
             }
+
         };
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
         grid.prmEdit.beforeSubmit = beforeSubmit;
