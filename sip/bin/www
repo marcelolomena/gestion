@@ -29,13 +29,16 @@ var options = {
 /**
  * Create HTTP server.
  */
+
 var server = http.createServer(app);
 var secure_server = https.createServer(options, app);
 var io = require('socket.io')(secure_server);
-
 /**
  * Listen on provided port, on all network interfaces.
  */
+
+
+
 if (cluster.isMaster && process.env.NODE_ENV==='production') {
   var numWorkers = require('os').cpus().length;
 
@@ -119,7 +122,9 @@ function startApp() {
   secure_server.listen(3001);
   server.on('error', onError);
   server.on('listening', onListening);
+
   io.sockets.on('connection', handleClient);
+
 }
 /**
  * Normalize a port into a number, string, or false.

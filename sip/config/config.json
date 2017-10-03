@@ -31,8 +31,7 @@
             "max": 50,
             "idle": 10000
         },
-        "logging": false,
-        "timezone": "-03:00"
+        "logging": false
     },
     "production": {
         "username": "art",
@@ -51,8 +50,7 @@
             "idle": 10000,
             "maxIdleTime": 10000
         },
-        "logging": false,
-        "timezone": "-03:00"
+        "logging": false
     },
     "home": {
         "username": "pi",
@@ -67,8 +65,7 @@
             "min": 5,
             "max": 100,
             "idle": 500000
-        },
-        "timezone": "-03:00"
+        }
     },
     "local": {
         "username": "pi",
@@ -83,8 +80,7 @@
             "min": 5,
             "max": 100,
             "idle": 500000
-        },
-        "timezone": "-03:00"
+        }
     },
     "local2": {
         "username": "biometria",
@@ -99,8 +95,7 @@
             "min": 5,
             "max": 100,
             "idle": 500000
-        },
-        "timezone": "-03:00"
+        }
     },
 	"qadesarrollo": {
         "username": "biometria",
@@ -117,7 +112,6 @@
             "max": 100,
             "idle": 500000
         },
-        "logging": false,
-        "timezone": "-03:00"
+        "logging": false
     }
 }
