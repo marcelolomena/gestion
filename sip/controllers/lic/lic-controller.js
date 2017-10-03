@@ -127,15 +127,17 @@ function exportList(req, res, entity, includes, transformer, cols, fileName) {
         return res.json({ error_code: 1 });
     })
 }
-function toDate(ma) {
-    if (!ma) {
+function toDate(ddmmaaaa) {
+    if (!ddmmaaaa) {
         return null;
     }
-    var kk = _.split(ma, '-');
-    return new Date(Date.UTC(parseInt(kk[2]), parseInt(kk[1]) - 1, parseInt(kk[0])));
+    var parts = _.split(ddmmaaaa, '-');
+    var result = new Date(Date.UTC(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0])));
+    return result;
 }
 function fromDate(fecha) {
-    return fecha ? _.padStart(fecha.getUTCDate(), 2, '0') + '-' + getMonth(fecha) + '-' + fecha.getFullYear() : '';
+    var result = fecha ? _.padStart(fecha.getUTCDate(), 2, '0') + '-' + _.padStart(getUTCMonth(fecha), 2, '0')  + '-' + fecha.getUTCFullYear() : '';
+    return result;
 }
 
 module.exports = {
@@ -151,8 +153,11 @@ module.exports = {
     fromDate: fromDate
 };
 
+function getUTCMonth(date) {
+    return date.getUTCMonth() + 1;
+}
 function getMonth(date) {
-    return _.padStart(date.getMonth() + 1, 2, '0');
+    return date.getMonth() + 1;
 }
 function translateFilter(item) {
     switch (item.op) {
