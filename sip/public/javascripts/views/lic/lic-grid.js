@@ -243,8 +243,9 @@
         };
     }
 
-    function TabGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles){
-        this = new SimpleGrid(tableName,pagerName,caption,editCaption,addCaption,url,viewModel,sortField,sessionUrl,authorizedRoles,showChildGrid, tabs);
+    function TabGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles,showChildGrid, tabs){
+        SimpleGrid.call(this,tableName,pagerName,caption,editCaption,addCaption,url,viewModel,sortField,sessionUrl,authorizedRoles,showChildGrid, tabs);
+        var tableId = '#' + tableName;
         this.config.subGrid = true;
         this.config.subGridRowExpanded = function (divid, rowid) {
             showChildGrid(divid, rowid, tabs);
