@@ -70,7 +70,7 @@ function list(req, res, entity, includes, transformer) {
 function listChilds(req, res, entity, pIdName, includes, transformer) {
     var page = parseInt(req.query.page);
     var rows = parseInt(req.query.rows);
-    var orden = [[req.query.sidx || 'id', req.query.sord || 'desc']];
+    var orden = (req.query.sidx || (entity.name + '.id')) + ' ' +(req.query.sord || 'desc');
     var whereClause = getFilters(req.query.filters);
     var pFilter = {
         field: pIdName,
@@ -85,7 +85,7 @@ function listChilds(req, res, entity, pIdName, includes, transformer) {
         return entity.findAll({
             offset: parseInt(rows * (page - 1)),
             limit: parseInt(rows),
-            order: orden,
+            // order: orden,
             where: whereClause,
             include: includes
         }).then(function (data) {
