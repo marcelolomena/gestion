@@ -60,6 +60,9 @@ var gridvertabreserva = {
                 { label: 'Aprobado (Miles)', name: 'Aprobado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Utilizado (Miles)', name: 'Utilizado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                 { label: 'Reservado (Miles)', name: 'Reservado', width: 30, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                { label: 'DisponiblePesos', name: 'DisponiblePesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
+                { label: 'AprobadoPesos', name: 'AprobadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
+                { label: 'UtilizadoPesos', name: 'UtilizadoPesos', hidden: true, editable: true, formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true }, },
                 {
                     label: 'Disponible', name: 'Disponible', width: 30, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true },
                     formatter: function (cellvalue, options, rowObject) {
@@ -153,25 +156,19 @@ var gridvertabreserva = {
 
           
                 var thisId = $.jgrid.jqID(this.id);
-                var sum1 = $gridTabreserva.jqGrid('getCol', 'Aprobado', false, 'sum');
-                var sum2 = $gridTabreserva.jqGrid('getCol', 'Utilizado', false, 'sum');
+                var sum1 = $gridTabreserva.jqGrid('getCol', 'AprobadoPesos', false, 'sum');
+                var sum2 = $gridTabreserva.jqGrid('getCol', 'UtilizadoPesos', false, 'sum');
                 var sum3 = $gridTabreserva.jqGrid('getCol', 'Reservado', false, 'sum');
-                var sum4 = $gridTabreserva.jqGrid('getCol', 'Disponible', false, 'sum');
-                /*var sum5 = $("#" + childGridID).jqGrid('getCol', 'Total', false, 'sum');
-                var sum6 = $("#" + childGridID).jqGrid('getCol', 'VarAprobacion', false, 'sum');
-                var sum7 = $("#" + childGridID).jqGrid('getCol', 'DeudaBanco', false, 'sum');
-                var sum8 = $("#" + childGridID).jqGrid('getCol', 'GarantiaReal', false, 'sum');
-                var sum9 = $("#" + childGridID).jqGrid('getCol', 'SBIFACHEL', false, 'sum');
-                var sum10 = $("#" + childGridID).jqGrid('getCol', 'Penetracion', false, 'avg');
-                */
+                var sum4 = $gridTabreserva.jqGrid('getCol', 'DisponiblePesos', false, 'sum');
+
 
                 $gridTabreserva.jqGrid('footerData', 'set',
                     {
                         Moneda: 'Total (CLP) :',
-                        Aprobado: '7.830.782',
-                        Utilizado: '25.130',
-                        Reservado: sum3,
-                        Disponible: sum4,
+                        Aprobado: (formatear.formatearNumero(sum1)),
+                        Utilizado: (formatear.formatearNumero(sum2)),
+                        Reservado: (formatear.formatearNumero(sum3)),
+                        Disponible: (formatear.formatearNumero(sum4)),
                         Bloqueo_N: '<span role="button" class="fa fa-lock bloqueartodo" aria-hidden="true" href="#" style= "font-size: 20px;"></span>'
                         /*Total : sum5,
                         VarAprobacion : sum6,

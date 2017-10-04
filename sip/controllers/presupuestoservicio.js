@@ -459,8 +459,8 @@ exports.action = function (req, res) {
           logger.debug("***ELIMINANDO***");
           var id = req.body.id;
           var sql = "DELETE FROM sip.detalleplan WHERE iddetallepre=" + id + "; " +
-             "EXECUTE sip.actualizadetallepre " + id+ "; ";
-            "DELETE FROM sip.detallepre WHERE id=" + id+ "; " +
+             "EXECUTE sip.actualizadetallepre " + id+ "; "+
+            "DELETE FROM sip.detallepre WHERE id=" + id+ "; " ;
             logger.debug("sql:"+sql);
           sequelize.query(sql).then(function (response) {     
             

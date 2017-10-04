@@ -59,7 +59,7 @@ var gridVermacgrupal = {
             { label: 'GarantiaRealTopada', name: 'GarantiaRealTopada', width: 50, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
             { label: 'SbifAchel', name: 'SbifAchel', width: 50, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
             { label: 'Penetracion', name: 'Penetracion', width: 50, hidden: false, search: true, editable: true, align: 'right', editrules: { required: true } },
-            
+
         ];
 
         $gridTab.jqGrid({
@@ -163,7 +163,7 @@ var gridVermacgrupal = {
 
         if (document.getElementById("elmacgrupal") == null) {
 
-            
+
             var idmacgrupal = $("#param").text();
             var nombre = ""
             var rut = ""
@@ -176,6 +176,7 @@ var gridVermacgrupal = {
                 async: false,
                 success: function (data) {
                     if (data.length > 0) {
+
                         $("#vermacgrupal").prepend(`
                         <div class="panel panel-primary" id="elmacgrupal" style="margin-left:15px;">
                             <div class="panel-heading" style='background-color: #0B2161; border-color: #0B2161;'>
@@ -187,14 +188,14 @@ var gridVermacgrupal = {
                                     <div class="col-xs-2">408.000</div>
                                     <div class="col-xs-2"></div>
                                     <div class="col-xs-2"></div>
-                                    <div class="col-xs-2"></br><b>Nombre Grupo: </b>`+data[0].nombregrupo+`</div>
+                                    <div class="col-xs-2"></br><b>Nombre Grupo: </b>`+ data[0].nombregrupo + `</div>
                                     <div class="col-xs-2"></br></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-2"><b>Fecha Presentación:</b></div>
-                                    <div class="col-xs-2">`+data[0].FechaPresentacion+`</div>
+                                    <div class="col-xs-2">`+ data[0].FechaPresentacion + `</div>
                                     <div class="col-xs-2"><b>Fecha Vcto:</b></div>
-                                    <div class="col-xs-2">`+data[0].FechaVencimiento+`</div>
+                                    <div class="col-xs-2">`+ data[0].FechaVencimiento + `</div>
                                 </div>
             
                                 <div class="row">
@@ -213,6 +214,11 @@ var gridVermacgrupal = {
                         </div>`);
                         nombregrupo = data[0].nombregrupo;
                         $("#nombregrupo").html(nombregrupo)
+                        $("#vermacgrupal").append(`
+                        <div class="form-group" style="padding-top: 10px; padding-left: 15px;">
+                        
+                        <button id="confirmar" type="submit" class="btn neutro border ladda-button ng-scope" >Confirmar</button> 
+                    </div>`);
                     } else {
                         alert("Error con datos del Mac Grupal")
                     }

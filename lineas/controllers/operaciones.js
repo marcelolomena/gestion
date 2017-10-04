@@ -35,9 +35,9 @@ exports.listlimite = function (req, res) {
         "With SQLPaging As   ( " +
         "Select Top(@rowsPerPage * @pageNum) ROW_NUMBER() OVER (ORDER BY " + order + ") " +
         `as resultNum, a.*, Monto, Activo, Comentario , 
-        IIF(a.Moneda = 'USD' , a.Disponible*623, IIF(a.Moneda = 'UF' , a.Disponible*26628, IIF(a.Moneda = 'EURO' , a.Disponible*744, a.Disponible))) AS DisponiblePesos,
-        IIF(a.Moneda = 'USD' , a.Aprobado*623, IIF(a.Moneda = 'UF' , a.Aprobado*26628, IIF(a.Moneda = 'EURO' , a.Aprobado*744, a.Aprobado))) AS AprobadoPesos,
-        IIF(a.Moneda = 'USD' , a.Utilizado*623, IIF(a.Moneda = 'UF' , a.Utilizado*26628, IIF(a.Moneda = 'EURO' , a.Utilizado*744, a.Utilizado))) AS UtilizadoPesos
+        IIF(a.Moneda = 'USD' , a.Disponible*628, IIF(a.Moneda = 'UF' , a.Disponible*26628, IIF(a.Moneda = 'EURO' , a.Disponible*744, a.Disponible))) AS DisponiblePesos,
+        IIF(a.Moneda = 'USD' , a.Aprobado*628, IIF(a.Moneda = 'UF' , a.Aprobado*26628, IIF(a.Moneda = 'EURO' , a.Aprobado*744, a.Aprobado))) AS AprobadoPesos,
+        IIF(a.Moneda = 'USD' , a.Utilizado*628, IIF(a.Moneda = 'UF' , a.Utilizado*26628, IIF(a.Moneda = 'EURO' , a.Utilizado*744, a.Utilizado))) AS UtilizadoPesos
               from scl.Linea a
               join scl.LineaEmpresa b on a.Id=b.Linea_Id
               join scl.Empresa c on c.Id=b.Empresa_Id
@@ -617,13 +617,12 @@ exports.listoperacionesreserva = function (req, res) {
 
 exports.actionoperacionesreserva = function (req, res) {
     var action = req.body.oper;
-    console.log('valor de tipo operacion es :' + req.body.TipoOperacion)
+    //console.log('valor de tipo operacion es :' + req.body.TipoOperacion)
 
     switch (action) {
         case "add":
 
-            var sql = `exec scl.nuevareserva ` + req.body.Idlim + `,` + req.body.TipoOperacion + `,` + req.body.NumeroProducto + `,'` + req.body.FechaOtorgamiento + `','` + req.body.FechaProxVenc + `',` + req.body.Moneda + `,` + req.body.MontoInicial + `,` + req.body.MontoActual + `,` + req.body.MontoActualMNac + `,` + req.body.RutEmpresa + ``
-            // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
+            var sql = `exec scl.nuevareserva ` + req.body.Idlim + `,'` + req.body.Producto + `',` + req.body.MontoInicial + `,'` + req.body.Moneda + `','` + req.body.Plazo + `','` + req.body.FechaReserva + `','` + req.body.FechaDesembolso + `','` + req.body.FechaVencimiento + `',` + req.body.RutEmpresa + ``
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
             }).catch(function (err) {
@@ -635,7 +634,8 @@ exports.actionoperacionesreserva = function (req, res) {
 
         case "edit":
 
-            var sql = `update scl.Operacion set TipoOperacion ='` + req.body.TipoOperacion + `',NumeroProducto=` + req.body.NumeroProducto + `,FechaOtorgamiento='` + req.body.FechaOtorgamiento + `',FechaProxVenc='` + req.body.FechaProxVenc + `',Moneda='` + req.body.Moneda + `',MontoInicial=` + req.body.MontoInicial + `,MontoActual=` + req.body.MontoActual + `,MontoActualMNac=` + req.body.MontoActualMNac + ` WHERE Id=` + req.body.Idlim
+            
+            var sql = `update scl.Operacion set Producto ='` + req.body.Producto + `',MontoInicial=` + req.body.MontoInicial + `,Moneda='` + req.body.Moneda + `',Plazo='` + req.body.Plazo + `',FechaReserva='` + req.body.FechaReserva + `',FechaDesembolso=` + req.body.FechaDesembolso + `,FechaVencimiento=` + req.body.FechaVencimiento + ` WHERE Id=` + req.body.Id
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
             }).catch(function (err) {
@@ -647,8 +647,8 @@ exports.actionoperacionesreserva = function (req, res) {
             break;
 
         case "del":
-            var sql = `exec scl.borrarreserva ` + parseInt(req.body.Idlim) + `,` + parseInt(req.body.id) + ``
-            // console.log("Tipo Operacion: "+ req.body.TipoOperacion )
+            var sql = `exec scl.borrarreserva ` + parseInt(req.body.Idlim) + `,` + req.body.id + ``
+             console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" )
             sequelize.query(sql).spread((results, metadata) => {
                 return res.json({ error: 0 });
             }).catch(function (err) {

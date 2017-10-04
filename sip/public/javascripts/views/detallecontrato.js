@@ -619,7 +619,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
             },
             {
                 label: 'Nombre Servicio', name: 'glosaservicio', search: true, editable: true, hidden: false,
-                edittype: "textarea"
+                edittype: "textarea", editoptions: {maxlength:"255"}
             },
             {
                 label: 'Meses Entre Cuotas', name: 'mesesentrecuotas', align: 'center', search: true, editable: true, hidden: true,
@@ -699,7 +699,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
             },
             {
                 label: 'Comentario', name: 'comentario', search: false, editable: true, hidden: false,
-                edittype: "textarea"
+                edittype: "textarea", editoptions: {maxlength:"1000"}
             },
             {
                 label: 'Numero Ficha Criticidad', name: 'numfichacriticidad', search: false, editable: true, hidden: true,

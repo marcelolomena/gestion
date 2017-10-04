@@ -831,29 +831,14 @@ var gridvertablimites = {
 
                     var modelOperacion = [
                         {
-                            label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,
-                            editable: true, hidedlg: true, sortable: false
-                        },
-
-                        { label: 'Tipo Operacion', name: 'TipoOperacion', width: 8, hidden: false, editable: true, align: 'center' },
-                        { label: 'Nro Producto', name: 'NumeroProducto', width: 8, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                        { label: 'Fecha Otorgamiento', name: 'FechaOtorgamiento', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                        //{ label: 'TipoLimite', name: 'Tipolimite', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                        {
-                            label: 'Fecha Prox Vencimiento', name: 'FechaProxVenc', width: 9, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true },
-                        },
-                        //{ label: '', name: 'PlazoResudual', width: 30, hidden: false, search: true, editable: true, editrules: { required: true } },
-                        { label: 'Moneda', name: 'Moneda', width: 5, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
-                        { label: 'Monto Inicial', name: 'MontoInicial', width: 8, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                        { label: 'Monto Actual', name: 'MontoActual', width: 6, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                        // { label: 'Monto Actual Equiv.M /Linea', name: 'MontoActualMLinea', width: 15, hidden: false, search: true, editable: true,align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
-                        {
-                            label: 'Monto Actual Equiv. M/N', name: 'MontoActualMNac', width: 10, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
-                        },
-                        {
-                            label: 'Rut Empresa', name: 'RutEmpresa', width: 10, hidden: true, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 },
-
-                        },
+                            label: 'Id', name: 'Id', index: 'Id', key: true, hidden: true, width: 10,editable: true, hidedlg: true, sortable: false
+                        },                        { label: 'Producto', name: 'Producto', width: 8, hidden: false, editable: true, align: 'center' },
+                        { label: 'Monto', name: 'MontoInicial', width: 8, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
+                        { label: 'Plazo', name: 'Plazo', width: 8, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Moneda', name: 'Moneda', width: 8, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },                        
+                        { label: 'Fecha Reserva', name: 'FechaReserva', width: 10, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Fecha Desembolso', name: 'FechaDesembolso', width: 9, hidden: false, search: true, editable: true, align: 'center', editrules: { required: true } },
+                        { label: 'Fecha Vencimiento', name: 'FechaVencimiento', width: 6, hidden: false, search: true, editable: true, align: 'right', formatter: 'number', formatoptions: { decimalPlaces: 0 }, editrules: { required: true } },
                     ];
 
 
@@ -1052,7 +1037,7 @@ var gridvertablimites = {
 
                     }
                     else { //bloqueado
-                         
+
                         $.ajax({
                             type: "POST",
                             url: "/cargarbloqueo/" + idlineabloqueo,
@@ -1062,6 +1047,7 @@ var gridvertablimites = {
                             }
                         });
                     }
+                    $('#miprimerform2')[0].reset();
                 });
 
                 //BOTÓN BLOQUEAR
@@ -1088,7 +1074,7 @@ var gridvertablimites = {
                         alert("El monto ingresado es superior al disponible");
                     }
                     else {
-                        
+
 
                         $.ajax({
                             type: "POST",
@@ -1103,10 +1089,25 @@ var gridvertablimites = {
                     }
 
 
-
+                    $('#miprimerform2')[0].reset();
                     //$("#fechaBloqueo").html(fechaGuardada);
                 });
-
+                $(`#monto`).keypress(function (evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if (charCode > 31 && ((charCode < 48 || charCode > 57) && (charCode != 75 || charCode != 107))) {
+                        return false;
+                    }
+                    return true;
+                })
+                $(`#montodes`).keypress(function (evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if (charCode > 31 && ((charCode < 48 || charCode > 57) && (charCode != 75 || charCode != 107))) {
+                        return false;
+                    }
+                    return true;
+                })
                 //BOTÓN CANDADO
                 $('.abrirbloqueo').click(function () {
                     var id = $(this).attr('href').substring(1);
@@ -1156,7 +1157,7 @@ var gridvertablimites = {
                                 }
                             }
                             else {
-                               
+
                                 //Bloqueo
                                 $("#idlineabloqueo2").val(id)
                                 $("#disponible").val(data[0].Disponible)
@@ -1227,7 +1228,7 @@ var gridvertablimites = {
                 });
 
                 $("#btnCerrar").on("click", function (e) {
-                    
+
                     console.log("llegue a la funcion!!")
                     e.preventDefault();
                     location.reload();
@@ -1381,14 +1382,12 @@ var gridvertablimites = {
                         return [true, "", ""]
                 }
             });
-
-
-
-
     }
 }
 
 function subGridsublimite2(subgrid_id, row_id) {//cambiar el nombre a la funcion si se copia la plantilla!!!!
     //console.log('hola');
+
     gridvertabsublimites(subgrid_id, row_id, 'sublimite'); //sublimite es el nombre con el que quedaran los divs en la subgrilla (/verlimite.js)
+    gridsublimiteoperaciones(subgrid_id, row_id, 'operaciones');
 }

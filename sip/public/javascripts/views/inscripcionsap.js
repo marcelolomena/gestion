@@ -2,8 +2,9 @@ $(document).ready(function () {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'>Glosa Presupuesto {glosa}</div>";
+    template += "<div class='column-full'>Glosa Presupuesto {glosa}</div>";
     template += "<div class='column-half'><span style='color: red'>*</span>N° SAP{sap}</div>";
+    template += "<div class='column-half'>Extensión{extension}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -38,6 +39,10 @@ $(document).ready(function () {
                 }
             },
         },
+        {
+            label: 'Extension', name: 'extension', width: 50, align: 'left',
+            search: false, editable: true, hidden: false
+        },           
         /*
         {
             label: 'program_id', name: 'program_id', width: 150, align: 'left',
@@ -47,7 +52,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/programas',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.program_name;
@@ -160,7 +165,7 @@ $(document).ready(function () {
 
     ];
 
-    $("#grid").jqGrid({
+    $("#table_iniciativa").jqGrid({
         url: '/inscripcionsap/listSAP',
         mtype: "POST",
         datatype: "json",
@@ -174,7 +179,7 @@ $(document).ready(function () {
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
-        pager: "#pager",
+        pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/presupuestoiniciativa/actualiSAP',
@@ -186,9 +191,9 @@ $(document).ready(function () {
             minusicon: "glyphicon-hand-down"
         },
         onSelectRow: function (id) {
-            //var temp = $('#grid').getRowData($('#grid').getGridParam("selrow")).program_id;
-            //$("#grid").setColProp('uidjefeproyecto', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
-            //$("#grid").setColProp('uidlider', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
+            //var temp = $('#table_iniciativa').getRowData($('#table_iniciativa').getGridParam("selrow")).program_id;
+            //$("#table_iniciativa").setColProp('uidjefeproyecto', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
+            //$("#table_iniciativa").setColProp('uidlider', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
         },
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
@@ -196,20 +201,20 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         },
         gridComplete: function () {
-            var recs = $("#grid").getGridParam("reccount");
+            var recs = $("#table_iniciativa").getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#grid").addRowData("blankRow", { "sap": "", "codigoart": "No hay datos" });
+                $("#table_iniciativa").addRowData("blankRow", { "sap": "", "codigoart": "No hay datos" });
             }
         }
     });
     jQuery.extend(jQuery.jgrid.edit, { recreateForm: true });
-    $("#grid").jqGrid('filterToolbar', {
+    $("#table_iniciativa").jqGrid('filterToolbar', {
         stringResult: true, searchOperators: true,
         searchOnEnter: false, defaultSearch: 'cn'
     });
 
-    $('#grid').jqGrid('navGrid', "#pager", {
+    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {
         edit: true, add: false, del: false, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },
@@ -242,7 +247,7 @@ $(document).ready(function () {
                 if (result.error_code != 0) {
                     return [false, result.error_text, ""];
                 } else {
-                    var grid = $("#grid");
+                    var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.id;
@@ -280,8 +285,9 @@ $(document).ready(function () {
                 $('input#codigoart', form).attr('readonly', 'readonly');
                 $('input#glosa', form).attr('readonly', 'readonly');
                 $('input#fechafinal', form).attr('readonly', 'readonly');
+                $('input#extension', form).attr('readonly', 'readonly');
                 //$('#program_id').attr('disabled', 'disabled');
-                var grid = $("#grid");
+                var grid = $("#table_iniciativa");
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
                 var thissid = rowData.id;
@@ -290,10 +296,10 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 }
 
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
                 //$('input#codigoart', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
             }
         },
         {
@@ -314,7 +320,7 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
-    $("#pager_left").css("width", "");
+    $("#pager_iniciativa_left").css("width", "");
     
     function showSubGrids(subgrid_id, row_id) {
         gridTareasInscripcion(subgrid_id, row_id, 'tareasinscripcion');

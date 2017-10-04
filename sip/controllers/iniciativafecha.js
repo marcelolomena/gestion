@@ -1,11 +1,12 @@
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var utilSeq = require('../utils/seq');
-//var logger = require("../utils/logger");
+var logger = require("../utils/logger");
 exports.action = function (req, res) {
   var action = req.body.oper;
   var fecha;
-
+  console.log("***EN action"+req.body.id);
+  logger.debug("***EN action"+req.body.id);
   if (action != "del") {
     if (req.body.fecha != "")
       fecha = req.body.fecha.split("-").reverse().join("-")
@@ -72,6 +73,9 @@ exports.list = function (req, res) {
   var filters = req.body.filters;
   var sidx = req.body.sidx;
   var sord = req.body.sord;
+  
+  console.log("***EN list"+req.body.id);
+  logger.debug("***EN list"+req.body.id);  
 
   if (!sidx)
     sidx = "fecha";
@@ -83,6 +87,61 @@ exports.list = function (req, res) {
 
   var additional = [{
     "field": "idiniciativaprograma",
+    "op": "eq",
+    "data": req.params.id
+  }, {
+        "field": "idpresupuestoiniciativa",
+        "op": "eq",
+        "data": null
+    }];
+
+  utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
+    if (err) {
+      //logger.debug("->>> " + err)
+    } else {
+      models.iniciativafecha.count({
+        where: data
+      }).then(function (records) {
+          //logger.debug("campos: "+records);
+        var total = Math.ceil(records / rows);
+        models.iniciativafecha.findAll({
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
+          order: orden,
+          where: data
+        }).then(function (iniciativas) {
+          res.json({ records: records, total: total, page: page, rows: iniciativas });
+        }).catch(function (err) {
+          //logger.error(err);
+          res.json({ error_code: 1 });
+        });
+      })
+    }
+  });
+
+};
+
+// Create endpoint /iniciativaprograma for GET
+exports.listfp = function (req, res) {
+  var page = req.body.page;
+  var rows = req.body.rows;
+  var filters = req.body.filters;
+  var sidx = req.body.sidx;
+  var sord = req.body.sord;
+  
+  console.log("***EN listfp"+req.body.id);
+  logger.debug("***EN listfp"+req.body.id);  
+
+  if (!sidx)
+    sidx = "fecha";
+
+  if (!sord)
+    sord = "asc";
+
+  var orden = sidx + " " + sord;
+
+  var additional = [{
+    "field": "idpresupuestoiniciativa",
     "op": "eq",
     "data": req.params.id
   }];
@@ -159,6 +218,17 @@ exports.actualizaDuracion = function (req, res) {
 
 exports.getFechas = function (req, res) {
 
+  var sql = "SELECT * FROM sip.parametro where tipo='tipofechaini' ORDER BY valor";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+
+exports.getFechasIniPrep = function (req, res) {
+
   var sql = "SELECT * FROM sip.parametro where tipo='tipofecha' ORDER BY valor";
 
   sequelize.query(sql)
@@ -167,3 +237,76 @@ exports.getFechas = function (req, res) {
     });
 
 };
+
+//Action para fechas de presupuesto
+exports.actionfp = function (req, res) {
+  var action = req.body.oper;
+  var fecha;
+  
+  console.log("***EN actionfp"+req.body.id);
+  logger.debug("***EN actionfp"+req.body.id);
+  if (action != "del") {
+    if (req.body.fecha != "")
+      fecha = req.body.fecha.split("-").reverse().join("-")
+  }
+
+  switch (action) {
+    case "add":
+      var sql="SELECT a.id FROM sip.iniciativaprograma a "+
+        "JOIN sip.presupuestoiniciativa b ON a.id=b.idiniciativaprograma "+
+        "WHERE b.id="+req.body.parent_id;
+      sequelize.query(sql)
+        .spread(function (rows) { 
+          var idiniprog =  rows[0].id;  
+          models.iniciativafecha.create({
+            idiniciativaprograma: idiniprog,
+            idpresupuestoiniciativa: req.body.parent_id,
+            tipofecha: req.body.tipofecha,
+            fecha: fecha,
+            comentario: req.body.comentario,
+            idtipofecha:req.body.idtipofecha,
+            borrado: 1
+          }).then(function (iniciativa) {
+            res.json({ error_code: 0 });
+          }).catch(function (err) {
+            //logger.error(err);
+            res.json({ error_code: 1 });
+          });
+      });
+      break;
+    case "edit":
+      models.iniciativafecha.update({
+        idpresupuestoiniciativa: req.body.parent_id,
+        idtipofecha: req.body.idtipofecha,
+        tipofecha: req.body.tipofecha,
+        fecha: fecha,
+        comentario: req.body.comentario
+      }, {
+          where: {
+            id: req.body.id
+          }
+        }).then(function (iniciativa) {
+          res.json({ error_code: 0 });
+        }).catch(function (err) {
+          //logger.error(err);
+          res.json({ error_code: 1 });
+        });
+      break;
+    case "del":
+      models.iniciativafecha.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+        if (rowDeleted === 1) {
+          //logger.debug('Deleted successfully');
+        }
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        //logger.error(err);
+        res.json({ error_code: 1 });
+      });
+
+      break;
+  }
+}
