@@ -2,6 +2,36 @@
     'use strict';
     var zs = window.zs;
 
+    function beforeSubmit(postdata, formid) {
+        if (!postdata.idFabricante) {
+            return [false, "Fabricante: Debe escoger un valor.", ""];
+        } else if (!postdata.idProveedor) {
+            return [false, "Proveedor: Debe escoger un valor.", ""];
+        } else if (postdata.nombre.trim().length == 0) {
+            return [false, "Software: Debe ingresar un software.", ""];
+        } else if (!postdata.idTipoInstalacion) {
+            return [false, "¿Donde está instalada?: Debe escoger un valor.", ""];
+        } else if (!postdata.idClasificacion) {
+            return [false, "Clasificación: Debe escoger un valor.", ""];
+        } else if (!postdata.idTipoLicenciamiento) {
+            return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
+        } else if (postdata.fechaCompra.trim().length == 0) {
+            return [false, "Fecha Compra: Debe ingresar una fecha.", ""];
+        } else if (postdata.licCompradas.trim().length == 0) {
+            return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
+        } else if (!postdata.idMoneda) {
+            return [false, "Moneda: Debe escoger un valor.", ""];
+        } else if (postdata.valorLicencias.trim().length == 0) {
+            return [false, "Valor Licencias: Debe ingresar un valor.", ""];
+        } else if (postdata.valorSoporte.trim().length == 0) {
+            return [false, "Valor Soportes: Debe ingresar un valor.", ""];
+        } else if (postdata.fechaRenovaSoporte.trim().length == 0) {
+            return [false, "Fecha Expiración: Debe escoger un valor.", ""];
+        } else {
+            return [true, "", ""];
+        }
+    };
+
     $(function () {
         var $table = $('#gridMaster');
         var viewModel = [{
@@ -435,37 +465,6 @@
                 search: false
             },
         ];
-
-        function beforeSubmit(postdata, formid) {
-            if (!postdata.idFabricante) {
-                return [false, "Fabricante: Debe escoger un valor.", ""];
-            } else if (!postdata.idProveedor) {
-                return [false, "Proveedor: Debe escoger un valor.", ""];
-            } else if (postdata.nombre.trim().length == 0) {
-                return [false, "Software: Debe ingresar un software.", ""];
-            } else if (!postdata.idTipoInstalacion) {
-                return [false, "¿Donde está instalada?: Debe escoger un valor.", ""];
-            } else if (!postdata.idClasificacion) {
-                return [false, "Clasificación: Debe escoger un valor.", ""];
-            } else if (!postdata.idTipoLicenciamiento) {
-                return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
-            } else if (postdata.fechaCompra.trim().length == 0) {
-                return [false, "Fecha Compra: Debe ingresar una fecha.", ""];
-            } else if (postdata.licCompradas.trim().length == 0) {
-                return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
-            } else if (!postdata.idMoneda) {
-                return [false, "Moneda: Debe escoger un valor.", ""];
-            } else if (postdata.valorLicencias.trim().length == 0) {
-                return [false, "Valor Licencias: Debe ingresar un valor.", ""];
-            } else if (postdata.valorSoporte.trim().length == 0) {
-                return [false, "Valor Soportes: Debe ingresar un valor.", ""];
-            } else if (postdata.fechaRenovaSoporte.trim().length == 0) {
-                return [false, "Fecha Expiración: Debe escoger un valor.", ""];
-            } else {
-                return [true, "", ""];
-            }
-
-        };
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
         grid.prmEdit.beforeSubmit = beforeSubmit;
         grid.prmAdd.beforeSubmit = beforeSubmit;
