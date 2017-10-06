@@ -3,24 +3,17 @@
     var zs = window.zs;
 
     function showChildGrid(divid, rowid) {
-
+        var url = '';  //TODO:Definir URL
+        var gridID = divid + '_t';
+        var pagerID = 'p_' + gridID;
+        $('#' + parentRowID).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
+        detalleCompraTramiteGrid.renderGrid(gridID, url);
     }
 
     var initGrid = function (viewModel) {
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
-
-
-        grid.config.subGrid = true;
+        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
         grid.config.subGridRowExpanded = function (divid, rowid) {
             showChildGrid(divid, rowid);
-        };
-        grid.config.subGridBeforeExpand = function (divid, rowid) {
-            var expanded = $('td.sgexpanded', tableId)[0];
-            if (expanded) {
-                setTimeout(function () {
-                    $(expanded).trigger('click');
-                }, 100);
-            }
         };
         grid.build();
     };

@@ -14,7 +14,7 @@
         }
     };
 
-    function DecoraleLabel(item){
+    function decoraleLabel(item){
         if(item.editrules && item.editrules.required){
             return item.label + '<span style="color:red">*</span>';
         } else{
@@ -33,9 +33,9 @@
             _.each(editables, function (item, key) {
                 if (key + 1 % 2) {
                     result += '<div class="form-row">';
-                    result += '<div class="column-half" id="d_' + item.name + '">' + DecoraleLabel(item)  + '{' + item.name + '}</div>';
+                    result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item)  + '{' + item.name + '}</div>';
                 } else {
-                    result += '<div class="column-half" id="d_' + item.name + '">' + DecoraleLabel(item) + '{' + item.name + '}</div>';
+                    result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
                     result += '</div>';
                 }
             });
@@ -248,6 +248,10 @@
         SimpleGrid.call(this,tableName,pagerName,caption,editCaption,addCaption,url,viewModel,sortField,sessionUrl,authorizedRoles,showChildGrid);
         var tableId = '#' + tableName;
         this.config.subGrid = true;
+        this.config.subGridOptions= {
+            plusicon: "glyphicon-hand-right",
+            minusicon: "glyphicon-hand-down"
+        };
         this.config.subGridRowExpanded = function (divid, rowid) {
             showChildGrid(divid, rowid);
         };
