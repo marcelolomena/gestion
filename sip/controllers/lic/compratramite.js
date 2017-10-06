@@ -39,6 +39,10 @@ function list(req, res) {
     base.list(req, res, entity, includes, mapper);
 }
 
+function listChilds(req, res) {
+    base.listChilds(req, res, entity, 'idCompraTramite', includes, mapper);
+}
+
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
