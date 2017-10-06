@@ -18,15 +18,7 @@ module.exports = function (sequelize, DataTypes) {
         comentario: {
             type: DataTypes.STRING,
             allowNull: true
-        },
-        cui: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
-        sap: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
+        }
     }, {
         schema: 'lic',
         timestamps: false,
