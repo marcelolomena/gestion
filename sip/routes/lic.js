@@ -20,6 +20,8 @@ var planillaController = require('../controllers/lic/planilla');
 var instalacionController = require('../controllers/lic/instalacion');
 var ajusteController = require('../controllers/lic/ajuste');
 
+var compraTramiteController = require('../controllers/lic/compratramite');
+
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -68,6 +70,9 @@ module.exports = function (passport) {
     router.route('/lic/ajuste')
         .get(isAuthenticated, ajusteController.list)
         .post(isAuthenticated, ajusteController.action);
+
+        router.route('/lic/compratramite')
+        .get(isAuthenticated, compraTramiteController.list)
 
     return router;
 };

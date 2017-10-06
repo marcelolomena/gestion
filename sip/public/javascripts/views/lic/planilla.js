@@ -32,6 +32,15 @@
         }
     };
 
+    function initGrid(viewModel){
+        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
+        grid.prmEdit.beforeSubmit = beforeSubmit;
+        grid.prmAdd.beforeSubmit = beforeSubmit;
+        grid.navParameters.del = false;
+        grid.build();
+        grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
+    }
+
     $(function () {
         var $table = $('#gridMaster');
         var viewModel = [{
@@ -465,11 +474,6 @@
                 search: false
             },
         ];
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
-        grid.prmEdit.beforeSubmit = beforeSubmit;
-        grid.prmAdd.beforeSubmit = beforeSubmit;
-        grid.navParameters.del = false;
-        grid.build();
-        grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
+        initGrid(viewModel);
     });
 })(jQuery, _);
