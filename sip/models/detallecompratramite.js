@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('detallecompratramite', {
+    return sequelize.define('detalleCompraTramite', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -17,25 +17,21 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        nombre: {
-            type: DataTypes.STRING,
+        fechaInicio: {
+            field: 'fechainicio',
+            type: DataTypes.DATE,
             allowNull: true
         },
-        fechaInicio: {
-            field:'fechainicio',
+        fechaTermino: {
+            field: 'fechatermino',
             type: DataTypes.DATE,
             allowNull: true
-          },
-          fechaTermino: {
-            field:'fechatermino',
+        },
+        fechaControl: {
+            field: 'fechacontrol',
             type: DataTypes.DATE,
             allowNull: true
-          },
-          fechaControl: {
-            field:'fechacontrol',
-            type: DataTypes.DATE,
-            allowNull: true
-          },
+        },
         monto: {
             type: DataTypes.INTEGER,
             allowNull: true
@@ -52,8 +48,19 @@ module.exports = function (sequelize, DataTypes) {
         comentario: {
             type: DataTypes.STRING,
             allowNull: true
-        }
-
+        },
+        cui: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        sap: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        numsolicitud: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
     }, {
         schema: 'lic',
         timestamps: false,

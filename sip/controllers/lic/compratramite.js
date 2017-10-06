@@ -3,7 +3,7 @@ var models = require('../../models');
 var base = require('./lic-controller');
 var _ = require('lodash');
 
-var entity = models.compratramite;
+var entity = models.compraTramite;
 entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
 function map(req) {
     return {

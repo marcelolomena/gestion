@@ -21,6 +21,7 @@ var instalacionController = require('../controllers/lic/instalacion');
 var ajusteController = require('../controllers/lic/ajuste');
 
 var compraTramiteController = require('../controllers/lic/compratramite');
+var detalleCompraTramiteController = require('../controllers/lic/detallecompratramite');
 
 
 module.exports = function (passport) {
@@ -73,6 +74,9 @@ module.exports = function (passport) {
 
         router.route('/lic/compratramite')
         .get(isAuthenticated, compraTramiteController.list)
+
+        router.route('/lic/detallecompratramite')
+        .get(isAuthenticated, detalleCompraTramiteController.list)
 
     return router;
 };
