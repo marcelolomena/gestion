@@ -1,6 +1,20 @@
 (function ($, _) {
     'use strict';
     var zs = window.zs;
+
+    function showChildGrid(divid, rowid) {
+        var url = 'lic/detalleRecepcion'; 
+        var gridID = divid + '_t';
+        var pagerID = 'p_' + gridID;
+        $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
+        detalleRecepcioneGrid.renderGrid(url,gridID );
+    }
+
+    var initGrid = function (viewModel) {
+        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Recepción de licencias', 'Editar Recepción', 'Recepcionar Licencias', '/lic/recepcion', viewModel, 'id', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        grid.build();
+    };
+
     $(function () {
         var viewModel = [
             {
@@ -64,20 +78,16 @@
                 search: false
             }, {
                 label: 'CUI',
-                name: 'idCui',
+                name: 'cui',
                 width: 80,
                 align: 'center',
-                jsonmap: 'estructuracui.nombre',
                 sortable: false,
                 editable: true,
-                edittype: 'select',
                 editoptions: {
-                    dataUrl: '/lic/cui',
-                    buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.idCui;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione CUI', thissid).template;
+                    dataInit: function (element) {
+                        $(element).mask("00000", {
+                            placeholder: "00000"
+                        });
                     }
                 },
                 search: false
@@ -152,6 +162,7 @@
                 search: false
             }
         ];
+        initGrid(viewModel);
     });
 
 })(jQuery, _);
