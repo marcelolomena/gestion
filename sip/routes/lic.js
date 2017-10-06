@@ -23,11 +23,12 @@ var ajusteController = require('../controllers/lic/ajuste');
 var compraTramiteController = require('../controllers/lic/compratramite');
 var detalleCompraTramiteController = require('../controllers/lic/detallecompratramite');
 
+var recepcionController = require('../controllers/lic/recepcion');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
-        return req.session.passport.sidebar[0].rol 
-            ? res.json(req.session.passport.sidebar[0].rol) 
+        return req.session.passport.sidebar[0].rol
+            ? res.json(req.session.passport.sidebar[0].rol)
             : res.send("no session value stored in DB ");
     });
     router.get('/lic/clasificacion', clasificacionController.listAll);
@@ -51,14 +52,14 @@ module.exports = function (passport) {
         .get(isAuthenticated, compraController.list);
 
     router.route('/lic/traduccion/:pId')
-        .get(isAuthenticated, traduccionController.listChilds) 
+        .get(isAuthenticated, traduccionController.listChilds)
         .post(isAuthenticated, traduccionController.action);
 
     router.route('/lic/planilla')
-        .get(isAuthenticated, planillaController.list) 
+        .get(isAuthenticated, planillaController.list)
         .post(isAuthenticated, planillaController.action);
-        
-    router.route('/lic/exportplanilla' )
+
+    router.route('/lic/exportplanilla')
         .get(isAuthenticated, planillaController.excel);
 
     router.route('/lic/traduccion')
@@ -72,11 +73,15 @@ module.exports = function (passport) {
         .get(isAuthenticated, ajusteController.list)
         .post(isAuthenticated, ajusteController.action);
 
-        router.route('/lic/compratramite')
-        .get(isAuthenticated, compraTramiteController.list)
+    router.route('/lic/compratramite')
+        .get(isAuthenticated, compraTramiteController.list);
 
-        router.route('/lic/detallecompratramite')
-        .get(isAuthenticated, detalleCompraTramiteController.list)
+    router.route('/lic/detallecompratramite')
+        .get(isAuthenticated, detalleCompraTramiteController.list);
+
+    router.route('/lic/recepcion')
+        .get(isAuthenticated, recepcionController.list) 
+        .post(isAuthenticated, recepcionController.action);
 
     return router;
 };
