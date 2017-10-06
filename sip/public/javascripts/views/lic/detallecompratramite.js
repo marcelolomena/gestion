@@ -65,7 +65,7 @@ function renderGrid(loadurl, tableId) {
             editable: false
         },
         {
-            label: 'Número',
+            label: 'Número', 
             name: 'numero',
             hidden: true,
             hidden: false,
