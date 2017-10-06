@@ -243,12 +243,13 @@
         };
     }
 
-    function TabGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles,showChildGrid, tabs){
-        SimpleGrid.call(this,tableName,pagerName,caption,editCaption,addCaption,url,viewModel,sortField,sessionUrl,authorizedRoles,showChildGrid, tabs);
+    function StackGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles,showChildGrid){
+        var ar = arguments;
+        SimpleGrid.call(this,tableName,pagerName,caption,editCaption,addCaption,url,viewModel,sortField,sessionUrl,authorizedRoles,showChildGrid);
         var tableId = '#' + tableName;
         this.config.subGrid = true;
         this.config.subGridRowExpanded = function (divid, rowid) {
-            showChildGrid(divid, rowid, tabs);
+            showChildGrid(divid, rowid);
         };
         this.config.subGridBeforeExpand = function (divid, rowid) {
             var expanded = $('td.sgexpanded', tableId)[0];
@@ -259,6 +260,15 @@
             }
         };
     }
+
+    function TabGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles,showChildGrid, tabs){
+        var ar = arguments;
+        StackGrid.call(this,tableName,pagerName,caption,editCaption,addCaption,url,viewModel,sortField,sessionUrl,authorizedRoles,showChildGrid);
+        this.config.subGridRowExpanded = function (divid, rowid) {
+            showChildGrid(divid, rowid, tabs);
+        };
+    }
+
     var zs = window['zs'];
     if (!zs) {
         window['zs'] = {};
