@@ -3,7 +3,7 @@
     var zs = window.zs;
 
     function showChildGrid(divid, rowid) {
-        var url = '/lic/detallecompratramite/' +  gridID;
+        var url = '/lic/detallecompratramite/' +  rowid;
         var gridID = divid + '_t';
         var pagerID = 'p_' + gridID;
         $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');

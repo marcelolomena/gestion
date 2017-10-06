@@ -3,7 +3,7 @@
     function renderGrid(loadurl, tableId) {
         var $table = $('#' + tableId);
         var viewModel = [
-            {
+            { 
                 label: 'ID',
                 name: 'id',
                 key: true,
