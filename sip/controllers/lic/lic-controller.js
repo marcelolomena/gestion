@@ -8,7 +8,7 @@ function create(entity, data, res) {
     entity.create(data).then(function (created) {
         return res.json({ error: 0, glosa: '' });
     }).catch(function (err) {
-        logger.error(err);
+        logger.error(entity.name + ':create, ' + err);
         return res.json({ error: 1, glosa: err.message });
     });
 }
@@ -20,7 +20,7 @@ function update(entity, data, res) {
     }).then(function (updated) {
         return res.json({ error: 0, glosa: '' });
     }).catch(function (err) {
-        logger.error(err);
+        logger.error(entity.name + ':update, ' + err);
         return res.json({ error: 1, glosa: err.message });
     });
 }
@@ -35,7 +35,7 @@ function destroy(entity, id, res) {
         }
         return res.json({ success: true, glosa: '' });
     }).catch(function (err) {
-        logger.error(err);
+        logger.error(entity.name + ':destroy, ' + err);
         return res.json({ success: false, glosa: err.message });
     });
 }
@@ -59,11 +59,11 @@ function list(req, res, entity, includes, transformer) {
             var resultData = transformer(data);
             return res.json({ records: records, total: total, page: page, rows: resultData });
         }).catch(function (err) {
-            logger.error(err.message);
+            logger.error(entity.name + ':list.findAll, ' + err.message);
             return res.json({ error_code: 1 });
         })
     }).catch(function (err) {
-        logger.error(err.message);
+        logger.error(entity.name + ':list.count, ' + err.message);
         return res.json({ error_code: 1 });
     });
 }
@@ -92,11 +92,11 @@ function listChilds(req, res, entity, pIdName, includes, transformer) {
             var resultData = transformer(data);
             return res.json({ records: records, total: total, page: page, rows: resultData });
         }).catch(function (err) {
-            logger.error(err.message);
+            logger.error(entity.name + ':listChilds.findAll, ' +err.message);
             return res.json({ error_code: 1 });
         })
     }).catch(function (err) {
-        logger.error(err.message);
+        logger.error(entity.name + ':listChilds.count, ' + err.message);
         return res.json({ error_code: 1 });
     });
 }
@@ -104,7 +104,7 @@ function listAll(req, res, entity, mapper) {
     entity.findAll().then(function (rows) {
         return res.json(_.orderBy(_.map(rows, mapper), ['nombre']));
     }).catch(function (err) {
-        logger.error(err.message);
+        logger.error(entity.name + ':listAll.findAll, ' + err.message);
         return res.json({
             error_code: 1
         });
@@ -123,7 +123,7 @@ function exportList(req, res, entity, includes, transformer, cols, fileName) {
         res.setHeader('Content-Disposition', 'attachment;filename=' + fileName + '_' + sts + '.xlsx');
         return res.end(result, 'binary');
     }).catch(function (err) {
-        logger.error(err.message);
+        logger.error(entity.name + ':exportList.findAll, ' +err.message);
         return res.json({ error_code: 1 });
     })
 }
