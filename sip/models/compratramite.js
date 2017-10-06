@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('compratramite', {
+    return sequelize.define('compraTramite', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
             autoIncrement: true
         },
         nombre: {
-            type: DataTypes.STRING(10),
+            type: DataTypes.STRING,
             allowNull: true
         },
         idProveedor: {
@@ -32,7 +32,7 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
         },
         comprador: {
-            type: DataTypes.STRING(60),
+            type: DataTypes.STRING,
             allowNull: true
         },
         origen: {
