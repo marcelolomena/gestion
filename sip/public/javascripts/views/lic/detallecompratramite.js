@@ -16,18 +16,6 @@ function renderGrid(loadurl, tableId) {
             editable: false
         },
         {
-            label: 'CUI',
-            name: 'cui',
-            hidden: false,
-            editable: false
-        },
-        {
-            label: 'SAP',
-            name: 'sap',
-            hidden: false,
-            editable: false
-        },
-        {
             label: 'Fecha Inicio',
             name: 'fechaInicio',
             hidden: true,
@@ -65,6 +53,20 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Comentario',
             name: 'comentario',
+            hidden: true,
+            hidden: false,
+            editable: false
+        },
+        {
+            label: 'Nombre',
+            name: 'nombre',
+            hidden: true,
+            hidden: false,
+            editable: false
+        },
+        {
+            label: 'Número',
+            name: 'numero',
             hidden: true,
             hidden: false,
             editable: false

@@ -3,11 +3,11 @@
     var zs = window.zs;
 
     function showChildGrid(divid, rowid) {
-        var url = '';  //TODO:Definir URL
+        var url = '/lic/detallecompratramite/' +  gridID;
         var gridID = divid + '_t';
         var pagerID = 'p_' + gridID;
         $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
-        detalleCompraTramiteGrid.renderGrid(url,gridID );
+        detalleCompraTramiteGrid.renderGrid(url, gridID);
     }
 
     var initGrid = function (viewModel) {
@@ -28,34 +28,55 @@
                 label: 'Contrato',
                 name: 'nombre',
                 hidden: false,
-                editable: false
+                editable: false,
+                search: false
             },
             {
                 label: 'Proveedor',
                 name: 'idProveedor',
                 hidden: false,
-                editable: false
+                editable: false,
+                search: false
+            },
+            {
+                label: 'CUI',
+                name: 'cui',
+                hidden: false,
+                hidden: false,
+                editable: false,
+                search: false
+            },
+            {
+                label: 'SAP',
+                name: 'sap',
+                hidden: true,
+                hidden: false,
+                editable: false,
+                search: false
             },
             {
                 label: 'Número',
                 name: 'numContrato',
                 hidden: false,
-                editable: false
+                editable: false,
+                search: false
             },
             {
                 label: 'Comprador',
                 name: 'comprador',
                 hidden: true,
                 hidden: false,
-                editable: false
+                editable: false,
+                search: false
             },
             {
                 label: 'Origen',
                 name: 'origen',
                 hidden: true,
                 hidden: false,
-                editable: false
-            },
+                editable: false,
+                search: false
+            }
         ];
         initGrid(viewModel);
     });

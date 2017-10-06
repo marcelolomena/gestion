@@ -42,6 +42,14 @@ module.exports = function (sequelize, DataTypes) {
         borrado: {
             type: DataTypes.INTEGER,
             allowNull: true
+        },
+        cui: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        sap: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }
     }, {
         schema: 'lic',

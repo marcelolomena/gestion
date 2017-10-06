@@ -49,18 +49,18 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
-        cui: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
-        sap: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
         numsolicitud: {
             type: DataTypes.INTEGER,
             allowNull: true
         },
+        nombre: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        numero: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
     }, {
         schema: 'lic',
         timestamps: false,

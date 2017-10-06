@@ -74,9 +74,11 @@ module.exports = function (passport) {
 
         router.route('/lic/compratramite')
         .get(isAuthenticated, compraTramiteController.list)
+        .post(isAuthenticated, compraTramiteController.action);
 
-        router.route('/lic/detallecompratramite')
-        .get(isAuthenticated, detalleCompraTramiteController.list)
+        router.route('/lic/detallecompratramite/:pId')
+        .get(isAuthenticated, detalleCompraTramiteController.listChilds)
+        .post(isAuthenticated, detalleCompraTramiteController.action);
 
     return router;
 };

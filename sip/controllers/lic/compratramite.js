@@ -13,6 +13,8 @@ function map(req) {
         numContrato: req.body.numContrato,
         comprador: req.body.comprador,
         origen: req.body.origen,
+        cui: req.body.cui,
+        sap: req.body.sap,
         borrado: 1
     }
 }
@@ -25,6 +27,8 @@ function mapper(data) {
             numContrato: item.numContrato,
             comprador: item.comprador,
             origen: item.origen,
+            cui: item.cui,
+            sap: item.sap,
             proveedor: { nombre: item.proveedor.nombre }
         }
     });
@@ -56,5 +60,5 @@ function action(req, res) {
 
 module.exports = {
     list: list,
-    // action: action
+    action: action
 }

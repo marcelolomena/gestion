@@ -15,15 +15,15 @@ function map(req) {
     return {
         id: req.body.id || 0,
         idCompraTramite: req.body.idCompraTramite,
-        cui: req.body.cui || null,
-        sap: req.body.sap || null,
         nombre: req.body.nombre,
         fechaInicio: req.body.fechaInicio,
         fechaTermino: req.body.fechaTermino,
         fechaControl: req.body.fechaControl,
         monto: req.body.monto,
         idMoneda: req.body.idMoneda,
-        comentario: req.body.comentario
+        numsolicitud: req.body.numsolicitud,
+        nombre: req.body.nombre,
+        numero: req.body.numero
     }
 }
 
@@ -32,15 +32,15 @@ function mapper(data) {
         return {
             id: item.id,
             idCompraTramite: item.idCompraTramite,
-            cui: item.cui || null,
-            sap: item.sap || null,
-            nombre: item.nombre,
             fechaInicio: item.fechaInicio,
             fechaTermino: item.fechaTermino,
             fechaControl: item.fechaControl,
             monto: item.monto,
             idMoneda: item.idMoneda,
             comentario: item.comentario,
+            numsolicitud: item.numsolicitud,
+            nombre: item.nombre,
+            numero: item.numero,
             compraTramite: {
                 nombre: item.compraTramite.nombre
             },
@@ -59,6 +59,10 @@ function list(req, res) {
     base.list(req, res, entity, includes, mapper);
 }
 
+function listChilds(req, res) {
+    base.listChilds(req, res, entity, 'idCompraTramite', includes, mapper);
+}
+
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
@@ -72,5 +76,5 @@ function action(req, res) {
 
 module.exports = {
     list: list,
-    // action: action
+    action: action
 }
