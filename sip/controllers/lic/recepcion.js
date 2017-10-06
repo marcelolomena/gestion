@@ -4,7 +4,7 @@ var base = require('./lic-controller');
 var _ = require('lodash');
 
 var entity = models.recepcion;
-entity.belongsTo(models.proveerdor, { foreignKey: 'idProveedor' });
+entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
 entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
 
 function map(req) {
@@ -20,7 +20,7 @@ function mapper(data) {
 var includes = [
     {
         model: models.proveedor
-    },{
+    }, {
         model: models.moneda
     }
 ];

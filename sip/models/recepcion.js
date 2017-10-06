@@ -80,6 +80,6 @@ module.exports = function (sequelize, DataTypes) {
     }, {
         schema: 'lic',
         timestamps: false,
-        tableName: 'receocion'
+        tableName: 'recepcion'
     });
 };

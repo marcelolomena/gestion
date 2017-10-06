@@ -55,9 +55,6 @@ var includes = [{
     model: models.moneda
 }];
 
-function list(req, res) {
-    base.list(req, res, entity, includes, mapper);
-}
 
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idCompraTramite', includes, mapper);
@@ -75,6 +72,6 @@ function action(req, res) {
 }
 
 module.exports = {
-    list: list,
+    listChilds: listChilds,
     action: action
 }

@@ -28,7 +28,7 @@
                 label: 'Contrato',
                 name: 'nombre',
                 hidden: false,
-                editable: false,
+                editable: true,
                 search: false
             },
             {
@@ -43,7 +43,7 @@
                 name: 'cui',
                 hidden: false,
                 hidden: false,
-                editable: false,
+                editable: true,
                 search: false
             },
             {
@@ -51,7 +51,7 @@
                 name: 'sap',
                 hidden: true,
                 hidden: false,
-                editable: false,
+                editable: true,
                 search: false
             },
             {
