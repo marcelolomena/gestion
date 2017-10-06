@@ -3,9 +3,8 @@ var models = require('../../models');
 var base = require('./lic-controller');
 var _ = require('lodash');
 
-var entity = models.recepcion;
-entity.belongsTo(models.proveerdor, { foreignKey: 'idProveedor' });
-entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
+var entity = models.detalleSolicoitud;
+//entity.belongsTo(models.proveerdor, { foreignKey: 'idProveedor' });
 
 function map(req) {
     return {
@@ -18,15 +17,10 @@ function mapper(data) {
     });
 }
 var includes = [
-    {
-        model: models.proveedor
-    },{
-        model: models.moneda
-    }
 ];
 
-function list(req, res) {
-    base.list(req, res, entity, includes, mapper);
+function listChilds(req, res) {
+    base.listChilds(req, res, entity, 'idRecepcion', includes, mapper);
 }
 
 function action(req, res) {
@@ -135,7 +129,7 @@ function upload(req, res) {
 
 };
 module.exports = {
-    list: list,
+    listChilds: listChilds,
     action: action,
     upload: upload
 }
