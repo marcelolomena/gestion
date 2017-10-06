@@ -282,6 +282,7 @@
         TabTemplate: TabTemplate,
         SelectTemplate: SelectTemplate,
         SimpleGrid: SimpleGrid,
+        StackGrid:StackGrid,
         TabGrid :TabGrid
     });
 })(jQuery, _);

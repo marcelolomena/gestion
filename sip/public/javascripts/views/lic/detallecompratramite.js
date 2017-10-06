@@ -1,5 +1,4 @@
 
-
 function renderGrid(loadurl, tableId) {
     var $table = $('#' +tableId);
 
@@ -10,7 +9,7 @@ function renderGrid(loadurl, tableId) {
             key: true,
             hidden: true,
             editable: false
-        }, , {
+        }, {
             label: 'idCompraTramite',
             name: 'idcompratramite',
             hidden: true,

@@ -6,15 +6,12 @@
         var url = '';  //TODO:Definir URL
         var gridID = divid + '_t';
         var pagerID = 'p_' + gridID;
-        $('#' + parentRowID).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
-        detalleCompraTramiteGrid.renderGrid(gridID, url);
+        $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
+        detalleCompraTramiteGrid.renderGrid(url,gridID );
     }
 
     var initGrid = function (viewModel) {
-        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
-        grid.config.subGridRowExpanded = function (divid, rowid) {
-            showChildGrid(divid, rowid);
-        };
+        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.build();
     };
 
