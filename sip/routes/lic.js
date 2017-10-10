@@ -38,10 +38,21 @@ module.exports = function (passport) {
     .get(isAuthenticated, fabricanteController.list)
     .post(isAuthenticated, fabricanteController.action);
 
-    router.get('/lic/clasificacion', clasificacionController.listAll);
-    
-    router.get('/lic/tipoInstalacion', tipoInstalacionController.listAll);
+    router.get('/lic/clasificaciones', clasificacionController.listAll);
+    router.route('/lic/clasificacion')
+    .get(isAuthenticated, clasificacionController.list)
+    .post(isAuthenticated, clasificacionController.action);
+
+    router.get('/lic/tipoInstalacion', tipoInstalacionController.listAll);}
+    router.route('/lic/tipoInstalacion')
+    .get(isAuthenticated, tipoInstalacionController.list)
+    .post(isAuthenticated, tipoInstalacionController.action);
+
     router.get('/lic/tipoLicenciamiento', tipoLicenciamientoController.listAll);
+    router.route('/lic/tipoLicenciamiento')
+    .get(isAuthenticated, tipoLicenciamientoController.list)
+    .post(isAuthenticated, tipoLicenciamientoController.action);
+
     router.get('/lic/proveedor', proveedorController.listAll);
     router.get('/lic/cui', cuiController.listAll);
     router.get('/lic/moneda', monedaController.listAll);

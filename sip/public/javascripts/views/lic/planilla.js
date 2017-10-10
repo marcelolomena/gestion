@@ -218,7 +218,7 @@
                 editable: true,
                 edittype: 'select',
                 editoptions: {
-                    dataUrl: '/lic/clasificacion',
+                    dataUrl: '/lic/clasificaciones',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.clasificacion;
@@ -232,7 +232,7 @@
                 search: true,
                 stype: 'select',
                 searchoptions: {
-                    dataUrl: '/lic/clasificacion',
+                    dataUrl: '/lic/clasificaciones',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.clasificacion;
