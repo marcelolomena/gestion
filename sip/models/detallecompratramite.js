@@ -60,6 +60,15 @@ module.exports = function (sequelize, DataTypes) {
         numero: {
             type: DataTypes.INTEGER,
             allowNull: true
+        },
+        idProducto: {
+            field: 'idproducto',
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'producto',
+                key: 'id'
+            }
         }
     }, {
         schema: 'lic',

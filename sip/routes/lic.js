@@ -40,6 +40,7 @@ module.exports = function (passport) {
     router.get('/lic/cui', cuiController.listAll);
     router.get('/lic/moneda', monedaController.listAll);
     router.get('/lic/tipo', tipoController.listAll);
+    router.get('/lic/producto', productoController.listAll);
 
     router.route('/lic/grid_inventario')
         .get(isAuthenticated, productoController.list)

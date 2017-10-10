@@ -3,7 +3,7 @@
     var zs = window.zs;
 
     function showChildGrid(divid, rowid) {
-        var url = '/lic/detallecompratramite/' +  rowid;
+        var url = '/lic/detallecompratramite/' + rowid;
         var gridID = divid + '_t';
         var pagerID = 'p_' + gridID;
         $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
@@ -24,18 +24,15 @@
                 key: true,
                 hidden: true,
                 editable: false
-            }, {
-                label: 'Contrato',
+            },
+            {
+                label: 'Nombre',
                 name: 'nombre',
                 hidden: false,
                 editable: true,
-                search: false
-            },
-            {
-                label: 'Proveedor',
-                name: 'idProveedor',
-                hidden: false,
-                editable: false,
+                editrules: {
+                    required: true
+                },
                 search: false
             },
             {
@@ -44,6 +41,9 @@
                 hidden: false,
                 hidden: false,
                 editable: true,
+                editrules: {
+                    required: true
+                },
                 search: false
             },
             {
@@ -55,10 +55,17 @@
                 search: false
             },
             {
-                label: 'Número',
+                label: 'Número Contrato',
                 name: 'numContrato',
                 hidden: false,
-                editable: false,
+                editable: true,
+                search: false
+            },
+            {
+                label: 'O.C.',
+                name: 'ordenCompra',
+                hidden: false,
+                editable: true,
                 search: false
             },
             {
@@ -66,7 +73,33 @@
                 name: 'comprador',
                 hidden: true,
                 hidden: false,
-                editable: false,
+                editable: true,
+                editrules: {
+                    required: true
+                },
+                search: false
+            },
+            {
+                label: 'Proveedor',
+                name: 'idProveedor',
+                jsonmap: 'proveedor.nombre',
+                width: 300,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                edittype: 'select',
+                editoptions: {
+                    dataUrl: '/lic/proveedor',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.proveedor;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
+                    }
+                },
+                editrules: {
+                    required: true
+                },
                 search: false
             },
             {
@@ -74,7 +107,10 @@
                 name: 'origen',
                 hidden: true,
                 hidden: false,
-                editable: false,
+                editable: true,
+                editrules: {
+                    required: true
+                },
                 search: false
             }
         ];

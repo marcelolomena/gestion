@@ -60,6 +60,15 @@ function list(req, res) {
     base.list(req, res, entity, includes, mapper);
 }
 
+function listAll(req, res) {
+    base.listAll(req, res, entity, function (item) {
+        return {
+            id: item.id,
+            nombre: item.nombre
+        };
+    });
+}
+
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
@@ -73,5 +82,6 @@ function action(req, res) {
 
 module.exports = {
     list: list,
-    action: action
+    action: action,
+    listAll: listAll
 }
