@@ -14,7 +14,7 @@ var bitacoraGrid = {
             editable: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/lic/fabricante',
+                dataUrl: '/lic/fabricantes',
                 buildSelect: function (response) {
                     var rowData = $grid.getRowData($grid.getGridParam("selrow"));
                     var thissid = rowData.fabricante;

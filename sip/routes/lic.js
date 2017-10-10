@@ -32,8 +32,14 @@ module.exports = function (passport) {
             res.json(req.session.passport.sidebar[0].rol) :
             res.send("no session value stored in DB ");
     });
+
+    router.get('/lic/fabricantes', fabricanteController.listAll);
+    router.route('/lic/fabricante')
+    .get(isAuthenticated, fabricanteController.list)
+    .post(isAuthenticated, fabricanteController.action);
+
     router.get('/lic/clasificacion', clasificacionController.listAll);
-    router.get('/lic/fabricante', fabricanteController.listAll);
+    
     router.get('/lic/tipoInstalacion', tipoInstalacionController.listAll);
     router.get('/lic/tipoLicenciamiento', tipoLicenciamientoController.listAll);
     router.get('/lic/proveedor', proveedorController.listAll);

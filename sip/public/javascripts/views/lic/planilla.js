@@ -122,7 +122,7 @@
                 editable: true,
                 edittype: 'select',
                 editoptions: {
-                    dataUrl: '/lic/fabricante',
+                    dataUrl: '/lic/fabricantes',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.fabricante;
@@ -136,7 +136,7 @@
                 search: true,
                 stype: 'select',
                 searchoptions: {
-                    dataUrl: '/lic/fabricante',
+                    dataUrl: '/lic/fabricantes',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.fabricante;
