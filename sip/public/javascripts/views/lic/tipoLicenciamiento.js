@@ -20,7 +20,7 @@
             },
             search: true
         }];
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Tipo de Licenciamiento', 'Editar Tipo de Licenciamiento', 'Agregar Tipo de Licenciamiento', '/lic/clasificacion', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Tipo de Licenciamiento', 'Editar Tipo de Licenciamiento', 'Agregar Tipo de Licenciamiento', '/lic/tipoLicenciamiento', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
         grid.build();
     });
 
