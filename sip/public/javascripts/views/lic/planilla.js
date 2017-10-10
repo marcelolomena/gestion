@@ -185,7 +185,7 @@
                 editable: true,
                 edittype: 'select',
                 editoptions: {
-                    dataUrl: '/lic/tipoInstalacion',
+                    dataUrl: '/lic/tiposInstalacion',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.tipoInstalacion;
@@ -200,7 +200,7 @@
                 search: true,
                 stype: 'select',
                 searchoptions: {
-                    dataUrl: '/lic/tipoInstalacion',
+                    dataUrl: '/lic/tiposInstalacion',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.tipoInstalacion;
@@ -250,7 +250,7 @@
                 editable: true,
                 edittype: 'select',
                 editoptions: {
-                    dataUrl: '/lic/tipoLicenciamiento',
+                    dataUrl: '/lic/tiposLicenciamiento',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.tipoLicenciamiento;
@@ -264,7 +264,7 @@
                 search: true,
                 stype: 'select',
                 searchoptions: {
-                    dataUrl: '/lic/tipoLicenciamiento',
+                    dataUrl: '/lic/tiposLicenciamiento',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.tipoLicenciamiento;
