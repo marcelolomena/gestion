@@ -83,7 +83,7 @@
                 label: 'Proveedor',
                 name: 'idProveedor',
                 jsonmap: 'proveedor.nombre',
-                width: 300,
+                width: 600,
                 align: 'center',
                 sortable: false,
                 editable: true,
