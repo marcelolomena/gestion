@@ -21,6 +21,8 @@
             search: true
         }];
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Tipo de Aplicación', 'Editar Tipo de Aplicación', 'Agregar Tipo de Aplicación', '/lic/tipoInstalacion', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
+        grid.config.rowNum = 20;
+        grid.config.sortorder= 'asc';
         grid.build();
     });
 

@@ -21,6 +21,8 @@
             search: true
         }];
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Fabricantes', 'Editar Fabricante', 'Agregar Fabricante', '/lic/fabricante', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
+        grid.config.rowNum = 20;
+        grid.config.sortorder= 'asc';
         grid.build();
     });
 

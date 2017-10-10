@@ -21,6 +21,8 @@
             search: true
         }];
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Tipo de Licenciamiento', 'Editar Tipo de Licenciamiento', 'Agregar Tipo de Licenciamiento', '/lic/tipoLicenciamiento', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
+        grid.config.rowNum = 20;
+        grid.config.sortorder= 'asc';
         grid.build();
     });
 
