@@ -4,24 +4,24 @@ var base = require('./lic-controller');
 var _ = require('lodash');
 
 var entity = models.detalleCompraTramite;
-entity.belongsTo(models.compraTramite, {
-    foreignKey: 'idCompraTramite'
-});
 entity.belongsTo(models.moneda, {
     foreignKey: 'idMoneda'
 });
-entity.belongsTo(models.producto, { foreignKey: 'idProducto'});
+entity.belongsTo(models.producto, {
+    foreignKey: 'idProducto'
+});
+
 function map(req) {
     return {
         id: req.body.id || 0,
-        idCompraTramite: req.body.idCompraTramite,
+        idCompraTramite: req.body.idCompraTramite || req.params.pId,
         nombre: req.body.nombre,
-        fechaInicio: req.body.fechaInicio,
-        fechaTermino: req.body.fechaTermino,
-        fechaControl: req.body.fechaControl,
+        fechaInicio: base.toDate(req.body.fechaInicio),
+        fechaTermino: base.toDate(req.body.fechaTermino),
+        fechaControl: base.toDate(req.body.fechaControl),
         monto: req.body.monto,
         idMoneda: req.body.idMoneda,
-        numsolicitud: req.body.numsolicitud,
+        comentario: req.body.comentario,
         nombre: req.body.nombre,
         numero: req.body.numero,
         idProducto: req.body.idProducto
@@ -32,19 +32,15 @@ function mapper(data) {
     return _.map(data, function (item) {
         return {
             id: item.id,
-            idCompraTramite: item.idCompraTramite,
-            fechaInicio: item.fechaInicio,
-            fechaTermino: item.fechaTermino,
-            fechaControl: item.fechaControl,
+            fechaInicio: base.fromDate(item.fechaInicio),
+            fechaTermino: base.fromDate(item.fechaTermino),
+            fechaControl: base.fromDate(item.fechaControl),
             monto: item.monto,
             idMoneda: item.idMoneda,
             comentario: item.comentario,
             numsolicitud: item.numsolicitud,
-            nombre: item.nombre,
+            nombrenew: item.nombre,
             numero: item.numero,
-            compraTramite: {
-                nombre: item.compraTramite.nombre
-            },
             moneda: {
                 nombre: item.moneda.nombre
             },
@@ -55,11 +51,13 @@ function mapper(data) {
     });
 }
 var includes = [{
-    model: models.compraTramite,
-    model: models.moneda,
-    model: models.producto
-}];
+        model: models.moneda
+    },
+    {
+        model: models.producto
+    }
 
+];
 
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idCompraTramite', includes, mapper);

@@ -27,7 +27,7 @@ function mapper(data) {
             idProveedor: item.idProveedor,
             numContrato: item.numContrato,
             comprador: item.comprador,
-            origen: item.origen,
+            origen: item.origen ? 'Proyectos' : 'Continuidad',
             cui: item.cui,
             sap: item.sap,
             proveedor: { nombre: item.proveedor.razonsocial }

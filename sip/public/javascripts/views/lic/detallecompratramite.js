@@ -13,13 +13,14 @@ function renderGrid(loadurl, tableId) {
             label: 'idCompraTramite',
             name: 'idcompratramite',
             hidden: true,
-            editable: false
+            editable: false,
+            search: false
         },
         {
             label: 'Producto',
             name: 'idProducto',
-            //jsonmap: 'invetario',
-            width: 300,
+            jsonmap: 'producto.nombre',
+            width: 250,
             align: 'center',
             sortable: false,
             editable: true,
@@ -39,9 +40,16 @@ function renderGrid(loadurl, tableId) {
             search: false
         },
         {
+            label: 'Otro',
+            name: 'nombre',
+            hidden: false,
+            editable: false,
+            search: false
+        },
+        {
             label: 'Fecha Inicio',
             name: 'fechaInicio',
-            width: 200,
+            width: 100,
             align: 'center',
             sortable: false,
             editable: true,
@@ -62,7 +70,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Fecha Término',
             name: 'fechaTermino',
-            width: 200,
+            width: 110,
             align: 'center',
             sortable: false,
             editable: true,
@@ -83,7 +91,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Fecha Control',
             name: 'fechaControl',
-            width: 200,
+            width: 100,
             align: 'center',
             sortable: false,
             editable: true,
@@ -102,17 +110,10 @@ function renderGrid(loadurl, tableId) {
             search: false
         },
         {
-            label: 'Monto',
-            name: 'monto',
-            hidden: true,
-            hidden: false,
-            editable: true
-        },
-        {
             label: 'Moneda',
             name: 'idMoneda',
             jsonmap: 'moneda.nombre',
-            width: 70,
+            width: 100,
             align: 'center',
             sortable: false,
             editable: true,
@@ -132,23 +133,25 @@ function renderGrid(loadurl, tableId) {
             search: false
         },
         {
-            label: 'Nombre',
-            name: 'nombre',
-            hidden: true,
+            label: 'Monto',
+            name: 'monto',
+            width: 100,
             hidden: false,
-            editable: true
+            editable: true,
+            search: false
         },
+        
         {
             label: 'Número', 
             name: 'numero',
-            hidden: true,
             hidden: false,
-            editable: true
+            editable: true,
+            search: false
         },
         {
             label: 'Comentario',
             name: 'comentario',
-            hidden: true,
+            width: 500,
             hidden: false,
             editable: true,
             edittype: 'textarea',
