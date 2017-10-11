@@ -15,11 +15,13 @@ module.exports = function (sequelize, DataTypes) {
             references: {
                 model: 'fabricante',
                 key: 'id'
-            }
+            },
+            unique: 'fabricanteNombre'
         },
         nombre: {
             type: DataTypes.STRING(120),
-            allowNull: false
+            allowNull: false,
+            unique: 'fabricanteNombre'
         },
         idTipoInstalacion: {
             field: 'idtipoinstalacion',

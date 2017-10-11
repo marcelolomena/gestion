@@ -31,7 +31,7 @@ function destroy(entity, id, res) {
         }
     }).then(function (rowDeleted) {
         if (rowDeleted === 1) {
-            logger.debug('Deleted successfully');
+            logger.debug(entity.name + ' Deleted successfully');
         }
         return res.json({ success: true, glosa: '' });
     }).catch(function (err) {
