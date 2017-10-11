@@ -69,6 +69,15 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'producto',
                 key: 'id'
             }
+        },
+        idFabricante: {
+            field: 'idfabricante',
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'fabricante',
+                key: 'id'
+            }
         }
     }, {
         schema: 'lic',

@@ -1,9 +1,7 @@
-
 function renderGrid(loadurl, tableId) {
-    var $table = $('#' +tableId);
+    var $table = $('#' + tableId);
 
-    var viewModel = [
-        {
+    var viewModel = [{
             label: 'ID',
             name: 'id',
             key: true,
@@ -40,12 +38,45 @@ function renderGrid(loadurl, tableId) {
             search: false
         },
         {
-            label: 'Otro',
+            label: 'Otro Producto',
             name: 'nombre',
             width: 250,
             hidden: false,
-            editable: false,
+            editable: true,
             search: false
+        },
+        {
+            label: 'Fabricante',
+            name: 'idFabricante',
+            jsonmap: 'fabricante.nombre',
+            width: 180,
+            align: 'center',
+            sortable: false,
+            editable: true,
+            edittype: 'select',
+            editoptions: {
+                dataUrl: '/lic/fabricantes',
+                buildSelect: function (response) {
+                    var rowData = $table.getRowData($table.getGridParam('selrow'));
+                    var thissid = rowData.fabricante;
+                    var data = JSON.parse(response);
+                    return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
+                }
+            },
+            editrules: {
+                required: true
+            },
+            search: false,
+            stype: 'select',
+            searchoptions: {
+                dataUrl: '/lic/fabricantes',
+                buildSelect: function (response) {
+                    var rowData = $table.getRowData($table.getGridParam('selrow'));
+                    var thissid = rowData.idFabricante;
+                    var data = JSON.parse(response);
+                    return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                }
+            }
         },
         {
             label: 'Fecha Inicio',
@@ -142,9 +173,9 @@ function renderGrid(loadurl, tableId) {
             editable: true,
             search: false
         },
-        
+
         {
-            label: 'Número', 
+            label: 'Número',
             name: 'numero',
             width: 80,
             align: 'center',
@@ -169,7 +200,3 @@ function renderGrid(loadurl, tableId) {
 var detalleCompraTramiteGrid = {
     renderGrid: renderGrid
 };
-
-
-
-
