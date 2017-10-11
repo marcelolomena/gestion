@@ -10,6 +10,9 @@ entity.belongsTo(models.moneda, {
 entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
+entity.belongsTo(models.fabricante, {
+    foreignKey: 'idFabricante'
+});
 
 function map(req) {
     return {
@@ -24,7 +27,8 @@ function map(req) {
         comentario: req.body.comentario,
         nombre: req.body.nombre,
         numero: req.body.numero,
-        idProducto: req.body.idProducto
+        idProducto: req.body.idProducto,
+        idFabricante: req.body.idFabricante
     }
 }
 
@@ -46,6 +50,9 @@ function mapper(data) {
             },
             producto: {
                 nombre: item.producto.nombre
+            },
+            fabricante: {
+                nombre: item.fabricante.nombre
             }
         }
     });
@@ -55,6 +62,9 @@ var includes = [{
     },
     {
         model: models.producto
+    },
+    {
+        model: models.fabricante
     }
 
 ];

@@ -75,7 +75,13 @@ module.exports = function (sequelize, DataTypes) {
         comentarios: {
             type: DataTypes.STRING(255),
             allowNull: true
-        }
+        },
+        licTramite: {
+            field:'lictramite',
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue:0
+        },
     }, {
             schema: 'lic', timestamps: false, tableName: 'producto'
         });

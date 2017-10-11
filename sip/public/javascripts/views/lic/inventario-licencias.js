@@ -106,7 +106,8 @@
                 width: 160,
                 align: 'center',
                 sortable: false,
-                editable: true,
+                editable: false,
+                hidden: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/tiposInstalacion',
@@ -135,7 +136,8 @@
                 width: 150,
                 align: 'center',
                 sortable: false,
-                editable: true,
+                editable: false,
+                hidden: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/clasificaciones',
@@ -164,7 +166,8 @@
                 width: 170,
                 align: 'center',
                 sortable: false,
-                editable: true,
+                editable: false,
+                hidden: true,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/tiposLicenciamiento',
@@ -194,7 +197,17 @@
                 formatter: 'integer',
                 editable: false,
                 search: false
-            }, {
+            }, 
+            {
+                label: 'Por Recepcionar',
+                name: 'licTramite',
+                width: 125,
+                align: 'center',
+                formatter: 'integer',
+                editable: false,
+                search: false
+            },
+            {
                 label: 'Licencias Instaladas',
                 name: 'licOcupadas',
                 width: 125,

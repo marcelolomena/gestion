@@ -19,8 +19,9 @@ function map(req) {
         licStock: req.body.licStock,
         licOcupadas: req.body.licOcupadas,
         alertaRenovacion: req.body.alertaRenovacion,
-        // utilidad: req.body.utilidad,
-        comentarios: req.body.comentarios
+        utilidad: req.body.utilidad,
+        comentarios: req.body.comentarios,
+        licTramite: req.body.licTramite
     }
 }
 function mapper(data) {
@@ -40,7 +41,8 @@ function mapper(data) {
             fabricante: { nombre: item.fabricante.nombre },
             clasificacion: { nombre: item.clasificacion.nombre },
             tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
-            tipoLicenciamiento: { nombre: item.tipoLicenciamiento.nombre }
+            tipoLicenciamiento: { nombre: item.tipoLicenciamiento.nombre },
+            licTramite: item.licTramite,
         }
     });
 }
