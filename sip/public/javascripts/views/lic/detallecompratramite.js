@@ -42,6 +42,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Otro',
             name: 'nombre',
+            width: 250,
             hidden: false,
             editable: false,
             search: false
@@ -135,7 +136,8 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Monto',
             name: 'monto',
-            width: 100,
+            width: 80,
+            align: 'center',
             hidden: false,
             editable: true,
             search: false
@@ -144,6 +146,8 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Número', 
             name: 'numero',
+            width: 80,
+            align: 'center',
             hidden: false,
             editable: true,
             search: false
@@ -151,7 +155,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Comentario',
             name: 'comentario',
-            width: 500,
+            width: 400,
             hidden: false,
             editable: true,
             edittype: 'textarea',

@@ -28,42 +28,52 @@
             {
                 label: 'Nombre',
                 name: 'nombre',
+                width: 380,
                 hidden: false,
                 editable: true,
                 editrules: {
-                    required: true
+                    required: false
                 },
                 search: false
             },
             {
                 label: 'CUI',
                 name: 'cui',
-                hidden: false,
+                width: 80,
                 hidden: false,
                 editable: true,
                 editrules: {
-                    required: true
+                    required: false
                 },
                 search: false
             },
             {
                 label: 'SAP',
                 name: 'sap',
-                hidden: true,
-                hidden: false,
+                width: 80,
+                align: 'center',
+                sortable:false,
                 editable: true,
+                editrules: {
+                    required: false
+                },
                 search: false
             },
             {
                 label: 'Número Contrato',
                 name: 'numContrato',
+                width: 80,
                 hidden: false,
                 editable: true,
+                editrules: {
+                    required: false
+                },
                 search: false
             },
             {
                 label: 'O.C.',
                 name: 'ordenCompra',
+                width: 80,
                 hidden: false,
                 editable: true,
                 search: false
@@ -83,7 +93,7 @@
                 label: 'Proveedor',
                 name: 'idProveedor',
                 jsonmap: 'proveedor.nombre',
-                width: 600,
+                width: 500,
                 align: 'center',
                 sortable: false,
                 editable: true,
