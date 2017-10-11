@@ -42,7 +42,7 @@ function mapper(data) {
             nombrenew: item.nombre,
             numero: item.numero,
             moneda: {
-                nombre: item.moneda.nombre
+                nombre: item.moneda.moneda
             },
             producto: {
                 nombre: item.producto.nombre
