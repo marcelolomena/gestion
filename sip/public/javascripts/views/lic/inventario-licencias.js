@@ -208,14 +208,16 @@
                 sortable: false,
                 editable: false,
                 search: false
-            }, {
-                label: 'Utilidad',
-                name: 'utilidad',
-                hidden: true,
-                sortable: false,
-                editable: true,
-                edittype: 'textarea'
-            }, {
+             }, 
+            //  {
+            //     label: 'Utilidad',
+            //     name: 'utilidad',
+            //     hidden: true,
+            //     sortable: false,
+            //     editable: true,
+            //     edittype: 'textarea'
+            // },
+             {
                 label: 'Comentarios',
                 name: 'comentarios',
                 hidden: true,

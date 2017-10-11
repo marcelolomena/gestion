@@ -7,7 +7,8 @@ var entity = models.tipoLicenciamiento;
 function map(req) {
     return {
         id: req.body.id || 0,
-        nombre: req.body.nombre
+        nombre: req.body.nombre,
+        borrado: req.body.nombre.borrado || 1
     }
 }
 function mapper(data) {

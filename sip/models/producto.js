@@ -1,15 +1,15 @@
-'use strict'; 
+'use strict';
 var Sequelize = require('sequelize');
 module.exports = function (sequelize, DataTypes) {
     return sequelize.define('producto', {
         id: {
-            type:DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
         },
         idFabricante: {
-            field:'idfabricante',
+            field: 'idfabricante',
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
@@ -22,7 +22,7 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false
         },
         idTipoInstalacion: {
-            field:'idtipoinstalacion',
+            field: 'idtipoinstalacion',
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
@@ -31,7 +31,7 @@ module.exports = function (sequelize, DataTypes) {
             }
         },
         idClasificacion: {
-            field:'idclasificacion',
+            field: 'idclasificacion',
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
@@ -40,7 +40,7 @@ module.exports = function (sequelize, DataTypes) {
             }
         },
         idTipoLicenciamiento: {
-            field:'idtipolicenciamiento',
+            field: 'idtipolicenciamiento',
             type: DataTypes.INTEGER,
             allowNull: true,
             references: {
@@ -49,22 +49,22 @@ module.exports = function (sequelize, DataTypes) {
             }
         },
         licStock: {
-            field:'licstock',
+            field: 'licstock',
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue:0
+            defaultValue: 0
         },
         licOcupadas: {
-            field:'licocupadas',
+            field: 'licocupadas',
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue:0
+            defaultValue: 0
         },
         alertaRenovacion: {
-            field:'alertarenovacion',
+            field: 'alertarenovacion',
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue:0
+            defaultValue: 0
         },
         utilidad: {
             type: DataTypes.STRING(255),

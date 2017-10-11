@@ -8,7 +8,8 @@ module.exports = function (sequelize, DataTypes) {
         },
         nombre: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
+            unique: true
 
         },
         borrado: {

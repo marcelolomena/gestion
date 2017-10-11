@@ -456,15 +456,17 @@
                 sortable: false,
                 editable: true,
                 search: false
-            }, {
-                label: 'Utilidad',
-                name: 'utilidad',
-                hidden: true,
-                sortable: false,
-                editable: true,
-                edittype: 'textarea',
-                search: false
-            }, {
+            },
+            //  {
+            //     label: 'Utilidad',
+            //     name: 'utilidad',
+            //     hidden: true,
+            //     sortable: false,
+            //     editable: true,
+            //     edittype: 'textarea',
+            //     search: false
+            // },
+             {
                 label: 'Comentarios',
                 name: 'comentarios',
                 hidden: true,
