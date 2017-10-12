@@ -106,7 +106,7 @@
                 width: 160,
                 align: 'center',
                 sortable: false,
-                editable: false,
+                editable: true,
                 hidden: true,
                 edittype: 'select',
                 editoptions: {
@@ -136,7 +136,7 @@
                 width: 150,
                 align: 'center',
                 sortable: false,
-                editable: false,
+                editable: true,
                 hidden: true,
                 edittype: 'select',
                 editoptions: {
@@ -166,7 +166,7 @@
                 width: 170,
                 align: 'center',
                 sortable: false,
-                editable: false,
+                editable: true,
                 hidden: true,
                 edittype: 'select',
                 editoptions: {
