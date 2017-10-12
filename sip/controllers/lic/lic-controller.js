@@ -4,32 +4,44 @@ var logger = require('../../utils/logger');
 var nodeExcel = require('excel-export');
 var _ = require('lodash');
 
+function createP(entity, data){
+    return entity.create(data);
+}
 function create(entity, data, res) {
-    entity.create(data).then(function (created) {
+    entity.createP(entity, data)
+    .then(function (created) {
         return res.json({ error: 0, glosa: '' });
     }).catch(function (err) {
         logger.error(entity.name + ':create, ' + err);
         return res.json({ error: 1, glosa: err.message });
     });
 }
-function update(entity, data, res) {
-    entity.update(data, {
+function updateP(entity, data){
+    return  entity.update(data, {
         where: {
             id: data.id
         }
-    }).then(function (updated) {
+    });
+}
+function update(entity, data, res) {
+    updateP(entity, data)
+    .then(function (updated) {
         return res.json({ error: 0, glosa: '' });
     }).catch(function (err) {
         logger.error(entity.name + ':update, ' + err);
         return res.json({ error: 1, glosa: err.message });
     });
 }
-function destroy(entity, id, res) {
-    entity.destroy({
+function updateP(entity, id){
+    return  entity.destroy({
         where: {
             id: id
         }
-    }).then(function (rowDeleted) {
+    });
+}
+function destroy(entity, id, res) {
+    updateP(entity, id)
+    .then(function (rowDeleted) {
         if (rowDeleted === 1) {
             logger.debug(entity.name + ' Deleted successfully');
         }
@@ -39,6 +51,7 @@ function destroy(entity, id, res) {
         return res.json({ success: false, glosa: err.message });
     });
 }
+
 function list(req, res, entity, includes, transformer) {
     var page = parseInt(req.query.page);
     var rows = parseInt(req.query.rows);
@@ -141,6 +154,9 @@ function fromDate(fecha) {
 }
 
 module.exports = {
+    createP: createP,
+    updateP: updateP,
+    destroyP: destroyP,
     create: create,
     update: update,
     destroy: destroy,
