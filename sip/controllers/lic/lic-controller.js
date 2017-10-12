@@ -8,7 +8,7 @@ function createP(entity, data){
     return entity.create(data);
 }
 function create(entity, data, res) {
-    entity.createP(entity, data)
+    createP(entity, data)
     .then(function (created) {
         return res.json({ error: 0, glosa: '' });
     }).catch(function (err) {
@@ -32,7 +32,7 @@ function update(entity, data, res) {
         return res.json({ error: 1, glosa: err.message });
     });
 }
-function updateP(entity, id){
+function destroyP(entity, id){
     return  entity.destroy({
         where: {
             id: id
@@ -40,7 +40,7 @@ function updateP(entity, id){
     });
 }
 function destroy(entity, id, res) {
-    updateP(entity, id)
+    destroyP(entity, id)
     .then(function (rowDeleted) {
         if (rowDeleted === 1) {
             logger.debug(entity.name + ' Deleted successfully');
