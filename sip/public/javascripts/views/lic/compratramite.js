@@ -28,7 +28,8 @@
             {
                 label: 'Nombre',
                 name: 'nombre',
-                width: 380,
+                width: 250,
+                align: 'center',
                 hidden: false,
                 editable: true,
                 editrules: {
@@ -40,6 +41,7 @@
                 label: 'CUI',
                 name: 'cui',
                 width: 80,
+                align: 'center',
                 hidden: false,
                 editable: true,
                 editrules: {
@@ -63,6 +65,7 @@
                 label: 'Número Contrato',
                 name: 'numContrato',
                 width: 80,
+                align: 'center',
                 hidden: false,
                 editable: true,
                 editrules: {
@@ -74,6 +77,7 @@
                 label: 'O.C.',
                 name: 'ordenCompra',
                 width: 80,
+                align: 'center',
                 hidden: false,
                 editable: true,
                 search: false
@@ -81,6 +85,8 @@
             {
                 label: 'Comprador',
                 name: 'comprador',
+                width: 150,
+                align: 'center',
                 hidden: true,
                 hidden: false,
                 editable: true,
@@ -118,6 +124,23 @@
                 hidden: true,
                 hidden: false,
                 editable: true,
+                edittype: 'custom',
+                editoptions: {
+                    custom_value: sipLibrary.getRadioElementValue,
+                    custom_element: sipLibrary.radioElemContrato,
+                    defaultValue: "Continuidad",
+                },
+                formatter: function (cellvalue, options, rowObject) {
+                    var dato = '';
+                    var val = rowObject.origen;
+                    if (val == 1) {
+                        dato = 'Continuidad';
+    
+                    } else if (val == 0) {
+                        dato = 'Proyectos';
+                    }
+                    return dato;
+                },
                 editrules: {
                     required: true
                 },
