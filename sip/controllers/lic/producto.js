@@ -39,9 +39,9 @@ function mapper(data) {
             // utilidad: item.utilidad,
             comentarios: item.comentarios,
             fabricante: { nombre: item.fabricante.nombre },
-            clasificacion: { nombre: item.clasificacion.nombre },
-            tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
-            tipoLicenciamiento: { nombre: item.tipoLicenciamiento.nombre },
+            clasificacion: { nombre: item.clasificacion ? item.clasificacion.nombre: '' },
+            tipoInstalacion: { nombre: item.tipoInstalacion ? item.tipoInstalacion.nombre: ''  },
+            tipoLicenciamiento: { nombre: item.tipoLicenciamiento ? item.tipoLicenciamiento.nombre: ''  },
             licTramite: item.licTramite,
         }
     });

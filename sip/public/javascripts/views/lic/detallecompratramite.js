@@ -33,7 +33,7 @@ function renderGrid(loadurl, tableId) {
                 }
             },
             editrules: {
-                required: true
+                required: false
             },
             search: false
         },

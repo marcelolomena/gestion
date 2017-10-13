@@ -58,25 +58,40 @@ function mapper(data) {
     });
 }
 var includes = [{
-        model: models.moneda
-    },
-    {
-        model: models.producto
-    },
-    {
-        model: models.fabricante
-    }
+    model: models.moneda
+},
+{
+    model: models.producto
+},
+{
+    model: models.fabricante
+}
 
 ];
 
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idCompraTramite', includes, mapper);
 }
-
+function mapProducto(data) { 
+    return {nombre:data.nombre, idFabricante:data.idFabricante};
+}
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
-            return base.create(entity, map(req), res);
+            var data = map(req);
+            var productoM = models.producto;
+            if (!req.body.idProducto) {
+                return base.createP(productoM, mapProducto(data))
+                    .then(function (created) {
+                        data.idProducto = created.id;
+                        return base.create(entity, data, res);
+                    }).catch(function (err) {
+                        logger.error(productoM.name + ':create, ' + err);
+                        return res.json({ error: 1, glosa: err.message });
+                    });
+            } else {
+                return base.create(entity, data, res);
+            }
         case 'edit':
             return base.update(entity, map(req), res);
         case 'del':
