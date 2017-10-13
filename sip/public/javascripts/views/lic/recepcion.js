@@ -3,11 +3,11 @@
     var zs = window.zs;
 
     function showChildGrid(divid, rowid) {
-        var url = 'lic/detalleRecepcion' +  rowid; 
+        var url = 'lic/detalleRecepcion' + rowid;
         var gridID = divid + '_t';
         var pagerID = 'p_' + gridID;
         $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
-        detalleRecepcioneGrid.renderGrid(url,gridID );
+        detalleRecepcioneGrid.renderGrid(url, gridID);
     }
 
     var initGrid = function (viewModel) {
@@ -23,19 +23,109 @@
                 key: true,
                 hidden: true,
                 editable: false
-            },{
-                label: 'Título',
-                name: 'titulo',
+            }, {
+                label: 'Nombre',
+                name: 'nombre',
+                width: 250,
+                align: 'center',
+                hidden: false,
+                editable: true,
+                editrules: {
+                    required: false
+                },
+                search: false
+            }, {
+                label: 'SAP',
+                name: 'sap',
                 width: 80,
                 align: 'center',
                 sortable: false,
                 editable: true,
+                editrules: {
+                    required: false
+                },
                 search: false
-            },{
+            }, {
+                label: 'CUI',
+                name: 'cui',
+                width: 80,
+                align: 'center',
+                hidden: false,
+                editable: true,
+                editoptions: {
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var rowKey = $table.getGridParam("selrow");
+                            var rowData = $table.getRowData(rowKey);
+                            var thissid = $(this).val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/getNombreCui/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    if (data) {
+                                        $("input#unidadcui").val(data.nombre);
+                                    } else {
+                                        alert("No existe ese CUI");
+                                        $("input#unidadcui").val("0");
+                                    }
+                                }
+                            });
+                        }
+                    }],
+                },
+                search: false
+            }, {
+                label: 'Unidad CUI',
+                name: 'unidadcui',
+                width: 80,
+                align: 'center',
+                hidden: true,
+                editable: true,
+                editoptions: {
+                    readonly: 'readonly'
+                },
+                editrules: {
+                    required: false,
+                    edithidden: false
+                },
+                search: false
+            }, {
+                label: 'Número Contrato',
+                name: 'numContrato',
+                width: 80,
+                align: 'center',
+                hidden: false,
+                editable: true,
+                editrules: {
+                    required: false
+                },
+                search: false
+            }, {
+                label: 'O.C.',
+                name: 'ordenCompra',
+                width: 80,
+                align: 'center',
+                hidden: false,
+                editable: true,
+                search: false
+            }, {
+                label: 'Comprador',
+                name: 'comprador',
+                width: 150,
+                align: 'center',
+                hidden: true,
+                hidden: false,
+                editable: true,
+                editrules: {
+                    required: true
+                },
+                search: false
+            }, {
                 label: 'Proveedor',
                 name: 'idProveedor',
                 jsonmap: 'proveedor.nombre',
-                width: 300,
+                width: 500,
                 align: 'center',
                 sortable: false,
                 editable: true,
@@ -51,113 +141,6 @@
                 },
                 editrules: {
                     required: true
-                },
-                search: false
-            },{
-                label: 'Contrato',
-                name: 'contrato',
-                width: 80,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                search: false
-            }, {
-                label: 'O.C.',
-                name: 'ordenCompra',
-                width: 80,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                editoptions: {
-                    dataInit: function (element) {
-                        $(element).mask("00000", {
-                            placeholder: "00000"
-                        });
-                    }
-                },
-                search: false
-            }, {
-                label: 'CUI',
-                name: 'cui',
-                width: 80,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                editoptions: {
-                    dataInit: function (element) {
-                        $(element).mask("00000", {
-                            placeholder: "00000"
-                        });
-                    }
-                },
-                search: false
-            }, {
-                label: 'SAP',
-                name: 'sap',
-                width: 80,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                editoptions: {
-                    dataInit: function (element) {
-                        $(element).mask("00000", {
-                            placeholder: "00000"
-                        });
-                    }
-                },
-                search: false
-            },{
-                label: 'Fecha Inicio',
-                name: 'fechaInicio',
-                width: 200,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                editoptions: {
-                    size: 10,
-                    maxlengh: 10,
-                    dataInit: function (element) {
-                        $(element).mask('00-00-0000', {
-                            placeholder: 'DD-MM-YYYY'
-                        });
-                    }
-                },
-                editrules: {
-                    required: true
-                },
-                search: false
-            }, {
-                label: 'Fecha Término',
-                name: 'fechaTermino',
-                align: 'center',
-                width: 200,
-                sortable: false,
-                editable: true,
-                editoptions: {
-                    size: 10,
-                    maxlengh: 10,
-                    dataInit: function (element) {
-                        $(element).mask('00-00-0000', {
-                            placeholder: 'DD-MM-AAAA'
-                        });
-                    }
-                },
-                search: false
-            },{
-                label: 'Fecha Control',
-                name: 'fechaControl',
-                align: 'center',
-                width: 200,
-                sortable: false,
-                editable: true,
-                editoptions: {
-                    size: 10,
-                    maxlengh: 10,
-                    dataInit: function (element) {
-                        $(element).mask('00-00-0000', {
-                            placeholder: 'DD-MM-AAAA'
-                        });
-                    }
                 },
                 search: false
             }

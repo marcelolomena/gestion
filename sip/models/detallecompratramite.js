@@ -53,10 +53,6 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: true
         },
-        nombre: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
         numero: {
             type: DataTypes.INTEGER,
             allowNull: true
@@ -70,24 +66,16 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        idFabricante: {
-            field: 'idfabricante',
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'fabricante',
-                key: 'id'
-            }
-        },
         fechaRecepcion: {
             field: 'fecharecepcion',
             type: DataTypes.DATE,
             allowNull: true
         },
-        estadoRecepcion: {
-            field: 'estadorecepcion',
-            type: DataTypes.INTEGER,
-            allowNull: true
+        recepcionado: {
+            field: 'recepcionado',
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false 
         },
     }, {
         schema: 'lic',

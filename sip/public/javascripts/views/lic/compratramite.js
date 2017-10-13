@@ -18,14 +18,14 @@
 
     $(function () {
         var $table = $('#gridMaster');
-        var viewModel = [{
+        var viewModel = [
+            {
                 label: 'ID',
                 name: 'id',
                 key: true,
                 hidden: true,
                 editable: false
-            },
-            {
+            }, {
                 label: 'Nombre',
                 name: 'nombre',
                 width: 250,
@@ -36,20 +36,18 @@
                     required: false
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'SAP',
                 name: 'sap',
                 width: 80,
                 align: 'center',
-                sortable:false,
+                sortable: false,
                 editable: true,
                 editrules: {
                     required: false
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'CUI',
                 name: 'cui',
                 width: 80,
@@ -79,8 +77,7 @@
                     }],
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Unidad CUI',
                 name: 'unidadcui',
                 width: 80,
@@ -95,8 +92,7 @@
                     edithidden: false
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Número Contrato',
                 name: 'numContrato',
                 width: 80,
@@ -107,8 +103,7 @@
                     required: false
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'O.C.',
                 name: 'ordenCompra',
                 width: 80,
@@ -116,8 +111,7 @@
                 hidden: false,
                 editable: true,
                 search: false
-            },
-            {
+            }, {
                 label: 'Comprador',
                 name: 'comprador',
                 width: 150,
@@ -129,8 +123,7 @@
                     required: true
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Proveedor',
                 name: 'idProveedor',
                 jsonmap: 'proveedor.nombre',
@@ -152,8 +145,7 @@
                     required: true
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Origen',
                 name: 'origen',
                 hidden: true,
@@ -170,7 +162,7 @@
                     var val = rowObject.origen;
                     if (val == 1) {
                         dato = 'Continuidad';
-    
+
                     } else if (val == 0) {
                         dato = 'Proyectos';
                     }

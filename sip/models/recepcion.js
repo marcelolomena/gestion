@@ -41,41 +41,10 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: true
         },
-		fechaInicio: {
-            field: 'fechainicio',
+        fecha:{
+            field:'fecha',
             type: DataTypes.DATE,
-            allowNull: true
-        },
-        fechaTermino: {
-            field: 'fechatermino',
-            type: DataTypes.DATE,
-            allowNull: true
-        },
-        fechaControl: {
-            field: 'fechacontrol',
-            type: DataTypes.DATE,
-            allowNull: true
-        },
-        idMoneda: {
-            field: 'idmoneda',
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'moneda',
-                key: 'id'
-            }
-        },
-        monto: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
-        comentario: {
-            type: DataTypes.STRING,
-            allowNull: true
-        },
-        numsolicitud: {
-            type: DataTypes.INTEGER,
-            allowNull: true
+            allowNull:false
         }
     }, {
         schema: 'lic',
@@ -83,3 +52,6 @@ module.exports = function (sequelize, DataTypes) {
         tableName: 'recepcion'
     });
 };
+
+
+
