@@ -66,6 +66,15 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
+        idFabricante: {
+            field: 'idfabricante',
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'fabricante',
+                key: 'id'
+            }
+        },
         fechaRecepcion: {
             field: 'fecharecepcion',
             type: DataTypes.DATE,

@@ -11,12 +11,12 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'recepcion',
+                model: 'recepcion', 
                 key: 'id'
             }
         },
         nombre: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(250),
             allowNull: true
         },
         idProveedor: {
@@ -39,7 +39,7 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
         },
         comprador: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(250),
             allowNull: true
         },
         cui: {
@@ -49,6 +49,15 @@ module.exports = function (sequelize, DataTypes) {
         sap: {
             type: DataTypes.INTEGER,
             allowNull: true
+        },
+        idFabricante: {
+            field: 'idfabricante',
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'fabricante',
+                key: 'id'
+            }
         },
         idProducto: {
             field: 'idproducto',
@@ -84,7 +93,7 @@ module.exports = function (sequelize, DataTypes) {
             }
         },
         monto: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(10, 2),
             allowNull: true
         },
         cantidad: {

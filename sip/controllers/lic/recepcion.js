@@ -5,25 +5,40 @@ var _ = require('lodash');
 
 var entity = models.recepcion;
 entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
-entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
-
+var includes = [
+    {
+        model: models.proveedor
+    }
+];
 function map(req) {
     return {
         id: parseInt(req.body.id) || 0,
+        idProveedor: parseInt(req.body.idProveedor),
+        sap: parseInt(req.body.sap),
+        cui: parseInt(req.body.cui),
+        numContrato: parseInt(req.body.numContrato),
+        ordenCompra: parseInt(req.body.ordenCompra),
+        nombre: req.body.nombre,
+        fecha: req.body.fecha || base.now()
     }
 }
 function mapper(data) {
     return _.map(data, function (item) {
-        return item;
+        return {
+            id: item.id,
+            idProveedor: item.idProveedor,
+            proveedor: { nombre: item.proveedor.razonsocial },
+            sap:item.sap,
+            cui:item.cui,
+            numContrato:item.numContrato,
+            ordenCompra:item.ordenCompra,
+            nombre:item.nombre,
+            comprador:item.comprador,
+            fecha:item.fecha
+        };
     });
 }
-var includes = [
-    {
-        model: models.proveedor
-    }, {
-        model: models.moneda
-    }
-];
+
 
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
@@ -32,6 +47,7 @@ function list(req, res) {
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
+            var pp = map(req);
             return base.create(entity, map(req), res);
         case 'edit':
             return base.update(entity, map(req), res);

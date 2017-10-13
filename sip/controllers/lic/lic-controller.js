@@ -55,7 +55,7 @@ function destroy(entity, id, res) {
 function list(req, res, entity, includes, transformer) {
     var page = parseInt(req.query.page);
     var rows = parseInt(req.query.rows);
-    var orden = [[req.query.sidx || 'id', req.query.sord || 'desc']];
+    var orden = [[req.query.sidx || 'id', req.query.sord || 'asc']];
     var whereClause = getFilters(req.query.filters);
 
     entity.count({
@@ -152,7 +152,9 @@ function fromDate(fecha) {
     var result = fecha ? _.padStart(fecha.getUTCDate(), 2, '0') + '-' + _.padStart(getUTCMonth(fecha), 2, '0')  + '-' + fecha.getUTCFullYear() : '';
     return result;
 }
-
+function now(){
+    return new Date(Date.now())
+}
 module.exports = {
     createP: createP,
     updateP: updateP,
@@ -166,7 +168,8 @@ module.exports = {
     exportList: exportList,
     getFilters: getFilters,
     toDate: toDate,
-    fromDate: fromDate
+    fromDate: fromDate,
+    now:now
 };
 
 function getUTCMonth(date) {

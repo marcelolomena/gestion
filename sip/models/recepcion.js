@@ -7,7 +7,7 @@ module.exports = function (sequelize, DataTypes) {
             autoIncrement: true
         },
         nombre: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(120),
             allowNull: true
         },
         idProveedor: {
@@ -30,7 +30,7 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
         },
         comprador: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(120),
             allowNull: true
         },
         cui: {

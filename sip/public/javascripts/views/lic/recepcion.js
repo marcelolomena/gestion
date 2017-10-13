@@ -7,15 +7,16 @@
         var gridID = divid + '_t';
         var pagerID = 'p_' + gridID;
         $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
-        detalleRecepcioneGrid.renderGrid(url, gridID);
+        detalleRecepcionGrid.renderGrid(url, gridID);
     }
 
     var initGrid = function (viewModel) {
-        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Recepción de licencias', 'Editar Recepción', 'Recepcionar Licencias', '/lic/recepcion', viewModel, 'id', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Recepción de licencias', 'Editar Recepción', 'Recepcionar Licencias', '/lic/recepcion', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.build();
     };
 
     $(function () {
+        var $table = $('#gridMaster');
         var viewModel = [
             {
                 label: 'ID',
@@ -32,6 +33,28 @@
                 editable: true,
                 editrules: {
                     required: false
+                },
+                search: false
+            }, {
+                label: 'Proveedor',
+                name: 'idProveedor',
+                jsonmap: 'proveedor.nombre',
+                width: 500,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                edittype: 'select',
+                editoptions: {
+                    dataUrl: '/lic/proveedor',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.proveedor;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
+                    }
+                },
+                editrules: {
+                    required: true
                 },
                 search: false
             }, {
@@ -108,40 +131,6 @@
                 align: 'center',
                 hidden: false,
                 editable: true,
-                search: false
-            }, {
-                label: 'Comprador',
-                name: 'comprador',
-                width: 150,
-                align: 'center',
-                hidden: true,
-                hidden: false,
-                editable: true,
-                editrules: {
-                    required: true
-                },
-                search: false
-            }, {
-                label: 'Proveedor',
-                name: 'idProveedor',
-                jsonmap: 'proveedor.nombre',
-                width: 500,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                edittype: 'select',
-                editoptions: {
-                    dataUrl: '/lic/proveedor',
-                    buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.proveedor;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
-                    }
-                },
-                editrules: {
-                    required: true
-                },
                 search: false
             }
         ];
