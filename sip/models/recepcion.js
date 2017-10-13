@@ -45,6 +45,15 @@ module.exports = function (sequelize, DataTypes) {
             field:'fecha',
             type: DataTypes.DATE,
             allowNull:false
+        },
+        idDetalleCompraTramite: {
+            field: 'iddetallecompratramite',
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'detallecompratramite',
+                key: 'id'
+            }
         }
     }, {
         schema: 'lic',
