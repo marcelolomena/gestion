@@ -73,7 +73,7 @@ function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idCompraTramite', includes, mapper);
 }
 function mapProducto(data) { 
-    return {nombre:data.nombre, idFabricante:data.idFabricante};
+    return {nombre:data.nombre, idFabricante:data.idFabricante, licTramite:data.numero};
 }
 function action(req, res) {
     switch (req.body.oper) {
