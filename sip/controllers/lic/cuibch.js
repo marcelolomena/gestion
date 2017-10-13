@@ -15,12 +15,17 @@ function listAll(req, res) {
     });
 }
 
-function getNombreCui(req, res){
-    base.listAll(req, res, entity, function(item){
-        return {
-            unidad: item.unidad
-        }
-    })
+
+function getNombreCui(req, res) {
+    var cui = parseInt(req.params.cui);
+    entity
+        .findOne({ where: { cui: cui }, attributes: ['unidad'] })
+        .then(function (result) {
+            return res.json({ error: 0, glosa: '', nombre: result.unidad });
+        })
+        .catch(function (err) {
+            return res.json({ error_code: 1 });
+        });
 }
 
 
@@ -30,9 +35,9 @@ function getNombreCui(req, res){
 //       .spread(function (rows) {
 //         return res.json(rows);
 //       });
-  
+
 //   };
-  
+
 module.exports = {
     listAll: listAll,
     getNombreCui: getNombreCui

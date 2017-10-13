@@ -57,7 +57,7 @@ module.exports = function (passport) {
     router.get('/lic/proveedor', proveedorController.listAll);
     router.get('/lic/cui', cuiController.listAll);
 
-    router.route('/getNombreCui/:id')
+    router.route('/getNombreCui/:cui')
         .get(isAuthenticated, cuiBchController.getNombreCui);
 
     router.get('/lic/cuibch', cuiController.listAll);

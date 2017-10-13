@@ -29,7 +29,7 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
         }
     }, {
-        schema: 'sip',
+        schema: 'lic',
         timestamps: false,
         tableName: 'estructuracuibch'
     });
