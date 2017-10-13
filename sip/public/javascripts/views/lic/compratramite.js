@@ -67,8 +67,8 @@
                                 url: '/getNombreCui/' + thissid,
                                 async: false,
                                 success: function (data) {
-                                    if (data.length > 0) {
-                                        $("input#unidadcui").val(data[0].unidad);
+                                    if (data) {
+                                        $("input#unidadcui").val(data.nombre);
                                     } else {
                                         alert("No existe ese CUI");
                                         $("input#unidadcui").val("0");
