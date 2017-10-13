@@ -78,7 +78,17 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'fabricante',
                 key: 'id'
             }
-        }
+        },
+        fechaRecepcion: {
+            field: 'fecharecepcion',
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        estadoRecepcion: {
+            field: 'estadorecepcion',
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
     }, {
         schema: 'lic',
         timestamps: false,
