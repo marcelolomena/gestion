@@ -38,18 +38,6 @@
                 search: false
             },
             {
-                label: 'CUI',
-                name: 'cui',
-                width: 80,
-                align: 'center',
-                hidden: false,
-                editable: true,
-                editrules: {
-                    required: false
-                },
-                search: false
-            },
-            {
                 label: 'SAP',
                 name: 'sap',
                 width: 80,
@@ -58,6 +46,53 @@
                 editable: true,
                 editrules: {
                     required: false
+                },
+                search: false
+            },
+            {
+                label: 'CUI',
+                name: 'cui',
+                width: 80,
+                align: 'center',
+                hidden: false,
+                editable: true,
+                editoptions: {
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var rowKey = $table.getGridParam("selrow");
+                            var rowData = $table.getRowData(rowKey);
+                            var thissid = $(this).val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/getNombreCui/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    if (data.length > 0) {
+                                        $("input#unidadcui").val(data[0].unidad);
+                                    } else {
+                                        alert("No existe ese CUI");
+                                        $("input#unidadcui").val("0");
+                                    }
+                                }
+                            });
+                        }
+                    }],
+                },
+                search: false
+            },
+            {
+                label: 'Unidad CUI',
+                name: 'unidadcui',
+                width: 80,
+                align: 'center',
+                hidden: true,
+                editable: true,
+                editoptions: {
+                    readonly: 'readonly'
+                },
+                editrules: {
+                    required: false,
+                    edithidden: false
                 },
                 search: false
             },

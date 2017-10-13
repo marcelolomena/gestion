@@ -8,6 +8,7 @@ var tipoInstalacionController = require('../controllers/lic/tipoInstalacion');
 var tipoLicenciamientoController = require('../controllers/lic/tipoLicenciamiento');
 var proveedorController = require('../controllers/lic/proveedor');
 var cuiController = require('../controllers/lic/cui');
+var cuiBchController = require('../controllers/lic/cuibch');
 var monedaController = require('../controllers/lic/moneda');
 var tipoController = require('../controllers/lic/tipo');
 
@@ -35,26 +36,31 @@ module.exports = function (passport) {
 
     router.get('/lic/fabricantes', fabricanteController.listAll);
     router.route('/lic/fabricante')
-    .get(isAuthenticated, fabricanteController.list)
-    .post(isAuthenticated, fabricanteController.action);
+        .get(isAuthenticated, fabricanteController.list)
+        .post(isAuthenticated, fabricanteController.action);
 
     router.get('/lic/clasificaciones', clasificacionController.listAll);
     router.route('/lic/clasificacion')
-    .get(isAuthenticated, clasificacionController.list)
-    .post(isAuthenticated, clasificacionController.action);
+        .get(isAuthenticated, clasificacionController.list)
+        .post(isAuthenticated, clasificacionController.action);
 
     router.get('/lic/tiposInstalacion', tipoInstalacionController.listAll);
     router.route('/lic/tipoInstalacion')
-    .get(isAuthenticated, tipoInstalacionController.list)
-    .post(isAuthenticated, tipoInstalacionController.action);
+        .get(isAuthenticated, tipoInstalacionController.list)
+        .post(isAuthenticated, tipoInstalacionController.action);
 
     router.get('/lic/tiposLicenciamiento', tipoLicenciamientoController.listAll);
     router.route('/lic/tipoLicenciamiento')
-    .get(isAuthenticated, tipoLicenciamientoController.list)
-    .post(isAuthenticated, tipoLicenciamientoController.action);
+        .get(isAuthenticated, tipoLicenciamientoController.list)
+        .post(isAuthenticated, tipoLicenciamientoController.action);
 
     router.get('/lic/proveedor', proveedorController.listAll);
     router.get('/lic/cui', cuiController.listAll);
+
+    router.route('/getNombreCui/:id')
+        .get(isAuthenticated, cuiBchController.getNombreCui);
+
+    router.get('/lic/cuibch', cuiController.listAll);
     router.get('/lic/moneda', monedaController.listAll);
     router.get('/lic/tipo', tipoController.listAll);
     router.get('/lic/producto', productoController.listAll);
