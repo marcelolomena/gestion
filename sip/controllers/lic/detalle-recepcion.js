@@ -3,46 +3,104 @@ var models = require('../../models');
 var base = require('./lic-controller');
 var _ = require('lodash');
 
-var entity = models.detalleSolicoitud;
-//entity.belongsTo(models.proveerdor, { foreignKey: 'idProveedor' });
-
+var entity = models.detalleRecepcion;
+entity.belongsTo(models.proveedor, {
+    foreignKey: 'idProveedor'
+});
+entity.belongsTo(models.fabricante, {
+    foreignKey: 'idFabricante'
+});
+entity.belongsTo(models.producto, {
+    foreignKey: 'idProducto'
+});
+entity.belongsTo(models.moneda, {
+    foreignKey: 'idMoneda'
+});
+var includes = [
+    {
+        model: models.proveedor
+    },
+    {
+        model: models.fabricante
+    },
+    {
+        model: models.producto
+    },
+    {
+        model: models.moneda
+    }
+];
 function map(req) {
     return {
         id: parseInt(req.body.id) || 0,
+        idRecepcion: req.body.idRecepcion || req.params.pId,
+        nombre:req.body.nombre,
+        idProveedor: parseInt(req.body.idProveedor),
+        sap: parseInt(req.body.sap),
+        cui: parseInt(req.body.cui),
+        numContrato: parseInt(req.body.numContrato),
+        ordenCompra: parseInt(req.body.ordenCompra),
+        idProducto: req.body.idProducto,
+        idFabricante: req.body.idFabricante,
+        fechaInicio: base.toDate(req.body.fechaInicio),
+        fechaTermino: base.toDate(req.body.fechaTermino),
+        fechaControl: base.toDate(req.body.fechaControl),
+        idMoneda: req.body.idMoneda,
+        monto: req.body.monto,
+        cantidad: req.body.cantidad,
+        comentario: req.body.comentario,
+        numSolicitud: req.body.comentario,
+        comprador:req.body.comprador
     }
 }
 function mapper(data) {
     return _.map(data, function (item) {
-        return item;
+        return {
+            id: item.id,
+            idProveedor: item.idProveedor,
+            proveedor: { nombre: item.proveedor.razonsocial },
+            idFabricante: item.idFabricante,
+            fabricante: { nombre: item.fabricante.nombre },
+            idProducto: item.idProducto,
+            producto: { nombre: item.producto.nombre },
+            idMoneda: item.idMoneda,
+            moneda: { nombre: item.moneda.nombre },
+            sap: item.sap,
+            cui: item.cui,
+            numContrato: item.numContrato,
+            ordenCompra: item.ordenCompra,
+            nombre: item.nombre,
+            comprador: item.comprador,
+            fecha: item.fecha
+        };
     });
 }
-var includes = [
-];
+
 
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idRecepcion', includes, mapper);
 }
 
-function mapProducto(data) { 
-    return {nombre:data.nombre, idFabricante:data.idFabricante};
+function mapProducto(data) {
+    return { nombre: data.nombre, idFabricante: data.idFabricante };
 }
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
-        var data = map(req);
-        var productoM = models.producto;
-        if (!req.body.idProducto) {
-             base.createP(productoM,mapProducto(data))
-            .then(function (created) {
-                data.idProducto = created.id;
-                return base.create(entity, data, res);
-            }).catch(function (err) {
-                logger.error(productoM.name + ':create, ' + err);
-                return res.json({ error: 1, glosa: err.message });
-            });
-        } else {
-            return base.create(entity, map(req), res);
-        }
+            var data = map(req);
+            var productoM = models.producto;
+            if (!req.body.idProducto) {
+                base.createP(productoM, mapProducto(data))
+                    .then(function (created) {
+                        data.idProducto = created.id;
+                        return base.create(entity, data, res);
+                    }).catch(function (err) {
+                        logger.error(productoM.name + ':create, ' + err);
+                        return res.json({ error: 1, glosa: err.message });
+                    });
+            } else {
+                return base.create(entity, map(req), res);
+            }
         case 'edit':
             return base.update(entity, map(req), res);
         case 'del':

@@ -110,7 +110,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, recepcionController.list)
         .post(isAuthenticated, recepcionController.action);
 
-    router.route('/lic/detallerecepcion/:pId')
+    router.route('/lic/detalleRecepcion/:pId')
         .get(isAuthenticated, detalleRecepcionController.listChilds)
         .post(isAuthenticated, detalleRecepcionController.action);
 
