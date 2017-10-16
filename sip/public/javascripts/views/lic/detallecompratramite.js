@@ -30,7 +30,37 @@ function renderGrid(loadurl, tableId) {
                     var thissid = rowData.nombre;
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione el Producto', thissid).template;
-                }
+                },
+                dataEvents: [{
+                    type: 'change',
+                    fn: function (e) {
+                        var rowKey = $table.getGridParam("selrow");
+                        var rowData = $table.getRowData(rowKey);
+                        var thissid = $(this).val();
+                        $("input#idFabricante").val($('option:selected', this).text());
+                        var idFabricante = $('option:selected', this).val();
+                        if (idFabricante != '0') {
+
+                            if (thissid) {
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/lic/getFabricante/' + thissid,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data) {
+                                            $("select#idFabricante").val(data.idFabric);
+                                            $("#idFabricante").attr('disabled', 'disabled');
+                                        } else {
+                                            alert("No existe Fabricante para este Producto");
+                                            $("select#idFabricante").val("0");
+                                        }
+                                    }
+    
+                                });
+                            }
+                        }
+                    }
+                }],
             },
             editrules: {
                 required: false
@@ -72,7 +102,7 @@ function renderGrid(loadurl, tableId) {
                 dataUrl: '/lic/fabricantes',
                 buildSelect: function (response) {
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
-                    var thissid = rowData.idFabricante;
+                    var thissid = rowData.nombre;
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
                 }
@@ -194,6 +224,7 @@ function renderGrid(loadurl, tableId) {
         },
     ];
     var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+
     grid.build();
 }
 

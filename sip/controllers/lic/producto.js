@@ -71,6 +71,27 @@ function listAll(req, res) {
     });
 }
 
+
+function getFabricante(req, res) {
+    var idProducto = parseInt(req.params.idProducto);
+    entity.findOne({ where: { id: idProducto }, attributes: ['idfabricante'] })
+        .then(function (result) {
+            var idFabric = result.dataValues.idfabricante;
+            models.fabricante.findOne({ where: { id: idFabric }, attributes: ['nombre']})
+            .then(function(resulta){
+                return res.json({ error: 0, idFabric: idFabric, nombre: resulta.nombre});
+            })
+            .catch(function (err) {
+                return res.json({ error_code: 1 });
+            });
+        })
+        .catch(function (err) {
+            return res.json({ error_code: 1 });
+        });
+}
+
+
+
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
@@ -85,5 +106,6 @@ function action(req, res) {
 module.exports = {
     list: list,
     action: action,
-    listAll: listAll
+    listAll: listAll,
+    getFabricante: getFabricante
 }
