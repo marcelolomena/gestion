@@ -33,45 +33,52 @@ var includes = [
 function map(req) {
     return {
         id: parseInt(req.body.id) || 0,
-        idRecepcion: req.body.idRecepcion || req.params.pId,
-        nombre:req.body.nombre,
+        idRecepcion: parseInt(req.body.idRecepcion || req.params.pId),
+        nombre: req.body.nombre,
         idProveedor: parseInt(req.body.idProveedor),
-        sap: parseInt(req.body.sap),
-        cui: parseInt(req.body.cui),
-        numContrato: parseInt(req.body.numContrato),
-        ordenCompra: parseInt(req.body.ordenCompra),
-        idProducto: req.body.idProducto,
-        idFabricante: req.body.idFabricante,
+        sap: req.body.sap ? parseInt(req.body.sap) : null,
+        cui: req.body.sap ? parseInt(req.body.idCui) : null,
+        numContrato: req.body.numContrato ? parseInt(req.body.numContrato) : null,
+        ordenCompra: req.body.ordenCompra ? parseInt(req.body.ordenCompra) : null,
+        idProducto: req.body.idProducto ? parseInt(req.body.idProducto) : null,
+        idFabricante: req.body.idFabricante ? parseInt(req.body.idFabricante) : null,
         fechaInicio: base.toDate(req.body.fechaInicio),
         fechaTermino: base.toDate(req.body.fechaTermino),
         fechaControl: base.toDate(req.body.fechaControl),
-        idMoneda: req.body.idMoneda,
-        monto: req.body.monto,
-        cantidad: req.body.cantidad,
+        idMoneda: parseInt(req.body.idMoneda),
+        monto: parseInt(req.body.monto || 0),
+        cantidad: req.body.cantidad ? parseInt(req.body.cantidad) : 0,
         comentario: req.body.comentario,
-        numSolicitud: req.body.comentario,
-        comprador:req.body.comprador
+        numSolicitud: req.body.numSolicitud ? parseInt(req.body.numSolicitud) : null,
+        comprador: req.body.comprador
     }
 }
 function mapper(data) {
     return _.map(data, function (item) {
         return {
             id: item.id,
+            idRecepcion: item.idRecepcion,
             idProveedor: item.idProveedor,
             proveedor: { nombre: item.proveedor.razonsocial },
-            idFabricante: item.idFabricante,
-            fabricante: { nombre: item.fabricante.nombre },
-            idProducto: item.idProducto,
-            producto: { nombre: item.producto.nombre },
-            idMoneda: item.idMoneda,
-            moneda: { nombre: item.moneda.nombre },
             sap: item.sap,
             cui: item.cui,
             numContrato: item.numContrato,
             ordenCompra: item.ordenCompra,
+            idFabricante: item.idFabricante,
+            fabricante: { nombre: item.fabricante.nombre },
+            idProducto: item.idProducto,
+            producto: { nombre: item.producto.nombre },
+            fechaInicio: base.fromDate(item.fechaInicio),
+            fechaTermino: base.fromDate(item.fechaTermino),
+            fechaControl: base.fromDate(item.fechaControl),
+            idMoneda: item.idMoneda,
+            moneda: { nombre: item.moneda.nombre },
+            monto: item.monto,
+            cantidad: item.cantidad,
             nombre: item.nombre,
             comprador: item.comprador,
-            fecha: item.fecha
+            comentario: item.comentario,
+            fecha: base.fromDate(item.fecha)
         };
     });
 }

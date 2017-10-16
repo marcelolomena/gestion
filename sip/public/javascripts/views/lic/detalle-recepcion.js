@@ -39,7 +39,7 @@ var detalleRecepcionGrid = {
                 align: 'center',
                 hidden: false,
                 sortable: false,
-                editable: true,
+                editable: false,
                 editoptions: {
                     readonly: 'readonly'
                 },
@@ -104,7 +104,7 @@ var detalleRecepcionGrid = {
                 },
                 search: false
             }, {
-                label: 'Número Contrato',
+                label: '# Contrato',
                 name: 'numContrato',
                 width: 80,
                 align: 'center',
@@ -203,8 +203,7 @@ var detalleRecepcionGrid = {
                     required: true
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Fecha Término',
                 name: 'fechaTermino',
                 width: 110,
@@ -224,8 +223,7 @@ var detalleRecepcionGrid = {
                     required: true
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Fecha Control',
                 name: 'fechaControl',
                 width: 100,
@@ -245,8 +243,7 @@ var detalleRecepcionGrid = {
                     required: true
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Moneda',
                 name: 'idMoneda',
                 jsonmap: 'moneda.nombre',
@@ -268,39 +265,51 @@ var detalleRecepcionGrid = {
                     required: true
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Monto',
                 name: 'monto',
                 width: 80,
                 align: 'center',
                 hidden: false,
                 editable: true,
+                editoptions: { defaultValue: '0' },
+                editrules: { number: true },
                 search: false
             }, {
                 label: 'Cantidad',
                 name: 'cantidad',
                 hidden: false,
-                editable: true
+                editable: true,
+                editoptions: { defaultValue: '0' },
+                editrules: { integer: true },
             }, {
                 label: 'Comentario',
                 name: 'comentario',
                 hidden: true,
                 editable: true,
                 edittype: 'textarea'
-            },
-            {
+            }, {
                 label: 'N° Solicitud',
                 name: 'numSolicitud',
                 hidden: true,
                 editable: true
+            }, {
+                label: 'Comprador',
+                name: 'comprador',
+                hidden: false,
+                sortable: false,
+                editable: true,
+                search: true
             }
         ];
         var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
-        grid.prmAdd.beforeShowForm = function (formid) {
-            var pp = formid[0];
-            var $pp = $(pp);
-
+        grid.prmAdd.beforeSubmit = function (postdata, formid) {
+            postdata.idProveedor = grid.parentRowData.idProveedor;
+            postdata.idCui = grid.parentRowData.idCui;
+            postdata.sap = grid.parentRowData.sap;
+            postdata.numContrato = grid.parentRowData.numContrato;
+            postdata.ordenCompra = grid.parentRowData.ordenCompra;
+            return [true, '', ''];
         };
         grid.build();
         return grid;

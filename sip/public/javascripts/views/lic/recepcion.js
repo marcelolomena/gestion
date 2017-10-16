@@ -126,7 +126,7 @@
                 },
                 search: false
             }, {
-                label: 'Número Contrato',
+                label: '# Contrato',
                 name: 'numContrato',
                 width: 80,
                 align: 'center',
