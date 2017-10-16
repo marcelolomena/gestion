@@ -1,5 +1,5 @@
 var detalleRecepcionGrid = {
-    renderGrid :function (loadurl, tableId) {
+    renderGrid: function (loadurl, tableId) {
         var $table = $('#' + tableId);
         var viewModel = [
             {
@@ -21,7 +21,14 @@ var detalleRecepcionGrid = {
                 hidden: false,
                 editable: true,
                 editrules: {
-                    required: false
+                    required: true,
+                    custom: true,
+                    custom_func: function (value, colname) {
+                        if (value.length > 250) {
+                            return [false, colname + ' no debe tener mas de 250 caracteres'];
+                        }
+                        return [true, ''];
+                    }
                 },
                 search: false
             }, {
@@ -30,17 +37,11 @@ var detalleRecepcionGrid = {
                 jsonmap: 'proveedor.nombre',
                 width: 500,
                 align: 'center',
+                hidden: false,
                 sortable: false,
                 editable: true,
-                edittype: 'select',
                 editoptions: {
-                    dataUrl: '/lic/proveedor',
-                    buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.proveedor;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
-                    }
+                    readonly: 'readonly'
                 },
                 editrules: {
                     required: true
@@ -52,7 +53,7 @@ var detalleRecepcionGrid = {
                 width: 80,
                 align: 'center',
                 sortable: false,
-                editable: true,
+                editable: false,
                 editrules: {
                     required: false
                 },
@@ -63,7 +64,7 @@ var detalleRecepcionGrid = {
                 width: 80,
                 align: 'center',
                 hidden: false,
-                editable: true,
+                editable: false,
                 editoptions: {
                     dataEvents: [{
                         type: 'change', fn: function (e) {
@@ -93,7 +94,7 @@ var detalleRecepcionGrid = {
                 width: 80,
                 align: 'center',
                 hidden: true,
-                editable: true,
+                editable: false,
                 editoptions: {
                     readonly: 'readonly'
                 },
@@ -108,7 +109,7 @@ var detalleRecepcionGrid = {
                 width: 80,
                 align: 'center',
                 hidden: false,
-                editable: true,
+                editable: false,
                 editrules: {
                     required: false
                 },
@@ -119,65 +120,189 @@ var detalleRecepcionGrid = {
                 width: 80,
                 align: 'center',
                 hidden: false,
-                editable: true,
+                editable: false,
                 search: false
             }, {
                 label: 'Fabricante',
                 name: 'idFabricante',
-                jsonmap:'fabricante.nombre',
-                hidden: false,
-                editable: false
+                jsonmap: 'fabricante.nombre',
+                width: 180,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                edittype: 'select',
+                editoptions: {
+                    dataUrl: '/lic/fabricantes',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.fabricante;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
+                    }
+                },
+                editrules: {
+                    required: true
+                },
+                search: false,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/fabricantes',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.idFabricante;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
+                }
             }, {
                 label: 'Producto',
                 name: 'idProducto',
-                jsonmap:'producto.nombre',
-                hidden: false,
-                editable: false
-            },  {
+                jsonmap: 'producto.nombre',
+                width: 250,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                edittype: 'select',
+                editoptions: {
+                    dataUrl: '/lic/producto',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.nombre;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione el Producto', thissid).template;
+                    }
+                },
+                editrules: {
+                    required: false
+                },
+                search: false
+            }, {
+                label: 'Otro Producto',
+                name: 'otro',
+                width: 250,
+                hidden: true,
+                editable: true,
+                search: false
+            }, {
                 label: 'Fecha Inicio',
                 name: 'fechaInicio',
-                hidden: false,
-                editable: false
-            }, {
+                width: 100,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                editoptions: {
+                    size: 10,
+                    maxlengh: 10,
+                    dataInit: function (element) {
+                        $(element).mask('00-00-0000', {
+                            placeholder: 'DD-MM-YYYY'
+                        });
+                    }
+                },
+                editrules: {
+                    required: true
+                },
+                search: false
+            },
+            {
                 label: 'Fecha Término',
                 name: 'fechaTermino',
-                hidden: false,
-                editable: false
-            }, {
+                width: 110,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                editoptions: {
+                    size: 10,
+                    maxlengh: 10,
+                    dataInit: function (element) {
+                        $(element).mask('00-00-0000', {
+                            placeholder: 'DD-MM-YYYY'
+                        });
+                    }
+                },
+                editrules: {
+                    required: true
+                },
+                search: false
+            },
+            {
                 label: 'Fecha Control',
                 name: 'fechaControl',
-                hidden: false,
-                editable: false
-            },{
+                width: 100,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                editoptions: {
+                    size: 10,
+                    maxlengh: 10,
+                    dataInit: function (element) {
+                        $(element).mask('00-00-0000', {
+                            placeholder: 'DD-MM-YYYY'
+                        });
+                    }
+                },
+                editrules: {
+                    required: true
+                },
+                search: false
+            },
+            {
                 label: 'Moneda',
                 name: 'idMoneda',
-                jsonmap:'moneda.nombre',
-                hidden: false,
-                editable: false
-            },  {
+                jsonmap: 'moneda.nombre',
+                width: 100,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                edittype: 'select',
+                editoptions: {
+                    dataUrl: '/lic/moneda',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.moneda;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
+                    }
+                },
+                editrules: {
+                    required: true
+                },
+                search: false
+            },
+            {
                 label: 'Monto',
                 name: 'monto',
+                width: 80,
+                align: 'center',
                 hidden: false,
-                editable: false
-            },{
+                editable: true,
+                search: false
+            }, {
                 label: 'Cantidad',
                 name: 'cantidad',
                 hidden: false,
-                editable: false
+                editable: true
             }, {
                 label: 'Comentario',
                 name: 'comentario',
                 hidden: true,
-                editable: false
+                editable: true,
+                edittype: 'textarea'
             },
             {
                 label: 'N° Solicitud',
-                name: 'numsolicitud',
+                name: 'numSolicitud',
                 hidden: true,
-                editable: false
+                editable: true
             }
         ];
         var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        grid.prmAdd.beforeShowForm = function (formid) {
+            var pp = formid[0];
+            var $pp = $(pp);
+
+        };
         grid.build();
+        return grid;
     }
-  };
+};

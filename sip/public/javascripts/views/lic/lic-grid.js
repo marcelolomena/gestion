@@ -14,10 +14,10 @@
         }
     };
 
-    function decoraleLabel(item){
-        if(item.editrules && item.editrules.required){
+    function decoraleLabel(item) {
+        if (item.editrules && item.editrules.required) {
             return item.label + '<span style="color:red">*</span>';
-        } else{
+        } else {
             return item.label;
         }
 
@@ -28,24 +28,22 @@
         var editables = _.filter(model, function (item) {
             return item.editable && !item.zsHidden;
         })
-        var req = '<span style="color:red">*</span>';
-
-            _.each(editables, function (item, key) {
-                if (key + 1 % 2) {
-                    result += '<div class="form-row">';
-                    result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item)  + '{' + item.name + '}</div>';
-                } else {
-                    result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
-                    result += '</div>';
-                }
-            });
+        _.each(editables, function (item, key) {
+            if ((key + 1) % 2) {
+                result += '<div class="form-row">';
+                result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
+            } else {
+                result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
+                result += '</div>';
+            }
+        });
         result += '<hr style="width:100%"/>';
         result += '<div> {sData} {cData} </div>';
         result += '</div>';
-        var hiddens = _.filter(model, function(item){
+        var hiddens = _.filter(model, function (item) {
             return item.zsHidden;
         });
-        _.each(hiddens, function(item){
+        _.each(hiddens, function (item) {
             result += '<div style="display: none;">{' + item.name + '}</div>';
         });
 
@@ -80,7 +78,11 @@
     function SimpleGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles) {
         var tableId = '#' + tableName;
         var $table = $(tableId);
+        var _grid = this;
+        this.dataRows = [];
+        this.parentRowData = {};
         this.loadComplete = function (data) {
+            _grid.dataRows = data.rows;
             var thisId = $.jgrid.jqID(this.id);
             $.get(sessionUrl, function (data) {
                 if (!_.intersection(authorizedRoles, _.map(data, function (item) {
@@ -241,14 +243,19 @@
                 }
             });
         };
+        this.getRowData = function (rowid) {
+            return _.find(_grid.dataRows, function (item) {
+                return item.id === parseInt(rowid);
+            });
+        }
     }
 
-    function StackGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles,showChildGrid){
+    function StackGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles, showChildGrid) {
         var ar = arguments;
-        SimpleGrid.call(this,tableName,pagerName,caption,editCaption,addCaption,url,viewModel,sortField,sessionUrl,authorizedRoles,showChildGrid);
+        SimpleGrid.call(this, tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles, showChildGrid);
         var tableId = '#' + tableName;
         this.config.subGrid = true;
-        this.config.subGridOptions= {
+        this.config.subGridOptions = {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         };
@@ -265,9 +272,9 @@
         };
     }
 
-    function TabGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles,showChildGrid, tabs){
+    function TabGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles, showChildGrid, tabs) {
         var ar = arguments;
-        StackGrid.call(this,tableName,pagerName,caption,editCaption,addCaption,url,viewModel,sortField,sessionUrl,authorizedRoles,showChildGrid);
+        StackGrid.call(this, tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles, showChildGrid);
         this.config.subGridRowExpanded = function (divid, rowid) {
             showChildGrid(divid, rowid, tabs);
         };
@@ -282,7 +289,7 @@
         TabTemplate: TabTemplate,
         SelectTemplate: SelectTemplate,
         SimpleGrid: SimpleGrid,
-        StackGrid:StackGrid,
-        TabGrid :TabGrid
+        StackGrid: StackGrid,
+        TabGrid: TabGrid
     });
 })(jQuery, _);
