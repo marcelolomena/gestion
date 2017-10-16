@@ -80,7 +80,11 @@
     function SimpleGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles) {
         var tableId = '#' + tableName;
         var $table = $(tableId);
+        var _grid = this;
+        this.dataRows = [];
+        this.parentRowData = {};
         this.loadComplete = function (data) {
+            _grid.dataRows = data.rows;
             var thisId = $.jgrid.jqID(this.id);
             $.get(sessionUrl, function (data) {
                 if (!_.intersection(authorizedRoles, _.map(data, function (item) {
@@ -241,6 +245,11 @@
                 }
             });
         };
+        this.getRowData = function(rowid){
+            return _.find(_grid.dataRows, function(item){
+                return item.id === parseInt(rowid);
+            });
+        }
     }
 
     function StackGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles,showChildGrid){
@@ -252,6 +261,7 @@
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         };
+        
         this.config.subGridRowExpanded = function (divid, rowid) {
             showChildGrid(divid, rowid);
         };

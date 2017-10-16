@@ -1,17 +1,19 @@
 (function ($, _) {
     'use strict';
     var zs = window.zs;
+    var grid;
 
     function showChildGrid(divid, rowid) {
         var url = '/lic/detalleRecepcion/' + rowid;
         var gridID = divid + '_t';
         var pagerID = 'p_' + gridID;
         $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
-        detalleRecepcionGrid.renderGrid(url, gridID);
+        var detail = detalleRecepcionGrid.renderGrid(url, gridID);
+        detail.parentRowData = grid.getRowData(rowid);
     }
 
     var initGrid = function (viewModel) {
-        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Recepción de licencias', 'Editar Recepción', 'Recepcionar Licencias', '/lic/recepcion', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Recepción de licencias', 'Editar Recepción', 'Recepcionar Licencias', '/lic/recepcion', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.build();
     };
 
@@ -34,14 +36,14 @@
                 editrules: {
                     required: false
                 },
-                search: false
+                search: true
             }, {
                 label: 'Proveedor',
                 name: 'idProveedor',
                 jsonmap: 'proveedor.nombre',
                 width: 500,
                 align: 'center',
-                sortable: false,
+                sortable: true,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
@@ -56,18 +58,28 @@
                 editrules: {
                     required: true
                 },
-                search: false
+                search: true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/proveedor',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.fabricante;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
+                }
             }, {
                 label: 'SAP',
                 name: 'sap',
                 width: 80,
                 align: 'center',
-                sortable: false,
+                sortable: true,
                 editable: true,
                 editrules: {
                     required: false
                 },
-                search: false
+                search: true
             }, {
                 label: 'CUI',
                 name: 'cui',
@@ -97,7 +109,7 @@
                         }
                     }],
                 },
-                search: false
+                search: true
             }, {
                 label: 'Unidad CUI',
                 name: 'unidadcui',
@@ -123,7 +135,7 @@
                 editrules: {
                     required: false
                 },
-                search: false
+                search: true
             }, {
                 label: 'O.C.',
                 name: 'ordenCompra',
@@ -131,7 +143,7 @@
                 align: 'center',
                 hidden: false,
                 editable: true,
-                search: false
+                search: true
             }
         ];
         initGrid(viewModel);

@@ -31,7 +31,7 @@ var detalleRecepcionGrid = {
                 width: 500,
                 align: 'center',
                 sortable: false,
-                editable: true,
+                editable: false,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/proveedor',
@@ -52,7 +52,7 @@ var detalleRecepcionGrid = {
                 width: 80,
                 align: 'center',
                 sortable: false,
-                editable: true,
+                editable: false,
                 editrules: {
                     required: false
                 },
@@ -63,7 +63,7 @@ var detalleRecepcionGrid = {
                 width: 80,
                 align: 'center',
                 hidden: false,
-                editable: true,
+                editable: false,
                 editoptions: {
                     dataEvents: [{
                         type: 'change', fn: function (e) {
@@ -93,7 +93,7 @@ var detalleRecepcionGrid = {
                 width: 80,
                 align: 'center',
                 hidden: true,
-                editable: true,
+                editable: false,
                 editoptions: {
                     readonly: 'readonly'
                 },
@@ -108,7 +108,7 @@ var detalleRecepcionGrid = {
                 width: 80,
                 align: 'center',
                 hidden: false,
-                editable: true,
+                editable: false,
                 editrules: {
                     required: false
                 },
@@ -119,7 +119,7 @@ var detalleRecepcionGrid = {
                 width: 80,
                 align: 'center',
                 hidden: false,
-                editable: true,
+                editable: false,
                 search: false
             }, {
                 label: 'Fabricante',
@@ -179,7 +179,7 @@ var detalleRecepcionGrid = {
                 label: 'Otro Producto',
                 name: 'nombre',
                 width: 250,
-                hidden: false,
+                hidden: true,
                 editable: true,
                 search: false
             }, {
@@ -297,5 +297,6 @@ var detalleRecepcionGrid = {
         ];
         var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         grid.build();
+        return grid;
     }
   };
