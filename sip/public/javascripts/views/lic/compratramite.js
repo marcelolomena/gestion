@@ -15,6 +15,7 @@
         grid.build();
     };
 
+    
 
     $(function () {
         var $table = $('#gridMaster');
@@ -33,7 +34,7 @@
                 hidden: false,
                 editable: true,
                 editrules: {
-                    required: false
+                    required: true
                 },
                 search: false
             }, {
@@ -49,7 +50,7 @@
                 search: false
             }, {
                 label: 'CUI',
-                name: 'cui',
+                name: 'idCui',
                 width: 80,
                 align: 'center',
                 hidden: false,
@@ -66,10 +67,10 @@
                                 async: false,
                                 success: function (data) {
                                     if (data) {
-                                        $("input#unidadcui").val(data.nombre);
+                                        $("input#nombreCui").val(data.nombre);
                                     } else {
                                         alert("No existe ese CUI");
-                                        $("input#unidadcui").val("0");
+                                        $("input#nombreCui").val("0");
                                     }
                                 }
                             });
@@ -79,7 +80,7 @@
                 search: false
             }, {
                 label: 'Unidad CUI',
-                name: 'unidadcui',
+                name: 'nombreCui',
                 width: 80,
                 align: 'center',
                 hidden: true,
@@ -95,12 +96,12 @@
             }, {
                 label: 'Número Contrato',
                 name: 'numContrato',
-                width: 80,
+                width: 120,
                 align: 'center',
                 hidden: false,
                 editable: true,
                 editrules: {
-                    required: false
+                    required: true
                 },
                 search: false
             }, {

@@ -30,7 +30,40 @@ function renderGrid(loadurl, tableId) {
                     var thissid = rowData.nombre;
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione el Producto', thissid).template;
-                }
+                },
+                dataEvents: [{
+                    type: 'change',
+                    fn: function (e) {
+                        var rowKey = $table.getGridParam("selrow");
+                        var rowData = $table.getRowData(rowKey);
+                        var thissid = $(this).val();
+                        $("input#idFabricante").val($('option:selected', this).text());
+                        var idFabricante = $('option:selected', this).val();
+                        if (idFabricante) {
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/lic/getFabricante/' + thissid,
+                                    async: false,
+                                    success: function (data) {
+                                        if (data) {
+                                            $("select#idFabricante").val(data.idFabric);
+                                            $("#idFabricante").attr('disabled', true);
+                                            $("#nombre").attr('disabled', true);
+                                        } else {
+                                            alert("No existe Fabricante para este Producto");
+                                            $("select#idFabricante").val("0");
+                                        }
+                                    }
+    
+                                });
+                        }else { 
+                            $("#idFabricante").attr('disabled', false);
+                            $("#nombre").attr('disabled', false);
+
+                        }
+                    }
+                }],
             },
             editrules: {
                 required: false
@@ -66,17 +99,17 @@ function renderGrid(loadurl, tableId) {
             editrules: {
                 required: true
             },
-            search: false,
-            stype: 'select',
-            searchoptions: {
-                dataUrl: '/lic/fabricantes',
-                buildSelect: function (response) {
-                    var rowData = $table.getRowData($table.getGridParam('selrow'));
-                    var thissid = rowData.idFabricante;
-                    var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
-                }
-            }
+            search: false
+            // stype: 'select',
+            // searchoptions: {
+            //     dataUrl: '/lic/fabricantes',
+            //     buildSelect: function (response) {
+            //         var rowData = $table.getRowData($table.getGridParam('selrow'));
+            //         var thissid = rowData.nombre;
+            //         var data = JSON.parse(response);
+            //         return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+            //     }
+            // }
         },
         {
             label: 'Fecha Inicio',
@@ -170,16 +203,26 @@ function renderGrid(loadurl, tableId) {
             width: 80,
             align: 'center',
             hidden: false,
+            editrules: {
+                number: true
+            },
+            editoptions: {
+                defaultValue: '0'
+            },
             editable: true,
             search: false
         },
 
         {
-            label: 'Número',
+            label: 'Número Licencias',
             name: 'numero',
             width: 80,
             align: 'center',
             hidden: false,
+            editrules: {
+                required: true,
+                integer: true
+            },
             editable: true,
             search: false
         },
@@ -194,6 +237,7 @@ function renderGrid(loadurl, tableId) {
         },
     ];
     var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+
     grid.build();
 }
 
