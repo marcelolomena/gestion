@@ -5,9 +5,13 @@ var _ = require('lodash');
 
 var entity = models.recepcion;
 entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
+entity.belongsTo(models.estructuracuibch, { foreignKey: 'cui' });
 var includes = [
     {
         model: models.proveedor
+    },
+    {
+        model: models.estructuracuibch
     }
 ];
 function map(req) {
@@ -29,7 +33,8 @@ function mapper(data) {
             idProveedor: item.idProveedor,
             proveedor: { nombre: item.proveedor.razonsocial },
             sap:item.sap,
-            cui:item.cui,
+            idCui:item.cui,
+            nombreCui:item.estructuracuibch.unidad,
             numContrato:item.numContrato,
             ordenCompra:item.ordenCompra,
             nombre:item.nombre,

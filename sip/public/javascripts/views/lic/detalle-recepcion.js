@@ -1,5 +1,5 @@
 var detalleRecepcionGrid = {
-    renderGrid :function (loadurl, tableId) {
+    renderGrid: function (loadurl, tableId) {
         var $table = $('#' + tableId);
         var viewModel = [
             {
@@ -21,7 +21,14 @@ var detalleRecepcionGrid = {
                 hidden: false,
                 editable: true,
                 editrules: {
-                    required: false
+                    required: true,
+                    custom: true,
+                    custom_func: function (value, colname) {
+                        if (value.length > 250) {
+                            return [false, colname + ' no debe tener mas de 250 caracteres'];
+                        }
+                        return [true, ''];
+                    }
                 },
                 search: false
             }, {
@@ -30,17 +37,11 @@ var detalleRecepcionGrid = {
                 jsonmap: 'proveedor.nombre',
                 width: 500,
                 align: 'center',
+                hidden: false,
                 sortable: false,
-                editable: false,
-                edittype: 'select',
+                editable: true,
                 editoptions: {
-                    dataUrl: '/lic/proveedor',
-                    buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.proveedor;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
-                    }
+                    readonly: 'readonly'
                 },
                 editrules: {
                     required: true
@@ -153,7 +154,7 @@ var detalleRecepcionGrid = {
                         return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
                     }
                 }
-            },  {
+            }, {
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'producto.nombre',
@@ -175,9 +176,9 @@ var detalleRecepcionGrid = {
                     required: false
                 },
                 search: false
-            },  {
+            }, {
                 label: 'Otro Producto',
-                name: 'nombre',
+                name: 'otro',
                 width: 250,
                 hidden: true,
                 editable: true,
@@ -276,7 +277,7 @@ var detalleRecepcionGrid = {
                 hidden: false,
                 editable: true,
                 search: false
-            },{
+            }, {
                 label: 'Cantidad',
                 name: 'cantidad',
                 hidden: false,
@@ -296,7 +297,12 @@ var detalleRecepcionGrid = {
             }
         ];
         var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        grid.prmAdd.beforeShowForm = function (formid) {
+            var pp = formid[0];
+            var $pp = $(pp);
+
+        };
         grid.build();
         return grid;
     }
-  };
+};
