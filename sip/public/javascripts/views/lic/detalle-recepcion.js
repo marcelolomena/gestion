@@ -18,8 +18,8 @@ var detalleRecepcionGrid = {
                 name: 'nombre',
                 width: 250,
                 align: 'center',
-                hidden: false,
-                editable: true,
+                hidden: true,
+                editable: false,
                 editrules: {
                     required: true,
                     custom: true,
@@ -37,7 +37,7 @@ var detalleRecepcionGrid = {
                 jsonmap: 'proveedor.nombre',
                 width: 500,
                 align: 'center',
-                hidden: false,
+                hidden: true,
                 sortable: false,
                 editable: false,
                 editoptions: {
@@ -52,6 +52,7 @@ var detalleRecepcionGrid = {
                 name: 'sap',
                 width: 80,
                 align: 'center',
+                hidden: true,
                 sortable: false,
                 editable: false,
                 editrules: {
@@ -63,7 +64,7 @@ var detalleRecepcionGrid = {
                 name: 'cui',
                 width: 80,
                 align: 'center',
-                hidden: false,
+                hidden: true,
                 editable: false,
                 editoptions: {
                     dataEvents: [{
@@ -108,7 +109,7 @@ var detalleRecepcionGrid = {
                 name: 'numContrato',
                 width: 80,
                 align: 'center',
-                hidden: false,
+                hidden: true,
                 editable: false,
                 editrules: {
                     required: false
@@ -119,7 +120,7 @@ var detalleRecepcionGrid = {
                 name: 'ordenCompra',
                 width: 80,
                 align: 'center',
-                hidden: false,
+                hidden: true,
                 editable: false,
                 search: false
             }, {
@@ -309,6 +310,7 @@ var detalleRecepcionGrid = {
             postdata.sap = grid.parentRowData.sap;
             postdata.numContrato = grid.parentRowData.numContrato;
             postdata.ordenCompra = grid.parentRowData.ordenCompra;
+            postdata.nombre = grid.parentRowData.nombre;
             return [true, '', ''];
         };
         grid.build();

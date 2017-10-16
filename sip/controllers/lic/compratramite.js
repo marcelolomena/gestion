@@ -28,7 +28,7 @@ function map(req) {
         comprador: req.body.comprador,
         origen: req.body.origen,
         borrado: 1,
-        cui: req.body.idCui ? parseInt(req.body.cui) : null,
+        cui: req.body.idCui ? parseInt(req.body.idCui) : null,
         sap: req.body.sap ? parseInt(req.body.sap) : null
     }
 }

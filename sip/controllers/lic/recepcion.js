@@ -35,7 +35,7 @@ function mapper(data) {
             proveedor: { nombre: item.proveedor.razonsocial },
             sap: item.sap,
             idCui: item.cui,
-            nombreCui: item.estructuracuibch.unidad,
+            nombreCui: item.estructuracuibch ? item.estructuracuibch.unidad : '',
             numContrato: item.numContrato,
             ordenCompra: item.ordenCompra,
             nombre: item.nombre,
