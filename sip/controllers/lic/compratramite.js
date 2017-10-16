@@ -4,41 +4,57 @@ var base = require('./lic-controller');
 var _ = require('lodash');
 
 var entity = models.compraTramite;
-entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
+entity.belongsTo(models.proveedor, {
+    foreignKey: 'idProveedor'
+});
+entity.belongsTo(models.estructuracuibch, {
+    foreignKey: 'cui', targetKey: 'cui'
+});
+var includes = [{
+        model: models.proveedor
+    },
+    {
+        model: models.estructuracuibch
+    }
+];
+
 function map(req) {
     return {
         id: req.body.id || 0,
         nombre: req.body.nombre,
-        idProveedor: req.body.idProveedor,
-        numContrato: req.body.numContrato,
+        idProveedor: parseInt(req.body.idProveedor),
+        numContrato: req.body.numContrato ? parseInt(req.body.numContrato) : null,
+        ordenCompra: req.body.ordenCompra ? parseInt(req.body.ordenCompra) : null,
         comprador: req.body.comprador,
         origen: req.body.origen,
         borrado: 1,
-        cui: req.body.cui,
-        sap: req.body.sap,
-        
+        cui: req.body.idCui ? parseInt(req.body.cui) : null,
+        sap: req.body.sap ? parseInt(req.body.sap) : null
     }
 }
+
 function mapper(data) {
     return _.map(data, function (item) {
-        return {
+        var result = {
             id: item.id,
             nombre: item.nombre,
             idProveedor: item.idProveedor,
             numContrato: item.numContrato,
+            ordenCompra: item.ordenCompra,
             comprador: item.comprador,
             origen: item.origen,
-            cui: item.cui,
+            idCui: item.cui,
             sap: item.sap,
-            proveedor: { nombre: item.proveedor.razonsocial }
-        }
+            nombreCui: item.estructuracuibch ? item.estructuracuibch.unidad : '',
+            proveedor: {
+                nombre: item.proveedor.razonsocial
+            }
+        };
+        return result;
+
     });
 }
-var includes = [
-    {
-        model: models.proveedor
-    }
-];
+
 
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
