@@ -14,14 +14,19 @@ var detalleRecepcionGrid = {
                 hidden: true,
                 editable: false
             }, {
-                label: 'Compra en trámite',
+                label: 'idCompraTramite',
                 name: 'idCompraTramite',
+                hidden: true,
+                editable: false
+            }, {
+                label: 'Detalle de Compra en trámite',
+                name: 'numsolicitud',
                 hidden: true,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
                     fullRow: true,
-                    dataUrl: '/lic/detallecomprasentramite/' + tableId,
+                    dataUrl: '/lic/detallecomprasentramite/1',
                     buildSelect: function (response) {
                         var data = JSON.parse(response).rows;
                         compraData = data;
@@ -37,19 +42,19 @@ var detalleRecepcionGrid = {
                                 return item.id === parseInt(thissid);
                             });
 
-                            $('input#nombre').val(fila.nombre);
-                            var saps = $('input#sap');
-                            saps.val(fila.sap);
-                            saps.change();
-                            var cuis = $('input#idCui');
-                            cuis.val(fila.idCui);
-                            cuis.change();
-                            $('input#numContrato').val(fila.numContrato);
-                            $('select#ordenCompra').val(fila.ordenCompra);
-                            var $idProveedor = $('select#idProveedor');
-                            $('input#idProveedor').val(fila.idProveedor);
-                            $('input#comprador').val(fila.comprador);
-                            $('textarea#comentario').val(fila.comentario);
+                            // $('input#nombre').val(fila.nombre);
+                            // var saps = $('input#sap');
+                            // saps.val(fila.sap);
+                            // saps.change();
+                            // var cuis = $('input#idCui');
+                            // cuis.val(fila.idCui);
+                            // cuis.change();
+                            // $('input#numContrato').val(fila.numContrato);
+                            // $('select#ordenCompra').val(fila.ordenCompra);
+                            // var $idProveedor = $('select#idProveedor');
+                            // $('input#idProveedor').val(fila.idProveedor);
+                            // $('input#comprador').val(fila.comprador);
+                            // $('textarea#comentario').val(fila.comentario);
                         }
                     }]
                 },
@@ -186,7 +191,7 @@ var detalleRecepcionGrid = {
                 hidden: false,
                 editable: true,
                 editoptions: { defaultValue: '0' },
-                editrules: { integer: true, required:true },
+                editrules: { integer: true, required: true },
             }, {
                 label: 'Moneda',
                 name: 'idMoneda',
@@ -231,15 +236,19 @@ var detalleRecepcionGrid = {
             }
         ];
         var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
-        grid.prmAdd.beforeSubmit = function (postdata, formid) {
-            postdata.idProveedor = grid.parentRowData.idProveedor;
+        function beforeSubmit(postdata, formid) {
+            postdata.nombre = grid.parentRowData.nombre;
             postdata.idCui = grid.parentRowData.idCui;
             postdata.sap = grid.parentRowData.sap;
             postdata.numContrato = grid.parentRowData.numContrato;
             postdata.ordenCompra = grid.parentRowData.ordenCompra;
-            postdata.nombre = grid.parentRowData.nombre;
+            postdata.idProveedor = grid.parentRowData.idProveedor;
             return [true, '', ''];
-        };
+        }
+        grid.prmAdd.beforeSubmit = beforeSubmit;
+        grid.prmEdit.beforeSubmit = beforeSubmit;
+
+
         grid.build();
         return grid;
     }

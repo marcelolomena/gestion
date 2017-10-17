@@ -6,7 +6,7 @@ var _ = require('lodash');
 var entity = models.recepcion;
 entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
 entity.belongsTo(models.estructuracuibch, { foreignKey: 'cui', targetKey: 'cui' });
-entity.belongsTo(models.presupuestoenvuelo, { foreignKey: 'sap', targetKey: 'sap' })
+entity.belongsTo(models.presupuestoenvuelo, { foreignKey: 'sap', targetKey: 'sap' });
 var includes = [
     {
         model: models.proveedor
