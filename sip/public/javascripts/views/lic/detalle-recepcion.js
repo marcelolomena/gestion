@@ -14,115 +14,48 @@ var detalleRecepcionGrid = {
                 hidden: true,
                 editable: false
             }, {
-                label: 'Nombre',
-                name: 'nombre',
-                width: 250,
-                align: 'center',
+                label: 'Compra en trámite',
+                name: 'idCompraTramite',
                 hidden: true,
-                editable: false,
-                editrules: {
-                    required: true,
-                    custom: true,
-                    custom_func: function (value, colname) {
-                        if (value.length > 250) {
-                            return [false, colname + ' no debe tener mas de 250 caracteres'];
-                        }
-                        return [true, ''];
-                    }
-                },
-                search: false
-            }, {
-                label: 'Proveedor',
-                name: 'idProveedor',
-                jsonmap: 'proveedor.nombre',
-                width: 500,
-                align: 'center',
-                hidden: true,
-                sortable: false,
-                editable: false,
+                editable: true,
+                edittype: 'select',
                 editoptions: {
-                    readonly: 'readonly'
-                },
-                editrules: {
-                    required: true
-                },
-                search: false
-            }, {
-                label: 'SAP',
-                name: 'sap',
-                width: 80,
-                align: 'center',
-                hidden: true,
-                sortable: false,
-                editable: false,
-                editrules: {
-                    required: false
-                },
-                search: false
-            }, {
-                label: 'CUI',
-                name: 'cui',
-                width: 80,
-                align: 'center',
-                hidden: true,
-                editable: false,
-                editoptions: {
+                    fullRow: true,
+                    dataUrl: '/lic/detallecomprasentramite/' + tableId,
+                    buildSelect: function (response) {
+                        var data = JSON.parse(response).rows;
+                        compraData = data;
+                        return new zs.SelectTemplate(data, 'Seleccione detalle Compra en trámite', null).template;
+                    },
                     dataEvents: [{
                         type: 'change', fn: function (e) {
-                            var rowKey = $table.getGridParam("selrow");
+                            var rowKey = $table.getGridParam('selrow');
                             var rowData = $table.getRowData(rowKey);
                             var thissid = $(this).val();
-                            $.ajax({
-                                type: "GET",
-                                url: '/getNombreCui/' + thissid,
-                                async: false,
-                                success: function (data) {
-                                    if (data) {
-                                        $("input#unidadcui").val(data.nombre);
-                                    } else {
-                                        alert("No existe ese CUI");
-                                        $("input#unidadcui").val("0");
-                                    }
-                                }
+
+                            var fila = _.find(compraData, function (item) {
+                                return item.id === parseInt(thissid);
                             });
+
+                            $('input#nombre').val(fila.nombre);
+                            var saps = $('input#sap');
+                            saps.val(fila.sap);
+                            saps.change();
+                            var cuis = $('input#idCui');
+                            cuis.val(fila.idCui);
+                            cuis.change();
+                            $('input#numContrato').val(fila.numContrato);
+                            $('select#ordenCompra').val(fila.ordenCompra);
+                            var $idProveedor = $('select#idProveedor');
+                            $('input#idProveedor').val(fila.idProveedor);
+                            $('input#comprador').val(fila.comprador);
+                            $('textarea#comentario').val(fila.comentario);
                         }
-                    }],
+                    }]
                 },
-                search: false
-            }, {
-                label: 'Unidad CUI',
-                name: 'unidadcui',
-                width: 80,
-                align: 'center',
-                hidden: true,
-                editable: false,
-                editoptions: {
-                    readonly: 'readonly'
-                },
-                editrules: {
-                    required: false,
-                    edithidden: false
-                },
-                search: false
-            }, {
-                label: '# Contrato',
-                name: 'numContrato',
-                width: 80,
-                align: 'center',
-                hidden: true,
-                editable: false,
                 editrules: {
                     required: false
-                },
-                search: false
-            }, {
-                label: 'O.C.',
-                name: 'ordenCompra',
-                width: 80,
-                align: 'center',
-                hidden: true,
-                editable: false,
-                search: false
+                }
             }, {
                 label: 'Fabricante',
                 name: 'idFabricante',
@@ -183,7 +116,10 @@ var detalleRecepcionGrid = {
                 width: 250,
                 hidden: true,
                 editable: true,
-                search: false
+                search: false,
+                editoptions: {
+                    fullRow: true
+                }
             }, {
                 label: 'Fecha Inicio',
                 name: 'fechaInicio',
@@ -245,6 +181,13 @@ var detalleRecepcionGrid = {
                 },
                 search: false
             }, {
+                label: 'Cantidad',
+                name: 'cantidad',
+                hidden: false,
+                editable: true,
+                editoptions: { defaultValue: '0' },
+                editrules: { integer: true, required:true },
+            }, {
                 label: 'Moneda',
                 name: 'idMoneda',
                 jsonmap: 'moneda.nombre',
@@ -277,30 +220,14 @@ var detalleRecepcionGrid = {
                 editrules: { number: true },
                 search: false
             }, {
-                label: 'Cantidad',
-                name: 'cantidad',
-                hidden: false,
-                editable: true,
-                editoptions: { defaultValue: '0' },
-                editrules: { integer: true },
-            }, {
                 label: 'Comentario',
                 name: 'comentario',
                 hidden: true,
                 editable: true,
-                edittype: 'textarea'
-            }, {
-                label: 'N° Solicitud',
-                name: 'numSolicitud',
-                hidden: true,
-                editable: true
-            }, {
-                label: 'Comprador',
-                name: 'comprador',
-                hidden: false,
-                sortable: false,
-                editable: true,
-                search: true
+                edittype: 'textarea',
+                editoptions: {
+                    fullRow: true
+                }
             }
         ];
         var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);

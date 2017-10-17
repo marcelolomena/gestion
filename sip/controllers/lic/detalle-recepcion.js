@@ -209,8 +209,31 @@ function upload(req, res) {
     }
 
 };
+
+function listDetalleCompras(req, res) {
+    var ntt = models.detalleCompraTramite;
+    base.listChilds(req, res, ntt, 'idCompraTramite', [], function (data) {
+        return _.map(data, function (item) {
+            if (item.estado === 1) {
+                return {
+                    id: item.id,
+                    idFabricante: item.idFabricante,
+                    idProducto: item.idProducto,
+                    fechaInicio: base.fromDate(item.fechaInicio),
+                    fechaTermino: base.fromDate(item.fechaTermino),
+                    fechaControl: base.fromDate(item.fechaControl),
+                    idMoneda: item.idMoneda,
+                    monto: item.monto,
+                    cantidad: item.cantidad,
+                    comentario: item.comentario
+                };
+            }
+        });
+    })
+}
 module.exports = {
     listChilds: listChilds,
     action: action,
-    upload: upload
+    upload: upload,
+    listDetalleCompras:listDetalleCompras
 }

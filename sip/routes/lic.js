@@ -83,6 +83,12 @@ module.exports = function (passport) {
     router.route('/lic/compra')
         .get(isAuthenticated, compraController.list);
 
+    router.route('/lic/comprasentramite')
+        .get(isAuthenticated, recepcionController.listCompras);
+        
+    router.route('/lic/detallecomprasentramite/:pId')
+        .get(isAuthenticated, detalleRecepcionController.listDetalleCompras);
+
     router.route('/lic/traduccion/:pId')
         .get(isAuthenticated, traduccionController.listChilds)
         .post(isAuthenticated, traduccionController.action);
