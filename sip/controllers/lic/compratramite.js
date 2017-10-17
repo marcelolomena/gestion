@@ -29,7 +29,9 @@ function map(req) {
         origen: req.body.origen,
         borrado: 1,
         cui: req.body.idCui ? parseInt(req.body.idCui) : null,
-        sap: req.body.sap ? parseInt(req.body.sap) : null
+        sap: req.body.sap ? parseInt(req.body.sap) : null,
+        estado: 1,
+        comentario: req.body.comentario
     }
 }
 
@@ -48,7 +50,9 @@ function mapper(data) {
             nombreCui: item.estructuracuibch ? item.estructuracuibch.unidad : '',
             proveedor: {
                 nombre: item.proveedor.razonsocial
-            }
+            },
+            estado: item.estado ? 'En Trámite' : 'Recepcionado',
+            comentario: item.comentario
         };
         return result;
 

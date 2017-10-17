@@ -15,19 +15,18 @@
         grid.build();
     };
 
-    
+
 
     $(function () {
         var $table = $('#gridMaster');
-        var viewModel = [
-            {
+        var viewModel = [{
                 label: 'ID',
                 name: 'id',
                 key: true,
                 hidden: true,
                 editable: false
             }, {
-                label: 'Nombre',
+                label: 'Descripción',
                 name: 'nombre',
                 width: 250,
                 align: 'center',
@@ -37,18 +36,8 @@
                     required: true
                 },
                 search: false
-            }, {
-                label: 'SAP',
-                name: 'sap',
-                width: 80,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                editrules: {
-                    required: false
-                },
-                search: false
-            }, {
+            },
+            {
                 label: 'CUI',
                 name: 'idCui',
                 width: 80,
@@ -57,7 +46,8 @@
                 editable: true,
                 editoptions: {
                     dataEvents: [{
-                        type: 'change', fn: function (e) {
+                        type: 'change',
+                        fn: function (e) {
                             var rowKey = $table.getGridParam("selrow");
                             var rowData = $table.getRowData(rowKey);
                             var thissid = $(this).val();
@@ -93,7 +83,60 @@
                     edithidden: false
                 },
                 search: false
-            }, {
+            },
+             {
+                label: 'SAP',
+                name: 'sap',
+                width: 80,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                editrules: {
+                    required: false
+                },
+                editoptions: {
+                    dataEvents: [{
+                        type: 'change',
+                        fn: function (e) {
+                            var rowKey = $table.getGridParam("selrow");
+                            var rowData = $table.getRowData(rowKey);
+                            var thissid = $(this).val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/lic/existeSap/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    if (data) {
+                                        $("input#nombreSap").val(data.nombre);
+                                    } else {
+                                        alert("No existe ese CUI");
+                                        $("input#nombreSap").val("0");
+                                    }
+                                }
+                            });
+                        }
+                    }],
+                },
+                search: false
+            },
+            {
+                label: 'Nombre SAP',
+                name: 'nombreSap',
+                width: 80,
+                align: 'center',
+                hidden: true,
+                editable: true,
+                editoptions: {
+                    readonly: 'readonly'
+                },
+                editrules: {
+                    required: false,
+                    edithidden: false
+                },
+                search: false
+            },
+            
+            {
                 label: 'Número Contrato',
                 name: 'numContrato',
                 width: 120,
@@ -111,18 +154,6 @@
                 align: 'center',
                 hidden: false,
                 editable: true,
-                search: false
-            }, {
-                label: 'Comprador',
-                name: 'comprador',
-                width: 150,
-                align: 'center',
-                hidden: true,
-                hidden: false,
-                editable: true,
-                editrules: {
-                    required: true
-                },
                 search: false
             }, {
                 label: 'Proveedor',
@@ -146,32 +177,46 @@
                     required: true
                 },
                 search: false
-            }, {
-                label: 'Origen',
-                name: 'origen',
+            },
+            {
+                label: 'Comprador',
+                name: 'comprador',
+                width: 150,
+                align: 'center',
                 hidden: true,
                 hidden: false,
                 editable: true,
-                edittype: 'custom',
-                editoptions: {
-                    custom_value: sipLibrary.getRadioElementValue,
-                    custom_element: sipLibrary.radioElemContrato,
-                    defaultValue: "Continuidad",
-                },
-                formatter: function (cellvalue, options, rowObject) {
-                    var dato = '';
-                    var val = rowObject.origen;
-                    if (val == 1) {
-                        dato = 'Continuidad';
-
-                    } else if (val == 0) {
-                        dato = 'Proyectos';
-                    }
-                    return dato;
-                },
                 editrules: {
                     required: true
                 },
+                search: false
+            },
+            {
+                label: 'Estado',
+                name: 'estado',
+                width: 90,
+                align: 'center',
+                sortable: false,
+                editable: false,
+                search: false
+            },
+            {
+                label: 'Fecha Recepcion',
+                name: 'fechaRecepcion',
+                width: 140,
+                hidden: true,
+                align: 'center',
+                sortable: false,
+                editable: false,
+                search: false
+            },
+            {
+                label: 'Comentario',
+                name: 'comentario',
+                width: 400,
+                hidden: false,
+                editable: true,
+                edittype: 'textarea',
                 search: false
             }
         ];

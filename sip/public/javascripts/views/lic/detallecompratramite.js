@@ -74,7 +74,7 @@ function renderGrid(loadurl, tableId) {
             label: 'Otro Producto',
             name: 'nombre',
             width: 250,
-            hidden: false,
+            hidden: true,
             editable: true,
             search: false
         },

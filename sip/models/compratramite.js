@@ -50,6 +50,19 @@ module.exports = function (sequelize, DataTypes) {
         sap: {
             type: DataTypes.INTEGER,
             allowNull: true
+        },
+        estado: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        fechaRecepcion: {
+            field: 'fecharecepcion',
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        comentario: {
+            type: DataTypes.STRING,
+            allowNull: true
         }
     }, {
         schema: 'lic',
