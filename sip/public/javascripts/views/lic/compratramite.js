@@ -11,11 +11,11 @@
     }
 
     function beforeSubmit(postdata, formid) {
-        if (!postdata.idCui || !postdata.sap) {
+        if (!postdata.sap || !postdata.idCui) {
             return [false, "Ingresar al menos un CUI ó SAP", ""];
-        } else if (!postdata.numContrato && !postdata.ordenCompra) {
-            return [false, "Ingresar al menos un Número de Contrato ó Orden de Compra", ""];
-        } else {
+        } else if (!postdata.numContrato || !postdata.ordenCompra) {
+                return [false, "Ingresar al menos un Número de Contrato ó Orden de Compra", ""];
+         } else {
             return [true, "", ""];
         }
     };
@@ -54,57 +54,8 @@
                 editrules: {
                     required: true
                 },
-                search: false
-            },
-            {
-                label: 'CUI',
-                name: 'idCui',
-                width: 80,
-                align: 'center',
-                hidden: false,
-                editable: true,
                 editoptions: {
-                    dataEvents: [{
-                        type: 'change',
-                        fn: function (e) {
-                            var rowKey = $table.getGridParam("selrow");
-                            var rowData = $table.getRowData(rowKey);
-                            var thissid = $(this).val();
-                            $.ajax({
-                                type: "GET",
-                                url: '/getNombreCui/' + thissid,
-                                async: false,
-                                success: function (data) {
-                                    if (data) {
-                                        $("input#nombreCui").val(data.nombre);
-                                    } else {
-                                        alert("No existe ese CUI");
-                                        $("input#nombreCui").val("0");
-                                    }
-                                }
-                            });
-                        }
-                    }],
-                    dataInit: function (element) {
-                        $(element).mask("00000", {
-                            placeholder: "00000"
-                        });
-                    }
-                },
-                search: false
-            }, {
-                label: 'Unidad CUI',
-                name: 'nombreCui',
-                width: 80,
-                align: 'center',
-                hidden: true,
-                editable: true,
-                editoptions: {
-                    readonly: 'readonly'
-                },
-                editrules: {
-                    required: false,
-                    edithidden: false
+                    fullRow: true
                 },
                 search: false
             },
@@ -130,11 +81,11 @@
                                 url: '/lic/existeSap/' + thissid,
                                 async: false,
                                 success: function (data) {
-                                    if (data) {
+                                    if (data && data.error === 0) {
                                         $("input#nombreSap").val(data.nombre);
                                     } else {
-                                        alert("No existe ese CUI");
-                                        $("input#nombreSap").val("0");
+                                        alert("No existe ese SAP");
+                                        $("input#nombreSap").val("");
                                     }
                                 }
                             });
@@ -164,7 +115,58 @@
                 },
                 search: false
             },
-            
+            {
+                label: 'CUI',
+                name: 'idCui',
+                width: 80,
+                align: 'center',
+                hidden: false,
+                editable: true,
+                editoptions: {
+                    dataEvents: [{
+                        type: 'change',
+                        fn: function (e) {
+                            var rowKey = $table.getGridParam("selrow");
+                            var rowData = $table.getRowData(rowKey);
+                            var thissid = $(this).val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/getNombreCui/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    if (data && data.error === 0) {
+                                        $("input#nombreCui").val(data.nombre);
+                                    } else {
+                                        alert("No existe ese CUI");
+                                        $("input#nombreCui").val("");
+                                    }
+                                }
+                            });
+                        }
+                    }],
+                    dataInit: function (element) {
+                        $(element).mask("00000", {
+                            placeholder: "00000"
+                        });
+                    }
+                },
+                search: false
+            }, {
+                label: 'Unidad CUI',
+                name: 'nombreCui',
+                width: 80,
+                align: 'center',
+                hidden: true,
+                editable: true,
+                editoptions: {
+                    readonly: 'readonly'
+                },
+                editrules: {
+                    required: false,
+                    edithidden: false
+                },
+                search: false
+            },
             {
                 label: 'Número Contrato',
                 name: 'numContrato',
@@ -246,6 +248,9 @@
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
+                editoptions: {
+                    fullRow: true
+                },
                 search: false
             }
         ];
