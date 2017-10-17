@@ -9,6 +9,7 @@ var tipoLicenciamientoController = require('../controllers/lic/tipoLicenciamient
 var proveedorController = require('../controllers/lic/proveedor');
 var cuiController = require('../controllers/lic/cui');
 var cuiBchController = require('../controllers/lic/cuibch');
+var sapController = require('../controllers/lic/sap');
 var monedaController = require('../controllers/lic/moneda');
 var tipoController = require('../controllers/lic/tipo');
 
@@ -59,6 +60,9 @@ module.exports = function (passport) {
 
     router.route('/getNombreCui/:cui')
         .get(isAuthenticated, cuiBchController.getNombreCui);
+
+    router.route('/lic/existeSap/:sap')
+        .get(isAuthenticated, sapController.existeSap);
 
     router.get('/lic/cuibch', cuiController.listAll);
     router.get('/lic/moneda', monedaController.listAll);
