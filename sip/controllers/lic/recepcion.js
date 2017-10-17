@@ -6,24 +6,28 @@ var _ = require('lodash');
 var entity = models.recepcion;
 entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
 entity.belongsTo(models.estructuracuibch, { foreignKey: 'cui', targetKey: 'cui' });
+entity.belongsTo(models.presupuestoenvuelo,{foreignKey:'sap', targetKey: 'sap'})
 var includes = [
     {
         model: models.proveedor
-    },
-    {
+    },    {
         model: models.estructuracuibch
+    },    {
+        model: models.presupuestoenvuelo
     }
 ];
 
 function map(req) {
     return {
         id: parseInt(req.body.id) || 0,
-        idProveedor: parseInt(req.body.idProveedor),
+        nombre: req.body.nombre,
         sap: req.body.sap ? parseInt(req.body.sap) : null,
-        cui: req.body.sap ? parseInt(req.body.idCui) : null,
+        cui: req.body.idCui ? parseInt(req.body.idCui) : null,
         numContrato: req.body.numContrato ? parseInt(req.body.numContrato) : null,
         ordenCompra: req.body.ordenCompra ? parseInt(req.body.ordenCompra) : null,
-        nombre: req.body.nombre,
+        idProveedor: parseInt(req.body.idProveedor),
+        comprador:req.body.comprador,
+        comentario:req.body.comentario,
         fecha: req.body.fecha || base.now()
     }
 }
@@ -31,15 +35,17 @@ function mapper(data) {
     return _.map(data, function (item) {
         return {
             id: item.id,
-            idProveedor: item.idProveedor,
-            proveedor: { nombre: item.proveedor.razonsocial },
+            nombre: item.nombre,
             sap: item.sap,
+            nombreSap: item.presupuestoenvuelo ? item.presupuestoenvuelo.nombreproyecto : '',
             idCui: item.cui,
             nombreCui: item.estructuracuibch ? item.estructuracuibch.unidad : '',
             numContrato: item.numContrato,
             ordenCompra: item.ordenCompra,
-            nombre: item.nombre,
+            idProveedor: item.idProveedor,
+            proveedor: { nombre: item.proveedor.razonsocial },
             comprador: item.comprador,
+            comentario:item.comentario,
             fecha: item.fecha
         };
     });
