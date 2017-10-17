@@ -28,13 +28,22 @@
         var editables = _.filter(model, function (item) {
             return item.editable && !item.zsHidden;
         })
+        var left = true;
         _.each(editables, function (item, key) {
-            if ((key + 1) % 2) {
+             if (item.editoptions && item.editoptions.fullRow) {
+                result += '<div class="form-row">';
+                result += '<div  id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
+                result += '</div>';
+                left = true;
+            } else 
+            if (left) {
                 result += '<div class="form-row">';
                 result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
+                left = false;
             } else {
                 result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
                 result += '</div>';
+                left= true;
             }
         });
         result += '<hr style="width:100%"/>';
