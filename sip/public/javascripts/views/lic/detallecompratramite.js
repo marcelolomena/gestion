@@ -1,6 +1,15 @@
 function renderGrid(loadurl, tableId) {
     var $table = $('#' + tableId);
 
+    function showChildGrid(divid, rowid) {
+        var url = '/lic/detallecompratramite/' + rowid;
+        var gridID = divid + '_t';
+        var pagerID = 'p_' + gridID;
+        $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
+        detalleCompraTramiteGrid.renderGrid(url, gridID);
+    }
+
+
     var viewModel = [{
             label: 'ID',
             name: 'id',
@@ -12,6 +21,72 @@ function renderGrid(loadurl, tableId) {
             name: 'idcompratramite',
             hidden: true,
             editable: false,
+            search: false
+        },
+        {
+            label: 'Fabricante',
+            name: 'idFabricante',
+            jsonmap: 'fabricante.nombre',
+            width: 180,
+            align: 'center',
+            sortable: false,
+            editable: true,
+            edittype: 'select',
+            editoptions: {
+                dataUrl: '/lic/fabricantes',
+                buildSelect: function (response) {
+                    var rowData = $table.getRowData($table.getGridParam('selrow'));
+                    var thissid = rowData.fabricante;
+                    var data = JSON.parse(response);
+                    return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
+                },
+                dataEvents: [{
+                    type: 'change',
+                    fn: function (e) {
+                        var rowKey = $table.getGridParam("selrow");
+                        var rowData = $table.getRowData(rowKey);
+                        var thissid = $(this).val();
+                        $("input#idProducto").val($('option:selected', this).text());
+                        var idProducto = $('option:selected', this).val();
+                        if (idProducto) {
+                            var s = "<select>";
+                            s += '<option value="0">--Seleccionar Producto--</option>'
+                            $.ajax({
+                                type: "GET",
+                                url: '/lic/getProducto/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    $.each(data, function(i, item){
+                                        if(data[i].idFabricante == thissid){
+                                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                        }else{
+                                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                        }
+                                    });
+                                    s += '</select>';
+                                    $('select#idProducto').empty().html(s);
+                                }
+
+                            });
+                        } else {
+                             $("#idProducto").attr('disabled', false);
+                             $("#nombreFabri").attr('disabled', false);
+
+                        }
+                    }
+                }],
+            },
+            editrules: {
+                required: true
+            },
+            search: false
+        },
+        {
+            label: 'Otro Fabricante',
+            name: 'nombreFabri',
+            width: 250,
+            hidden: true,
+            editable: true,
             search: false
         },
         {
@@ -41,23 +116,23 @@ function renderGrid(loadurl, tableId) {
                         var idFabricante = $('option:selected', this).val();
                         if (idFabricante) {
 
-                                $.ajax({
-                                    type: "GET",
-                                    url: '/lic/getFabricante/' + thissid,
-                                    async: false,
-                                    success: function (data) {
-                                        if (data) {
-                                            $("select#idFabricante").val(data.idFabric);
-                                            $("#idFabricante").attr('disabled', true);
-                                            $("#nombre").attr('disabled', true);
-                                        } else {
-                                            alert("No existe Fabricante para este Producto");
-                                            $("select#idFabricante").val("0");
-                                        }
+                            $.ajax({
+                                type: "GET",
+                                url: '/lic/getFabricante/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    if (data) {
+                                        $("select#idFabricante").val(data.idFabric);
+                                        $("#idFabricante").attr('disabled', true);
+                                        $("#nombre").attr('disabled', true);
+                                    } else {
+                                        alert("No existe Fabricante para este Producto");
+                                        $("select#idFabricante").val("");
                                     }
-    
-                                });
-                        }else { 
+                                }
+
+                            });
+                        } else {
                             $("#idFabricante").attr('disabled', false);
                             $("#nombre").attr('disabled', false);
 
@@ -77,39 +152,6 @@ function renderGrid(loadurl, tableId) {
             hidden: true,
             editable: true,
             search: false
-        },
-        {
-            label: 'Fabricante',
-            name: 'idFabricante',
-            jsonmap: 'fabricante.nombre',
-            width: 180,
-            align: 'center',
-            sortable: false,
-            editable: true,
-            edittype: 'select',
-            editoptions: {
-                dataUrl: '/lic/fabricantes',
-                buildSelect: function (response) {
-                    var rowData = $table.getRowData($table.getGridParam('selrow'));
-                    var thissid = rowData.fabricante;
-                    var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
-                }
-            },
-            editrules: {
-                required: true
-            },
-            search: false
-            // stype: 'select',
-            // searchoptions: {
-            //     dataUrl: '/lic/fabricantes',
-            //     buildSelect: function (response) {
-            //         var rowData = $table.getRowData($table.getGridParam('selrow'));
-            //         var thissid = rowData.nombre;
-            //         var data = JSON.parse(response);
-            //         return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
-            //     }
-            // }
         },
         {
             label: 'Fecha Inicio',
@@ -175,6 +217,19 @@ function renderGrid(loadurl, tableId) {
             search: false
         },
         {
+            label: 'Número Licencias',
+            name: 'numero',
+            width: 80,
+            align: 'center',
+            hidden: false,
+            editrules: {
+                required: true,
+                integer: true
+            },
+            editable: true,
+            search: false
+        },
+        {
             label: 'Moneda',
             name: 'idMoneda',
             jsonmap: 'moneda.nombre',
@@ -212,18 +267,13 @@ function renderGrid(loadurl, tableId) {
             editable: true,
             search: false
         },
-
         {
-            label: 'Número Licencias',
-            name: 'numero',
-            width: 80,
+            label: 'Estado',
+            name: 'estado',
+            width: 130,
             align: 'center',
             hidden: false,
-            editrules: {
-                required: true,
-                integer: true
-            },
-            editable: true,
+            editable: false,
             search: false
         },
         {
@@ -233,6 +283,9 @@ function renderGrid(loadurl, tableId) {
             hidden: false,
             editable: true,
             edittype: 'textarea',
+            editoptions: {
+                fullRow: true
+            },
             search: false
         },
     ];

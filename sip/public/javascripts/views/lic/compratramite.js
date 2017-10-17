@@ -10,10 +10,29 @@
         detalleCompraTramiteGrid.renderGrid(url, gridID);
     }
 
+    function beforeSubmit(postdata, formid) {
+        if (!postdata.sap) {
+            if (!postdata.idCui) {
+                return [false, "Ingresar al menos un CUI ó SAP", ""];
+            }
+        } else if (!postdata.numContrato) {
+            if (!postdata.ordenCompra) {
+                return [false, "Ingresar al menos un Número de Contrato ó Orden de Compra", ""];
+            }
+        } else {
+            return [true, "", ""];
+        }
+    };
+
     var initGrid = function (viewModel) {
         var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        grid.prmAdd.beforeSubmit = beforeSubmit;
+
+
         grid.build();
     };
+
+
 
 
 
@@ -34,6 +53,65 @@
                 editable: true,
                 editrules: {
                     required: true
+                },
+                editoptions: {
+                    fullRow: true
+                },
+                search: false
+            },
+            {
+                label: 'SAP',
+                name: 'sap',
+                width: 80,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                editrules: {
+                    required: false
+                },
+                editoptions: {
+                    dataEvents: [{
+                        type: 'change',
+                        fn: function (e) {
+                            var rowKey = $table.getGridParam("selrow");
+                            var rowData = $table.getRowData(rowKey);
+                            var thissid = $(this).val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/lic/existeSap/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    if (data && data.error === 0) {
+                                        $("input#nombreSap").val(data.nombre);
+                                    } else {
+                                        alert("No existe ese SAP");
+                                        $("input#nombreSap").val("");
+                                    }
+                                }
+                            });
+                        }
+                    }],
+                    dataInit: function (element) {
+                        $(element).mask("00000", {
+                            placeholder: "00000"
+                        });
+                    }
+                },
+                search: false
+            },
+            {
+                label: 'Nombre SAP',
+                name: 'nombreSap',
+                width: 80,
+                align: 'center',
+                hidden: true,
+                editable: true,
+                editoptions: {
+                    readonly: 'readonly'
+                },
+                editrules: {
+                    required: false,
+                    edithidden: false
                 },
                 search: false
             },
@@ -56,16 +134,21 @@
                                 url: '/getNombreCui/' + thissid,
                                 async: false,
                                 success: function (data) {
-                                    if (data) {
+                                    if (data && data.error === 0) {
                                         $("input#nombreCui").val(data.nombre);
                                     } else {
                                         alert("No existe ese CUI");
-                                        $("input#nombreCui").val("0");
+                                        $("input#nombreCui").val("");
                                     }
                                 }
                             });
                         }
                     }],
+                    dataInit: function (element) {
+                        $(element).mask("00000", {
+                            placeholder: "00000"
+                        });
+                    }
                 },
                 search: false
             }, {
@@ -84,58 +167,6 @@
                 },
                 search: false
             },
-             {
-                label: 'SAP',
-                name: 'sap',
-                width: 80,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                editrules: {
-                    required: false
-                },
-                editoptions: {
-                    dataEvents: [{
-                        type: 'change',
-                        fn: function (e) {
-                            var rowKey = $table.getGridParam("selrow");
-                            var rowData = $table.getRowData(rowKey);
-                            var thissid = $(this).val();
-                            $.ajax({
-                                type: "GET",
-                                url: '/lic/existeSap/' + thissid,
-                                async: false,
-                                success: function (data) {
-                                    if (data) {
-                                        $("input#nombreSap").val(data.nombre);
-                                    } else {
-                                        alert("No existe ese CUI");
-                                        $("input#nombreSap").val("0");
-                                    }
-                                }
-                            });
-                        }
-                    }],
-                },
-                search: false
-            },
-            {
-                label: 'Nombre SAP',
-                name: 'nombreSap',
-                width: 80,
-                align: 'center',
-                hidden: true,
-                editable: true,
-                editoptions: {
-                    readonly: 'readonly'
-                },
-                editrules: {
-                    required: false,
-                    edithidden: false
-                },
-                search: false
-            },
-            
             {
                 label: 'Número Contrato',
                 name: 'numContrato',
@@ -144,7 +175,7 @@
                 hidden: false,
                 editable: true,
                 editrules: {
-                    required: true
+                    required: false
                 },
                 search: false
             }, {
@@ -217,6 +248,9 @@
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
+                editoptions: {
+                    fullRow: true
+                },
                 search: false
             }
         ];

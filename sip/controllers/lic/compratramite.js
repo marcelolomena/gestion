@@ -20,7 +20,7 @@ var includes = [{
 
 function map(req) {
     return {
-        id: req.body.id || 0,
+        id: req.body.id,
         nombre: req.body.nombre,
         idProveedor: parseInt(req.body.idProveedor),
         numContrato: req.body.numContrato ? parseInt(req.body.numContrato) : null,

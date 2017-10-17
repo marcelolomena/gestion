@@ -1,13 +1,23 @@
 'use strict';
 var models = require('../../models');
+var sequelize = require('../../models/index').sequelize;
 var base = require('./lic-controller');
 var _ = require('lodash');
 
 var entity = models.producto;
-entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
-entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
-entity.belongsTo(models.tipoInstalacion, { foreignKey: 'idTipoInstalacion' });
-entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
+entity.belongsTo(models.fabricante, {
+    foreignKey: 'idFabricante'
+});
+entity.belongsTo(models.clasificacion, {
+    foreignKey: 'idClasificacion'
+});
+entity.belongsTo(models.tipoInstalacion, {
+    foreignKey: 'idTipoInstalacion'
+});
+entity.belongsTo(models.tipoLicenciamiento, {
+    foreignKey: 'idTipoLicenciamiento'
+});
+
 function map(req) {
     return {
         id: req.body.id || 0,
@@ -24,6 +34,7 @@ function map(req) {
         licTramite: req.body.licTramite
     }
 }
+
 function mapper(data) {
     return _.map(data, function (item) {
         return {
@@ -38,25 +49,31 @@ function mapper(data) {
             // alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
             // utilidad: item.utilidad,
             comentarios: item.comentarios,
-            fabricante: { nombre: item.fabricante.nombre },
-            clasificacion: { nombre: item.clasificacion ? item.clasificacion.nombre: '' },
-            tipoInstalacion: { nombre: item.tipoInstalacion ? item.tipoInstalacion.nombre: ''  },
-            tipoLicenciamiento: { nombre: item.tipoLicenciamiento ? item.tipoLicenciamiento.nombre: ''  },
+            fabricante: {
+                nombre: item.fabricante.nombre
+            },
+            clasificacion: {
+                nombre: item.clasificacion ? item.clasificacion.nombre : ''
+            },
+            tipoInstalacion: {
+                nombre: item.tipoInstalacion ? item.tipoInstalacion.nombre : ''
+            },
+            tipoLicenciamiento: {
+                nombre: item.tipoLicenciamiento ? item.tipoLicenciamiento.nombre : ''
+            },
             licTramite: item.licTramite,
         }
     });
 }
-var includes = [
-    {
-        model: models.fabricante
-    }, {
-        model: models.clasificacion
-    }, {
-        model: models.tipoInstalacion
-    }, {
-        model: models.tipoLicenciamiento
-    }
-];
+var includes = [{
+    model: models.fabricante
+}, {
+    model: models.clasificacion
+}, {
+    model: models.tipoInstalacion
+}, {
+    model: models.tipoLicenciamiento
+}];
 
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
@@ -74,23 +91,50 @@ function listAll(req, res) {
 
 function getFabricante(req, res) {
     var idProducto = parseInt(req.params.idProducto);
-    entity.findOne({ where: { id: idProducto }, attributes: ['idfabricante'] })
+    entity.findOne({
+            where: {
+                id: idProducto
+            },
+            attributes: ['idfabricante']
+        })
         .then(function (result) {
             var idFabric = result.dataValues.idfabricante;
-            models.fabricante.findOne({ where: { id: idFabric }, attributes: ['nombre']})
-            .then(function(resulta){
-                return res.json({ error: 0, idFabric: idFabric, nombre: resulta.nombre});
-            })
-            .catch(function (err) {
-                return res.json({ error_code: 1 });
-            });
+            models.fabricante.findOne({
+                    where: {
+                        id: idFabric
+                    },
+                    attributes: ['nombre']
+                })
+                .then(function (resulta) {
+                    return res.json({
+                        error: 0,
+                        idFabric: idFabric,
+                        nombre: resulta.nombre
+                    });
+                })
+                .catch(function (err) {
+                    return res.json({
+                        error_code: 1
+                    });
+                });
         })
         .catch(function (err) {
-            return res.json({ error_code: 1 });
+            return res.json({
+                error_code: 1
+            });
         });
 }
 
 
+function getProducto (req, res) {
+    var idFabricante = req.params.idFabricante;
+    var sql = 'SELECT id, idfabricante, nombre FROM lic.producto WHERE idfabricante = ' + idFabricante;
+    sequelize.query(sql)
+        .spread(function (rows) {
+            return res.json(rows);
+        });
+
+};
 
 function action(req, res) {
     switch (req.body.oper) {
@@ -107,5 +151,6 @@ module.exports = {
     list: list,
     action: action,
     listAll: listAll,
-    getFabricante: getFabricante
+    getFabricante: getFabricante,
+    getProducto: getProducto
 }

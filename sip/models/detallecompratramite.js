@@ -80,8 +80,8 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DATE,
             allowNull: true
         },
-        recepcionado: {
-            field: 'recepcionado',
+        estadoRecepcion: {
+            field: 'estadorecepcion',
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false 

@@ -76,6 +76,9 @@ module.exports = function (passport) {
     router.route('/lic/getFabricante/:idProducto')
         .get(isAuthenticated, productoController.getFabricante);
 
+    router.route('/lic/getProducto/:idFabricante')
+        .get(isAuthenticated, productoController.getProducto);
+
     router.route('/lic/compra/:pId')
         .get(isAuthenticated, compraController.listChilds)
         .post(isAuthenticated, compraController.action);
@@ -85,7 +88,7 @@ module.exports = function (passport) {
 
     router.route('/lic/comprasentramite')
         .get(isAuthenticated, recepcionController.listCompras);
-        
+
     router.route('/lic/detallecomprasentramite/:pId')
         .get(isAuthenticated, detalleRecepcionController.listDetalleCompras);
 
