@@ -32,10 +32,6 @@
         grid.build();
     };
 
-
-
-
-
     $(function () {
         var $table = $('#gridMaster');
         var viewModel = [{
@@ -223,15 +219,6 @@
                 search: false
             },
             {
-                label: 'Estado',
-                name: 'estado',
-                width: 90,
-                align: 'center',
-                sortable: false,
-                editable: false,
-                search: false
-            },
-            {
                 label: 'Fecha Recepcion',
                 name: 'fechaRecepcion',
                 width: 140,
@@ -250,6 +237,31 @@
                 edittype: 'textarea',
                 editoptions: {
                     fullRow: true
+                },
+                search: false
+            },
+            {
+                label: 'Estado',
+                name: 'estado',
+                width: 90,
+                align: 'center',
+                editable: true,
+                edittype: "custom",
+                editoptions: {
+                    custom_value: sipLibrary.getRadioElementValue,
+                    custom_element: sipLibrary.radioElemCompraTramite,
+                    defaultValue: "En Trámite",
+                },
+                formatter: function (cellvalue, options, rowObject) {
+                    var dato = '';
+                    var val = rowObject.estado;
+                    if (val == 1) {
+                        dato = 'En Trámite';
+
+                    } else if (val == 0) {
+                        dato = 'Recepcionado';
+                    }
+                    return dato;
                 },
                 search: false
             }

@@ -268,15 +268,6 @@ function renderGrid(loadurl, tableId) {
             search: false
         },
         {
-            label: 'Estado',
-            name: 'estado',
-            width: 130,
-            align: 'center',
-            hidden: false,
-            editable: false,
-            search: false
-        },
-        {
             label: 'Comentario',
             name: 'comentario',
             width: 400,
@@ -288,6 +279,31 @@ function renderGrid(loadurl, tableId) {
             },
             search: false
         },
+        {
+            label: 'Estado',
+            name: 'estado',
+            width: 90,
+            align: 'center',
+            editable: true,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemCompraTramite,
+                defaultValue: "En Trámite",
+            },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.estado;
+                if (val == 1) {
+                    dato = 'En Trámite';
+
+                } else if (val == 0) {
+                    dato = 'Recepcionado';
+                }
+                return dato;
+            },
+            search: false
+        }
     ];
     var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
 
