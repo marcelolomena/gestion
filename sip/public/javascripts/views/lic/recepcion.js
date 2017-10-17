@@ -26,14 +26,14 @@
                 key: true,
                 hidden: true,
                 editable: false
-            },{
+            }, {
                 label: 'Compra en trámite',
                 name: 'idCompraTramite',
                 hidden: true,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
-                    fullRow:true,
+                    fullRow: true,
                     dataUrl: '/lic/proveedor',
                     buildSelect: function (response) {
                         var data = JSON.parse(response);
@@ -54,10 +54,10 @@
                     required: true
                 },
                 editoptions: {
-                    fullRow:true
+                    fullRow: true
                 },
                 search: true
-            } ,{
+            }, {
                 label: 'SAP',
                 name: 'sap',
                 width: 80,
@@ -66,6 +66,28 @@
                 editable: true,
                 editrules: {
                     required: false
+                },
+                editoptions: {
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var rowKey = $table.getGridParam('selrow');
+                            var rowData = $table.getRowData(rowKey);
+                            var thissid = $(this).val();
+                            $.ajax({
+                                type: 'GET',
+                                url: '/lic/existeSap/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    if (data && data.error === 0) {
+                                        $('input#nombreSap').val(data.nombre);
+                                    } else {
+                                        alert('No existe ese sap');
+                                        $('input#nombreSap').val('');
+                                    }
+                                }
+                            });
+                        }
+                    }],
                 },
                 search: true
             }, {
@@ -83,7 +105,7 @@
                     edithidden: false
                 },
                 search: false
-            } ,{
+            }, {
                 label: 'CUI',
                 name: 'idCui',
                 width: 80,
@@ -93,19 +115,19 @@
                 editoptions: {
                     dataEvents: [{
                         type: 'change', fn: function (e) {
-                            var rowKey = $table.getGridParam("selrow");
+                            var rowKey = $table.getGridParam('selrow');
                             var rowData = $table.getRowData(rowKey);
                             var thissid = $(this).val();
                             $.ajax({
-                                type: "GET",
+                                type: 'GET',
                                 url: '/getNombreCui/' + thissid,
                                 async: false,
                                 success: function (data) {
-                                    if (data) {
-                                        $("input#nombreCui").val(data.nombre);
+                                    if (data && data.error === 0) {
+                                        $('input#nombreCui').val(data.nombre);
                                     } else {
-                                        alert("No existe ese CUI");
-                                        $("input#nombreCui").val("0");
+                                        alert('No existe ese CUI');
+                                        $('input#nombreCui').val('');
                                     }
                                 }
                             });
@@ -179,7 +201,7 @@
                         return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
                     }
                 }
-            },{
+            }, {
                 label: 'Comprador',
                 name: 'comprador',
                 width: 150,
@@ -195,16 +217,16 @@
                 name: 'comentario',
                 hidden: true,
                 editable: true,
-                edittype:'textarea',
+                edittype: 'textarea',
                 editrules: {
                     required: false
                 },
                 editoptions: {
-                    fullRow:true,
+                    fullRow: true,
 
                 },
                 search: true
-            } 
+            }
         ];
         initGrid(viewModel);
     });
