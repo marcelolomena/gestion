@@ -30,7 +30,7 @@ function map(req) {
         borrado: 1,
         cui: req.body.idCui ? parseInt(req.body.idCui) : null,
         sap: req.body.sap ? parseInt(req.body.sap) : null,
-        estado: 1,
+        estado: req.body.estado,
         comentario: req.body.comentario
     }
 }
@@ -51,7 +51,7 @@ function mapper(data) {
             proveedor: {
                 nombre: item.proveedor.razonsocial
             },
-            estado: item.estado ? 'En Trámite' : 'Recepcionado',
+            estado: item.estado,
             comentario: item.comentario
         };
         return result;

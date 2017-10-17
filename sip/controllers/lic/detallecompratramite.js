@@ -30,7 +30,7 @@ function map(req) {
         numero: req.body.numero,
         idProducto: req.body.idProducto,
         idFabricante: req.body.idFabricante,
-        estadoRecepcion: 1
+        estadoRecepcion: req.body.estado
     }
 }
 
@@ -56,7 +56,7 @@ function mapper(data) {
             fabricante: {
                 nombre: item.fabricante.nombre
             },
-            estado: item.estado ? 'En Trámite' : 'Recepcionado'
+            estado: item.estadoRecepcion
         }
     });
 }
