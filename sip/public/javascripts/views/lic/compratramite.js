@@ -11,29 +11,29 @@
     }
 
     function beforeSubmit(postdata, formid) {
-        if (!postdata.sap || !postdata.idCui) {
-            return [false, "Ingresar al menos un CUI ó SAP", ""];
-        } else if (!postdata.numContrato || !postdata.ordenCompra) {
+        if (!postdata.sap) {
+            if (!postdata.idCui) {
+                return [false, "Ingresar al menos un CUI ó SAP", ""];
+            }
+        } else if (!postdata.numContrato) {
+            if (!postdata.ordenCompra) {
                 return [false, "Ingresar al menos un Número de Contrato ó Orden de Compra", ""];
-         } else {
+            }
+        } else {
             return [true, "", ""];
         }
     };
 
-
-
-
-
     var initGrid = function (viewModel) {
         var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.prmAdd.beforeSubmit = beforeSubmit;
-        
-        
+
+
         grid.build();
     };
 
 
-    
+
 
 
     $(function () {
@@ -59,7 +59,7 @@
                 },
                 search: false
             },
-             {
+            {
                 label: 'SAP',
                 name: 'sap',
                 width: 80,

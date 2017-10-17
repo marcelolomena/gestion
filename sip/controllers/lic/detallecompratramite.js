@@ -19,6 +19,7 @@ function map(req) {
         id: req.body.id || 0,
         idCompraTramite: req.body.idCompraTramite || req.params.pId,
         nombre: req.body.nombre,
+        nombreFabri: req.body.nombreFabri,
         fechaInicio: base.toDate(req.body.fechaInicio),
         fechaTermino: base.toDate(req.body.fechaTermino),
         fechaControl: base.toDate(req.body.fechaControl),
@@ -28,7 +29,8 @@ function map(req) {
         nombre: req.body.nombre,
         numero: req.body.numero,
         idProducto: req.body.idProducto,
-        idFabricante: req.body.idFabricante
+        idFabricante: req.body.idFabricante,
+        estadoRecepcion: 1
     }
 }
 
@@ -53,7 +55,8 @@ function mapper(data) {
             },
             fabricante: {
                 nombre: item.fabricante.nombre
-            }
+            },
+            estado: item.estado ? 'En Trámite' : 'Recepcionado'
         }
     });
 }
