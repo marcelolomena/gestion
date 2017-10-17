@@ -166,9 +166,10 @@ function upload(req, res) {
 function listCompras(req, res) {
     var ntt = models.compraTramite;
     base.list(req, res, ntt, [], function (data) {
-        return _.map(data, function (item) {
+        var result = [];
+        _.each(data, function (item) {
             if (item.estado === 1) {
-                return {
+                result.push({
                     id: item.id,
                     nombre: item.nombre,
                     sap: item.sap,
@@ -176,11 +177,12 @@ function listCompras(req, res) {
                     numContrato: item.numContrato,
                     ordenCompra: item.ordenCompra,
                     idProveedor: item.idProveedor,
-                    comprador :item.comprador,
-                    comentario:item.comentario
-                };
+                    comprador: item.comprador,
+                    comentario: item.comentario
+                });
             }
         });
+        return result;
     })
 }
 

@@ -1,6 +1,7 @@
 var detalleRecepcionGrid = {
     renderGrid: function (loadurl, tableId) {
         var $table = $('#' + tableId);
+        var parentId = 1;
         var viewModel = [
             {
                 label: 'ID',
@@ -26,7 +27,7 @@ var detalleRecepcionGrid = {
                 edittype: 'select',
                 editoptions: {
                     fullRow: true,
-                    dataUrl: '/lic/detallecomprasentramite/1',
+                    dataUrl: '/lic/detallecomprasentramite/'+ parent,
                     buildSelect: function (response) {
                         var data = JSON.parse(response).rows;
                         compraData = data;
@@ -247,8 +248,6 @@ var detalleRecepcionGrid = {
         }
         grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.prmEdit.beforeSubmit = beforeSubmit;
-
-
         grid.build();
         return grid;
     }
