@@ -10,11 +10,30 @@
         detalleCompraTramiteGrid.renderGrid(url, gridID);
     }
 
+    function beforeSubmit(postdata, formid) {
+        if (!postdata.idCui || !postdata.sap) {
+            return [false, "Ingresar al menos un CUI ó SAP", ""];
+        } else if (!postdata.numContrato && !postdata.ordenCompra) {
+            return [false, "Ingresar al menos un Número de Contrato ó Orden de Compra", ""];
+        } else {
+            return [true, "", ""];
+        }
+    };
+
+
+
+
+
     var initGrid = function (viewModel) {
         var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        grid.prmAdd.beforeSubmit = beforeSubmit;
+        
+        
         grid.build();
     };
 
+
+    
 
 
     $(function () {
@@ -66,6 +85,11 @@
                             });
                         }
                     }],
+                    dataInit: function (element) {
+                        $(element).mask("00000", {
+                            placeholder: "00000"
+                        });
+                    }
                 },
                 search: false
             }, {
@@ -116,6 +140,11 @@
                             });
                         }
                     }],
+                    dataInit: function (element) {
+                        $(element).mask("00000", {
+                            placeholder: "00000"
+                        });
+                    }
                 },
                 search: false
             },
@@ -144,7 +173,7 @@
                 hidden: false,
                 editable: true,
                 editrules: {
-                    required: true
+                    required: false
                 },
                 search: false
             }, {
