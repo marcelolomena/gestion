@@ -2,6 +2,7 @@
 var models = require('../../models');
 var base = require('./lic-controller');
 var _ = require('lodash');
+var logger = require('../../utils/logger');
 
 var entity = models.detalleRecepcion;
 entity.belongsTo(models.proveedor, {
@@ -36,7 +37,7 @@ function map(req) {
         idRecepcion: parseInt(req.body.idRecepcion || req.params.pId),
         nombre: req.body.nombre,
         sap: req.body.sap ? parseInt(req.body.sap) : null,
-        cui: req.body.sap ? parseInt(req.body.idCui) : null,
+        cui: req.body.idCui ? parseInt(req.body.idCui) : null,
         numContrato: req.body.numContrato ? parseInt(req.body.numContrato) : null,
         ordenCompra: req.body.ordenCompra ? parseInt(req.body.ordenCompra) : null,
         idProveedor: parseInt(req.body.idProveedor),
@@ -49,7 +50,8 @@ function map(req) {
         monto: parseInt(req.body.monto || 0),
         cantidad: req.body.cantidad ? parseInt(req.body.cantidad) : 0,
         comentario: req.body.comentario,
-        numsolicitud: req.body.numsolicitud ? parseInt(req.body.numsolicitud) : null
+        numsolicitud: req.body.numsolicitud ? parseInt(req.body.numsolicitud) : null,
+        otro :req.body.otro
     }
 }
 function mapper(data) {
@@ -88,14 +90,14 @@ function listChilds(req, res) {
 }
 
 function mapProducto(data) {
-    return { nombre: data.nombre, idFabricante: data.idFabricante };
+    return { nombre: data.otro, idFabricante: data.idFabricante };
 }
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
             var data = map(req);
             var productoM = models.producto;
-            if (!req.body.idProducto) {
+            if (req.body.idProducto === '') {
                 base.createP(productoM, mapProducto(data))
                     .then(function (created) {
                         data.idProducto = created.id;
@@ -213,7 +215,7 @@ function listDetalleCompras(req, res) {
     var ntt = models.detalleCompraTramite;
     base.listChilds(req, res, ntt, 'idCompraTramite', [], function (data) {
         return _.map(data, function (item) {
-            if (item.estadorecepcion === 1) {
+            if (item.estadoRecepcion === 1) {
                 return {
                     id: item.id,
                     idFabricante: item.idFabricante,
