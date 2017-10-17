@@ -18,6 +18,7 @@
     };
 
     $(function () {
+        var compraData = [];
         var $table = $('#gridMaster');
         var viewModel = [
             {
@@ -34,11 +35,37 @@
                 edittype: 'select',
                 editoptions: {
                     fullRow: true,
-                    dataUrl: '/lic/proveedor',
+                    dataUrl: '/lic/comprasentramite',
                     buildSelect: function (response) {
-                        var data = JSON.parse(response);
+                        var data = JSON.parse(response).rows;
+                        compraData = data;
                         return new zs.SelectTemplate(data, 'Seleccione Compra en trámite', null).template;
-                    }
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var rowKey = $table.getGridParam('selrow');
+                            var rowData = $table.getRowData(rowKey);
+                            var thissid = $(this).val();
+
+                            var fila = _.find(compraData, function (item) {
+                                return item.id === parseInt(thissid);
+                            });
+                            
+                            $('input#nombre').val(fila.nombre);
+                            var saps = $('input#sap');
+                            saps.val(fila.sap);
+                            saps.change();
+                            var cuis = $('input#idCui');
+                            cuis.val(fila.idCui);
+                            cuis.change();
+                            $('input#numContrato').val(fila.numContrato);
+                            $('select#ordenCompra').val(fila.ordenCompra);
+                            var $idProveedor = $('select#idProveedor');
+                            $('input#idProveedor').val(fila.idProveedor);
+                            $('input#comprador').val(fila.comprador);
+                            $('textarea#comentario').val(fila.comentario);
+                        }
+                    }]
                 },
                 editrules: {
                     required: false
@@ -87,7 +114,7 @@
                                 }
                             });
                         }
-                    }],
+                    }]
                 },
                 search: true
             }, {

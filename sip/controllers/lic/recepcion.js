@@ -6,13 +6,13 @@ var _ = require('lodash');
 var entity = models.recepcion;
 entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
 entity.belongsTo(models.estructuracuibch, { foreignKey: 'cui', targetKey: 'cui' });
-entity.belongsTo(models.presupuestoenvuelo,{foreignKey:'sap', targetKey: 'sap'})
+entity.belongsTo(models.presupuestoenvuelo, { foreignKey: 'sap', targetKey: 'sap' })
 var includes = [
     {
         model: models.proveedor
-    },    {
+    }, {
         model: models.estructuracuibch
-    },    {
+    }, {
         model: models.presupuestoenvuelo
     }
 ];
@@ -26,8 +26,8 @@ function map(req) {
         numContrato: req.body.numContrato ? parseInt(req.body.numContrato) : null,
         ordenCompra: req.body.ordenCompra ? parseInt(req.body.ordenCompra) : null,
         idProveedor: parseInt(req.body.idProveedor),
-        comprador:req.body.comprador,
-        comentario:req.body.comentario,
+        comprador: req.body.comprador,
+        comentario: req.body.comentario,
         fecha: req.body.fecha || base.now()
     }
 }
@@ -45,7 +45,7 @@ function mapper(data) {
             idProveedor: item.idProveedor,
             proveedor: { nombre: item.proveedor.razonsocial },
             comprador: item.comprador,
-            comentario:item.comentario,
+            comentario: item.comentario,
             fecha: item.fecha
         };
     });
@@ -162,8 +162,32 @@ function upload(req, res) {
 
 };
 
+
+function listCompras(req, res) {
+    var ntt = models.compraTramite;
+    base.list(req, res, ntt, [], function (data) {
+        return _.map(data, function (item) {
+            if (item.estado === 1) {
+                return {
+                    id: item.id,
+                    nombre: item.nombre,
+                    sap: item.sap,
+                    idCui: item.cui,
+                    numContrato: item.numContrato,
+                    ordenCompra: item.ordenCompra,
+                    idProveedor: item.idProveedor,
+                    comprador :item.comprador,
+                    comentario:item.comentario
+                };
+            }
+        });
+    })
+}
+
+
 module.exports = {
     list: list,
     action: action,
-    upload: upload
+    upload: upload,
+    listCompras: listCompras
 }
