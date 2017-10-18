@@ -1,6 +1,7 @@
 (function ($, _) {
     'use strict';
-
+    $.fn.datepicker.defaults.format = "dd-mm-yyyy";
+    
     var licLibrary = {
         jsonOptions: {
             type: 'POST',

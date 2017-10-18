@@ -89,27 +89,46 @@ function mapper(data) {
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idRecepcion', includes, mapper);
 }
-
+function mapfabricante(data) {
+    return { nombre: data.otroFabricante };
+}
 function mapProducto(data) {
-    return { nombre: data.otro, idFabricante: data.idFabricante };
+    return { nombre: data.otroProducto, idFabricante: data.idFabricante };
+}
+function saveProducto(data, res) {
+    if (data.idProducto === '') {
+        var productoM = models.producto;
+        base.createP(productoM, mapProducto(data))
+            .then(function (created) {
+                data.idProducto = created.id;
+                return base.create(entity, data, res);
+            }).catch(function (err) {
+                logger.error(productoM.name + ':create, ' + err);
+                return res.json({ error: 1, glosa: err.message });
+            });
+    } else {
+        return base.create(entity, data, res);
+    }
 }
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
             var data = map(req);
-            var productoM = models.producto;
-            if (req.body.idProducto === '') {
-                base.createP(productoM, mapProducto(data))
+            if (data.idFabricante === '') {
+                var fabricanteM = models.fabricante;
+                base.createP(fabricanteM, mapfabricante(data))
                     .then(function (created) {
-                        data.idProducto = created.id;
-                        return base.create(entity, data, res);
+                        data.idFabricante = created.id;
+                        return saveProducto(data, res);
                     }).catch(function (err) {
-                        logger.error(productoM.name + ':create, ' + err);
+                        logger.error(fabricanteM.name + ':create, ' + err);
                         return res.json({ error: 1, glosa: err.message });
                     });
             } else {
-                return base.create(entity, data, res);
+                return saveProducto(data, res);
             }
+
+           
         case 'edit':
             return base.update(entity, map(req), res);
         case 'del':
@@ -214,12 +233,15 @@ function upload(req, res) {
 
 function listDetalleCompras(req, res) {
     var ntt = models.detalleCompraTramite;
-    base.listChilds(req, res, ntt, 'idCompraTramite', [], function (data) {
+    base.listChilds(req, res, ntt, 'idCompraTramite', [{
+        model: models.producto
+    }], function (data) {
         var result = [];
         _.each(data, function (item) {
             if (item.estado === 1) {
-                result.push({
+                var row = {
                     id: item.id,
+                    nombre: item.producto.nombre,
                     idFabricante: item.idFabricante,
                     idProducto: item.idProducto,
                     fechaInicio: base.fromDate(item.fechaInicio),
@@ -229,7 +251,8 @@ function listDetalleCompras(req, res) {
                     monto: item.monto,
                     cantidad: item.numero,
                     comentario: item.comentario
-                });
+                };
+                result.push(row);
             }
         });
         return result;

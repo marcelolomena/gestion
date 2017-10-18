@@ -1,6 +1,9 @@
+'use strict';
 var detalleRecepcionGrid = {
     renderGrid: function (loadurl, tableId, idCompraTramite) {
+        
         var $table = $('#' + tableId);
+        var compraData=[];
         var viewModel = [
             {
                 label: 'ID',
@@ -34,27 +37,19 @@ var detalleRecepcionGrid = {
                     },
                     dataEvents: [{
                         type: 'change', fn: function (e) {
-                            var rowKey = $table.getGridParam('selrow');
-                            var rowData = $table.getRowData(rowKey);
                             var thissid = $(this).val();
-
                             var fila = _.find(compraData, function (item) {
                                 return item.id === parseInt(thissid);
                             });
-
-                            // $('input#nombre').val(fila.nombre);
-                            // var saps = $('input#sap');
-                            // saps.val(fila.sap);
-                            // saps.change();
-                            // var cuis = $('input#idCui');
-                            // cuis.val(fila.idCui);
-                            // cuis.change();
-                            // $('input#numContrato').val(fila.numContrato);
-                            // $('select#ordenCompra').val(fila.ordenCompra);
-                            // var $idProveedor = $('select#idProveedor');
-                            // $('input#idProveedor').val(fila.idProveedor);
-                            // $('input#comprador').val(fila.comprador);
-                            // $('textarea#comentario').val(fila.comentario);
+                            $('select#idFabricante').val(fila.idFabricante);
+                            $('select#idProducto').val(fila.idProducto);
+                            $('input#fechaInicio').val(fila.fechaInicio);
+                            $('input#fechaControl').val(fila.fechaControl);
+                            $('input#fechaTermino').val(fila.fechaTermino);
+                            $('input#cantidad').val(fila.cantidad);
+                            $('select#idMoneda').val(fila.idMoneda);
+                            $('input#monto').val(fila.monto);
+                            $('textarea#comentario').val(fila.comentario);
                         }
                     }]
                 },
@@ -101,7 +96,7 @@ var detalleRecepcionGrid = {
                 editable: true,
                 search: false,
                 editoptions: {
-                    fullRow: true
+                    fullRow: false
                 }
             }, {
                 label: 'Producto',
@@ -133,7 +128,7 @@ var detalleRecepcionGrid = {
                 editable: true,
                 search: false,
                 editoptions: {
-                    fullRow: true
+                    fullRow: false
                 }
             }, {
                 label: 'Fecha Inicio',
