@@ -37,7 +37,25 @@ function mapProducto(data) {
     return {nombre:data.nombre, idFabricante:data.idFabricante, licTramite:data.numero};
 }
 
+function listRecepcionados(req, res) {
+    var ntt = models.detalleRecepcion;
+    base.listChilds(req, res, ntt, 'numsolicitud', [{
+        model: models.producto
+    }], function (data) {
+        var result = [];
+        _.each(data, function (item) {
+            
+                var row = {
+                    id: item.id,
+                    nombre: item.producto.nombre
+                };
+                result.push(row);
+        });
+        return result;
+    })
+}
 
 module.exports = {
-    listChilds: listChilds
+    listChilds: listChilds,
+    listRecepcionados: listRecepcionados
 }
