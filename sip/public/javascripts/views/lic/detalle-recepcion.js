@@ -1,6 +1,7 @@
 'use strict';
 var detalleRecepcionGrid = {
     renderGrid: function (loadurl, tableId, idCompraTramite) {
+        
         var $table = $('#' + tableId);
         var compraData=[];
         var viewModel = [
