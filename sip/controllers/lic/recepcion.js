@@ -6,7 +6,7 @@ var _ = require('lodash');
 var entity = models.recepcion;
 entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
 entity.belongsTo(models.estructuracuibch, { foreignKey: 'cui', targetKey: 'cui' });
-entity.belongsTo(models.presupuestoenvuelo, { foreignKey: 'sap', targetKey: 'sap' })
+entity.belongsTo(models.presupuestoenvuelo, { foreignKey: 'sap', targetKey: 'sap' });
 var includes = [
     {
         model: models.proveedor
@@ -28,7 +28,8 @@ function map(req) {
         idProveedor: parseInt(req.body.idProveedor),
         comprador: req.body.comprador,
         comentario: req.body.comentario,
-        fecha: req.body.fecha || base.now()
+        fecha: req.body.fecha || base.now(),
+        idCompraTramite : req.body.idCompraTramite ? parseInt(req.body.idCompraTramite) : null
     }
 }
 function mapper(data) {
@@ -46,7 +47,8 @@ function mapper(data) {
             proveedor: { nombre: item.proveedor.razonsocial },
             comprador: item.comprador,
             comentario: item.comentario,
-            fecha: item.fecha
+            fecha: item.fecha,
+            idCompraTramite: item.idCompraTramite
         };
     });
 }
@@ -166,9 +168,10 @@ function upload(req, res) {
 function listCompras(req, res) {
     var ntt = models.compraTramite;
     base.list(req, res, ntt, [], function (data) {
-        return _.map(data, function (item) {
+        var result = [];
+        _.each(data, function (item) {
             if (item.estado === 1) {
-                return {
+                result.push({
                     id: item.id,
                     nombre: item.nombre,
                     sap: item.sap,
@@ -176,11 +179,12 @@ function listCompras(req, res) {
                     numContrato: item.numContrato,
                     ordenCompra: item.ordenCompra,
                     idProveedor: item.idProveedor,
-                    comprador :item.comprador,
-                    comentario:item.comentario
-                };
+                    comprador: item.comprador,
+                    comentario: item.comentario
+                });
             }
         });
+        return result;
     })
 }
 

@@ -2,6 +2,7 @@
 var models = require('../../models');
 var base = require('./lic-controller');
 var _ = require('lodash');
+var logger = require('../../utils/logger');
 
 var entity = models.detalleRecepcion;
 entity.belongsTo(models.proveedor, {
@@ -35,11 +36,11 @@ function map(req) {
         id: parseInt(req.body.id) || 0,
         idRecepcion: parseInt(req.body.idRecepcion || req.params.pId),
         nombre: req.body.nombre,
-        idProveedor: parseInt(req.body.idProveedor),
         sap: req.body.sap ? parseInt(req.body.sap) : null,
-        cui: req.body.sap ? parseInt(req.body.idCui) : null,
+        cui: req.body.idCui ? parseInt(req.body.idCui) : null,
         numContrato: req.body.numContrato ? parseInt(req.body.numContrato) : null,
         ordenCompra: req.body.ordenCompra ? parseInt(req.body.ordenCompra) : null,
+        idProveedor: parseInt(req.body.idProveedor),
         idProducto: req.body.idProducto ? parseInt(req.body.idProducto) : null,
         idFabricante: req.body.idFabricante ? parseInt(req.body.idFabricante) : null,
         fechaInicio: base.toDate(req.body.fechaInicio),
@@ -49,8 +50,8 @@ function map(req) {
         monto: parseInt(req.body.monto || 0),
         cantidad: req.body.cantidad ? parseInt(req.body.cantidad) : 0,
         comentario: req.body.comentario,
-        numSolicitud: req.body.numSolicitud ? parseInt(req.body.numSolicitud) : null,
-        comprador: req.body.comprador
+        numsolicitud: req.body.numsolicitud ? parseInt(req.body.numsolicitud) : null,
+        otro: req.body.otro
     }
 }
 function mapper(data) {
@@ -58,12 +59,13 @@ function mapper(data) {
         return {
             id: item.id,
             idRecepcion: item.idRecepcion,
-            idProveedor: item.idProveedor,
-            proveedor: { nombre: item.proveedor.razonsocial },
+            idCompraTrameite: item.idCompraTrameite,
             sap: item.sap,
-            cui: item.cui,
+            idCui: item.cui,
             numContrato: item.numContrato,
             ordenCompra: item.ordenCompra,
+            idProveedor: item.idProveedor,
+            proveedor: { nombre: item.proveedor.razonsocial },
             idFabricante: item.idFabricante,
             fabricante: { nombre: item.fabricante.nombre },
             idProducto: item.idProducto,
@@ -72,31 +74,30 @@ function mapper(data) {
             fechaTermino: base.fromDate(item.fechaTermino),
             fechaControl: base.fromDate(item.fechaControl),
             idMoneda: item.idMoneda,
-            moneda: { nombre: item.moneda.nombre },
+            moneda: { nombre: item.moneda.moneda },
             monto: item.monto,
             cantidad: item.cantidad,
-            nombre: item.nombre,
             comprador: item.comprador,
             comentario: item.comentario,
-            fecha: base.fromDate(item.fecha)
+            fecha: base.fromDate(item.fecha),
+            numsolicitud: item.numsolicitud
         };
     });
 }
-
 
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idRecepcion', includes, mapper);
 }
 
 function mapProducto(data) {
-    return { nombre: data.nombre, idFabricante: data.idFabricante };
+    return { nombre: data.otro, idFabricante: data.idFabricante };
 }
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
             var data = map(req);
             var productoM = models.producto;
-            if (!req.body.idProducto) {
+            if (req.body.idProducto === '') {
                 base.createP(productoM, mapProducto(data))
                     .then(function (created) {
                         data.idProducto = created.id;
@@ -106,7 +107,7 @@ function action(req, res) {
                         return res.json({ error: 1, glosa: err.message });
                     });
             } else {
-                return base.create(entity, map(req), res);
+                return base.create(entity, data, res);
             }
         case 'edit':
             return base.update(entity, map(req), res);
@@ -213,9 +214,10 @@ function upload(req, res) {
 function listDetalleCompras(req, res) {
     var ntt = models.detalleCompraTramite;
     base.listChilds(req, res, ntt, 'idCompraTramite', [], function (data) {
-        return _.map(data, function (item) {
-            if (item.estado === 1) {
-                return {
+        var result = [];
+        _.each(data, function (item) {
+            if (item.estadoRecepcion === 1) {
+                result.push({
                     id: item.id,
                     idFabricante: item.idFabricante,
                     idProducto: item.idProducto,
@@ -224,16 +226,17 @@ function listDetalleCompras(req, res) {
                     fechaControl: base.fromDate(item.fechaControl),
                     idMoneda: item.idMoneda,
                     monto: item.monto,
-                    cantidad: item.cantidad,
+                    cantidad: item.numero,
                     comentario: item.comentario
-                };
+                });
             }
         });
+        return result;
     })
 }
 module.exports = {
     listChilds: listChilds,
     action: action,
     upload: upload,
-    listDetalleCompras:listDetalleCompras
+    listDetalleCompras: listDetalleCompras
 }

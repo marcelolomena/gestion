@@ -5,21 +5,32 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
-        },
-        idRecepcion: {
+        }, idRecepcion: {
             field: 'idrecepcion',
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'recepcion', 
+                model: 'recepcion',
                 key: 'id'
             }
-        },
-        nombre: {
+        }, nombre: {
             type: DataTypes.STRING(250),
             allowNull: true
-        },
-        idProveedor: {
+        },  cui: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }, sap: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }, numContrato: {
+            field: 'numcontrato',
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }, ordenCompra: {
+            field: 'ordencompra',
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }, idProveedor: {
             field: 'idproveedor',
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -27,30 +38,10 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'proveedor',
                 key: 'id'
             }
-        },
-        numContrato: {
-            field: 'numcontrato',
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
-        ordenCompra: {
-            field: 'ordencompra',
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
-        comprador: {
+        }, comprador: {
             type: DataTypes.STRING(250),
             allowNull: true
-        },
-        cui: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
-        sap: {
-            type: DataTypes.INTEGER,
-            allowNull: true
-        },
-        idFabricante: {
+        }, idFabricante: {
             field: 'idfabricante',
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -58,8 +49,7 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'fabricante',
                 key: 'id'
             }
-        },
-        idProducto: {
+        }, idProducto: {
             field: 'idproducto',
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -67,23 +57,19 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'producto',
                 key: 'id'
             }
-        },
-		fechaInicio: {
+        }, fechaInicio: {
             field: 'fechainicio',
             type: DataTypes.DATE,
             allowNull: true
-        },
-        fechaTermino: {
+        }, fechaTermino: {
             field: 'fechatermino',
             type: DataTypes.DATE,
             allowNull: true
-        },
-        fechaControl: {
+        }, fechaControl: {
             field: 'fechacontrol',
             type: DataTypes.DATE,
             allowNull: true
-        },
-        idMoneda: {
+        }, idMoneda: {
             field: 'idmoneda',
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -91,26 +77,22 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'moneda',
                 key: 'id'
             }
-        },
-        monto: {
+        }, monto: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: true
-        },
-        cantidad: {
+        }, cantidad: {
             type: DataTypes.INTEGER,
             allowNull: true
-        },
-        comentario: {
+        }, comentario: {
             type: DataTypes.STRING,
             allowNull: true
-        },
-        numsolicitud: {
+        }, numsolicitud: {
             type: DataTypes.INTEGER,
             allowNull: true
         }
     }, {
-        schema: 'lic',
-        timestamps: false,
-        tableName: 'detallerecepcion'
-    });
+            schema: 'lic',
+            timestamps: false,
+            tableName: 'detallerecepcion'
+        });
 };
