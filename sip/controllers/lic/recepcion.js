@@ -28,7 +28,8 @@ function map(req) {
         idProveedor: parseInt(req.body.idProveedor),
         comprador: req.body.comprador,
         comentario: req.body.comentario,
-        fecha: req.body.fecha || base.now()
+        fecha: req.body.fecha || base.now(),
+        idCompraTramite : req.body.idCompraTramite ? parseInt(req.body.idCompraTramite) : null
     }
 }
 function mapper(data) {
@@ -46,7 +47,8 @@ function mapper(data) {
             proveedor: { nombre: item.proveedor.razonsocial },
             comprador: item.comprador,
             comentario: item.comentario,
-            fecha: item.fecha
+            fecha: item.fecha,
+            idCompraTramite: item.idCompraTramite
         };
     });
 }

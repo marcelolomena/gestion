@@ -78,8 +78,10 @@
         var s = '<select><option value="">--' + caption + '--</option>';
         var selected;
         _.each(data, function (item, key) {
-            selected = item.id == selectedId ? '" selected>' : '">';
-            s += '<option value="' + item.id + selected + item.nombre + '</option>';
+            if (item) {
+                selected = item.id == selectedId ? '" selected>' : '">';
+                s += '<option value="' + item.id + selected + item.nombre + '</option>';
+            }
         });
         this.template = s + '</select>';
     }

@@ -51,7 +51,7 @@ function map(req) {
         cantidad: req.body.cantidad ? parseInt(req.body.cantidad) : 0,
         comentario: req.body.comentario,
         numsolicitud: req.body.numsolicitud ? parseInt(req.body.numsolicitud) : null,
-        otro :req.body.otro
+        otro: req.body.otro
     }
 }
 function mapper(data) {
@@ -80,7 +80,7 @@ function mapper(data) {
             comprador: item.comprador,
             comentario: item.comentario,
             fecha: base.fromDate(item.fecha),
-            numsolicitud:item.numsolicitud
+            numsolicitud: item.numsolicitud
         };
     });
 }
@@ -214,9 +214,10 @@ function upload(req, res) {
 function listDetalleCompras(req, res) {
     var ntt = models.detalleCompraTramite;
     base.listChilds(req, res, ntt, 'idCompraTramite', [], function (data) {
-        return _.map(data, function (item) {
+        var result = [];
+        _.each(data, function (item) {
             if (item.estadoRecepcion === 1) {
-                return {
+                result.push({
                     id: item.id,
                     idFabricante: item.idFabricante,
                     idProducto: item.idProducto,
@@ -227,14 +228,15 @@ function listDetalleCompras(req, res) {
                     monto: item.monto,
                     cantidad: item.numero,
                     comentario: item.comentario
-                };
+                });
             }
         });
+        return result;
     })
 }
 module.exports = {
     listChilds: listChilds,
     action: action,
     upload: upload,
-    listDetalleCompras:listDetalleCompras
+    listDetalleCompras: listDetalleCompras
 }

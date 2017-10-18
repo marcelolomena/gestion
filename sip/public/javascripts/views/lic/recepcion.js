@@ -8,8 +8,9 @@
         var gridID = divid + '_t';
         var pagerID = 'p_' + gridID;
         $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
-        var detail = detalleRecepcionGrid.renderGrid(url, gridID);
-        detail.parentRowData = grid.getRowData(rowid);
+        var rowData = grid.getRowData(rowid);
+        var detail = detalleRecepcionGrid.renderGrid(url, gridID, rowData.idCompraTramite||0);
+        detail.parentRowData = rowData
     }
 
     var initGrid = function (viewModel) {

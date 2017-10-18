@@ -1,7 +1,6 @@
 var detalleRecepcionGrid = {
-    renderGrid: function (loadurl, tableId) {
+    renderGrid: function (loadurl, tableId, idCompraTramite) {
         var $table = $('#' + tableId);
-        var parentId = 1;
         var viewModel = [
             {
                 label: 'ID',
@@ -27,7 +26,7 @@ var detalleRecepcionGrid = {
                 edittype: 'select',
                 editoptions: {
                     fullRow: true,
-                    dataUrl: '/lic/detallecomprasentramite/'+ parent,
+                    dataUrl: '/lic/detallecomprasentramite/'+ idCompraTramite,
                     buildSelect: function (response) {
                         var data = JSON.parse(response).rows;
                         compraData = data;
@@ -134,6 +133,7 @@ var detalleRecepcionGrid = {
                 sortable: false,
                 editable: true,
                 editoptions: {
+                    'data-provide':'datepicker',
                     size: 10,
                     maxlengh: 10,
                     dataInit: function (element) {
@@ -154,6 +154,7 @@ var detalleRecepcionGrid = {
                 sortable: false,
                 editable: true,
                 editoptions: {
+                    'data-provide':'datepicker',
                     size: 10,
                     maxlengh: 10,
                     dataInit: function (element) {
@@ -174,6 +175,7 @@ var detalleRecepcionGrid = {
                 sortable: false,
                 editable: true,
                 editoptions: {
+                    'data-provide':'datepicker',
                     size: 10,
                     maxlengh: 10,
                     dataInit: function (element) {
