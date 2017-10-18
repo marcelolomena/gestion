@@ -80,11 +80,10 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DATE,
             allowNull: true
         },
-        estadoRecepcion: {
-            field: 'estadorecepcion',
-            type: DataTypes.BOOLEAN,
+        estado: {
+            type: DataTypes.INTEGER, 
             allowNull: false,
-            defaultValue: false 
+            defaultValue: 1 
         },
     }, {
         schema: 'lic',

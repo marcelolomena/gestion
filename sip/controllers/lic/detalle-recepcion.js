@@ -51,7 +51,8 @@ function map(req) {
         cantidad: req.body.cantidad ? parseInt(req.body.cantidad) : 0,
         comentario: req.body.comentario,
         numsolicitud: req.body.numsolicitud ? parseInt(req.body.numsolicitud) : null,
-        otro: req.body.otro
+        otroProducto: req.body.otroProducto,
+        otroFabricante: req.body.otroFabricante
     }
 }
 function mapper(data) {
@@ -216,7 +217,7 @@ function listDetalleCompras(req, res) {
     base.listChilds(req, res, ntt, 'idCompraTramite', [], function (data) {
         var result = [];
         _.each(data, function (item) {
-            if (item.estadoRecepcion === 1) {
+            if (item.estado === 1) {
                 result.push({
                     id: item.id,
                     idFabricante: item.idFabricante,

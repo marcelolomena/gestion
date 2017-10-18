@@ -94,6 +94,16 @@ var detalleRecepcionGrid = {
                     }
                 }
             }, {
+                label: 'Otro Fabricante',
+                name: 'otroFabricante',
+                width: 250,
+                hidden: true,
+                editable: true,
+                search: false,
+                editoptions: {
+                    fullRow: true
+                }
+            }, {
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'producto.nombre',
@@ -117,7 +127,7 @@ var detalleRecepcionGrid = {
                 search: false
             }, {
                 label: 'Otro Producto',
-                name: 'otro',
+                name: 'otroProducto',
                 width: 250,
                 hidden: true,
                 editable: true,
