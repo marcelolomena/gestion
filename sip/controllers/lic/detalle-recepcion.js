@@ -96,39 +96,49 @@ function mapProducto(data) {
     return { nombre: data.otroProducto, idFabricante: data.idFabricante };
 }
 function saveProducto(data, res) {
-    if (data.idProducto === '') {
-        var productoM = models.producto;
-        base.createP(productoM, mapProducto(data))
+    if (data.idProducto == null) {
+        base.createP(models.producto, mapProducto(data))
             .then(function (created) {
                 data.idProducto = created.id;
-                return addDetalle(data, res);
+                addDetalle(data, res);
             }).catch(function (err) {
-                logger.error(productoM.name + ':create, ' + err);
+                logger.error(models.producto.name + ':create, ' + err);
                 return res.json({ error: 1, glosa: err.message });
             });
     } else {
-        return addDetalle(data, res);
+        addDetalle(data, res);
     }
 }
 function addDetalle(data, res) {
-    return base.create(entity, data, res);
+    base.createP(entity, data)
+        .then(function (created) {
+            return models.producto.findById(data.idProducto)
+                .then(function (item) {
+                    item.licStock = item.licStock + data.cantidad;
+                   return base.update(models.producto, item, res);
+                })
+        }).catch(function (err) {
+            logger.error(entity.name + ':create, ' + err);
+            return res.json({ error: 1, glosa: err.message });
+        });
+
+
 }
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
             var data = map(req);
-            if (data.idFabricante === '') {
-                var fabricanteM = models.fabricante;
-                base.createP(fabricanteM, mapfabricante(data))
+            if (data.idFabricante == null) {
+                base.createP( models.fabricante, mapFabricante(data))
                     .then(function (created) {
                         data.idFabricante = created.id;
-                        return saveProducto(data, res);
+                        saveProducto(data, res);
                     }).catch(function (err) {
-                        logger.error(fabricanteM.name + ':create, ' + err);
+                        logger.error( models.fabricante.name + ':create, ' + err);
                         return res.json({ error: 1, glosa: err.message });
                     });
             } else {
-                return saveProducto(data, res);
+                saveProducto(data, res);
             }
         case 'edit':
             return base.update(entity, map(req), res);

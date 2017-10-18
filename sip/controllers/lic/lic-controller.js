@@ -8,7 +8,7 @@ function createP(entity, data){
     return entity.create(data);
 }
 function create(entity, data, res) {
-    createP(entity, data)
+   FcreateP(entity, data)
     .then(function (created) {
         return res.json({ error: 0, glosa: '' });
     }).catch(function (err) {
@@ -24,7 +24,7 @@ function updateP(entity, data){
     });
 }
 function update(entity, data, res) {
-    updateP(entity, data)
+  updateP(entity, data)
     .then(function (updated) {
         return res.json({ error: 0, glosa: '' });
     }).catch(function (err) {
@@ -40,7 +40,7 @@ function destroyP(entity, id){
     });
 }
 function destroy(entity, id, res) {
-    destroyP(entity, id)
+  destroyP(entity, id)
     .then(function (rowDeleted) {
         if (rowDeleted === 1) {
             logger.debug(entity.name + ' Deleted successfully');

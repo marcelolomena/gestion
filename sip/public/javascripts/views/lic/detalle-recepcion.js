@@ -288,11 +288,11 @@ var detalleRecepcionGrid = {
             if (!(postdata.idFabricante || postdata.otroFabricante)) {
                 return [false, 'Debe seleccionar Fabricante o ingresar Otro Fabricante', ''];
             }
-            if (!(postdata.idProducto || postdata.otroProductoe)) {
+            if (!(postdata.idProducto || postdata.otroProducto)) {
                 return [false, 'Debe seleccionar Producto o ingresar Otro Producto', ''];
             }
             if (moment(postdata.fechaInicio).isSameOrAfter(moment(postdata.fechaControl))) {
-                return[false,'Fecha de Control debe ser menor que Fecha de Inicio']
+                return[false,'Fecha de Control debe ser mayor que Fecha de Inicio']
             }
             postdata.nombre = grid.parentRowData.nombre;
             postdata.idCui = grid.parentRowData.idCui;
