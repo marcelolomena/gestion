@@ -16,6 +16,9 @@ function renderGrid(loadurl, tableId) {
         }
     ];
     var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle Recepcionado', 'Editar Recepcionado', 'Agregar Recepcionado', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+    grid.navParameters.add = false;
+    grid.navParameters.edit = false;
+    grid.navParameters.del = false;
     grid.build();
 }
 

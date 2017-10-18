@@ -33,7 +33,7 @@ function map(req) {
         numero: req.body.numero,
         idProducto: req.body.idProducto,
         idFabricante: req.body.idFabricante,
-        estadoRecepcion: req.body.estado
+        estado: req.body.estado
     }
 }
 
@@ -62,7 +62,7 @@ function mapper(data) {
             fabricante: {
                 nombre: item.fabricante.nombre
             },
-            estado: item.estadoRecepcion
+            estado: item.estado
         }
     });
 }
