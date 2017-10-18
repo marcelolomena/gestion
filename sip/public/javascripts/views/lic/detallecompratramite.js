@@ -56,10 +56,10 @@ function renderGrid(loadurl, tableId) {
                                 url: '/lic/getProducto/' + thissid,
                                 async: false,
                                 success: function (data) {
-                                    $.each(data, function(i, item){
-                                        if(data[i].idFabricante == thissid){
+                                    $.each(data, function (i, item) {
+                                        if (data[i].idFabricante == thissid) {
                                             s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                                        }else{
+                                        } else {
                                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                                         }
                                     });
@@ -69,8 +69,8 @@ function renderGrid(loadurl, tableId) {
 
                             });
                         } else {
-                             $("#idProducto").attr('disabled', false);
-                             $("#nombreFabri").attr('disabled', false);
+                            $("#idProducto").attr('disabled', false);
+                            $("#nombreFabri").attr('disabled', false);
 
                         }
                     }
@@ -160,32 +160,17 @@ function renderGrid(loadurl, tableId) {
             align: 'center',
             sortable: false,
             editable: true,
-            formatter: 'date',
-            formatoptions: { 
-                srcformat: 'ISO8601Long', 
-                newformat: 'Y-m-d' 
-            },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'yyyy-mm-dd',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                $('#' + divid)[0].triggerToolbar();
-                            }, 100);
-                        }
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
             editoptions: {
-                size: 10,
-                maxlengh: 10,
+                'data-provide': 'datepicker',
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "AAAA-MM-DD" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("00-00-0000", {
+                        placeholder: "DD-MM-AAAA"
+                    });
+                    $(element).datepicker({
+                        language: 'es',
+                        format: 'dd-mm-yyyy',
+                        autoclose: true
+                    })
                 }
             },
             editrules: {
@@ -200,33 +185,24 @@ function renderGrid(loadurl, tableId) {
             align: 'center',
             sortable: false,
             editable: true,
-            formatter: 'date',
-            formatoptions: { 
-                srcformat: 'ISO8601Long', 
-                newformat: 'Y-m-d' 
-            },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'yyyy-mm-dd',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                $('#' + divid)[0].triggerToolbar();
-                            }, 100);
-                        }
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
             editoptions: {
-                size: 10,
-                maxlengh: 10,
+                'data-provide': 'datepicker',
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "AAAA-MM-DD" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
-                }
+                    $(element).mask("00-00-0000", {
+                        placeholder: "DD-MM-AAAA"
+                    });
+                    $(element).datepicker({
+                        language: 'es',
+                        format: 'dd-mm-yyyy',
+                        autoclose: true
+                    })
+                },
+                dataEvents: [{
+                    type: 'change',
+                    fn: function (e) {
+
+                    }
+                }],
             },
             editrules: {
                 required: true
@@ -240,32 +216,17 @@ function renderGrid(loadurl, tableId) {
             align: 'center',
             sortable: false,
             editable: true,
-            formatter: 'date',
-            formatoptions: { 
-                srcformat: 'ISO8601Long', 
-                newformat: 'Y-m-d' 
-            },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'yyyy-mm-dd',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                $('#' + divid)[0].triggerToolbar();
-                            }, 100);
-                        }
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
             editoptions: {
-                size: 10,
-                maxlengh: 10,
+                'data-provide': 'datepicker',
                 dataInit: function (element) {
-                    $(element).mask("0000-00-00", { placeholder: "AAAA-MM-DD" });
-                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    $(element).mask("00-00-0000", {
+                        placeholder: "DD-MM-AAAA"
+                    });
+                    $(element).datepicker({
+                        language: 'es',
+                        format: 'dd-mm-yyyy',
+                        autoclose: true
+                    })
                 }
             },
             editrules: {
