@@ -24,6 +24,7 @@ var ajusteController = require('../controllers/lic/ajuste');
 
 var compraTramiteController = require('../controllers/lic/compratramite');
 var detalleCompraTramiteController = require('../controllers/lic/detallecompratramite');
+var recepcionadoController = require('../controllers/lic/recepcionado');
 
 var recepcionController = require('../controllers/lic/recepcion');
 var detalleRecepcionController = require('../controllers/lic/detalle-recepcion');
@@ -121,6 +122,9 @@ module.exports = function (passport) {
     router.route('/lic/detallecompratramite/:pId')
         .get(isAuthenticated, detalleCompraTramiteController.listChilds)
         .post(isAuthenticated, detalleCompraTramiteController.action);
+
+        router.route('/lic/recepcionado/:pId')
+        .get(isAuthenticated, recepcionadoController.listChilds)
 
     router.route('/lic/recepcion')
         .get(isAuthenticated, recepcionController.list)

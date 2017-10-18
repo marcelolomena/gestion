@@ -2,11 +2,11 @@ function renderGrid(loadurl, tableId) {
     var $table = $('#' + tableId);
 
     function showChildGrid(divid, rowid) {
-        var url = '/lic/detallecompratramite/' + rowid;
+        var url = '/lic/recepcionado/' + rowid;
         var gridID = divid + '_t';
         var pagerID = 'p_' + gridID;
         $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
-        detalleCompraTramiteGrid.renderGrid(url, gridID);
+        recepcionadoGrid.renderGrid(url, gridID);
     }
 
 
@@ -160,13 +160,32 @@ function renderGrid(loadurl, tableId) {
             align: 'center',
             sortable: false,
             editable: true,
+            formatter: 'date',
+            formatoptions: { 
+                srcformat: 'ISO8601Long', 
+                newformat: 'Y-m-d' 
+            },
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                $('#' + divid)[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
             editoptions: {
                 size: 10,
                 maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask('00-00-0000', {
-                        placeholder: 'DD-MM-YYYY'
-                    });
+                    $(element).mask("0000-00-00", { placeholder: "AAAA-MM-DD" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             },
             editrules: {
@@ -181,13 +200,32 @@ function renderGrid(loadurl, tableId) {
             align: 'center',
             sortable: false,
             editable: true,
+            formatter: 'date',
+            formatoptions: { 
+                srcformat: 'ISO8601Long', 
+                newformat: 'Y-m-d' 
+            },
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                $('#' + divid)[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
             editoptions: {
                 size: 10,
                 maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask('00-00-0000', {
-                        placeholder: 'DD-MM-YYYY'
-                    });
+                    $(element).mask("0000-00-00", { placeholder: "AAAA-MM-DD" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             },
             editrules: {
@@ -202,13 +240,32 @@ function renderGrid(loadurl, tableId) {
             align: 'center',
             sortable: false,
             editable: true,
+            formatter: 'date',
+            formatoptions: { 
+                srcformat: 'ISO8601Long', 
+                newformat: 'Y-m-d' 
+            },
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'yyyy-mm-dd',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                $('#' + divid)[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
             editoptions: {
                 size: 10,
                 maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask('00-00-0000', {
-                        placeholder: 'DD-MM-YYYY'
-                    });
+                    $(element).mask("0000-00-00", { placeholder: "AAAA-MM-DD" });
+                    $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
                 }
             },
             editrules: {
@@ -305,7 +362,8 @@ function renderGrid(loadurl, tableId) {
             search: false
         }
     ];
-    var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+    var grid = new zs.StackGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+    // var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
 
     grid.build();
 }
