@@ -9,12 +9,23 @@
         var pagerID = 'p_' + gridID;
         $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
         var rowData = grid.getRowData(rowid);
-        var detail = detalleRecepcionGrid.renderGrid(url, gridID, rowData.idCompraTramite||0);
+        var detail = detalleRecepcionGrid.renderGrid(url, gridID, rowData.idCompraTramite || 0);
         detail.parentRowData = rowData
     }
+    function beforeSubmit(postdata, formid) {
+        if (!postdata.sap && !postdata.idCui) {
+            return [false, 'Debe ingresar SAP o CUI'];
+        }
+        if (!postdata.numContrato && !postdata.ordenCompra) {
+            return [false, 'Debe ingresar Contrato u O.C.'];
+        }
+        return [true, '', ''];
+    }
 
-    var initGrid = function (viewModel) {
+    function initGrid(viewModel) {
         grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Recepción de licencias', 'Editar Recepción', 'Recepcionar Licencias', '/lic/recepcion', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        grid.prmAdd.beforeSubmit = beforeSubmit;
+        grid.prmEdit.beforeSubmit = beforeSubmit;
         grid.build();
     };
 
@@ -51,7 +62,7 @@
                             var fila = _.find(compraData, function (item) {
                                 return item.id === parseInt(thissid);
                             });
-                            
+
                             $('input#nombre').val(fila.nombre);
                             var saps = $('input#sap');
                             saps.val(fila.sap);

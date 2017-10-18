@@ -1,9 +1,9 @@
 'use strict';
 var detalleRecepcionGrid = {
     renderGrid: function (loadurl, tableId, idCompraTramite) {
-        
+
         var $table = $('#' + tableId);
-        var compraData=[];
+        var compraData = [], fabricanteData = [], productoData = [];
         var viewModel = [
             {
                 label: 'ID',
@@ -29,17 +29,16 @@ var detalleRecepcionGrid = {
                 edittype: 'select',
                 editoptions: {
                     fullRow: true,
-                    dataUrl: '/lic/detallecomprasentramite/'+ idCompraTramite,
+                    dataUrl: '/lic/detallecomprasentramite/' + idCompraTramite,
                     buildSelect: function (response) {
-                        var data = JSON.parse(response).rows;
-                        compraData = data;
-                        return new zs.SelectTemplate(data, 'Seleccione detalle Compra en trámite', null).template;
+                        compraData = JSON.parse(response).rows;
+                        return new zs.SelectTemplate(compraData, 'Seleccione detalle Compra en trámite', null).template;
                     },
                     dataEvents: [{
                         type: 'change', fn: function (e) {
-                            var thissid = $(this).val();
+                            var thissid = parseInt($(this).val());
                             var fila = _.find(compraData, function (item) {
-                                return item.id === parseInt(thissid);
+                                return item.id === thissid;
                             });
                             $('select#idFabricante').val(fila.idFabricante);
                             $('select#idProducto').val(fila.idProducto);
@@ -69,13 +68,33 @@ var detalleRecepcionGrid = {
                     dataUrl: '/lic/fabricantes',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.fabricante;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
-                    }
+                        var thissid = rowData.idFabricante;
+                        fabricanteData = JSON.parse(response);
+                        return new zs.SelectTemplate(fabricanteData, 'Seleccione Fabricante', thissid).template;
+                    }, dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var thissid = parseInt($(this).val() || 0);
+                            var ofa = $('input#otroFabricante');
+                            var opr = $('input#otroProducto');
+                            var prods = $('select#idProducto');
+                            if (thissid) {
+                                var porFacilitador = _.filter(productoData, function (item) {
+                                    return item.pId === thissid;
+                                });
+                                ofa.val('');
+                                ofa.attr('readonly', 'readonly');
+                                prods.html(new zs.SelectTemplate(porFacilitador, 'Seleccione producto', null).template);
+                                opr.removeAttr('readonly');
+                            } else {
+                                prods.html(new zs.SelectTemplate(productoData, 'Seleccione producto', null).template);
+                                ofa.removeAttr('readonly');
+                                opr.removeAttr('readonly');
+                            }
+                        }
+                    }]
                 },
                 editrules: {
-                    required: true
+                    required: false
                 },
                 search: false,
                 stype: 'select',
@@ -112,9 +131,29 @@ var detalleRecepcionGrid = {
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.nombre;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione el Producto', thissid).template;
-                    }
+                        productoData = JSON.parse(response);
+                        return new zs.SelectTemplate(productoData, 'Seleccione el Producto', thissid).template;
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var thissid = parseInt($(this).val() || 0);
+                            var opr = $('input#otroProducto');
+                            var ofa = $('input#otroFabricante');
+                            var fabs = $('select#idFabricante');
+                            if (thissid) {
+                                var fila = _.find(productoData, function (item) {
+                                    return item.id === thissid;
+                                });
+                                opr.val('');
+                                opr.attr('readonly', 'readonly');
+                                ofa.val('');
+                                ofa.attr('readonly', 'readonly');
+                                fabs.val(fila.pId);
+                            } else {
+                                opr.removeAttr('readonly');
+                            }
+                        }
+                    }]
                 },
                 editrules: {
                     required: false
@@ -138,7 +177,7 @@ var detalleRecepcionGrid = {
                 sortable: false,
                 editable: true,
                 editoptions: {
-                    'data-provide':'datepicker',
+                    'data-provide': 'datepicker',
                     size: 10,
                     maxlengh: 10,
                     dataInit: function (element) {
@@ -159,7 +198,7 @@ var detalleRecepcionGrid = {
                 sortable: false,
                 editable: true,
                 editoptions: {
-                    'data-provide':'datepicker',
+                    'data-provide': 'datepicker',
                     size: 10,
                     maxlengh: 10,
                     dataInit: function (element) {
@@ -180,7 +219,7 @@ var detalleRecepcionGrid = {
                 sortable: false,
                 editable: true,
                 editoptions: {
-                    'data-provide':'datepicker',
+                    'data-provide': 'datepicker',
                     size: 10,
                     maxlengh: 10,
                     dataInit: function (element) {
@@ -245,6 +284,12 @@ var detalleRecepcionGrid = {
         ];
         var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         function beforeSubmit(postdata, formid) {
+            if (!(postdata.idFabricante || postdata.otroFabricante)) {
+                return [false, 'Debe seleccionar Fabricante o ingresar Otro Fabricante', ''];
+            }
+            if (!(postdata.idProducto || postdata.otroProductoe)) {
+                return [false, 'Debe seleccionar Producto o ingresar Otro Producto', ''];
+            }
             postdata.nombre = grid.parentRowData.nombre;
             postdata.idCui = grid.parentRowData.idCui;
             postdata.sap = grid.parentRowData.sap;

@@ -83,7 +83,8 @@ function listAll(req, res) {
     base.listAll(req, res, entity, function (item) {
         return {
             id: item.id,
-            nombre: item.nombre
+            nombre: item.nombre,
+            pId: item.idFabricante
         };
     });
 }
@@ -124,7 +125,6 @@ function getFabricante(req, res) {
             });
         });
 }
-
 
 function getProducto (req, res) {
     var idFabricante = req.params.idFabricante;
