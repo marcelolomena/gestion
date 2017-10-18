@@ -101,14 +101,17 @@ function saveProducto(data, res) {
         base.createP(productoM, mapProducto(data))
             .then(function (created) {
                 data.idProducto = created.id;
-                return base.create(entity, data, res);
+                return addDetalle(data, res);
             }).catch(function (err) {
                 logger.error(productoM.name + ':create, ' + err);
                 return res.json({ error: 1, glosa: err.message });
             });
     } else {
-        return base.create(entity, data, res);
+        return addDetalle(data, res);
     }
+}
+function addDetalle(data, res) {
+    return base.create(entity, data, res);
 }
 function action(req, res) {
     switch (req.body.oper) {
@@ -127,8 +130,6 @@ function action(req, res) {
             } else {
                 return saveProducto(data, res);
             }
-
-           
         case 'edit':
             return base.update(entity, map(req), res);
         case 'del':

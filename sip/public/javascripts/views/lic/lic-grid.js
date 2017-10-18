@@ -1,6 +1,7 @@
 (function ($, _) {
     'use strict';
     $.fn.datepicker.defaults.format = "dd-mm-yyyy";
+    moment.defaultFormat='DD-MM-YYYY'
     
     var licLibrary = {
         jsonOptions: {

@@ -61,7 +61,7 @@ var detalleRecepcionGrid = {
                 jsonmap: 'fabricante.nombre',
                 width: 180,
                 align: 'center',
-                sortable: false,
+                sortable: true,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
@@ -123,7 +123,7 @@ var detalleRecepcionGrid = {
                 jsonmap: 'producto.nombre',
                 width: 250,
                 align: 'center',
-                sortable: false,
+                sortable: true,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
@@ -174,7 +174,7 @@ var detalleRecepcionGrid = {
                 name: 'fechaInicio',
                 width: 100,
                 align: 'center',
-                sortable: false,
+                sortable: true,
                 editable: true,
                 editoptions: {
                     'data-provide': 'datepicker',
@@ -195,7 +195,7 @@ var detalleRecepcionGrid = {
                 name: 'fechaTermino',
                 width: 110,
                 align: 'center',
-                sortable: false,
+                sortable: true,
                 editable: true,
                 editoptions: {
                     'data-provide': 'datepicker',
@@ -216,7 +216,7 @@ var detalleRecepcionGrid = {
                 name: 'fechaControl',
                 width: 100,
                 align: 'center',
-                sortable: false,
+                sortable: true,
                 editable: true,
                 editoptions: {
                     'data-provide': 'datepicker',
@@ -245,7 +245,7 @@ var detalleRecepcionGrid = {
                 jsonmap: 'moneda.nombre',
                 width: 100,
                 align: 'center',
-                sortable: false,
+                sortable: true,
                 editable: true,
                 edittype: 'select',
                 editoptions: {
@@ -266,6 +266,7 @@ var detalleRecepcionGrid = {
                 name: 'monto',
                 width: 80,
                 align: 'center',
+                sortable: true,
                 hidden: false,
                 editable: true,
                 editoptions: { defaultValue: '0' },
@@ -289,6 +290,9 @@ var detalleRecepcionGrid = {
             }
             if (!(postdata.idProducto || postdata.otroProductoe)) {
                 return [false, 'Debe seleccionar Producto o ingresar Otro Producto', ''];
+            }
+            if (moment(postdata.fechaInicio).isSameOrAfter(moment(postdata.fechaControl))) {
+                return[false,'Fecha de Control debe ser menor que Fecha de Inicio']
             }
             postdata.nombre = grid.parentRowData.nombre;
             postdata.idCui = grid.parentRowData.idCui;
