@@ -52,7 +52,10 @@ function map(req) {
         comentario: req.body.comentario,
         numsolicitud: req.body.numsolicitud ? parseInt(req.body.numsolicitud) : null,
         otroProducto: req.body.otroProducto,
-        otroFabricante: req.body.otroFabricante
+        otroFabricante: req.body.otroFabricante,
+        idTipoInstalacion: req.body.idTipoInstalacion,
+        idClasificacion: req.body.idClasificacion,
+        idTipoLicenciamiento: req.body.idTipoLicenciamiento
     }
 }
 function mapper(data) {
@@ -93,7 +96,13 @@ function mapfabricante(data) {
     return { nombre: data.otroFabricante };
 }
 function mapProducto(data) {
-    return { nombre: data.otroProducto, idFabricante: data.idFabricante };
+    return {
+        nombre: data.otroProducto, 
+        idFabricante: data.idFabricante,
+        idTipoInstalacion: data.idTipoInstalacion,
+        idClasificacion: data.idClasificacion,
+        idTipoLicenciamiento: data.idTipoLicenciamiento
+    };
 }
 function saveProducto(data, res) {
     if (data.idProducto == null) {
@@ -115,7 +124,7 @@ function addDetalle(data, res) {
             return models.producto.findById(data.idProducto)
                 .then(function (item) {
                     item.licStock = item.licStock + data.cantidad;
-                   return base.update(models.producto, item, res);
+                    return base.update(models.producto, item, res);
                 })
         }).catch(function (err) {
             logger.error(entity.name + ':create, ' + err);
@@ -129,12 +138,12 @@ function action(req, res) {
         case 'add':
             var data = map(req);
             if (data.idFabricante == null) {
-                base.createP( models.fabricante, mapFabricante(data))
+                base.createP(models.fabricante, mapFabricante(data))
                     .then(function (created) {
                         data.idFabricante = created.id;
                         saveProducto(data, res);
                     }).catch(function (err) {
-                        logger.error( models.fabricante.name + ':create, ' + err);
+                        logger.error(models.fabricante.name + ':create, ' + err);
                         return res.json({ error: 1, glosa: err.message });
                     });
             } else {
