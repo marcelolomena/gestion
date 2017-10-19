@@ -170,6 +170,66 @@ var detalleRecepcionGrid = {
                     fullRow: false
                 }
             }, {
+                label: '¿Donde está instalada?',
+                name: 'idTipoInstalacion',
+                jsonmap: 'tipoInstalacion.nombre',
+                width: 160,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                hidden: true,
+                edittype: 'select',
+                editoptions: {
+                    dataUrl: '/lic/tiposInstalacion',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.tipoInstalacion;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
+                },
+                search: true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/tiposInstalacion',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.tipoInstalacion;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
+                }
+            }, {
+                label: 'Clasificación',
+                name: 'idClasificacion',
+                jsonmap: 'clasificacion.nombre',
+                width: 150,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                hidden: true,
+                edittype: 'select',
+                editoptions: {
+                    dataUrl: '/lic/clasificaciones',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.clasificacion;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
+                    }
+                },
+                search: true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/clasificaciones',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.clasificacion;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
+                }
+            }, {
                 label: 'Fecha Inicio',
                 name: 'fechaInicio',
                 width: 100,
