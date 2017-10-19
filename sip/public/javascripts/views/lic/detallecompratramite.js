@@ -83,7 +83,7 @@ function renderGrid(loadurl, tableId) {
         },
         {
             label: 'Otro Fabricante',
-            name: 'nombreFabri',
+            name: 'otroFabricante',
             width: 250,
             hidden: true,
             editable: true,
@@ -147,7 +147,7 @@ function renderGrid(loadurl, tableId) {
         },
         {
             label: 'Otro Producto',
-            name: 'nombre',
+            name: 'otroProducto',
             width: 250,
             hidden: true,
             editable: true,
@@ -168,6 +168,7 @@ function renderGrid(loadurl, tableId) {
                     });
                     $(element).datepicker({
                         language: 'es',
+                        weekStart: 1,
                         format: 'dd-mm-yyyy',
                         autoclose: true
                     })
@@ -179,7 +180,7 @@ function renderGrid(loadurl, tableId) {
             search: false
         },
         {
-            label: 'Fecha Término',
+            label: 'Fecha Termino',
             name: 'fechaTermino',
             width: 110,
             align: 'center',
@@ -193,6 +194,7 @@ function renderGrid(loadurl, tableId) {
                     });
                     $(element).datepicker({
                         language: 'es',
+                        weekStart: 1,
                         format: 'dd-mm-yyyy',
                         autoclose: true
                     })
@@ -224,6 +226,7 @@ function renderGrid(loadurl, tableId) {
                     });
                     $(element).datepicker({
                         language: 'es',
+                        weekStart: 1,
                         format: 'dd-mm-yyyy',
                         autoclose: true
                     })
@@ -325,6 +328,37 @@ function renderGrid(loadurl, tableId) {
     ];
     var grid = new zs.StackGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC'], showChildGrid);
     // var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+    function beforeSubmit(postdata, formid) {
+        if (!(postdata.idFabricante || postdata.otroFabricante)) {
+            return [false, 'Debe seleccionar Fabricante o ingresar Otro Fabricante', ''];
+        }
+        if (!(postdata.idProducto || postdata.otroProducto)) {
+            return [false, 'Debe seleccionar Producto o ingresar Otro Producto', ''];
+        }
+        var f1 = postdata.fechaInicio;
+        var f2 = postdata.fechaTermino;
+        var f3 = postdata.fechaControl;
+        var f1compare = f1.substring(6) + f1.substring(3, 4) + f1.substring(0, 1);
+        var f2compare = f2.substring(6) + f2.substring(3, 4) + f2.substring(0, 1);
+        var f3compare = f3.substring(6) + f3.substring(3, 4) + f3.substring(0, 1);
+
+
+
+
+        if (f1compare > f2compare) {
+            return [false, 'La fecha de Termino debe ser mayor a la fecha de Inicio'];
+        } else if (f2compare < f3compare) {
+            return [false, 'La fecha de Control debe ser menor a la fecha de Termino']
+        } else if (f3compare > f1compare) {
+            return [false, 'La fecha de Control debe ser mayor a la fecha de Inicio']
+        } else {
+            return [true, '', ''];
+        }
+    }
+
+
+    grid.prmAdd.beforeSubmit = beforeSubmit;
+    grid.prmEdit.beforeSubmit = beforeSubmit;
 
     grid.build();
 }

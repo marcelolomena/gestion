@@ -11,65 +11,19 @@
         }
 
         function beforeSubmit(postdata, formid) {
-            if (!postdata.sap) {
-                if (!postdata.idCui) {
-                    return [false, "Ingresar al menos un SAP ó CUI", ""];
-                }else{
-                    if (!postdata.numContrato) {
-                        if (!postdata.ordenCompra) {
-                            return [false, "Ingresar al menos un Numero de Contrato ó una Orden de Compra", ""];
-                        }
-                    } else {
-                        if (!postdata.ordenCompra) {
-                            if (!postdata.numContrato) {
-                                return [false, "Ingresar al menos un Numero de Contrato ó una Orden de Compra", ""];
-                            }
-                        } else {
-                            return [true, "", ""];
-                        }
-                    }
-                }
-            } else {
-                if (!postdata.idCui) {
-                    if (!postdata.sap) {
-                        return [false, "Ingresar al menos un CUI ó SAP", ""];
-                    }else{
-                        if (!postdata.numContrato) {
-                            if (!postdata.ordenCompra) {
-                                return [false, "Ingresar al menos un Numero de Contrato ó una Orden de Compra", ""];
-                            }
-                        } else {
-                            if (!postdata.ordenCompra) {
-                                if (!postdata.numContrato) {
-                                    return [false, "Ingresar al menos un Numero de Contrato ó una Orden de Compra", ""];
-                                }
-                            } else {
-                                return [true, "", ""];
-                            }
-                        }
-                    }
-                } else {
-                    if (!postdata.numContrato) {
-                        if (!postdata.ordenCompra) {
-                            return [false, "Ingresar al menos un Numero de Contrato ó una Orden de Compra", ""];
-                        }
-                    } else {
-                        if (!postdata.ordenCompra) {
-                            if (!postdata.numContrato) {
-                                return [false, "Ingresar al menos un Numero de Contrato ó una Orden de Compra", ""];
-                            }
-                        } else {
-                            return [true, "", ""];
-                        }
-                    }
-                }
+            if (!postdata.sap && !postdata.idCui) {
+                return [false, 'Debe ingresar SAP o CUI'];
             }
+            if (!postdata.numContrato && !postdata.ordenCompra) {
+                return [false, 'Debe ingresar Número de Contrato u Orden de Compra'];
+            }
+            return [true, '', ''];
         }
 
             var initGrid = function (viewModel) {
                 var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
                 grid.prmAdd.beforeSubmit = beforeSubmit;
-
+                grid.prmEdit.beforeSubmit = beforeSubmit;
 
                 grid.build();
             };

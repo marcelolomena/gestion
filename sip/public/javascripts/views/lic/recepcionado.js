@@ -11,7 +11,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Producto',
             name: 'idProducto',
-            jsonmap: 'nombre',
+            jsonmap: 'producto',
             width: 250,
             align: 'center',
             sortable: false,
@@ -30,6 +30,121 @@ function renderGrid(loadurl, tableId) {
                 required: false
             },
             search: false
+        },
+        {
+            label: 'Fabricante',
+            name: 'idFabricante',
+            // jsonmap: 'fabricante',
+            width: 180,
+            align: 'center',
+            sortable: true,
+            editable: false,
+            editrules: {
+                required: false
+            },
+            search: false,
+        },
+        {
+            label: 'Fecha Inicio',
+            name: 'fechaInicio',
+            width: 100,
+            align: 'center',
+            sortable: true,
+            editable: true,
+            editoptions: {
+                'data-provide': 'datepicker',
+                size: 10,
+                maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask('00-00-0000', {
+                        placeholder: 'DD-MM-YYYY'
+                    });
+                }
+            },
+            editrules: {
+                required: true
+            },
+            search: false
+        }, {
+            label: 'Fecha Término',
+            name: 'fechaTermino',
+            width: 110,
+            align: 'center',
+            sortable: true,
+            editable: true,
+            editoptions: {
+                'data-provide': 'datepicker',
+                size: 10,
+                maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask('00-00-0000', {
+                        placeholder: 'DD-MM-YYYY'
+                    });
+                }
+            },
+            editrules: {
+                required: true
+            },
+            search: false
+        }, {
+            label: 'Fecha Control',
+            name: 'fechaControl',
+            width: 100,
+            align: 'center',
+            sortable: true,
+            editable: true,
+            editoptions: {
+                'data-provide': 'datepicker',
+                size: 10,
+                maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask('00-00-0000', {
+                        placeholder: 'DD-MM-YYYY'
+                    });
+                }
+            },
+            editrules: {
+                required: true
+            },
+            search: false
+        }, {
+            label: 'Cantidad',
+            name: 'cantidad',
+            hidden: false,
+            editable: true,
+            search: false
+        }, {
+            label: 'Moneda',
+            name: 'idMoneda',
+            // jsonmap: 'moneda.nombre',
+            width: 100,
+            align: 'center',
+            editable: true,
+            search: false
+        }, {
+            label: 'Monto',
+            name: 'monto',
+            width: 80,
+            align: 'center',
+            sortable: true,
+            hidden: false,
+            editable: true,
+            editoptions: {
+                defaultValue: '0'
+            },
+            editrules: {
+                number: true
+            },
+            search: false
+        }, {
+            label: 'Comentario',
+            name: 'comentario',
+            hidden: true,
+            editable: true,
+            edittype: 'textarea',
+            editoptions: {
+                fullRow: true
+            }
         }
 
     ];

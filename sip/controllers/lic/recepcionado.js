@@ -7,6 +7,24 @@ var entity = models.recepcionado;
 entity.belongsTo(models.detalleCompraTramite, {
     foreignKey: 'idDetalleCompraTramite'
 });
+entity.belongsTo(models.fabricante, {
+    foreignKey: 'idfabricante'
+});
+
+var includes = [
+    {
+        model: models.proveedor
+    },
+    {
+        model: models.fabricante
+    },
+    {
+        model: models.producto
+    },
+    {
+        model: models.moneda
+    }
+];
 
 
 function map(req) {
@@ -40,14 +58,24 @@ function mapProducto(data) {
 function listRecepcionados(req, res) {
     var ntt = models.detalleRecepcion;
     base.listChilds(req, res, ntt, 'numsolicitud', [{
-        model: models.producto
+        model: models.producto,
+        model: models.fabricante,
+        model: models.moneda
     }], function (data) {
         var result = [];
         _.each(data, function (item) {
             
                 var row = {
                     id: item.id,
-                    nombre: item.producto.nombre
+                    producto: item.producto.nombre,
+                    idFabricante: item.fabricante.nombre,
+                    fechaInicio: base.fromDate(item.fechaInicio),
+                    fechaTermino: base.fromDate(item.fechaTermino),
+                    fechaControl: base.fromDate(item.fechaControl),
+                    idMoneda: item.moneda.nombre,
+                    monto: item.monto,
+                    cantidad: item.numero,
+                    comentario: item.comentario
                 };
                 result.push(row);
         });
