@@ -23,7 +23,7 @@ function map(req) {
         fechaInicio: base.toDate(req.body.fechaInicio),
         fechaTermino: base.toDate(req.body.fechaTermino),
         fechaControl: base.toDate(req.body.fechaControl),
-        monto: req.body.monto,
+        monto: parseInt(req.body.monto || 0),
         idMoneda: req.body.idMoneda,
         comentario: req.body.comentario,
         nombre: req.body.nombre,
@@ -78,6 +78,11 @@ function listChilds(req, res) {
 function mapProducto(data) { 
     return {nombre:data.nombre, idFabricante:data.idFabricante, licTramite:data.numero};
 }
+
+function mapfabricante(data) {
+    return { nombre: data.otroFabricante };
+}
+
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':

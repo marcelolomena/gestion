@@ -9,7 +9,6 @@ function renderGrid(loadurl, tableId) {
         recepcionadoGrid.renderGrid(url, gridID);
     }
 
-
     var viewModel = [{
             label: 'ID',
             name: 'id',
@@ -341,25 +340,18 @@ function renderGrid(loadurl, tableId) {
         var f1compare = f1.substring(6) + f1.substring(3, 4) + f1.substring(0, 1);
         var f2compare = f2.substring(6) + f2.substring(3, 4) + f2.substring(0, 1);
         var f3compare = f3.substring(6) + f3.substring(3, 4) + f3.substring(0, 1);
-
-
-
-
         if (f1compare > f2compare) {
             return [false, 'La fecha de Termino debe ser mayor a la fecha de Inicio'];
         } else if (f2compare < f3compare) {
             return [false, 'La fecha de Control debe ser menor a la fecha de Termino']
-        } else if (f3compare > f1compare) {
+        } else if (f3compare < f1compare) {
             return [false, 'La fecha de Control debe ser mayor a la fecha de Inicio']
         } else {
             return [true, '', ''];
         }
     }
-
-
     grid.prmAdd.beforeSubmit = beforeSubmit;
     grid.prmEdit.beforeSubmit = beforeSubmit;
-
     grid.build();
 }
 
