@@ -1,4 +1,6 @@
 'use strict';
+
+
 var detalleRecepcionGrid = {
     renderGrid: function (loadurl, tableId, idCompraTramite) {
 
@@ -136,21 +138,27 @@ var detalleRecepcionGrid = {
                     },
                     dataEvents: [{
                         type: 'change', fn: function (e) {
-                            var thissid = parseInt($(this).val() || 0);
+                            var thissid =parseInt($(this).val() || 0);
+
                             var opr = $('input#otroProducto');
                             var ofa = $('input#otroFabricante');
-                            var fabs = $('select#idFabricante');
                             if (thissid) {
-                                var fila = _.find(productoData, function (item) {
-                                    return item.id === thissid;
-                                });
                                 opr.val('');
                                 opr.attr('readonly', 'readonly');
                                 ofa.val('');
                                 ofa.attr('readonly', 'readonly');
-                                fabs.val(fila.pId);
+                                $('select#idClasificacion').attr('readonly', 'readonly');
+                                $('select#idTipoInstalacion').attr('readonly', 'readonly');
+                                $('select#idTipoLicenciamiento').attr('readonly', 'readonly');
+                                var fila = _.find(productoData, function (item) {
+                                    return item.id === thissid;
+                                });
+                                $('select#idFabricante').val(fila.pId);
                             } else {
                                 opr.removeAttr('readonly');
+                                $('select#idClasificacion').removeAttr('readonly');
+                                $('select#idTipoInstalacion').removeAttr('readonly');
+                                $('select#idTipoLicenciamiento').removeAttr('readonly');
                             }
                         }
                     }]
@@ -225,6 +233,36 @@ var detalleRecepcionGrid = {
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.clasificacion;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
+                }
+            }, {
+                label: 'Tipo de Licenciamiento',
+                name: 'idTipoLicenciamiento',
+                jsonmap: 'tipoLicenciamiento.nombre',
+                width: 170,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                hidden: true,
+                edittype: 'select',
+                editoptions: {
+                    dataUrl: '/lic/tiposLicenciamiento',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.tipoLicenciamiento;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione Tipo de Licencia', thissid).template;
+                    }
+                },
+                search: true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/tiposLicenciamiento',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.tipoLicenciamiento;
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
                     }
@@ -351,19 +389,49 @@ var detalleRecepcionGrid = {
             if (!(postdata.idProducto || postdata.otroProducto)) {
                 return [false, 'Debe seleccionar Producto o ingresar Otro Producto', ''];
             }
-            if (moment(postdata.fechaInicio).isSameOrAfter(moment(postdata.fechaControl))) {
-                return[false,'Fecha de Control debe ser mayor que Fecha de Inicio']
+            if (postdata.otroProducto) {
+                if (!postdata.idClasificacion) {
+                    return [false, 'Debe seleccionar Clasificación'];
+                }
             }
+            var f1 = postdata.fechaInicio;
+            var f2 = postdata.fechaTermino;
+            var f3 = postdata.fechaControl;
+            var f1compare = f1.substring(6) + f1.substring(3, 4) + f1.substring(0, 1);
+            var f2compare = f2.substring(6) + f2.substring(3, 4) + f2.substring(0, 1);
+            var f3compare = f3.substring(6) + f3.substring(3, 4) + f3.substring(0, 1);
+            if (f1compare > f2compare) {
+                return [false, 'La fecha de Termino debe ser mayor a la fecha de Inicio'];
+            } else if (f2compare < f3compare) {
+                return [false, 'La fecha de Control debe ser menor a la fecha de Termino']
+            } else if (f3compare < f1compare) {
+                return [false, 'La fecha de Control debe ser mayor a la fecha de Inicio']
+            }
+
             postdata.nombre = grid.parentRowData.nombre;
             postdata.idCui = grid.parentRowData.idCui;
             postdata.sap = grid.parentRowData.sap;
             postdata.numContrato = grid.parentRowData.numContrato;
             postdata.ordenCompra = grid.parentRowData.ordenCompra;
             postdata.idProveedor = grid.parentRowData.idProveedor;
+
             return [true, '', ''];
         }
         grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.prmEdit.beforeSubmit = beforeSubmit;
+        grid.prmEdit.onInitializeForm = function (formid, action) {
+            if (action === 'edit') {
+                setTimeout(function () {
+                    $('select#idFabricante').attr('readonly', 'readonly');
+                    $('input#otroFabricante').attr('readonly', 'readonly');
+                    $('select#idProducto').attr('readonly', 'readonly');
+                    $('input#otroProducto').attr('readonly', 'readonly');
+                    $('select#idClasificacion').attr('readonly', 'readonly');
+                    $('select#idTipoInstalacion').attr('readonly', 'readonly');
+                    $('select#idTipoLicenciamiento').attr('readonly', 'readonly');
+                }, 500);
+            }
+        };
         grid.build();
         return grid;
     }

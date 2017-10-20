@@ -20,14 +20,20 @@ entity.belongsTo(models.moneda, {
 var includes = [
     {
         model: models.proveedor
-    },
-    {
+    }, {
         model: models.fabricante
-    },
-    {
-        model: models.producto
-    },
-    {
+    }, {
+        model: models.producto,
+        include: [
+            {
+                model: models.clasificacion
+            }, {
+                model: models.tipoInstalacion
+            }, {
+                model: models.tipoLicenciamiento
+            }
+        ]
+    }, {
         model: models.moneda
     }
 ];
@@ -74,6 +80,12 @@ function mapper(data) {
             fabricante: { nombre: item.fabricante.nombre },
             idProducto: item.idProducto,
             producto: { nombre: item.producto.nombre },
+            idTipoInstalacion: item.producto.idTipoInstalacion,
+            tipoInstalacion: { nombre: item.producto.tipoInstalacion.nombre },
+            idClasificacion: item.producto.idClasificacion,
+            clasificacion: { nombre: item.producto.clasificacion.nombre },
+            idTipoLicenciamiento: item.producto.idTipoLicenciamiento,
+            tipoLicenciamiento: { nombre: item.producto.tipoLicenciamiento.nombre },
             fechaInicio: base.fromDate(item.fechaInicio),
             fechaTermino: base.fromDate(item.fechaTermino),
             fechaControl: base.fromDate(item.fechaControl),
@@ -97,7 +109,7 @@ function mapfabricante(data) {
 }
 function mapProducto(data) {
     return {
-        nombre: data.otroProducto, 
+        nombre: data.otroProducto,
         idFabricante: data.idFabricante,
         idTipoInstalacion: data.idTipoInstalacion,
         idClasificacion: data.idClasificacion,
@@ -106,7 +118,7 @@ function mapProducto(data) {
 }
 function saveProducto(data, res) {
     if (data.idProducto == null) {
-        base.createP(models.producto, mapProducto(data))
+        return base.createP(models.producto, mapProducto(data))
             .then(function (created) {
                 data.idProducto = created.id;
                 addDetalle(data, res);
@@ -115,16 +127,18 @@ function saveProducto(data, res) {
                 return res.json({ error: 1, glosa: err.message });
             });
     } else {
-        addDetalle(data, res);
+        return addDetalle(data, res);
     }
 }
 function addDetalle(data, res) {
-    base.createP(entity, data)
+    return base.createP(entity, data)
         .then(function (created) {
-            return models.producto.findById(data.idProducto)
+            return base.findById(models.producto, data.idProducto)
                 .then(function (item) {
-                    item.licStock = item.licStock + data.cantidad;
-                    return base.update(models.producto, item, res);
+                    return base.update(models.producto, { id: data.idProducto, licStock: item.licStock + data.cantidad }, res);
+                }).catch(function (err) {
+                    logger.error('producto.Stock Upd, ' + err);
+                    return res.json({ error: 1, glosa: err.message });
                 })
         }).catch(function (err) {
             logger.error(entity.name + ':create, ' + err);
@@ -134,11 +148,11 @@ function addDetalle(data, res) {
 
 }
 function action(req, res) {
+    var data = map(req);
     switch (req.body.oper) {
         case 'add':
-            var data = map(req);
             if (data.idFabricante == null) {
-                base.createP(models.fabricante, mapFabricante(data))
+                return base.createP(models.fabricante, mapFabricante(data))
                     .then(function (created) {
                         data.idFabricante = created.id;
                         saveProducto(data, res);
@@ -147,12 +161,50 @@ function action(req, res) {
                         return res.json({ error: 1, glosa: err.message });
                     });
             } else {
-                saveProducto(data, res);
+                return saveProducto(data, res);
             }
         case 'edit':
-            return base.update(entity, map(req), res);
+            return base.findById(entity, req.body.id)
+                .then(function (detalle) {
+                    return base.updateP(entity, data)
+                        .then(function (updated) {
+                            return base.findById(models.producto, detalle.idProducto)
+                                .then(function (item) {
+                                    return base.update(models.producto, { id: detalle.idProducto, licStock: item.licStock - detalle.cantidad + data.cantidad }, res);
+                                }).catch(function (err) {
+                                    logger.error('producto.Stock Upd, ' + err);
+                                    return res.json({ error: 1, glosa: err.message });
+                                });
+                        }).catch(function (err) {
+                            logger.error(entity.name + ':destroy, ' + err);
+                            return res.json({ success: false, glosa: err.message });
+                        });
+                }).catch(function (err) {
+                    logger.error(entity.name + 'by Id, ' + err);
+                    return res.json({ error: 1, glosa: err.message });
+                });
         case 'del':
-            return base.destroy(entity, req.body.id, res);
+            return base.findById(entity, req.body.id)
+                .then(function (detalle) {
+                    return base.destroyP(entity, detalle.id)
+                        .then(function (deleted) {
+                            return base.findById(models.producto, detalle.idProducto)
+                                .then(function (item) {
+                                    return base.update(models.producto, { id: detalle.idProducto, licStock: item.licStock - detalle.cantidad }, res);
+                                }).catch(function (err) {
+                                    logger.error('producto.Stock Upd, ' + err);
+                                    return res.json({ error: 1, glosa: err.message });
+                                })
+                        })
+                        .catch(function (err) {
+                            logger.error(entity.name + ':destroy, ' + err);
+                            return res.json({ success: false, glosa: err.message });
+                        });
+                })
+                .catch(function (err) {
+                    logger.error(entity.name + 'by Id, ' + err);
+                    return res.json({ error: 1, glosa: err.message });
+                });
     }
 }
 

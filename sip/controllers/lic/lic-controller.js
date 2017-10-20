@@ -4,6 +4,10 @@ var logger = require('../../utils/logger');
 var nodeExcel = require('excel-export');
 var _ = require('lodash');
 
+function findById(entity, id){
+    return entity.findById(id)
+}
+
 function createP(entity, data) {
     return entity.create(data);
 }
@@ -33,7 +37,7 @@ function updateP(entity, data) {
 }
 
 function update(entity, data, res) {
-    updateP(entity, data)
+   return updateP(entity, data)
         .then(function (updated) {
             return res.json({
                 error: 0,
@@ -210,6 +214,7 @@ function now() {
     return new Date(Date.now())
 }
 module.exports = {
+    findById:findById,
     createP: createP,
     updateP: updateP,
     destroyP: destroyP,

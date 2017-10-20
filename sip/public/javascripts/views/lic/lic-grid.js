@@ -133,44 +133,30 @@
             searchOnEnter: false,
             defaultSearch: 'cn'
         };
-        this.addErrorTextFormat = function (data) {
+        this.errorTextFormat = function (data) {
             return 'Error: ' + data.responseText
         };
-        this.addBeforeShowForm = function (form) {
+        this.beforeShowForm = function (form) {
+            console.log('beforeShowForm');
         };
-        this.addBeforeSubmit = function (postdata, formid) {
+        this.afterShowForm = function(form){
+            console.log('afterShowForm');
+        };
+        this.afterComplete = function(response, postdata, formid, a){
+            console.log('afterComplete');
+        };
+        this.onInitializeForm = function(formid){
+            console.log('onInitializeForm');
+        };
+        this.beforeSubmit = function (postdata, formid) {
+            console.log('beforeSubmit');
             //valido formulario
             return [true, '', ''];
         };
-        this.addAfterSubmit = function (response, postdata) {
-            // var json = response.responseText;
+        this.afterSubmit = function (response, postdata) {
+            console.log('afterSubmit');
             var result = response.responseJSON;//JSON.parse(json);
-            if (result.error != 0) {
-                return [false, result.glosa, ""];
-            } else {
-                // var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"descripcion\",\"op\":\"cn\",\"data\":\"" + postdata.descripcion + "\"}]}";
-                // $table.jqGrid('setGridParam', {
-                //     search: true,
-                //     postData: {
-                //         filters
-                //     }
-                // }).trigger("reloadGrid");
-                return [true, "", ""];
-            }
-        };
-        this.editErrorTextFormat = function (data) {
-            return 'Error: ' + data.responseText
-        };
-        this.editBeforeShowForm = function (form) {
-            var rowData = $table.getRowData($table.getGridParam('selrow'));
-        };
-        this.editBeforeSubmit = function (postdata, formid) {
-            //valido formulario
-            return [true, '', ''];
-        };
-        this.editAfterSubmit = function (response, postdata) {
-            var result = response.responseJSON;//JSON.parse(json);
-            if (result.error != 0) {
+            if (result && result.error != 0) {
                 return [false, result.glosa, ""];
             } else {
                 // var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"descripcion\",\"op\":\"cn\",\"data\":\"" + postdata.descripcion + "\"}]}";
@@ -184,8 +170,7 @@
             }
         };
         this.deleteAfterSubmit = function (response, postdata) {
-            var json = response.responseText;
-            var result = JSON.parse(json);
+            var result = JSON.parse(response.responseText);
             if (!result.success)
                 return [false, result.message, ""];
             else
@@ -209,9 +194,12 @@
             serializeEditData: licLibrary.createJSON,
             template: this.itemTemplate.template,
             beforeShowForm: this.editBeforeShowForm,
-            errorTextFormat: this.editErrorTextFormat,
+            afterShowForm:this.editAfterShowForm,
+            afterComplete:this.afterComplete,
+            errorTextFormat: this.errorTextFormat,
             beforeSubmit: this.editBeforeSubmit,
-            afterSubmit: this.editAfterSubmit
+            afterSubmit: this.editAfterSubmit,
+            onInitializeForm:this.onInitializeForm  
         };
         this.prmAdd = {
             addCaption: addCaption,
@@ -222,10 +210,11 @@
             ajaxEditOptions: licLibrary.jsonOptions,
             serializeEditData: licLibrary.createJSON,
             template: this.itemTemplate.template,
-            beforeShowForm: this.addBeforeShowForm,
+            beforeShowForm: this.beforeShowForm,
             errorTextFormat: this.addErrorTextFormat,
-            beforeSubmit: this.addBeforeSubmit,
-            afterSubmit: this.addAfterSubmit
+            beforeSubmit: this.beforeSubmit,
+            afterSubmit: this.afterSubmit,
+            onInitializeForm:this.onInitializeForm  
 
         };
         this.prmDel = {
