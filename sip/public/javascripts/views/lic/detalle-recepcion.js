@@ -138,7 +138,7 @@ var detalleRecepcionGrid = {
                     },
                     dataEvents: [{
                         type: 'change', fn: function (e) {
-                            var thissid =parseInt($(this).val() || 0);
+                            var thissid = parseInt($(this).val() || 0);
 
                             var opr = $('input#otroProducto');
                             var ofa = $('input#otroFabricante');
@@ -397,9 +397,9 @@ var detalleRecepcionGrid = {
             var f1 = postdata.fechaInicio;
             var f2 = postdata.fechaTermino;
             var f3 = postdata.fechaControl;
-            var f1compare = f1.substring(6) +  _.padStart(f1.substring(3, 4),0) +  _.padStart(f1.substring(0, 1), 0);
-            var f2compare = f2.substring(6) +  _.padStart(f2.substring(3, 4), 0) +  _.padStart(f2.substring(0, 1),0);
-            var f3compare = f3.substring(6) +  _.padStart(f3.substring(3, 4), 0) +  _.padStart(f3.substring(0, 1),0);
+            var f1compare = f1.substr(6) + f1.substr(3, 2) + f1.substr(0, 2);
+            var f2compare = f2.substr(6) +f2.substr(3, 2) + f2.substr(0, 2);
+            var f3compare = f3.substr(6) + f3.substr(3, 2) + f3.substr(0, 2);
             if (f1compare > f2compare) {
                 return [false, 'La fecha de Termino debe ser mayor a la fecha de Inicio'];
             } else if (f2compare < f3compare) {
