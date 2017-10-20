@@ -8,6 +8,7 @@ BDC/test-2.10/*
 BDC/bin/*
 BDC/logs/*
 BDC/*.xlsx
+BDC/conf/application.conf
 bicevida/*
 clustered-chat-master/*
 sip/node_modules/*
@@ -23,3 +24,4 @@ sip/.vscode/*
 sip/.vscode/settings.json
 sip/lic.njsproj
 sip/lic.sln
+sip/config/config.json
