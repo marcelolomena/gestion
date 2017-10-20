@@ -136,6 +136,30 @@ function getProducto (req, res) {
 
 };
 
+function getProductoLicTramite(req, res) {
+    var idProducto = parseInt(req.idProducto);
+    entity
+        .findOne({ where: { id: idProducto }, attributes: ['lictramite'] })
+        .then(function (result) {
+            return res.json({ error: 0, glosa: '', numero: result.lictramite });
+        })
+        .catch(function (err) {
+            return res.json({ error_code: 1 });
+        });
+}
+
+// function getProductoLicTramite (req, res) {
+
+    
+//     var idProducto = req.idProducto;
+//     var sql = 'SELECT lictramite FROM lic.producto WHERE id = ' + idProducto;
+//     sequelize.query(sql)
+//         .spread(function (rows) {
+//             return res.json(rows);
+//         });
+
+// };
+
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
@@ -152,5 +176,6 @@ module.exports = {
     action: action,
     listAll: listAll,
     getFabricante: getFabricante,
-    getProducto: getProducto
+    getProducto: getProducto,
+    getProductoLicTramite: getProductoLicTramite
 }

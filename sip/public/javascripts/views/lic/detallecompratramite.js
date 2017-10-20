@@ -55,28 +55,34 @@ function renderGrid(loadurl, tableId) {
                                 url: '/lic/getProducto/' + thissid,
                                 async: false,
                                 success: function (data) {
-                                    $.each(data, function (i, item) {
-                                        if (data[i].idFabricante == thissid) {
-                                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                                        } else {
-                                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                                        }
-                                    });
-                                    s += '</select>';
-                                    $('select#idProducto').empty().html(s);
+                                    if (data) {
+                                        $.each(data, function (i, item) {
+                                            if (data[i].idFabricante == thissid) {
+                                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                            } else {
+                                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                            }
+                                        });
+                                        s += '</select>';
+                                        $('select#idProducto').empty().html(s);
+                                        // $("#idProducto").attr('disabled', true);
+                                        // $("#otroProducto").attr('disabled', true);
+                                    } else {
+                                        alert("No existe Fabricante para este Producto");
+                                        $("select#idProducto").val("");
+                                    }
                                 }
-
                             });
                         } else {
                             $("#idProducto").attr('disabled', false);
-                            $("#nombreFabri").attr('disabled', false);
+                            $("#otroProducto").attr('disabled', false);
 
                         }
                     }
                 }],
             },
             editrules: {
-                required: true
+                required: false
             },
             search: false
         },
@@ -123,7 +129,7 @@ function renderGrid(loadurl, tableId) {
                                     if (data) {
                                         $("select#idFabricante").val(data.idFabric);
                                         $("#idFabricante").attr('disabled', true);
-                                        $("#nombre").attr('disabled', true);
+                                        $("#otroFabricante").attr('disabled', true);
                                     } else {
                                         alert("No existe Fabricante para este Producto");
                                         $("select#idFabricante").val("");
@@ -133,7 +139,7 @@ function renderGrid(loadurl, tableId) {
                             });
                         } else {
                             $("#idFabricante").attr('disabled', false);
-                            $("#nombre").attr('disabled', false);
+                            $("#otroFabricante").attr('disabled', false);
 
                         }
                     }
@@ -326,6 +332,7 @@ function renderGrid(loadurl, tableId) {
         }
     ];
     var grid = new zs.StackGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+
     function beforeSubmit(postdata, formid) {
         if (!(postdata.idFabricante || postdata.otroFabricante)) {
             return [false, 'Debe seleccionar Fabricante o ingresar Otro Fabricante', ''];

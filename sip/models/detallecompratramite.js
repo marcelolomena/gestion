@@ -60,7 +60,7 @@ module.exports = function (sequelize, DataTypes) {
         idProducto: {
             field: 'idproducto',
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'producto',
                 key: 'id'
@@ -69,7 +69,7 @@ module.exports = function (sequelize, DataTypes) {
         idFabricante: {
             field: 'idfabricante',
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'fabricante',
                 key: 'id'
@@ -85,6 +85,16 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false,
             defaultValue: 1 
         },
+        otroProducto: {
+            field: 'otroproducto',
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        otroFabricante: {
+            field: 'otrofabricante',
+            type: DataTypes.STRING,
+            allowNull: true
+        }
     }, {
         schema: 'lic',
         timestamps: false,
