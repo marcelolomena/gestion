@@ -16,6 +16,7 @@ function create(entity, data, res) {
     createP(entity, data)
         .then(function (created) {
             return res.json({
+                success: true,
                 error: 0,
                 glosa: ''
             });
@@ -40,6 +41,7 @@ function update(entity, data, res) {
    return updateP(entity, data)
         .then(function (updated) {
             return res.json({
+                success: true,
                 error: 0,
                 glosa: ''
             });
