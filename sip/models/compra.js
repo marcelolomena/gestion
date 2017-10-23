@@ -91,7 +91,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     factura: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.BIGINT,
       allowNull: true
     },
     comprador: {
