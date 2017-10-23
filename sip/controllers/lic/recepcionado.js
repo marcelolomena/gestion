@@ -67,12 +67,12 @@ function listRecepcionados(req, res) {
             
                 var row = {
                     id: item.id,
-                    producto: item.producto.nombre,
-                    idFabricante: item.fabricante.nombre,
+                    producto: item.nombre,
+                    idFabricante: item.idFabricante,
                     fechaInicio: base.fromDate(item.fechaInicio),
                     fechaTermino: base.fromDate(item.fechaTermino),
                     fechaControl: base.fromDate(item.fechaControl),
-                    idMoneda: item.moneda.nombre,
+                    idMoneda: item.moneda.moneda,
                     monto: item.monto,
                     cantidad: item.numero,
                     comentario: item.comentario
