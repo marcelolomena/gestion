@@ -80,17 +80,33 @@ function list(req, res) {
     base.list(req, res, entity, includes, mapper);
 }
 
+
 function listAll(req, res) {
-    base.listAll(req, res, entity, function (item) {
-        return {
-            id: item.id,
-            nombre: item.nombre,
-            pId: item.idFabricante,
-            idClasificacion: item.idClasificacion,
-            idTipoInstalacion: item.idTipoInstalacion,
-            idTipoLicenciamiento: item.idTipoLicenciamiento
-        };
+    entity.findAll({
+        where:
+        {
+            idClasificacion: { $ne: null },
+            idTipoInstalacion: { $ne: null },
+            idTipoLicenciamiento: { $ne: null },
+        }
+    }).then(function (rows) {
+        return res.json(_.orderBy(_.map(rows, function (item) {
+            return {
+                id: item.id,
+                nombre: item.nombre,
+                pId: item.idFabricante,
+                idClasificacion: item.idClasificacion,
+                idTipoInstalacion: item.idTipoInstalacion,
+                idTipoLicenciamiento: item.idTipoLicenciamiento
+            };
+        }), ['nombre']));
+    }).catch(function (err) {
+        logger.error(entity.name + ':listAll.findAll, ' + err.message);
+        return res.json({
+            error_code: 1
+        });
     });
+
 }
 
 
