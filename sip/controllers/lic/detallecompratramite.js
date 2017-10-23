@@ -18,7 +18,7 @@ entity.belongsTo(models.fabricante, {
 
 function map(req) {
     return {
-        id: req.body.id,
+        id: parseInt(req.body.id) || 0,
         idCompraTramite: req.body.idCompraTramite || req.params.pId,
         otroProducto: req.body.otroProducto,
         otroFabricante: req.body.otroFabricante,
@@ -82,7 +82,7 @@ function mapProducto(data) {
     return {
         nombre: data.otroProducto,
         idFabricante: data.idFabricante,
-        licTramite: data.numero
+        // licTramite: data.numero
     };
 }
 
@@ -111,38 +111,20 @@ function saveProducto(data, res) {
 }
 
 function addDetalle(data, res) {
-    // prod.getProductoLicTramite(data, res)
-    // .then(function(numero){
-    //     numero.lictramite = numero.lictramite + data.numero;
-    //     base.update(models.producto, numero, res)
-    //     base.createP(entity, data)
-    // })
-    
-
-
-    // var cosa = prod.getProductoLicTramite(data, res)
-    // var cosa2 = cosa;
-    // prod.getProductoLicTramite(data, res)
-    // .then(function(numero){
-    //     numero.licTramite = numero.licTramite + data.numero;
-    //     base.update(models.producto, numero, res)
-    //     base.createP(entity, data)
-    // })
-    
-    base.createP(entity, data)
-        .then(function (created) {
-            return models.producto.findById(data.idProducto)
-                .then(function (item) {
-                    item.licTramite = item.licTramite + data.numero;
-                    return base.update(models.producto, item, res);
-                })
-        }).catch(function (err) {
-            logger.error(entity.name + ':create, ' + err);
-            return res.json({
-                error: 1,
-                glosa: err.message
-            });
-        });
+   
+    return base.createP(entity, data)
+    .then(function (created) {
+        return base.findById(models.producto, data.idProducto)
+            .then(function (item) {
+                return base.update(models.producto, { id: data.idProducto, licTramite: item.licTramite + data.numero }, res);
+            }).catch(function (err) {
+                logger.error('producto.LicTramite, ' + err);
+                return res.json({ error: 1, glosa: err.message });
+            })
+    }).catch(function (err) {
+        logger.error(entity.name + ':create, ' + err);
+        return res.json({ error: 1, glosa: err.message });
+    });
 }
 
 function action(req, res) {
@@ -162,11 +144,30 @@ function action(req, res) {
                         });
                     });
             } else {
-                saveProducto(data, res);
+               return saveProducto(data, res);
             }
-            break;
         case 'edit':
-            // var data = map(req);
+        return base.findById(entity, req.body.id)
+        .then(function (detalle) {
+            return base.updateP(entity, data)
+                .then(function (updated) {
+                    return base.findById(models.producto, detalle.idProducto)
+                        .then(function (item) {
+                            return base.update(models.producto, { id: detalle.idProducto, licTramite: item.licTramite - detalle.numero + data.numero }, res);
+                        }).catch(function (err) {
+                            logger.error('producto.LicTramite Upd, ' + err);
+                            return res.json({ error: 1, glosa: err.message });
+                        });
+                }).catch(function (err) {
+                    logger.error(entity.name + ':destroy, ' + err);
+                    return res.json({ success: false, glosa: err.message });
+                });
+        }).catch(function (err) {
+            logger.error(entity.name + ' by Id, ' + err);
+            return res.json({ error: 1, glosa: err.message });
+        });    
+        
+        // var data = map(req);
             // var lictramiteactualizado = data.numero;
             // return models.detalleCompraTramite.findById(data.idDetalleCompraTramite)
             //     .then(function (item) {
@@ -177,9 +178,32 @@ function action(req, res) {
             //                 base.update(models.producto, items, res);
             //             })
             //     })
-            return base.update(entity, map(req), res);
+            
+            // return base.update(entity, map(req), res);
         case 'del':
-            return base.destroy(entity, req.body.id, res);
+            // return base.destroy(entity, req.body.id, res);
+
+            return base.findById(entity, req.body.id)
+            .then(function (detalle) {
+                return base.destroyP(entity, detalle.id)
+                    .then(function (deleted) {
+                        return base.findById(models.producto, detalle.idProducto)
+                            .then(function (item) {
+                                return base.update(models.producto, { id: detalle.idProducto, licTramite: item.licTramite - detalle.numero }, res);
+                            }).catch(function (err) {
+                                logger.error('producto.LicTramite Upd, ' + err);
+                                return res.json({ error: 1, glosa: err.message });
+                            })
+                    })
+                    .catch(function (err) {
+                        logger.error(entity.name + ':destroy, ' + err);
+                        return res.json({ success: false, glosa: err.message });
+                    });
+            })
+            .catch(function (err) {
+                logger.error(entity.name + 'by Id, ' + err);
+                return res.json({ error: 1, glosa: err.message });
+            });
     }
 }
 
