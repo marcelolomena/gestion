@@ -128,9 +128,9 @@ function addDetalle(data, res) {
 }
 
 function action(req, res) {
+    var data = map(req);
     switch (req.body.oper) {
         case 'add':
-            var data = map(req);
             if (!data.idFabricante) {
                 base.createP(models.fabricante, mapFabricante(data))
                     .then(function (created) {
