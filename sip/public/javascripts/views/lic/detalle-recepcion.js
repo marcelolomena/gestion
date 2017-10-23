@@ -42,15 +42,20 @@ var detalleRecepcionGrid = {
                             var fila = _.find(compraData, function (item) {
                                 return item.id === thissid;
                             });
-                            $('select#idFabricante').val(fila.idFabricante);
-                            $('select#idProducto').val(fila.idProducto);
-                            $('input#fechaInicio').val(fila.fechaInicio);
-                            $('input#fechaControl').val(fila.fechaControl);
-                            $('input#fechaTermino').val(fila.fechaTermino);
-                            $('input#cantidad').val(fila.cantidad);
-                            $('select#idMoneda').val(fila.idMoneda);
-                            $('input#monto').val(fila.monto);
-                            $('textarea#comentario').val(fila.comentario);
+                            if (fila) {
+                                $('select#idFabricante').val(fila.idFabricante);
+                                $('select#idProducto').val(fila.idProducto);
+                                $('select#idClasificacion').val(fila.idClasificacion);
+                                $('select#idTipoInstalacion').val(fila.idTipoInstalacion);
+                                $('select#idTipoLicenciamiento').val(fila.idTipoLicenciamiento);
+                                $('input#fechaInicio').val(fila.fechaInicio);
+                                $('input#fechaControl').val(fila.fechaControl);
+                                $('input#fechaTermino').val(fila.fechaTermino);
+                                $('input#cantidad').val(fila.cantidad);
+                                $('select#idMoneda').val(fila.idMoneda);
+                                $('input#monto').val(fila.monto);
+                                $('textarea#comentario').val(fila.comentario);
+                            }
                         }
                     }]
                 },
@@ -142,23 +147,29 @@ var detalleRecepcionGrid = {
 
                             var opr = $('input#otroProducto');
                             var ofa = $('input#otroFabricante');
+                            var idC =   $('select#idClasificacion');
+                            var inst=$('select#idTipoInstalacion');
+                            var li = $('select#idTipoLicenciamiento');
                             if (thissid) {
                                 opr.val('');
                                 opr.attr('readonly', 'readonly');
                                 ofa.val('');
                                 ofa.attr('readonly', 'readonly');
-                                $('select#idClasificacion').attr('readonly', 'readonly');
-                                $('select#idTipoInstalacion').attr('readonly', 'readonly');
-                                $('select#idTipoLicenciamiento').attr('readonly', 'readonly');
                                 var fila = _.find(productoData, function (item) {
                                     return item.id === thissid;
                                 });
                                 $('select#idFabricante').val(fila.pId);
+                                idC.val(fila.idClasificacion);
+                                idC.attr('readonly', 'readonly');
+                                inst.val(fila.idTipoInstalacion);
+                                inst.attr('readonly', 'readonly');
+                                li.val(fila.idTipoLicenciamiento);
+                                li.attr('readonly', 'readonly');
                             } else {
                                 opr.removeAttr('readonly');
-                                $('select#idClasificacion').removeAttr('readonly');
-                                $('select#idTipoInstalacion').removeAttr('readonly');
-                                $('select#idTipoLicenciamiento').removeAttr('readonly');
+                                idC.removeAttr('readonly');
+                                inst.removeAttr('readonly');
+                                li.removeAttr('readonly');
                             }
                         }
                     }]
@@ -389,16 +400,22 @@ var detalleRecepcionGrid = {
             if (!(postdata.idProducto || postdata.otroProducto)) {
                 return [false, 'Debe seleccionar Producto o ingresar Otro Producto', ''];
             }
-            if (postdata.otroProducto) {
-                if (!postdata.idClasificacion) {
-                    return [false, 'Debe seleccionar Clasificación'];
-                }
+            //if (postdata.otroProducto) {
+            if (!postdata.idClasificacion) {
+                return [false, 'Debe seleccionar Clasificación'];
             }
+            if (!postdata.idTipoInstalacion) {
+                return [false, 'Debe seleccionar ¿Donde está instalada?'];
+            }
+            if (!postdata.idTipoLicenciamiento) {
+                return [false, 'Debe seleccionar Tipo de Licenciamiento'];
+            }
+            // }
             var f1 = postdata.fechaInicio;
             var f2 = postdata.fechaTermino;
             var f3 = postdata.fechaControl;
             var f1compare = f1.substr(6) + f1.substr(3, 2) + f1.substr(0, 2);
-            var f2compare = f2.substr(6) +f2.substr(3, 2) + f2.substr(0, 2);
+            var f2compare = f2.substr(6) + f2.substr(3, 2) + f2.substr(0, 2);
             var f3compare = f3.substr(6) + f3.substr(3, 2) + f3.substr(0, 2);
             if (f1compare > f2compare) {
                 return [false, 'La fecha de Termino debe ser mayor a la fecha de Inicio'];
