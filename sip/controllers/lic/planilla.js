@@ -11,7 +11,28 @@ entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
 entity.belongsTo(models.tipoInstalacion, { foreignKey: 'idTipoInstalacion' });
 entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
 entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' });
-
+var includes = [
+    {
+        model: models.fabricante
+    }, {
+        model: models.clasificacion
+    }, {
+        model: models.tipoInstalacion
+    }, {
+        model: models.tipoLicenciamiento
+    }, {
+        model: models.compra,
+        include: [
+            {
+                model: models.estructuracuibch
+            }, {
+                model: models.moneda
+            }, {
+                model: models.proveedor
+            }
+        ]
+    }
+];
 var childEntity = models.compra;
 
 function map(req) {
@@ -82,12 +103,12 @@ function mapper(data) {
                     alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
                     utilidad: item.utilidad,
 
-                    fabricante: { nombre: item.fabricante.nombre },
-                    clasificacion: { nombre: item.clasificacion.nombre },
-                    tipoInstalacion: { nombre: item.tipoInstalacion.nombre },
-                    tipoLicenciamiento: { nombre: item.tipoLicenciamiento.nombre },
+                    fabricante: { nombre: item.fabricante ? item.fabricante.nombre : '' },
+                    clasificacion: { nombre: item.clasificacion ? item.clasificacion.nombre : '' },
+                    tipoInstalacion: { nombre: item.tipoInstalacion ? item.tipoInstalacion.nombre : '' },
+                    tipoLicenciamiento: { nombre: item.tipoLicenciamiento ? item.tipoLicenciamiento.nombre : '' },
                     moneda: { nombre: sItem.moneda.moneda },
-                    estructuracui: { nombre: sItem.estructuracui ? sItem.estructuracui.cui + ' - ' + sItem.estructuracui.nombre : '' },
+                    estructuracui: { nombre: sItem.estructuracuibch ? sItem.estructuracuibch.cui : '' },
                     proveedor: { nombre: sItem.proveedor.razonsocial }
                 });
             });
@@ -102,14 +123,14 @@ function excelMapper(data) {
             _.each(item.compras, function (sItem) {
                 result.push([sItem.contrato,
                 sItem.ordenCompra || '',
-                sItem.estructuracui ? sItem.estructuracui.cui + ' - ' + sItem.estructuracui.nombre : '',
+                sItem.estructuracuibch ? sItem.estructuracuibch.cui  : '',
                 sItem.sap || '',
-                item.fabricante.nombre,
+                item.fabricante? item.fabricante.nombre:'',
                 sItem.proveedor.razonsocial,
                 item.nombre,
-                item.tipoInstalacion.nombre,
-                item.clasificacion.nombre,
-                item.tipoLicenciamiento.nombre,
+                item.tipoInstalacion?item.tipoInstalacion.nombre:'',
+                item.clasificacion?item.clasificacion.nombre:'',
+                item.clasificacion?item.tipoLicenciamiento.nombre:'',
                 base.fromDate(sItem.fechaCompra),
                 base.fromDate(sItem.fechaExpiracion),
                 sItem.licCompradas || '',
@@ -132,28 +153,7 @@ function excelMapper(data) {
     });
     return result;
 }
-var includes = [
-    {
-        model: models.fabricante
-    }, {
-        model: models.clasificacion
-    }, {
-        model: models.tipoInstalacion
-    }, {
-        model: models.tipoLicenciamiento
-    }, {
-        model: models.compra,
-        include: [
-            {
-                model: models.estructuracui
-            }, {
-                model: models.moneda
-            }, {
-                model: models.proveedor
-            }
-        ]
-    }
-];
+
 
 function listxxx(req, res, entity, includes, transformer) {
     var page = parseInt(req.query.page);
