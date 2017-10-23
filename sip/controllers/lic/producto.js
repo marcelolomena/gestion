@@ -152,18 +152,6 @@ function getProductoLicTramite(req, res) {
         });
 }
 
-// function getProductoLicTramite (req, res) {
-
-
-//     var idProducto = req.idProducto;
-//     var sql = 'SELECT lictramite FROM lic.producto WHERE id = ' + idProducto;
-//     sequelize.query(sql)
-//         .spread(function (rows) {
-//             return res.json(rows);
-//         });
-
-// };
-
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
