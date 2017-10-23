@@ -81,11 +81,11 @@ function mapper(data) {
             idProducto: item.idProducto,
             producto: { nombre: item.producto.nombre },
             idTipoInstalacion: item.producto.idTipoInstalacion,
-            tipoInstalacion: { nombre: item.producto.tipoInstalacion.nombre },
+            tipoInstalacion: { nombre: item.producto.tipoInstalacion ? item.producto.tipoInstalacion.nombre : '' },
             idClasificacion: item.producto.idClasificacion,
-            clasificacion: { nombre: item.producto.clasificacion.nombre },
+            clasificacion: { nombre: item.producto.clasificacion ? item.producto.clasificacion.nombre : '' },
             idTipoLicenciamiento: item.producto.idTipoLicenciamiento,
-            tipoLicenciamiento: { nombre: item.producto.tipoLicenciamiento.nombre },
+            tipoLicenciamiento: { nombre: item.producto.tipoLicenciamiento ? item.producto.tipoLicenciamiento.nombre : '' },
             fechaInicio: base.fromDate(item.fechaInicio),
             fechaTermino: base.fromDate(item.fechaTermino),
             fechaControl: base.fromDate(item.fechaControl),
@@ -135,7 +135,11 @@ function addDetalle(data, res) {
         .then(function (created) {
             return base.findById(models.producto, data.idProducto)
                 .then(function (item) {
-                    return base.update(models.producto, { id: data.idProducto, licStock: item.licStock + data.cantidad }, res);
+                    var prdData = { id: data.idProducto, licStock: item.licStock + data.cantidad };
+                    if (!item.idClasificacion) { prdData.idClasificacion = data.idClasificacion; }
+                    if (!item.idTipoInstalacion) { prdData.idTipoInstalacion = data.idTipoInstalacion; }
+                    if (!item.idTipoLicenciamiento) { prdData.idTipoLicenciamiento = data.idTipoLicenciamiento; }
+                    return base.update(models.producto, prdData, res);
                 }).catch(function (err) {
                     logger.error('producto.Stock Upd, ' + err);
                     return res.json({ error: 1, glosa: err.message });
@@ -306,7 +310,16 @@ function upload(req, res) {
 function listDetalleCompras(req, res) {
     var ntt = models.detalleCompraTramite;
     base.listChilds(req, res, ntt, 'idCompraTramite', [{
-        model: models.producto
+        model: models.producto,
+        include: [
+            {
+                model: models.clasificacion
+            }, {
+                model: models.tipoInstalacion
+            }, {
+                model: models.tipoLicenciamiento
+            }
+        ]
     }], function (data) {
         var result = [];
         _.each(data, function (item) {
@@ -316,6 +329,9 @@ function listDetalleCompras(req, res) {
                     nombre: item.producto.nombre,
                     idFabricante: item.idFabricante,
                     idProducto: item.idProducto,
+                    idClasificacion: item.producto.idClasificacion,
+                    idTipoInstalacion: item.producto.idTipoInstalacion,
+                    idTipoLicenciamiento: item.producto.idTipoLicenciamiento,
                     fechaInicio: base.fromDate(item.fechaInicio),
                     fechaTermino: base.fromDate(item.fechaTermino),
                     fechaControl: base.fromDate(item.fechaControl),

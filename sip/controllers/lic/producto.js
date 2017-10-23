@@ -18,6 +18,16 @@ entity.belongsTo(models.tipoLicenciamiento, {
     foreignKey: 'idTipoLicenciamiento'
 });
 
+var includes = [{
+    model: models.fabricante
+}, {
+    model: models.clasificacion
+}, {
+    model: models.tipoInstalacion
+}, {
+    model: models.tipoLicenciamiento
+}];
+
 function map(req) {
     return {
         id: req.body.id || 0,
@@ -65,47 +75,43 @@ function mapper(data) {
         }
     });
 }
-var includes = [{
-    model: models.fabricante
-}, {
-    model: models.clasificacion
-}, {
-    model: models.tipoInstalacion
-}, {
-    model: models.tipoLicenciamiento
-}];
 
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
 }
+
 
 function listAll(req, res) {
     base.listAll(req, res, entity, function (item) {
         return {
             id: item.id,
             nombre: item.nombre,
-            pId: item.idFabricante
+            pId: item.idFabricante,
+            idClasificacion: item.idClasificacion,
+            idTipoInstalacion: item.idTipoInstalacion,
+            idTipoLicenciamiento: item.idTipoLicenciamiento
         };
     });
 }
 
 
+
 function getFabricante(req, res) {
     var idProducto = parseInt(req.params.idProducto);
     entity.findOne({
-            where: {
-                id: idProducto
-            },
-            attributes: ['idfabricante']
-        })
+        where: {
+            id: idProducto
+        },
+        attributes: ['idfabricante']
+    })
         .then(function (result) {
             var idFabric = result.dataValues.idfabricante;
             models.fabricante.findOne({
-                    where: {
-                        id: idFabric
-                    },
-                    attributes: ['nombre']
-                })
+                where: {
+                    id: idFabric
+                },
+                attributes: ['nombre']
+            })
                 .then(function (resulta) {
                     return res.json({
                         error: 0,
@@ -126,7 +132,7 @@ function getFabricante(req, res) {
         });
 }
 
-function getProducto (req, res) {
+function getProducto(req, res) {
     var idFabricante = req.params.idFabricante;
     var sql = 'SELECT id, idfabricante, nombre FROM lic.producto WHERE idfabricante = ' + idFabricante;
     sequelize.query(sql)
@@ -147,18 +153,6 @@ function getProductoLicTramite(req, res) {
             return res.json({ error_code: 1 });
         });
 }
-
-// function getProductoLicTramite (req, res) {
-
-    
-//     var idProducto = req.idProducto;
-//     var sql = 'SELECT lictramite FROM lic.producto WHERE id = ' + idProducto;
-//     sequelize.query(sql)
-//         .spread(function (rows) {
-//             return res.json(rows);
-//         });
-
-// };
 
 function action(req, res) {
     switch (req.body.oper) {

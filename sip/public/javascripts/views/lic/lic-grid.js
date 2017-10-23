@@ -113,7 +113,7 @@
             mtype: 'GET',
             colModel: viewModel,
             pager: '#' + pagerName,
-            rowNum: 10,
+            rowNum: 15,
             sortname: sortField,
             viewrecords: true,
             caption: caption,
