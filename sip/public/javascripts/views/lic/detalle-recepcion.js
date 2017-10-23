@@ -147,8 +147,8 @@ var detalleRecepcionGrid = {
 
                             var opr = $('input#otroProducto');
                             var ofa = $('input#otroFabricante');
-                            var idC =   $('select#idClasificacion');
-                            var inst=$('select#idTipoInstalacion');
+                            var idC = $('select#idClasificacion');
+                            var inst = $('select#idTipoInstalacion');
                             var li = $('select#idTipoLicenciamiento');
                             if (thissid) {
                                 opr.val('');
@@ -160,11 +160,23 @@ var detalleRecepcionGrid = {
                                 });
                                 $('select#idFabricante').val(fila.pId);
                                 idC.val(fila.idClasificacion);
-                                idC.attr('readonly', 'readonly');
+                                if (fila.idClasificacion) {
+                                    idC.attr('readonly', 'readonly');
+                                } else{
+                                    idC.removeAttr('readonly');
+                                }
                                 inst.val(fila.idTipoInstalacion);
-                                inst.attr('readonly', 'readonly');
+                                if (fila.idTipoInstalacion) {
+                                    inst.attr('readonly', 'readonly');
+                                }else{
+                                    inst.removeAttr('readonly');
+                                }
                                 li.val(fila.idTipoLicenciamiento);
-                                li.attr('readonly', 'readonly');
+                                if (fila.idTipoLicenciamiento) {
+                                    li.attr('readonly', 'readonly');
+                                }else{
+                                    li.removeAttr('readonly')
+                                }
                             } else {
                                 opr.removeAttr('readonly');
                                 idC.removeAttr('readonly');
