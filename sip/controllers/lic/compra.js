@@ -4,7 +4,7 @@ var base = require('./lic-controller');
 var _ = require('lodash');
 
 var entity = models.compra;
-entity.belongsTo(models.estructuracui, { foreignKey: 'idCui' });
+entity.belongsTo(models.estructuracuibch, { foreignKey: 'idCui' });
 entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
 entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
 
@@ -51,14 +51,15 @@ function mapper(data) {
             factura: item.factura,
             comprador: item.comprador,
             correoComprador: item.correoComprador,
-            proveedor: { nombre: item.proveedor.razonsocial }
+            proveedor: { nombre: item.proveedor.razonsocial },
+            estructuracuibch: { cui: item.estructuracuibch.cui }
         }
     });
 }
 
 var includes = [
     {
-        model: models.estructuracui
+        model: models.estructuracuibch
     }, {
         model: models.moneda
     }, {

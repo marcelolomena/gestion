@@ -67,7 +67,7 @@
                 label: 'Fabricante',
                 name: 'idFabricante',
                 jsonmap: 'fabricante.nombre',
-                width: 180,
+                width: 380,
                 align: 'center',
                 sortable: false,
                 editable: true,
@@ -95,7 +95,7 @@
             }, {
                 label: 'Software',
                 name: 'nombre',
-                width: 200,
+                width: 380,
                 align: 'center',
                 sortable: false,
                 editable: true

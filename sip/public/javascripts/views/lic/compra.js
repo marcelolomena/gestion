@@ -41,7 +41,7 @@ var compraGrid = {
                 align: 'center',
                 sortable:false,
                 editable: true,
-                jsonmap: 'estructuracui.cui',
+                jsonmap: 'estructuracuibch.cui',
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/cui',
@@ -65,7 +65,7 @@ var compraGrid = {
                 label: 'Proveedor',
                 name: 'idProveedor',
                 jsonmap: 'proveedor.nombre',
-                width: 500,
+                width: 200,
                 align: 'center',
                 sortable:false,
                 editable: true,
