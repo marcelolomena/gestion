@@ -91,7 +91,7 @@ var compraGrid = {
                     }
                 }
             }, {
-                label: 'Año-Mes de Compra',
+                label: 'Fecha de Compra',
                 name: 'fechaCompra',
                 width: 200,
                 align: 'center',
@@ -99,14 +99,22 @@ var compraGrid = {
                 editable: true,
                 search:false
             }, {
-                label: 'Año-Mes de Expiración',
+                label: 'Fecha de Término',
                 name: 'fechaExpiracion',
                 width: 200,
                 align: 'center',
                 sortable:false,
                 editable: true,
                 search: false
-            }, {
+            },{
+                label: 'Fecha de Control',
+                name: 'fechaRenovaSoporte',
+                width: 200,
+                align: 'center',
+                sortable:false,
+                editable: true,
+                search: false
+            },  {
                 label: 'N° Lic. Compradas',
                 name: 'licCompradas',
                 width: 125,

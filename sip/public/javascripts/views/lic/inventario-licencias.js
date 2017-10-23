@@ -56,7 +56,7 @@
     $(function () {
 
         var $table = $('#gridMaster');
-        var licenciasModel = [
+        var viewModel = [
             {
                 label: 'ID',
                 name: 'id',
@@ -250,6 +250,6 @@
             }
         ];
 
-        initMainGrid('/lic/grid_inventario', licenciasModel, 'nombre', tabs);
+        initMainGrid('/lic/grid_inventario', viewModel, 'nombre', tabs);
     });
 })(jQuery, _);
