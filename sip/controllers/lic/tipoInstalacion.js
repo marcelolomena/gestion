@@ -4,6 +4,7 @@ var base = require('./lic-controller');
 var _ = require('lodash');
 
 var entity = models.tipoInstalacion;
+var includes = [];
 function map(req) {
     return {
         id: req.body.id || 0,
@@ -13,15 +14,7 @@ function map(req) {
 }
 function mapper(data) {
     return data;
-    // return _.map(data, function (item) {
-    //     return {
-    //         id: item.id,
-    //         nombre: item.nombre
-    //     }
-    // });
 }
-
-var includes = [];
 
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
@@ -34,7 +27,6 @@ function listAll(req, res) {
         };
     });
 }
-
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
@@ -45,7 +37,6 @@ function action(req, res) {
             return base.destroy(entity, req.body.id, res);
     }
 }
-
 module.exports = {
     list: list,
     action: action,
