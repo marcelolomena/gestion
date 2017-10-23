@@ -29,11 +29,7 @@ module.exports = function(sequelize, DataTypes) {
     idCui: {
       field:'idcui',
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'estructuracui',
-        key: 'id'
-      }
+      allowNull: true
     },
     sap: {
       type: DataTypes.INTEGER,
@@ -95,7 +91,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     factura: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true
     },
     comprador: {
