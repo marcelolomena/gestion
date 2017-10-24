@@ -69,8 +69,11 @@ module.exports = function (sequelize, DataTypes) {
         alertaRenovacion: {
             field: 'alertarenovacion',
             type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0
+            allowNull: true,
+            references: {
+                model: 'parametro',
+                key: 'id'
+            }
         },
         utilidad: {
             type: DataTypes.STRING(255),

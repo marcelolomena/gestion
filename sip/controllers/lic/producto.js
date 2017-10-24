@@ -17,6 +17,9 @@ entity.belongsTo(models.tipoInstalacion, {
 entity.belongsTo(models.tipoLicenciamiento, {
     foreignKey: 'idTipoLicenciamiento'
 });
+entity.belongsTo(models.parametro, {
+    foreignKey: 'alertaRenovacion'
+});
 
 var includes = [{
     model: models.fabricante
@@ -26,6 +29,8 @@ var includes = [{
     model: models.tipoInstalacion
 }, {
     model: models.tipoLicenciamiento
+},{
+    model: models.parametro
 }];
 
 function map(req) {
@@ -69,6 +74,9 @@ function mapper(data) {
             },
             tipoLicenciamiento: {
                 nombre: item.tipoLicenciamiento ? item.tipoLicenciamiento.nombre : ''
+            },
+            alertaRenovacion: {
+                nombre: item.parametro ? item.parametro.nombre : ''
             },
             licTramite: item.licTramite,
         }

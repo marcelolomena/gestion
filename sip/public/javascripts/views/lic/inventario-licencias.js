@@ -135,6 +135,7 @@
             }, {
                 label: 'Alerta de Renovación',
                 name: 'alertaRenovacion',
+                jsonmap: 'alertaRenovacion.nombre',
                 sortable: false,
                 editable: false,
                 search: false
