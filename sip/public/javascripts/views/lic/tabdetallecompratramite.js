@@ -20,6 +20,34 @@ var tabdetalleCompraTramiteGrid = {
             search: false
         },
         {
+            label: 'Número Licencias',
+            name: 'numero',
+            width: 80,
+            align: 'center',
+            hidden: false,
+            editrules: {
+                required: true,
+                integer: true
+            },
+            editable: true,
+            search: false
+        },
+        {
+            label: 'Monto',
+            name: 'monto',
+            width: 80,
+            align: 'center',
+            hidden: false,
+            editrules: {
+                number: true
+            },
+            editoptions: {
+                defaultValue: '0'
+            },
+            editable: true,
+            search: false
+        },
+        {
             label: 'Fecha Inicio',
             name: 'fechaInicio',
             width: 100,
@@ -103,69 +131,31 @@ var tabdetalleCompraTramiteGrid = {
             },
             search: false
         },
-        {
-            label: 'Número Licencias',
-            name: 'numero',
-            width: 80,
-            align: 'center',
-            hidden: false,
-            editrules: {
-                required: true,
-                integer: true
-            },
-            editable: true,
-            search: false
-        },
-        {
-            label: 'Moneda',
-            name: 'idMoneda',
-            jsonmap: 'moneda.nombre',
-            width: 100,
-            align: 'center',
-            sortable: false,
-            editable: true,
-            edittype: 'select',
-            editoptions: {
-                dataUrl: '/lic/moneda',
-                buildSelect: function (response) {
-                    var rowData = $table.getRowData($table.getGridParam('selrow'));
-                    var thissid = rowData.moneda;
-                    var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
-                }
-            },
-            editrules: {
-                required: true
-            },
-            search: false
-        },
-        {
-            label: 'Monto',
-            name: 'monto',
-            width: 80,
-            align: 'center',
-            hidden: false,
-            editrules: {
-                number: true
-            },
-            editoptions: {
-                defaultValue: '0'
-            },
-            editable: true,
-            search: false
-        },
-        {
-            label: 'Comentario',
-            name: 'comentario',
-            width: 400,
-            hidden: false,
-            editable: true,
-            edittype: 'textarea',
-            editoptions: {
-                fullRow: true
-            },
-            search: false
-        },
+        
+        // {
+        //     label: 'Moneda',
+        //     name: 'idMoneda',
+        //     jsonmap: 'moneda.moneda',
+        //     width: 100,
+        //     align: 'center',
+        //     sortable: false,
+        //     editable: true,
+        //     edittype: 'select',
+        //     editoptions: {
+        //         dataUrl: '/lic/moneda',
+        //         buildSelect: function (response) {
+        //             var rowData = $table.getRowData($table.getGridParam('selrow'));
+        //             var thissid = rowData.moneda;
+        //             var data = JSON.parse(response);
+        //             return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
+        //         }
+        //     },
+        //     editrules: {
+        //         required: true
+        //     },
+        //     search: false
+        // },
+        
         {
             label: 'Estado',
             name: 'estado',
@@ -190,7 +180,20 @@ var tabdetalleCompraTramiteGrid = {
                 return dato;
             },
             search: false
-        }
+        },
+        {
+            label: 'Comentario',
+            name: 'comentario',
+            width: 400,
+            hidden: false,
+            editable: true,
+            edittype: 'textarea',
+            editoptions: {
+                fullRow: true
+            },
+            search: false
+        },
+        
     ];
 
         var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Detalle Compra Trámite', 'Editar Compra en Trámite', 'Agregar Compra en Trámite', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
