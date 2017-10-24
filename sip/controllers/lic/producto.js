@@ -165,11 +165,43 @@ function action(req, res) {
     }
 }
 
+function listcompratramite(req, res) {
+    var ntt = models.detalleCompraTramite;
+    base.listChilds(req, res, ntt, 'idproducto', [{
+        model: models.producto,
+        model: models.fabricante,
+        model: models.moneda
+    }], function (data) {
+        var result = [];
+        _.each(data, function (item) {
+
+            var row = {
+                id: item.id,
+                fechaInicio: base.fromDate(item.fechaInicio),
+                fechaTermino: base.fromDate(item.fechaTermino),
+                fechaControl: base.fromDate(item.fechaControl),
+                monto: item.monto,
+                idMoneda: item.idMoneda,
+                comentario: item.comentario,
+                numsolicitud: item.numsolicitud,
+                numero: item.numero,
+                idMoneda: {
+                    nombre: item.moneda.moneda
+                },
+                estado: item.estado
+            };
+            result.push(row);
+        });
+        return result;
+    })
+}
+
 module.exports = {
     list: list,
     action: action,
     listAll: listAll,
     getFabricante: getFabricante,
     getProducto: getProducto,
-    getProductoLicTramite: getProductoLicTramite
+    getProductoLicTramite: getProductoLicTramite,
+    listcompratramite: listcompratramite
 }

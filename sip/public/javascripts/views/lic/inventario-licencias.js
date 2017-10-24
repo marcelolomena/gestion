@@ -18,6 +18,8 @@
         switch (targ) {
             case '#compra':
                 return compraGrid;
+            case '#tramite':
+                return tabdetalleCompraTramiteGrid;
             case '#instalacion':
                 return instalacionGrid;
             case '#ajuste':
@@ -56,8 +58,7 @@
     $(function () {
 
         var $table = $('#gridMaster');
-        var viewModel = [
-            {
+        var viewModel = [{
                 label: 'ID',
                 name: 'id',
                 key: true,
@@ -197,7 +198,7 @@
                 formatter: 'integer',
                 editable: false,
                 search: false
-            }, 
+            },
             {
                 label: 'Por Recepcionar',
                 name: 'licTramite',
@@ -221,7 +222,7 @@
                 sortable: false,
                 editable: false,
                 search: false
-             }, 
+            },
             //  {
             //     label: 'Utilidad',
             //     name: 'utilidad',
@@ -230,7 +231,7 @@
             //     editable: true,
             //     edittype: 'textarea'
             // },
-             {
+            {
                 label: 'Comentarios',
                 name: 'comentarios',
                 hidden: true,
@@ -240,15 +241,16 @@
             }
         ];
 
-        var tabs = [
-            {
-                id: 'compra',
-                nom: 'Compras'
-            },{
-                id: 'traduccion',
-                nom: 'Traducciones'
-            }
-        ];
+        var tabs = [{
+            id: 'compra',
+            nom: 'Compras'
+        }, {
+            id: 'tramite',
+            nom: 'Compra Trámite'
+        }, {
+            id: 'traduccion',
+            nom: 'Traducciones'
+        }];
 
         initMainGrid('/lic/grid_inventario', viewModel, 'nombre', tabs);
     });
