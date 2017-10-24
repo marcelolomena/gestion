@@ -20,6 +20,8 @@
                 return compraGrid;
             case '#tramite':
                 return tabdetalleCompraTramiteGrid;
+            case '#recepcion':
+                return recepcionGrid;
             case '#instalacion':
                 return instalacionGrid;
             case '#ajuste':
@@ -100,6 +102,41 @@
                 align: 'center',
                 sortable: false,
                 editable: true
+            }, {
+                label: 'Cantidad Lic. Compradas',
+                name: 'licStock',
+                width: 125,
+                align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    return rowObject.ilimitado ? 'Ilimitado' : cellvalue;
+                },
+                editable: false,
+                search: false
+            }, {
+                name: 'ilimitado',
+                hidden: true
+            }, {
+                label: 'Por Recepcionar',
+                name: 'licTramite',
+                width: 125,
+                align: 'center',
+                formatter: 'integer',
+                editable: false,
+                search: false
+            }, {
+                label: 'Licencias Instaladas',
+                name: 'licOcupadas',
+                width: 125,
+                align: 'center',
+                formatter: 'integer',
+                editable: false,
+                search: false
+            }, {
+                label: 'Alerta de Renovación',
+                name: 'alertaRenovacion',
+                sortable: false,
+                editable: false,
+                search: false
             }, {
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
@@ -241,16 +278,18 @@
             }
         ];
 
-        var tabs = [{
-            id: 'compra',
-            nom: 'Compras'
-        }, {
-            id: 'tramite',
-            nom: 'Compra Trámite'
-        }, {
-            id: 'traduccion',
-            nom: 'Traducciones'
-        }];
+        var tabs = [
+            {
+                id: 'recepcion',
+                nom: 'Recepciones'
+            },            {
+                id: 'tramite',
+                nom: 'Compra Trámite'
+            }, {
+                id: 'traduccion',
+                nom: 'Traducciones'
+            }
+        ];
 
         initMainGrid('/lic/grid_inventario', viewModel, 'nombre', tabs);
     });

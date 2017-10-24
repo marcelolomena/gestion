@@ -55,9 +55,8 @@ function mapper(data) {
             idClasificacion: item.idClasificacion,
             idTipoLicenciamiento: item.idTipoLicenciamiento,
             licStock: item.licStock,
+            ilimitado:item.ilimitado,
             licOcupadas: item.licOcupadas,
-            // alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
-            // utilidad: item.utilidad,
             comentarios: item.comentarios,
             fabricante: {
                 nombre: item.fabricante.nombre

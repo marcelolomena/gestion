@@ -135,8 +135,13 @@ module.exports = function (passport) {
         .get(isAuthenticated, detalleRecepcionController.listChilds)
         .post(isAuthenticated, detalleRecepcionController.action);
 
+<<<<<<< HEAD
     router.route('/lic/tramite/:pId')
         .get(isAuthenticated, productoController.listcompratramite);
+=======
+    router.route('/lic/recepcion/:pId')
+        .get(isAuthenticated, detalleRecepcionController.listProductChilds);
+>>>>>>> licencias
 
     return router;
 };
