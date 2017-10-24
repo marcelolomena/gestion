@@ -7,12 +7,8 @@ var entity = models.recepcionado;
 entity.belongsTo(models.detalleCompraTramite, {
     foreignKey: 'idDetalleCompraTramite'
 });
-entity.belongsTo(models.fabricante, {
-    foreignKey: 'idfabricante'
-});
 
-var includes = [
-    {
+var includes = [{
         model: models.proveedor
     },
     {
@@ -23,6 +19,9 @@ var includes = [
     },
     {
         model: models.moneda
+    },
+    {
+        model: models.detalleCompraTramite
     }
 ];
 
@@ -31,7 +30,7 @@ function map(req) {
     return {
         id: req.body.id || 0,
         idDetalleCompraTramite: req.body.idDetalleCompraTramite || req.params.pId,
-        
+
     }
 }
 
@@ -42,17 +41,20 @@ function mapper(data) {
         }
     });
 }
-var includes = [{
-    model: models.detalleCompraTramite
-}
-];
+// var includes = [{
+//     model: models.detalleCompraTramite
+// }];
 
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idDetalleCompraTramite', includes, mapper);
 }
 
-function mapProducto(data) { 
-    return {nombre:data.nombre, idFabricante:data.idFabricante, licTramite:data.numero};
+function mapProducto(data) {
+    return {
+        nombre: data.nombre,
+        idFabricante: data.idFabricante,
+        licTramite: data.numero
+    };
 }
 
 function listRecepcionados(req, res) {
@@ -64,20 +66,20 @@ function listRecepcionados(req, res) {
     }], function (data) {
         var result = [];
         _.each(data, function (item) {
-            
-                var row = {
-                    id: item.id,
-                    producto: item.nombre,
-                    idFabricante: item.idFabricante,
-                    fechaInicio: base.fromDate(item.fechaInicio),
-                    fechaTermino: base.fromDate(item.fechaTermino),
-                    fechaControl: base.fromDate(item.fechaControl),
-                    idMoneda: item.moneda.moneda,
-                    monto: item.monto,
-                    cantidad: item.numero,
-                    comentario: item.comentario
-                };
-                result.push(row);
+
+            var row = {
+                id: item.id,
+                producto: item.nombre,
+                idFabricante: item.idFabricante.nombre,
+                fechaInicio: base.fromDate(item.fechaInicio),
+                fechaTermino: base.fromDate(item.fechaTermino),
+                fechaControl: base.fromDate(item.fechaControl),
+                idMoneda: item.moneda.moneda,
+                monto: item.monto,
+                cantidad: item.cantidad,
+                comentario: item.comentario
+            };
+            result.push(row);
         });
         return result;
     })
