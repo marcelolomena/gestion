@@ -1,8 +1,8 @@
 (function ($, _) {
     'use strict';
     $.fn.datepicker.defaults.format = "dd-mm-yyyy";
-    moment.defaultFormat='DD-MM-YYYY'
-    
+    moment.defaultFormat = 'DD-MM-YYYY'
+
     var licLibrary = {
         jsonOptions: {
             type: 'POST',
@@ -32,21 +32,21 @@
         })
         var left = true;
         _.each(editables, function (item, key) {
-             if (item.editoptions && item.editoptions.fullRow) {
+            if (item.editoptions && item.editoptions.fullRow) {
                 result += '<div class="form-row">';
                 result += '<div  id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
                 result += '</div>';
                 left = true;
-            } else 
-            if (left) {
-                result += '<div class="form-row">';
-                result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
-                left = false;
-            } else {
-                result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
-                result += '</div>';
-                left= true;
-            }
+            } else
+                if (left) {
+                    result += '<div class="form-row">';
+                    result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
+                    left = false;
+                } else {
+                    result += '<div class="column-half" id="d_' + item.name + '">' + decoraleLabel(item) + '{' + item.name + '}</div>';
+                    result += '</div>';
+                    left = true;
+                }
         });
         result += '<hr style="width:100%"/>';
         result += '<div> {sData} {cData} </div>';
@@ -113,7 +113,8 @@
             mtype: 'GET',
             colModel: viewModel,
             pager: '#' + pagerName,
-            rowNum: 15,
+            rowNum: 10,
+            rowList: [10, 20, 30, 40, 50],
             sortname: sortField,
             viewrecords: true,
             caption: caption,
@@ -139,13 +140,13 @@
         this.beforeShowForm = function (form) {
             console.log('beforeShowForm');
         };
-        this.afterShowForm = function(form){
+        this.afterShowForm = function (form) {
             console.log('afterShowForm');
         };
-        this.afterComplete = function(response, postdata, formid, a){
+        this.afterComplete = function (response, postdata, formid, a) {
             console.log('afterComplete');
         };
-        this.onInitializeForm = function(formid){
+        this.onInitializeForm = function (formid) {
             console.log('onInitializeForm');
         };
         this.beforeSubmit = function (postdata, formid) {
@@ -194,12 +195,12 @@
             serializeEditData: licLibrary.createJSON,
             template: this.itemTemplate.template,
             beforeShowForm: this.editBeforeShowForm,
-            afterShowForm:this.editAfterShowForm,
-            afterComplete:this.afterComplete,
+            afterShowForm: this.editAfterShowForm,
+            afterComplete: this.afterComplete,
             errorTextFormat: this.errorTextFormat,
             beforeSubmit: this.editBeforeSubmit,
             afterSubmit: this.editAfterSubmit,
-            onInitializeForm:this.onInitializeForm  
+            onInitializeForm: this.onInitializeForm
         };
         this.prmAdd = {
             addCaption: addCaption,
@@ -214,7 +215,7 @@
             errorTextFormat: this.addErrorTextFormat,
             beforeSubmit: this.beforeSubmit,
             afterSubmit: this.afterSubmit,
-            onInitializeForm:this.onInitializeForm  
+            onInitializeForm: this.onInitializeForm
 
         };
         this.prmDel = {
