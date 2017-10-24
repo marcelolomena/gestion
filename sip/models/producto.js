@@ -55,6 +55,10 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
+        }, ilimitado:{
+            type: DataTypes.BOOLEAN,
+            defaultValue:false,
+            allowNull: false
         },
         licOcupadas: {
             field: 'licocupadas',

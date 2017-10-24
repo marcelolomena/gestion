@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
         }, nombre: {
             type: DataTypes.STRING(250),
             allowNull: true
-        },  cui: {
+        }, cui: {
             type: DataTypes.INTEGER,
             allowNull: true
         }, sap: {
@@ -82,6 +82,13 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
         }, cantidad: {
             type: DataTypes.INTEGER,
+            allowNull: true
+        }, ilimitado:{
+            type: DataTypes.BOOLEAN,
+            defaultValue:false,
+            allowNull: false
+        }, factura: {
+            type: DataTypes.STRING(20),
             allowNull: true
         }, comentario: {
             type: DataTypes.STRING,

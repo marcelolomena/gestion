@@ -61,7 +61,9 @@ function map(req) {
         otroFabricante: req.body.otroFabricante,
         idTipoInstalacion: req.body.idTipoInstalacion,
         idClasificacion: req.body.idClasificacion,
-        idTipoLicenciamiento: req.body.idTipoLicenciamiento
+        idTipoLicenciamiento: req.body.idTipoLicenciamiento,
+        ilimitado: req.body.ilimitado === 'true',
+        factura: req.body.factura
     }
 }
 function mapper(data) {
@@ -96,13 +98,17 @@ function mapper(data) {
             comprador: item.comprador,
             comentario: item.comentario,
             fecha: base.fromDate(item.fecha),
-            numsolicitud: item.numsolicitud
+            numsolicitud: item.numsolicitud,
+            ilimitado: item.ilimitado,
+            factura: item.factura
         };
     });
 }
-
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idRecepcion', includes, mapper);
+}
+function listProductChilds(req, res) {
+    base.listChilds(req, res, entity, 'idProducto', includes, mapper);
 }
 function mapfabricante(data) {
     return { nombre: data.otroFabricante };
@@ -135,7 +141,10 @@ function addDetalle(data, res) {
         .then(function (created) {
             return base.findById(models.producto, data.idProducto)
                 .then(function (item) {
-                    var prdData = { id: data.idProducto, licStock: item.licStock + data.cantidad };
+                    var prdData = { id: data.idProducto, ilimitado: data.ilimitado };
+                    if (!updData.ilimitado) {
+                        updData.licStock = item.licStock + data.cantidad;
+                    }
                     if (!item.idClasificacion) { prdData.idClasificacion = data.idClasificacion; }
                     if (!item.idTipoInstalacion) { prdData.idTipoInstalacion = data.idTipoInstalacion; }
                     if (!item.idTipoLicenciamiento) { prdData.idTipoLicenciamiento = data.idTipoLicenciamiento; }
@@ -174,7 +183,11 @@ function action(req, res) {
                         .then(function (updated) {
                             return base.findById(models.producto, detalle.idProducto)
                                 .then(function (item) {
-                                    return base.update(models.producto, { id: detalle.idProducto, licStock: item.licStock - detalle.cantidad + data.cantidad }, res);
+                                    var updData = { id: detalle.idProducto, ilimitado: data.ilimitado };
+                                    if (!updData.ilimitado) {
+                                        updData.licStock = item.licStock - detalle.cantidad + data.cantidad
+                                    }
+                                    return base.update(models.producto, updData, res);
                                 }).catch(function (err) {
                                     logger.error('producto.Stock Upd, ' + err);
                                     return res.json({ error: 1, glosa: err.message });
@@ -211,7 +224,6 @@ function action(req, res) {
                 });
     }
 }
-
 function upload(req, res) {
     if (req.method === 'POST') {
         var busboy = new Busboy({ headers: req.headers });
@@ -306,7 +318,6 @@ function upload(req, res) {
     }
 
 };
-
 function listDetalleCompras(req, res) {
     var ntt = models.detalleCompraTramite;
     base.listChilds(req, res, ntt, 'idCompraTramite', [{
@@ -349,6 +360,7 @@ function listDetalleCompras(req, res) {
 module.exports = {
     listChilds: listChilds,
     action: action,
+    listProductChilds:listProductChilds,
     upload: upload,
     listDetalleCompras: listDetalleCompras
 }

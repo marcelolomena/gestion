@@ -18,6 +18,8 @@
         switch (targ) {
             case '#compra':
                 return compraGrid;
+            case '#recepcion':
+                return recepcionGrid;
             case '#instalacion':
                 return instalacionGrid;
             case '#ajuste':
@@ -99,6 +101,41 @@
                 align: 'center',
                 sortable: false,
                 editable: true
+            }, {
+                label: 'Cantidad Lic. Compradas',
+                name: 'licStock',
+                width: 125,
+                align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    return rowObject.ilimitado ? 'Ilimitado' : cellvalue;
+                },
+                editable: false,
+                search: false
+            }, {
+                name: 'ilimitado',
+                hidden: true
+            }, {
+                label: 'Por Recepcionar',
+                name: 'licTramite',
+                width: 125,
+                align: 'center',
+                formatter: 'integer',
+                editable: false,
+                search: false
+            }, {
+                label: 'Licencias Instaladas',
+                name: 'licOcupadas',
+                width: 125,
+                align: 'center',
+                formatter: 'integer',
+                editable: false,
+                search: false
+            }, {
+                label: 'Alerta de Renovación',
+                name: 'alertaRenovacion',
+                sortable: false,
+                editable: false,
+                search: false
             }, {
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
@@ -190,47 +227,6 @@
                     }
                 }
             }, {
-                label: 'Cantidad Lic. Compradas',
-                name: 'licStock',
-                width: 125,
-                align: 'center',
-                formatter: 'integer',
-                editable: false,
-                search: false
-            }, 
-            {
-                label: 'Por Recepcionar',
-                name: 'licTramite',
-                width: 125,
-                align: 'center',
-                formatter: 'integer',
-                editable: false,
-                search: false
-            },
-            {
-                label: 'Licencias Instaladas',
-                name: 'licOcupadas',
-                width: 125,
-                align: 'center',
-                formatter: 'integer',
-                editable: false,
-                search: false
-            }, {
-                label: 'Alerta de Renovación',
-                name: 'alertaRenovacion',
-                sortable: false,
-                editable: false,
-                search: false
-             }, 
-            //  {
-            //     label: 'Utilidad',
-            //     name: 'utilidad',
-            //     hidden: true,
-            //     sortable: false,
-            //     editable: true,
-            //     edittype: 'textarea'
-            // },
-             {
                 label: 'Comentarios',
                 name: 'comentarios',
                 hidden: true,
@@ -242,9 +238,9 @@
 
         var tabs = [
             {
-                id: 'compra',
-                nom: 'Compras'
-            },{
+                id: 'recepcion',
+                nom: 'Recepciones'
+            }, {
                 id: 'traduccion',
                 nom: 'Traducciones'
             }

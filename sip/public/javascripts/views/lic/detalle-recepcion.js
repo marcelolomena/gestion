@@ -162,19 +162,19 @@ var detalleRecepcionGrid = {
                                 idC.val(fila.idClasificacion);
                                 if (fila.idClasificacion) {
                                     idC.attr('readonly', 'readonly');
-                                } else{
+                                } else {
                                     idC.removeAttr('readonly');
                                 }
                                 inst.val(fila.idTipoInstalacion);
                                 if (fila.idTipoInstalacion) {
                                     inst.attr('readonly', 'readonly');
-                                }else{
+                                } else {
                                     inst.removeAttr('readonly');
                                 }
                                 li.val(fila.idTipoLicenciamiento);
                                 if (fila.idTipoLicenciamiento) {
                                     li.attr('readonly', 'readonly');
-                                }else{
+                                } else {
                                     li.removeAttr('readonly')
                                 }
                             } else {
@@ -361,6 +361,29 @@ var detalleRecepcionGrid = {
                 editoptions: { defaultValue: '0' },
                 editrules: { integer: true, required: true },
             }, {
+                label: 'Ilimitado',
+                name: 'ilimitado',
+                hidden: false,
+                editable: true,
+                edittype: 'checkbox',
+                editoptions: {
+                    value:'true:false',
+                    defaultValue: false,
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var cant = $('input#cantidad');
+                            if (this.checked) {
+                                cant.val(0);
+                                cant.attr('readonly', 'readonly');
+                            } else{
+                                cant.val('');
+                                cant.removeAttr('readonly');
+                            }
+                         }
+                    }]
+                },
+                editrules: { required: true },
+            }, {
                 label: 'Moneda',
                 name: 'idMoneda',
                 jsonmap: 'moneda.nombre',
@@ -393,6 +416,11 @@ var detalleRecepcionGrid = {
                 editoptions: { defaultValue: '0' },
                 editrules: { number: true },
                 search: false
+            }, {
+                label: 'N° Factura',
+                name: 'factura',
+                hidden: false,
+                editable: true
             }, {
                 label: 'Comentario',
                 name: 'comentario',
