@@ -60,7 +60,8 @@
     $(function () {
 
         var $table = $('#gridMaster');
-        var viewModel = [{
+        var viewModel = [
+            {
                 label: 'ID',
                 name: 'id',
                 key: true,
@@ -124,9 +125,9 @@
                 editable: false,
                 search: false
             }, {
-                label: 'Licencias Instaladas',
+                label: 'Instaladas',
                 name: 'licOcupadas',
-                width: 125,
+                width: 150,
                 align: 'center',
                 formatter: 'integer',
                 editable: false,
@@ -145,7 +146,7 @@
                 align: 'center',
                 sortable: false,
                 editable: true,
-                hidden: true,
+                hidden: false,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/tiposInstalacion',
@@ -175,7 +176,7 @@
                 align: 'center',
                 sortable: false,
                 editable: true,
-                hidden: true,
+                hidden: false,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/clasificaciones',
@@ -205,7 +206,7 @@
                 align: 'center',
                 sortable: false,
                 editable: true,
-                hidden: true,
+                hidden: false,
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/tiposLicenciamiento',
@@ -228,47 +229,6 @@
                     }
                 }
             }, {
-                label: 'Cantidad Lic. Compradas',
-                name: 'licStock',
-                width: 125,
-                align: 'center',
-                formatter: 'integer',
-                editable: false,
-                search: false
-            },
-            {
-                label: 'Por Recepcionar',
-                name: 'licTramite',
-                width: 125,
-                align: 'center',
-                formatter: 'integer',
-                editable: false,
-                search: false
-            },
-            {
-                label: 'Licencias Instaladas',
-                name: 'licOcupadas',
-                width: 125,
-                align: 'center',
-                formatter: 'integer',
-                editable: false,
-                search: false
-            }, {
-                label: 'Alerta de Renovación',
-                name: 'alertaRenovacion',
-                sortable: false,
-                editable: false,
-                search: false
-            },
-            //  {
-            //     label: 'Utilidad',
-            //     name: 'utilidad',
-            //     hidden: true,
-            //     sortable: false,
-            //     editable: true,
-            //     edittype: 'textarea'
-            // },
-            {
                 label: 'Comentarios',
                 name: 'comentarios',
                 hidden: true,
@@ -282,7 +242,7 @@
             {
                 id: 'recepcion',
                 nom: 'Recepciones'
-            },            {
+            }, {
                 id: 'tramite',
                 nom: 'Compra Trámite'
             }, {
