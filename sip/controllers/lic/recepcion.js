@@ -52,8 +52,6 @@ function mapper(data) {
         };
     });
 }
-
-
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
 }
@@ -68,7 +66,6 @@ function action(req, res) {
             return base.destroy(entity, req.body.id, res);
     }
 }
-
 function upload(req, res) {
     if (req.method === 'POST') {
         var busboy = new Busboy({ headers: req.headers });
@@ -161,9 +158,7 @@ function upload(req, res) {
 
         return req.pipe(busboy);
     }
-
 };
-
 
 function listCompras(req, res) {
     var ntt = models.compraTramite;
@@ -187,8 +182,6 @@ function listCompras(req, res) {
         return result;
     })
 }
-
-
 module.exports = {
     list: list,
     action: action,

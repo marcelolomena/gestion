@@ -4,6 +4,9 @@ var base = require('./lic-controller');
 var _ = require('lodash');
 
 var entity = models.traduccion;
+
+var includes = [];
+
 function map(req) {
     return {
         id: req.body.id || 0,
@@ -19,8 +22,6 @@ function mapper(data) {
    });
    return result;
 }
-
-var includes = [];
 
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
