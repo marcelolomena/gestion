@@ -29,6 +29,9 @@ var recepcionadoController = require('../controllers/lic/recepcionado');
 var recepcionController = require('../controllers/lic/recepcion');
 var detalleRecepcionController = require('../controllers/lic/detalle-recepcion');
 
+var snowController = require('../controllers/lic/snow');
+
+
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
         return req.session.passport.sidebar[0].rol ?
@@ -123,7 +126,6 @@ module.exports = function (passport) {
         .get(isAuthenticated, detalleCompraTramiteController.listChilds)
         .post(isAuthenticated, detalleCompraTramiteController.action);
 
-
     router.route('/lic/recepcionado/:pId')
         .get(isAuthenticated, recepcionadoController.listRecepcionados);
 
@@ -135,10 +137,16 @@ module.exports = function (passport) {
         .get(isAuthenticated, detalleRecepcionController.listChilds)
         .post(isAuthenticated, detalleRecepcionController.action);
 
-    router.route('/lic/tramite/:pId')
-        .get(isAuthenticated, productoController.listcompratramite);
     router.route('/lic/recepcion/:pId')
         .get(isAuthenticated, detalleRecepcionController.listProductChilds);
+
+    router.route('/lic/tramite/:pId')
+        .get(isAuthenticated, productoController.listcompratramite);
+
+    router.route('/lic/snow')
+        .get(isAuthenticated, snowController.get)
+        .post(isAuthenticated, snowController.upload);
+
 
     return router;
 };

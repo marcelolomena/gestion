@@ -215,6 +215,7 @@ function fromDate(fecha) {
 function now() {
     return new Date(Date.now())
 }
+
 module.exports = {
     findById:findById,
     createP: createP,
@@ -284,6 +285,7 @@ function getFilters(filters) {
     }
     return [];
 }
+
 var pp = {
     'eq': '==',
     'ne': '!',

@@ -5,6 +5,11 @@ var _ = require('lodash');
 
 var entity = models.[Entity];
 entity.belongsTo(models.[Entity], { foreignKey: '[foreignKey]' });
+var includes = [
+    {
+        model: models.[foreignEntity]
+    }
+];
 
 function map(req) {
     return {
@@ -16,11 +21,7 @@ function mapper(data) {
         return item;
     });
 }
-var includes = [
-    {
-        model: models.[foreignEntity]
-    }
-];
+
 
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
