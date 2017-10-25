@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
         }, idRecepcion: {
             field: 'idrecepcion',
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'recepcion',
                 key: 'id'
@@ -80,7 +80,11 @@ module.exports = function (sequelize, DataTypes) {
         }, monto: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: true
-        }, cantidad: {
+        }, montoSoporte: {
+            field:'montosoporte',
+            type: DataTypes.DECIMAL(10, 2),
+            allowNull: true
+        },cantidad: {
             type: DataTypes.INTEGER,
             allowNull: true
         }, ilimitado:{

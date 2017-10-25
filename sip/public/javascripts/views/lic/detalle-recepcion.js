@@ -367,7 +367,7 @@ var detalleRecepcionGrid = {
                 editable: true,
                 edittype: 'checkbox',
                 editoptions: {
-                    value:'true:false',
+                    value: 'true:false',
                     defaultValue: false,
                     dataEvents: [{
                         type: 'change', fn: function (e) {
@@ -375,14 +375,14 @@ var detalleRecepcionGrid = {
                             if (this.checked) {
                                 cant.val(0);
                                 cant.attr('readonly', 'readonly');
-                            } else{
+                            } else {
                                 cant.val('');
                                 cant.removeAttr('readonly');
                             }
-                         }
+                        }
                     }]
                 },
-                editrules: { required: true },
+                editrules: { required: false },
             }, {
                 label: 'Moneda',
                 name: 'idMoneda',
@@ -408,6 +408,17 @@ var detalleRecepcionGrid = {
             }, {
                 label: 'Monto',
                 name: 'monto',
+                width: 80,
+                align: 'center',
+                sortable: true,
+                hidden: false,
+                editable: true,
+                editoptions: { defaultValue: '0' },
+                editrules: { number: true },
+                search: false
+            }, {
+                label: 'Monto Soporte',
+                name: 'montoSoporte',
                 width: 80,
                 align: 'center',
                 sortable: true,

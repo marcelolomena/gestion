@@ -4,7 +4,7 @@ var logger = require('../../utils/logger');
 var nodeExcel = require('excel-export');
 var _ = require('lodash');
 
-function findById(entity, id){
+function findById(entity, id) {
     return entity.findById(id)
 }
 
@@ -38,7 +38,7 @@ function updateP(entity, data) {
 }
 
 function update(entity, data, res) {
-   return updateP(entity, data)
+    return updateP(entity, data)
         .then(function (updated) {
             return res.json({
                 success: true,
@@ -164,8 +164,13 @@ function listChilds(req, res, entity, pIdName, includes, transformer) {
     });
 }
 
+function listAllP(entity) {
+    return entity.findAll();
+}
+
 function listAll(req, res, entity, mapper) {
-    entity.findAll().then(function (rows) {
+    listAllP(entity)
+    .then(function (rows) {
         return res.json(_.orderBy(_.map(rows, mapper), ['nombre']));
     }).catch(function (err) {
         logger.error(entity.name + ':listAll.findAll, ' + err.message);
@@ -217,7 +222,7 @@ function now() {
 }
 
 module.exports = {
-    findById:findById,
+    findById: findById,
     createP: createP,
     updateP: updateP,
     destroyP: destroyP,

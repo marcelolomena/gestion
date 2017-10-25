@@ -15,32 +15,13 @@ var includes = [
         model: models.traduccion
     }
 ];
-function map(req) {
-    return {
-        id: req.body.id || 0,
-    }
-}
+
 function mapper(data) {
     return _.map(data, function (item) {
         return item;
     });
 }
 
-
-function list(req, res) {
-    base.list(req, res, entity, includes, mapper);
-}
-
-function action(req, res) {
-    switch (req.body.oper) {
-        case 'add':
-            return base.create(entity, map(req), res);
-        case 'edit':
-            return base.update(entity, map(req), res);
-        case 'del':
-            return base.destroy(entity, req.body.id, res);
-    }
-}
 function get(req, res) {
     var tmpl = pug.renderFile('views/lic/upload.pug', {
         title: 'platapapannn'
@@ -150,56 +131,66 @@ function xupload(req, res) {
 
     return req.pipe(busboy);
 };
-function upload(req,res){
+
+function saveUpload(actividad, archivo){
+   base.createP(models.bitacoraCarga, {})
+}
+function upload(req, res) {
     var data = [];
     var head = false;
     var header;
     var rows = [];
     var busboy = new Busboy({ headers: req.headers });
-    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        var saveTo = path.join(__dirname, '../../', 'docs', filename);
+    var saveTo;
+    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+
+        saveTo = path.join(__dirname, '../../', 'docs', filename);
         file.pipe(fs.createWriteStream(saveTo));
-      console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
-      file.on('data', function(chunk) {
-        var lines = _.split(chunk, '\r\n');
-        _.each(lines, function (line) {
-            var record = _.split(line, ';');
-            if (head) {
-                if (record[0] !== '') {
-                    data.push(record);
+
+        console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
+        
+        file.on('data', function (chunk) {
+            var lines = _.split(chunk, '\r\n');
+            _.each(lines, function (line) {
+                var record = _.split(line, ';');
+                if (head) {
+                    if (record[0] !== '') {
+                        data.push(record);
+                    }
+                } else {
+                    head = true;
+                    header = record;
                 }
-            } else {
-                head = true;
-                header = record;
-            }
-        });
-        console.log('File [' + fieldname + '] got ' + chunk.length + ' bytes');
-      });
-      file.on('end', function() {
-          _.each(data, function(value, key){
-              var row = {};
-            _.each(header, function(v,k){
-                row[_.replace(v,/"/g,'')] = _.replace(value[k],/"/g,'');
             });
-            rows.push(row);
-          });
-        console.log('File [' + fieldname + '] Finished');
-      });
+            console.log('File [' + fieldname + '] got ' + chunk.length + ' bytes');
+        });
+
+        file.on('end', function () {
+            _.each(data, function (value, key) {
+                var row = {};
+                _.each(header, function (v, k) {
+                    row[_.replace(v, /"/g, '')] = _.replace(value[k], /"/g, '');
+                });
+                rows.push(row);
+            });
+            console.log('File [' + fieldname + '] Finished');
+        });
     });
-    busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
-      console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+    busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+        console.log('Field [' + fieldname + ']: value: ' + inspect(val));
     });
-    busboy.on('finish', function() {
-      console.log('Done parsing form!');
-      res.writeHead(200, { Connection: 'close', Location: '/' });
-      res.end();
+    busboy.on('finish', function () {
+        console.log('Done parsing form!');
+        res.redirect('/lic/snow');
+        //   res.writeHead(200, { Connection: 'close', Location: '/lic/snow' });
+        //   res.render
+
+        //   res.end();
     });
     req.pipe(busboy);
 
 }
 module.exports = {
-    list: list,
-    action: action,
-    upload: upload,
-    get: get
+    get: get,
+    upload: upload
 }

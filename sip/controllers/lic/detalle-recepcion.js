@@ -5,18 +5,10 @@ var _ = require('lodash');
 var logger = require('../../utils/logger');
 
 var entity = models.detalleRecepcion;
-entity.belongsTo(models.proveedor, {
-    foreignKey: 'idProveedor'
-});
-entity.belongsTo(models.fabricante, {
-    foreignKey: 'idFabricante'
-});
-entity.belongsTo(models.producto, {
-    foreignKey: 'idProducto'
-});
-entity.belongsTo(models.moneda, {
-    foreignKey: 'idMoneda'
-});
+entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
+entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
+entity.belongsTo(models.producto, { foreignKey: 'idProducto' });
+entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
 var includes = [
     {
         model: models.proveedor
@@ -54,6 +46,7 @@ function map(req) {
         fechaControl: base.toDate(req.body.fechaControl),
         idMoneda: parseInt(req.body.idMoneda),
         monto: parseInt(req.body.monto || 0),
+        montoSoporte: parseInt(req.body.montoSoporte || 0),
         cantidad: req.body.cantidad ? parseInt(req.body.cantidad) : 0,
         comentario: req.body.comentario,
         numsolicitud: req.body.numsolicitud ? parseInt(req.body.numsolicitud) : null,
@@ -94,6 +87,7 @@ function mapper(data) {
             idMoneda: item.idMoneda,
             moneda: { nombre: item.moneda.moneda },
             monto: item.monto,
+            montoSoporte:item.montoSoporte,
             cantidad: item.cantidad,
             comprador: item.comprador,
             comentario: item.comentario,
@@ -104,6 +98,7 @@ function mapper(data) {
         };
     });
 }
+
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idRecepcion', includes, mapper);
 }
@@ -142,8 +137,8 @@ function addDetalle(data, res) {
             return base.findById(models.producto, data.idProducto)
                 .then(function (item) {
                     var prdData = { id: data.idProducto, ilimitado: data.ilimitado };
-                    if (!updData.ilimitado) {
-                        updData.licStock = item.licStock + data.cantidad;
+                    if (!prdData.ilimitado) {
+                        prdData.licStock = item.licStock + data.cantidad;
                     }
                     if (!item.idClasificacion) { prdData.idClasificacion = data.idClasificacion; }
                     if (!item.idTipoInstalacion) { prdData.idTipoInstalacion = data.idTipoInstalacion; }
@@ -267,6 +262,6 @@ function listDetalleCompras(req, res) {
 module.exports = {
     listChilds: listChilds,
     action: action,
-    listProductChilds:listProductChilds,
+    listProductChilds: listProductChilds,
     listDetalleCompras: listDetalleCompras
 }
