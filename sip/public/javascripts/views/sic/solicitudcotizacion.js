@@ -46,7 +46,8 @@ $(document).ready(function () {
 
     t1 += "</div>";
 
-    var $grid = $("#gridMaster"), solicitudcotizacionModel = [
+    var $grid = $("#gridMaster"),
+	solicitudcotizacionModel = [
         { label: 'ID', name: 'id', key: true, hidden: true },
         {
             label: 'Estado',
@@ -297,7 +298,7 @@ $(document).ready(function () {
                 buildSelect: function (response) {
                     var rowKey = $grid.getGridParam("selrow");
                     var rowData = $grid.getRowData(rowKey);
-                    var thissid = rowData.uidpmo;
+                    var thissid = rowData.idnegociador;
                     var data = JSON.parse(response);
                     var s = "<select>";
                     s += '<option value="0">--Escoger Negociador--</option>';

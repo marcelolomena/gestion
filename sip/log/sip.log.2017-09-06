@@ -1,0 +1,168 @@
+09:29:48 - error:  TypeError: Cannot read property 'contenido' of null
+    at Model.<anonymous> (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:125:53)
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:111:16
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at module.exports (c:\Wrk\DAE\BCH\licencias\gestion\sip\policies\isAuthenticated.js:3:16)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:349:14)
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:365:14)
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:410:3)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+10:02:19 - error:  TypeError: Cannot read property 'contenido' of null
+    at Model.<anonymous> (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:125:53)
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:111:16
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at module.exports (c:\Wrk\DAE\BCH\licencias\gestion\sip\policies\isAuthenticated.js:3:16)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:349:14)
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:365:14)
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:410:3)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+10:03:07 - error:  TypeError: Cannot read property 'contenido' of null
+    at Model.<anonymous> (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:125:53)
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:111:16
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at module.exports (c:\Wrk\DAE\BCH\licencias\gestion\sip\policies\isAuthenticated.js:3:16)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:349:14)
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:365:14)
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:410:3)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+10:09:07 - error:  TypeError: Cannot read property 'contenido' of null
+    at Model.<anonymous> (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:125:53)
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:111:16
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at module.exports (c:\Wrk\DAE\BCH\licencias\gestion\sip\policies\isAuthenticated.js:3:16)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:349:14)
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:365:14)
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:410:3)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+10:09:54 - error:  TypeError: Cannot read property 'contenido' of null
+    at Model.<anonymous> (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:125:53)
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:111:16
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at module.exports (c:\Wrk\DAE\BCH\licencias\gestion\sip\policies\isAuthenticated.js:3:16)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:349:14)
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:365:14)
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:410:3)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+10:11:00 - error:  TypeError: Cannot read property 'contenido' of null
+    at Model.<anonymous> (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:125:53)
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:111:16
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at module.exports (c:\Wrk\DAE\BCH\licencias\gestion\sip\policies\isAuthenticated.js:3:16)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:349:14)
+    at param (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:365:14)
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:410:3)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)

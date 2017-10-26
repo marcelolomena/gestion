@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 /**
  * Module dependencies.
@@ -17,7 +18,7 @@ var app = require('../app'),
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT | '3000');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 var options = {
@@ -38,7 +39,7 @@ var io = require('socket.io')(secure_server);
 
 
 
-if (cluster.isMaster) {
+if (cluster.isMaster && process.env.NODE_ENV==='production') {
   var numWorkers = require('os').cpus().length;
 
   logger.debug('Iniciando cluster maestro con ' + numWorkers + ' trabajadores...');

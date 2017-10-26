@@ -103,9 +103,6 @@ module.exports = function (passport) {
     router.route('/sic/preguntas/:id')
         .get(isAuthenticated, preguntasController.list);
 
-    //router.route('/sic/asignarpreguntas/:id')
-    //    .get(isAuthenticated, preguntasController.listasignar);
-
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, serviciosController.list);
 
@@ -756,7 +753,7 @@ module.exports = function (passport) {
 
     router.route('/sic/triada/:id')
         .get(isAuthenticated, triadaController.list);
-    
+
     router.route('/sic/triada/action')
         .post(isAuthenticated, triadaController.action);
 
