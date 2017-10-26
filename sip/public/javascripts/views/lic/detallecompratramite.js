@@ -333,6 +333,44 @@ function renderGrid(loadurl, tableId) {
     ];
     var grid = new zs.StackGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC'], showChildGrid);
 
+    function editar_fecha(fecha, intervalo, dma, simbolo) {
+        
+         var simbolo = simbolo || "-";
+         var arrayFecha = fecha.split(simbolo);
+         var dia = arrayFecha[0];
+         var mes = arrayFecha[1];
+         var anio = arrayFecha[2]; 
+         
+         var fechaInicial = new Date(anio, mes - 1, dia);
+         var fechaFinal = fechaInicial;
+         if(dma=="m" || dma=="M"){
+           fechaFinal.setMonth(fechaInicial.getMonth()+parseInt(intervalo));
+         }else if(dma=="y" || dma=="Y"){
+           fechaFinal.setFullYear(fechaInicial.getFullYear()+parseInt(intervalo));
+         }else if(dma=="d" || dma=="D"){
+           fechaFinal.setDate(fechaInicial.getDate()+parseInt(intervalo));
+         }else{
+           return fecha;
+         }
+         dia = fechaFinal.getDate();
+         mes = fechaFinal.getMonth() + 1;
+         anio = fechaFinal.getFullYear();
+        
+         dia = (dia.toString().length == 1) ? "0" + dia.toString() : dia;
+         mes = (mes.toString().length == 1) ? "0" + mes.toString() : mes;
+        
+         return dia + "-" + mes + "-" + anio;
+       }
+       
+
+
+
+
+
+
+
+
+
     function beforeSubmit(postdata, formid) {
         if (!(postdata.idFabricante || postdata.otroFabricante)) {
             return [false, 'Debe seleccionar Fabricante o ingresar Otro Fabricante', ''];
@@ -349,15 +387,38 @@ function renderGrid(loadurl, tableId) {
         if (f1compare > f2compare) {
             return [false, 'La fecha de Termino debe ser mayor a la fecha de Inicio'];
         } else if (f2compare < f3compare) {
-            return [false, 'La fecha de Control debe ser menor a la fecha de Termino']
+            return [false, 'La fecha de Control debe ser menor a la fecha de Termino'];
         } else if (f3compare < f1compare) {
-            return [false, 'La fecha de Control debe ser mayor a la fecha de Inicio']
+            return [false, 'La fecha de Control debe ser mayor a la fecha de Inicio'];
         } else {
             return [true, '', ''];
         }
     }
+
+    function beforeShowForm(postdata, formid) {
+        var rowKey = $table.getGridParam("selrow");
+        var rowData = $table.getRowData(rowKey);
+        var estado = rowData.fecha;
+        setTimeout(function () {
+            if (estado == 'Recepcionado') {
+                $("#estado").attr('disabled', true);
+            }
+        }, 550);
+    }
+
+    grid.prmEdit.beforeShowForm = beforeShowForm;
     grid.prmAdd.beforeSubmit = beforeSubmit;
     grid.prmEdit.beforeSubmit = beforeSubmit;
+    grid.prmEdit.onInitializeForm = function (formid, action) {
+        if (action === 'edit') {
+            setTimeout(function () {
+                $("#idFabricante").attr('disabled', true);
+                $("#otroFabricante").attr('disabled', true);
+                $("#idProducto").attr('disabled', true);
+                $("#otroProducto").attr('disabled', true);
+            }, 500);
+        }
+    };
     grid.build();
 }
 
