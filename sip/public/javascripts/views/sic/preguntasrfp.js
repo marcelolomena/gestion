@@ -1,16 +1,11 @@
-//doc.js
 var gridPreguntasrfp = {
 
     renderGrid: function (loadurl, parentRowKey, targ) {
-        //var $gridTab = $(targ + "_t")
         var $gridTab = $(targ + "_t_" + parentRowKey)
-
         var tmplServ = "<div id='responsive-form' class='clearfix'>";
-
         tmplServ += "<div class='form-row'>";
         tmplServ += "<div class='column-full'>Pregunta<span style='color:red'>*</span>{fileToUpload}</div>";
         tmplServ += "</div>";
-
         tmplServ += "<hr style='width:100%;'/>";
         tmplServ += "<div> {sData} {cData}  </div>";
         tmplServ += "</div>";
@@ -33,12 +28,8 @@ var gridPreguntasrfp = {
                         enctype: "multipart/form-data"
                     },
                     search: false
-                },
-
-            ],
-            //rowList: [3, 6],
-            //page: 1,
-            rowNum: 10,
+                }
+            ], rowNum: 10,
             pager: '#navGridPreg',
             styleUI: "Bootstrap",
             sortname: 'id',
@@ -48,8 +39,7 @@ var gridPreguntasrfp = {
             width: "auto",
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
-            },
-            viewrecords: true,
+            }, viewrecords: true,
             caption: "Preguntas al Proveedor",
             loadComplete: function (data) {
                 var thisId = $.jgrid.jqID(this.id);
@@ -69,8 +59,13 @@ var gridPreguntasrfp = {
                 });
             }
         });
-        $gridTab.jqGrid('navGrid', '#navGridPreg', { edit: false, add: true, del: true, search: false },
+        $gridTab.jqGrid('navGrid', '#navGridPreg',
             {
+                edit: false,
+                add: true,
+                del: true,
+                search: false
+            }, {
                 editCaption: "Modifica",
                 closeAfterEdit: true,
                 recreateForm: true,
@@ -87,22 +82,17 @@ var gridPreguntasrfp = {
                 ajaxEditOptions: sipLibrary.jsonOptions,
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
-                    //$('input#notacriticidad', form).attr('readonly', 'readonly');
-                },
-                beforeSubmit: function (postdata, formid) {
+
+                }, beforeSubmit: function (postdata, formid) {
                     if (postdata.idsolicitudcotizacion == 0) {
                         return [false, "Pregunta : Campo obligatorio", ""];
                     } else {
                         return [true, "", ""]
                     }
-                },
-                onclickSubmit: function (rowid) {
+                }, onclickSubmit: function (rowid) {
                     return { idsolicitudcotizacion: parentRowKey };
-                },afterSubmit: UploadPre
-
-            },
-            
-            {
+                }, afterSubmit: UploadPre
+            }, {
                 closeAfterDelete: true,
                 recreateForm: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
@@ -114,7 +104,6 @@ var gridPreguntasrfp = {
                     return 'Error: ' + data.responseText
                 }
             }
-
         );
 
         $gridTab.jqGrid('navButtonAdd', '#navGridPreg', {
@@ -124,34 +113,24 @@ var gridPreguntasrfp = {
             title: "Generar Documento",
             position: "last",
             onClickButton: function () {
-                //var rowKey = $gridTab.getGridParam("selrow");
-                //var parentRowData = $("#gridMaster").getRowData(parentRowKey);
-                //console.log(parentRowData.idtipo)
-                //console.log(parentRowData.idgrupo)
                 try {
                     var url = '/sic/descargapreguntas/' + parentRowKey;
                     $gridTab.jqGrid('excelExport', { "url": url });
                 } catch (e) {
                     console.log("error: " + e)
-
                 }
-
             }
         });
-
-
     }
 }
 
 function UploadPre(response, postdata) {
-    //console.log(postdata)
     var data = $.parseJSON(response.responseText);
     if (data.success) {
         if ($("#fileToUpload").val() != "") {
             ajaxPregUpload(data.id);
         }
     }
-
     return [data.success, data.message, data.id];
 }
 
@@ -166,7 +145,7 @@ function ajaxPregUpload(id) {
             secureuri: false,
             fileElementId: 'fileToUpload',
             dataType: 'json',
-            data: { id: id},
+            data: { id: id },
             success: function (data, status) {
                 if (typeof (data.success) != 'undefined') {
                     if (data.success == true) {
@@ -186,4 +165,3 @@ function ajaxPregUpload(id) {
         })
     });
 }
-

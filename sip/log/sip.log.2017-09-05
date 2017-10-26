@@ -1,0 +1,190 @@
+16:23:19 - error:  Error: No autorizado
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\utils\menu.js:177:35
+From previous event:
+    at Promise.then (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Strategy._verify (C:\Wrk\DAE\BCH\licencias\gestion\sip\passport\login.js:46:7)
+    at Strategy.authenticate (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport-local\lib\strategy.js:88:12)
+    at attempt (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport\lib\middleware\authenticate.js:361:16)
+    at authenticate (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport\lib\middleware\authenticate.js:362:7)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at Function.process_params (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+16:25:34 - error:  Error: No autorizado
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\utils\menu.js:177:35
+From previous event:
+    at Promise.then (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Strategy._verify (C:\Wrk\DAE\BCH\licencias\gestion\sip\passport\login.js:46:7)
+    at Strategy.authenticate (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport-local\lib\strategy.js:88:12)
+    at attempt (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport\lib\middleware\authenticate.js:361:16)
+    at authenticate (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport\lib\middleware\authenticate.js:362:7)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at Function.process_params (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+16:25:49 - error:  Error: No autorizado
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\utils\menu.js:177:35
+From previous event:
+    at Promise.then (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Strategy._verify (C:\Wrk\DAE\BCH\licencias\gestion\sip\passport\login.js:46:7)
+    at Strategy.authenticate (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport-local\lib\strategy.js:88:12)
+    at attempt (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport\lib\middleware\authenticate.js:361:16)
+    at authenticate (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport\lib\middleware\authenticate.js:362:7)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at Function.process_params (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+16:30:53 - error:  TypeError: Cannot read property 'contenido' of null
+    at Model.<anonymous> (C:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:52:65)
+From previous event:
+    at Promise.then (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Model.req.session.save (C:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:39:28)
+    at runCallback (timers.js:672:20)
+    at tryOnImmediate (timers.js:645:5)
+    at processImmediate [as _immediateCallback] (timers.js:617:5)
+16:52:04 - error:  TypeError: Cannot read property 'contenido' of null
+    at Model.<anonymous> (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:52:65)
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Model.module.exports.router.post.menu.builUserdMenu.req.session.save (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:39:28)
+    at runCallback (timers.js:672:20)
+    at tryOnImmediate (timers.js:645:5)
+    at processImmediate [as _immediateCallback] (timers.js:617:5)
+16:56:59 - error:  TypeError: Cannot read property 'contenido' of null
+    at Model.<anonymous> (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:55:65)
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Model.module.exports.router.post.menu.builUserdMenu.req.session.save (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:41:28)
+    at runCallback (timers.js:672:20)
+    at tryOnImmediate (timers.js:645:5)
+    at processImmediate [as _immediateCallback] (timers.js:617:5)
+17:01:30 - error:  Error: No autorizado
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\utils\menu.js:177:35
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Strategy._verify (c:\Wrk\DAE\BCH\licencias\gestion\sip\passport\login.js:46:7)
+    at Strategy.authenticate (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport-local\lib\strategy.js:88:12)
+    at attempt (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport\lib\middleware\authenticate.js:361:16)
+    at authenticate (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport\lib\middleware\authenticate.js:362:7)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+17:01:55 - error:  Error: No autorizado
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\utils\menu.js:177:35
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Strategy._verify (c:\Wrk\DAE\BCH\licencias\gestion\sip\passport\login.js:46:7)
+    at Strategy.authenticate (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport-local\lib\strategy.js:88:12)
+    at attempt (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport\lib\middleware\authenticate.js:361:16)
+    at authenticate (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\passport\lib\middleware\authenticate.js:362:7)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:131:13)
+    at Route.dispatch (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:277:22
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:330:12)
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:271:10)
+    at c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:618:15
+    at next (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:256:14)
+    at Function.handle (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:176:3)
+    at router (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:46:12)
+    at Layer.handle [as handle_request] (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\express\lib\router\index.js:312:13)
+17:04:00 - error:  Error: ENOENT: no such file or directory, open 'c:\Wrk\DAE\BCH\licencias\gestion\sip\views\lic\page_home3.pug'
+    at Error (native)
+    at Object.fs.openSync (fs.js:641:18)
+    at Object.fs.readFileSync (fs.js:509:33)
+    at handleTemplateCache (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\pug\lib\index.js:215:37)
+    at Object.exports.renderFile (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\pug\lib\index.js:428:10)
+    at Model.<anonymous> (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:55:48)
+From previous event:
+    at Promise.then (c:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Model.module.exports.router.post.menu.builUserdMenu.req.session.save (c:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:41:28)
+    at runCallback (timers.js:672:20)
+    at tryOnImmediate (timers.js:645:5)
+    at processImmediate [as _immediateCallback] (timers.js:617:5)
+17:05:31 - error:  Error: ENOENT: no such file or directory, open 'C:\Wrk\DAE\BCH\licencias\gestion\sip\views\lic\page_home3.pug'
+    at Error (native)
+    at Object.fs.openSync (fs.js:641:18)
+    at Object.fs.readFileSync (fs.js:509:33)
+    at handleTemplateCache (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\pug\lib\index.js:215:37)
+    at Object.exports.renderFile (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\pug\lib\index.js:428:10)
+    at Model.<anonymous> (C:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:55:48)
+From previous event:
+    at Promise.then (C:\Wrk\DAE\BCH\licencias\gestion\sip\node_modules\sequelize\lib\promise.js:21:17)
+    at Model.req.session.save (C:\Wrk\DAE\BCH\licencias\gestion\sip\routes\sistema.js:41:28)
+    at runCallback (timers.js:672:20)
+    at tryOnImmediate (timers.js:645:5)
+    at processImmediate [as _immediateCallback] (timers.js:617:5)

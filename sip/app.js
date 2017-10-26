@@ -36,7 +36,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: new SequelizeStore({
-    checkExpirationInterval: 60 * 60 * 1000,
+    checkExpirationInterval: 15 * 60 * 1000,
     expiration: 24 * 60 * 60 * 1000,
     db: sequelize
   })
@@ -61,6 +61,7 @@ app.use(function (req, res, next) {
 
 if (app.get('env') === 'development') {
   app.use(function (err, req, res, next) {
+    logger.error(err);
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
