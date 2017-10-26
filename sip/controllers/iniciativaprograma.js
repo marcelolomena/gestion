@@ -12,7 +12,7 @@ exports.action = function (req, res) {
     
     logger.debug("*************el gasto: "+gasto+ ", "+req.body.pptoestimadogasto);  
     if (req.body.pptoestimadogasto != ""){
-      gasto = req.body.pptoestimadogasto.replace(",", ".");
+      gasto = req.body.pptoestimadogasto; //.replace(",", ".");
       logger.debug("*************el gasto: "+gasto+ ", "+req.body.pptoestimadogasto);
     }
 

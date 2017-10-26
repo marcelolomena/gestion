@@ -96,7 +96,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/programas',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#table_iniciativa");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.program_name;
@@ -130,7 +130,7 @@ $(document).ready(function () {
                                 url: '/usuariosporprograma/' + thispid,
                                 async: false,
                                 success: function (data) {
-                                    var grid = $('#grid');
+                                    var grid = $('#table_iniciativa');
                                     var rowKey = grid.getGridParam("selrow");
                                     var rowData = grid.getRowData(rowKey);
                                     var thissid = rowData.uidlider;
@@ -275,6 +275,26 @@ $(document).ready(function () {
             edittype: "select",
             editoptions: {
                 value: "0:--Escoger Lider--",
+                /*
+                buildSelect: function (response) {
+                    var grid = $('#table_iniciativa');
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.uidlider;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Lider--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].uid == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                */
+
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#lider").val($('option:selected', this).val());
@@ -304,6 +324,25 @@ $(document).ready(function () {
             edittype: "select",
             editoptions: {
                 value: "0:--Escoger Lider--",
+                /*
+                buildSelect: function (response) {
+                    var grid = $('#table_iniciativa');
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.uidjefeproyecto;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Jefe de Proyecto--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].uid == thissid) {
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                */
                 dataEvents: [{
                     type: 'change', fn: function (e) {
                         $("input#jefeproyecto").val($('option:selected', this).val());
@@ -435,7 +474,7 @@ $(document).ready(function () {
         */
     ];
 
-    $("#grid").jqGrid({
+    $("#table_iniciativa").jqGrid({
         url: '/presupuestoenvuelo/list',
         mtype: "POST",
         datatype: "json",
@@ -449,7 +488,7 @@ $(document).ready(function () {
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
-        pager: "#pager",
+        pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/presupuestoenvuelo/action',
@@ -461,6 +500,9 @@ $(document).ready(function () {
             minusicon: "glyphicon-hand-down"
         },
         onSelectRow: function (id) {
+            //var temp = $('#table_iniciativa').getRowData($('#table_iniciativa').getGridParam("selrow")).program_id;
+            //$("#table_iniciativa").setColProp('uidjefeproyecto', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
+            //$("#table_iniciativa").setColProp('uidlider', { editoptions: { dataUrl: '/usuariosporprograma/' + temp } });
         },
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
@@ -468,20 +510,20 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         },
         gridComplete: function () {
-            var recs = $("#grid").getGridParam("reccount");
+            var recs = $("#table_iniciativa").getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#grid").addRowData("blankRow", { "sap": "", "codigoart": "No hay datos" });
+                $("#table_iniciativa").addRowData("blankRow", { "sap": "", "codigoart": "No hay datos" });
             }
         },
     });
     jQuery.extend(jQuery.jgrid.edit, { recreateForm: true });
-    $("#grid").jqGrid('filterToolbar', {
+    $("#table_iniciativa").jqGrid('filterToolbar', {
         stringResult: true, searchOperators: true,
         searchOnEnter: true, defaultSearch: 'cn'
     });
 
-    $('#grid').jqGrid('navGrid', "#pager", {
+    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {
         edit: true, add: true, del: true, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },
@@ -534,7 +576,7 @@ $(document).ready(function () {
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
                 $('input#codigoart', form).attr('readonly', 'readonly');
-                var grid = $("#grid");
+                var grid = $("#table_iniciativa");
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
                 var thissid = rowData.id;
@@ -542,13 +584,13 @@ $(document).ready(function () {
                     alert("Debe seleccionar una fila");
                     return [false, result.error_text, ""];
                 }
-                var temp = $('#grid').getRowData($('#grid').getGridParam("selrow")).program_id;
+                var temp = $('#table_iniciativa').getRowData($('#table_iniciativa').getGridParam("selrow")).program_id;
 
                 $.ajax({
                     type: "GET",
                     url: '/usuariosporprograma/' + temp,
                     success: function (data) {
-                        var grid = $('#grid');
+                        var grid = $('#table_iniciativa');
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
                         var thissid2 = rowData.uidlider;
@@ -567,10 +609,10 @@ $(document).ready(function () {
                     }
                 });
 
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
                 //$('input#codigoart', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
             }
         },
         {
@@ -620,14 +662,14 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 } else {
                     var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombreproyecto\",\"op\":\"cn\",\"data\":\"" + postdata.nombreproyecto + "\"}]}";
-                    $("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                    $("#table_iniciativa").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#grid').attr('id'));
+                sipLibrary.centerDialog($('#table_iniciativa').attr('id'));
                 $('input#codigoart', form).attr('readonly', 'readonly');
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_iniciativa").attr('id'));
             }
         },
         {
@@ -648,10 +690,10 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
-    $("#pager_left").css("width", "");
+    $("#pager_iniciativa_left").css("width", "");
     function showSubGrids(subgrid_id, row_id) {
         gridTareaEnVuelo(subgrid_id, row_id, 'tareaenvuelo');
-        gridFechaEnVuelo(subgrid_id, row_id, 'fechaenvuelo');
+        //gridFechaEnVuelo(subgrid_id, row_id, 'fechaenvuelo');
         gridConversionEnVuelo(subgrid_id, row_id, 'conversionenvuelo');
     }
 });
