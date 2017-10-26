@@ -10,7 +10,7 @@ entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
 entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
 entity.belongsTo(models.tipoInstalacion, { foreignKey: 'idTipoInstalacion' });
 entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
-entity.hasMany(models.detalleRecepcion, {  sourceKey: 'id', foreignKey: 'idProducto' });
+entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' });
 var includes = [
     {
         model: models.fabricante
@@ -21,9 +21,11 @@ var includes = [
     }, {
         model: models.tipoLicenciamiento
     }, {
-        model: models.detalleRecepcion,
+        model: models.compra,
         include: [
             {
+                model: models.estructuracuibch
+            }, {
                 model: models.moneda
             }, {
                 model: models.proveedor
@@ -70,14 +72,14 @@ function map(req) {
 function mapper(data) {
     var result = [];
     _.each(data, function (item) {
-        if (item.detalleRecepcions) {
-            _.each(item.detalleRecepcions, function (sItem) {
+        if (item.compras) {
+            _.each(item.compras, function (sItem) {
                 result.push({
                     id: sItem.id,
                     idProducto: item.id,
-                    contrato: sItem.numContrato,
+                    contrato: sItem.contrato,
                     ordenCompra: sItem.ordenCompra,
-                    idCui: sItem.cui,
+                    idCui: sItem.idCui,
                     sap: sItem.sap,
                     idFabricante: item.idFabricante,
                     idProveedor: sItem.idProveedor,
@@ -87,17 +89,19 @@ function mapper(data) {
                     idTipoLicenciamiento: item.idTipoLicenciamiento,
                     licStock: item.licStock,
                     licOcupadas: item.licOcupadas,
-                    fechaCompra: base.fromDate(sItem.fechaInicio),
-                    fechaExpiracion: base.fromDate(sItem.fechaTermino),
-                    licCompradas: sItem.cantidad,
+                    fechaCompra: base.fromDate(sItem.fechaCompra),
+                    fechaExpiracion: base.fromDate(sItem.fechaExpiracion),
+                    licCompradas: sItem.licCompradas,
+                    cantidadSoporte: sItem.cantidadSoporte,
                     idMoneda: sItem.idMoneda,
-                    valorLicencia: sItem.monto,
-                    valorSoporte: sItem.montoSoporte,
-                    fechaRenovaSoporte: base.fromDate(sItem.fechaControl),
+                    valorLicencia: sItem.valorLicencia,
+                    valorSoporte: sItem.valorSoporte,
+                    fechaRenovaSoporte: base.fromDate(sItem.fechaRenovaSoporte),
                     factura: sItem.factura,
                     comprador: sItem.comprador,
-                    correoComprador: sItem.mailComprador,
+                    correoComprador: sItem.correoComprador,
                     alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
+                    utilidad:item.utilidad,
                     fabricante: { nombre: item.fabricante ? item.fabricante.nombre : '' },
                     clasificacion: { nombre: item.clasificacion ? item.clasificacion.nombre : '' },
                     tipoInstalacion: { nombre: item.tipoInstalacion ? item.tipoInstalacion.nombre : '' },
@@ -118,14 +122,14 @@ function excelMapper(data) {
             _.each(item.compras, function (sItem) {
                 result.push([sItem.contrato,
                 sItem.ordenCompra || '',
-                sItem.estructuracuibch ? sItem.estructuracuibch.cui  : '',
+                sItem.estructuracuibch ? sItem.estructuracuibch.cui : '',
                 sItem.sap || '',
-                item.fabricante? item.fabricante.nombre:'',
+                item.fabricante ? item.fabricante.nombre : '',
                 sItem.proveedor.razonsocial,
                 item.nombre,
-                item.tipoInstalacion?item.tipoInstalacion.nombre:'',
-                item.clasificacion?item.clasificacion.nombre:'',
-                item.clasificacion?item.tipoLicenciamiento.nombre:'',
+                item.tipoInstalacion ? item.tipoInstalacion.nombre : '',
+                item.clasificacion ? item.clasificacion.nombre : '',
+                item.clasificacion ? item.tipoLicenciamiento.nombre : '',
                 base.fromDate(sItem.fechaCompra),
                 base.fromDate(sItem.fechaExpiracion),
                 sItem.licCompradas || '',
