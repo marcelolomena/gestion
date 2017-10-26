@@ -111,20 +111,29 @@ function saveProducto(data, res) {
 }
 
 function addDetalle(data, res) {
-   
+
     return base.createP(entity, data)
-    .then(function (created) {
-        return base.findById(models.producto, data.idProducto)
-            .then(function (item) {
-                return base.update(models.producto, { id: data.idProducto, licTramite: item.licTramite + data.numero }, res);
-            }).catch(function (err) {
-                logger.error('producto.LicTramite, ' + err);
-                return res.json({ error: 1, glosa: err.message });
-            })
-    }).catch(function (err) {
-        logger.error(entity.name + ':create, ' + err);
-        return res.json({ error: 1, glosa: err.message });
-    });
+        .then(function (created) {
+            return base.findById(models.producto, data.idProducto)
+                .then(function (item) {
+                    return base.update(models.producto, {
+                        id: data.idProducto,
+                        licTramite: item.licTramite + data.numero
+                    }, res);
+                }).catch(function (err) {
+                    logger.error('producto.LicTramite, ' + err);
+                    return res.json({
+                        error: 1,
+                        glosa: err.message
+                    });
+                })
+        }).catch(function (err) {
+            logger.error(entity.name + ':create, ' + err);
+            return res.json({
+                error: 1,
+                glosa: err.message
+            });
+        });
 }
 
 function action(req, res) {
@@ -144,66 +153,92 @@ function action(req, res) {
                         });
                     });
             } else {
-               return saveProducto(data, res);
+                return saveProducto(data, res);
             }
         case 'edit':
-        return base.findById(entity, req.body.id)
-        .then(function (detalle) {
-            return base.updateP(entity, data)
-                .then(function (updated) {
-                    return base.findById(models.producto, detalle.idProducto)
-                        .then(function (item) {
-                            return base.update(models.producto, { id: detalle.idProducto, licTramite: item.licTramite - detalle.numero + data.numero }, res);
+            return base.findById(entity, req.body.id)
+                .then(function (detalle) {
+                    return base.updateP(entity, data)
+                        .then(function (updated) {
+                            if (detalle.estado == 0) {
+                                return base.findById(models.producto, detalle.idProducto)
+                                .then(function (item) {
+                                    return base.update(models.producto, {
+                                        id: detalle.idProducto,
+                                        licTramite: item.licTramite - data.numero
+                                    }, res);
+                                }).catch(function (err) {
+                                    logger.error('producto.LicTramite Upd, ' + err);
+                                    return res.json({
+                                        error: 1,
+                                        glosa: err.message
+                                    });
+                                });
+                            } else {
+                                return base.findById(models.producto, detalle.idProducto)
+                                    .then(function (item) {
+                                        return base.update(models.producto, {
+                                            id: detalle.idProducto,
+                                            licTramite: item.licTramite - detalle.numero + data.numero
+                                        }, res);
+                                    }).catch(function (err) {
+                                        logger.error('producto.LicTramite Upd, ' + err);
+                                        return res.json({
+                                            error: 1,
+                                            glosa: err.message
+                                        });
+                                    });
+                            }
                         }).catch(function (err) {
-                            logger.error('producto.LicTramite Upd, ' + err);
-                            return res.json({ error: 1, glosa: err.message });
+                            logger.error(entity.name + ':destroy, ' + err);
+                            return res.json({
+                                success: false,
+                                glosa: err.message
+                            });
                         });
                 }).catch(function (err) {
-                    logger.error(entity.name + ':destroy, ' + err);
-                    return res.json({ success: false, glosa: err.message });
-                });
-        }).catch(function (err) {
-            logger.error(entity.name + ' by Id, ' + err);
-            return res.json({ error: 1, glosa: err.message });
-        });    
-        
-        // var data = map(req);
-            // var lictramiteactualizado = data.numero;
-            // return models.detalleCompraTramite.findById(data.idDetalleCompraTramite)
-            //     .then(function (item) {
-            //         item.licTramite = lictramiteactualizado - item.numero;
-            //         return models.producto.findById(data.idProducto)
-            //             .then(function (items) {
-            //                 items.licTramite = items.licTramite + data.numero;
-            //                 base.update(models.producto, items, res);
-            //             })
-            //     })
-            
-            // return base.update(entity, map(req), res);
-        case 'del':
-            // return base.destroy(entity, req.body.id, res);
-
-            return base.findById(entity, req.body.id)
-            .then(function (detalle) {
-                return base.destroyP(entity, detalle.id)
-                    .then(function (deleted) {
-                        return base.findById(models.producto, detalle.idProducto)
-                            .then(function (item) {
-                                return base.update(models.producto, { id: detalle.idProducto, licTramite: item.licTramite - detalle.numero }, res);
-                            }).catch(function (err) {
-                                logger.error('producto.LicTramite Upd, ' + err);
-                                return res.json({ error: 1, glosa: err.message });
-                            })
-                    })
-                    .catch(function (err) {
-                        logger.error(entity.name + ':destroy, ' + err);
-                        return res.json({ success: false, glosa: err.message });
+                    logger.error(entity.name + ' by Id, ' + err);
+                    return res.json({
+                        error: 1,
+                        glosa: err.message
                     });
-            })
-            .catch(function (err) {
-                logger.error(entity.name + 'by Id, ' + err);
-                return res.json({ error: 1, glosa: err.message });
-            });
+                });
+        case 'del':
+            return base.findById(entity, req.body.id)
+                .then(function (detalle) {
+                    return base.destroyP(entity, detalle.id)
+                        .then(function (deleted) {
+                            if(detalle.estado == 1){
+                                return base.findById(models.producto, detalle.idProducto)
+                                .then(function (item) {
+                                    return base.update(models.producto, {
+                                        id: detalle.idProducto,
+                                        licTramite: item.licTramite - detalle.numero
+                                    }, res);
+                                }).catch(function (err) {
+                                    logger.error('producto.LicTramite Upd, ' + err);
+                                    return res.json({
+                                        error: 1,
+                                        glosa: err.message
+                                    });
+                                })
+                            }
+                        })
+                        .catch(function (err) {
+                            logger.error(entity.name + ':destroy, ' + err);
+                            return res.json({
+                                success: false,
+                                glosa: err.message
+                            });
+                        });
+                })
+                .catch(function (err) {
+                    logger.error(entity.name + 'by Id, ' + err);
+                    return res.json({
+                        error: 1,
+                        glosa: err.message
+                    });
+                });
     }
 }
 

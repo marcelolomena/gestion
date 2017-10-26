@@ -20,7 +20,7 @@ var tabdetalleCompraTramiteGrid = {
             search: false
         },
         {
-            label: 'Número Licencias',
+            label: 'Cantidad',
             name: 'numero',
             width: 80,
             align: 'center',
