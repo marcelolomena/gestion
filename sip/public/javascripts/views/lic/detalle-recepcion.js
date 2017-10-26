@@ -363,7 +363,7 @@ var detalleRecepcionGrid = {
             }, {
                 label: 'Ilimitado',
                 name: 'ilimitado',
-                hidden: false,
+                hidden: true,
                 editable: true,
                 edittype: 'checkbox',
                 editoptions: {
@@ -417,7 +417,7 @@ var detalleRecepcionGrid = {
                 editrules: { number: true },
                 search: false
             }, {
-                label: 'Monto Soporte',
+                label: 'Soporte',
                 name: 'montoSoporte',
                 width: 80,
                 align: 'center',
@@ -433,6 +433,16 @@ var detalleRecepcionGrid = {
                 hidden: false,
                 editable: true
             }, {
+                label: 'Comprador',
+                name: 'comprador',
+                hidden: false,
+                editable: true
+            },{
+                label: 'Correo Comprador',
+                name: 'mailComprador',
+                hidden: false,
+                editable: true
+            },{
                 label: 'Comentario',
                 name: 'comentario',
                 hidden: true,

@@ -56,7 +56,9 @@ function map(req) {
         idClasificacion: req.body.idClasificacion,
         idTipoLicenciamiento: req.body.idTipoLicenciamiento,
         ilimitado: req.body.ilimitado === 'true',
-        factura: req.body.factura
+        factura: req.body.factura,
+        comprador: req.body.comprador,
+        mailComprador: req.body.mailComprador,
     }
 }
 function mapper(data) {
@@ -90,6 +92,7 @@ function mapper(data) {
             montoSoporte:item.montoSoporte,
             cantidad: item.cantidad,
             comprador: item.comprador,
+            mailComprador: item.mailComprador,
             comentario: item.comentario,
             fecha: base.fromDate(item.fecha),
             numsolicitud: item.numsolicitud,

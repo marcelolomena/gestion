@@ -41,6 +41,10 @@ module.exports = function (sequelize, DataTypes) {
         }, comprador: {
             type: DataTypes.STRING(250),
             allowNull: true
+        }, mailComprador: {
+            field:'mailcomprador',
+            type: DataTypes.STRING(250),
+            allowNull: true
         }, idFabricante: {
             field: 'idfabricante',
             type: DataTypes.INTEGER,
@@ -81,15 +85,15 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: true
         }, montoSoporte: {
-            field:'montosoporte',
+            field: 'montosoporte',
             type: DataTypes.DECIMAL(10, 2),
             allowNull: true
-        },cantidad: {
+        }, cantidad: {
             type: DataTypes.INTEGER,
             allowNull: true
-        }, ilimitado:{
+        }, ilimitado: {
             type: DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue: false,
             allowNull: false
         }, factura: {
             type: DataTypes.STRING(20),

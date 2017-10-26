@@ -10,7 +10,7 @@ entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
 entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
 entity.belongsTo(models.tipoInstalacion, { foreignKey: 'idTipoInstalacion' });
 entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
-entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' });
+entity.hasMany(models.detalleRecepcion, {  sourceKey: 'id', foreignKey: 'idProducto' });
 var includes = [
     {
         model: models.fabricante
@@ -21,11 +21,9 @@ var includes = [
     }, {
         model: models.tipoLicenciamiento
     }, {
-        model: models.compra,
+        model: models.detalleRecepcion,
         include: [
             {
-                model: models.estructuracuibch
-            }, {
                 model: models.moneda
             }, {
                 model: models.proveedor
@@ -72,14 +70,14 @@ function map(req) {
 function mapper(data) {
     var result = [];
     _.each(data, function (item) {
-        if (item.compras) {
-            _.each(item.compras, function (sItem) {
+        if (item.detalleRecepcions) {
+            _.each(item.detalleRecepcions, function (sItem) {
                 result.push({
                     id: sItem.id,
                     idProducto: item.id,
-                    contrato: sItem.contrato,
+                    contrato: sItem.numContrato,
                     ordenCompra: sItem.ordenCompra,
-                    idCui: sItem.idCui,
+                    idCui: sItem.cui,
                     sap: sItem.sap,
                     idFabricante: item.idFabricante,
                     idProveedor: sItem.idProveedor,
@@ -89,20 +87,17 @@ function mapper(data) {
                     idTipoLicenciamiento: item.idTipoLicenciamiento,
                     licStock: item.licStock,
                     licOcupadas: item.licOcupadas,
-                    fechaCompra: base.fromDate(sItem.fechaCompra),
-                    fechaExpiracion: base.fromDate(sItem.fechaExpiracion),
-                    licCompradas: sItem.licCompradas,
-                    cantidadSoporte: sItem.cantidadSoporte,
+                    fechaCompra: base.fromDate(sItem.fechaInicio),
+                    fechaExpiracion: base.fromDate(sItem.fechaTermino),
+                    licCompradas: sItem.cantidad,
                     idMoneda: sItem.idMoneda,
-                    valorLicencia: sItem.valorLicencia,
-                    valorSoporte: sItem.valorSoporte,
-                    fechaRenovaSoporte: base.fromDate(sItem.fechaRenovaSoporte),
+                    valorLicencia: sItem.monto,
+                    valorSoporte: sItem.montoSoporte,
+                    fechaRenovaSoporte: base.fromDate(sItem.fechaControl),
                     factura: sItem.factura,
                     comprador: sItem.comprador,
-                    correoComprador: sItem.correoComprador,
+                    correoComprador: sItem.mailComprador,
                     alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
-                    utilidad: item.utilidad,
-
                     fabricante: { nombre: item.fabricante ? item.fabricante.nombre : '' },
                     clasificacion: { nombre: item.clasificacion ? item.clasificacion.nombre : '' },
                     tipoInstalacion: { nombre: item.tipoInstalacion ? item.tipoInstalacion.nombre : '' },
