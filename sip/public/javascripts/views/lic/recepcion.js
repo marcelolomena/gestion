@@ -71,7 +71,7 @@
                             cuis.val(fila.idCui);
                             cuis.change();
                             $('input#numContrato').val(fila.numContrato);
-                            $('select#ordenCompra').val(fila.ordenCompra);
+                            $('input#ordenCompra').val(fila.ordenCompra);
                             $('select#idProveedor').val(fila.idProveedor);
                             $('input#comprador').val(fila.comprador);
                             $('textarea#comentario').val(fila.comentario);
