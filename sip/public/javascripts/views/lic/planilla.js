@@ -21,7 +21,7 @@
             return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
         } else if (!postdata.idMoneda) {
             return [false, "Moneda: Debe escoger un valor.", ""];
-        } else if (postdata.valorLicencias.trim().length == 0) {
+        } else if (postdata.valorLicencia == "0") {
             return [false, "Valor Licencias: Debe ingresar un valor.", ""];
         } else if (postdata.valorSoporte.trim().length == 0) {
             return [false, "Valor Soportes: Debe ingresar un valor.", ""];
@@ -36,7 +36,8 @@
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
         grid.prmEdit.beforeSubmit = beforeSubmit;
         grid.prmAdd.beforeSubmit = beforeSubmit;
-        grid.navParameters.del = false;
+        grid.navParameters.del = true;
+        grid.navParameters.add = false;
         grid.build();
         grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
     }
@@ -278,17 +279,31 @@
             align: 'center',
             sortable: false,
             editable: true,
-            editoptions: {
-                size: 10,
-                maxlengh: 10,
-                dataInit: function (element) {
-                    $(element).mask('00-00-0000', {
-                        placeholder: 'DD-MM-YYYY'
-                    });
+            formatter: function (cellvalue, options, rowObject) {
+                var val = rowObject.fechaExpiracion;
+                console.log("fecha:"+val);
+                if (val != null) {
+                    val = val.substring(0,10);
+                    console.log("fecha2:"+val);//2017-10-28
+                    var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                    return fechaok;
+                } else {
+                    return '';
                 }
             },
-            editrules: {
-                required: true
+            editoptions: {
+                'data-provide': 'datepicker',
+                dataInit: function (element) {
+                    $(element).mask("00-00-0000", {
+                        placeholder: "__-__-____"
+                    });
+                    $(element).datepicker({
+                        language: 'es',
+                        weekStart: 1,
+                        format: 'dd-mm-yyyy',
+                        autoclose: true
+                    })
+                }
             },
             search: false
         }, {
@@ -298,13 +313,30 @@
             width: 200,
             sortable: false,
             editable: true,
+            formatter: function (cellvalue, options, rowObject) {
+                var val = rowObject.fechaExpiracion;
+                console.log("fecha:"+val);
+                if (val != null) {
+                    val = val.substring(0,10);
+                    console.log("fecha2:"+val);//2017-10-28
+                    var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                    return fechaok;
+                } else {
+                    return '';
+                }
+            },
             editoptions: {
-                size: 10,
-                maxlengh: 10,
+                'data-provide': 'datepicker',
                 dataInit: function (element) {
-                    $(element).mask('00-00-0000', {
-                        placeholder: 'DD-MM-AAAA'
+                    $(element).mask("00-00-0000", {
+                        placeholder: "__-__-____"
                     });
+                    $(element).datepicker({
+                        language: 'es',
+                        weekStart: 1,
+                        format: 'dd-mm-yyyy',
+                        autoclose: true
+                    })
                 }
             },
             search: false
@@ -342,9 +374,6 @@
                     return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
                 }
             },
-            editrules: {
-                required: true
-            },
             search: false
         }, {
             label: 'Valor Licencias',
@@ -380,17 +409,31 @@
             align: 'center',
             sortable: false,
             editable: true,
-            editoptions: {
-                size: 10,
-                maxlengh: 10,
-                dataInit: function (element) {
-                    $(element).mask('00-00-0000', {
-                        placeholder: 'DD-MM-AAAA'
-                    });
+            formatter: function (cellvalue, options, rowObject) {
+                var val = rowObject.fechaExpiracion;
+                console.log("fecha:"+val);
+                if (val != null) {
+                    val = val.substring(0,10);
+                    console.log("fecha2:"+val);//2017-10-28
+                    var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                    return fechaok;
+                } else {
+                    return '';
                 }
             },
-            editrules: {
-                required: true
+            editoptions: {
+                'data-provide': 'datepicker',
+                dataInit: function (element) {
+                    $(element).mask("00-00-0000", {
+                        placeholder: "__-__-____"
+                    });
+                    $(element).datepicker({
+                        language: 'es',
+                        weekStart: 1,
+                        format: 'dd-mm-yyyy',
+                        autoclose: true
+                    })
+                }
             },
             search: false
         }, {
