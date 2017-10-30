@@ -22,8 +22,8 @@
                 return tabdetalleCompraTramiteGrid;
             case '#recepcion':
                 return recepcionGrid;
-            case '#instalacion':
-                return instalacionGrid;
+            // case '#instalacion':
+            //     return instalacionGrid;
             case '#ajuste':
                 return ajusteGrid;
             case '#traduccion':
