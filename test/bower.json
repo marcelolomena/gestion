@@ -1,0 +1,23 @@
+{
+  "name": "test",
+  "description": "prueba de concepto",
+  "main": "index.js",
+  "authors": [
+    "Marcelo Lomeña"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-ui-grid": "^4.0.4",
+    "angular-touch": "^1.6.4",
+    "angular-animate": "^1.6.4"
+  }
+}
