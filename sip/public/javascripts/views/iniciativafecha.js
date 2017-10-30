@@ -112,7 +112,7 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix ) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Fechas Clave',
+        caption: 'Fechas Iniciativa',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
@@ -172,10 +172,12 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix ) {
                     alert("Debe seleccionar una fila");
                     return [false, result.error_text, ""];
                 }
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-                //$('input#codigoart', form).attr('readonly', 'readonly');
+                //sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                var dlgDiv = jQuery("#editmod" + $("#" + childGridID).attr('id'));
+                dlgDiv[0].style.left = "100px";
+                dlgDiv[0].style.top = "550px";   
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                //sipLibrary.centerDialog($("#" + childGridID).attr('id'));            
             }
         },
         {
@@ -207,9 +209,12 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix ) {
                     });
                 return [true, "", ""]
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                //sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                var dlgDiv = jQuery("#editmod" + $("#" + childGridID).attr('id'));
+                dlgDiv[0].style.left = "100px";
+                dlgDiv[0].style.top = "550px";                
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+                //sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }
         },
         {

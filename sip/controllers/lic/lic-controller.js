@@ -217,6 +217,12 @@ function fromDate(fecha) {
     return result;
 }
 
+//Convierte desde dd-mm-yyyy a yyyy-mm-dd
+function strToDateDB(fecha){
+    var fechadb = fecha.substring(6)+'-'+fecha.substring(3,5)+'-'+fecha.substring(0,2);
+    return fechadb;
+}
+
 function now() {
     return new Date(Date.now())
 }
@@ -235,7 +241,9 @@ module.exports = {
     exportList: exportList,
     getFilters: getFilters,
     toDate: toDate,
+    strToDateDB: strToDateDB,
     fromDate: fromDate,
+
     now: now
 };
 

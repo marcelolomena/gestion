@@ -2,6 +2,7 @@
 var models = require('../../models');
 var base = require('./lic-controller');
 var logger = require('../../utils/logger');
+var sequelize = require('../../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var _ = require('lodash');
 
@@ -55,13 +56,13 @@ function map(req) {
             idCui: req.body.idCui || null,
             sap: req.body.sap,
             idProveedor: req.body.idProveedor,
-            fechaCompra: base.toDate(req.body.fechaCompra),
-            fechaExpiracion: base.toDate(req.body.fechaExpiracion),
+            fechaCompra: req.body.fechaCompra,
+            fechaExpiracion: req.body.fechaExpiracion,
             licCompradas: req.body.licCompradas,
             idMoneda: req.body.idMoneda,
-            valorLicencia: req.body.valorLicencias,
+            valorLicencia: req.body.valorLicencia,
             valorSoporte: req.body.valorSoporte,
-            fechaRenovaSoporte: base.toDate(req.body.fechaRenovaSoporte),
+            fechaRenovaSoporte: req.body.fechaRenovaSoporte,
             factura: req.body.factura,
             comprador: req.body.comprador,
             correoComprador: req.body.correoComprador
@@ -89,14 +90,14 @@ function mapper(data) {
                     idTipoLicenciamiento: item.idTipoLicenciamiento,
                     licStock: item.licStock,
                     licOcupadas: item.licOcupadas,
-                    fechaCompra: base.fromDate(sItem.fechaCompra),
-                    fechaExpiracion: base.fromDate(sItem.fechaExpiracion),
+                    fechaCompra: sItem.fechaCompra,
+                    fechaExpiracion: sItem.fechaExpiracion,
                     licCompradas: sItem.licCompradas,
                     cantidadSoporte: sItem.cantidadSoporte,
                     idMoneda: sItem.idMoneda,
                     valorLicencia: sItem.valorLicencia,
                     valorSoporte: sItem.valorSoporte,
-                    fechaRenovaSoporte: base.fromDate(sItem.fechaRenovaSoporte),
+                    fechaRenovaSoporte: sItem.fechaRenovaSoporte,
                     factura: sItem.factura,
                     comprador: sItem.comprador,
                     correoComprador: sItem.correoComprador,
@@ -193,12 +194,34 @@ function create(entity, data, res) {
         return res.json({ error: 1, glosa: err.message });
     });
 }
+
+
+
 function update(entity, data, res) {
-    childEntity.update(data.compra, {
-        where: {
-            id: data.id
-        }
-    }).then(function (updated) {
+    var oc = data.compra.ordenCompra == "" ? "NULL" : data.compra.ordenCompra;
+    var sap = data.compra.sap == "" ? "NULL" : data.compra.sap;
+    var idcui = data.compra.idCui == "0" ? "NULL" : data.compra.idCui;
+    var sql = "UPDATE lic.compra SET "+
+        "idproducto = "+data.compra.idProducto+", "+
+        "contrato = '"+data.compra.contrato+"', "+ 
+        "ordencompra = "+oc+", "+ 
+        "idcui ="+idcui+", "+ 
+        "sap = "+sap+", "+ 
+        "idproveedor = "+data.compra.idProveedor+", "+ 
+        "fechacompra = '"+base.strToDateDB(data.compra.fechaCompra)+"', "+ 
+        "fechaexpiracion = '"+base.strToDateDB(data.compra.fechaExpiracion)+"', "+ 
+        "liccompradas = "+data.compra.licCompradas+", "+ 
+        "idmoneda = "+data.compra.idMoneda+", "+ 
+        "valorlicencia = "+data.compra.valorLicencia+", "+ 
+        "valorsoporte = "+data.compra.valorSoporte+", "+ 
+        "fecharenovasoporte = '"+base.strToDateDB(data.compra.fechaRenovaSoporte)+"', "+ 
+        //"factura = "+data.compra.factura+", "+ 
+        "comprador = '"+data.compra.comprador+"', "+ 
+        "correocomprador ='"+data.compra.correoComprador+
+        "' where id="+data.id;
+    console.log("sql:"+sql);
+    sequelize.query(sql
+    ).then(function (updated) {
         return res.json({ error: 0, glosa: '' });
     }).catch(function (err) {
         logger.error(err);
