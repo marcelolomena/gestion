@@ -55,6 +55,7 @@ function mapper(data) {
         return {
             id: item.id,
             idFabricante: item.idFabricante,
+            // idFabricante: item.idFabricante ? item.idFabricante : '',
             nombre: item.nombre,
             idTipoInstalacion: item.idTipoInstalacion,
             idClasificacion: item.idClasificacion,
@@ -64,7 +65,7 @@ function mapper(data) {
             licOcupadas: item.licOcupadas,
             comentarios: item.comentarios,
             fabricante: {
-                nombre: item.fabricante.nombre
+                nombre: item.fabricante ? item.fabricante.nombre : ''
             },
             clasificacion: {
                 nombre: item.clasificacion ? item.clasificacion.nombre : ''
