@@ -63,7 +63,7 @@ module.exports = function(sequelize, DataTypes) {
     cantidadSoporte: {
       field:'cantidadsoporte',
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       defaultValue:0
     },
     idMoneda: {

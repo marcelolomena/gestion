@@ -9,6 +9,8 @@ entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
 entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
 entity.belongsTo(models.producto, { foreignKey: 'idProducto' });
 entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
+entity.belongsTo(models.compra, { foreignKey: 'idCompra' });
+entity.belongsTo(models.estructuracuibch, { foreignKey: 'idCui' });
 var includes = [
     {
         model: models.proveedor
@@ -27,6 +29,10 @@ var includes = [
         ]
     }, {
         model: models.moneda
+    }, {
+        model: models.compra
+    }, {
+        model: models.estructuracuibch
     }
 ];
 function map(req) {
@@ -59,6 +65,7 @@ function map(req) {
         factura: req.body.factura,
         comprador: req.body.comprador,
         mailComprador: req.body.mailComprador,
+        idCompra: req.body.idCompra ? parseInt(req.body.idCompra) : null,
     }
 }
 function mapper(data) {
@@ -120,6 +127,26 @@ function mapProducto(data) {
         idTipoLicenciamiento: data.idTipoLicenciamiento
     };
 }
+function mapCompra(data) {
+    return { idProducto: data.idProducto,
+        contrato: data.numContrato,
+        ordenCompra: data.ordenCompra,
+        idCui: data.cui,
+        sap: data.cui,
+        idProveedor: data.idProveedor,
+        fechaCompra: data.fechaInicio,
+        fechaExpiracion: data.fechaTermino,
+        licCompradas: data.cantidad,
+        cantidadSoporte: data.cantidadSoporte,
+        idMoneda: data.idMoneda,
+        valorLicencia: data.monto,
+        valorSoporte: data.montoSoporte,
+        fechaRenovaSoporte: data.fechaControl,
+        factura: data.factura,
+        comprador: data.comprador,
+        correoComprador: data.mailComprador
+    };
+}
 function saveProducto(data, res) {
     if (data.idProducto == null) {
         return base.createP(models.producto, mapProducto(data))
@@ -135,7 +162,17 @@ function saveProducto(data, res) {
     }
 }
 function addDetalle(data, res) {
-    return base.createP(entity, data)
+    if(data.idCompra == null){
+        return base.createP(models.compra, mapCompra(data))
+        .then(function(createdd){
+            data.idCompra = createdd.id;
+            addDetalle(data, res);
+        }).catch(function (err) {
+            logger.error('compra.Stock Upd, ' + err);
+            return res.json({ error: 1, glosa: err.message });
+        })
+    }else{
+        return base.createP(entity, data)
         .then(function (created) {
             return base.findById(models.producto, data.idProducto)
                 .then(function (item) {
@@ -155,8 +192,7 @@ function addDetalle(data, res) {
             logger.error(entity.name + ':create, ' + err);
             return res.json({ error: 1, glosa: err.message });
         });
-
-
+    }
 }
 function action(req, res) {
     var data = map(req);
