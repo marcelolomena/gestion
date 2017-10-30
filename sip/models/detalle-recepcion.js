@@ -5,7 +5,8 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
-        }, idRecepcion: {
+        },
+        idRecepcion: {
             field: 'idrecepcion',
             type: DataTypes.INTEGER,
             allowNull: true,
@@ -13,24 +14,30 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'recepcion',
                 key: 'id'
             }
-        }, nombre: {
+        },
+        nombre: {
             type: DataTypes.STRING(250),
             allowNull: true
-        }, cui: {
+        },
+        cui: {
             type: DataTypes.INTEGER,
             allowNull: true
-        }, sap: {
+        },
+        sap: {
             type: DataTypes.INTEGER,
             allowNull: true
-        }, numContrato: {
+        },
+        numContrato: {
             field: 'numcontrato',
             type: DataTypes.INTEGER,
             allowNull: true
-        }, ordenCompra: {
+        },
+        ordenCompra: {
             field: 'ordencompra',
             type: DataTypes.INTEGER,
             allowNull: true
-        }, idProveedor: {
+        },
+        idProveedor: {
             field: 'idproveedor',
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -38,14 +45,17 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'proveedor',
                 key: 'id'
             }
-        }, comprador: {
+        },
+        comprador: {
             type: DataTypes.STRING(250),
             allowNull: true
-        }, mailComprador: {
-            field:'mailcomprador',
+        },
+        mailComprador: {
+            field: 'mailcomprador',
             type: DataTypes.STRING(250),
             allowNull: true
-        }, idFabricante: {
+        },
+        idFabricante: {
             field: 'idfabricante',
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -53,7 +63,8 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'fabricante',
                 key: 'id'
             }
-        }, idProducto: {
+        },
+        idProducto: {
             field: 'idproducto',
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -61,19 +72,23 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'producto',
                 key: 'id'
             }
-        }, fechaInicio: {
+        },
+        fechaInicio: {
             field: 'fechainicio',
             type: DataTypes.DATE,
             allowNull: true
-        }, fechaTermino: {
+        },
+        fechaTermino: {
             field: 'fechatermino',
             type: DataTypes.DATE,
             allowNull: true
-        }, fechaControl: {
+        },
+        fechaControl: {
             field: 'fechacontrol',
             type: DataTypes.DATE,
             allowNull: true
-        }, idMoneda: {
+        },
+        idMoneda: {
             field: 'idmoneda',
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -81,33 +96,49 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'moneda',
                 key: 'id'
             }
-        }, monto: {
+        },
+        monto: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: true
-        }, montoSoporte: {
+        },
+        montoSoporte: {
             field: 'montosoporte',
             type: DataTypes.DECIMAL(10, 2),
             allowNull: true
-        }, cantidad: {
+        },
+        cantidad: {
             type: DataTypes.INTEGER,
             allowNull: true
-        }, ilimitado: {
+        },
+        ilimitado: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false
-        }, factura: {
+        },
+        factura: {
             type: DataTypes.STRING(20),
             allowNull: true
-        }, comentario: {
+        },
+        comentario: {
             type: DataTypes.STRING,
             allowNull: true
-        }, numsolicitud: {
+        },
+        numsolicitud: {
             type: DataTypes.INTEGER,
             allowNull: true
+        },
+        idCompra: {
+            field: 'idcompra',
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: 'compra',
+                key: 'id'
+            }
         }
     }, {
-            schema: 'lic',
-            timestamps: false,
-            tableName: 'detallerecepcion'
-        });
+        schema: 'lic',
+        timestamps: false,
+        tableName: 'detallerecepcion'
+    });
 };

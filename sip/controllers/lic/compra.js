@@ -52,7 +52,7 @@ function mapper(data) {
             comprador: item.comprador,
             correoComprador: item.correoComprador,
             proveedor: { nombre: item.proveedor.razonsocial },
-            estructuracuibch: { cui: item.estructuracuibch.cui }
+            // estructuracuibch: { cui: item.estructuracuibch.cui }
         }
     });
 }
