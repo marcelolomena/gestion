@@ -282,10 +282,8 @@
             editable: true,
             formatter: function (cellvalue, options, rowObject) {
                 var val = rowObject.fechaExpiracion;
-                console.log("fecha:"+val);
                 if (val != null) {
                     val = val.substring(0,10);
-                    console.log("fecha2:"+val);//2017-10-28
                     var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
                     return fechaok;
                 } else {
@@ -316,10 +314,8 @@
             editable: true,
             formatter: function (cellvalue, options, rowObject) {
                 var val = rowObject.fechaExpiracion;
-                console.log("fecha:"+val);
                 if (val != null) {
                     val = val.substring(0,10);
-                    console.log("fecha2:"+val);//2017-10-28
                     var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
                     return fechaok;
                 } else {
@@ -412,10 +408,8 @@
             editable: true,
             formatter: function (cellvalue, options, rowObject) {
                 var val = rowObject.fechaExpiracion;
-                console.log("fecha:"+val);
                 if (val != null) {
                     val = val.substring(0,10);
-                    console.log("fecha2:"+val);//2017-10-28
                     var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
                     return fechaok;
                 } else {
