@@ -281,7 +281,7 @@
             sortable: false,
             editable: true,
             formatter: function (cellvalue, options, rowObject) {
-                var val = rowObject.fechaExpiracion;
+                var val = rowObject.fechaCompra;
                 if (val != null) {
                     val = val.substring(0,10);
                     var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
@@ -407,7 +407,7 @@
             sortable: false,
             editable: true,
             formatter: function (cellvalue, options, rowObject) {
-                var val = rowObject.fechaExpiracion;
+                var val = rowObject.fechaRenovaSoporte;
                 if (val != null) {
                     val = val.substring(0,10);
                     var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
