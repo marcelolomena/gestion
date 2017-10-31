@@ -39,13 +39,7 @@ var traduccionGrid = {
                 }
             }
         }];
-
         var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Traducciones', 'Editar Traducción', 'Agregar Traducción', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
-        tabGrid.navParameters.edit = false;
-        tabGrid.navParameters.add = false;
-        tabGrid.navParameters.del = false;
-        tabGrid.navParameters.view = false;
-
         tabGrid.build();
     }
 };
