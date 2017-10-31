@@ -10,7 +10,7 @@ entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
 entity.belongsTo(models.producto, { foreignKey: 'idProducto' });
 entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
 entity.belongsTo(models.compra, { foreignKey: 'idCompra' });
-entity.belongsTo(models.estructuracuibch, { foreignKey: 'idCui' });
+// entity.belongsTo(models.estructuracuibch, { foreignKey: 'idCui' });
 var includes = [
     {
         model: models.proveedor
@@ -31,9 +31,10 @@ var includes = [
         model: models.moneda
     }, {
         model: models.compra
-    }, {
-        model: models.estructuracuibch
     }
+    // , {
+    //     model: models.estructuracuibch
+    // }
 ];
 function map(req) {
     return {
