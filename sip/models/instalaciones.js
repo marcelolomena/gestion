@@ -31,11 +31,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    idlicencia: {
+    idproducto: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'licencia',
+        model: 'producto',
         key: 'id'
       }
     }
