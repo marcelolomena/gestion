@@ -41,7 +41,7 @@ var compraGrid = {
                 align: 'center',
                 sortable: false,
                 editable: true,
-                jsonmap: 'estructuracuibch.cui',
+                // jsonmap: 'estructuracuibch.cui',
                 edittype: 'select',
                 editoptions: {
                     dataUrl: '/lic/cui',

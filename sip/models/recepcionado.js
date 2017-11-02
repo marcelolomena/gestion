@@ -17,14 +17,10 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        numSolicitud: {
-            field: 'numsolicitud',
+        idNumSolicitud: {
+            field: 'idnumsolicitud',
             type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'detallerecepcion',
-                key: 'id'
-            }
+            allowNull: true
         }
     }, {
         schema: 'lic',

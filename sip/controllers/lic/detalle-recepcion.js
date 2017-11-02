@@ -10,7 +10,7 @@ entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
 entity.belongsTo(models.producto, { foreignKey: 'idProducto' });
 entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
 entity.belongsTo(models.compra, { foreignKey: 'idCompra' });
-entity.belongsTo(models.estructuracuibch, { foreignKey: 'idCui' });
+// entity.belongsTo(models.estructuracuibch, { foreignKey: 'idCui' });
 var includes = [
     {
         model: models.proveedor
@@ -31,9 +31,10 @@ var includes = [
         model: models.moneda
     }, {
         model: models.compra
-    }, {
-        model: models.estructuracuibch
     }
+    // , {
+    //     model: models.estructuracuibch
+    // }
 ];
 function map(req) {
     return {
@@ -132,7 +133,7 @@ function mapCompra(data) {
         contrato: data.numContrato,
         ordenCompra: data.ordenCompra,
         idCui: data.cui,
-        sap: data.cui,
+        sap: data.sap,
         idProveedor: data.idProveedor,
         fechaCompra: data.fechaInicio,
         fechaExpiracion: data.fechaTermino,
@@ -178,11 +179,11 @@ function addDetalle(data, res) {
                 .then(function (item) {
                     var prdData = { id: data.idProducto, ilimitado: data.ilimitado };
                     if (!prdData.ilimitado) {
-                        prdData.licStock = item.licStock + data.cantidad;
+                        prdData.licStock = parseInt(item.licStock) + parseInt(data.cantidad);
                     }
-                    if (!item.idClasificacion) { prdData.idClasificacion = data.idClasificacion; }
-                    if (!item.idTipoInstalacion) { prdData.idTipoInstalacion = data.idTipoInstalacion; }
-                    if (!item.idTipoLicenciamiento) { prdData.idTipoLicenciamiento = data.idTipoLicenciamiento; }
+                    if (item.idClasificacion) { prdData.idClasificacion = data.idClasificacion; }
+                    if (item.idTipoInstalacion) { prdData.idTipoInstalacion = data.idTipoInstalacion; }
+                    if (item.idTipoLicenciamiento) { prdData.idTipoLicenciamiento = data.idTipoLicenciamiento; }
                     return base.update(models.producto, prdData, res);
                 }).catch(function (err) {
                     logger.error('producto.Stock Upd, ' + err);
