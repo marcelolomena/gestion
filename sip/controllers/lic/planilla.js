@@ -25,8 +25,6 @@ var includes = [
         model: models.compra,
         include: [
             {
-                model: models.estructuracuibch
-            }, {
                 model: models.moneda
             }, {
                 model: models.proveedor
@@ -44,9 +42,10 @@ function map(req) {
         idTipoInstalacion: req.body.idTipoInstalacion,
         idClasificacion: req.body.idClasificacion,
         idTipoLicenciamiento: req.body.idTipoLicenciamiento,
-        licStock: req.body.licStock,
+        licStock: req.body.licCompradas,
         licOcupadas: req.body.licOcupadas,
         utilidad: req.body.utilidad,
+        idFabricante: req.body.idFabricante,
         comentarios: req.body.comentarios,
         compra: {
             id: req.body.id || 0,
@@ -89,6 +88,7 @@ function mapper(data) {
                     idClasificacion: item.idClasificacion,
                     idTipoLicenciamiento: item.idTipoLicenciamiento,
                     licStock: item.licStock,
+                    comentarios: item.comentarios,
                     licOcupadas: item.licOcupadas,
                     fechaCompra: sItem.fechaCompra,
                     fechaExpiracion: sItem.fechaExpiracion,
@@ -102,12 +102,13 @@ function mapper(data) {
                     comprador: sItem.comprador,
                     correoComprador: sItem.correoComprador,
                     alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
-                    utilidad:item.utilidad,
+                    utilidad: item.utilidad,
                     fabricante: { nombre: item.fabricante ? item.fabricante.nombre : '' },
                     clasificacion: { nombre: item.clasificacion ? item.clasificacion.nombre : '' },
                     tipoInstalacion: { nombre: item.tipoInstalacion ? item.tipoInstalacion.nombre : '' },
                     tipoLicenciamiento: { nombre: item.tipoLicenciamiento ? item.tipoLicenciamiento.nombre : '' },
                     moneda: { nombre: sItem.moneda.moneda },
+                    cui: { nombre: sItem.estructuracuibch ? sItem.estructuracuibch.cui : '' },
                     estructuracui: { nombre: sItem.estructuracuibch ? sItem.estructuracuibch.cui : '' },
                     proveedor: { nombre: sItem.proveedor.razonsocial }
                 });
@@ -201,28 +202,61 @@ function update(entity, data, res) {
     var oc = data.compra.ordenCompra == "" ? "NULL" : data.compra.ordenCompra;
     var sap = data.compra.sap == "" ? "NULL" : data.compra.sap;
     var idcui = data.compra.idCui == "0" ? "NULL" : data.compra.idCui;
-    var sql = "UPDATE lic.compra SET "+
-        "idproducto = "+data.compra.idProducto+", "+
-        "contrato = '"+data.compra.contrato+"', "+ 
-        "ordencompra = "+oc+", "+ 
-        "idcui ="+idcui+", "+ 
-        "sap = "+sap+", "+ 
-        "idproveedor = "+data.compra.idProveedor+", "+ 
-        "fechacompra = '"+base.strToDateDB(data.compra.fechaCompra)+"', "+ 
-        "fechaexpiracion = '"+base.strToDateDB(data.compra.fechaExpiracion)+"', "+ 
-        "liccompradas = "+data.compra.licCompradas+", "+ 
-        "idmoneda = "+data.compra.idMoneda+", "+ 
-        "valorlicencia = "+data.compra.valorLicencia+", "+ 
-        "valorsoporte = "+data.compra.valorSoporte+", "+ 
-        "fecharenovasoporte = '"+base.strToDateDB(data.compra.fechaRenovaSoporte)+"', "+ 
-        //"factura = "+data.compra.factura+", "+ 
-        "comprador = '"+data.compra.comprador+"', "+ 
-        "correocomprador ='"+data.compra.correoComprador+
-        "' where id="+data.id;
-    console.log("sql:"+sql);
+    var sql = "UPDATE lic.compra SET " +
+        "idproducto = " + data.compra.idProducto + ", " +
+        "contrato = '" + data.compra.contrato + "', " +
+        "ordencompra = " + oc + ", " +
+        "idcui =" + idcui + ", " +
+        "sap = " + sap + ", " +
+        "idproveedor = " + data.compra.idProveedor + ", ";
+    console.log("fechacompra:'" + data.compra.fechaCompra + "', " + data.compra.fechaCompra.length);
+    if (data.compra.fechaCompra.length > 0) {
+        sql = sql + "fechacompra = '" + base.strToDateDB(data.compra.fechaCompra) + "', ";
+    } else {
+        sql = sql + "fechacompra = NULL, ";
+    }
+
+    if (data.compra.fechaExpiracion.length > 0) {
+        sql = sql + "fechaexpiracion = '" + base.strToDateDB(data.compra.fechaExpiracion) + "', ";
+    } else {
+        sql = sql + "fechaExpiracion = NULL, ";
+    }
+    sql = sql + "liccompradas = " + data.compra.licCompradas + ", ";
+    sql = sql + "idmoneda = " + data.compra.idMoneda + ", ";
+    sql = sql + "valorlicencia = " + data.compra.valorLicencia + ", ";
+    sql = sql + "valorsoporte = " + data.compra.valorSoporte + ", ";
+    if (data.compra.factura.length > 0) {
+        sql = sql + "factura = " + data.compra.factura + ", ";
+    } else {
+        sql = sql + "factura = NULL, ";
+    }
+    if (data.compra.fechaRenovaSoporte.length > 0) {
+        sql = sql + "fecharenovasoporte = '" + base.strToDateDB(data.compra.fechaRenovaSoporte) + "', ";
+    } else {
+        sql = sql + "fecharenovasoporte = NULL, ";
+    }
+    sql = sql + "comprador = '" + data.compra.comprador + "', ";
+    sql = sql + "correocomprador ='" + data.compra.correoComprador;
+    sql = sql + "' where id=" + data.id;
+    console.log("sql:" + sql);
     sequelize.query(sql
     ).then(function (updated) {
-        return res.json({ error: 0, glosa: '' });
+        var sql2 = "UPDATE lic.producto " +
+            "SET idfabricante = " + data.idFabricante + ", " +
+            "idtipoinstalacion =" + data.idTipoInstalacion + ", " +
+            "idclasificacion =" + data.idClasificacion + ", " +
+            "idtipolicenciamiento =" + data.idTipoLicenciamiento + ", " +
+            "licstock = " + data.licStock + ", " +
+            "licocupadas =" + data.licOcupadas + ", " +
+            "comentarios ='" + data.comentarios + "' " +
+            "where nombre='" + data.nombre + "'";
+        console.log("sql2:" + sql2);
+        sequelize.query(sql2).then(function (updated) {
+            return res.json({ error: 0, glosa: '' });
+        }).catch(function (err) {
+            logger.error(err);
+            return res.json({ error: 1, glosa: err.message });
+        });
     }).catch(function (err) {
         logger.error(err);
         return res.json({ error: 1, glosa: err.message });
