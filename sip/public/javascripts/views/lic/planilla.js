@@ -15,18 +15,12 @@
             return [false, "Clasificación: Debe escoger un valor.", ""];
         } else if (!postdata.idTipoLicenciamiento) {
             return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
-        } else if (postdata.fechaCompra.trim().length == 0) {
-            return [false, "Fecha Compra: Debe ingresar una fecha.", ""];
         } else if (postdata.licCompradas.trim().length == 0) {
             return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
         } else if (!postdata.idMoneda) {
             return [false, "Moneda: Debe escoger un valor.", ""];
-        } else if (postdata.valorLicencia == "0") {
-            return [false, "Valor Licencias: Debe ingresar un valor.", ""];
         } else if (postdata.valorSoporte.trim().length == 0) {
             return [false, "Valor Soportes: Debe ingresar un valor.", ""];
-        } else if (postdata.fechaRenovaSoporte.trim().length == 0) {
-            return [false, "Fecha Expiración: Debe escoger un valor.", ""];
         } else {
             return [true, "", ""];
         }
@@ -92,7 +86,7 @@
                 dataUrl: '/lic/cui',
                 buildSelect: function (response) {
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
-                    var thissid = rowData.idCui;
+                    var thissid = rowData.cui;
                     var data = JSON.parse(response);
                     return new zs.SelectTemplate(data, 'Seleccione CUI', thissid).template;
                 }
