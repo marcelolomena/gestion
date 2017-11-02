@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    console.log(uid);
 
     var template = "<div id='responsive-form' class='clearfix'>";
 
