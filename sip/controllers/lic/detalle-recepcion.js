@@ -133,7 +133,7 @@ function mapCompra(data) {
         contrato: data.numContrato,
         ordenCompra: data.ordenCompra,
         idCui: data.cui,
-        sap: data.cui,
+        sap: data.sap,
         idProveedor: data.idProveedor,
         fechaCompra: data.fechaInicio,
         fechaExpiracion: data.fechaTermino,
@@ -179,11 +179,11 @@ function addDetalle(data, res) {
                 .then(function (item) {
                     var prdData = { id: data.idProducto, ilimitado: data.ilimitado };
                     if (!prdData.ilimitado) {
-                        prdData.licStock = item.licStock + data.cantidad;
+                        prdData.licStock = parseInt(item.licStock) + parseInt(data.cantidad);
                     }
-                    if (!item.idClasificacion) { prdData.idClasificacion = data.idClasificacion; }
-                    if (!item.idTipoInstalacion) { prdData.idTipoInstalacion = data.idTipoInstalacion; }
-                    if (!item.idTipoLicenciamiento) { prdData.idTipoLicenciamiento = data.idTipoLicenciamiento; }
+                    if (item.idClasificacion) { prdData.idClasificacion = data.idClasificacion; }
+                    if (item.idTipoInstalacion) { prdData.idTipoInstalacion = data.idTipoInstalacion; }
+                    if (item.idTipoLicenciamiento) { prdData.idTipoLicenciamiento = data.idTipoLicenciamiento; }
                     return base.update(models.producto, prdData, res);
                 }).catch(function (err) {
                     logger.error('producto.Stock Upd, ' + err);
