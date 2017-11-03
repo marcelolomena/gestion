@@ -36,7 +36,7 @@ var childEntity = models.compra;
 
 function map(req) {
     return {
-        id: req.body.id || 0,
+        id: req.body.idProducto || 0,
         idFabricante: req.body.idFabricante,
         nombre: req.body.nombre,
         idTipoInstalacion: req.body.idTipoInstalacion,
@@ -248,8 +248,9 @@ function update(entity, data, res) {
             "idtipolicenciamiento =" + data.idTipoLicenciamiento + ", " +
             "licstock = " + data.licStock + ", " +
             "licocupadas =" + data.licOcupadas + ", " +
-            "comentarios ='" + data.comentarios + "' " +
-            "where nombre='" + data.nombre + "'";
+            "comentarios ='" + data.comentarios + "', " +
+            "nombre ='" + data.nombre + "' " +
+            "where id='" + data.id + "'";
         console.log("sql2:" + sql2);
         sequelize.query(sql2).then(function (updated) {
             return res.json({ error: 0, glosa: '' });
