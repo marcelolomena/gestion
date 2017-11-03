@@ -1,45 +1,78 @@
-var traduccionGrid = {
-
-    renderGrid: function (loadurl, parentRowKey, targ) {
-        var tabName = 'traduccion';
-        var tableName = tabName + '_t_' + parentRowKey;
-        var table = targ + '_t_' + parentRowKey;
-        var $grid = $(table);
+(function ($, _) {
+    'use strict';
+    var zs = window.zs;
+    $(function () {
+        var $table = $('#gridMaster');
         var viewModel = [{
             label: 'ID',
             name: 'id',
             key: true,
             hidden: true,
             editable: false
-        }, {
-            label: 'Id Producto',
+        },
+        {
+            label: 'Producto',
             name: 'idProducto',
-            hidden: true,
-            editable: false
+            jsonmap: 'producto.nombre',
+            width: 250,
+            align: 'center',
+            sortable: false,
+            editable: true,
+            edittype: 'select',
+            editoptions: {
+                dataUrl: '/lic/producto',
+                buildSelect: function (response) {
+                    var rowData = $table.getRowData($table.getGridParam('selrow'));
+                    var thissid = rowData.nombre;
+                    var data = JSON.parse(response);
+                    return new zs.SelectTemplate(data, 'Seleccione el Producto', thissid).template;
+                },
+                dataEvents: [{
+                    type: 'change',
+                    fn: function (e) {
+                        var rowKey = $table.getGridParam("selrow");
+                        var rowData = $table.getRowData(rowKey);
+                        var thissid = $(this).val();
+                        $("input#idFabricante").val($('option:selected', this).text());
+                        var idFabricante = $('option:selected', this).val();
+                        if (idFabricante) {
+
+                            $.ajax({
+                                type: "GET",
+                                url: '/lic/getFabricante/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    if (data) {
+                                        $("select#idFabricante").val(data.idFabric);
+                                        $("#idFabricante").attr('disabled', true);
+                                        $("#otroFabricante").attr('disabled', true);
+                                    } else {
+                                        alert("No existe Fabricante para este Producto");
+                                        $("select#idFabricante").val("");
+                                    }
+                                }
+
+                            });
+                        } else {
+                            $("#idFabricante").attr('disabled', false);
+                            $("#otroFabricante").attr('disabled', false);
+
+                        }
+                    }
+                }],
+            },
+            editrules: {
+                required: false
+            },
+            search: false
         }, {
             label: 'Nombre',
             name: 'nombre',
             width: 300,
             editable: true
-        }, {
-            label: 'Tipo',
-            name: 'tipo',
-            jsonmap: 'tipos.nombre',
-            width: 300,
-
-            editable: true,
-            edittype: 'select',
-            editoptions: {
-                dataUrl: '/lic/tipo',
-                buildSelect: function (response) {
-                    var rowData = $grid.getRowData($grid.getGridParam('selrow'));
-                    var thissid = rowData.tipo;
-                    var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Tipo', thissid).template;
-                }
-            }
         }];
-        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Traducciones', 'Editar Traducción', 'Agregar Traducción', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
-        tabGrid.build();
-    }
-};
+        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Traducciones', 'Editar Traducción', 'Agregar Traducción', '/lic/traduccion', viewModel, 'idProducto', '/lic/getsession', ['Administrador LIC']);
+        grid.build();
+    });
+
+})(jQuery, _);

@@ -1,5 +1,5 @@
 var proveedorController = require('../controllers/proveedor');
-var contactoController = require('../controllers/contacto')
+var contactoController = require('../controllers/contacto');
 var parametroController = require('../controllers/parametro');
 var proyectoController = require('../controllers/proyecto');
 var proyectoTareasController = require('../controllers/proyectotareas');
@@ -12,14 +12,15 @@ var servicioController = require('../controllers/servicio');
 var monedaController = require('../controllers/moneda');
 var compromisoController = require('../controllers/detallecompromiso');
 var graficoController = require('../controllers/graficotest');
-var testController = require('../controllers/test')
-var rolesController = require('../controllers/roles')
-var permisosController = require('../controllers/permisos')
-var registroController = require('../controllers/registro')
-var express = require('express')
-var router = express.Router()
-var isAuthenticated = require('../policies/isAuthenticated')
-var testxmlController = require('../controllers/testxml')
+var testController = require('../controllers/test');
+var rolesController = require('../controllers/roles');
+var permisosController = require('../controllers/permisos');
+var registroController = require('../controllers/registro');
+var rolnegocioController = require('../controllers/rolnegocio');
+var express = require('express');
+var router = express.Router();
+var isAuthenticated = require('../policies/isAuthenticated');
+var testxmlController = require('../controllers/testxml');
 var models = require('../models');
 var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
@@ -381,6 +382,20 @@ module.exports = function (passport) {
     router.route('/testxml')
         .get(isAuthenticated, testxmlController.xmltest);
 
+        
+    router.route('/rolnegocio/user/list')
+        .post(isAuthenticated, rolnegocioController.listUsers);
+    
+    router.route('/rolnegocio/list/:id')
+        .post(isAuthenticated,rolnegocioController.getRolesUsuario);
+
+    router.route('/rolnegocio/action/:id')
+        .post(isAuthenticated, rolnegocioController.action);
+    
+    router.route('/rolnegocio/getroles')
+        .get(isAuthenticated,rolnegocioController.getRoles);
+
     return router;
 
 }
+

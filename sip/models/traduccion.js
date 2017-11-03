@@ -19,10 +19,6 @@ module.exports = function(sequelize, DataTypes) {
     nombre: {
       type: DataTypes.STRING(120),
       allowNull: false
-    },
-    tipo: {
-      type: DataTypes.INTEGER,
-      allowNull: false
     }
   }, {
     schema: 'lic',timestamps: false,tableName: 'traduccion'

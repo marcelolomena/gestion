@@ -334,38 +334,48 @@ function renderGrid(loadurl, tableId) {
     var grid = new zs.StackGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC'], showChildGrid);
 
     function editar_fecha(fecha, intervalo, dma, simbolo) {
+
+        var simbolo = simbolo || "-";
+        var arrayFecha = fecha.split(simbolo);
+        var dia = arrayFecha[0];
+        var mes = arrayFecha[1];
+        var anio = arrayFecha[2];
+
+        var fechaInicial = new Date(anio, mes - 1, dia);
+        var fechaFinal = fechaInicial;
+        if (dma == "m" || dma == "M") {
+            fechaFinal.setMonth(fechaInicial.getMonth() + parseInt(intervalo));
+        } else if (dma == "y" || dma == "Y") {
+            fechaFinal.setFullYear(fechaInicial.getFullYear() + parseInt(intervalo));
+        } else if (dma == "d" || dma == "D") {
+            fechaFinal.setDate(fechaInicial.getDate() + parseInt(intervalo));
+        } else {
+            return fecha;
+        }
+        dia = fechaFinal.getDate();
+        mes = fechaFinal.getMonth() + 1;
+        anio = fechaFinal.getFullYear();
+
+        dia = (dia.toString().length == 1) ? "0" + dia.toString() : dia;
+        mes = (mes.toString().length == 1) ? "0" + mes.toString() : mes;
+
+        return dia + "-" + mes + "-" + anio;
+    }
+
+
+
+
+    function beforeSubmitDel(postdata, formid) {
+        var rowData = $table.getRowData($table.getGridParam('selrow'));
+        var thissid = rowData.estado;
         
-         var simbolo = simbolo || "-";
-         var arrayFecha = fecha.split(simbolo);
-         var dia = arrayFecha[0];
-         var mes = arrayFecha[1];
-         var anio = arrayFecha[2]; 
-         
-         var fechaInicial = new Date(anio, mes - 1, dia);
-         var fechaFinal = fechaInicial;
-         if(dma=="m" || dma=="M"){
-           fechaFinal.setMonth(fechaInicial.getMonth()+parseInt(intervalo));
-         }else if(dma=="y" || dma=="Y"){
-           fechaFinal.setFullYear(fechaInicial.getFullYear()+parseInt(intervalo));
-         }else if(dma=="d" || dma=="D"){
-           fechaFinal.setDate(fechaInicial.getDate()+parseInt(intervalo));
-         }else{
-           return fecha;
-         }
-         dia = fechaFinal.getDate();
-         mes = fechaFinal.getMonth() + 1;
-         anio = fechaFinal.getFullYear();
         
-         dia = (dia.toString().length == 1) ? "0" + dia.toString() : dia;
-         mes = (mes.toString().length == 1) ? "0" + mes.toString() : mes;
-        
-         return dia + "-" + mes + "-" + anio;
-       }
-       
-
-
-
-
+        if (thissid == 'Recepcionado') {
+            return [false, 'el producto esta recepcionado, por lo tanto no se va a eliminar.', ''];
+        } else {
+            return [true, '', ''];
+        }
+    }
 
 
 
@@ -381,9 +391,9 @@ function renderGrid(loadurl, tableId) {
         var f1 = postdata.fechaInicio;
         var f2 = postdata.fechaTermino;
         var f3 = postdata.fechaControl;
-        var f1compare = f1.substring(6) + f1.substring(3, 4) + f1.substring(0, 1);
-        var f2compare = f2.substring(6) + f2.substring(3, 4) + f2.substring(0, 1);
-        var f3compare = f3.substring(6) + f3.substring(3, 4) + f3.substring(0, 1);
+        var f1compare = f1.substr(6) + f1.substr(3, 2) + f1.substr(0, 2);
+        var f2compare = f2.substr(6) + f2.substr(3, 2) + f2.substr(0, 2);
+        var f3compare = f3.substr(6) + f3.substr(3, 2) + f3.substr(0, 2);
         if (f1compare > f2compare) {
             return [false, 'La fecha de Termino debe ser mayor a la fecha de Inicio'];
         } else if (f2compare < f3compare) {
@@ -395,18 +405,27 @@ function renderGrid(loadurl, tableId) {
         }
     }
 
-    function beforeShowForm(postdata, formid) {
-        var rowKey = $table.getGridParam("selrow");
-        var rowData = $table.getRowData(rowKey);
-        var estado = rowData.fecha;
-        setTimeout(function () {
-            if (estado == 'Recepcionado') {
-                $("#estado").attr('disabled', true);
-            }
-        }, 550);
+
+
+
+    function beforeShowForm(form) {
+        var rowData = $table.getRowData($table.getGridParam('selrow'));
+        var thissid = rowData.estado;
+        
+        
+        if (thissid == 'Recepcionado') {
+            bootbox.alert({
+                message: "el producto fue recepcionado, por lo tanto no se va a eliminar.",
+                size: 'small'
+                
+            });
+            return [true, "listo", ""];
+        }
+
     }
 
-    grid.prmEdit.beforeShowForm = beforeShowForm;
+    grid.prmDel.beforeSubmit = beforeSubmitDel;
+    
     grid.prmAdd.beforeSubmit = beforeSubmit;
     grid.prmEdit.beforeSubmit = beforeSubmit;
     grid.prmEdit.onInitializeForm = function (formid, action) {
@@ -419,6 +438,7 @@ function renderGrid(loadurl, tableId) {
             }, 500);
         }
     };
+    // grid.prmDel.afterSubmit = afterSubmit;
     grid.build();
 }
 
