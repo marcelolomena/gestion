@@ -490,11 +490,15 @@
         }, {
             label: 'Comentarios',
             name: 'comentarios',
-            hidden: true,
+            hidden: false,
             sortable: false,
             editable: true,
             edittype: 'textarea',
-            search: false
+            search: false,
+            width: 1000,
+            editoptions: {
+                fullRow: true
+            },            
         },
         ];
         initGrid(viewModel);
