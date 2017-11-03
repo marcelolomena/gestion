@@ -154,6 +154,12 @@
             //valido formulario
             return [true, '', ''];
         };
+
+        this.beforeSubmitDel = function (postdata, formid) {
+            console.log('beforeSubmit');
+            //valido formulario
+            return [true, '', ''];
+        };
         this.afterSubmit = function (response, postdata) {
             console.log('afterSubmit');
             var result = response.responseJSON;//JSON.parse(json);
@@ -223,7 +229,8 @@
             url: this.config.url,
             ajaxEditOptions: licLibrary.jsonOptions,
             serializeEditData: licLibrary.createJSON,
-            afterSubmit: this.deleteAfterSubmit
+            afterSubmit: this.deleteAfterSubmit,
+            beforeSubmit: this.beforeSubmitDel
         };
         this.build = function () {
             var uno = $table.jqGrid(this.config);
@@ -294,5 +301,6 @@
         SimpleGrid: SimpleGrid,
         StackGrid: StackGrid,
         TabGrid: TabGrid
+
     });
 })(jQuery, _);

@@ -5,28 +5,35 @@ var _ = require('lodash');
 var logger = require('../../utils/logger');
 
 var entity = models.detalleRecepcion;
-entity.belongsTo(models.proveedor, { foreignKey: 'idProveedor' });
-entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
-entity.belongsTo(models.producto, { foreignKey: 'idProducto' });
-entity.belongsTo(models.moneda, { foreignKey: 'idMoneda' });
-entity.belongsTo(models.compra, { foreignKey: 'idCompra' });
+entity.belongsTo(models.proveedor, {
+    foreignKey: 'idProveedor'
+});
+entity.belongsTo(models.fabricante, {
+    foreignKey: 'idFabricante'
+});
+entity.belongsTo(models.producto, {
+    foreignKey: 'idProducto'
+});
+entity.belongsTo(models.moneda, {
+    foreignKey: 'idMoneda'
+});
+entity.belongsTo(models.compra, {
+    foreignKey: 'idCompra'
+});
 // entity.belongsTo(models.estructuracuibch, { foreignKey: 'idCui' });
-var includes = [
-    {
+var includes = [{
         model: models.proveedor
     }, {
         model: models.fabricante
     }, {
         model: models.producto,
-        include: [
-            {
-                model: models.clasificacion
-            }, {
-                model: models.tipoInstalacion
-            }, {
-                model: models.tipoLicenciamiento
-            }
-        ]
+        include: [{
+            model: models.clasificacion
+        }, {
+            model: models.tipoInstalacion
+        }, {
+            model: models.tipoLicenciamiento
+        }]
     }, {
         model: models.moneda
     }, {
@@ -36,6 +43,7 @@ var includes = [
     //     model: models.estructuracuibch
     // }
 ];
+
 function map(req) {
     return {
         id: parseInt(req.body.id) || 0,
@@ -66,9 +74,10 @@ function map(req) {
         factura: req.body.factura,
         comprador: req.body.comprador,
         mailComprador: req.body.mailComprador,
-        idCompra: req.body.idCompra ? parseInt(req.body.idCompra) : null,
+        idCompra: req.body.idCompra,
     }
 }
+
 function mapper(data) {
     return _.map(data, function (item) {
         return {
@@ -80,24 +89,38 @@ function mapper(data) {
             numContrato: item.numContrato,
             ordenCompra: item.ordenCompra,
             idProveedor: item.idProveedor,
-            proveedor: { nombre: item.proveedor.razonsocial },
+            proveedor: {
+                nombre: item.proveedor.razonsocial
+            },
             idFabricante: item.idFabricante,
-            fabricante: { nombre: item.fabricante.nombre },
+            fabricante: {
+                nombre: item.fabricante.nombre
+            },
             idProducto: item.idProducto,
-            producto: { nombre: item.producto.nombre },
+            producto: {
+                nombre: item.producto.nombre
+            },
             idTipoInstalacion: item.producto.idTipoInstalacion,
-            tipoInstalacion: { nombre: item.producto.tipoInstalacion ? item.producto.tipoInstalacion.nombre : '' },
+            tipoInstalacion: {
+                nombre: item.producto.tipoInstalacion ? item.producto.tipoInstalacion.nombre : ''
+            },
             idClasificacion: item.producto.idClasificacion,
-            clasificacion: { nombre: item.producto.clasificacion ? item.producto.clasificacion.nombre : '' },
+            clasificacion: {
+                nombre: item.producto.clasificacion ? item.producto.clasificacion.nombre : ''
+            },
             idTipoLicenciamiento: item.producto.idTipoLicenciamiento,
-            tipoLicenciamiento: { nombre: item.producto.tipoLicenciamiento ? item.producto.tipoLicenciamiento.nombre : '' },
+            tipoLicenciamiento: {
+                nombre: item.producto.tipoLicenciamiento ? item.producto.tipoLicenciamiento.nombre : ''
+            },
             fechaInicio: base.fromDate(item.fechaInicio),
             fechaTermino: base.fromDate(item.fechaTermino),
             fechaControl: base.fromDate(item.fechaControl),
             idMoneda: item.idMoneda,
-            moneda: { nombre: item.moneda.moneda },
+            moneda: {
+                nombre: item.moneda.moneda
+            },
             monto: item.monto,
-            montoSoporte:item.montoSoporte,
+            montoSoporte: item.montoSoporte,
             cantidad: item.cantidad,
             comprador: item.comprador,
             mailComprador: item.mailComprador,
@@ -105,7 +128,8 @@ function mapper(data) {
             fecha: base.fromDate(item.fecha),
             numsolicitud: item.numsolicitud,
             ilimitado: item.ilimitado,
-            factura: item.factura
+            factura: item.factura,
+            idCompra: item.idCompra
         };
     });
 }
@@ -113,12 +137,17 @@ function mapper(data) {
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idRecepcion', includes, mapper);
 }
+
 function listProductChilds(req, res) {
     base.listChilds(req, res, entity, 'idProducto', includes, mapper);
 }
+
 function mapfabricante(data) {
-    return { nombre: data.otroFabricante };
+    return {
+        nombre: data.otroFabricante
+    };
 }
+
 function mapProducto(data) {
     return {
         nombre: data.otroProducto,
@@ -128,8 +157,10 @@ function mapProducto(data) {
         idTipoLicenciamiento: data.idTipoLicenciamiento
     };
 }
+
 function mapCompra(data) {
-    return { idProducto: data.idProducto,
+    return {
+        idProducto: data.idProducto,
         contrato: data.numContrato,
         ordenCompra: data.ordenCompra,
         idCui: data.cui,
@@ -145,9 +176,11 @@ function mapCompra(data) {
         fechaRenovaSoporte: data.fechaControl,
         factura: data.factura,
         comprador: data.comprador,
-        correoComprador: data.mailComprador
+        correoComprador: data.mailComprador,
+        idCompra: data.idCompra
     };
 }
+
 function saveProducto(data, res) {
     if (data.idProducto == null) {
         return base.createP(models.producto, mapProducto(data))
@@ -156,45 +189,69 @@ function saveProducto(data, res) {
                 addDetalle(data, res);
             }).catch(function (err) {
                 logger.error(models.producto.name + ':create, ' + err);
-                return res.json({ error: 1, glosa: err.message });
+                return res.json({
+                    error: 1,
+                    glosa: err.message
+                });
             });
     } else {
         return addDetalle(data, res);
     }
 }
+
 function addDetalle(data, res) {
-    if(data.idCompra == null){
+    if (data.idCompra == null) {
         return base.createP(models.compra, mapCompra(data))
-        .then(function(createdd){
-            data.idCompra = createdd.id;
-            addDetalle(data, res);
-        }).catch(function (err) {
-            logger.error('compra.Stock Upd, ' + err);
-            return res.json({ error: 1, glosa: err.message });
-        })
-    }else{
+            .then(function (createdd) {
+                data.idCompra = createdd.id;
+                addDetalle(data, res);
+            }).catch(function (err) {
+                logger.error('compra.Stock Upd, ' + err);
+                return res.json({
+                    error: 1,
+                    glosa: err.message
+                });
+            })
+    } else {
         return base.createP(entity, data)
-        .then(function (created) {
-            return base.findById(models.producto, data.idProducto)
-                .then(function (item) {
-                    var prdData = { id: data.idProducto, ilimitado: data.ilimitado };
-                    if (!prdData.ilimitado) {
-                        prdData.licStock = parseInt(item.licStock) + parseInt(data.cantidad);
-                    }
-                    if (item.idClasificacion) { prdData.idClasificacion = data.idClasificacion; }
-                    if (item.idTipoInstalacion) { prdData.idTipoInstalacion = data.idTipoInstalacion; }
-                    if (item.idTipoLicenciamiento) { prdData.idTipoLicenciamiento = data.idTipoLicenciamiento; }
-                    return base.update(models.producto, prdData, res);
-                }).catch(function (err) {
-                    logger.error('producto.Stock Upd, ' + err);
-                    return res.json({ error: 1, glosa: err.message });
-                })
-        }).catch(function (err) {
-            logger.error(entity.name + ':create, ' + err);
-            return res.json({ error: 1, glosa: err.message });
-        });
+            .then(function (created) {
+                return base.findById(models.producto, data.idProducto)
+                    .then(function (item) {
+                        var prdData = {
+                            id: data.idProducto,
+                            ilimitado: data.ilimitado
+                        };
+                        if (!prdData.ilimitado) {
+                            prdData.licStock = parseInt(item.licStock) + parseInt(data.cantidad);
+                        }
+                        if (item.idClasificacion) {
+                            prdData.idClasificacion = data.idClasificacion;
+                        }
+                        if (item.idTipoInstalacion) {
+                            prdData.idTipoInstalacion = data.idTipoInstalacion;
+                        }
+                        if (item.idTipoLicenciamiento) {
+                            prdData.idTipoLicenciamiento = data.idTipoLicenciamiento;
+                        }
+                        return base.update(models.producto, prdData, res);
+                    }).catch(function (err) {
+                        logger.error('producto.Stock Upd, ' + err);
+                        return res.json({
+                            error: 1,
+                            glosa: err.message
+                        });
+                    })
+
+            }).catch(function (err) {
+                logger.error(entity.name + ':create, ' + err);
+                return res.json({
+                    error: 1,
+                    glosa: err.message
+                });
+            });
     }
 }
+
 function action(req, res) {
     var data = map(req);
     switch (req.body.oper) {
@@ -206,7 +263,10 @@ function action(req, res) {
                         saveProducto(data, res);
                     }).catch(function (err) {
                         logger.error(models.fabricante.name + ':create, ' + err);
-                        return res.json({ error: 1, glosa: err.message });
+                        return res.json({
+                            error: 1,
+                            glosa: err.message
+                        });
                     });
             } else {
                 return saveProducto(data, res);
@@ -218,44 +278,108 @@ function action(req, res) {
                         .then(function (updated) {
                             return base.findById(models.producto, detalle.idProducto)
                                 .then(function (item) {
-                                    var updData = { id: detalle.idProducto, ilimitado: data.ilimitado };
+                                    var updData = {
+                                        id: detalle.idProducto,
+                                        ilimitado: data.ilimitado
+                                    };
                                     if (!updData.ilimitado) {
                                         updData.licStock = item.licStock - detalle.cantidad + data.cantidad
                                     }
-                                    return base.update(models.producto, updData, res);
+
+                                    return base.findById(models.compra, detalle.idCompra)
+                                        .then(function (items) {
+                                            return base.findById(models.compra, detalle.idCompra)
+                                                .then(function (items) {
+                                                    var updcData = {
+                                                        id: detalle.idCompra
+                                                    };
+                                                    updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
+                                                    base.update(models.compra, updcData, res);
+                                                    return base.update(models.producto, updData, res);
+                                                }).catch(function (err) {
+                                                    logger.error('producto.Stock Upd, ' + err);
+                                                    return res.json({
+                                                        error: 1,
+                                                        glosa: err.message
+                                                    });
+                                                });
+                                        }).catch(function (err) {
+                                            logger.error('compra.licCompradas Updc, ' + err);
+                                            return res.json({
+                                                error: 1,
+                                                glosa: err.message
+                                            });
+                                        });
                                 }).catch(function (err) {
                                     logger.error('producto.Stock Upd, ' + err);
-                                    return res.json({ error: 1, glosa: err.message });
+                                    return res.json({
+                                        error: 1,
+                                        glosa: err.message
+                                    });
                                 });
                         }).catch(function (err) {
                             logger.error(entity.name + ':destroy, ' + err);
-                            return res.json({ success: false, glosa: err.message });
+                            return res.json({
+                                success: false,
+                                glosa: err.message
+                            });
                         });
                 }).catch(function (err) {
                     logger.error(entity.name + 'by Id, ' + err);
-                    return res.json({ error: 1, glosa: err.message });
+                    return res.json({
+                        error: 1,
+                        glosa: err.message
+                    });
                 });
         case 'del':
             return base.findById(entity, req.body.id)
                 .then(function (detalle) {
                     return base.destroyP(entity, detalle.id)
                         .then(function (deleted) {
-                            return base.findById(models.producto, detalle.idProducto)
-                                .then(function (item) {
-                                    return base.update(models.producto, { id: detalle.idProducto, licStock: item.licStock - detalle.cantidad }, res);
+                            return base.findById(models.compra, detalle.idCompra)
+                                .then(function (items) {
+                                   return base.destroyP(models.compra, items.id)
+                                        .then(function (deleteed) {
+                                            return base.findById(models.producto, detalle.idProducto)
+                                                .then(function (item) {
+                                                    return base.update(models.producto, {
+                                                        id: detalle.idProducto,
+                                                        licStock: item.licStock - detalle.cantidad
+                                                    }, res);
+                                                }).catch(function (err) {
+                                                    logger.error('producto.Stock Upd, ' + err);
+                                                    return res.json({
+                                                        error: 1,
+                                                        glosa: err.message
+                                                    });
+                                                })
+                                        }).catch(function (err) {
+                                            logger.error(entity.name + ':destroy, ' + err);
+                                            return res.json({
+                                                success: false,
+                                                glosa: err.message
+                                            });
+                                        });
                                 }).catch(function (err) {
-                                    logger.error('producto.Stock Upd, ' + err);
-                                    return res.json({ error: 1, glosa: err.message });
-                                })
-                        })
-                        .catch(function (err) {
+                                    logger.error('compra.Stock Upd, ' + err);
+                                    return res.json({
+                                        error: 1,
+                                        glosa: err.message
+                                    });
+                                });
+                        }).catch(function (err) {
                             logger.error(entity.name + ':destroy, ' + err);
-                            return res.json({ success: false, glosa: err.message });
+                            return res.json({
+                                success: false,
+                                glosa: err.message
+                            });
                         });
-                })
-                .catch(function (err) {
+                }).catch(function (err) {
                     logger.error(entity.name + 'by Id, ' + err);
-                    return res.json({ error: 1, glosa: err.message });
+                    return res.json({
+                        error: 1,
+                        glosa: err.message
+                    });
                 });
     }
 }
@@ -264,15 +388,13 @@ function listDetalleCompras(req, res) {
     var ntt = models.detalleCompraTramite;
     base.listChilds(req, res, ntt, 'idCompraTramite', [{
         model: models.producto,
-        include: [
-            {
-                model: models.clasificacion
-            }, {
-                model: models.tipoInstalacion
-            }, {
-                model: models.tipoLicenciamiento
-            }
-        ]
+        include: [{
+            model: models.clasificacion
+        }, {
+            model: models.tipoInstalacion
+        }, {
+            model: models.tipoLicenciamiento
+        }]
     }], function (data) {
         var result = [];
         _.each(data, function (item) {
