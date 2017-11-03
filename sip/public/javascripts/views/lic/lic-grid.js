@@ -158,7 +158,7 @@
         this.beforeSubmitDel = function (postdata, formid) {
             console.log('beforeSubmit');
             //valido formulario
-            return [false, '', ''];
+            return [true, '', ''];
         };
         this.afterSubmit = function (response, postdata) {
             console.log('afterSubmit');
