@@ -147,6 +147,9 @@ module.exports = function (passport) {
         .get(isAuthenticated, snowController.get)
         .post(isAuthenticated, snowController.upload);
 
+    router.route('/lic/traduccion')
+        .get(isAuthenticated, traduccionController.list)
+        .post(isAuthenticated, traduccionController.action);
 
     return router;
 };

@@ -39,7 +39,7 @@
             case '#ajuste':
                 return ajusteGrid;
             case '#traduccion':
-                return traduccionGrid;
+                return tabtraduccionGrid;
             case '#bitacora':
                 return bitacoraGrid;
         }
