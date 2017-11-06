@@ -61,7 +61,7 @@ function mapper(data) {
             idClasificacion: item.idClasificacion,
             idTipoLicenciamiento: item.idTipoLicenciamiento,
             licStock: item.licStock,
-            ilimitado:item.ilimitado,
+            ilimitado: item.ilimitado ? 'Ilimitado' : '',
             licOcupadas: item.licOcupadas,
             comentarios: item.comentarios,
             fabricante: {
