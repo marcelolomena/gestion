@@ -19,26 +19,10 @@ var tabtraduccionGrid = {
         }, {
             label: 'Nombre',
             name: 'nombre',
-            width: 300,
+            width: 1000,
             editable: true
-        }, {
-            label: 'Tipo',
-            name: 'tipo',
-            jsonmap: 'tipos.nombre',
-            width: 300,
-
-            editable: true,
-            edittype: 'select',
-            editoptions: {
-                dataUrl: '/lic/tipo',
-                buildSelect: function (response) {
-                    var rowData = $grid.getRowData($grid.getGridParam('selrow'));
-                    var thissid = rowData.tipo;
-                    var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Tipo', thissid).template;
-                }
-            }
-        }];
+        }
+        ];
         
         var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Traducciones', 'Editar Traducción', 'Agregar Traducción', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         tabGrid.navParameters.edit = false;

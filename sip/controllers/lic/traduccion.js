@@ -26,7 +26,7 @@ function mapper(data) {
             idProducto: item.idProducto,
             producto: {
                 nombre: item.producto.nombre
-            }
+            },
         }
     });
 }
@@ -35,7 +35,7 @@ function list(req, res) {
             base.list(req, res, entity, includes, mapper);
         }
 function listChilds(req, res) {
-            base.listChilds(req, res, entity, 'id', includes, mapper);
+            base.listChilds(req, res, entity, 'idProducto', includes, mapper);
         }
 function action(req, res) {
             switch (req.body.oper) {
