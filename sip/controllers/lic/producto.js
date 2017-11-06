@@ -29,7 +29,7 @@ var includes = [{
     model: models.tipoInstalacion
 }, {
     model: models.tipoLicenciamiento
-},{
+}, {
     model: models.parametro
 }];
 
@@ -63,6 +63,7 @@ function mapper(data) {
             licStock: item.licStock,
             ilimitado: item.ilimitado ? 'Ilimitado' : '',
             licOcupadas: item.licOcupadas,
+            snow: item.snow ? item.snow : '',
             comentarios: item.comentarios,
             fabricante: {
                 nombre: item.fabricante ? item.fabricante.nombre : ''
@@ -107,19 +108,19 @@ function listAll(req, res) {
 function getFabricante(req, res) {
     var idProducto = parseInt(req.params.idProducto);
     entity.findOne({
-        where: {
-            id: idProducto
-        },
-        attributes: ['idfabricante']
-    })
+            where: {
+                id: idProducto
+            },
+            attributes: ['idfabricante']
+        })
         .then(function (result) {
             var idFabric = result.dataValues.idfabricante;
             models.fabricante.findOne({
-                where: {
-                    id: idFabric
-                },
-                attributes: ['nombre']
-            })
+                    where: {
+                        id: idFabric
+                    },
+                    attributes: ['nombre']
+                })
                 .then(function (resulta) {
                     return res.json({
                         error: 0,
@@ -153,12 +154,23 @@ function getProducto(req, res) {
 function getProductoLicTramite(req, res) {
     var idProducto = parseInt(req.idProducto);
     entity
-        .findOne({ where: { id: idProducto }, attributes: ['lictramite'] })
+        .findOne({
+            where: {
+                id: idProducto
+            },
+            attributes: ['lictramite']
+        })
         .then(function (result) {
-            return res.json({ error: 0, glosa: '', numero: result.lictramite });
+            return res.json({
+                error: 0,
+                glosa: '',
+                numero: result.lictramite
+            });
         })
         .catch(function (err) {
-            return res.json({ error_code: 1 });
+            return res.json({
+                error_code: 1
+            });
         });
 }
 

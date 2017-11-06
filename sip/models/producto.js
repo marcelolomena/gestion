@@ -55,9 +55,10 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
-        }, ilimitado:{
+        },
+        ilimitado: {
             type: DataTypes.BOOLEAN,
-            defaultValue:false,
+            defaultValue: false,
             allowNull: false
         },
         licOcupadas: {
@@ -84,12 +85,18 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true
         },
         licTramite: {
-            field:'lictramite',
+            field: 'lictramite',
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue:0
+            defaultValue: 0
         },
+        snow: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
     }, {
-            schema: 'lic', timestamps: false, tableName: 'producto'
-        });
+        schema: 'lic',
+        timestamps: false,
+        tableName: 'producto'
+    });
 };
