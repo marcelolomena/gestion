@@ -81,7 +81,7 @@
             }, {
                 label: 'Fabricante',
                 name: 'idFabricante',
-                jsonmap: 'fabricante.nombre',
+                jsonmap: 'nombreFab',
                 width: 380,
                 align: 'center',
                 sortable: false,
@@ -116,7 +116,7 @@
                 editable: true
             }, {
                 label: 'Cantidad Lic. Compradas',
-                name: 'licStock',
+                name: 'licstock',
                 width: 165,
                 align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
@@ -132,7 +132,7 @@
                 search: false
             }, {
                 label: 'Por Recepcionar',
-                name: 'licTramite',
+                name: 'lictramite',
                 width: 110,
                 align: 'center',
                 formatter: 'integer',
@@ -140,7 +140,7 @@
                 search: false
             }, {
                 label: 'Instaladas',
-                name: 'licOcupadas',
+                name: 'licocupadas',
                 width: 70,
                 align: 'center',
                 formatter: 'integer',
@@ -156,8 +156,8 @@
             },
             {
                 label: 'Alerta de Renovación',
-                name: 'alertaRenovacion',
-                jsonmap: 'alertaRenovacion.nombre',
+                name: 'idAlertaRen',
+                jsonmap: 'nombreAlertaRen',
                 align: 'center',
                 sortable: false,
                 editable: false,
@@ -165,7 +165,7 @@
             }, {
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
-                jsonmap: 'tipoInstalacion.nombre',
+                jsonmap: 'nombreTipoInst',
                 width: 160,
                 align: 'center',
                 sortable: false,
@@ -195,7 +195,7 @@
             }, {
                 label: 'Clasificación',
                 name: 'idClasificacion',
-                jsonmap: 'clasificacion.nombre',
+                jsonmap: 'nombreClas',
                 width: 150,
                 align: 'center',
                 sortable: false,
@@ -225,7 +225,7 @@
             }, {
                 label: 'Tipo de Licenciamiento',
                 name: 'idTipoLicenciamiento',
-                jsonmap: 'tipoLicenciamiento.nombre',
+                jsonmap: 'nombreTipoLic',
                 width: 170,
                 align: 'center',
                 sortable: false,

@@ -64,7 +64,7 @@
             editrules: {
                 required: false
             },
-            search: false
+            search: true
         }, {
             label: 'Nombre',
             name: 'nombre',

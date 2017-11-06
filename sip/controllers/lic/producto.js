@@ -2,6 +2,7 @@
 var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
 var base = require('./lic-controller');
+var logger = require("../../utils/logger");
 var _ = require('lodash');
 
 var entity = models.producto;
@@ -85,9 +86,9 @@ function mapper(data) {
     });
 }
 
-function list(req, res) {
+/*function list(req, res) {
     base.list(req, res, entity, includes, mapper);
-}
+}*/
 
 
 function listAll(req, res) {
@@ -103,6 +104,72 @@ function listAll(req, res) {
     });
 }
 
+function list(req, res) {
+    var page = req.query.page;
+    var rowspp = req.query.rows;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var cui = req.params.cui
+    var periodo = req.params.periodo
+    var proveedor = req.params.proveedor
+    var filters = req.query.filters;
+    var condition = "";
+  
+    if (filters) {
+      var jsonObj = JSON.parse(filters);
+      if (JSON.stringify(jsonObj.rules) != '[]') {
+        jsonObj.rules.forEach(function (item) {
+          if (item.op === 'cn' || item.op === 'eq')
+            if (item.field == 'nombre') {
+              condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
+            } else {
+              condition += 'a.' + item.field + "=" + item.data + " AND ";
+            } 
+        });
+        condition = condition.substring(0, condition.length - 5);
+        logger.debug("***CONDICION:" + condition);
+      }
+    }
+    var sqlcount = "SELECT count(*) AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto ";
+    if (filters && condition != "") {
+      sqlcount += "WHERE " + condition + " ";
+    }
+  
+    var sql = "DECLARE @PageSize INT; " +
+      "SELECT @PageSize=" + rowspp + "; " +
+      "DECLARE @PageNumber INT; " +
+      "SELECT @PageNumber=" + page + "; " +
+      "SELECT a.*, c.id idFabricante, c.nombre nombreFab, d.id idClasificacion, d.nombre nombreClas, "+
+      "e.id idTipoLic, e.nombre nombreTipoLic, f.id idTipoInst, f.nombre nombreTipoInst, "+
+      "g.id idAlertaRen, g.nombre nombreAlertaRen "+      
+      "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto "+
+      "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id "+
+      "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id "+
+      "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id "+
+      "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id "+
+      "LEFT JOIN sip.parametro g ON a.alertarenovacion=g.id ";
+    if (filters && condition != "") {
+      sql += "WHERE " + condition + " ";
+      logger.debug("**" + sql + "**");
+    }
+    var sql2 = sql + "ORDER BY a.id OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+    var records;
+    logger.debug("query:" + sql2);
+    sequelize.query(sqlcount).spread(function (recs) {
+      var records = recs[0].count;
+      var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+      sequelize.query(sql2).spread(function (rows) {
+        res.json({ records: records, total: total, page: page, rows: rows });
+      }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1 });
+      });
+    }).catch(function (err) {
+      logger.error(err)
+      res.json({ error_code: 1 });
+    });
+  }
+  
 
 
 function getFabricante(req, res) {
