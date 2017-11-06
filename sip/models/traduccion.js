@@ -19,7 +19,13 @@ module.exports = function(sequelize, DataTypes) {
     nombre: {
       type: DataTypes.STRING(120),
       allowNull: false
-    }
+    },
+    snow: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+
+
   }, {
     schema: 'lic',timestamps: false,tableName: 'traduccion'
   });
