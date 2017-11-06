@@ -264,18 +264,19 @@ function update(entity, data, res) {
     });
 }
 function destroy(entity, id, res) {
-    entity.destroy({
+    models.compra.destroy({
         where: {
-            id: id
+          id: id
         }
-    }).then(function (rowDeleted) {
+      }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
         if (rowDeleted === 1) {
-            logger.debug('Deleted successfully');
+          logger.debug('Deleted successfully');
         }
         return res.json({ success: true, glosa: '' });
-    }).catch(function (err) {
-        logger.error(err);
+      }).catch(function (err) {
+        logger.error(err)
         return res.json({ success: false, glosa: err.message });
+
     });
 }
 function list(req, res) {
