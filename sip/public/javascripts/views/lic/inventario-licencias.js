@@ -113,8 +113,11 @@
             editable: false,
             search: false
         }, {
+            label: 'Ilimitado',
             name: 'ilimitado',
-            hidden: true
+            align: 'center',
+            hidden: true,
+            search: false    
         }, {
             label: 'Por Recepcionar',
             name: 'licTramite',
