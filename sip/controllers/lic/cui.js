@@ -13,8 +13,17 @@ function listAll(req, res) {
         };
     });
 }
+function listAllRes(req, res) {
+    base.listAll(req, res, entity, function (item) {
+        return {
+            id: item.id,
+            nombre: item.cui + ' - ' + item.unidad
+        };
+    });
+}
 
 
 module.exports = {
-    listAll: listAll
+    listAll: listAll,
+    listAllRes: listAllRes
 };

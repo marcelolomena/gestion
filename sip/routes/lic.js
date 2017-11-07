@@ -30,7 +30,7 @@ var recepcionController = require('../controllers/lic/recepcion');
 var detalleRecepcionController = require('../controllers/lic/detalle-recepcion');
 
 var snowController = require('../controllers/lic/snow');
-
+ var reservaController = require('../controllers/lic/reserva');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -69,6 +69,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, sapController.existeSap);
 
     router.get('/lic/cuibch', cuiController.listAll);
+    router.get('/lic/cuibchres', cuiController.listAllRes);
     router.get('/lic/moneda', monedaController.listAll);
     router.get('/lic/tipo', tipoController.listAll);
     router.get('/lic/producto', productoController.listAll);
@@ -152,6 +153,11 @@ module.exports = function (passport) {
         .post(isAuthenticated, traduccionController.action);
 
     router.route('/lic/snow/:pId')
-        .get(isAuthenticated, traduccionController.listChilds)
+        .get(isAuthenticated, traduccionController.listChilds);
+
+    router.route('/lic/reserva')
+        .get(isAuthenticated, reservaController.list)
+        .post(isAuthenticated, reservaController.action);
+
     return router;
 };
