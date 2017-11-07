@@ -34,12 +34,14 @@
                 return tabdetalleCompraTramiteGrid;
             case '#recepcion':
                 return recepcionGrid;
-            // case '#instalacion':
-            //     return instalacionGrid;
+                // case '#instalacion':
+                //     return instalacionGrid;
             case '#ajuste':
                 return ajusteGrid;
             case '#traduccion':
                 return tabtraduccionGrid;
+            case '#snow':
+                return tabSnowGrid;
             case '#bitacora':
                 return bitacoraGrid;
         }
@@ -274,6 +276,9 @@
         }, {
             id: 'traduccion',
             nom: 'Traducciones'
+        }, {
+            id: 'snow',
+            nom: 'SNOW'
         }];
 
         initMainGrid('/lic/grid_inventario', viewModel, 'nombre', tabs);
