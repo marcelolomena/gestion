@@ -139,7 +139,7 @@ function list(req, res) {
       "SELECT @PageSize=" + rowspp + "; " +
       "DECLARE @PageNumber INT; " +
       "SELECT @PageNumber=" + page + "; " +
-      "SELECT a.*, c.id idFabricante, c.nombre nombreFab, d.id idClasificacion, d.nombre nombreClas, "+
+      "SELECT DISTINCT(a.id) id1, a.*, c.id idFabricante, c.nombre nombreFab, d.id idClasificacion, d.nombre nombreClas, "+
       "e.id idTipoLic, e.nombre nombreTipoLic, f.id idTipoInst, f.nombre nombreTipoInst, "+
       "g.id idAlertaRen, g.nombre nombreAlertaRen "+      
       "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto "+
