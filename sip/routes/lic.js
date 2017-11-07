@@ -151,5 +151,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, traduccionController.list)
         .post(isAuthenticated, traduccionController.action);
 
+    router.route('/lic/snow/:pId')
+        .get(isAuthenticated, traduccionController.listChilds)
     return router;
 };
