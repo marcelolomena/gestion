@@ -15,7 +15,6 @@ var includes = [];
 function map(req) {
     return {
         id: req.query.id || 0,
-        traduccion: req.query.traduccion,
         aplicacion: req.quey.aplicacion,
         fabricante: req.quey.fabricante,
         categoria: req.query.categoria

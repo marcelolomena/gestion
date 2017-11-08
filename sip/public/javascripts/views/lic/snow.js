@@ -11,12 +11,6 @@
             editable: false,
         },
         {
-            label: 'Traducción',
-            name: 'traduccion',
-            hidden: false,
-            editable: false,
-            search:true
-        }, {
             label: 'Aplicación',
             name: 'aplicacion',
             editable: false,
