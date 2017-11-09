@@ -408,16 +408,21 @@ object Risks extends Controller {
             case Some(rr: RiskAlerts) =>
               val ra = RiskAlerts(rr.id,
                 rr.risk_id,
-                rr.event_type,
                 rr.event_code,
                 rr.event_date,
                 rr.event_title,
                 rr.event_details,
                 rr.responsible,
                 rr.person_invloved,
-                rr.alert_type,
                 rr.criticality,
-                rr.is_active)
+                rr.is_active,
+                rr.category_id,
+                rr.impacted_variable,
+                rr.reiteration,
+                rr.status_id,
+                rr.task_id,
+                rr.change_state,
+                rr.responsible_answer)
 
               val users = ProgramMemberService.findAllProgramMembers(program_id);
               Ok(views.html.frontend.risks.editAlert(risk_id.toString, alert_id.toString, ARTForms.alertsForm.fill(ra), alert, users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
@@ -480,16 +485,22 @@ object Risks extends Controller {
         case Some(rr: RiskAlerts) =>
           val ra = RiskAlerts(rr.id,
             rr.risk_id,
-            rr.event_type,
             rr.event_code,
             rr.event_date,
             rr.event_title,
             rr.event_details,
             rr.responsible,
             rr.person_invloved,
-            rr.alert_type,
             rr.criticality,
-            rr.is_active)
+            rr.is_active,
+            rr.category_id,
+            rr.impacted_variable,
+            rr.reiteration,
+            rr.status_id,
+            rr.task_id,
+            rr.change_state,
+            rr.responsible_answer         
+            )
 
           ARTForms.alertsForm.bindFromRequest.fold(
             errors => {
@@ -519,16 +530,22 @@ object Risks extends Controller {
 
               val theAlert = RiskAlerts(ra.id,
                 ra.risk_id,
-                success.event_type,
                 success.event_code,
                 ra.event_date,
                 success.event_title.toString,
                 success.event_details,
                 ra.responsible,
                 success.person_invloved,
-                success.alert_type,
                 success.criticality,
-                ra.is_active)
+                ra.is_active,
+                success.category_id,
+                success.impacted_variable,
+                success.reiteration,
+                success.status_id,
+                success.task_id,
+                success.change_state,
+                success.responsible_answer                
+                )
 
               val last = RiskService.updateAlertDetails(theAlert)
 
@@ -820,10 +837,26 @@ object Risks extends Controller {
                 risks => {
 
                   val user_id = Integer.parseInt(request.session.get("uId").get)
-                  val alert = RiskAlerts(Option(1), risk_id.toInt, Option(2), risks.event_code, Option(new Date()),
-                    risks.event_title, risks.event_details, Option(user_id), risks.person_invloved,
-                    risks.alert_type,
-                    risks.criticality, Option(1))
+                  val alert = RiskAlerts(
+                      Option(1),
+                      risk_id.toInt,
+                      //Option(2),
+                      risks.event_code,
+                      Option(new Date()),
+                      risks.event_title,
+                      risks.event_details,
+                      Option(user_id),
+                      risks.person_invloved,
+                      risks.criticality,
+                      Option(1),
+                      risks.category_id,
+                      risks.impacted_variable,
+                      risks.reiteration,
+                      risks.status_id,
+                      risks.task_id,
+                      risks.change_state,
+                      risks.responsible_answer                    
+                    )
 
                   val last_index = RiskService.insertRiskAlert(alert)
 
