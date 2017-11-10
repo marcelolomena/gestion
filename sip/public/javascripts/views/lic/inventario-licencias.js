@@ -312,6 +312,9 @@
         }, {
             id: 'snow',
             nom: 'SNOW'
+        }, {
+            id: 'addm',
+            nom: 'ADDM'
         }];
 
         initMainGrid('/lic/grid_inventario', viewModel, 'nombre', tabs);

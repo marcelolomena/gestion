@@ -24,8 +24,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-
-
+    addm:  {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }
   }, {
     schema: 'lic',timestamps: false,tableName: 'traduccion'
   });
