@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('compra', {
     id: {
       type: DataTypes.INTEGER,
@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true
     },
     idProducto: {
-      field:'idproducto',
+      field: 'idproducto',
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -22,12 +22,12 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     ordenCompra: {
-      field:'ordencompra',
+      field: 'ordencompra',
       type: DataTypes.INTEGER,
       allowNull: true
     },
     idCui: {
-      field:'idcui',
+      field: 'idcui',
       type: DataTypes.INTEGER,
       allowNull: true
     },
@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     idProveedor: {
-      field:'idproveedor',
+      field: 'idproveedor',
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -45,29 +45,29 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     fechaCompra: {
-      field:'fechacompra',
+      field: 'fechacompra',
       type: DataTypes.DATE,
       allowNull: true
     },
     fechaExpiracion: {
-      field:'fechaexpiracion',
+      field: 'fechaexpiracion',
       type: DataTypes.DATE,
       allowNull: true
     },
     licCompradas: {
-      field:'liccompradas',
+      field: 'liccompradas',
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue:0
+      defaultValue: 0
     },
     cantidadSoporte: {
-      field:'cantidadsoporte',
+      field: 'cantidadsoporte',
       type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue:0
+      defaultValue: 0
     },
     idMoneda: {
-      field:'idmoneda',
+      field: 'idmoneda',
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -76,17 +76,17 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     valorLicencia: {
-      field:'valorlicencia',
-      type: DataTypes.DECIMAL(10,2),
+      field: 'valorlicencia',
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: true
     },
     valorSoporte: {
-      field:'valorsoporte',
-      type: DataTypes.DECIMAL(10,2),
+      field: 'valorsoporte',
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: true
     },
     fechaRenovaSoporte: {
-      field:'fecharenovasoporte',
+      field: 'fecharenovasoporte',
       type: DataTypes.DATE,
       allowNull: true
     },
@@ -99,11 +99,18 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     correoComprador: {
-      field:'correocomprador',
+      field: 'correocomprador',
       type: DataTypes.STRING(120),
+      allowNull: true
+    },
+    alertaRenovacion: {
+      field: 'alertarenovacion',
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {
-    schema: 'lic',timestamps: false,tableName: 'compra'
+    schema: 'lic',
+    timestamps: false,
+    tableName: 'compra'
   });
 };

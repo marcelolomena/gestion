@@ -15,33 +15,56 @@
 		<input type="hidden" value="@end_date.format("dd-MM-yyyy")" name="end_date" id="end_date"/>
 			@form(action = controllers.Frontend.routes.Risks.saveRiskAlert(risk_id), 'id->"risk-management-alert-form") {
 		      <input type="hidden" value="@risk_id" name="risk_id" id="risk_id"/>
-		      <input type="hidden" value="2" name="event_type" id="event_type"/>    
+		      <input type="hidden" value="1" name="category_id" id="category_id"/> 
+		      <input type="hidden" value="algo" name="impacted_variable" id="impacted_variable"/> 		      
+		      <input type="hidden" value="1" name="reiteration" id="reiteration"/> 
+		      <input type="hidden" value="1" name="status_id" id="status_id"/> 		      
+		      <input type="hidden" value="" name="task_id" id="task_id"/> 
+		      <input type="hidden" value="" name="change_state" id="change_state"/> 
+		      <input type="hidden" value="algo" name="responsible_answer" id="responsible_answer"/>		      		      
+		         <div class="left width_full">
+		         	<div class="left width-pr50 padding-top-3px" >
+			      		@select(
+					         alertForm("criticality"),
+					         options("1"->"Alto", "2"->"Medio","3"->"Bajo"),
+					         'class -> "input-xlarge ",
+					         '_label -> "*Severidad"
+					      )
+				      </div>
+		         </div>		      
+		        
 		       	<div class="left width_full">
-	      			@select(
-				         alertForm("event_code"),
-				         options("1"->"Risk", "2"->"Issue"),
-				         'class -> "input-xlarge",
-				         '_label -> "*Tipo de Evento"
-				      )
+		       		<div class="left width-pr50 padding-top-3px" >
+		      			@select(
+					         alertForm("event_code"),
+					         options("1"->"Riesgo", "2"->"Incidente"),
+					         'class -> "input-xlarge",
+					         '_label -> "*Tipo de Evento"
+					      )
+					</div>					      
 		         </div>
 		         
 		      	<div class="left width_full">
-		      		@inputText(
-		                alertForm("event_title"),
-		                'class -> "span5", 
-		                '_label -> "*Evento"		                
-		            )
+		      		<div class="left width-pr50 padding-top-3px" >
+			      		@inputText(
+			                alertForm("event_title"),
+			                'class -> "span5", 
+			                '_label -> "*Evento"		                
+			            )
+					</div>			            
 		         </div>
 		         
 		         
 		      	<div class="left width_full">
-		      		 @textarea(
-		                alertForm("event_details"),
-		                'class -> "span5", 
-		                '_label ->  "Detalles",		                
-					    'rows -> 3,
-					    'cols -> 60
-	            	)
+			      	<div class="left width-pr50 padding-top-3px" >
+			      		 @textarea(
+			                alertForm("event_details"),
+			                'class -> "span5", 
+			                '_label ->  "Detalles",		                
+						    'rows -> 3,
+						    'cols -> 60
+		            	)
+	            	</div>
 		         </div>
 		         
 		         <div class="left width_full">
@@ -88,7 +111,8 @@
 					      )*@
 			         </div>
 		         </div>
-		         
+
+				<!-- 		         
 		         <div class="left width_full">
 		         	<div class="left width-pr50 padding-top-3px" >
 			      		@select(
@@ -99,20 +123,7 @@
 					      )
 				      </div>
 		         </div>
-		         
-		         <div class="left width_full">
-		         	<div class="left width-pr50 padding-top-3px" >
-			      		@select(
-					         alertForm("criticality"),
-					         options("1"->"Alto", "2"->"Medio","3"->"Bajo"),
-					         'class -> "input-xlarge ",
-					         '_label -> "*Criticidad"
-					      )
-				      </div>
-		         </div>
-		         
-		         
-		         
+				 -->		         
 		         
 		         <dl id="member_id_search_field " class=" display-none">
 	   				<dt>

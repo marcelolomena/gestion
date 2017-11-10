@@ -28,7 +28,7 @@ object ApplicationBuild extends Build {
 
   val main = Project(appName, file(".")).enablePlugins(play.PlayScala).settings(
     version := appVersion,
-    scalaVersion := "2.11.7",
+    scalaVersion := "2.11.11",//2.11.11,2.11.7
     libraryDependencies ++= appDependencies)
 
   // no incluye documentacion de la API mientras empaqueta:

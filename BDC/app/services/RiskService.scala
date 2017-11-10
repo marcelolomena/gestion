@@ -86,6 +86,8 @@ object RiskService extends CustomColumns {
 
   } /*  'risk_state -> risk.risk_state,*/
 
+  /*
+   */
   def updateAlertDetails(alert: RiskAlerts) = {
     DB.withConnection { implicit connection =>
       println("ID : " + alert.id.get)
@@ -97,28 +99,38 @@ object RiskService extends CustomColumns {
         """
           update art_risk_alert  SET 
           risk_id={risk_id},          
-          event_type={event_type},
           event_code={event_code},
           event_date={event_date},
           event_title={event_title},
           event_details={event_details},
           responsible={responsible},
           person_invloved={person_invloved},
-          alert_type={alert_type},
-          criticality={criticality}
+          criticality={criticality},
+          category_id={category_id},
+          impacted_variable={impacted_variable},
+          reiteration={reiteration},
+          status_id={status_id},
+          task_id={task_id},
+          change_state={change_state},
+          responsible_answer={responsible_answer}
           where id={id}
           """).on(
           'id -> alert.id.get,
           'risk_id -> alert.risk_id,
-          'event_type -> alert.event_type,
           'event_code -> alert.event_code,
           'event_date -> alert.event_date,
           'event_title -> alert.event_title,
           'event_details -> alert.event_details.get.toString,
           'responsible -> alert.responsible,
           'person_invloved -> alert.person_invloved,
-          'alert_type -> alert.alert_type,
-          'criticality -> alert.criticality).executeUpdate()
+          'criticality -> alert.criticality,
+          'category_id -> alert.category_id,
+          'impacted_variable -> alert.impacted_variable,
+          'reiteration -> alert.reiteration,
+          'status_id -> alert.status_id,
+          'task_id -> alert.task_id,
+          'change_state -> alert.change_state,
+          'responsible_answer -> alert.responsible_answer).executeUpdate()
     }
   }
 
@@ -1009,23 +1021,30 @@ object RiskService extends CustomColumns {
 
       val risk_issue = SQL(
         """
-          insert into art_risk_alert (risk_id,event_type,event_code,event_date,event_title,event_details,
-          responsible,person_invloved,alert_type, criticality,is_active
+          insert into art_risk_alert (risk_id,event_code,event_date,event_title,event_details,
+          responsible,person_invloved, criticality,is_active,
+          category_id,impacted_variable,reiteration,status_id,task_id,change_state,responsible_answer
          ) values (
-         {risk_id},{event_type},{event_code},{event_date},{event_title},{event_details},
-          {responsible},{person_invloved},{alert_type},{criticality},{is_active})
+         {risk_id},{event_code},{event_date},{event_title},{event_details},
+          {responsible},{person_invloved},{criticality},{is_active},
+          {category_id},{impacted_variable},{reiteration},{status_id},{task_id},{change_state},{responsible_answer})
           """).on(
           'risk_id -> risk.risk_id,
-          'event_type -> risk.event_type,
           'event_code -> risk.event_code,
           'event_date -> risk.event_date,
           'event_title -> risk.event_title,
           'event_details -> risk.event_details,
           'responsible -> risk.responsible,
           'person_invloved -> risk.person_invloved,
-          'alert_type -> risk.alert_type,
           'criticality -> risk.criticality,
-          'is_active -> 1).executeInsert(scalar[Long].singleOpt)
+          'is_active -> 1,
+          'category_id -> risk.category_id,
+          'impacted_variable -> risk.impacted_variable,
+          'reiteration -> risk.reiteration,
+          'status_id -> risk.status_id,
+          'task_id -> risk.task_id,
+          'change_state -> risk.change_state,
+          'responsible_answer -> risk.responsible_answer).executeInsert(scalar[Long].singleOpt)
 
       var last_index = risk_issue.last
 
@@ -1325,11 +1344,12 @@ object RiskService extends CustomColumns {
                   persons = persons + "," + u.uid.get.toString()
                 }
               }
+              /*
               for (r <- risks) {
 
                 val alert = RiskAlerts(Option(1), r.id.get, Option(1), Option(1), Option(new Date()),
                   r.name, Option(r.cause), Option(r.responsible), Option(persons),
-                  Option(1), Option(1), Option(1))
+                  Option(1), Option(1), Option(1),)
 
                 /**
                  * Temp commit
@@ -1337,6 +1357,7 @@ object RiskService extends CustomColumns {
                 val last = insertRiskAlert(alert)
                 //sendAutomaticAlerts(last.toString())
               }
+              */
 
             }
 

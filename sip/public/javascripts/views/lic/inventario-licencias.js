@@ -114,14 +114,14 @@
             }, {
                 label: 'Software',
                 name: 'nombre',
-                width: 380,
+                width: 350,
                 align: 'center',
                 sortable: false,
                 editable: true
             }, {
-                label: 'Cantidad Lic. Compradas',
+                label: 'Cantidad Compradas',
                 name: 'licstock',
-                width: 165,
+                width: 140,
                 align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
                     return rowObject.ilimitado ? 'Ilimitado' : cellvalue;
@@ -145,7 +145,7 @@
             }, {
                 label: 'Instaladas',
                 name: 'licocupadas',
-                width: 70,
+                width: 75,
                 align: 'center',
                 formatter: 'integer',
                 editable: false,
@@ -159,14 +159,45 @@
                 search: false
             },
             {
-                label: 'Alerta de Renovación',
-                name: 'idAlertaRen',
-                jsonmap: 'nombreAlertaRen',
+                label: 'Alerta Renovación',
+                name: 'alertarenovacion',
+                width: 80,
+                hidden: false,
+                search: false,
+                editable: true,
+                align: 'right',
                 align: 'center',
-                sortable: false,
-                editable: false,
-                search: false
-            }, {
+                formatter: function (cellvalue, options, rowObject) {
+                    var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                    var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                    var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
+                    var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
+                    //console.log(" carlos ql " +cellvalue);
+                    if (rowObject.alertaRenovacion === 'Vencida') {
+                        return rojo
+                    } else {
+                        if (rowObject.alertaRenovacion === 'Al Dia') {
+                            return verde
+                        } else {
+                            if (rowObject.alertaRenovacion === 'Renovar') {
+                                return amarillo
+                            } else {
+                                return gris
+                            }
+                        }
+                    }
+                }
+            },
+            // {
+            //     label: 'Alerta Renovación',
+            //     name: 'idAlertaRen',
+            //     jsonmap: 'nombreAlertaRen',
+            //     align: 'center',
+            //     sortable: false,
+            //     editable: false,
+            //     search: false
+            // },
+             {
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
                 jsonmap: 'nombreTipoInst',
