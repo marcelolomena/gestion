@@ -18,9 +18,6 @@ entity.belongsTo(models.tipoInstalacion, {
 entity.belongsTo(models.tipoLicenciamiento, {
     foreignKey: 'idTipoLicenciamiento'
 });
-entity.belongsTo(models.parametro, {
-    foreignKey: 'alertaRenovacion'
-});
 
 var includes = [{
     model: models.fabricante
@@ -30,8 +27,6 @@ var includes = [{
     model: models.tipoInstalacion
 }, {
     model: models.tipoLicenciamiento
-}, {
-    model: models.parametro
 }];
 
 function map(req) {
@@ -78,9 +73,10 @@ function mapper(data) {
             tipoLicenciamiento: {
                 nombre: item.tipoLicenciamiento ? item.tipoLicenciamiento.nombre : ''
             },
-            alertaRenovacion: {
-                nombre: item.parametro ? item.parametro.nombre : ''
-            },
+            alertaRenovacion: item.alertaRenovacion,
+            // alertaRenovacion: {
+            //     nombre: item.parametro ? item.parametro.nombre : ''
+            // },
             licTramite: item.licTramite,
             estado: item.estado ? 'De Baja' : 'Vigente'
         }
@@ -141,19 +137,17 @@ function list(req, res) {
       "DECLARE @PageNumber INT; " +
       "SELECT @PageNumber=" + page + "; " +
       "SELECT DISTINCT(a.id) id1, a.*, c.id idFabricante, c.nombre nombreFab, d.id idClasificacion, d.nombre nombreClas, "+
-      "e.id idTipoLic, e.nombre nombreTipoLic, f.id idTipoInst, f.nombre nombreTipoInst, "+
-      "g.id idAlertaRen, g.nombre nombreAlertaRen "+      
+      "e.id idTipoLic, e.nombre nombreTipoLic, f.id idTipoInst, f.nombre nombreTipoInst "+     
       "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto "+
       "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id "+
       "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id "+
       "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id "+
-      "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id "+
-      "LEFT JOIN sip.parametro g ON a.alertarenovacion=g.id ";
+      "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id ";
     if (filters && condition != "") {
       sql += "WHERE " + condition + " ";
       logger.debug("**" + sql + "**");
     }
-    var sql2 = sql + "ORDER BY a.alertarenovacion desc OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+    var sql2 = sql + "ORDER BY a.alertarenovacion OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
     var records;
     logger.debug("query:" + sql2);
     sequelize.query(sqlcount).spread(function (recs) {

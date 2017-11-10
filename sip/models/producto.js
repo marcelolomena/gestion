@@ -69,12 +69,8 @@ module.exports = function (sequelize, DataTypes) {
         },
         alertaRenovacion: {
             field: 'alertarenovacion',
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            references: {
-                model: 'parametro',
-                key: 'id'
-            }
+            type: DataTypes.STRING,
+            allowNull: true
         },
         comentarios: {
             type: DataTypes.STRING(255),
