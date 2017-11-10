@@ -27,7 +27,8 @@ function mapper(data) {
             producto: {
                 nombre: item.producto.nombre
             },
-            snow: item.snow
+            snow: item.snow,
+            addm: item.addm
         }
     });
 }

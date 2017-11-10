@@ -152,11 +152,15 @@ module.exports = function (passport) {
     router.route('/lic/snow/list')
         .get(isAuthenticated, snowController.list);
 
+        
     router.route('/lic/traduccion')
         .get(isAuthenticated, traduccionController.list)
         .post(isAuthenticated, traduccionController.action);
 
     router.route('/lic/snow/:pId')
+        .get(isAuthenticated, traduccionController.listChilds);
+    
+        router.route('/lic/addm/:pId')
         .get(isAuthenticated, traduccionController.listChilds);
 
     router.route('/lic/reserva')
