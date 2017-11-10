@@ -44,6 +44,8 @@
                 return tabSnowGrid;
             case '#bitacora':
                 return bitacoraGrid;
+            case '#addm':
+                return tabAddmGrid;
         }
     };
 
