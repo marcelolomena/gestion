@@ -76,10 +76,6 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        utilidad: {
-            type: DataTypes.STRING(255),
-            allowNull: true
-        },
         comentarios: {
             type: DataTypes.STRING(255),
             allowNull: true
@@ -91,6 +87,10 @@ module.exports = function (sequelize, DataTypes) {
             defaultValue: 0
         },
         snow: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        estado: {
             type: DataTypes.INTEGER,
             allowNull: true
         }

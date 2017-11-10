@@ -56,9 +56,9 @@ function map(req) {
         idProveedor: parseInt(req.body.idProveedor),
         idProducto: req.body.idProducto ? parseInt(req.body.idProducto) : null,
         idFabricante: req.body.idFabricante ? parseInt(req.body.idFabricante) : null,
-        fechaInicio: base.toDate(req.body.fechaInicio),
-        fechaTermino: base.toDate(req.body.fechaTermino),
-        fechaControl: base.toDate(req.body.fechaControl),
+        fechaInicio: req.body.fechaInicio,
+        fechaTermino: req.body.fechaTermino,
+        fechaControl: req.body.fechaControl,
         idMoneda: parseInt(req.body.idMoneda),
         monto: parseInt(req.body.monto || 0),
         montoSoporte: parseInt(req.body.montoSoporte || 0),
@@ -166,14 +166,14 @@ function mapCompra(data) {
         idCui: data.cui,
         sap: data.sap,
         idProveedor: data.idProveedor,
-        fechaCompra: data.fechaInicio,
-        fechaExpiracion: data.fechaTermino,
+        fechaCompra: base.strToDateDB(data.fechaInicio),
+        fechaExpiracion: base.strToDateDB(data.fechaTermino),
         licCompradas: data.cantidad,
         cantidadSoporte: data.cantidadSoporte,
         idMoneda: data.idMoneda,
         valorLicencia: data.monto,
         valorSoporte: data.montoSoporte,
-        fechaRenovaSoporte: data.fechaControl,
+        fechaRenovaSoporte: base.strToDateDB(data.fechaControl),
         factura: data.factura,
         comprador: data.comprador,
         correoComprador: data.mailComprador,
@@ -213,13 +213,25 @@ function addDetalle(data, res) {
                 });
             })
     } else {
+        data.fechaInicio = base.strToDateDB(data.fechaInicio);
+        data.fechaTermino = base.strToDateDB(data.fechaTermino);
+        data.fechaControl = base.strToDateDB(data.fechaControl);
+
+        var hoy = "" + new Date().toISOString();
+
         return base.createP(entity, data)
             .then(function (created) {
                 return base.findById(models.producto, data.idProducto)
                     .then(function (item) {
+                        var f1 = data.fechaControl;
+                        var f2 = data.fechaTermino;
+                        var f1compare = f1.replace(/-/g, "")
+                        var f2compare = f2.replace(/-/g, "")
+                        var fhoycompare = hoy.substr(0, 10).replace(/-/g, "");
                         var prdData = {
                             id: data.idProducto,
-                            ilimitado: data.ilimitado
+                            ilimitado: data.ilimitado,
+                            alertaRenovacion: null
                         };
                         if (!prdData.ilimitado) {
                             prdData.licStock = parseInt(item.licStock) + parseInt(data.cantidad);
@@ -233,7 +245,47 @@ function addDetalle(data, res) {
                         if (item.idTipoLicenciamiento) {
                             prdData.idTipoLicenciamiento = data.idTipoLicenciamiento;
                         }
-                        return base.update(models.producto, prdData, res);
+                        if (f1compare < fhoycompare) {
+                            if (f2compare < fhoycompare) {
+                                models.parametro.findAll({
+                                    where: {
+                                        tipo: 'alertarenosoporte',
+                                        nombre: 'Vencida'
+                                    }
+                                }).then(function (alerta) {
+
+                                    if (alerta.length != 0) {
+                                        prdData.alertaRenovacion = alerta[0].dataValues.id;
+                                        return base.update(models.producto, prdData, res);
+                                    }
+                                });
+                            } else {
+                                models.parametro.findAll({
+                                    where: {
+                                        tipo: 'alertarenosoporte',
+                                        nombre: 'Renovar'
+                                    }
+                                }).then(function (alerta) {
+                                    if (alerta.length != 0) {
+                                        prdData.alertaRenovacion = alerta[0].dataValues.id;
+                                        return base.update(models.producto, prdData, res);
+                                    }
+                                });
+                            }
+                        } else {
+                            models.parametro.findAll({
+                                where: {
+                                    tipo: 'alertarenosoporte',
+                                    nombre: 'Al Día'
+                                }
+                            }).then(function (alerta) {
+                                if (alerta.length != 0) {
+                                    prdData.alertaRenovacion = alerta[0].dataValues.id;
+                                    return base.update(models.producto, prdData, res);
+                                }
+                            });
+                        }
+
                     }).catch(function (err) {
                         logger.error('producto.Stock Upd, ' + err);
                         return res.json({
@@ -272,6 +324,15 @@ function action(req, res) {
                 return saveProducto(data, res);
             }
         case 'edit':
+            data.fechaInicio = base.strToDateDB(data.fechaInicio);
+            data.fechaTermino = base.strToDateDB(data.fechaTermino);
+            data.fechaControl = base.strToDateDB(data.fechaControl);
+            var hoy = "" + new Date().toISOString();
+            var f1 = data.fechaControl;
+            var f2 = data.fechaTermino;
+            var f1compare = f1.replace(/-/g, "")
+            var f2compare = f2.replace(/-/g, "")
+            var fhoycompare = hoy.substr(0, 10).replace(/-/g, "");
             return base.findById(entity, req.body.id)
                 .then(function (detalle) {
                     return base.updateP(entity, data)
@@ -295,7 +356,48 @@ function action(req, res) {
                                                     };
                                                     updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
                                                     base.update(models.compra, updcData, res);
-                                                    return base.update(models.producto, updData, res);
+
+                                                    if (f1compare < fhoycompare) {
+                                                        if (f2compare < fhoycompare) {
+                                                            models.parametro.findAll({
+                                                                where: {
+                                                                    tipo: 'alertarenosoporte',
+                                                                    nombre: 'Vencida'
+                                                                }
+                                                            }).then(function (alerta) {
+                            
+                                                                if (alerta.length != 0) {
+                                                                    updData.alertaRenovacion = alerta[0].dataValues.id;
+                                                                    return base.update(models.producto, updData, res);
+                                                                }
+                                                            });
+                                                        } else {
+                                                            models.parametro.findAll({
+                                                                where: {
+                                                                    tipo: 'alertarenosoporte',
+                                                                    nombre: 'Renovar'
+                                                                }
+                                                            }).then(function (alerta) {
+                                                                if (alerta.length != 0) {
+                                                                    updData.alertaRenovacion = alerta[0].dataValues.id;
+                                                                    return base.update(models.producto, updData, res);
+                                                                }
+                                                            });
+                                                        }
+                                                    } else {
+                                                        models.parametro.findAll({
+                                                            where: {
+                                                                tipo: 'alertarenosoporte',
+                                                                nombre: 'Al Día'
+                                                            }
+                                                        }).then(function (alerta) {
+                                                            if (alerta.length != 0) {
+                                                                updData.alertaRenovacion = alerta[0].dataValues.id;
+                                                                return base.update(models.producto, updData, res);
+                                                            }
+                                                        });
+                                                    }
+                                                    // return base.update(models.producto, updData, res);
                                                 }).catch(function (err) {
                                                     logger.error('producto.Stock Upd, ' + err);
                                                     return res.json({
@@ -338,7 +440,7 @@ function action(req, res) {
                         .then(function (deleted) {
                             return base.findById(models.compra, detalle.idCompra)
                                 .then(function (items) {
-                                   return base.destroyP(models.compra, items.id)
+                                    return base.destroyP(models.compra, items.id)
                                         .then(function (deleteed) {
                                             return base.findById(models.producto, detalle.idProducto)
                                                 .then(function (item) {
