@@ -229,6 +229,7 @@
 							 	}
 						 	}							
 							</span>
+							@**
 							<span class="member">
 							@{
 						 		p.alert_type.get match{
@@ -237,6 +238,7 @@
 						 		}
 					 		}
 							</span>
+							**@
 							</a>
 							<span class="member">
 								@if(utils.UserAccess.checkAccess(req,"delete_alert")){    

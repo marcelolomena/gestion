@@ -97,11 +97,10 @@ import models.NonCommittedInvestment
 import models.AvailableInvestment
 import models.AvailableExpenditure
 
-
 object ARTForms {
 
   val langObj = new Lang(Lang.forCode("es-ES"))
-  
+
   /**
    * add/edit project form FRONT end.
    */
@@ -177,7 +176,7 @@ object ARTForms {
       "mId" -> optional(number),
       "pId" -> number, //.verifying(Messages.get("error.task.projectId"), project => project.length() > 4),
       "project_mode" -> number,
-      "pert" -> number,//of[Boolean]
+      "pert" -> number, //of[Boolean]
       "title" -> text.verifying(Messages.get(langObj, "error.task.milestone_title"), title => title.length() >= 4 && title.length() <= 60),
       "plan_start_date" -> play.api.data.Forms.date("dd-MM-yyyy"),
       "plan_end_date" -> play.api.data.Forms.date("dd-MM-yyyy"),
@@ -196,12 +195,12 @@ object ARTForms {
         "task_code" -> text,
         "stage" -> number,
         "user_role" -> number,
-        "deliverable" -> optional(number))(TaskDetails.apply)(TaskDetails.unapply))((tId, pId, project_mode,pert, title, plan_start_date, plan_end_date,
+        "deliverable" -> optional(number))(TaskDetails.apply)(TaskDetails.unapply))((tId, pId, project_mode, pert, title, plan_start_date, plan_end_date,
         description, plan_time, task_status, status, task_owner, task_discipline,
         completion_percentage, remark, task_depend, dependencies_type, task_details) =>
-        TaskMaster(tId, pId, project_mode, pert,title, plan_start_date, plan_end_date,
+        TaskMaster(tId, pId, project_mode, pert, title, plan_start_date, plan_end_date,
           description, plan_time, task_status, status, task_owner, task_discipline,
-          completion_percentage, remark, task_depend, dependencies_type, task_details))((task: TaskMaster) => Some((task.tId, task.project,task.status,task.pert, task.task_title, task.plan_start_date, task.plan_end_date,
+          completion_percentage, remark, task_depend, dependencies_type, task_details))((task: TaskMaster) => Some((task.tId, task.project, task.status, task.pert, task.task_title, task.plan_start_date, task.plan_end_date,
         task.task_description, task.plan_time, task.task_status, task.status, task.owner, task.task_discipline,
         task.completion_percentage, task.remark, task.task_depend, task.dependencies_type, task.task_details))))
 
@@ -297,14 +296,14 @@ object ARTForms {
         "release_date" -> play.api.data.Forms.date("dd-MM-yyyy"))(ProgramDate.apply)(ProgramDate.unapply),
       "is_active" -> optional(number),
       "planned_hours" -> optional(of[Long]),
-        "internal_state" -> text,
+      "internal_state" -> text,
       "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, program_code,
-        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours, internal_state,estimated_cost) =>
+        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
         Programs(None, program_type, program_sub_type, program_name, program_code,
           program_description, work_flow_status, demand_manager,
-          program_manager, program_details, program_dates, is_active, planned_hours,internal_state, estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
+          program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
         program.program_description, program.work_flow_status, program.demand_manager, program.program_manager,
-        program.program_details, program.program_dates, program.is_active, program.planned_hours,program.internal_state, program.estimated_cost))))
+        program.program_details, program.program_dates, program.is_active, program.planned_hours, program.internal_state, program.estimated_cost))))
 
   /**
    * edit program front end
@@ -335,12 +334,12 @@ object ARTForms {
       "planned_hours" -> optional(of[Long]),
       "internal_state" -> text,
       "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, program_code,
-        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours,internal_state, estimated_cost) =>
+        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
         Programs(None, program_type, program_sub_type, program_name, program_code,
           program_description, work_flow_status, demand_manager,
-          program_manager, program_details, program_dates, is_active, planned_hours, internal_state,estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
+          program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
         program.program_description, program.work_flow_status, program.demand_manager, program.program_manager,
-        program.program_details, program.program_dates, program.is_active, program.planned_hours,program.internal_state, program.estimated_cost))))
+        program.program_details, program.program_dates, program.is_active, program.planned_hours, program.internal_state, program.estimated_cost))))
 
   /**
    * Not in use...
@@ -878,7 +877,7 @@ object ARTForms {
     mapping(
       //"delay_level" -> optional(text),
       //"project_classification" -> optional(text),
-      "work_flow_status" -> optional(text), 
+      "work_flow_status" -> optional(text),
       "program_name" -> optional(text),
       "program_code" -> optional(text), //agregado
       "sap_code" -> optional(text), //agregado      
@@ -938,9 +937,9 @@ object ARTForms {
       "document_category" -> optional(text),
       "sub_category" -> number,
       "risk_state" -> number,
-      "risk_clouser_date" -> play.api.data.Forms.date("dd-MM-yyyy")/*,
-      "is_active" -> optional(number)*/)(RiskManagement.apply)(RiskManagement.unapply))
-/*      
+      "risk_clouser_date" -> play.api.data.Forms.date("dd-MM-yyyy") /*,
+      "is_active" -> optional(number)*/ )(RiskManagement.apply)(RiskManagement.unapply))
+  /*      
   val riskManagementExForm: Form[RiskManagement] = Form(
     mapping(
               "parent_id" -> optional(number),
@@ -1004,9 +1003,8 @@ object ARTForms {
                             risk.probablity_of_occurence,risk.quantification,risk.strategic_reply,
                             risk.responsible,risk.reply_action,risk.configuration_plan,
                             risk.document_category,risk.sub_category,risk.risk_clouser_date,risk.is_active,risk.tail_risk))))         
-*/          
+*/
 
-      
   val addIssueForm: Form[models.RiskManagementIssueMain] = Form(
     mapping(
       "id" -> optional(number),
@@ -1055,6 +1053,7 @@ object ARTForms {
    * Author - Balkrishna
    * Date - 25-02-2015
    */
+ /*
   val alertsForm: Form[RiskAlerts] = Form(
     mapping(
       "id" -> optional(number),
@@ -1069,16 +1068,42 @@ object ARTForms {
       "alert_type" -> optional(number),
       "criticality" -> optional(number),
       "is_active" -> optional(number))(RiskAlerts.apply)(RiskAlerts.unapply))
-      
-   val pertForm: Form[InputPert] = Form(
+*/
+  val pertForm: Form[InputPert] = Form(
     mapping(
       "programa" -> number,
       "lider" -> number,
       "plantilla" -> number,
       "cajero" -> number,
       "direccion" -> text,
-      "fecha" -> play.api.data.Forms.date("dd-MM-yyyy"))(InputPert.apply)(InputPert.unapply)) 
-      
+      "fecha" -> play.api.data.Forms.date("dd-MM-yyyy"))(InputPert.apply)(InputPert.unapply))
+
+  /**
+   * Risk Manual Alerts...
+   * Author - Balkrishna
+   * Date - 09-11-2017
+   */
+
+  val alertsForm: Form[RiskAlerts] = Form(
+    mapping(
+      "id" -> optional(number),
+      "risk_id" -> number,
+      "event_code" -> optional(number),
+      "event_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
+      "event_title" -> text.verifying("Por favor, introduzca el título de alerta", event_title => (event_title.trim().length() > 0)),
+      "event_details" -> optional(text),
+      "responsible" -> optional(number),
+      "person_invloved" -> optional(text),
+      "criticality" -> optional(number),
+      "is_active" -> optional(number),
+      "category_id" -> optional(number),
+      "impacted_variable" -> optional(text),
+      "reiteration" -> optional(number),
+      "status_id" -> optional(number),
+      "task_id" -> optional(number),
+      "change_state" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
+      "responsible_answer" -> optional(text))(RiskAlerts.apply)(RiskAlerts.unapply))
+
 }
 
 
