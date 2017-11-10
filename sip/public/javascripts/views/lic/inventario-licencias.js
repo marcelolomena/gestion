@@ -157,8 +157,14 @@
                 align: 'center',
                 hidden: false,
                 search: false
-            },
-            {
+            }, {
+                label: 'Addm',
+                width: 70,
+                name: 'addm',
+                align: 'center',
+                hidden: false,
+                search: false
+            }, {
                 label: 'Alerta Renovación',
                 name: 'alertarenovacion',
                 width: 80,
@@ -307,14 +313,14 @@
             id: 'tramite',
             nom: 'Compra Trámite'
         }, {
-            id: 'traduccion',
-            nom: 'Traducciones'
-        }, {
             id: 'snow',
             nom: 'SNOW'
         }, {
             id: 'addm',
             nom: 'ADDM'
+        }, {
+            id: 'traduccion',
+            nom: 'Traducciones'
         }];
 
         initMainGrid('/lic/grid_inventario', viewModel, 'nombre', tabs);

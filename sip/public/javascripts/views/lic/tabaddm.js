@@ -22,7 +22,7 @@ var tabAddmGrid = {
                 width: 500,
                 editable: true
             }, {
-                label: 'Addm',
+                label: 'Cantidad',
                 name: 'addm',
                 width: 200,
                 editable: true,
