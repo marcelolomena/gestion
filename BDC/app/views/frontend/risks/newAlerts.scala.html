@@ -1,4 +1,4 @@
-@(risk_id: String, alertForm : Form[RiskAlerts],userMap: Seq[Users],start_date:java.util.Date,end_date: java.util.Date)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(risk_id: String, alertForm : Form[RiskAlerts],userMap: Seq[Users],start_date:java.util.Date,end_date: java.util.Date, alert_states :java.util.HashMap[String, String], alert_category :java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import play.api.i18n._
 @import play.api._
@@ -18,7 +18,7 @@
 		      <input type="hidden" value="1" name="category_id" id="category_id"/> 
 		      <input type="hidden" value="algo" name="impacted_variable" id="impacted_variable"/> 		      
 		      <input type="hidden" value="1" name="reiteration" id="reiteration"/> 
-		      <input type="hidden" value="1" name="status_id" id="status_id"/> 		      
+   		      <input type="hidden" value="*" name="event_details" id="event_details"/>
 		      <input type="hidden" value="" name="task_id" id="task_id"/> 
 		      <input type="hidden" value="" name="change_state" id="change_state"/> 
 		      <input type="hidden" value="algo" name="responsible_answer" id="responsible_answer"/>		      		      
@@ -31,10 +31,8 @@
 					         '_label -> "*Severidad"
 					      )
 				      </div>
-		         </div>		      
-		        
-		       	<div class="left width_full">
-		       		<div class="left width-pr50 padding-top-3px" >
+
+		       		<div class="right width-pr50 padding-top-3px" >
 		      			@select(
 					         alertForm("event_code"),
 					         options("1"->"Riesgo", "2"->"Incidente"),
@@ -42,19 +40,49 @@
 					         '_label -> "*Tipo de Evento"
 					      )
 					</div>					      
-		         </div>
+		         </div>	
 		         
 		      	<div class="left width_full">
 		      		<div class="left width-pr50 padding-top-3px" >
 			      		@inputText(
 			                alertForm("event_title"),
 			                'class -> "span5", 
-			                '_label -> "*Evento"		                
+			                '_label -> Messages("newAlert.alertTitle"),
+			                'placeholder -> Messages("newAlert.placeholder.introTitle")		                
 			            )
-					</div>			            
+					</div>	
+			      	<div class="right width-pr50 padding-top-3px" >
+		         				@select(
+				            	alertForm("status_id"),
+				       			options(alert_states),
+								'class -> "input-xlarge ",
+								'_label ->  Messages("newAlert.alertStatus"),
+								'_default -> Messages("newAlert.placeholder.alert_status")
+								)
+	            	</div>							            
 		         </div>
 		         
+		      	<div class="left width_full">
+			      	<div class="right width-pr50 padding-top-3px" >
+		         				@select(
+				            	alertForm("category_id"),
+				       			options(alert_category),
+								'class -> "input-xlarge ",
+								'_label ->  Messages("newAlert.alertCategory"),
+								'_default -> Messages("newAlert.placeholder.alert_category")
+								)
+	            	</div>							            
+		      		<div class="left width-pr50 padding-top-3px" >
+			      		@inputText(
+			                alertForm("impacted_variable"),
+			                'class -> "span5", 
+			                '_label -> Messages("newAlert.alertCategory"),
+			                'placeholder ->Messages("newAlert.introImpactedVariable")		                
+			            )
+					</div>		            	
+		         </div>			         
 		         
+		         @*
 		      	<div class="left width_full">
 			      	<div class="left width-pr50 padding-top-3px" >
 			      		 @textarea(
@@ -66,6 +94,7 @@
 		            	)
 	            	</div>
 		         </div>
+		         *@
 		         
 		         <div class="left width_full">
 			      	<div class="left width-pr50 padding-top-3px" >

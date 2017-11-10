@@ -376,12 +376,25 @@ object Risks extends Controller {
   }
 
   def editRiskAlert(risk_id: Integer, alert_id: Integer) = Action { implicit request =>
-    println("ENTRO risk_id : "+ risk_id + " alert_id : " + alert_id)
+    println("ENTRO risk_id : " + risk_id + " alert_id : " + alert_id)
     request.session.get("username").map { user =>
-      var alert = RiskService.findAlertsForRisk(risk_id.toString,alert_id.toString)
+      var alert = RiskService.findAlertsForRisk(risk_id.toString, alert_id.toString)
       val risk = RiskService.findRiskDetails(risk_id.toString)
       var program: Option[ProgramMaster] = null
       var program_id = ""
+
+      var alert_states = new java.util.LinkedHashMap[String, String]()
+      val status = RiskService.findAllAlertStatus()
+      for (d <- status) {
+        alert_states.put(d.id.get.toString, d.description)
+      }
+      var alert_category = new java.util.LinkedHashMap[String, String]()
+      val category = RiskService.findAllAlertCategory()
+      for (d <- category) {
+        alert_category.put(d.id.get.toString, d.description)
+      }
+
+      println(alert_states)
 
       risk match {
         case None =>
@@ -425,7 +438,14 @@ object Risks extends Controller {
                 rr.responsible_answer)
 
               val users = ProgramMemberService.findAllProgramMembers(program_id);
-              Ok(views.html.frontend.risks.editAlert(risk_id.toString, alert_id.toString, ARTForms.alertsForm.fill(ra), alert, users)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+              Ok(views.html.frontend.risks.editAlert(
+                risk_id.toString,
+                alert_id.toString,
+                ARTForms.alertsForm.fill(ra),
+                alert,
+                users,
+                alert_states,
+                alert_category)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
 
           }
       }
@@ -499,8 +519,7 @@ object Risks extends Controller {
             rr.status_id,
             rr.task_id,
             rr.change_state,
-            rr.responsible_answer         
-            )
+            rr.responsible_answer)
 
           ARTForms.alertsForm.bindFromRequest.fold(
             errors => {
@@ -522,7 +541,23 @@ object Risks extends Controller {
                   program_id = program.get.program_id.get.toString()
               }
               val users = ProgramMemberService.findAllProgramMembers(program_id);
-              BadRequest(views.html.frontend.risks.editAlert(ra.risk_id.toString, id, errors, alert, users))
+              var alert_states = new java.util.LinkedHashMap[String, String]()
+              val status = RiskService.findAllAlertStatus()
+              for (d <- status) {
+                alert_states.put(d.id.get.toString, d.description)
+              }
+              var alert_category = new java.util.LinkedHashMap[String, String]()
+              val category = RiskService.findAllAlertCategory()
+              for (d <- category) {
+                alert_category.put(d.id.get.toString, d.description)
+              }
+              BadRequest(views.html.frontend.risks.editAlert(ra.risk_id.toString,
+                id,
+                errors,
+                alert,
+                users,
+                alert_states,
+                alert_category))
             },
             success => {
 
@@ -544,8 +579,7 @@ object Risks extends Controller {
                 success.status_id,
                 success.task_id,
                 success.change_state,
-                success.responsible_answer                
-                )
+                success.responsible_answer)
 
               val last = RiskService.updateAlertDetails(theAlert)
 
@@ -763,6 +797,20 @@ object Risks extends Controller {
       var end_date: Date = new Date()
       var program_id = ""
       val risk = RiskService.findRiskDetails(risk_id)
+
+      var alert_states = new java.util.LinkedHashMap[String, String]()
+      val status = RiskService.findAllAlertStatus()
+      for (d <- status) {
+        alert_states.put(d.id.get.toString, d.description)
+      }
+      var alert_category = new java.util.LinkedHashMap[String, String]()
+      val category = RiskService.findAllAlertCategory()
+      for (d <- category) {
+        alert_category.put(d.id.get.toString, d.description)
+      }
+
+      println(alert_states)
+
       risk match {
         case None =>
           Redirect(routes.Login.loginUser())
@@ -785,7 +833,14 @@ object Risks extends Controller {
           for (u <- users) {
             // println(u.uid + " " + u.first_name)
           }
-          Ok(views.html.frontend.risks.newAlerts(risk_id, ARTForms.alertsForm, users, start_date, end_date)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+          Ok(views.html.frontend.risks.newAlerts(
+            risk_id,
+            ARTForms.alertsForm,
+            users,
+            start_date,
+            end_date,
+            alert_states,
+            alert_category)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
       }
 
     }.getOrElse {
@@ -801,6 +856,16 @@ object Risks extends Controller {
       var program_id = ""
 
       val risk = RiskService.findRiskDetails(risk_id)
+      var alert_states = new java.util.LinkedHashMap[String, String]()
+      val status = RiskService.findAllAlertStatus()
+      for (d <- status) {
+        alert_states.put(d.id.get.toString, d.description)
+      }
+      var alert_category = new java.util.LinkedHashMap[String, String]()
+      val category = RiskService.findAllAlertCategory()
+      for (d <- category) {
+        alert_category.put(d.id.get.toString, d.description)
+      }
       risk match {
         case None =>
           Redirect(routes.Login.loginUser())
@@ -832,31 +897,36 @@ object Risks extends Controller {
               val oldform = ARTForms.alertsForm.bindFromRequest
               oldform.fold(
                 errors => {
-                  Ok(views.html.frontend.risks.newAlerts(risk_id, errors, users, start_date, end_date))
+                  Ok(views.html.frontend.risks.newAlerts(risk_id,
+                    errors,
+                    users,
+                    start_date,
+                    end_date,
+                    alert_states,
+                    alert_category))
                 },
                 risks => {
 
                   val user_id = Integer.parseInt(request.session.get("uId").get)
                   val alert = RiskAlerts(
-                      Option(1),
-                      risk_id.toInt,
-                      //Option(2),
-                      risks.event_code,
-                      Option(new Date()),
-                      risks.event_title,
-                      risks.event_details,
-                      Option(user_id),
-                      risks.person_invloved,
-                      risks.criticality,
-                      Option(1),
-                      risks.category_id,
-                      risks.impacted_variable,
-                      risks.reiteration,
-                      risks.status_id,
-                      risks.task_id,
-                      risks.change_state,
-                      risks.responsible_answer                    
-                    )
+                    Option(1),
+                    risk_id.toInt,
+                    //Option(2),
+                    risks.event_code,
+                    Option(new Date()),
+                    risks.event_title,
+                    risks.event_details,
+                    Option(user_id),
+                    risks.person_invloved,
+                    risks.criticality,
+                    Option(1),
+                    risks.category_id,
+                    risks.impacted_variable,
+                    risks.reiteration,
+                    risks.status_id,
+                    risks.task_id,
+                    risks.change_state,
+                    risks.responsible_answer)
 
                   val last_index = RiskService.insertRiskAlert(alert)
 

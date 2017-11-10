@@ -12,6 +12,7 @@ import play.api.db.DB
 import play.i18n.Lang
 import java.util.Date
 import models.ProgramMaster
+import models.RiskStatus
 import anorm.NotAssigned
 import models.Project
 import scala.util.Random
@@ -24,6 +25,7 @@ import org.apache.commons.lang3.StringUtils
 import java.util.Calendar
 //import org.joda.time.DateTime
 import models.RiskAlerts
+import models.RiskCategory
 import models.Users
 import models.SpiCpiCalculations
 //import views.html.frontend.task.issueDetails
@@ -1238,6 +1240,20 @@ object RiskService extends CustomColumns {
 
     return risk_ids
   }
+  
+  def findAllAlertStatus(): Seq[RiskStatus] = {
+    var sqlString = "select id,description,is_active from art_risk_alert_status where is_active = 1"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(RiskStatus.status *)
+    }
+  }  
+  
+  def findAllAlertCategory(): Seq[RiskCategory] = {
+    var sqlString = "select id,description,is_active from art_risk_alert_category where is_active = 1"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(RiskCategory.category *)
+    }
+  }    
 
   def riskAutomaticAlert() {
     val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
