@@ -144,9 +144,13 @@ module.exports = function (passport) {
     router.route('/lic/tramite/:pId')
         .get(isAuthenticated, productoController.listcompratramite);
 
+        /*
     router.route('/lic/snow')
         .get(isAuthenticated, snowController.get)
         .post(isAuthenticated, snowController.upload);
+    */
+    router.route('/lic/snow/list')
+        .get(isAuthenticated, snowController.list);
 
     router.route('/lic/traduccion')
         .get(isAuthenticated, traduccionController.list)

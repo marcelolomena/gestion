@@ -8,13 +8,18 @@ var path = require('path');
 var fs = require('fs');
 var logger = require('../../utils/logger');
 
-var entity = models.producto;
-entity.hasMany(models.traduccion, { as: 'traducciones', sourceKey: 'id', foreignKey: 'idProducto' });
-var includes = [
-    {
-        model: models.traduccion
+var entity = models.applist$;
+
+var includes = [];
+
+function map(req) {
+    return {
+        id: req.query.id || 0,
+        aplicacion: req.quey.aplicacion,
+        fabricante: req.quey.fabricante,
+        categoria: req.query.categoria
     }
-];
+}
 
 function mapper(data) {
     return _.map(data, function (item) {
@@ -22,6 +27,11 @@ function mapper(data) {
     });
 }
 
+function list(req, res) {
+    base.list(req, res, entity, includes, mapper);
+}
+
+/*
 function get(req, res) {
     var tmpl = pug.renderFile('views/lic/upload.pug', {
         title: 'platapapannn'
@@ -190,7 +200,57 @@ function upload(req, res) {
     req.pipe(busboy);
 
 }
+function list(req,res){
+    var rows = parseInt(req.query.rows);
+    var page = parseInt(req.query.page);
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var filters = req.query.filters;
+
+    if (!sidx)
+        sidx = "id";
+
+    if (!sord)
+        sord = "asc";
+    
+    var where = {};
+
+    if(filters){
+        filters = JSON.parse(filters);
+        if (JSON.stringify(filters.rules) != '[]') {
+            filters.rules.forEach(function (item) {
+                if(item.op === "cn"){
+                    where[item.field]= {like :'%'+ item.data+'%'};
+                }
+            });
+        }
+    }
+
+    models.applist$.findAndCountAll({
+        where:where,
+        order:[[sidx,sord]],
+        offset: rows * (page-1), 
+        limit: rows,
+        logging: console.log
+    }).then(function(result){
+        var returns ={
+            records:result.count,
+            page: page,
+            rows:result.rows,
+            total: Math.ceil(result.count/rows)
+        };
+        res.json(returns);
+    }).catch(function(err){
+        logger.debug(err);
+        res.json({error_code:1});
+    });
+}
+
+*/
+
+
 module.exports = {
-    get: get,
-    upload: upload
+   // get: get,
+   // upload: upload,
+    list:list
 }
