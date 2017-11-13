@@ -174,6 +174,39 @@ object TaskService extends CustomColumns {
     }
   }
 
+  def findTaskListByParentTypeId(r: RiskManagementMaster): Seq[Tasks] = {
+      r.parent_type.get match {
+        case 0 =>
+          DB.withConnection { implicit connection =>
+            val result = SQL(
+              "select a.* from art_task a join art_project_master b on a.pId = b.pId where b.program = {value} and a.is_active = 1 and b.is_active = 1").on(
+              'value -> r.parent_id.get.toString()).as(Tasks.tasks *)
+            result
+          }
+        case 1 =>
+          DB.withConnection { implicit connection =>
+            val result = SQL(
+              "select a.* from art_task a where a.pId = {value} and a.is_active = 1 ").on(
+              'value -> r.parent_id.get.toString()).as(Tasks.tasks *)
+            result
+          }
+        case 2 =>
+          DB.withConnection { implicit connection =>
+            val result = SQL(
+              "select a.* from art_task a join (select b.* from art_task b where b.tId = {value} and b.is_active = 1 ) c on a.pId = c.pId where a.is_active = 1").on(
+              'value -> r.parent_id.get.toString()).as(Tasks.tasks *)
+            result
+          }
+        case 3 =>
+          DB.withConnection { implicit connection =>
+            val result = SQL(
+              "select a.* from art_task a join (select b.* from art_sub_task b where b.sub_task_id = {value} and b.is_deleted  = 1) c on a.tId = c.task_id where a.is_active = 1").on(
+              'value -> r.parent_id.get.toString()).as(Tasks.tasks *)
+            result
+          }
+      }
+  }
+
   def findTaskListByProjectIdAsign(pId: String): Seq[Tasks] = {
     var sqlString = ""
     sqlString = "EXEC art.task_asigned_time {pid}"

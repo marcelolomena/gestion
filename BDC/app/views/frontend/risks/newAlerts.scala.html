@@ -1,4 +1,4 @@
-@(risk_id: String, alertForm : Form[RiskAlerts],userMap: Seq[Users],start_date:java.util.Date,end_date: java.util.Date, alert_states :java.util.HashMap[String, String], alert_category :java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(risk_id: String, alertForm : Form[RiskAlerts],userMap: Seq[Users],start_date:java.util.Date,end_date: java.util.Date, alert_states :java.util.HashMap[String, String], alert_category :java.util.HashMap[String, String], alert_task :java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import play.api.i18n._
 @import play.api._
@@ -11,16 +11,11 @@
 <div class="main">
 @frontend.header()
 <section class="slider" id="pDetail_page">
-		<input type="hidden" value="@start_date.format("dd-MM-yyyy")" name="start_date" id="start_date"/>
-		<input type="hidden" value="@end_date.format("dd-MM-yyyy")" name="end_date" id="end_date"/>
 			@form(action = controllers.Frontend.routes.Risks.saveRiskAlert(risk_id), 'id->"risk-management-alert-form") {
 		      <input type="hidden" value="@risk_id" name="risk_id" id="risk_id"/>
-		      <input type="hidden" value="1" name="category_id" id="category_id"/> 
-		      <input type="hidden" value="algo" name="impacted_variable" id="impacted_variable"/> 		      
-		      <input type="hidden" value="1" name="reiteration" id="reiteration"/> 
+		      <input type="hidden" value="0" name="reiteration" id="reiteration"/>
    		      <input type="hidden" value="*" name="event_details" id="event_details"/>
-		      <input type="hidden" value="" name="task_id" id="task_id"/> 
-		      <input type="hidden" value="" name="change_state" id="change_state"/> 
+		      <input type="hidden" value="" name="change_state" id="change_state"/>
 		      <input type="hidden" value="algo" name="responsible_answer" id="responsible_answer"/>		      		      
 		         <div class="left width_full">
 		         	<div class="left width-pr50 padding-top-3px" >
@@ -141,19 +136,6 @@
 			         </div>
 		         </div>
 
-				<!-- 		         
-		         <div class="left width_full">
-		         	<div class="left width-pr50 padding-top-3px" >
-			      		@select(
-					         alertForm("alert_type"),
-					         options("1"->"Riesgos- General", "2"->"Riesgos- Serio"),
-					         'class -> "input-xlarge ",
-					         '_label -> "*Tipo de Alerto"
-					      )
-				      </div>
-		         </div>
-				 -->		         
-		         
 		         <dl id="member_id_search_field " class=" display-none">
 	   				<dt>
 	   					<label for="member_id_search"> @Messages("newmember.member")</label>
@@ -167,7 +149,6 @@
 			       	<input class="btn form-button" value="Enviar" id="send-alert"  type="button"/>
 			       	</span>
 			       	<span class="" style="margin-left:30px;"> 
-			       	@*<input id="done-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>*@
 			       	<input id="cancel-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>
 			       	</span>
 	          	</div>

@@ -1,4 +1,4 @@
-@(risk_id: String, alert_id: String, alertForm : Form[RiskAlerts],alert: Option[RiskAlerts],userMap: Seq[Users], alert_states :java.util.HashMap[String, String], alert_category :java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(risk_id: String, alert_id: String, alertForm : Form[RiskAlerts],alert: Option[RiskAlerts],userMap: Seq[Users], alert_states :java.util.HashMap[String, String], alert_category :java.util.HashMap[String, String], alert_task :java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import play.api.i18n._
 @import play.api._
@@ -22,11 +22,9 @@
 			@form(action = controllers.Frontend.routes.Risks.updateAlert(alert_id), 'id->"risk-management-alert-form") {
 		      <input type="hidden" value="@risk_id" name="risk_id" id="risk_id"/>
 		      <input type="hidden" value="@alert_id" name="alert_id" id="alert_id"/>
-		      <input type="hidden" value="1" name="reiteration" id="reiteration"/> 
+		      <input type="hidden" value="@alert.get.reiteration.get.toString" name="reiteration" id="reiteration"/>
 		      <input type="hidden" value="*" name="event_details" id="event_details"/> 		      
-		      <input type="hidden" value="" name="task_id" id="task_id"/> 
-		      <input type="hidden" value="" name="change_state" id="change_state"/> 
-		      <input type="hidden" value="algo" name="responsible_answer" id="responsible_answer"/>		
+		      <input type="hidden" value="" name="change_state" id="change_state"/>
 		         <div class="left width_full">
 		         	<div class="left width-pr50 padding-top-3px" >
 			      		@select(
@@ -48,14 +46,15 @@
 		         </div>		      
 		         
 		      	<div class="left width_full">
-		      		<div class="left width-pr50 padding-top-3px" >
-			      		@inputText(
-			                alertForm("event_title"),
-			                'class -> "span5", 
-			                '_label -> Messages("newAlert.alertTitle"),
-			                'placeholder -> Messages("newAlert.placeholder.introTitle")		                
-			            )
-					</div>	
+                    <div class="right width-pr50 padding-top-3px" >
+                        @select(
+                        alertForm("task_id"),
+                        options(alert_task),
+                        'class -> "input-xlarge ",
+                        '_label ->  Messages("newAlert.alertTask"),
+                        '_default -> Messages("newAlert.placeholder.alert_task")
+                        )
+                    </div>
 			      	<div class="right width-pr50 padding-top-3px" >
 		         				@select(
 				            	alertForm("status_id"),
@@ -81,31 +80,40 @@
 			      		@inputText(
 			                alertForm("impacted_variable"),
 			                'class -> "span5", 
-			                '_label -> Messages("newAlert.alertCategory"),
+			                '_label -> Messages("newAlert.alertImpactedVariable"),
 			                'placeholder ->Messages("newAlert.introImpactedVariable")		                
 			            )
 					</div>		            	
-		         </div>		         
-		         
-		         @*
-		      	<div class="left width_full">
-		      		<div class="left width-pr50 padding-top-3px" >
-			      		 @textarea(
-			                alertForm("event_details"),
-			                'class -> "span5", 
-			                '_label ->  "Detalles",		                
-						    'rows -> 3,
-						    'cols -> 60
-		            	)
-					</div>		            	
 		         </div>
-		         *@
-		         
+
+				<div class="left width_full">
+                    <div class="right width-pr50 padding-top-3px" >
+                        @textarea(
+                        alertForm("event_title"),
+                        'class -> "span5",
+                        '_label ->  Messages("newAlert.alertTitle"),
+                        'placeholder -> Messages("newAlert.placeholder.introTitle"),
+                        'rows -> 3,
+                        'cols -> 60
+                        )
+                    </div>
+                    <div class="left width-pr50 padding-top-3px" >
+                        @textarea(
+                        alertForm("responsible_answer"),
+                        'class -> "span5",
+                        '_label ->  Messages("newAlert.alertAnswer"),
+                        'placeholder -> Messages("newAlert.placeholder.introAnswer"),
+                        'rows -> 3,
+                        'cols -> 60
+                        )
+                    </div>
+                </div>
+
 		         <div class="left width_full">
 			      	<div class="left width-pr50 padding-top-3px" >
 					
 			      		<dl id="members_involved_field1" class=" ">
-						    <dt><label for="members_involved1">Miembros Implicado</label></dt>
+						    <dt><label for="members_involved1">Responsables</label></dt>
 						    <dd>
 						    	 <div class="mutliSelect">
 						            <ul class="width_full">
@@ -133,28 +141,8 @@
 				                'type -> "hidden"
 				            )
 				            </div>
-			      		@*@select(
-					         issueForm("members_involved"),
-					         options(userMap),
-					         'class -> "input-xlarge ",
-					         '_label -> Messages("addIssue.membersInvolved"),
-					          '_default -> Messages("addIssue.placeholder.membersInvolved")
-					      )*@
 			         </div>
 		         </div>
-		         
-		         <!-- 
-		         <div class="left width_full">
-		         	<div class="left width-pr50 padding-top-3px" >
-			      		@select(
-					         alertForm("alert_type"),
-					         options("1"->"Riesgos- General", "2"->"Riesgos- Serio"),
-					         'class -> "input-xlarge ",
-					         '_label -> "*Tipo de Alerto"
-					      )
-				      </div>
-		         </div>
-		         -->
 		         
 		         <dl id="member_id_search_field " class=" display-none">
 	   				<dt>
@@ -165,19 +153,19 @@
 					</dd>
 		    	</dl>
 	      		<div class="width_full" style="margin-top: 20px;">
-			       	<span class="">
-			       	<input class="btn form-button" value="Enviar" id="send-alert"  type="button"/>
-			       	</span>
-			       	<span class="" style="margin-left:30px;"> 
-			       	@*<input id="done-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>*@
-			       	<input id="cancel-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>
-			       	</span>
+                    <div class="left width-pr50 padding-top-3px" >
+			       	    <input class="btn form-button" value="Enviar" id="send-alert"  type="button"/>
+                    </div>
+                    <div class="right width-pr50 padding-top-3px" >
+			         	<input id="cancel-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>
+			       	</div>
 	          	</div>
 			}
 			</div>
   		@frontend.footer()
 	</section>			
 </div>
+</body>
 @frontend.headerScripts()
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
 
