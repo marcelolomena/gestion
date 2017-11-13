@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils
 import java.util.Calendar
 //import org.joda.time.DateTime
 import models.RiskAlerts
+import models.RiskAlertsExtended
 import models.RiskCategory
 import models.Users
 import models.SpiCpiCalculations
@@ -93,10 +94,7 @@ object RiskService extends CustomColumns {
   def updateAlertDetails(alert: RiskAlerts) = {
     DB.withConnection { implicit connection =>
       println("ID : " + alert.id.get)
-      println("DETALLE : " + alert.event_details.get.toString)
-      println("TITULO : " + alert.event_title)
-      println("FECHA : " + alert.event_date)
-      println("risk_id : " + alert.risk_id)
+
       val alert_detail = SQL(
         """
           update art_risk_alert  SET 
@@ -1211,6 +1209,27 @@ object RiskService extends CustomColumns {
       result
     }
 
+  }
+
+  def findRiskAlertsExtendedById(id: String): Seq[RiskAlertsExtended] =  {
+
+    val sql = """ SELECT a.*,b.description category, c.description status
+                 FROM art_risk_alert a
+                 JOIN art_risk_alert_category b
+                 ON a.category_id = b.id
+                 JOIN art_risk_alert_status c
+                 ON a.status_id = c.id
+                 WHERE
+                 a.is_active = 1
+                 AND b.is_active = 1
+                 AND c.is_active = 1
+                 AND risk_id ={id}
+              """
+    DB.withConnection { implicit connection =>
+      val result = SQL(sql).on(
+        'id -> id.toInt).as(RiskAlertsExtended.alerts *)
+      result
+    }
   }
 
   def findRiskAlertsUserIds() = {
