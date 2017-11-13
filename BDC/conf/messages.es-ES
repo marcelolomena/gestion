@@ -295,6 +295,19 @@ newTask.stage=*Etapa
 newTask.user_role=*Función de usuario
 newTask.deliverable=Entregable
 
+newAlert.alertStatus=*Estado de la Alerta
+newAlert.placeholder.alert_status=--- Elegir Estado de la Alerta ---
+newAlert.alertCategory=*Categoría
+newAlert.placeholder.alert_category=--- Elegir Categoría de la Alerta ---
+newAlert.alertImpactedVariable=*Variable Impactada
+newAlert.introImpactedVariable=Introduzca la variable impactada
+newAlert.alertTitle=*Descripción
+newAlert.placeholder.introTitle=Introduzca una descripción para la alerta
+newAlert.alertTask=*Actividad con Riesgo
+newAlert.placeholder.alert_task=--- Elegir Actividad con Riesgo ---
+newAlert.alertAnswer=*Respuesta del Responsable
+newAlert.placeholder.introAnswer=Introduzca una respuesta
+
 programDetails.nosap=No cuenta con detalle de SAP disponible
 programdetails.saplisting=SAP Ficha
 

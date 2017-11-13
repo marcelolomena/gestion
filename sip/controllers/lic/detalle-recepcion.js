@@ -166,18 +166,20 @@ function mapCompra(data) {
         idCui: data.cui,
         sap: data.sap,
         idProveedor: data.idProveedor,
-        fechaCompra: base.strToDateDB(data.fechaInicio),
-        fechaExpiracion: base.strToDateDB(data.fechaTermino),
+        fechaCompra: data.fechaInicio,
+        fechaExpiracion: data.fechaTermino,
         licCompradas: data.cantidad,
         cantidadSoporte: data.cantidadSoporte,
         idMoneda: data.idMoneda,
         valorLicencia: data.monto,
         valorSoporte: data.montoSoporte,
-        fechaRenovaSoporte: base.strToDateDB(data.fechaControl),
+        fechaRenovaSoporte: data.fechaControl,
         factura: data.factura,
         comprador: data.comprador,
         correoComprador: data.mailComprador,
-        idCompra: data.idCompra
+        idCompra: data.idCompra,
+        alertaRenovacion: data.alertaRenovacion
+
     };
 }
 
@@ -201,33 +203,75 @@ function saveProducto(data, res) {
 
 function addDetalle(data, res) {
     if (data.idCompra == null) {
-        return base.createP(models.compra, mapCompra(data))
-            .then(function (createdd) {
-                data.idCompra = createdd.id;
-                addDetalle(data, res);
-            }).catch(function (err) {
-                logger.error('compra.Stock Upd, ' + err);
-                return res.json({
-                    error: 1,
-                    glosa: err.message
-                });
-            })
-    } else {
         data.fechaInicio = base.strToDateDB(data.fechaInicio);
         data.fechaTermino = base.strToDateDB(data.fechaTermino);
         data.fechaControl = base.strToDateDB(data.fechaControl);
-
         var hoy = "" + new Date().toISOString();
+        var f1 = data.fechaControl;
+        var f2 = data.fechaTermino;
+        var f1compare = f1.replace(/-/g, "")
+        var f2compare = f2.replace(/-/g, "")
+        var fhoycompare = hoy.substr(0, 10).replace(/-/g, "");
+        if (f1compare < fhoycompare) {
+            if (f2compare < fhoycompare) {
+                data.alertaRenovacion = 'Vencida';
+                return base.createP(models.compra, mapCompra(data))
+                    .then(function (createdd) {
+                        data.idCompra = createdd.id;
+                        return addDetalle(data, res);
+                    }).catch(function (err) {
+                        logger.error('compra.Stock Upd, ' + err);
+                        return res.json({
+                            error: 1,
+                            glosa: err.message
+                        });
+                    })
+            } else {
+                data.alertaRenovacion = 'Renovar';
+                return base.createP(models.compra, mapCompra(data))
+                    .then(function (createdd) {
+                        data.idCompra = createdd.id;
+                        return addDetalle(data, res);
+                    }).catch(function (err) {
+                        logger.error('compra.Stock Upd, ' + err);
+                        return res.json({
+                            error: 1,
+                            glosa: err.message
+                        });
+                    })
+
+            }
+        } else {
+            data.alertaRenovacion = 'Al Dia';
+            return base.createP(models.compra, mapCompra(data))
+                .then(function (createdd) {
+                    data.idCompra = createdd.id;
+                    return addDetalle(data, res);
+                }).catch(function (err) {
+                    logger.error('compra.Stock Upd, ' + err);
+                    return res.json({
+                        error: 1,
+                        glosa: err.message
+                    });
+                })
+        }
+
+    } else {
+        // data.fechaInicio = base.strToDateDB(data.fechaInicio);
+        // data.fechaTermino = base.strToDateDB(data.fechaTermino);
+        // data.fechaControl = base.strToDateDB(data.fechaControl);
+
+        // var hoy = "" + new Date().toISOString();
 
         return base.createP(entity, data)
             .then(function (created) {
                 return base.findById(models.producto, data.idProducto)
                     .then(function (item) {
-                        var f1 = data.fechaControl;
-                        var f2 = data.fechaTermino;
-                        var f1compare = f1.replace(/-/g, "")
-                        var f2compare = f2.replace(/-/g, "")
-                        var fhoycompare = hoy.substr(0, 10).replace(/-/g, "");
+                        // var f1 = data.fechaControl;
+                        // var f2 = data.fechaTermino;
+                        // var f1compare = f1.replace(/-/g, "")
+                        // var f2compare = f2.replace(/-/g, "")
+                        // var fhoycompare = hoy.substr(0, 10).replace(/-/g, "");
                         var prdData = {
                             id: data.idProducto,
                             ilimitado: data.ilimitado,
@@ -245,46 +289,47 @@ function addDetalle(data, res) {
                         if (item.idTipoLicenciamiento) {
                             prdData.idTipoLicenciamiento = data.idTipoLicenciamiento;
                         }
-                        if (f1compare < fhoycompare) {
-                            if (f2compare < fhoycompare) {
-                                models.parametro.findAll({
-                                    where: {
-                                        tipo: 'alertarenosoporte',
-                                        nombre: 'Vencida'
-                                    }
-                                }).then(function (alerta) {
+                        // if (f1compare < fhoycompare) {
+                        //     if (f2compare < fhoycompare) {
+                        //         models.parametro.findAll({
+                        //             where: {
+                        //                 tipo: 'alertarenosoporte',
+                        //                 nombre: 'Vencida'
+                        //             }
+                        //         }).then(function (alerta) {
 
-                                    if (alerta.length != 0) {
-                                        prdData.alertaRenovacion = alerta[0].dataValues.id;
-                                        return base.update(models.producto, prdData, res);
-                                    }
-                                });
-                            } else {
-                                models.parametro.findAll({
-                                    where: {
-                                        tipo: 'alertarenosoporte',
-                                        nombre: 'Renovar'
-                                    }
-                                }).then(function (alerta) {
-                                    if (alerta.length != 0) {
-                                        prdData.alertaRenovacion = alerta[0].dataValues.id;
-                                        return base.update(models.producto, prdData, res);
-                                    }
-                                });
-                            }
-                        } else {
-                            models.parametro.findAll({
-                                where: {
-                                    tipo: 'alertarenosoporte',
-                                    nombre: 'Al Día'
-                                }
-                            }).then(function (alerta) {
-                                if (alerta.length != 0) {
-                                    prdData.alertaRenovacion = alerta[0].dataValues.id;
-                                    return base.update(models.producto, prdData, res);
-                                }
-                            });
-                        }
+                        //             if (alerta.length != 0) {
+                        //                 prdData.alertaRenovacion = alerta[0].dataValues.id;
+                        //                 return base.update(models.producto, prdData, res);
+                        //             }
+                        //         });
+                        //     } else {
+                        //         models.parametro.findAll({
+                        //             where: {
+                        //                 tipo: 'alertarenosoporte',
+                        //                 nombre: 'Renovar'
+                        //             }
+                        //         }).then(function (alerta) {
+                        //             if (alerta.length != 0) {
+                        //                 prdData.alertaRenovacion = alerta[0].dataValues.id;
+                        //                 return base.update(models.producto, prdData, res);
+                        //             }
+                        //         });
+                        //     }
+                        // } else {
+                        //     models.parametro.findAll({
+                        //         where: {
+                        //             tipo: 'alertarenosoporte',
+                        //             nombre: 'Al Día'
+                        //         }
+                        //     }).then(function (alerta) {
+                        //         if (alerta.length != 0) {
+                        //             prdData.alertaRenovacion = alerta[0].dataValues.id;
+                        //             return base.update(models.producto, prdData, res);
+                        //         }
+                        //     });
+                        // }
+                        return base.update(models.producto, prdData, res);
 
                     }).catch(function (err) {
                         logger.error('producto.Stock Upd, ' + err);
@@ -352,51 +397,29 @@ function action(req, res) {
                                             return base.findById(models.compra, detalle.idCompra)
                                                 .then(function (items) {
                                                     var updcData = {
-                                                        id: detalle.idCompra
+                                                        id: detalle.idCompra,
+                                                        alertarenovacion: null
                                                     };
-                                                    updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
-                                                    base.update(models.compra, updcData, res);
-
                                                     if (f1compare < fhoycompare) {
                                                         if (f2compare < fhoycompare) {
-                                                            models.parametro.findAll({
-                                                                where: {
-                                                                    tipo: 'alertarenosoporte',
-                                                                    nombre: 'Vencida'
-                                                                }
-                                                            }).then(function (alerta) {
-                            
-                                                                if (alerta.length != 0) {
-                                                                    updData.alertaRenovacion = alerta[0].dataValues.id;
-                                                                    return base.update(models.producto, updData, res);
-                                                                }
-                                                            });
+                                                            updcData.alertaRenovacion = 'Vencida';
+                                                            updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
+                                                            base.update(models.compra, updcData, res);
+
                                                         } else {
-                                                            models.parametro.findAll({
-                                                                where: {
-                                                                    tipo: 'alertarenosoporte',
-                                                                    nombre: 'Renovar'
-                                                                }
-                                                            }).then(function (alerta) {
-                                                                if (alerta.length != 0) {
-                                                                    updData.alertaRenovacion = alerta[0].dataValues.id;
-                                                                    return base.update(models.producto, updData, res);
-                                                                }
-                                                            });
+                                                            updcData.alertaRenovacion = 'Renovar';
+                                                            updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
+                                                            base.update(models.compra, updcData, res);
+
+
                                                         }
                                                     } else {
-                                                        models.parametro.findAll({
-                                                            where: {
-                                                                tipo: 'alertarenosoporte',
-                                                                nombre: 'Al Día'
-                                                            }
-                                                        }).then(function (alerta) {
-                                                            if (alerta.length != 0) {
-                                                                updData.alertaRenovacion = alerta[0].dataValues.id;
-                                                                return base.update(models.producto, updData, res);
-                                                            }
-                                                        });
+                                                        updcData.alertaRenovacion = 'Al Dia';
+                                                        updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
+                                                        base.update(models.compra, updcData, res);
+
                                                     }
+                                                    return base.update(models.producto, updData, res);
                                                     // return base.update(models.producto, updData, res);
                                                 }).catch(function (err) {
                                                     logger.error('producto.Stock Upd, ' + err);

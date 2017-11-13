@@ -3,6 +3,7 @@ package models
 import anorm.SqlParser._
 import anorm._
 import java.util.Date
+import play.api.libs.json._
 
 /*
 case class RiskAlerts(id: Option[Int],
@@ -62,20 +63,20 @@ object RiskAlerts extends CustomColumns {
 */
 
 case class RiskAlertsIncreased(id: Option[Int],
-                      risk_id: Int,
-                      event_type: Option[Int],
-                      event_code: Option[Int],
-                      event_date: Option[Date],
-                      event_title: String,
-                      event_details: Option[String],
-                      responsible: Option[Int],
-                      person_invloved: Option[String],
-                      alert_type: Option[Int],
-                      criticality: Option[Int],
-                      is_active: Option[Int],
-                      level: String,
-                      title: String,
-                      program_name: String)
+                               risk_id: Int,
+                               event_type: Option[Int],
+                               event_code: Option[Int],
+                               event_date: Option[Date],
+                               event_title: String,
+                               event_details: Option[String],
+                               responsible: Option[Int],
+                               person_invloved: Option[String],
+                               alert_type: Option[Int],
+                               criticality: Option[Int],
+                               is_active: Option[Int],
+                               level: String,
+                               title: String,
+                               program_name: String)
 
 object RiskAlertsIncreased extends CustomColumns {
   val alertsIncreased = {
@@ -91,7 +92,7 @@ object RiskAlertsIncreased extends CustomColumns {
       get[Option[Int]]("alert_type") ~
       get[Option[Int]]("criticality") ~
       get[Option[Int]]("is_active") ~ get[String]("level") ~
-      get[String]("title") ~ 
+      get[String]("title") ~
       get[String]("program_name") map {
         case id ~
           risk_id ~
@@ -137,11 +138,10 @@ case class RiskAlerts(id: Option[Int],
                       category_id: Option[Int],
                       impacted_variable: Option[String],
                       reiteration: Option[Int],
-                      status_id:Option[Int],
-                      task_id:Option[Int],
-                      change_state:Option[Date],
-                      responsible_answer:Option[String]
-)
+                      status_id: Option[Int],
+                      task_id: Option[Int],
+                      change_state: Option[Date],
+                      responsible_answer: Option[String])
 
 object RiskAlerts extends CustomColumns {
   val alerts = {
@@ -159,8 +159,8 @@ object RiskAlerts extends CustomColumns {
       get[Option[String]]("impacted_variable") ~
       get[Option[Int]]("reiteration") ~
       get[Option[Int]]("status_id") ~
-      get[Option[Int]]("task_id") ~   
-      get[Option[Date]]("change_state") ~ 
+      get[Option[Int]]("task_id") ~
+      get[Option[Date]]("change_state") ~
       get[Option[String]]("responsible_answer") map {
         case id ~
           risk_id ~
@@ -195,9 +195,36 @@ object RiskAlerts extends CustomColumns {
             status_id,
             task_id,
             change_state,
-            responsible_answer            
-            )
+            responsible_answer)
       }
   }
+}
+
+case class RiskStatus(id: Option[Int], description: String, is_active: Int);
+
+object RiskStatus {
+
+  val status = {
+    get[Option[Int]]("id") ~
+      get[String]("description") ~
+      get[Int]("is_active") map {
+        case id ~ description ~ is_active => RiskStatus(id, description, is_active)
+      }
+  }
+  implicit val riskStatusWrites = Json.writes[RiskStatus]
+}
+
+case class RiskCategory(id: Option[Int], description: String, is_active: Int);
+
+object RiskCategory {
+
+  val category = {
+    get[Option[Int]]("id") ~
+      get[String]("description") ~
+      get[Int]("is_active") map {
+        case id ~ description ~ is_active => RiskCategory(id, description, is_active)
+      }
+  }
+  implicit val riskCategoryWrites = Json.writes[RiskCategory]
 }
 
