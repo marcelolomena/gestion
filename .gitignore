@@ -1,4 +1,6 @@
 .gitignore
+*.log
+BDC/.idea
 BDC/.classpath
 BDC/.sbtserver
 BDC/project
