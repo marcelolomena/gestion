@@ -42,9 +42,9 @@
 					         'class -> "input-xlarge",
 					         '_label -> "*Tipo de Evento"
 					      )
-					</div>					      
-		         </div>		      
-		         
+					</div>
+		         </div>
+
 		      	<div class="left width_full">
                     <div class="right width-pr50 padding-top-3px" >
                         @select(
@@ -63,9 +63,9 @@
 								'_label ->  Messages("newAlert.alertStatus"),
 								'_default -> Messages("newAlert.placeholder.alert_status")
 								)
-	            	</div>							            
+	            	</div>
 		         </div>
-		         
+
 		      	<div class="left width_full">
 			      	<div class="right width-pr50 padding-top-3px" >
 		         				@select(
@@ -75,19 +75,19 @@
 								'_label ->  Messages("newAlert.alertCategory"),
 								'_default -> Messages("newAlert.placeholder.alert_category")
 								)
-	            	</div>							            
+	            	</div>
 		      		<div class="left width-pr50 padding-top-3px" >
 			      		@inputText(
 			                alertForm("impacted_variable"),
-			                'class -> "span5", 
+			                'class -> "span5",
 			                '_label -> Messages("newAlert.alertImpactedVariable"),
-			                'placeholder ->Messages("newAlert.introImpactedVariable")		                
+			                'placeholder ->Messages("newAlert.introImpactedVariable")
 			            )
-					</div>		            	
+					</div>
 		         </div>
 
 				<div class="left width_full">
-                    <div class="right width-pr50 padding-top-3px" >
+                    <div class="left width-pr50 padding-top-3px" >
                         @textarea(
                         alertForm("event_title"),
                         'class -> "span5",
@@ -97,7 +97,7 @@
                         'cols -> 60
                         )
                     </div>
-                    <div class="left width-pr50 padding-top-3px" >
+                    <div class="right width-pr50 padding-top-3px" >
                         @textarea(
                         alertForm("responsible_answer"),
                         'class -> "span5",

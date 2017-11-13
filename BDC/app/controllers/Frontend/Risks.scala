@@ -484,7 +484,8 @@ object Risks extends Controller {
 
   def riskDetails(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-      val alerts = RiskService.findAllActiveAlertsByRiskId(id)
+      //val alerts = RiskService.findAllActiveAlertsByRiskId(id)
+      val alerts = RiskService.findRiskAlertsExtendedById(id)
       val risk = RiskService.findRiskDetails(id)
       val parent_id = risk.get.parent_id.get.toString()
       //println("parent_id [" + parent_id + "]")
@@ -621,7 +622,8 @@ object Risks extends Controller {
       //var program = ProgramService.findProgramMasterDetailsById(program_id)
 
       val riskObj = RiskService.findRiskDetails(id)
-      val alerts = RiskService.findAllActiveAlertsByRiskId(id)
+      //val alerts = RiskService.findAllActiveAlertsByRiskId(id)
+      val alerts = RiskService.findRiskAlertsExtendedById(id)
       riskObj match {
         case None =>
           Redirect(routes.Login.loginUser())

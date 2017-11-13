@@ -107,7 +107,12 @@ module.exports = function (sequelize, DataTypes) {
       field: 'alertarenovacion',
       type: DataTypes.STRING,
       allowNull: true
+    },
+    perpetua: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
+
   }, {
     schema: 'lic',
     timestamps: false,
