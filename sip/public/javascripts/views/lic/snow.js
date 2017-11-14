@@ -34,15 +34,20 @@
             editable: false,
             search: false
         },{
+            label: 'Formulario de Licencia',
+            name: 'formulariolicencia',
+            editable:false,
+            search:true
+        },{
             label: 'Licencia Requerida',
             name: 'licencia',
             editable: false,
-            search: false
+            search: true
         },{
             label: 'Paquete',
             name: 'paquete',
             editable: false,
-            search: false
+            search: true
         }];
 
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Snow', 'Editar Traducción', 'Agregar Traducción', '/lic/snow/list', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);

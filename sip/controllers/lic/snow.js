@@ -8,7 +8,7 @@ var path = require('path');
 var fs = require('fs');
 var logger = require('../../utils/logger');
 
-var entity = models.applist$;
+var entity = models.snow$;
 
 var includes = [];
 
@@ -17,7 +17,10 @@ function map(req) {
         id: req.query.id || 0,
         aplicacion: req.quey.aplicacion,
         fabricante: req.quey.fabricante,
-        categoria: req.query.categoria
+        categoria: req.query.categoria,
+        licencia: req.query.licencia,
+        paquete : req.query.paquete,
+        formulariolicencia : req.query.formlicencia
     }
 }
 
