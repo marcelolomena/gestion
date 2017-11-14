@@ -715,11 +715,6 @@ object Risks extends Controller {
                 success.responsible_answer)
 
               val last = RiskService.updateAlertDetailsMail(theAlert)
-              println("ID DE LA ALERTA MODIFICADA : "  + id)
-              /*
-              send email alert
-               */
-              RiskService.sendAutomaticAlerts(id)
 
               /**
                 * Activity log
