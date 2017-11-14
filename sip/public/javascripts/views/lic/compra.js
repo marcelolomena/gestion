@@ -35,14 +35,10 @@ var compraGrid = {
                 if (rowObject.alertaRenovacion === 'Vencida') {
                     return rojo
                 } else {
-                    if (rowObject.alertaRenovacion === 'Al Dia') {
-                        return verde
+                    if (rowObject.alertaRenovacion === 'Renovar') {
+                        return amarillo
                     } else {
-                        if (rowObject.alertaRenovacion === 'Renovar') {
-                            return amarillo
-                        } else {
-                            return gris
-                        }
+                        return verde
                     }
                 }
             }
