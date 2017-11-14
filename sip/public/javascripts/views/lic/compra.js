@@ -28,8 +28,8 @@ var compraGrid = {
             align: 'center',
             formatter: function (cellvalue, options, rowObject) {
                 rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
-                amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
                 verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
+                amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
                 gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
                 //console.log(" carlos ql " +cellvalue);
                 if (rowObject.alertaRenovacion === 'Vencida') {
