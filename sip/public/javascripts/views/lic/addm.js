@@ -11,41 +11,44 @@
             editable: false,
         },
         {
+            label: 'Traducción',
+            name: 'type',
+            editable: false,
+            search: true,
+            width : 300
+        },{
             label: 'Aplicación',
             name: 'aplicacion',
+            editable: false,
+            search: false,
+            width : 200
+        },{
+            label: 'Host',
+            name: 'hostname',
+            editable: false,
+            search: true,
+            width : 150
+        },{
+            label: 'SO',
+            name: 'hostOS',
             editable: false,
             search: true,
             width : 300
         },{
             label: 'Fabricante',
-            name: 'fabricante',
+            name: 'publishers',
             editable: false,
             search: true,
-            width : 300
+            width : 150
         },{
-            label: 'Categoria',
-            name: 'categoria',
+            label: 'Vendedor',
+            name: 'vendor',
             editable: false,
             search: true,
-            width : 300
-        },{
-            label: 'Instalaciones',
-            name: 'instalaciones',
-            editable: false,
-            search: false
-        },{
-            label: 'Licencia Requerida',
-            name: 'licencia',
-            editable: false,
-            search: false
-        },{
-            label: 'Paquete',
-            name: 'paquete',
-            editable: false,
-            search: false
+            width : 150
         }];
 
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Snow', 'Editar Traducción', 'Agregar Traducción', '/lic/snow/list', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'ADDM', 'Editar Traducción', 'Agregar Traducción', '/lic/addm/list', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         grid.navParameters.edit = false;
         grid.navParameters.add = false;
         grid.navParameters.del = false;

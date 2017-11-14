@@ -31,6 +31,7 @@ var detalleRecepcionController = require('../controllers/lic/detalle-recepcion')
 
 var snowController = require('../controllers/lic/snow');
 var reservaController = require('../controllers/lic/reserva');
+var addmController = require('../controllers/lic/addm');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -151,6 +152,9 @@ module.exports = function (passport) {
     */
     router.route('/lic/snow/list')
         .get(isAuthenticated, snowController.list);
+    
+    router.route('/lic/addm/list')
+        .get(isAuthenticated, addmController.list);
 
         
     router.route('/lic/traduccion')
@@ -160,7 +164,7 @@ module.exports = function (passport) {
     router.route('/lic/snow/:pId')
         .get(isAuthenticated, traduccionController.listChilds);
     
-        router.route('/lic/addm/:pId')
+    router.route('/lic/addm/:pId')
         .get(isAuthenticated, traduccionController.listChilds);
 
     router.route('/lic/reserva')
