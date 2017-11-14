@@ -179,10 +179,10 @@
                     var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
                     var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
                     //console.log(" carlos ql " +cellvalue);
-                    if (rowObject.alertaRenovacion === 'Vencida') {
+                    if (rowObject.alertarenovacion === 'Vencida') {
                         return rojo
                     } else {
-                        if (rowObject.alertaRenovacion === 'Renovar') {
+                        if (rowObject.alertarenovacion === 'Renovar') {
                             return amarillo
                         } else {
                             return verde
