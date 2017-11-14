@@ -1,4 +1,4 @@
-@(alerts:Seq[RiskAlerts], risk:Option[RiskManagementMaster],parent_id:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader)
+@(alerts:Seq[RiskAlertsExtended], risk:Option[RiskManagementMaster],parent_id:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import services._
 @import utils._
@@ -199,48 +199,51 @@
 				
 				@if(alerts.size>0){
 					<li class="top-header"  style="width:99%">
-						<span class="member header">Nombre</span>
-						<span class="member header">Detalle</span>
-						<span class="member header">Fecha</span>
-						<span class="member header">Responsable</span>
-						<span class="member header">Criticidad</span>
-						<span class="member header">Tipo</span>
-						<span class="member header">Accion</span>
+						<span class="minimember header">Fecha</span>
+						<span class="minimember header">Severidad</span>
+						<span class="minimember header">Evento</span>
+						<span class="member header">Categoría</span>
+						<span class="member header">Variable</span>
+						<span class="member header">PMO Responsable</span>
+						<span class="minimember header">Estado</span>
+						<span class="minimember header">Emisiones</span>
+						<span class="rminimember header">Accion</span>
 					</li>
 					@for( (p,index) <- alerts.zipWithIndex){
-						@*<a href="/edit-alert/@risk.get.id/@p.id" class="left">*@
 						<a href="@controllers.Frontend.routes.Risks.editRiskAlert(risk.get.id.get,p.id.get)" class="left">
-						<li class="@if(index%2==0){even_row}else{odd_row}">	
-							<span class="member">@p.event_title</span>
-							<span class="member">@p.event_details</span>
-							<span class="member">@if(!p.event_date.isEmpty){
+						<li class="@if(index%2==0){even_row}else{odd_row}">
+							<span class="minimember">@if(!p.event_date.isEmpty){
 		 						@p.event_date.get.format("dd-MM-yyyy")
 		 					}
 							</span>
-							<span class="member">@UserService.findUserDetailsById(p.responsible.get.toLong).get.first_name.substring(0,1).&nbsp;@UserService.findUserDetailsById(p.responsible.get.toLong).get.last_name </span>
-							<span class="member">
+							<span class="minimember">
 							@{
 							 	if(!p.criticality.isEmpty){
 							 		p.criticality.get.toInt match{
 							 		 case 1=>"Alta"
 							 		 case 2=>"Mediana"
-							 		 case 3=>"Baja"	
+							 		 case 3=>"Baja"
 							 		}
 							 	}
-						 	}							
+						 	}
 							</span>
-							@**
-							<span class="member">
+							<span class="minimember">
 							@{
-						 		p.alert_type.get match{
-						 			case 1=>"RISK-General"
-						 			case 2=>"RISK-Serious"		
-						 		}
-					 		}
+							 	if(!p.event_code.isEmpty){
+							 		p.event_code.get.toInt match{
+							 		 case 1=>"Riesgo"
+							 		 case 2=>"Incidente"
+							 		}
+							 	}
+						 	}
 							</span>
-							**@
-							</a>
-							<span class="member">
+							<span class="member">@p.category</span>
+							<span class="member">@p.impacted_variable</span>
+							<span class="member">@UserService.findUserDetailsById(p.responsible.get.toLong).get.first_name.substring(0,1).&nbsp;@UserService.findUserDetailsById(p.responsible.get.toLong).get.last_name </span>
+							<span class="minimember">@p.status</span>
+							<span class="minimember">@p.reiteration</span>
+						</a>
+							<span class="rminimember">
 								@if(utils.UserAccess.checkAccess(req,"delete_alert")){    
 									<span class="delete-alert delete-icon" id="alert_@p.id" style="margin-left: 5px"></span>
 								}

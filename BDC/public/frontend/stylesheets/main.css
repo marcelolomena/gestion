@@ -4467,6 +4467,16 @@ form button {
 	width: 120px;
 }
 
+#risk_list .minimember {
+ 	float: left;
+ 	width: 70px;
+ }
+
+#risk_list .rminimember {
+ 	float: right;
+ 	width: 70px;
+ }
+
 #risk_list .status {
 	float: left;
 	width: 420px;

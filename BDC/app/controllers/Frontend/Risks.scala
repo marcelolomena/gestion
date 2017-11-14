@@ -484,7 +484,8 @@ object Risks extends Controller {
 
   def riskDetails(id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-      val alerts = RiskService.findAllActiveAlertsByRiskId(id)
+      //val alerts = RiskService.findAllActiveAlertsByRiskId(id)
+      val alerts = RiskService.findRiskAlertsExtendedById(id)
       val risk = RiskService.findRiskDetails(id)
       val parent_id = risk.get.parent_id.get.toString()
       //println("parent_id [" + parent_id + "]")
@@ -616,12 +617,136 @@ object Risks extends Controller {
     }
   }
 
+
+  def updateAlertAndSendMail(id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val alert = RiskService.findRiskAlertsById(id)
+      val risk = RiskService.findRiskDetails(alert.get.risk_id.toString)
+
+      alert match {
+        case None =>
+          Redirect(routes.Login.loginUser())
+        case Some(rr: RiskAlerts) =>
+          val ra = RiskAlerts(rr.id,
+            rr.risk_id,
+            rr.event_code,
+            rr.event_date,
+            rr.event_title,
+            rr.event_details,
+            rr.responsible,
+            rr.person_invloved,
+            rr.criticality,
+            rr.is_active,
+            rr.category_id,
+            rr.impacted_variable,
+            rr.reiteration,
+            rr.status_id,
+            rr.task_id,
+            rr.change_state,
+            rr.responsible_answer)
+
+          ARTForms.alertsForm.bindFromRequest.fold(
+            errors => {
+              var program_id = ""
+              println("Errors - " + errors.errors);
+              val riskObj = RiskService.findRiskDetails(ra.risk_id.toString)
+              var program: Option[ProgramMaster] = null
+              riskObj.get.parent_type.get match {
+                case 0 =>
+                  program_id = riskObj.get.parent_id.get.toString()
+                case 1 =>
+                  program = ProjectService.findProgramDetailForProject(riskObj.get.parent_id.toString())
+                  program_id = program.get.program_id.get.toString()
+                case 2 =>
+                  program = TaskService.findProgramDetailForTask(riskObj.get.parent_id.get.toString())
+                  program_id = program.get.program_id.get.toString()
+                case 3 =>
+                  program = SubTaskServices.findProgramDetailForSubTask(riskObj.get.parent_id.get.toString())
+                  program_id = program.get.program_id.get.toString()
+              }
+              val users = ProgramMemberService.findAllProgramMembers(program_id);
+              var alert_states = new java.util.LinkedHashMap[String, String]()
+              val status = RiskService.findAllAlertStatus()
+              for (d <- status) {
+                alert_states.put(d.id.get.toString, d.description)
+              }
+              var alert_category = new java.util.LinkedHashMap[String, String]()
+              val category = RiskService.findAllAlertCategory()
+              for (d <- category) {
+                alert_category.put(d.id.get.toString, d.description)
+              }
+
+              val alert_task = new java.util.LinkedHashMap[String, String]()
+              val tasks = TaskService.findTaskListByParentTypeId(risk.get)
+              for (d <- tasks) {
+                alert_task.put(d.tId.get.toString, d.task_title)
+              }
+              println(alert_task)
+
+              BadRequest(views.html.frontend.risks.editAlert(ra.risk_id.toString,
+                id,
+                errors,
+                alert,
+                users,
+                alert_states,
+                alert_category,
+                alert_task))
+            },
+            success => {
+
+              val theForm = RiskService.validateAlert(ARTForms.alertsForm.fill(success))
+
+              val theAlert = RiskAlerts(ra.id,
+                ra.risk_id,
+                success.event_code,
+                ra.event_date,
+                success.event_title.toString,
+                success.event_details,
+                ra.responsible,
+                success.person_invloved,
+                success.criticality,
+                ra.is_active,
+                success.category_id,
+                success.impacted_variable,
+                success.reiteration,
+                success.status_id,
+                success.task_id,
+                success.change_state,
+                success.responsible_answer)
+
+              val last = RiskService.updateAlertDetailsMail(theAlert)
+              println("ID DE LA ALERTA MODIFICADA : "  + id)
+              /*
+              send email alert
+               */
+              RiskService.sendAutomaticAlerts(id)
+
+              /**
+                * Activity log
+                */
+
+              val act = Activity(ActivityTypes.Alert.id, "Alert sent by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), id.toInt)
+              Activity.saveLog(act)
+
+              Ok("Sccuess");
+
+              ////
+            })
+      }
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+  //
+
   def updateRisk(id: String) = Action(parse.multipartFormData) { implicit request =>
     request.session.get("username").map { user =>
       //var program = ProgramService.findProgramMasterDetailsById(program_id)
 
       val riskObj = RiskService.findRiskDetails(id)
-      val alerts = RiskService.findAllActiveAlertsByRiskId(id)
+      //val alerts = RiskService.findAllActiveAlertsByRiskId(id)
+      val alerts = RiskService.findRiskAlertsExtendedById(id)
       riskObj match {
         case None =>
           Redirect(routes.Login.loginUser())

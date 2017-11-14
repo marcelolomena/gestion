@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils
 import java.util.Calendar
 //import org.joda.time.DateTime
 import models.RiskAlerts
+import models.RiskAlertsExtended
 import models.RiskCategory
 import models.Users
 import models.SpiCpiCalculations
@@ -92,11 +93,7 @@ object RiskService extends CustomColumns {
    */
   def updateAlertDetails(alert: RiskAlerts) = {
     DB.withConnection { implicit connection =>
-      println("ID : " + alert.id.get)
-      println("DETALLE : " + alert.event_details.get.toString)
-      println("TITULO : " + alert.event_title)
-      println("FECHA : " + alert.event_date)
-      println("risk_id : " + alert.risk_id)
+
       val alert_detail = SQL(
         """
           update art_risk_alert  SET 
@@ -133,6 +130,50 @@ object RiskService extends CustomColumns {
           'task_id -> alert.task_id,
           'change_state -> alert.change_state,
           'responsible_answer -> alert.responsible_answer).executeUpdate()
+    }
+  }
+
+  def updateAlertDetailsMail(alert: RiskAlerts) = {
+    DB.withConnection { implicit connection =>
+
+      val increment = alert.reiteration.get + 1
+
+      val alert_detail = SQL(
+        """
+          update art_risk_alert  SET
+          risk_id={risk_id},
+          event_code={event_code},
+          event_date={event_date},
+          event_title={event_title},
+          event_details={event_details},
+          responsible={responsible},
+          person_invloved={person_invloved},
+          criticality={criticality},
+          category_id={category_id},
+          impacted_variable={impacted_variable},
+          reiteration={reiteration},
+          status_id={status_id},
+          task_id={task_id},
+          change_state={change_state},
+          responsible_answer={responsible_answer}
+          where id={id}
+          """).on(
+        'id -> alert.id.get,
+        'risk_id -> alert.risk_id,
+        'event_code -> alert.event_code,
+        'event_date -> alert.event_date,
+        'event_title -> alert.event_title,
+        'event_details -> alert.event_details.get.toString,
+        'responsible -> alert.responsible,
+        'person_invloved -> alert.person_invloved,
+        'criticality -> alert.criticality,
+        'category_id -> alert.category_id,
+        'impacted_variable -> alert.impacted_variable,
+        'reiteration -> increment,
+        'status_id -> alert.status_id,
+        'task_id -> alert.task_id,
+        'change_state -> alert.change_state,
+        'responsible_answer -> alert.responsible_answer).executeUpdate()
     }
   }
 
@@ -1213,6 +1254,27 @@ object RiskService extends CustomColumns {
 
   }
 
+  def findRiskAlertsExtendedById(id: String): Seq[RiskAlertsExtended] =  {
+
+    val sql = """ SELECT a.*,b.description category, c.description status
+                 FROM art_risk_alert a
+                 JOIN art_risk_alert_category b
+                 ON a.category_id = b.id
+                 JOIN art_risk_alert_status c
+                 ON a.status_id = c.id
+                 WHERE
+                 a.is_active = 1
+                 AND b.is_active = 1
+                 AND c.is_active = 1
+                 AND risk_id ={id}
+              """
+    DB.withConnection { implicit connection =>
+      val result = SQL(sql).on(
+        'id -> id.toInt).as(RiskAlertsExtended.alerts *)
+      result
+    }
+  }
+
   def findRiskAlertsUserIds() = {
     var sqlString = ""
     sqlString = "SELECT person_invloved FROM art_risk_alert where is_active=1"
@@ -1391,6 +1453,9 @@ object RiskService extends CustomColumns {
 
   }
 
+  /*
+  author: marcelol marcelol@loso.cl
+   */
   def sendAutomaticAlerts(alert_id: String) {
 
     if (!StringUtils.isEmpty(alert_id)) {
@@ -1404,15 +1469,17 @@ object RiskService extends CustomColumns {
 
         val risk_details = findRiskDetails(risk_id)
         if (!risk_details.isEmpty) {
-          val name = risk_details.get.name
-          val cause = risk_details.get.cause
-          val parent_id = risk_details.get.parent_id.get
-          val parent_type = risk_details.get.parent_type.get
-          val persons_involved = risk_details.get.responsible
+          val risk_name = risk_details.get.name
+          val risk_cause = risk_details.get.cause
+          val risk_parent_id = risk_details.get.parent_id.get
+          val risk_parent_type = risk_details.get.parent_type.get
+          val risk_responsible = risk_details.get.responsible
 
           if (!alert_details.get.person_invloved.isEmpty) {
             persons = alert_details.get.person_invloved.get
+            println(persons)
           }
+
           var user: Option[Users] = null
           if (!StringUtils.isEmpty(persons)) {
             for (p <- persons.split(",")) {
@@ -1420,16 +1487,17 @@ object RiskService extends CustomColumns {
               if (!user.isEmpty) {
                 val email = user.get.email.toString()
 
+                println("enviando un correo : " + email)
+
                 if (!StringUtils.isEmpty(email)) {
                   val messge = """
                     """ + user.get.first_name + """
-                    This is Auto generated email for Risk Alert. Please check Risk '""" + risk_details.get.name + """'
-                    Alert has been generated for the same.
-                                
-                                            
+                    Este es un email auto generado por ART. Por favor revise el riesgo '""" + risk_details.get.name + """'
+                    Alerta generada por el mismo.
                     """
 
-                  utils.SendEmail.sendEmailRiskAlert(messge, "balakrishnar@siddhatech.com")
+                  utils.SendEmail.sendEmailRiskAlert(messge, "marcelo.mlomena@gmail.com")
+                  //balakrishnar@siddhatech.com
                 }
 
               }

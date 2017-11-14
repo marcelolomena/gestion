@@ -42,13 +42,13 @@ object SendEmail {
 
     val fromEmail = Play.application().configuration().getString("smtp.user")
     var mail = use[MailerPlugin].email
-    mail.setSubject("Risk Alert")
+    mail.setSubject("Emisión Alertas desde ART")
     //mail.addFrom(fromEmail.toString())
     mail.setFrom(fromEmail.toString())
     //mail.addRecipient(recipientEmail.toString())
     mail.setRecipient(recipientEmail.toString())
     try {
-      mail.sendHtml("<html><div> Hello,<br/>" + message.toString() + "</br></div></html>")
+      mail.sendHtml("<html><div> Hola,<br/>" + message.toString() + "</br></div></html>")
     } catch {
       case ex: Exception => return "Check SMTP Details"
     }
