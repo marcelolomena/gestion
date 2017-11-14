@@ -147,7 +147,7 @@ function list(req, res) {
       sql += "WHERE " + condition + " ";
       logger.debug("**" + sql + "**");
     }
-    var sql2 = sql + "ORDER BY a.alertarenovacion OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+    var sql2 = sql + "ORDER BY a.alertarenovacion desc OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
     var records;
     logger.debug("query:" + sql2);
     sequelize.query(sqlcount).spread(function (recs) {
