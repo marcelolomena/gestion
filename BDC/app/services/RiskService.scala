@@ -174,6 +174,11 @@ object RiskService extends CustomColumns {
         'task_id -> alert.task_id,
         'change_state -> alert.change_state,
         'responsible_answer -> alert.responsible_answer).executeUpdate()
+      /*
+      send email alert
+       */
+
+      sendAutomaticAlerts(alert.id.get.toString,increment.toInt)
     }
   }
 
@@ -469,6 +474,24 @@ object RiskService extends CustomColumns {
     }
 
     isValid
+  }
+
+  def findProgramByIdParent(parent_id: String, parent_type: Integer): Option[ProgramMaster] = {
+
+    var progrm: Option[ProgramMaster] = null
+    parent_type.intValue() match {
+
+      case 0 =>
+        progrm = ProgramService.findProgramMasterDetailsById(parent_id)
+      case 1 =>
+        progrm = ProjectService.findProgramDetailForProject(parent_id)
+      case 2 =>
+        progrm = TaskService.findProgramDetailForTask(parent_id)
+      case 3 =>
+        progrm = SubTaskServices.findProgramDetailForSubTask(parent_id)
+    }
+
+    progrm
   }
 
   def validateIssueFunction(parent_id: String, parent_type: Integer): Boolean = {
@@ -1456,8 +1479,10 @@ object RiskService extends CustomColumns {
   /*
   author: marcelol marcelol@loso.cl
    */
-  def sendAutomaticAlerts(alert_id: String) {
+  def sendAutomaticAlerts(alert_id: String, increment: Int) {
 
+    println("ID DE LA ALERTA MODIFICADA : "  + alert_id)
+    println("INCREMENT : "  + increment)
     if (!StringUtils.isEmpty(alert_id)) {
 
       val alert_details = findRiskAlertsById(alert_id)
@@ -1475,6 +1500,10 @@ object RiskService extends CustomColumns {
           val risk_parent_type = risk_details.get.parent_type.get
           val risk_responsible = risk_details.get.responsible
 
+          val program = findProgramByIdParent(risk_parent_id.toString, risk_parent_type)
+
+          println("Programa " + program.get.program_description.get.toString)
+
           if (!alert_details.get.person_invloved.isEmpty) {
             persons = alert_details.get.person_invloved.get
             println(persons)
@@ -1490,14 +1519,16 @@ object RiskService extends CustomColumns {
                 println("enviando un correo : " + email)
 
                 if (!StringUtils.isEmpty(email)) {
-                  val messge = """
-                    """ + user.get.first_name + """
-                    Este es un email auto generado por ART. Por favor revise el riesgo '""" + risk_details.get.name + """'
-                    Alerta generada por el mismo.
-                    """
+                  val first = user.get.first_name
+                  val last = user.get.last_name
+                  val messge = s"""
+                                  Estimada ${first} ${last},
+                    """.stripMargin
 
-                  utils.SendEmail.sendEmailRiskAlert(messge, "marcelo.mlomena@gmail.com")
-                  //balakrishnar@siddhatech.com
+                  utils.SendEmail.sendEmailRiskAlert(
+                    messge,
+                    "marcelo.mlomena@gmail.com",
+                    program.get.program_description.get.toString)
                 }
 
               }
