@@ -93,7 +93,6 @@ object RiskService extends CustomColumns {
    */
   def updateAlertDetails(alert: RiskAlerts) = {
     DB.withConnection { implicit connection =>
-      println("ID : " + alert.id.get)
 
       val alert_detail = SQL(
         """
@@ -131,6 +130,50 @@ object RiskService extends CustomColumns {
           'task_id -> alert.task_id,
           'change_state -> alert.change_state,
           'responsible_answer -> alert.responsible_answer).executeUpdate()
+    }
+  }
+
+  def updateAlertDetailsMail(alert: RiskAlerts) = {
+    DB.withConnection { implicit connection =>
+
+      val increment = alert.reiteration.get + 1
+
+      val alert_detail = SQL(
+        """
+          update art_risk_alert  SET
+          risk_id={risk_id},
+          event_code={event_code},
+          event_date={event_date},
+          event_title={event_title},
+          event_details={event_details},
+          responsible={responsible},
+          person_invloved={person_invloved},
+          criticality={criticality},
+          category_id={category_id},
+          impacted_variable={impacted_variable},
+          reiteration={reiteration},
+          status_id={status_id},
+          task_id={task_id},
+          change_state={change_state},
+          responsible_answer={responsible_answer}
+          where id={id}
+          """).on(
+        'id -> alert.id.get,
+        'risk_id -> alert.risk_id,
+        'event_code -> alert.event_code,
+        'event_date -> alert.event_date,
+        'event_title -> alert.event_title,
+        'event_details -> alert.event_details.get.toString,
+        'responsible -> alert.responsible,
+        'person_invloved -> alert.person_invloved,
+        'criticality -> alert.criticality,
+        'category_id -> alert.category_id,
+        'impacted_variable -> alert.impacted_variable,
+        'reiteration -> increment,
+        'status_id -> alert.status_id,
+        'task_id -> alert.task_id,
+        'change_state -> alert.change_state,
+        'responsible_answer -> alert.responsible_answer).executeUpdate()
     }
   }
 
