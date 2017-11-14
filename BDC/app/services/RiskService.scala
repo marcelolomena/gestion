@@ -1453,6 +1453,9 @@ object RiskService extends CustomColumns {
 
   }
 
+  /*
+  author: marcelol marcelol@loso.cl
+   */
   def sendAutomaticAlerts(alert_id: String) {
 
     if (!StringUtils.isEmpty(alert_id)) {
@@ -1466,15 +1469,17 @@ object RiskService extends CustomColumns {
 
         val risk_details = findRiskDetails(risk_id)
         if (!risk_details.isEmpty) {
-          val name = risk_details.get.name
-          val cause = risk_details.get.cause
-          val parent_id = risk_details.get.parent_id.get
-          val parent_type = risk_details.get.parent_type.get
-          val persons_involved = risk_details.get.responsible
+          val risk_name = risk_details.get.name
+          val risk_cause = risk_details.get.cause
+          val risk_parent_id = risk_details.get.parent_id.get
+          val risk_parent_type = risk_details.get.parent_type.get
+          val risk_responsible = risk_details.get.responsible
 
           if (!alert_details.get.person_invloved.isEmpty) {
             persons = alert_details.get.person_invloved.get
+            println(persons)
           }
+
           var user: Option[Users] = null
           if (!StringUtils.isEmpty(persons)) {
             for (p <- persons.split(",")) {
@@ -1482,16 +1487,17 @@ object RiskService extends CustomColumns {
               if (!user.isEmpty) {
                 val email = user.get.email.toString()
 
+                println("enviando un correo : " + email)
+
                 if (!StringUtils.isEmpty(email)) {
                   val messge = """
                     """ + user.get.first_name + """
-                    This is Auto generated email for Risk Alert. Please check Risk '""" + risk_details.get.name + """'
-                    Alert has been generated for the same.
-                                
-                                            
+                    Este es un email auto generado por ART. Por favor revise el riesgo '""" + risk_details.get.name + """'
+                    Alerta generada por el mismo.
                     """
 
-                  utils.SendEmail.sendEmailRiskAlert(messge, "balakrishnar@siddhatech.com")
+                  utils.SendEmail.sendEmailRiskAlert(messge, "marcelo.mlomena@gmail.com")
+                  //balakrishnar@siddhatech.com
                 }
 
               }
