@@ -20,7 +20,7 @@ var compraGrid = {
         }, {
             label: 'Alerta',
             name: 'alertarenovacion',
-            width: 80,
+            width: 50,
             hidden: false,
             search: false,
             editable: true,
@@ -31,17 +31,30 @@ var compraGrid = {
                 verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
                 amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
                 gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
-                //console.log(" carlos ql " +cellvalue);
-                if (rowObject.alertaRenovacion === 'Vencida') {
-                    return rojo
+                if (rowObject.alertaRenovacion === 'aGris') {
+                    return gris
                 } else {
-                    if (rowObject.alertaRenovacion === 'Renovar') {
-                        return amarillo
+                    if (rowObject.alertaRenovacion === 'Vencida') {
+                        return rojo
                     } else {
-                        return verde
+                        if (rowObject.alertaRenovacion === 'Renovar') {
+                            return amarillo
+                        } else {
+                            if (rowObject.alertaRenovacion === 'bAl Dia'){
+                                return verde
+                            }
+                            
+                        }
                     }
                 }
             }
+        }, {
+            label: 'Tipo',
+            width: 100,
+            name: 'perpetua',
+            align: 'center',
+            hidden: false,
+            search: false
         }, {
             label: 'Contrato',
             name: 'contrato',
@@ -89,7 +102,7 @@ var compraGrid = {
             label: 'Proveedor',
             name: 'idProveedor',
             jsonmap: 'proveedor.nombre',
-            width: 500,
+            width: 400,
             align: 'center',
             sortable: false,
             editable: true,
@@ -117,7 +130,7 @@ var compraGrid = {
         }, {
             label: 'Fecha de Compra',
             name: 'fechaCompra',
-            width: 200,
+            width: 120,
             align: 'center',
             sortable: false,
             editable: true,
@@ -125,7 +138,7 @@ var compraGrid = {
         }, {
             label: 'Fecha de Término',
             name: 'fechaExpiracion',
-            width: 200,
+            width: 120,
             align: 'center',
             sortable: false,
             editable: true,
@@ -133,7 +146,7 @@ var compraGrid = {
         }, {
             label: 'Fecha de Control',
             name: 'fechaRenovaSoporte',
-            width: 200,
+            width: 120,
             align: 'center',
             sortable: false,
             editable: true,
@@ -149,7 +162,7 @@ var compraGrid = {
         }, {
             label: 'Moneda',
             name: 'idMoneda',
-            jsonmap: 'moneda.moneda',
+            jsonmap: 'moneda.nombre',
             width: 70,
             align: 'center',
             sortable: false,
