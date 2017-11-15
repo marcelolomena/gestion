@@ -1,5 +1,6 @@
 package utils
 
+import models.{ProgramMaster, RiskAlerts, RiskManagementMaster, Users}
 import play.api._
 import play.api.Play.current
 import play.Play
@@ -39,22 +40,84 @@ object SendEmail {
   }
 
   def sendEmailRiskAlert(
-                          regards: String,
-                          program: String,
-                          alert: String,
-                          recipientEmail: String,
-                          programName: String
+                          user: Option[Users],
+                          program: Option[ProgramMaster],
+                          alert: Option[RiskAlerts],
+                          risks: Seq[RiskManagementMaster],
+                          risk_details: Option[RiskManagementMaster],
+                          recipientEmail: String
                         ): String = {
 
     val fromEmail = Play.application().configuration().getString("smtp.user")
     val mail = use[MailerPlugin].email
     mail.setSubject("Emisión Alertas desde ART")
-
     mail.setFrom(fromEmail.toString())
 
     mail.setRecipient(recipientEmail.toString())
-    //val word = message
+
     try {
+      val programName = program.get.program_description.get.toString
+      val alertTitle = alert.get.event_title
+      val first = user.get.first_name
+      val last = user.get.last_name
+      val regards = s"""
+                    Estimado: ${first} ${last},
+                    """.stripMargin
+
+      val builderRisk = StringBuilder.newBuilder
+      builderRisk.append("<ul>")
+      for (r <- risks) {
+        builderRisk.append("<li>")
+        builderRisk.append(r.name)
+        builderRisk.append("</li>")
+      }
+      builderRisk.append("</ul>")
+
+      val risksLst = builderRisk.toString()
+
+      val builderProject = StringBuilder.newBuilder
+      builderProject.append("<ul style=\"padding-right: 0px; padding-left: 0px; float: left; padding-bottom: 0px; margin: 15px 0px; width: 100%; padding-top: 0px; list-style-type: none;\">")
+
+      builderProject.append("<li style=\"padding-right: 2px; display: inline; padding-left: 2px; float: left; padding-bottom: 2px; width: 50%; padding-top: 2px;\">")
+      builderProject.append("ART")
+      builderProject.append("</li>")
+      builderProject.append("<li>")
+      builderProject.append(program.get.program_code.toString)
+      builderProject.append("</li>")
+
+      builderProject.append("<li style=\"padding-right: 2px; display: inline; padding-left: 2px; float: left; padding-bottom: 2px; width: 50%; padding-top: 2px;\">")
+      builderProject.append("SAP")
+      builderProject.append("</li>")
+      builderProject.append("<li>")
+      builderProject.append(program.get.sap_code.toString)
+      builderProject.append("</li>")
+
+      builderProject.append("</ul>")
+
+      val projectsLst = builderProject.toString()
+
+      val builderAlert = StringBuilder.newBuilder
+      builderAlert.append("<ul style=\"padding-right: 0px; padding-left: 0px; float: left; padding-bottom: 0px; margin: 15px 0px; width: 100%; padding-top: 0px; list-style-type: none;\">")
+
+      builderAlert.append("<li style=\"padding-right: 2px; display: inline; padding-left: 2px; float: left; padding-bottom: 2px; width: 50%; padding-top: 2px;\">")
+      builderAlert.append("Reiteración Alerta")
+      builderAlert.append("</li>")
+      builderAlert.append("<li>")
+      builderAlert.append(alert.get.reiteration.get.toString)
+      builderAlert.append("</li>")
+
+      builderAlert.append("<li style=\"padding-right: 2px; display: inline; padding-left: 2px; float: left; padding-bottom: 2px; width: 50%; padding-top: 2px;\">")
+      builderAlert.append("Variable Impactada")
+      builderAlert.append("</li>")
+      builderAlert.append("<li>")
+      builderAlert.append(alert.get.impacted_variable.get.toString)
+      builderAlert.append("</li>")
+
+
+      builderAlert.append("</ul>")
+
+      val alertLst = builderAlert.toString()
+
 
       val html =
         s"""
@@ -76,10 +139,10 @@ object SendEmail {
  |              <table border="0" cellpadding="0" cellspacing="0" width="100%">
  |								<tr>
  |									<td align="center" style="color: #ffffff;" width="100%">
- |										Alerta ART<br/>
+ |										Alerta PMO<br/>
  |									</td>
  |								</tr>
- |            </table>|
+ |            </table>
  |						</td>
  |					</tr>
  |					<tr>
@@ -87,7 +150,7 @@ object SendEmail {
  |							<table border="0" cellpadding="0" cellspacing="0" width="100%">
  |								<tr>
  |									<td style="color: #153643; font-family: Arial, sans-serif; font-size: 24px;">
- |										<b>${program}</b>
+ |										<b>${programName}</b>
  |									</td>
  |								</tr>
  |								<tr>
@@ -97,7 +160,13 @@ object SendEmail {
  |								</tr>
  |								<tr>
  |									<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
- |										${alert}
+ |										${alertTitle}
+ |									</td>
+ |								</tr>
+ |								<tr>
+ |									<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;">
+ |                    Adicionalmente se presentan los siguientes riesgos:
+ |										${risksLst}
  |									</td>
  |								</tr>
  |								<tr>
@@ -112,8 +181,9 @@ object SendEmail {
  |															</td>
  |														</tr>
  |														<tr>
- |															<td style="padding: 25px 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
- |																Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempus adipiscing felis, sit amet blandit ipsum volutpat sed. Morbi porttitor, eget accumsan dictum, nisi libero ultricies ipsum, in posuere mauris neque at erat.
+ |															<td style="padding: 25px 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;">
+ |                                Información del proyecto<br>
+ |																${projectsLst}
  |															</td>
  |														</tr>
  |													</table>
@@ -129,8 +199,9 @@ object SendEmail {
  |															</td>
  |														</tr>
  |														<tr>
- |															<td style="padding: 25px 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
- |																Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempus adipiscing felis, sit amet blandit ipsum volutpat sed. Morbi porttitor, eget accumsan dictum, nisi libero ultricies ipsum, in posuere mauris neque at erat.
+ |															<td style="padding: 25px 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;">
+ |																Información del riesgo<br>
+ |                                ${alertLst}
  |															</td>
  |														</tr>
  |													</table>

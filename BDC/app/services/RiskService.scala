@@ -1492,38 +1492,28 @@ object RiskService extends CustomColumns {
    */
   def sendAutomaticAlerts(alert_id: String, increment: Int) {
 
-    println("ID DE LA ALERTA MODIFICADA : "  + alert_id)
-    println("INCREMENT : "  + increment)
     if (!StringUtils.isEmpty(alert_id)) {
 
-      val alert_details = findRiskAlertsById(alert_id)
-      if (!alert_details.isEmpty) {
+      val alert = findRiskAlertsById(alert_id)
+      if (!alert.isEmpty) {
 
         var persons = ""
-        val risk_id = alert_details.get.risk_id.toString()
-        val title = alert_details.get.event_title
-
+        val risk_id = alert.get.risk_id.toString()
+        val title = alert.get.event_title
         val risks = findRiskFromAlert(risk_id)
-
-        for (r <- risks) {
-          println("--------------------> " + r.name)
-        }
 
         val risk_details = findRiskDetails(risk_id)
         if (!risk_details.isEmpty) {
-          val risk_name = risk_details.get.name
-          val risk_cause = risk_details.get.cause
+          //val risk_name = risk_details.get.name
+          //val risk_cause = risk_details.get.cause
           val risk_parent_id = risk_details.get.parent_id.get
           val risk_parent_type = risk_details.get.parent_type.get
-          val risk_responsible = risk_details.get.responsible
+          //val risk_responsible = risk_details.get.responsible
 
           val program = findProgramByIdParent(risk_parent_id.toString, risk_parent_type)
 
-          println("Programa " + program.get.program_description.get.toString)
-
-          if (!alert_details.get.person_invloved.isEmpty) {
-            persons = alert_details.get.person_invloved.get
-            println(persons)
+          if (!alert.get.person_invloved.isEmpty) {
+            persons = alert.get.person_invloved.get
           }
 
           var user: Option[Users] = null
@@ -1536,18 +1526,14 @@ object RiskService extends CustomColumns {
                 println("enviando un correo : " + email)
 
                 if (!StringUtils.isEmpty(email)) {
-                  val first = user.get.first_name
-                  val last = user.get.last_name
-                  val regards = s"""
-                                  Estimado: ${first} ${last},
-                    """.stripMargin
 
                   utils.SendEmail.sendEmailRiskAlert(
-                    regards,
-                    program.get.program_description.get.toString,
-                    alert_details.get.event_title,
-                    "marcelo.mlomena@gmail.com",
-                    program.get.program_description.get.toString)
+                    user,
+                    program,
+                    alert,
+                    risks,
+                    risk_details,
+                    "marcelo.mlomena@gmail.com")
                 }
 
               }
