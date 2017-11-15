@@ -60,9 +60,11 @@ function mapper(data) {
             proveedor: {
                 nombre: item.proveedor.razonsocial
             },
-            // idAlertaRenovacion: item.idAlertaRenovacion,
-            alertaRenovacion: item.alertaRenovacion
-            // estructuracuibch: { cui: item.estructuracuibch.cui }
+            moneda: {
+                nombre: item.moneda.moneda
+            },
+            alertaRenovacion: item.alertaRenovacion,
+            perpetua : item.perpetua ? 'PERPETUA' : 'TRANSITORIA'
         }
     });
 }
