@@ -39,7 +39,9 @@ object SendEmail {
   }
 
   def sendEmailRiskAlert(
-                          message: String,
+                          regards: String,
+                          program: String,
+                          alert: String,
                           recipientEmail: String,
                           programName: String
                         ): String = {
@@ -51,7 +53,7 @@ object SendEmail {
     mail.setFrom(fromEmail.toString())
 
     mail.setRecipient(recipientEmail.toString())
-    val word = message
+    //val word = message
     try {
 
       val html =
@@ -60,7 +62,7 @@ object SendEmail {
  |<html xmlns="http://www.w3.org/1999/xhtml">
  |<head>
  |<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- |<title>Demystifying Email Design</title>
+ |<title>.:Alert ART:.</title>
  |<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
  |</head>
  |<body style="margin: 0; padding: 0;">
@@ -74,7 +76,7 @@ object SendEmail {
  |              <table border="0" cellpadding="0" cellspacing="0" width="100%">
  |								<tr>
  |									<td align="center" style="color: #ffffff;" width="100%">
- |										Alerta PMO<br/>
+ |										Alerta ART<br/>
  |									</td>
  |								</tr>
  |            </table>|
@@ -85,12 +87,17 @@ object SendEmail {
  |							<table border="0" cellpadding="0" cellspacing="0" width="100%">
  |								<tr>
  |									<td style="color: #153643; font-family: Arial, sans-serif; font-size: 24px;">
- |										<b>${word}</b>
+ |										<b>${program}</b>
  |									</td>
  |								</tr>
  |								<tr>
  |									<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
- |										Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempus adipiscing felis, sit amet blandit ipsum volutpat sed. Morbi porttitor, eget accumsan dictum, nisi libero ultricies ipsum, in posuere mauris neque at erat.
+ |										<b>${regards}</b>
+ |									</td>
+ |								</tr>
+ |								<tr>
+ |									<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
+ |										${alert}
  |									</td>
  |								</tr>
  |								<tr>

@@ -251,6 +251,17 @@ object RiskService extends CustomColumns {
       SQL(sqlString).as(RiskManagementMaster.riskManagementMaster *)
     }
   }
+
+  def findRiskFromAlert(risk_id: String): Seq[RiskManagementMaster] = {
+    DB.withConnection { implicit connection =>
+      val result = SQL(
+        "SELECT * FROM art_risk WHERE parent_id IN (SELECT parent_id FROM art_risk WHERE id = {rId} AND is_active = 1) AND is_active = 1").on(
+        'rId -> risk_id).as(RiskManagementMaster.riskManagementMaster *)
+      result
+    }
+  }
+
+
   def findRiskListProgram(parent_id: String): Seq[RiskManagementMaster] = {
     var sqlString = "SELECT *  FROM art_risk where is_active = 1 AND (parent_id=" + parent_id + ""
     val proyectos = ProjectService.findProjectIdListForProgramId(parent_id)
@@ -1492,6 +1503,12 @@ object RiskService extends CustomColumns {
         val risk_id = alert_details.get.risk_id.toString()
         val title = alert_details.get.event_title
 
+        val risks = findRiskFromAlert(risk_id)
+
+        for (r <- risks) {
+          println("--------------------> " + r.name)
+        }
+
         val risk_details = findRiskDetails(risk_id)
         if (!risk_details.isEmpty) {
           val risk_name = risk_details.get.name
@@ -1521,12 +1538,14 @@ object RiskService extends CustomColumns {
                 if (!StringUtils.isEmpty(email)) {
                   val first = user.get.first_name
                   val last = user.get.last_name
-                  val messge = s"""
-                                  Estimada ${first} ${last},
+                  val regards = s"""
+                                  Estimado: ${first} ${last},
                     """.stripMargin
 
                   utils.SendEmail.sendEmailRiskAlert(
-                    messge,
+                    regards,
+                    program.get.program_description.get.toString,
+                    alert_details.get.event_title,
                     "marcelo.mlomena@gmail.com",
                     program.get.program_description.get.toString)
                 }
