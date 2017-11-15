@@ -86,7 +86,7 @@
                 label: 'Fabricante',
                 name: 'idFabricante',
                 jsonmap: 'nombreFab',
-                width: 380,
+                width: 280,
                 align: 'center',
                 sortable: false,
                 editable: true,
@@ -114,14 +114,14 @@
             }, {
                 label: 'Software',
                 name: 'nombre',
-                width: 350,
+                width: 250,
                 align: 'center',
                 sortable: false,
                 editable: true
             }, {
-                label: 'Cantidad Compradas',
+                label: 'Cant. Compradas',
                 name: 'licstock',
-                width: 140,
+                width: 120,
                 align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
                     return rowObject.ilimitado ? 'Ilimitado' : cellvalue;
@@ -178,29 +178,24 @@
                     var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
                     var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
                     var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
-                    //console.log(" carlos ql " +cellvalue);
-                    if (rowObject.alertarenovacion === 'Vencida') {
-                        return rojo
-                    } else {
-                        if (rowObject.alertarenovacion === 'Renovar') {
-                            return amarillo
+                    if(rowObject.alertarenovacion === 'aGris'){
+                        return gris;
+                    }else{
+                        if (rowObject.alertarenovacion === 'Vencida') {
+                            return rojo;
                         } else {
-                            return verde
-                    
-                        }
-                    }
+                            if (rowObject.alertarenovacion === 'Renovar') {
+                                return amarillo;
+                            } else {
+                                if (rowObject.alertarenovacion === 'bAl Dia')
+                                
+                                
+                                return verde;
+                            }
+                        }    
+                    }   
                 }
-            },
-            // {
-            //     label: 'Alerta Renovación',
-            //     name: 'idAlertaRen',
-            //     jsonmap: 'nombreAlertaRen',
-            //     align: 'center',
-            //     sortable: false,
-            //     editable: false,
-            //     search: false
-            // },
-             {
+            }, {
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
                 jsonmap: 'nombreTipoInst',
@@ -231,36 +226,6 @@
                     }
                 }
             }, {
-                label: 'Clasificación',
-                name: 'idClasificacion',
-                jsonmap: 'nombreClas',
-                width: 150,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                hidden: false,
-                edittype: 'select',
-                editoptions: {
-                    dataUrl: '/lic/clasificaciones',
-                    buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.clasificacion;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
-                    }
-                },
-                search: true,
-                stype: 'select',
-                searchoptions: {
-                    dataUrl: '/lic/clasificaciones',
-                    buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.clasificacion;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
-                    }
-                }
-            }, {
                 label: 'Tipo de Licenciamiento',
                 name: 'idTipoLicenciamiento',
                 jsonmap: 'nombreTipoLic',
@@ -286,6 +251,37 @@
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.tipoLicenciamiento;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    }
+                }
+            },
+            {
+                label: 'Clasificación',
+                name: 'idClasificacion',
+                jsonmap: 'nombreClas',
+                width: 150,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                hidden: false,
+                edittype: 'select',
+                editoptions: {
+                    dataUrl: '/lic/clasificaciones',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.clasificacion;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
+                    }
+                },
+                search: true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/clasificaciones',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.clasificacion;
                         var data = JSON.parse(response);
                         return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
                     }
