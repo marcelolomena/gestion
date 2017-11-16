@@ -76,45 +76,45 @@ object SendEmail {
       val risksLst = builderRisk.toString()
 
       val builderProject = StringBuilder.newBuilder
-      builderProject.append("<ul style=\"padding-right: 0px; padding-left: 0px; float: left; padding-bottom: 0px; margin: 15px 0px; width: 100%; padding-top: 0px; list-style-type: none;\">")
-
-      builderProject.append("<li style=\"padding-right: 2px; display: inline; padding-left: 2px; float: left; padding-bottom: 2px; width: 50%; padding-top: 2px;\">")
+      builderProject.append("<tr>")
+      builderProject.append("<td>")
       builderProject.append("ART")
-      builderProject.append("</li>")
-      builderProject.append("<li>")
+      builderProject.append("</td>")
+      builderProject.append("<td>")
       builderProject.append(program.get.program_code.toString)
-      builderProject.append("</li>")
+      builderProject.append("</td>")
+      builderProject.append("</tr>")
 
-      builderProject.append("<li style=\"padding-right: 2px; display: inline; padding-left: 2px; float: left; padding-bottom: 2px; width: 50%; padding-top: 2px;\">")
+      builderProject.append("<tr>")
+      builderProject.append("<td>")
       builderProject.append("SAP")
-      builderProject.append("</li>")
-      builderProject.append("<li>")
+      builderProject.append("</td>")
+      builderProject.append("<td>")
       builderProject.append(program.get.sap_code.toString)
-      builderProject.append("</li>")
-
-      builderProject.append("</ul>")
+      builderProject.append("</td>")
+      builderProject.append("</tr>")
 
       val projectsLst = builderProject.toString()
 
       val builderAlert = StringBuilder.newBuilder
-      builderAlert.append("<ul style=\"padding-right: 0px; padding-left: 0px; float: left; padding-bottom: 0px; margin: 15px 0px; width: 100%; padding-top: 0px; list-style-type: none;\">")
 
-      builderAlert.append("<li style=\"padding-right: 2px; display: inline; padding-left: 2px; float: left; padding-bottom: 2px; width: 50%; padding-top: 2px;\">")
+      builderAlert.append("<tr>")
+      builderAlert.append("<td>")
       builderAlert.append("Reiteración Alerta")
-      builderAlert.append("</li>")
-      builderAlert.append("<li>")
+      builderAlert.append("</td>")
+      builderAlert.append("<td>")
       builderAlert.append(alert.get.reiteration.get.toString)
-      builderAlert.append("</li>")
+      builderAlert.append("</td>")
+      builderAlert.append("</tr>")
 
-      builderAlert.append("<li style=\"padding-right: 2px; display: inline; padding-left: 2px; float: left; padding-bottom: 2px; width: 50%; padding-top: 2px;\">")
+      builderAlert.append("<tr>")
+      builderAlert.append("<td>")
       builderAlert.append("Variable Impactada")
-      builderAlert.append("</li>")
-      builderAlert.append("<li>")
+      builderAlert.append("</td>")
+      builderAlert.append("<td>")
       builderAlert.append(alert.get.impacted_variable.get.toString)
-      builderAlert.append("</li>")
-
-
-      builderAlert.append("</ul>")
+      builderAlert.append("</td>")
+      builderAlert.append("</tr>")
 
       val alertLst = builderAlert.toString()
 
@@ -182,8 +182,14 @@ object SendEmail {
  |														</tr>
  |														<tr>
  |															<td style="padding: 25px 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;">
- |                                Información del proyecto<br>
- |																${projectsLst}
+ |																<table border="0" cellpadding="0" cellspacing="0" width="100%">
+ |																	<tr>
+ |																		<td colspan="2" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;">
+ |																		PROYECTOS
+ |																		</td>
+ |																	</tr>
+ |                                  ${projectsLst}
+ |																</table>
  |															</td>
  |														</tr>
  |													</table>
@@ -200,8 +206,14 @@ object SendEmail {
  |														</tr>
  |														<tr>
  |															<td style="padding: 25px 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;">
- |																Información del riesgo<br>
- |                                ${alertLst}
+ |																<table border="0" cellpadding="0" cellspacing="0" width="100%">
+ |																	<tr>
+ |																		<td colspan="2" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;">
+ |																		PROYECTOS
+ |																		</td>
+ |																	</tr>
+ |                                    ${alertLst}
+ |																</table>
  |															</td>
  |														</tr>
  |													</table>
