@@ -136,7 +136,16 @@ object RiskService extends CustomColumns {
   def updateAlertDetailsMail(alert: RiskAlerts) = {
     DB.withConnection { implicit connection =>
 
-      val increment = alert.reiteration.get + 1
+      var increment = alert.reiteration.get + 1
+      val tmp = alert.reiteration.get + 1
+      /*
+      1 create
+      2 reintento 1
+      3 reintento 2
+       */
+      if (increment.toInt > 3) {
+        increment = 3
+      }
 
       val alert_detail = SQL(
         """
@@ -174,11 +183,10 @@ object RiskService extends CustomColumns {
         'task_id -> alert.task_id,
         'change_state -> alert.change_state,
         'responsible_answer -> alert.responsible_answer).executeUpdate()
-      /*
-      send email alert
-       */
 
-      sendAutomaticAlerts(alert.id.get.toString,increment.toInt)
+      if(tmp.toInt <= 3) {
+        sendAutomaticAlerts(alert.id.get.toString, increment.toInt)
+      }
     }
   }
 
@@ -1125,6 +1133,11 @@ object RiskService extends CustomColumns {
 
       var last_index = risk_issue.last
 
+      println("last_index : " + last_index)
+      println("reiteration : " + risk.reiteration.get.toInt)
+
+      sendAutomaticAlerts(last_index.toString,risk.reiteration.get.toInt)
+
       last_index
     }
 
@@ -1317,6 +1330,14 @@ object RiskService extends CustomColumns {
     }
   }
 
+  def findTmplMail() : String = {
+    var sqlString = ""
+    sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_tpl ORDER BY fec DESC"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(scalar[String].single)
+    }
+  }
+
   def findUserAlertsIds(employeeid: String): String = {
     var risk_ids = ""
     val risksAlerts = RiskService.findAllActiveAlerts()
@@ -1499,22 +1520,19 @@ object RiskService extends CustomColumns {
 
         var persons = ""
         val risk_id = alert.get.risk_id.toString()
-        val title = alert.get.event_title
         val risks = findRiskFromAlert(risk_id)
 
         val risk_details = findRiskDetails(risk_id)
         if (!risk_details.isEmpty) {
-          //val risk_name = risk_details.get.name
-          //val risk_cause = risk_details.get.cause
           val risk_parent_id = risk_details.get.parent_id.get
           val risk_parent_type = risk_details.get.parent_type.get
-          //val risk_responsible = risk_details.get.responsible
-
           val program = findProgramByIdParent(risk_parent_id.toString, risk_parent_type)
 
           if (!alert.get.person_invloved.isEmpty) {
             persons = alert.get.person_invloved.get
           }
+
+          val template = findTmplMail()
 
           var user: Option[Users] = null
           if (!StringUtils.isEmpty(persons)) {
@@ -1533,6 +1551,8 @@ object RiskService extends CustomColumns {
                     alert,
                     risks,
                     risk_details,
+                    increment,
+                    template,
                     "marcelo.mlomena@gmail.com")
                 }
 

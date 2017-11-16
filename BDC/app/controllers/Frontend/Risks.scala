@@ -944,14 +944,11 @@ object Risks extends Controller {
         alert_category.put(d.id.get.toString, d.description)
       }
 
-      println(alert_states)
-
       val alert_task = new java.util.LinkedHashMap[String, String]()
       val tasks = TaskService.findTaskListByParentTypeId(risk.get)
       for (d <- tasks) {
         alert_task.put(d.tId.get.toString, d.task_title)
       }
-      println(alert_task)
 
       risk match {
         case None =>
@@ -972,9 +969,11 @@ object Risks extends Controller {
               program_id = program.get.program_id.get.toString()
           }
           val users = ProgramMemberService.findAllProgramMembers(program_id);
+          /*
           for (u <- users) {
-            // println(u.uid + " " + u.first_name)
+
           }
+          */
           Ok(views.html.frontend.risks.newAlerts(
             risk_id,
             ARTForms.alertsForm,
@@ -1014,7 +1013,7 @@ object Risks extends Controller {
       for (d <- tasks) {
         alert_task.put(d.tId.get.toString, d.task_title)
       }
-      println(alert_task)
+      //println(alert_task)
       risk match {
         case None =>
           Redirect(routes.Login.loginUser())
