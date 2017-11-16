@@ -237,7 +237,7 @@ function update(entity, data, res) {
     }
     sql = sql + "comprador = '" + data.compra.comprador + "', ";
     sql = sql + "correocomprador ='" + data.compra.correoComprador;
-    sql = sql + "' where id=" + data.id;
+    sql = sql + "' where id=" + data.compra.id;
     console.log("sql:" + sql);
     sequelize.query(sql
     ).then(function (updated) {
