@@ -64,7 +64,7 @@ function mapper(data) {
                 nombre: item.moneda.moneda
             },
             alertaRenovacion: item.alertaRenovacion,
-            perpetua : item.perpetua ? 'PERPETUA' : 'TRANSITORIA'
+            perpetua : item.perpetua ? 'PERPETUA' : 'SUSCRIPCIÓN'
         }
     });
 }
