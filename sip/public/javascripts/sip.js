@@ -46,6 +46,21 @@ var sipLibrary = {
         jQuery(document.body).html(xht.responseText);
 
     },
+    radioElemReserva: function (value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="aprobar" value="1"',
+            breakline = '/>Aprobar</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="rechazar" value="0"',
+            endnaradio = '/>Rechazar</label>';
+
+        if (value === 'Aprobar') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === 'Rechazar') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+    },
+
     radioElemCompraTramite: function (value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="estado" value="1"',
             breakline = '/>En Trámite</label>',

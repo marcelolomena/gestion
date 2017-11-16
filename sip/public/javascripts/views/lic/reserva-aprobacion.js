@@ -14,28 +14,37 @@
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'producto.nombre',
-                width: 250,
                 align: 'center',
-                sortable: false,
+                width: 100,
                 editable: true,
-                edittype: 'select',
                 editoptions: {
-                    dataUrl: '/lic/producto',
-                    buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.nombre;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione el Producto', thissid).template;
-                    },
+                    fullRow: true,
+                    readonly: 'readonly'
                 },
                 editrules: {
-                    required: false
+                    required: false,
+                    edithidden: false
                 },
                 search: false
             },
             {
-                label: 'Número',
+                label: 'Número de Licencias',
                 name: 'numero',
+                align: 'center',
+                width: 100,
+                editable: true,
+                editoptions: {
+                    readonly: 'readonly'
+                },
+                editrules: {
+                    required: false,
+                    edithidden: false
+                },
+                search: false
+            },
+            {
+                label: 'SAP',
+                name: 'sap',
                 align: 'center',
                 width: 100,
                 editable: true,
@@ -60,12 +69,11 @@
                     },
                 },
                 editrules: {
-                    required: false
+                    required: true
                 },
                 search: false
-            },
-            {
-                label: 'Fecha Estimada',
+            }, {
+                label: 'Fecha de Uso',
                 name: 'fechaEstimada',
                 width: 110,
                 align: 'center',
@@ -95,9 +103,24 @@
                     required: true
                 },
                 search: false
-            },
-            {
-                label: 'Comentario',
+            }, {
+                label: 'Comentario de Solicitud',
+                name: 'comentario',
+                width: 400,
+                hidden: false,
+                editable: true,
+                edittype: 'textarea',
+                editoptions: {
+                    fullRow: true,
+                    readonly: 'readonly'
+                },
+                editrules: {
+                    required: false,
+                    edithidden: false
+                },
+                search: false
+            }, {
+                label: 'Comentario de Aprobación',
                 name: 'comentario',
                 width: 400,
                 hidden: false,
@@ -106,18 +129,41 @@
                 editoptions: {
                     fullRow: true
                 },
+                editrules: {
+                    required: true
+                },
                 search: false
-            },
-            {
-                label: 'Estado',
+            }, {
+                label: 'Estado de Autorización',
                 name: 'estado',
+                width: 90,
                 align: 'center',
-                width: 100,
-                editable: false,
+                editable: true,
+                edittype: "custom",
+                editoptions: {
+                    custom_value: sipLibrary.getRadioElementValue,
+                    custom_element: sipLibrary.radioElemReserva,
+                    defaultValue: "Aprobar"
+                    // fullRow: true
+                },
+                formatter: function (cellvalue, options, rowObject) {
+                    var dato = '';
+                    var val = rowObject.estado;
+                    if (val == 1) {
+                        dato = 'Aprobar';
+
+                    } else if (val == 0) {
+                        dato = 'Rechazar';
+                    }
+                    return dato;
+                },
+                editrules: {
+                    required: true
+                },
                 search: false
             }
         ];
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Reserva', 'Editar Reserva', 'Agregar Reserva', '/lic/reserva', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Aprobación de Reserva', 'Editar Aprobación', 'Agregar Aprobación', '/lic/reserva', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         grid.build();
     });
 
