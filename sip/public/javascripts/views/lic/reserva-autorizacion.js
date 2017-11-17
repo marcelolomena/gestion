@@ -87,18 +87,7 @@
                 },
                 search: false
             }, {
-                label: 'Comentario de Aprobación',
-                name: 'comentario',
-                width: 400,
-                hidden: false,
-                editable: true,
-                edittype: 'textarea',
-                editoptions: {
-                    fullRow: true
-                },
-                search: false
-            }, {
-                label: 'Estado de Autorización',
+                label: 'Estado de Aprobación',
                 name: 'estado',
                 width: 90,
                 align: 'center',
@@ -124,7 +113,7 @@
                 search: false
             },
             {
-                label: 'Comentario de Autorización',
+                label: 'Comentario de Aprobación',
                 name: 'comentario',
                 width: 400,
                 hidden: false,
@@ -133,13 +122,10 @@
                 editoptions: {
                     fullRow: true
                 },
-                editrules: {
-                    required: true
-                },
                 search: false
             },
             {
-                label: 'Estado Autorización',
+                label: 'Estado de Autorización',
                 name: 'estado',
                 width: 90,
                 align: 'center',
@@ -162,6 +148,21 @@
                     }
                     return dato;
                 },
+                editrules: {
+                    required: true
+                },
+                search: false
+            },
+            {
+                label: 'Comentario de Autorización',
+                name: 'comentario',
+                width: 400,
+                hidden: false,
+                editable: true,
+                edittype: 'textarea',
+                // editoptions: {
+                //     fullRow: true
+                // },
                 editrules: {
                     required: true
                 },
