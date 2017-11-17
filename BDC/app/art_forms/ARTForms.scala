@@ -39,7 +39,7 @@ import models.ProjectInvestment
 import models.ProjectMasters
 import models.ProjectSAP
 import models.ProjectStatus
-import models.ProjectType
+import models.ConfigMailAlert
 import models.ProjectWorkflow
 import models.SAPMaster
 import models.SearchCriteria
@@ -58,7 +58,6 @@ import models.TimesheetMaster
 import models.UserMaster
 import models.UserRoleChild
 import models.Workflows
-import models.ProgramCombo
 import models.InputPert
 import play.api.data.Form
 import play.api.data.Forms.email
@@ -477,6 +476,22 @@ object ARTForms {
       "updation_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
       "creation_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
       "is_deleted" -> number)(Stages.apply)(Stages.unapply))
+
+  /**
+    * *
+    * backend form to add/edit ConfigMailAlert
+    *
+    */
+  val configMailForm: play.api.data.Form[ConfigMailAlert] = play.api.data.Form(
+    mapping(
+      "id" -> optional(number),
+      "uid" -> number,
+      "em1" -> optional(email),
+      "em2" -> optional(email),
+      "em3" -> optional(email),
+      "tpl" -> text,
+      "fec" -> play.api.data.Forms.date("dd-MM-yyyy"))(ConfigMailAlert.apply)(ConfigMailAlert.unapply))
+
 
   /**
    * *

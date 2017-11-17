@@ -1,0 +1,74 @@
+@(username:String, myConfigMailForm :play.api.data.Form[ConfigMailAlert])(implicit lang:Lang)
+@import helper._
+<!--
+Header panel
+ -->
+@header()
+
+</head>
+
+<!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+<!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+<!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+<!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<body class="">
+<!--<![endif]-->
+
+<!-- Top Navigation bar -->
+@topNav("Admin")
+
+<!-- Left Navigation Bar -->
+@leftNav()
+<div class="content">
+    <div class="header">
+        <h1 class="page-title">@Messages("leftnav.divconfmail")</h1>
+    </div>
+    <ul class="breadcrumb">
+        <li><a href="@routes.Application.index">@Messages("confmail.home") </a> <span class="divider">/</span></li>
+        <li><a href="@routes.Stage.stageList">@Messages("confmail.list")</a> <span class="divider">/</span></li>
+        <li class="active">@Messages("confmail.edit")</li>
+    </ul>
+
+    <div class="container-fluid">
+
+        <div class="row-fluid">
+
+            <div class="block">
+                <p class="block-heading">@Messages("confmail.edit")</p>
+                <div class="block-body">
+                    @form(action = routes.Stage.updateStage, 'id->"myStageEdit") {
+
+                    @inputText(myConfigMailForm("em1"),'_label ->Messages("confmail.em1"),'placeholder->Messages("confmail.placeholder.em1"),'class->"span4",'name -> "em1")
+                    @inputText(myConfigMailForm("em2"),'_label ->Messages("confmail.em2"),'placeholder->Messages("confmail.placeholder.em2"),'class->"span4",'name -> "em2")
+                    @inputText(myConfigMailForm("em3"),'_label ->Messages("confmail.em3"),'placeholder->Messages("confmail.placeholder.em3"),'class->"span4",'name -> "em3")
+                    @textarea(myConfigMailForm("tpl"),'_label -> Messages("confmail.tpl"),'placeholder->Messages("confmail.placeholder.tpl"),'class->"span4",'name->"tpl",'rows->"10",'cols->"60")
+
+                    <input type="hidden" value="@myConfigMailForm.data.get("id")" name="id"/>
+                    <div> <input style="margin-left:12px;margin-right:12px;" class="btn" value="@Messages("button.save")" type="submit"/><a href="javascript:history.back(-1);" class="btn">@Messages("button.cancel")</a></div>
+                    <div class="clearfix"></div>
+                    }
+                </div>
+            </div>
+
+            <!-- Footer panel -->
+            @footer()
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	  $("#sequencing").keydown(function (e) {
+		  if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
+	                (e.keyCode >= 96 && e.keyCode <= 105))) {
+	          }
+	          else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 &&
+	                       e.keyCode != 9) {
+	              e.preventDefault();
+	          }
+	    });
+});
+
+    </script>
+</body>
+</html>

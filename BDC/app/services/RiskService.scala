@@ -1332,7 +1332,7 @@ object RiskService extends CustomColumns {
 
   def findTmplMail() : String = {
     var sqlString = ""
-    sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_tpl ORDER BY fec DESC"
+    sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf ORDER BY fec DESC"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(scalar[String].single)
     }
