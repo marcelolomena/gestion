@@ -207,7 +207,29 @@ function action(req, res) {
             return base.findById(entity, req.body.id)
                 .then(function (detalle) {
                     if (detalle.estado == 0) {
-            
+                        return base.destroyP(entity, detalle.id)
+                        .then(function (deleted) {
+                            return base.findById(models.producto, detalle.idProducto)
+                                .then(function (item) {
+                                    return base.update(models.producto, {
+                                        id: detalle.idProducto,
+                                        licTramite: item.licTramite + detalle.numero
+                                    }, res);
+                                }).catch(function (err) {
+                                    logger.error('producto.LicTramite Upd, ' + err);
+                                    return res.json({
+                                        error: 1,
+                                        glosa: err.message
+                                    });
+                                })
+                        })
+                        .catch(function (err) {
+                            logger.error(entity.name + ':destroy, ' + err);
+                            return res.json({
+                                success: false,
+                                glosa: err.message
+                            });
+                        });
                     } else {
                         return base.destroyP(entity, detalle.id)
                             .then(function (deleted) {
