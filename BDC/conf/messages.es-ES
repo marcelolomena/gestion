@@ -366,6 +366,7 @@ roadmap.selectProject=--Seleccionar Proyecto--
 button.update=Actualización
 button.add=Agregar
 button.cancel=Cancelar
+button.preview=Ver
 button.cropImage=Recortar
 button.upload=Subir
 button.save=Guardar
@@ -615,17 +616,19 @@ subtype.addprogtamsubtype=Agregar Foco Strategico
 subtype.editprogtamsubtype=Editar Foco Strategico
 
 confmail.home=Home
-confmail.list=configuraciones
+confmail.list=Configuración
 confmail.edit=Editar Configuración
 confmail.em1=Correo 1
 confmail.em2=Correo 2
 confmail.em3=Correo 3
-confmail.tpl=HTML
+confmail.tpl=Template
 confmail.placeholder.em1=Introduzca Correo 1
 confmail.placeholder.em2=Introduzca Correo 2
 confmail.placeholder.em3=Introduzca Correo 3
 confmail.placeholder.tpl=Introduzca HTML
-confmail.id=Id
+error.confmail.mail=Debe introducir una dirección de correo eléctronico
+error.confmail.alreadyexist=Correo ya existe
+
 
 stage.home=Home
 stage.id=Id

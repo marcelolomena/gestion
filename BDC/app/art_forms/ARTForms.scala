@@ -480,7 +480,6 @@ object ARTForms {
   /**
     * *
     * backend form to add/edit ConfigMailAlert
-    *
     */
   val configMailForm: play.api.data.Form[ConfigMailAlert] = play.api.data.Form(
     mapping(
@@ -490,7 +489,7 @@ object ARTForms {
       "em2" -> optional(email),
       "em3" -> optional(email),
       "tpl" -> text,
-      "fec" -> play.api.data.Forms.date("dd-MM-yyyy"))(ConfigMailAlert.apply)(ConfigMailAlert.unapply))
+      "fec" -> play.api.data.Forms.date("yyyy-MM-dd"))(ConfigMailAlert.apply)(ConfigMailAlert.unapply))
 
 
   /**

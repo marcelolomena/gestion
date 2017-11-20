@@ -4,13 +4,8 @@ import models.{ProgramMaster, RiskAlerts, RiskManagementMaster, Users}
 import play.api._
 import play.api.Play.current
 import play.Play
-//import play.api.libs.mailer._
 import com.typesafe.plugin._
 import play.api.Play.current
-
-
-
-
 
 object SendEmail {
 
@@ -47,93 +42,49 @@ object SendEmail {
                           risk_details: Option[RiskManagementMaster],
                           increment: Int,
                           template: String,
-                          recipientEmail: String
+                          cc: String
                         ): String = {
     try {
 
       val programName = program.get.program_description.get.toString
       val picod = program.get.program_code.toString
-      val alertTitle = alert.get.event_title
-      val first = user.get.first_name
-      val last = user.get.last_name
-
       var subject = s"ALERTA PMO - ART ${picod} – ${programName}"
-      if (increment>1)
-        {
-          subject = "RE-INSISTENCIA " + subject
-        }
-
       val fromEmail = Play.application().configuration().getString("smtp.user")
       val mail = use[MailerPlugin].email
+
+      if (increment>1)
+      {
+        subject = "RE-INSISTENCIA " + subject
+      }
+
       mail.setSubject(subject)
       mail.setFrom(fromEmail.toString())
-      mail.setRecipient(recipientEmail.toString())
+      mail.setRecipient("marcelo.mlomena@gmail.com"/*user.get.email.toString()*/)
+
+      val mylist  = cc.split(",").toList
+      mail.setCc(mylist:_*)
 
       val builderRisk = StringBuilder.newBuilder
-      builderRisk.append("<ul>")
+
       for (r <- risks) {
-        builderRisk.append("<li>")
-        builderRisk.append(r.name)
-        builderRisk.append("</li>")
+        builderRisk.append(r.name + "\n")
+
       }
-      builderRisk.append("</ul>")
 
-      val risksLst = builderRisk.toString()
-
-      val builderProject = StringBuilder.newBuilder
-      builderProject.append("<tr>")
-      builderProject.append("<td>")
-      builderProject.append("ART")
-      builderProject.append("</td>")
-      builderProject.append("<td>")
-      builderProject.append(program.get.program_code.toString)
-      builderProject.append("</td>")
-      builderProject.append("</tr>")
-
-      builderProject.append("<tr>")
-      builderProject.append("<td>")
-      builderProject.append("SAP")
-      builderProject.append("</td>")
-      builderProject.append("<td>")
-      builderProject.append(program.get.sap_code.toString)
-      builderProject.append("</td>")
-      builderProject.append("</tr>")
-
-      val projectsLst = builderProject.toString()
-
-      val builderAlert = StringBuilder.newBuilder
-
-      builderAlert.append("<tr>")
-      builderAlert.append("<td>")
-      builderAlert.append("Reiteración Alerta")
-      builderAlert.append("</td>")
-      builderAlert.append("<td>")
-      builderAlert.append(alert.get.reiteration.get.toString)
-      builderAlert.append("</td>")
-      builderAlert.append("</tr>")
-
-      builderAlert.append("<tr>")
-      builderAlert.append("<td>")
-      builderAlert.append("Variable Impactada")
-      builderAlert.append("</td>")
-      builderAlert.append("<td>")
-      builderAlert.append(alert.get.impacted_variable.get.toString)
-      builderAlert.append("</td>")
-      builderAlert.append("</tr>")
-
-      val alertLst = builderAlert.toString()
-      val html = template.replaceAllLiterally("${programName}",programName)
-      .replaceAllLiterally("${first}",first)
-      .replaceAllLiterally("${last}",last)
-      .replaceAllLiterally("${alertTitle}",alertTitle)
-      .replaceAllLiterally("${risksLst}",risksLst)
-      .replaceAllLiterally("${projectsLst}",projectsLst)
-      .replaceAllLiterally("${alertLst}",alertLst)
+      val html = template.replaceAllLiterally("${program.program_description}",program.get.program_description.get.toString)
+      .replaceAllLiterally("${user.first_name}",user.get.first_name)
+      .replaceAllLiterally("${user.last_name}",user.get.last_name)
+      .replaceAllLiterally("${alert.event_title}",alert.get.event_title)
+      .replaceAllLiterally("${risks.list}",builderRisk.toString())
+      .replaceAllLiterally("${program.program_code}",program.get.program_code.toString)
+      .replaceAllLiterally("${program.sap_code}",program.get.sap_code.get.toString)
+      .replaceAllLiterally("${alert.reiteration}",alert.get.reiteration.get.toString)
+      .replaceAllLiterally("${alert.impacted_variable}",alert.get.impacted_variable.get.toString)
 
       mail.sendHtml(html)
 
     } catch {
-      case ex: Exception => return "Check SMTP Details"
+      case ex: Exception => return ex.getMessage
     }
 
     "Success"

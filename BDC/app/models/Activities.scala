@@ -68,5 +68,5 @@ object ActivityTypes extends Enumeration {
   Project_Sap,
   UserSkills, 
   Project_Workflow_Status,
-  Incident = Value
+  Incident,ConfigMail = Value
 }
