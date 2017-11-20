@@ -1289,11 +1289,61 @@ object RiskService extends CustomColumns {
 
   def findRiskAlertsIncreasedById(id: String): Option[RiskAlertsIncreased] = {
     if (!StringUtils.isEmpty(id)) {
+      /*
       var sqlString = "EXEC art.risk_alert_details {id}"
 
       DB.withConnection { implicit connection =>
         SQL(sqlString).on('id -> id.toInt).executeQuery() as (RiskAlertsIncreased.alertsIncreased.singleOpt)
       }
+      */
+      val sqlString = """
+                        	SELECT
+                            X.id,
+                              X.risk_id,
+                              X.event_code,
+                              X.event_date,
+                              X.event_title,
+                              X.event_details,
+                              X.responsible,
+                              X.person_invloved,
+                              X.criticality,
+                              X.is_active,
+                        	Y.level,
+                        	Y.title,
+                        	Y.program_name FROM art_risk_alert X
+                        	JOIN
+                        	(SELECT
+                        	id,
+                        	CASE
+                        		WHEN a.parent_type = 0 THEN 'Programa'
+                        		WHEN a.parent_type = 1 THEN 'Proyecto'
+                        		WHEN a.parent_type = 2 THEN 'Tarea'
+                        		WHEN a.parent_type = 3 THEN 'Sub-Tarea'
+                        	END level,
+                        	CASE
+                        		WHEN a.parent_type = 0 THEN (SELECT b.program_name FROM art_program b WHERE b.program_id=a.parent_id)
+                        		WHEN a.parent_type = 1 THEN (SELECT c.project_name FROM art_project_master c WHERE c.pId=a.parent_id)
+                        		WHEN a.parent_type = 2 THEN (SELECT d.task_title FROM art_task d WHERE d.tId=a.parent_id)
+                        		WHEN a.parent_type = 3 THEN (SELECT e.title FROM art_sub_task e WHERE e.sub_task_id=a.parent_id)
+                        	END title,
+                        	CASE
+                        		WHEN a.parent_type = 0 THEN (SELECT program_name FROM art_program WHERE program_id=a.parent_id)
+                        		WHEN a.parent_type = 1 THEN (SELECT program_name FROM art_program WHERE program_id=(SELECT program FROM art_project_master WHERE pId=a.parent_id))
+                        		WHEN a.parent_type = 2 THEN (SELECT program_name FROM art_program WHERE program_id=(SELECT program FROM art_project_master WHERE pId=(SELECT pId FROM art_task WHERE tId=a.parent_id)))
+                        		WHEN a.parent_type = 3 THEN (SELECT program_name FROM art_program WHERE program_id=(SELECT program FROM art_project_master WHERE pId=(SELECT pId FROM art_task WHERE tId=(SELECT task_id FROM art_sub_task WHERE sub_task_id=a.parent_id))))
+                        	END program_name
+                        	  FROM art_risk a) Y
+                        	ON X.risk_id=Y.id
+                        	WHERE
+                        	X.is_active=1 AND
+                        	X.id={id}
+              """
+      DB.withConnection { implicit connection =>
+        val result = SQL(sqlString).on(
+          'id -> id.toInt).as(RiskAlertsIncreased.alertsIncreased.singleOpt)
+        result
+      }
+
     } else {
       val result: Option[RiskAlertsIncreased] = null
       result
