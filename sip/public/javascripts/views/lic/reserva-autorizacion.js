@@ -90,7 +90,7 @@
                 width: 90,
                 align: 'center',
                 hidden: true,
-                editable: true,
+                editable: false,
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
