@@ -990,6 +990,76 @@ object Risks extends Controller {
     }
   }
 
+
+///
+
+def alertSearch() = Action { implicit request =>
+  request.session.get("username").map { user =>
+    /*
+    var program: Option[ProgramMaster] = null
+    var start_date: Date = new Date()
+    var end_date: Date = new Date()
+    var program_id = ""
+    val risk = RiskService.findRiskDetails(risk_id)
+
+    var alert_states = new java.util.LinkedHashMap[String, String]()
+    val status = RiskService.findAllAlertStatus()
+    for (d <- status) {
+      alert_states.put(d.id.get.toString, d.description)
+    }
+    var alert_category = new java.util.LinkedHashMap[String, String]()
+    val category = RiskService.findAllAlertCategory()
+    for (d <- category) {
+      alert_category.put(d.id.get.toString, d.description)
+    }
+
+    val alert_task = new java.util.LinkedHashMap[String, String]()
+    val tasks = TaskService.findTaskListByParentTypeId(risk.get)
+    for (d <- tasks) {
+      alert_task.put(d.tId.get.toString, d.task_title)
+    }
+
+    risk match {
+      case None =>
+        Redirect(routes.Login.loginUser())
+
+      case Some(r: RiskManagementMaster) =>
+        r.parent_type.get match {
+          case 0 =>
+            program_id = r.parent_id.get.toString()
+          case 1 =>
+            program = ProjectService.findProgramDetailForProject(r.parent_id.get.toString())
+            program_id = program.get.program_id.get.toString()
+          case 2 =>
+            program = TaskService.findProgramDetailForTask(r.parent_id.get.toString())
+            program_id = program.get.program_id.get.toString()
+          case 3 =>
+            program = SubTaskServices.findProgramDetailForSubTask(r.parent_id.get.toString())
+            program_id = program.get.program_id.get.toString()
+        }
+        val users = ProgramMemberService.findAllProgramMembers(program_id);
+
+        Ok(views.html.frontend.risks.alertForm(
+          risk_id,
+          ARTForms.alertsForm,
+          users,
+          start_date,
+          end_date,
+          alert_states,
+          alert_category,
+          alert_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+}
+*/
+    Ok("OK")
+
+
+  }.getOrElse {
+    Redirect(routes.Login.loginUser())
+  }
+}
+
+///
+
   def saveRiskAlert(risk_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var program: Option[ProgramMaster] = null

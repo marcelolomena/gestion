@@ -44,7 +44,7 @@ import models.ProjectWorkflow
 import models.SAPMaster
 import models.SearchCriteria
 import models.SearchMaster
-import models.ServiceCatalogue
+import models.AlertsSearch
 import models.SkillsMaster
 import models.Stages
 import models.SubTaskMaster
@@ -1119,7 +1119,17 @@ object ARTForms {
       "change_state" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
       "responsible_answer" -> optional(text))(RiskAlerts.apply)(RiskAlerts.unapply))
 
+
+
+  val alertsSearchForm: Form[AlertsSearch] = Form(
+    mapping(
+      "event_code" -> optional(number),
+      "criticality" -> optional(number),
+      "category_id" -> optional(number),
+      "status_id" -> optional(number))(AlertsSearch.apply)(AlertsSearch.unapply))
+
 }
+
 
 
 

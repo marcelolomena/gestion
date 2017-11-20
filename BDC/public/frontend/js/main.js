@@ -106,6 +106,8 @@ $(document).ready(
 
 			$(".program-tab2").on("click", showSearchProgram);
 
+			$(".alert-tab2").on("click", showSearchAlert);
+
 			$(".edit-hours").off("click").on("click", renderEditProgramHours);
 			
 			$(".edit-status").off("click").live("click", renderEditProgramStatus);

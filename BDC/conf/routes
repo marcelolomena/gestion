@@ -37,6 +37,7 @@ GET    /get-report_to-list                                                      
 #ConfMailAlert
 GET    /edit-conf-mail-alert                                                                          controllers.ConfigMail.editConfig()
 POST   /edit-conf-mail-alert                                                                          controllers.ConfigMail.updateConfig()
+GET    /alert-search                                                                                  controllers.Frontend.Risks.alertSearch
 
 #Division
 GET    /division-list                                                                                 controllers.Division.divisionList	

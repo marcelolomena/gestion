@@ -1,0 +1,58 @@
+@(searchSearch : Form[AlertsSearch])(implicit session: play.api.mvc.Session,lang: Lang)
+@import play.api.i18n._
+@import play.api._
+@import services._
+@import helper._
+<div class="focus_on width_full" style="padding:10px 0px; margin:20px 0px;" id = "search_program_id">
+    <div class="focus_on_title"><img width="94" height="13" alt="" src="@routes.Assets.at("frontend/images/modify_search.png")"></div>
+    <div class="search-form-wrapper" style="padding: 10px 40px;">
+        @form(action = controllers.Frontend.routes.Program.searchResult, 'id->"search-program-form") {
+
+        <div class="field-wrapper">
+            @select(
+            searchSearch("criticality"),
+            options("1"->"Alto", "2"->"Medio","3"->"Bajo"),
+            'class -> "input-xlarge ",
+            '_label -> "*Severidad"
+            )
+        </div>
+
+        <div class="field-wrapper">
+            @select(
+            searchSearch("event_code"),
+            options("1"->"Riesgo", "2"->"Incidente"),
+            'class -> "input-xlarge",
+            '_label -> "*Tipo de Evento"
+            )
+        </div>
+
+        <div class="field-wrapper">
+            @select(
+            searchSearch("status_id"),
+            options(alert_states),
+            'class -> "input-xlarge ",
+            '_label ->  Messages("newAlert.alertStatus"),
+            '_default -> Messages("newAlert.placeholder.alert_status")
+            )
+        </div>
+
+        <div class="field-wrapper">
+            @select(
+            searchSearch("category_id"),
+            options(alert_category),
+            'class -> "input-xlarge ",
+            '_label ->  Messages("newAlert.alertCategory"),
+            '_default -> Messages("newAlert.placeholder.alert_category")
+            )
+        </div>
+
+        <div class="" style="margin: 10px auto;text-align: center;width: 300px;">
+            <span class="left" style="margin-top: 15px;"><input class="btn form-button" id="program-search-form" value='@Messages("button.search")' type="button"/></span>
+            <span class="left" style="margin-left: 29px; margin-top: 15px;"> <input id="cancel-program-search-report" class="btn form-button" value='@Messages("button.cancel")' type="button"/></span>
+        </div>
+        }
+    </div>
+</div>
+<script>
+
+</script>

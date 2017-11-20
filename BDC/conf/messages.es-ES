@@ -295,6 +295,8 @@ newTask.stage=*Etapa
 newTask.user_role=*Función de usuario
 newTask.deliverable=Entregable
 
+newAlert.list=ALERTAS
+newAlert.report=Reporte
 newAlert.alertStatus=*Estado de la Alerta
 newAlert.placeholder.alert_status=--- Elegir Estado de la Alerta ---
 newAlert.alertCategory=*Categoría
