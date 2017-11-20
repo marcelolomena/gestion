@@ -29,25 +29,7 @@
                 width: 100,
                 editable: true,
                 search: false
-            },
-            {
-                label: 'SAP',
-                name: 'sap',
-                align: 'center',
-                width: 100,
-                editable: true,
-                search: false
-            },
-            {
-                label: 'Unidad CUI',
-                name: 'idCui',
-                jsonmap: 'cui.unidad',
-                align: 'center',
-                width: 100,
-                editable: true,
-                search: false
-            },
-            {
+            }, {
                 label: 'Fecha de Uso',
                 name: 'fechaEstimada',
                 width: 110,
@@ -76,6 +58,21 @@
                 },
                 search: false
             }, {
+                label: 'CUI',
+                name: 'idCui',
+                jsonmap: 'cui.unidad',
+                align: 'center',
+                width: 100,
+                editable: true,
+                search: false
+            }, {
+                label: 'SAP',
+                name: 'sap',
+                align: 'center',
+                width: 100,
+                editable: true,
+                search: false
+            }, {
                 label: 'Comentario de Solicitud',
                 name: 'comentario',
                 width: 400,
@@ -86,11 +83,13 @@
                     fullRow: true
                 },
                 search: false
-            }, {
+            }, 
+            {
                 label: 'Estado de Aprobación',
                 name: 'estado',
                 width: 90,
                 align: 'center',
+                hidden: true,
                 editable: true,
                 edittype: "custom",
                 editoptions: {
