@@ -43,36 +43,6 @@
                 search: false
             },
             {
-                label: 'SAP',
-                name: 'sap',
-                align: 'center',
-                width: 100,
-                editable: true,
-                search: false
-            },
-            {
-                label: 'Unidad CUI',
-                name: 'idCui',
-                jsonmap: 'cui.unidad',
-                width: 200,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                edittype: 'select',
-                editoptions: {
-                    dataUrl: '/lic/cuibchres',
-                    buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.id;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione el CUI', thissid).template;
-                    },
-                },
-                editrules: {
-                    required: true
-                },
-                search: false
-            }, {
                 label: 'Fecha de Uso',
                 name: 'fechaEstimada',
                 width: 110,
@@ -102,6 +72,38 @@
                 editrules: {
                     required: true
                 },
+                search: false
+            },
+
+            {
+                label: 'CUI',
+                name: 'idCui',
+                jsonmap: 'cui.unidad',
+                width: 200,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                edittype: 'select',
+                editoptions: {
+                    dataUrl: '/lic/cuibchres',
+                    buildSelect: function (response) {
+                        var rowData = $table.getRowData($table.getGridParam('selrow'));
+                        var thissid = rowData.id;
+                        var data = JSON.parse(response);
+                        return new zs.SelectTemplate(data, 'Seleccione el CUI', thissid).template;
+                    },
+                },
+                editrules: {
+                    required: true
+                },
+                search: false
+            },
+            {
+                label: 'SAP',
+                name: 'sap',
+                align: 'center',
+                width: 100,
+                editable: true,
                 search: false
             }, {
                 label: 'Comentario de Solicitud',

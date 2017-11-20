@@ -20,7 +20,7 @@
                 editable: true,
                 edittype: 'select',
                 editoptions: {
-                    fullRow : true,
+                    fullRow: true,
                     dataUrl: '/lic/producto',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
@@ -43,25 +43,6 @@
                 editrules: {
                     required: true
                 },
-                search: false
-            },
-            {
-                label: 'CUI',
-                name: 'cui',
-                align: 'center',
-                width: 100,
-                editable: true,
-                editrules: {
-                    required: true
-                },
-                search: false
-            },
-            {
-                label: 'SAP',
-                name: 'sap',
-                align: 'center',
-                width: 100,
-                editable: true,
                 search: false
             },
             {
@@ -97,6 +78,25 @@
                 search: false
             },
             {
+                label: 'CUI',
+                name: 'cui',
+                align: 'center',
+                width: 100,
+                editable: true,
+                editrules: {
+                    required: true
+                },
+                search: false
+            },
+            {
+                label: 'SAP',
+                name: 'sap',
+                align: 'center',
+                width: 100,
+                editable: true,
+                search: false
+            },
+            {
                 label: 'Comentario',
                 name: 'comentario',
                 width: 400,
@@ -120,6 +120,8 @@
                 search: false
             }
         ];
+
+
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Solicitud de Reserva', 'Editar Solicitud', 'Agregar Solicitud', '/lic/reserva', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         grid.build();
     });
