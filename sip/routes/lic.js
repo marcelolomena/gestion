@@ -30,7 +30,7 @@ var recepcionController = require('../controllers/lic/recepcion');
 var detalleRecepcionController = require('../controllers/lic/detalle-recepcion');
 
 var snowController = require('../controllers/lic/snow');
-var reservaController = require('../controllers/lic/reserva');
+var reservaController = require('../controllers/lic/reserva-solicitud');
 var addmController = require('../controllers/lic/addm');
 
 module.exports = function (passport) {
@@ -145,31 +145,37 @@ module.exports = function (passport) {
     router.route('/lic/tramite/:pId')
         .get(isAuthenticated, productoController.listcompratramite);
 
-        /*
+    /*
     router.route('/lic/snow')
         .get(isAuthenticated, snowController.get)
         .post(isAuthenticated, snowController.upload);
     */
     router.route('/lic/snow/list')
         .get(isAuthenticated, snowController.list);
-    
+
     router.route('/lic/addm/list')
         .get(isAuthenticated, addmController.list);
 
-        
+
     router.route('/lic/traduccion')
         .get(isAuthenticated, traduccionController.list)
         .post(isAuthenticated, traduccionController.action);
 
     router.route('/lic/snow/:pId')
         .get(isAuthenticated, traduccionController.listChilds);
-    
+
     router.route('/lic/addm/:pId')
         .get(isAuthenticated, traduccionController.listChilds);
 
     router.route('/lic/reserva')
         .get(isAuthenticated, reservaController.list)
         .post(isAuthenticated, reservaController.action);
+
+    router.route('/lic/estado/:pId')
+        .get(isAuthenticated, reservaController.estado);
+
+        router.route('/lic/usuariocui/:uid')
+        .get(isAuthenticated, reservaController.usuariocui);
 
     // router.route('/lic/reservaJ')
     //     .get(isAuthenticated, reservaController.getPresupuestoPaginados);

@@ -1,6 +1,36 @@
 (function ($, _) {
     'use strict';
     var zs = window.zs;
+
+    function showChildGrid(divid, rowid) {
+        var url = '/lic/estado/' + rowid;
+        var gridID = divid + '_t';
+        var pagerID = 'p_' + gridID;
+        $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
+        detalleCompraTramiteGrid.renderGrid(url, gridID);
+    }
+
+    function beforeShowForm(form) {
+        var getID = form;
+    }
+
+
+
+
+    var initGrid = function (viewModel) {
+        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Solicitud de Reserva', 'Editar Solicitud', 'Agregar Solicitud', '/lic/reserva', viewModel, 'idEstado', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        grid.prmAdd.beforeShowForm = beforeShowForm;
+        
+        grid.build();
+    };
+
+   
+
+
+
+
+
+
     $(function () {
         var $table = $('#gridMaster');
         var viewModel = [{
@@ -11,6 +41,14 @@
                 editable: false
             },
             {
+                label: 'Estado',
+                name: 'idEstado',
+                jsonmap: 'estado.nombre',
+                align: 'center',
+                width: 100,
+                editable: false,
+                search: false
+            }, {
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'producto.nombre',
@@ -35,8 +73,8 @@
                 search: false
             },
             {
-                label: 'Número de Licencias',
-                name: 'numero',
+                label: 'Cantidad Lic.',
+                name: 'numlicencia',
                 align: 'center',
                 width: 100,
                 editable: true,
@@ -47,8 +85,8 @@
             },
             {
                 label: 'Fecha de Uso',
-                name: 'fechaEstimada',
-                width: 110,
+                name: 'fechaUso',
+                width: 100,
                 align: 'center',
                 sortable: false,
                 editable: true,
@@ -81,7 +119,7 @@
                 label: 'CUI',
                 name: 'cui',
                 align: 'center',
-                width: 100,
+                width: 60,
                 editable: true,
                 editrules: {
                     required: true
@@ -92,14 +130,14 @@
                 label: 'SAP',
                 name: 'sap',
                 align: 'center',
-                width: 100,
+                width: 60,
                 editable: true,
                 search: false
             },
             {
                 label: 'Comentario',
                 name: 'comentario',
-                width: 400,
+                width: 500,
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
@@ -110,20 +148,10 @@
                     required: true
                 },
                 search: false
-            },
-            {
-                label: 'Estado',
-                name: 'estado',
-                align: 'center',
-                width: 100,
-                editable: false,
-                search: false
             }
+
         ];
-
-
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Solicitud de Reserva', 'Editar Solicitud', 'Agregar Solicitud', '/lic/reserva', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
-        grid.build();
+        initGrid(viewModel);
     });
 
 })(jQuery, _);
