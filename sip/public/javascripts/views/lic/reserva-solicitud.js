@@ -28,20 +28,11 @@
 
     
     }
-
-
     var initGrid = function (viewModel) {
         var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Solicitud de Reserva', 'Editar Solicitud', 'Agregar Solicitud', '/lic/reserva', viewModel, 'idEstado', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.prmAdd.beforeShowForm = beforeShowForm;
         grid.build();
     };
-
-   
-
-
-
-
-
 
     $(function () {
         var $table = $('#gridMaster');
