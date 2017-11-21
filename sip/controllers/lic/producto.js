@@ -127,9 +127,9 @@ function list(req, res) {
         logger.debug("***CONDICION:" + condition);
       }
     }
-    var sqlcount = "SELECT count(*) AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto ";
+    var sqlcount = "SELECT count(*) AS count FROM lic.producto a WHERE a.id IN (SELECT DISTINCT(idproducto) FROM lic.compra)";
     if (filters && condition != "") {
-      sqlcount += "WHERE " + condition + " ";
+      sqlcount += " and "+condition + " ";
     }
   
     var sql = "DECLARE @PageSize INT; " +

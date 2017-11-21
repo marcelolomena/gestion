@@ -8,7 +8,8 @@ var config = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
 var logger = require("../utils/logger");
 config.logging = function(sql){
 
-
+  //logger.debug(sql)
+  
   var sqlchico = sql.toLowerCase();
 
   if(sqlchico.indexOf('[sip].[registro]') == -1 && sqlchico.indexOf('[sessions]') == -1 && 

@@ -45,7 +45,7 @@
             editable: false
         }, {
             label: 'Id Producto',
-            name: 'idProducto',
+            name: 'idproducto',
             hidden: true,
             editable: true,
             zsHidden: true
@@ -59,7 +59,7 @@
             search: false
         }, {
             label: 'O.C.',
-            name: 'ordenCompra',
+            name: 'ordencompra',
             width: 80,
             align: 'center',
             sortable: false,
@@ -74,7 +74,7 @@
             search: false
         }, {
             label: 'CUI',
-            name: 'idCui',
+            name: 'idcui',
             width: 80,
             align: 'center',
             sortable: false,
@@ -107,7 +107,7 @@
             search: false
         }, {
             label: 'Fabricante',
-            name: 'idFabricante',
+            name: 'idfabricante',
             jsonmap: 'fabricante.nombre',
             width: 180,
             align: 'center',
@@ -139,7 +139,7 @@
             }
         }, {
             label: 'Proveedor',
-            name: 'idProveedor',
+            name: 'idproveedor',
             jsonmap: 'proveedor.nombre',
             width: 300,
             align: 'center',
@@ -171,7 +171,7 @@
             search: true
         }, {
             label: '¿Donde está instalada?',
-            name: 'idTipoInstalacion',
+            name: 'idtipoinstalacion',
             jsonmap: 'tipoInstalacion.nombre',
             width: 160,
             align: 'center',
@@ -203,7 +203,7 @@
             }
         }, {
             label: 'Clasificación',
-            name: 'idClasificacion',
+            name: 'idclasificacion',
             jsonmap: 'clasificacion.nombre',
             width: 150,
             align: 'center',
@@ -235,7 +235,7 @@
             }
         }, {
             label: 'Tipo de Licenciamiento',
-            name: 'idTipoLicenciamiento',
+            name: 'idtipolicenciamiento',
             jsonmap: 'tipoLicenciamiento.nombre',
             width: 170,
             align: 'center',
@@ -267,7 +267,7 @@
             }
         }, {
             label: 'Fecha Compra',
-            name: 'fechaCompra',
+            name: 'fechacompra',
             width: 200,
             align: 'center',
             sortable: false,
@@ -299,7 +299,7 @@
             search: false
         }, {
             label: 'Fecha Expiración',
-            name: 'fechaExpiracion',
+            name: 'fechaexpiracion',
             align: 'center',
             width: 200,
             sortable: false,
@@ -331,7 +331,7 @@
             search: false
         }, {
             label: 'N° Lic Compradas',
-            name: 'licCompradas',
+            name: 'liccompradas',
             width: 125,
             align: 'center',
             formatter: 'integer',
@@ -347,7 +347,7 @@
             search: false
         }, {
             label: 'Moneda',
-            name: 'idMoneda',
+            name: 'idmoneda',
             jsonmap: 'moneda.nombre',
             width: 70,
             align: 'center',
@@ -366,7 +366,7 @@
             search: false
         }, {
             label: 'Valor Licencias',
-            name: 'valorLicencia',
+            name: 'valorlicencia',
             width: 110,
             align: 'center',
             sortable: false,
@@ -378,7 +378,7 @@
             search: false
         }, {
             label: 'Valor Soportes',
-            name: 'valorSoporte',
+            name: 'valorsoporte',
             width: 110,
             align: 'center',
             sortable: false,
@@ -393,7 +393,7 @@
             search: false,
         }, {
             label: 'Fecha Renovación Soporte',
-            name: 'fechaRenovaSoporte',
+            name: 'fecharenovasoporte',
             width: 125,
             align: 'center',
             sortable: false,
@@ -441,7 +441,7 @@
         },
         {
             label: 'N° Lic. Adquiridas',
-            name: 'licStock',
+            name: 'licstock',
             width: 125,
             align: 'center',
             sortable: false,
@@ -453,7 +453,7 @@
             search: false
         }, {
             label: 'N° Lic. Instaladas',
-            name: 'licOcupadas',
+            name: 'licocupadas',
             width: 125,
             align: 'center',
             sortable: false,
@@ -465,7 +465,7 @@
             search: false
         }, {
             label: 'Alerta de Renovación',
-            name: 'alertaRenovacion',
+            name: 'alertarenovacion',
             width: 140,
             align: 'center',
             sortable: false,
@@ -480,7 +480,7 @@
             search: false
         }, {
             label: 'Correo Comprador',
-            name: 'correoComprador',
+            name: 'correocomprador',
             align: 'left',
             sortable: false,
             editable: true,
