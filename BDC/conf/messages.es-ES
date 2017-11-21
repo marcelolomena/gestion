@@ -309,6 +309,8 @@ newAlert.alertTask=*Actividad con Riesgo
 newAlert.placeholder.alert_task=--- Elegir Actividad con Riesgo ---
 newAlert.alertAnswer=*Respuesta del Responsable
 newAlert.placeholder.introAnswer=Introduzca una respuesta
+newAlert.placeholder.criticality=--- Elegir Severidad ---
+newAlert.placeholder.event_code=--- Elegir Tipo de Evento ---
 
 programDetails.nosap=No cuenta con detalle de SAP disponible
 programdetails.saplisting=SAP Ficha

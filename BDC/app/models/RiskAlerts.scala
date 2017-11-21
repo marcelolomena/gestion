@@ -270,7 +270,8 @@ case class AlertReport(
                         alert_status: String,
                         alert_reiteration: Int,
                         alert_responsible_answer: String,
-                        risk_name: String
+                        risk_name: String,
+                        alert_criticality_id: Int
                       )
 
 object AlertReport {
@@ -291,7 +292,8 @@ object AlertReport {
       get[String]("alert_status") ~
       get[Int]("alert_reiteration") ~
       get[String]("alert_responsible_answer") ~
-      get[String]("risk_name") map {
+      get[String]("risk_name") ~
+      get[Int]("alert_criticality_id") map {
       case
         program_program_code ~
           alert_id ~
@@ -308,7 +310,8 @@ object AlertReport {
           alert_status ~
           alert_reiteration ~
           alert_responsible_answer ~
-          risk_name  => AlertReport(
+          risk_name  ~
+          alert_criticality_id => AlertReport(
                       program_program_code,
                       alert_id,
                       program_workflow_status,
@@ -324,7 +327,8 @@ object AlertReport {
                       alert_status,
                       alert_reiteration,
                       alert_responsible_answer,
-                      risk_name)
+                      risk_name,
+                      alert_criticality_id)
             }
   }
   implicit val reportAlertWrites = Json.writes[AlertReport]

@@ -1288,188 +1288,230 @@ object RiskService extends CustomColumns {
 
   }
 
-  def findReportAlerts(): Seq[AlertReport] = {
+  def findDescriptionStatusAlert(status_id: String): Option[String] = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT description FROM art_risk_alert_status WHERE id={id}").on(
+        'id -> status_id).as(scalar[Option[String]].single)
+    }
+  }
 
+  def findDescriptionCategoryAlert(category_id: String): Option[String] = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT description FROM art_risk_alert_category WHERE is_active = 1 AND id={id}").on(
+        'id -> category_id).as(scalar[Option[String]].single)
+    }
+  }
+
+  def findReportAlerts(alert_criticality_id: Int, alert_status_id: Int, alert_event_code_id: Int, alert_category_id: Int): Seq[AlertReport] = {
+    var sql :String = ""
     val sqlString =
       """
-        SELECT
-        CASE b.parent_type
-        WHEN 0 THEN (
-        				SELECT w.program_code program_code FROM art_program w
-        				WHERE w.program_id = b.parent_id
-        				AND w.is_active = 1
-        			)
-        WHEN 1 THEN (
-        				SELECT w.program_code program_code FROM art_program w
-        				JOIN art_project_master x ON w.program_id = x.program
-        				WHERE x.pId = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        			)
-        WHEN 2 THEN (
-        				SELECT w.program_code program_code FROM art_program w
-        				JOIN art_project_master x ON w.program_id = x.program
-        				JOIN art_task y ON x.pId = y.pId
-        				WHERE y.tId = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        				AND y.is_active = 1
-        			)
-        WHEN 3 THEN (
-        				SELECT w.program_code program_code FROM art_program w
-        				JOIN art_project_master x ON w.program_id = x.program
-        				JOIN art_task y ON x.pId = y.pId
-        				JOIN art_sub_task z ON y.tId = z.task_id
-        				WHERE z.sub_task_id = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        				AND y.is_active = 1
-        				AND z.is_deleted = 1
-        			)
-        END program_program_code,
-        a.id alert_id,
-        CASE b.parent_type
-        WHEN 0 THEN (
-        				SELECT k.workflow_status workflow_status FROM art_program w
-        				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
-        				WHERE w.program_id = b.parent_id
-        				AND w.is_active = 1
-        			)
-        WHEN 1 THEN (
-        				SELECT k.workflow_status workflow_status FROM art_program w
-        				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
-        				JOIN art_project_master x ON w.program_id = x.program
-        				WHERE x.pId = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        			)
-        WHEN 2 THEN (
-        				SELECT k.workflow_status workflow_status FROM art_program w
-        				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
-        				JOIN art_project_master x ON w.program_id = x.program
-        				JOIN art_task y ON x.pId = y.pId
-        				WHERE y.tId = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        				AND y.is_active = 1
-        			)
-        WHEN 3 THEN (
-        				SELECT k.workflow_status workflow_status FROM art_program w
-        				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
-        				JOIN art_project_master x ON w.program_id = x.program
-        				JOIN art_task y ON x.pId = y.pId
-        				JOIN art_sub_task z ON y.tId = z.task_id
-        				WHERE z.sub_task_id = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        				AND y.is_active = 1
-        				AND z.is_deleted = 1
-        			)
-        END program_workflow_status,
-        CASE b.parent_type
-        WHEN 0 THEN (
-        				SELECT w.program_name program_name FROM art_program w
-        				WHERE w.program_id = b.parent_id
-        				AND w.is_active = 1
-        			)
-        WHEN 1 THEN (
-        				SELECT w.program_name program_name FROM art_program w
-        				JOIN art_project_master x ON w.program_id = x.program
-        				WHERE x.pId = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        			)
-        WHEN 2 THEN (
-        				SELECT w.program_name program_name FROM art_program w
-        				JOIN art_project_master x ON w.program_id = x.program
-        				JOIN art_task y ON x.pId = y.pId
-        				WHERE y.tId = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        				AND y.is_active = 1
-        			)
-        WHEN 3 THEN (
-        				SELECT w.program_name program_name FROM art_program w
-        				JOIN art_project_master x ON w.program_id = x.program
-        				JOIN art_task y ON x.pId = y.pId
-        				JOIN art_sub_task z ON y.tId = z.task_id
-        				WHERE z.sub_task_id = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        				AND y.is_active = 1
-        				AND z.is_deleted = 1
-        			)
-        END program_program_name,
-        ISNULL(a.impacted_variable,'') alert_impacted_variable,
-        p.category_name risk_category,
-        q.description risk_sub_category,
-        c.description alert_category,
-        CASE a.criticality
-        WHEN 1 THEN 'Alto'
-        WHEN 2 THEN 'Medio'
-        WHEN 3 THEN 'Bajo'
-        END alert_criticality,
-        CASE b.parent_type
-        WHEN 0 THEN (
-        				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
-        				JOIN art_user u ON w.program_manager = u.uid
-        				WHERE w.program_id = b.parent_id
-        				AND w.is_active = 1
-        			)
-        WHEN 1 THEN (
-        				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
-        				JOIN art_user u ON w.program_manager = u.uid
-        				JOIN art_project_master x ON w.program_id = x.program
-        				WHERE x.pId = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        			)
-        WHEN 2 THEN (
-        				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
-        				JOIN art_user u ON w.program_manager = u.uid
-        				JOIN art_project_master x ON w.program_id = x.program
-        				JOIN art_task y ON x.pId = y.pId
-        				WHERE y.tId = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        				AND y.is_active = 1
-        			)
-        WHEN 3 THEN (
-        				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
-        				JOIN art_user u ON w.program_manager = u.uid
-        				JOIN art_project_master x ON w.program_id = x.program
-        				JOIN art_task y ON x.pId = y.pId
-        				JOIN art_sub_task z ON y.tId = z.task_id
-        				WHERE z.sub_task_id = b.parent_id
-        				AND w.is_active = 1
-        				AND x.is_active = 1
-        				AND y.is_active = 1
-        				AND z.is_deleted = 1
-        			)
-        END program_program_manager,
-        r.first_name + ' ' + r.last_name alert_responsible,
-        a.event_title alert_event_title,
-        s.description alert_status,
-        a.reiteration alert_reiteration,
-        ISNULL(a.responsible_answer,'') alert_responsible_answer,
-        b.name risk_name
-        FROM art_risk_alert a
-        JOIN art_risk b ON a.risk_id = b.id
-        JOIN art_risk_alert_category c ON c.id = a.category_id
-        JOIN art_risk_category p ON b.risk_category = p.id
-        JOIN art_risk_sub_category q ON b.sub_category = q.id
-        JOIN art_user r ON a.responsible = r.uid
-        JOIN art_risk_alert_status s ON s.id = a.status_id
-        WHERE
-        a.is_active = 1
-        AND b.is_active = 1
-        AND c.is_active = 1
-        AND p.is_deleted = 0
-        AND q.is_deleted = 0
+        SELECT * FROM
+        (
+                SELECT
+                CASE b.parent_type
+                WHEN 0 THEN (
+                				SELECT w.program_code program_code FROM art_program w
+                				WHERE w.program_id = b.parent_id
+                				AND w.is_active = 1
+                			)
+                WHEN 1 THEN (
+                				SELECT w.program_code program_code FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				WHERE x.pId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                			)
+                WHEN 2 THEN (
+                				SELECT w.program_code program_code FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				WHERE y.tId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                			)
+                WHEN 3 THEN (
+                				SELECT w.program_code program_code FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				JOIN art_sub_task z ON y.tId = z.task_id
+                				WHERE z.sub_task_id = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                				AND z.is_deleted = 1
+                			)
+                END program_program_code,
+                a.id alert_id,
+                CASE b.parent_type
+                WHEN 0 THEN (
+                				SELECT k.workflow_status workflow_status FROM art_program w
+                				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
+                				WHERE w.program_id = b.parent_id
+                				AND w.is_active = 1
+                			)
+                WHEN 1 THEN (
+                				SELECT k.workflow_status workflow_status FROM art_program w
+                				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
+                				JOIN art_project_master x ON w.program_id = x.program
+                				WHERE x.pId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                			)
+                WHEN 2 THEN (
+                				SELECT k.workflow_status workflow_status FROM art_program w
+                				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				WHERE y.tId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                			)
+                WHEN 3 THEN (
+                				SELECT k.workflow_status workflow_status FROM art_program w
+                				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				JOIN art_sub_task z ON y.tId = z.task_id
+                				WHERE z.sub_task_id = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                				AND z.is_deleted = 1
+                			)
+                END program_workflow_status,
+                CASE b.parent_type
+                WHEN 0 THEN (
+                				SELECT w.program_name program_name FROM art_program w
+                				WHERE w.program_id = b.parent_id
+                				AND w.is_active = 1
+                			)
+                WHEN 1 THEN (
+                				SELECT w.program_name program_name FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				WHERE x.pId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                			)
+                WHEN 2 THEN (
+                				SELECT w.program_name program_name FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				WHERE y.tId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                			)
+                WHEN 3 THEN (
+                				SELECT w.program_name program_name FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				JOIN art_sub_task z ON y.tId = z.task_id
+                				WHERE z.sub_task_id = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                				AND z.is_deleted = 1
+                			)
+                END program_program_name,
+                ISNULL(a.impacted_variable,'') alert_impacted_variable,
+                p.category_name risk_category,
+                q.description risk_sub_category,
+                c.description alert_category,
+                CASE a.criticality
+                WHEN 1 THEN 'Alto'
+                WHEN 2 THEN 'Medio'
+                WHEN 3 THEN 'Bajo'
+                END alert_criticality,
+                CASE b.parent_type
+                WHEN 0 THEN (
+                				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
+                				JOIN art_user u ON w.program_manager = u.uid
+                				WHERE w.program_id = b.parent_id
+                				AND w.is_active = 1
+                			)
+                WHEN 1 THEN (
+                				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
+                				JOIN art_user u ON w.program_manager = u.uid
+                				JOIN art_project_master x ON w.program_id = x.program
+                				WHERE x.pId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                			)
+                WHEN 2 THEN (
+                				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
+                				JOIN art_user u ON w.program_manager = u.uid
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				WHERE y.tId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                			)
+                WHEN 3 THEN (
+                				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
+                				JOIN art_user u ON w.program_manager = u.uid
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				JOIN art_sub_task z ON y.tId = z.task_id
+                				WHERE z.sub_task_id = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                				AND z.is_deleted = 1
+                			)
+                END program_program_manager,
+                r.first_name + ' ' + r.last_name alert_responsible,
+                a.event_title alert_event_title,
+                s.description alert_status,
+                a.reiteration alert_reiteration,
+                ISNULL(a.responsible_answer,'') alert_responsible_answer,
+                b.name risk_name,
+                a.criticality alert_criticality_id,
+                a.status_id alert_status_id,
+                a.event_code alert_event_code_id,
+                a.category_id alert_category_id
+                FROM art_risk_alert a
+                JOIN art_risk b ON a.risk_id = b.id
+                JOIN art_risk_alert_category c ON c.id = a.category_id
+                JOIN art_risk_category p ON b.risk_category = p.id
+                JOIN art_risk_sub_category q ON b.sub_category = q.id
+                JOIN art_user r ON a.responsible = r.uid
+                JOIN art_risk_alert_status s ON s.id = a.status_id
+                WHERE
+                a.is_active = 1
+                AND b.is_active = 1
+                AND c.is_active = 1
+                AND p.is_deleted = 0
+                AND q.is_deleted = 0
+        ) K
+        WHERE K.program_program_code IS NOT NULL
+        ${sql}
       """
 
+    if(alert_criticality_id > 0) {
+      sql = " AND K.alert_criticality_id = " + alert_criticality_id
+    }
+
+    if(alert_status_id > 0) {
+      sql = sql + " AND K.alert_status_id = " + alert_status_id
+    }
+
+    if(alert_event_code_id > 0) {
+      sql = sql + " AND K.alert_event_code_id = " + alert_event_code_id
+    }
+
+    if(alert_category_id > 0) {
+      sql = sql + " AND K.alert_category_id = " + alert_category_id
+    }
+
+    val qrysql = sqlString.replaceAllLiterally("${sql}",sql)
+    //println(qrysql)
+
     DB.withConnection { implicit connection =>
-      SQL(sqlString).as(AlertReport.reportAlert *)
+      SQL(qrysql).as(AlertReport.reportAlert *)
 
     }
 
@@ -1846,6 +1888,8 @@ object RiskService extends CustomColumns {
               if (!user.isEmpty) {
                 val email = user.get.email.toString()
 
+                println(email)
+
                 if (!StringUtils.isEmpty(email)) {
 
                   if(increment == 2) {
@@ -1859,8 +1903,6 @@ object RiskService extends CustomColumns {
                       cc = cc + "," + bigboss.get.toString
                   }
 
-                  println("increment "+ increment + ", enviando correo a : " + cc)
-
                   val response=utils.SendEmail.sendEmailRiskAlert(
                     user,
                     program,
@@ -1871,7 +1913,7 @@ object RiskService extends CustomColumns {
                     template,
                     cc)
 
-                  println(response)
+                  println("RESPUESTA : " + response)
                 }
 
               }

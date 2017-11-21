@@ -13,7 +13,8 @@
             searchSearch("criticality"),
             options("1"->"Alto", "2"->"Medio","3"->"Bajo"),
             'class -> "input-xlarge ",
-            '_label -> "*Severidad"
+            '_label -> "*Severidad",
+            '_default -> Messages("newAlert.placeholder.criticality")
             )
         </div>
 
@@ -22,7 +23,8 @@
             searchSearch("event_code"),
             options("1"->"Riesgo", "2"->"Incidente"),
             'class -> "input-xlarge",
-            '_label -> "*Tipo de Evento"
+            '_label -> "*Tipo de Evento",
+            '_default -> Messages("newAlert.placeholder.event_code")
             )
         </div>
 

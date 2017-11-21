@@ -161,9 +161,17 @@
 					</dd>
 		    	</dl>
 	      		<div class="width_full" style="margin-top: 20px;">
-                    <div class="left width-pr50 padding-top-3px" >
-			       	    <input class="btn form-button" value="Enviar" id="send-alert"  type="button"/>
-                    </div>
+					@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
+						<!--debe ingresar respuesta-->
+						<div class="left width-pr50 padding-top-3px" >
+							<input class="btn form-button" value="Guardar" id="send-alert"  type="button"/>
+						</div>
+					}else{
+						<!--debe mandar correo-->
+						<div class="left width-pr50 padding-top-3px" >
+							<input class="btn form-button" value="Enviar Alerta" id="send-alert"  type="button"/>
+						</div>
+					}
                     <div class="right width-pr50 padding-top-3px" >
 			         	<input id="cancel-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>
 			       	</div>

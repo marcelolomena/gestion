@@ -50,7 +50,6 @@ object SendEmail {
                           cc: String
                         ): String = {
     try {
-
       val programName = program.get.program_description.get.toString
       val picod = program.get.program_code.toString
       var subject = s"ALERTA PMO - ART ${picod} – ${programName}"
@@ -73,7 +72,6 @@ object SendEmail {
 
       for (r <- risks) {
         builderRisk.append(r.name + "\n")
-
       }
 
       val html = template.replaceAllLiterally("${program.program_description}",program.get.program_description.get.toString)
@@ -82,9 +80,10 @@ object SendEmail {
         .replaceAllLiterally("${alert.event_title}",alert.get.event_title)
         .replaceAllLiterally("${risks.list}",builderRisk.toString())
         .replaceAllLiterally("${program.program_code}",program.get.program_code.toString)
-        .replaceAllLiterally("${program.sap_code}",program.get.sap_code.get.toString)
+        .replaceAllLiterally("${program.sap_code}",program.get.sap_code.getOrElse("No tiene").toString)
         .replaceAllLiterally("${alert.reiteration}",alert.get.reiteration.get.toString)
         .replaceAllLiterally("${alert.impacted_variable}",alert.get.impacted_variable.get.toString)
+
 
       mail.sendHtml(html)
 

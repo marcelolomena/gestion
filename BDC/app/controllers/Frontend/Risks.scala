@@ -409,15 +409,29 @@ object Risks extends Controller {
                 rr.responsible_answer)
 
               val users = ProgramMemberService.findAllProgramMembers(program_id);
-              Ok(views.html.frontend.risks.editAlert(
-                risk_id.toString,
-                alert_id.toString,
-                ARTForms.alertsForm.fill(ra),
-                alert,
-                users,
-                alert_states,
-                alert_category,
-                alert_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+
+              println("reiteration : " + rr.reiteration.get.toInt)
+              println("status_id : " + rr.status_id.get.toInt)
+
+              if(rr.status_id.get.toInt == 3)// Alerta cerrada
+                {
+                  Ok(views.html.frontend.risks.alertDetails(
+                    alert,
+                    risk)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+
+                }else{
+                Ok(views.html.frontend.risks.editAlert(
+                  risk_id.toString,
+                  alert_id.toString,
+                  ARTForms.alertsForm.fill(ra),
+                  alert,
+                  users,
+                  alert_states,
+                  alert_category,
+                  alert_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+
+              }
+
 
           }
       }
@@ -980,7 +994,11 @@ object Risks extends Controller {
                 alert_category)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
             },
             success => {
-              println("ENTRO")
+              println("category_id : " + success.category_id.getOrElse(0))
+              println("status_id : " + success.status_id.getOrElse(0))
+              println("event_code : " + success.event_code.getOrElse(0))
+              println("criticality : " + success.criticality.getOrElse(0))
+
               //success.category_id
               val file = new File("alert.xlsx")
               val fileOut = new FileOutputStream(file);
@@ -1019,7 +1037,12 @@ object Risks extends Controller {
               for (j <- 0 to 15)
                 rowhead.getCell(j).setCellStyle(style)
 
-              val panel = RiskService.findReportAlerts()
+              val panel = RiskService.findReportAlerts(
+                success.criticality.getOrElse(0),
+                success.status_id.getOrElse(0),
+                success.event_code.getOrElse(0),
+                success.category_id.getOrElse(0)
+              )
 
               for (s <- panel) {
                 val row = sheet.createRow(rNum)
