@@ -38,6 +38,7 @@ GET    /get-report_to-list                                                      
 GET    /edit-conf-mail-alert                                                                          controllers.ConfigMail.editConfig()
 POST   /edit-conf-mail-alert                                                                          controllers.ConfigMail.updateConfig()
 GET    /alert-search                                                                                  controllers.Frontend.Risks.alertSearch
+POST   /alert-search-result                                                                           controllers.Frontend.Risks.searchResult
 
 #Division
 GET    /division-list                                                                                 controllers.Division.divisionList	
@@ -46,7 +47,6 @@ POST   /save-division                                                           
 GET    /edit-division                                                                                 controllers.Division.editDivision(id :String)
 POST   /edit-division                                                                                 controllers.Division.updateDivision()
 POST   /update-division                                                                               controllers.Division.divisionUpdateStatus(id :String,status:Boolean)
-
 
 #Genrencia
 GET    /genrencia-list                                                                                controllers.Genrencia.genrenciaList	
@@ -189,9 +189,6 @@ GET    /edit-user-profile                                                       
 POST   /edit-user-profile                                                                             controllers.UserProfile.updateUserProfile	
 GET    /delete-user-profile                                                                           controllers.UserProfile.deleteUserProfile(id :String)
 ################################## Front End ########################################################
-
-
-
 
 # Home page
 GET    /                                                                                              controllers.Frontend.Application.index

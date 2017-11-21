@@ -1,23 +1,9 @@
 package controllers.Frontend
 
-import java.util.List
 
-import scala.math.BigDecimal.double2bigDecimal
-import scala.math.BigDecimal.int2bigDecimal
-import org.apache.commons.lang3.StringUtils
-import org.json.JSONArray
-import org.json.JSONObject
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import services.DepartmentService
-import services.DivisionService
-import services.ProgramService
-import services.ProjectService
-import services.SubTaskServices
-import services.TimesheetService
-import services.UserService
-import services.RiskStateService
-import java.util.Calendar
+import services._
 import java.util.Date
 
 import models._
@@ -25,26 +11,8 @@ import play.libs.Json
 import org.json.JSONObject
 import play.api.libs.json
 import play.api.libs.json._
-import services.ProgramMemberService
 import art_forms.ARTForms
-import services.ProgramTypeService
-import services.SubTypeService
-import services.TaskService
-import services.DocumentService
-import services.BudgetTypeService
-import services.EarnValueService
-
-import scala.math.BigDecimal.RoundingMode
-import utils.DateTime
-import services.SpiCpiCalculationsService
-import services.RiskCategoryService
-//import models.RiskManagementIncreased
-import models.RiskManagementIssue
-import java.util.TreeMap
-import models.riskParentType
-import services.RiskService
 import models.ProgramDates
-import models.Tasks
 import models.ProgramMaster
 import models.RiskAlerts
 import models.UserSetting
@@ -53,14 +21,13 @@ import models.ActivityTypes
 import play.Play
 import play.api.Play.current
 import play.api.data._
-import java.io.FileInputStream
+import java.io.{File, FileInputStream, FileOutputStream}
 import java.util.UUID
-//import play.api.libs.Files
-import java.nio.file.CopyOption
 import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+
+
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 object Risks extends Controller {
 
@@ -990,75 +957,167 @@ object Risks extends Controller {
     }
   }
 
+  def searchResult() = Action { implicit request =>
 
-///
+    request.session.get("username").map { user =>
+
+      val myForm = ARTForms.alertsSearchForm.bindFromRequest
+          myForm.fold(
+            errors => {
+              val alert_states = new java.util.LinkedHashMap[String, String]()
+              val status = RiskService.findAllAlertStatus()
+              for (d <- status) {
+                alert_states.put(d.id.get.toString, d.description)
+              }
+
+              val alert_category = new java.util.LinkedHashMap[String, String]()
+              val category = RiskService.findAllAlertCategory()
+              for (d <- category) {
+                alert_category.put(d.id.get.toString, d.description)
+              }
+              BadRequest(views.html.frontend.risks.alertForm( ARTForms.alertsSearchForm,
+                alert_states,
+                alert_category)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+            },
+            success => {
+              println("ENTRO")
+              //success.category_id
+              val file = new File("alert.xlsx")
+              val fileOut = new FileOutputStream(file);
+              val wb = new XSSFWorkbook
+              val sheet = wb.createSheet("Alertas")
+              var j = 0
+              var rNum = 1
+              var cNum = 0
+              var a = 0
+
+              var rowhead = sheet.createRow(0);
+              val style = wb.createCellStyle();
+              val font = wb.createFont();
+              font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL);
+              font.setFontHeightInPoints(10);
+              font.setBold(true);
+              style.setFont(font);
+              rowhead.createCell(0).setCellValue("program_program_code")
+              rowhead.createCell(1).setCellValue("alert_id")
+              rowhead.createCell(2).setCellValue("program_workflow_status")
+              rowhead.createCell(3).setCellValue("program_program_name")
+              rowhead.createCell(4).setCellValue("alert_impacted_variable")
+              rowhead.createCell(5).setCellValue("risk_category")
+              rowhead.createCell(6).setCellValue("risk_sub_category")
+              rowhead.createCell(7).setCellValue("alert_category")
+              rowhead.createCell(8).setCellValue("alert_criticality")
+              rowhead.createCell(9).setCellValue("program_program_manager")
+              rowhead.createCell(10).setCellValue("alert_responsible")
+              rowhead.createCell(11).setCellValue("alert_event_title")
+              rowhead.createCell(12).setCellValue("alert_status")
+              rowhead.createCell(13).setCellValue("alert_reiteration")
+              rowhead.createCell(14).setCellValue("alert_responsible_answer")
+              rowhead.createCell(15).setCellValue("risk_name")
+
+
+              for (j <- 0 to 15)
+                rowhead.getCell(j).setCellStyle(style)
+
+              val panel = RiskService.findReportAlerts()
+
+              for (s <- panel) {
+                val row = sheet.createRow(rNum)
+
+                val cel0 = row.createCell(cNum)
+                cel0.setCellValue(s.program_program_code)
+
+                val cel1 = row.createCell(cNum + 1)
+                cel1.setCellValue(s.alert_id)
+
+                val cel2 = row.createCell(cNum + 2)
+                cel2.setCellValue(s.program_workflow_status)
+
+                val cel3 = row.createCell(cNum + 3)
+                cel3.setCellValue(s.program_program_name)
+
+                val cel4 = row.createCell(cNum + 4)
+                cel4.setCellValue(s.alert_impacted_variable)
+
+                val cel5 = row.createCell(cNum + 5)
+                cel5.setCellValue(s.risk_category)
+
+                val cel6 = row.createCell(cNum + 6)
+                cel6.setCellValue(s.risk_sub_category)
+
+                val cel7 = row.createCell(cNum + 7)
+                cel7.setCellValue(s.alert_category)
+
+                val cel8 = row.createCell(cNum + 8)
+                cel8.setCellValue(s.alert_criticality)
+
+                val cel9 = row.createCell(cNum + 9)
+                cel9.setCellValue(s.program_program_manager)
+
+                val cel10 = row.createCell(cNum + 10)
+                cel10.setCellValue(s.alert_responsible)
+
+                val cel11 = row.createCell(cNum + 11)
+                cel11.setCellValue(s.alert_event_title)
+
+                val cel12 = row.createCell(cNum + 12)
+                cel12.setCellValue(s.alert_status)
+
+                val cel13 = row.createCell(cNum + 13)
+                cel13.setCellValue(s.alert_reiteration)
+
+                val cel14 = row.createCell(cNum + 14)
+                cel14.setCellValue(s.alert_responsible_answer)
+
+                val cel15 = row.createCell(cNum + 15)
+                cel15.setCellValue(s.risk_name)
+
+                rNum = rNum + 1
+                cNum = 0
+
+              }
+
+              for (a <- 0 to 15) {
+                sheet.autoSizeColumn((a.toInt));
+              }
+
+              wb.write(fileOut);
+              fileOut.close();
+              Ok.sendFile(content = file, fileName = _ => "alert.xlsx")
+
+            })
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
 
 def alertSearch() = Action { implicit request =>
   request.session.get("username").map { user =>
-    /*
-    var program: Option[ProgramMaster] = null
-    var start_date: Date = new Date()
-    var end_date: Date = new Date()
-    var program_id = ""
-    val risk = RiskService.findRiskDetails(risk_id)
 
-    var alert_states = new java.util.LinkedHashMap[String, String]()
-    val status = RiskService.findAllAlertStatus()
-    for (d <- status) {
-      alert_states.put(d.id.get.toString, d.description)
-    }
-    var alert_category = new java.util.LinkedHashMap[String, String]()
-    val category = RiskService.findAllAlertCategory()
-    for (d <- category) {
-      alert_category.put(d.id.get.toString, d.description)
-    }
 
-    val alert_task = new java.util.LinkedHashMap[String, String]()
-    val tasks = TaskService.findTaskListByParentTypeId(risk.get)
-    for (d <- tasks) {
-      alert_task.put(d.tId.get.toString, d.task_title)
-    }
-
-    risk match {
-      case None =>
-        Redirect(routes.Login.loginUser())
-
-      case Some(r: RiskManagementMaster) =>
-        r.parent_type.get match {
-          case 0 =>
-            program_id = r.parent_id.get.toString()
-          case 1 =>
-            program = ProjectService.findProgramDetailForProject(r.parent_id.get.toString())
-            program_id = program.get.program_id.get.toString()
-          case 2 =>
-            program = TaskService.findProgramDetailForTask(r.parent_id.get.toString())
-            program_id = program.get.program_id.get.toString()
-          case 3 =>
-            program = SubTaskServices.findProgramDetailForSubTask(r.parent_id.get.toString())
-            program_id = program.get.program_id.get.toString()
+        val alert_states = new java.util.LinkedHashMap[String, String]()
+        val status = RiskService.findAllAlertStatus()
+        for (d <- status) {
+          alert_states.put(d.id.get.toString, d.description)
         }
-        val users = ProgramMemberService.findAllProgramMembers(program_id);
+
+        val alert_category = new java.util.LinkedHashMap[String, String]()
+        val category = RiskService.findAllAlertCategory()
+        for (d <- category) {
+          alert_category.put(d.id.get.toString, d.description)
+        }
+
 
         Ok(views.html.frontend.risks.alertForm(
-          risk_id,
-          ARTForms.alertsForm,
-          users,
-          start_date,
-          end_date,
+          ARTForms.alertsSearchForm,
           alert_states,
-          alert_category,
-          alert_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
-}
-*/
-    Ok("OK")
-
+          alert_category)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
 
   }.getOrElse {
     Redirect(routes.Login.loginUser())
   }
 }
-
-///
 
   def saveRiskAlert(risk_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>

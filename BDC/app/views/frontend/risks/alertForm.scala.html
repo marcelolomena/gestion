@@ -1,4 +1,4 @@
-@(searchSearch : Form[AlertsSearch])(implicit session: play.api.mvc.Session,lang: Lang)
+@(searchSearch : Form[AlertsSearch], alert_states :java.util.HashMap[String, String], alert_category :java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang: Lang)
 @import play.api.i18n._
 @import play.api._
 @import services._
@@ -6,7 +6,7 @@
 <div class="focus_on width_full" style="padding:10px 0px; margin:20px 0px;" id = "search_program_id">
     <div class="focus_on_title"><img width="94" height="13" alt="" src="@routes.Assets.at("frontend/images/modify_search.png")"></div>
     <div class="search-form-wrapper" style="padding: 10px 40px;">
-        @form(action = controllers.Frontend.routes.Program.searchResult, 'id->"search-program-form") {
+        @form(action = controllers.Frontend.routes.Risks.searchResult, 'id->"search-program-form") {
 
         <div class="field-wrapper">
             @select(

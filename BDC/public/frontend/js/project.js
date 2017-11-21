@@ -846,14 +846,14 @@ function showSearchAlert() {
 
 	$('.loader').css('display', 'block');
 	if (!$("#alert-tab2").hasClass("current")) {
-		var url = "/program-search";
+		var url = "/alert-search";
 		$.get(url, function(data) {
 			$(".content-box-content").html(data);
 			$('.loader').css('display', 'none');
 			$(".focus_on").css("display", "block");
 			$("#alert-tab2").addClass("current");
 			$("#program-tab1").removeClass("current");
-			$("#program-search-form").on("click", renderSearchProgramSubmit);
+			$("#program-search-form").on("click", renderSearchAlertSubmit);
 			$("#cancel-program-search-report").on("click", function() {
 				window.location.reload();
 			});
@@ -1288,6 +1288,35 @@ function renderSearchReportSubmit() {
 		}
 	});
 
+}
+
+function renderSearchAlertSubmit() {
+
+	$('.loader').css('display', 'block');
+
+
+	var url = "/alert-search-result"
+	var params = $("#search-program-form").serialize()
+
+	$.ajax({
+		url : url,
+		type : "POST",
+		cache : false,
+		data : $("#search-program-form").serialize(),
+		dataType : "html",
+		success : function(data) {
+		    console.log(data.size);
+			//$("#search-result").html(data)
+			download(data,'informe.xlsx','application/vnd.ms-excel')
+			$('#search_program_id').css("display", "none");
+			$('#alert-tab2').removeClass('current');
+			$('.loader').css('display', 'none');
+		},
+		error : function() {
+			alert("alertSomethingWentWrong");
+			$('.loader').css('display', 'none');
+		}
+	});
 }
 
 function renderSearchProgramSubmit() {
