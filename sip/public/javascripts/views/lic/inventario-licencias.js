@@ -23,6 +23,7 @@
                 }, 100);
             }
         };
+        grid.config.rowNum = 20;
         grid.build();
     };
 
