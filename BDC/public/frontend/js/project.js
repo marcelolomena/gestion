@@ -853,7 +853,7 @@ function showSearchAlert() {
 			$(".focus_on").css("display", "block");
 			$("#alert-tab2").addClass("current");
 			$("#program-tab1").removeClass("current");
-			$("#program-search-form").on("click", renderSearchAlertSubmit);
+			//$("#program-search-form").on("click", renderSearchAlertSubmit);
 			$("#cancel-program-search-report").on("click", function() {
 				window.location.reload();
 			});
@@ -1305,9 +1305,9 @@ function renderSearchAlertSubmit() {
 		data : $("#search-program-form").serialize(),
 		dataType : "html",
 		success : function(data) {
-		    console.log(data.size);
 			//$("#search-result").html(data)
-			download(data,'informe.xlsx','application/vnd.ms-excel')
+			 var blob=new Blob([data]);
+			download(blob,'informe.xlsx','application/vnd.ms-excel')
 			$('#search_program_id').css("display", "none");
 			$('#alert-tab2').removeClass('current');
 			$('.loader').css('display', 'none');
