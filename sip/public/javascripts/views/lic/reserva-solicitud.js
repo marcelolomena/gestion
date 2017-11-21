@@ -10,13 +10,29 @@
         detalleCompraTramiteGrid.renderGrid(url, gridID);
     }
 
+    function beforeShowForm(form){
+        $.ajax({
+            type: "GET",
+            url: '/lic/usuariocui',
+            async: false,
+            success: function (data) {
+                if (data) {
+                    $("input#cui").val(data[0].cui);
+                    $("#cui").attr('disabled', true);
+                } else {
+                    alert("No existe CUI asociado al Usuario");
 
+                }
+            }
+        }); 
 
+    
+    }
 
 
     var initGrid = function (viewModel) {
         var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Solicitud de Reserva', 'Editar Solicitud', 'Agregar Solicitud', '/lic/reserva', viewModel, 'idEstado', '/lic/getsession', ['Administrador LIC'], showChildGrid);
-        
+        grid.prmAdd.beforeShowForm = beforeShowForm;
         grid.build();
     };
 

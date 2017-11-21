@@ -51,10 +51,6 @@ function mapper(data) {
             idEstado: item.idEstado,
             estado: {
                 nombre: item.parametro.nombre
-            },
-            idUsuario: item.idUsuario,
-            usuario: {
-                nombre: item.user.first_name
             }
         }
     });
@@ -121,22 +117,12 @@ function estado(req, res) {
 }
 
 
-function getProducto(req, res) {
-    var idFabricante = req.params.idFabricante;
-    
-    sequelize.query(sql)
-        .spread(function (rows) {
-            return res.json(rows);
-        });
-
-};
 
 function usuariocui(req, res){
-    var uid = req.params.uid
-    var sql = 'select b.cui from dbo.art_user a join dbo.RecursosHumanos b on a.email = b.emailTrab where a.uid = ' + uid;
+    
     models.sequelize.query("select b.cui from dbo.art_user a " +
     "join dbo.RecursosHumanos b on a.email = b.emailTrab " +
-    "where a.uid = " +req.params.uid + " and periodo = (select max(periodo) from dbo.RecursosHumanos)").spread(function (rows) {
+    "where a.uid = " + req.session.passport.user + " and periodo = (select max(periodo) from dbo.RecursosHumanos)").spread(function (rows) {
         return res.json(rows);
     });
 }

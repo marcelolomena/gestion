@@ -174,7 +174,7 @@ module.exports = function (passport) {
     router.route('/lic/estado/:pId')
         .get(isAuthenticated, reservaController.estado);
 
-        router.route('/lic/usuariocui/:uid')
+        router.route('/lic/usuariocui')
         .get(isAuthenticated, reservaController.usuariocui);
 
     // router.route('/lic/reservaJ')
