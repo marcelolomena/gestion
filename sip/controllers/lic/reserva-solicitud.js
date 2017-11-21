@@ -4,7 +4,7 @@ var sequelize = require('../../models/index').sequelize;
 var base = require('./lic-controller');
 var _ = require('lodash');
 
-var entity = models.reservaSolicitud;
+var entity = models.reserva;
 entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
@@ -28,9 +28,13 @@ function map(req) {
         fechaSolicitud: base.toDate(req.body.fechaSolicitud),
         cui: req.body.cui,
         sap: req.body.sap,
-        comentario: req.body.comentario,
+        comentarioSolicitud: req.body.comentarioSolicitud,
         idEstado: req.body.idEstado,
-        idUsuario : req.body.idUsuario
+        idUsuario : req.body.idUsuario,
+        fechaAprobacion: null,
+        comentarioAprobacion: null,
+        fechaAutorizacion: null,
+        comentarioAutorizacion: null
     }
 }
 
@@ -116,8 +120,6 @@ function estado(req, res) {
     })
 }
 
-
-
 function usuariocui(req, res){
     
     models.sequelize.query("select b.cui from dbo.art_user a " +
@@ -126,19 +128,6 @@ function usuariocui(req, res){
         return res.json(rows);
     });
 }
-
-exports.updateTotales = function (req, res) {
-    logger.debug("****id:" + req.params.id);
-    sequelize.query('EXECUTE sip.actualizadetallepre ' + req.params.id
-      + ';').then(function (response) {
-        res.json({ error_code: 0 });
-      }).catch(function (err) {
-        logger.error(err)
-        res.json(err);
-      });
-  
-  };
-
 
 module.exports = {
     list: list,

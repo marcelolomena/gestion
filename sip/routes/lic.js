@@ -30,7 +30,7 @@ var recepcionController = require('../controllers/lic/recepcion');
 var detalleRecepcionController = require('../controllers/lic/detalle-recepcion');
 
 var snowController = require('../controllers/lic/snow');
-var reservaController = require('../controllers/lic/reserva-solicitud');
+var reservaSolicitudController = require('../controllers/lic/reserva-solicitud');
 var addmController = require('../controllers/lic/addm');
 
 module.exports = function (passport) {
@@ -168,14 +168,14 @@ module.exports = function (passport) {
         .get(isAuthenticated, traduccionController.listChilds);
 
     router.route('/lic/reserva')
-        .get(isAuthenticated, reservaController.list)
-        .post(isAuthenticated, reservaController.action);
+        .get(isAuthenticated, reservaSolicitudController.list)
+        .post(isAuthenticated, reservaSolicitudController.action);
 
     router.route('/lic/estado/:pId')
-        .get(isAuthenticated, reservaController.estado);
+        .get(isAuthenticated, reservaSolicitudController.estado);
 
         router.route('/lic/usuariocui')
-        .get(isAuthenticated, reservaController.usuariocui);
+        .get(isAuthenticated, reservaSolicitudController.usuariocui);
 
     // router.route('/lic/reservaJ')
     //     .get(isAuthenticated, reservaController.getPresupuestoPaginados);

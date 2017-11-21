@@ -139,7 +139,7 @@
             },
             {
                 label: 'Comentario',
-                name: 'comentario',
+                name: 'comentarioSolicitud',
                 width: 500,
                 hidden: false,
                 editable: true,
