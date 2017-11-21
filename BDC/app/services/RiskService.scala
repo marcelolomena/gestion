@@ -136,7 +136,16 @@ object RiskService extends CustomColumns {
   def updateAlertDetailsMail(alert: RiskAlerts) = {
     DB.withConnection { implicit connection =>
 
-      val increment = alert.reiteration.get + 1
+      var increment = alert.reiteration.get + 1
+      val tmp = alert.reiteration.get + 1
+      /*
+      1 create
+      2 reintento 1
+      3 reintento 2
+       */
+      if (increment.toInt > 3) {
+        increment = 3
+      }
 
       val alert_detail = SQL(
         """
@@ -174,11 +183,10 @@ object RiskService extends CustomColumns {
         'task_id -> alert.task_id,
         'change_state -> alert.change_state,
         'responsible_answer -> alert.responsible_answer).executeUpdate()
-      /*
-      send email alert
-       */
 
-      sendAutomaticAlerts(alert.id.get.toString,increment.toInt)
+      if(tmp.toInt <= 3) {
+        sendAutomaticAlerts(alert.id.get.toString, increment)
+      }
     }
   }
 
@@ -1125,6 +1133,11 @@ object RiskService extends CustomColumns {
 
       var last_index = risk_issue.last
 
+      println("last_index : " + last_index)
+      println("reiteration : " + risk.reiteration.get.toInt)
+
+      sendAutomaticAlerts(last_index.toString,risk.reiteration.get)
+
       last_index
     }
 
@@ -1317,6 +1330,63 @@ object RiskService extends CustomColumns {
     }
   }
 
+  def findTmplMail() : String = {
+    var sqlString = ""
+    sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf ORDER BY id DESC"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(scalar[String].single)
+    }
+  }
+
+  def findBigBossMail(emailEmployee: String) : Option[String] = {
+    val sqlString = """
+                      ;WITH tblBoss AS
+                      (
+                          SELECT emailJefe,emailTrab
+                              FROM RecursosHumanos WHERE emailTrab = {emailEmployee} AND periodo = (SELECT MAX(periodo) FROM RecursosHumanos)
+                          UNION ALL
+                          SELECT RecursosHumanos.emailJefe,RecursosHumanos.emailTrab
+                              FROM RecursosHumanos  JOIN tblBoss  ON RecursosHumanos.emailTrab = tblBoss.emailJefe
+                      )
+
+                      SELECT STUFF((
+                              SELECT top 2 ','+ emailTrab
+                              FROM tblBoss WHERE  emailTrab <> {emailEmployee}
+                              FOR XML PATH('')
+                              )
+                              ,1,1,'') AS emailTrab
+
+                      OPTION(MAXRECURSION 32767)
+
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'emailEmployee -> emailEmployee).as(scalar[Option[String]].single)
+    }
+  }
+
+  def findBossMail(emailEmployee: String) : Option[String] = {
+    val sqlString = """
+                      ;WITH tblBoss AS
+                      (
+                          SELECT emailJefe,emailTrab
+                              FROM RecursosHumanos WHERE emailTrab = {emailEmployee} AND periodo = (SELECT MAX(periodo) FROM RecursosHumanos)
+                          UNION ALL
+                          SELECT RecursosHumanos.emailJefe,RecursosHumanos.emailTrab
+                              FROM RecursosHumanos  JOIN tblBoss  ON RecursosHumanos.emailTrab = tblBoss.emailJefe
+                      )
+                      SELECT top 1 emailTrab FROM  tblBoss
+                          WHERE emailTrab <> {emailEmployee}
+                      OPTION(MAXRECURSION 32767)
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+      'emailEmployee -> emailEmployee).as(scalar[Option[String]].single)
+    }
+  }
+
   def findUserAlertsIds(employeeid: String): String = {
     var risk_ids = ""
     val risksAlerts = RiskService.findAllActiveAlerts()
@@ -1342,8 +1412,19 @@ object RiskService extends CustomColumns {
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(RiskStatus.status *)
     }
-  }  
-  
+  }
+
+  def findAllCCEmail(): Option[String] = {
+    val sqlString =
+      """
+        SELECT TOP 1 ISNULL(RTRIM(em1),'') + ',' + ISNULL(RTRIM(em2),'') + ',' + ISNULL(RTRIM(em3),'')
+        emails FROM art_risk_alert_conf ORDER BY id DESC
+      """
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(scalar[String].singleOpt)
+    }
+  }
+
   def findAllAlertCategory(): Seq[RiskCategory] = {
     var sqlString = "select id,description,is_active from art_risk_alert_category where is_active = 1"
     DB.withConnection { implicit connection =>
@@ -1499,22 +1580,25 @@ object RiskService extends CustomColumns {
 
         var persons = ""
         val risk_id = alert.get.risk_id.toString()
-        val title = alert.get.event_title
         val risks = findRiskFromAlert(risk_id)
 
         val risk_details = findRiskDetails(risk_id)
         if (!risk_details.isEmpty) {
-          //val risk_name = risk_details.get.name
-          //val risk_cause = risk_details.get.cause
           val risk_parent_id = risk_details.get.parent_id.get
           val risk_parent_type = risk_details.get.parent_type.get
-          //val risk_responsible = risk_details.get.responsible
-
           val program = findProgramByIdParent(risk_parent_id.toString, risk_parent_type)
 
           if (!alert.get.person_invloved.isEmpty) {
             persons = alert.get.person_invloved.get
           }
+
+          val template = findTmplMail()
+          var cc = findAllCCEmail().get.toString
+
+          val lastchar = cc.charAt(cc.length-1).toString
+
+          if(lastchar.equals(","))
+            cc = cc.substring(0, cc.length() - 1)
 
           var user: Option[Users] = null
           if (!StringUtils.isEmpty(persons)) {
@@ -1523,17 +1607,32 @@ object RiskService extends CustomColumns {
               if (!user.isEmpty) {
                 val email = user.get.email.toString()
 
-                println("enviando un correo : " + email)
-
                 if (!StringUtils.isEmpty(email)) {
 
-                  utils.SendEmail.sendEmailRiskAlert(
+                  if(increment == 2) {
+                    val boss = findBossMail(email)
+                    if(!boss.isEmpty)
+                      cc = cc + "," + boss.get.toString
+
+                  } else if (increment == 3) {
+                    val bigboss = findBigBossMail(email)
+                    if(!bigboss.isEmpty)
+                      cc = cc + "," + bigboss.get.toString
+                  }
+
+                  println("increment "+ increment + ", enviando correo a : " + cc)
+
+                  val response=utils.SendEmail.sendEmailRiskAlert(
                     user,
                     program,
                     alert,
                     risks,
                     risk_details,
-                    "marcelo.mlomena@gmail.com")
+                    increment,
+                    template,
+                    cc)
+
+                  println(response)
                 }
 
               }

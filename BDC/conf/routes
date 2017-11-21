@@ -34,6 +34,10 @@ POST   /edit-department                                                         
 POST   /update-department                                                                             controllers.Department.updateDepartmentStatus(id :String,status:Boolean)
 GET    /get-report_to-list                                                                            controllers.Department.getDepartmentReportTo
 
+#ConfMailAlert
+GET    /edit-conf-mail-alert                                                                          controllers.ConfigMail.editConfig()
+POST   /edit-conf-mail-alert                                                                          controllers.ConfigMail.updateConfig()
+
 #Division
 GET    /division-list                                                                                 controllers.Division.divisionList	
 GET    /create-division                                                                               controllers.Division.createDivision
@@ -121,8 +125,6 @@ POST   /edit-users-profile/:id                                                  
 
 GET    /assets/*file                                                                                  controllers.Assets.at(path="/public", file)
 
-
-
 #Stage
 GET    /stage-list                                                                                    controllers.Stage.stageList	
 GET    /add-stage                                                                                     controllers.Stage.createStage
@@ -151,8 +153,6 @@ POST   /add-generic-project-type                                                
 GET    /edit-generic-project-type                                                                     controllers.GenericProjectType.editGenericProjectType(id :String)
 POST   /edit-generic-project-type                                                                     controllers.GenericProjectType.updateGenericProjectType	
 GET    /delete-generic-project-type                                                                   controllers.GenericProjectType.deleteGenericProjectType(id :String)
-
-
 
 #Document-type
 GET    /document-type-list                                                                            controllers.DocumentType.documentTypeList	

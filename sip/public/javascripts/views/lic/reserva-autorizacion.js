@@ -29,25 +29,7 @@
                 width: 100,
                 editable: true,
                 search: false
-            },
-            {
-                label: 'SAP',
-                name: 'sap',
-                align: 'center',
-                width: 100,
-                editable: true,
-                search: false
-            },
-            {
-                label: 'Unidad CUI',
-                name: 'idCui',
-                jsonmap: 'cui.unidad',
-                align: 'center',
-                width: 100,
-                editable: true,
-                search: false
-            },
-            {
+            }, {
                 label: 'Fecha de Uso',
                 name: 'fechaEstimada',
                 width: 110,
@@ -76,6 +58,21 @@
                 },
                 search: false
             }, {
+                label: 'CUI',
+                name: 'idCui',
+                jsonmap: 'cui.unidad',
+                align: 'center',
+                width: 100,
+                editable: true,
+                search: false
+            }, {
+                label: 'SAP',
+                name: 'sap',
+                align: 'center',
+                width: 100,
+                editable: true,
+                search: false
+            }, {
                 label: 'Comentario de Solicitud',
                 name: 'comentario',
                 width: 400,
@@ -86,23 +83,14 @@
                     fullRow: true
                 },
                 search: false
-            }, {
-                label: 'Comentario de Aprobación',
-                name: 'comentario',
-                width: 400,
-                hidden: false,
-                editable: true,
-                edittype: 'textarea',
-                editoptions: {
-                    fullRow: true
-                },
-                search: false
-            }, {
-                label: 'Estado de Autorización',
+            }, 
+            {
+                label: 'Estado de Aprobación',
                 name: 'estado',
                 width: 90,
                 align: 'center',
-                editable: true,
+                hidden: true,
+                editable: false,
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
@@ -124,7 +112,7 @@
                 search: false
             },
             {
-                label: 'Comentario de Autorización',
+                label: 'Comentario de Aprobación',
                 name: 'comentario',
                 width: 400,
                 hidden: false,
@@ -133,13 +121,10 @@
                 editoptions: {
                     fullRow: true
                 },
-                editrules: {
-                    required: true
-                },
                 search: false
             },
             {
-                label: 'Estado Autorización',
+                label: 'Estado de Autorización',
                 name: 'estado',
                 width: 90,
                 align: 'center',
@@ -162,6 +147,21 @@
                     }
                     return dato;
                 },
+                editrules: {
+                    required: true
+                },
+                search: false
+            },
+            {
+                label: 'Comentario de Autorización',
+                name: 'comentario',
+                width: 400,
+                hidden: false,
+                editable: true,
+                edittype: 'textarea',
+                // editoptions: {
+                //     fullRow: true
+                // },
                 editrules: {
                     required: true
                 },

@@ -4,13 +4,8 @@ import models.{ProgramMaster, RiskAlerts, RiskManagementMaster, Users}
 import play.api._
 import play.api.Play.current
 import play.Play
-//import play.api.libs.mailer._
 import com.typesafe.plugin._
 import play.api.Play.current
-
-
-
-
 
 object SendEmail {
 
@@ -45,226 +40,51 @@ object SendEmail {
                           alert: Option[RiskAlerts],
                           risks: Seq[RiskManagementMaster],
                           risk_details: Option[RiskManagementMaster],
-                          recipientEmail: String
+                          increment: Int,
+                          template: String,
+                          cc: String
                         ): String = {
-
-    val fromEmail = Play.application().configuration().getString("smtp.user")
-    val mail = use[MailerPlugin].email
-    mail.setSubject("Emisión Alertas desde ART")
-    mail.setFrom(fromEmail.toString())
-
-    mail.setRecipient(recipientEmail.toString())
-
     try {
+
       val programName = program.get.program_description.get.toString
-      val alertTitle = alert.get.event_title
-      val first = user.get.first_name
-      val last = user.get.last_name
-      val regards = s"""
-                    Estimado: ${first} ${last},
-                    """.stripMargin
+      val picod = program.get.program_code.toString
+      var subject = s"ALERTA PMO - ART ${picod} – ${programName}"
+      val fromEmail = Play.application().configuration().getString("smtp.user")
+      val mail = use[MailerPlugin].email
+
+      if (increment>1)
+      {
+        subject = "RE-INSISTENCIA " + subject
+      }
+
+      mail.setSubject(subject)
+      mail.setFrom(fromEmail.toString())
+      mail.setRecipient("marcelo.mlomena@gmail.com"/*user.get.email.toString()*/)
+
+      val mylist  = cc.split(",").toList
+      mail.setCc(mylist:_*)
 
       val builderRisk = StringBuilder.newBuilder
-      builderRisk.append("<ul>")
+
       for (r <- risks) {
-        builderRisk.append("<li>")
-        builderRisk.append(r.name)
-        builderRisk.append("</li>")
+        builderRisk.append(r.name + "\n")
+
       }
-      builderRisk.append("</ul>")
 
-      val risksLst = builderRisk.toString()
+      val html = template.replaceAllLiterally("${program.program_description}",program.get.program_description.get.toString)
+      .replaceAllLiterally("${user.first_name}",user.get.first_name)
+      .replaceAllLiterally("${user.last_name}",user.get.last_name)
+      .replaceAllLiterally("${alert.event_title}",alert.get.event_title)
+      .replaceAllLiterally("${risks.list}",builderRisk.toString())
+      .replaceAllLiterally("${program.program_code}",program.get.program_code.toString)
+      .replaceAllLiterally("${program.sap_code}",program.get.sap_code.get.toString)
+      .replaceAllLiterally("${alert.reiteration}",alert.get.reiteration.get.toString)
+      .replaceAllLiterally("${alert.impacted_variable}",alert.get.impacted_variable.get.toString)
 
-      val builderProject = StringBuilder.newBuilder
-      builderProject.append("<tr>")
-      builderProject.append("<td>")
-      builderProject.append("ART")
-      builderProject.append("</td>")
-      builderProject.append("<td>")
-      builderProject.append(program.get.program_code.toString)
-      builderProject.append("</td>")
-      builderProject.append("</tr>")
+      mail.sendHtml(html)
 
-      builderProject.append("<tr>")
-      builderProject.append("<td>")
-      builderProject.append("SAP")
-      builderProject.append("</td>")
-      builderProject.append("<td>")
-      builderProject.append(program.get.sap_code.toString)
-      builderProject.append("</td>")
-      builderProject.append("</tr>")
-
-      val projectsLst = builderProject.toString()
-
-      val builderAlert = StringBuilder.newBuilder
-
-      builderAlert.append("<tr>")
-      builderAlert.append("<td>")
-      builderAlert.append("Reiteración Alerta")
-      builderAlert.append("</td>")
-      builderAlert.append("<td>")
-      builderAlert.append(alert.get.reiteration.get.toString)
-      builderAlert.append("</td>")
-      builderAlert.append("</tr>")
-
-      builderAlert.append("<tr>")
-      builderAlert.append("<td>")
-      builderAlert.append("Variable Impactada")
-      builderAlert.append("</td>")
-      builderAlert.append("<td>")
-      builderAlert.append(alert.get.impacted_variable.get.toString)
-      builderAlert.append("</td>")
-      builderAlert.append("</tr>")
-
-      val alertLst = builderAlert.toString()
-
-
-      val html =
-        s"""
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
- |<html xmlns="http://www.w3.org/1999/xhtml">
- |<head>
- |<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
- |<title>.:Alert ART:.</title>
- |<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
- |</head>
- |<body style="margin: 0; padding: 0;">
- |	<table border="0" cellpadding="0" cellspacing="0" width="100%">
- |		<tr>
- |			<td style="padding: 10px 0 30px 0;">
- |				<table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #cccccc; border-collapse: collapse;">
- |					<tr>
- |						<td align="center" bgcolor="#002464" style="padding: 40px 0 30px 0; color: #153643; font-size: 28px; font-weight: bold; font-family: Arial, sans-serif;">
- |							<!--<img src="" alt="Mail Alerta" width="300" height="230" style="display: block;" />-->
- |              <table border="0" cellpadding="0" cellspacing="0" width="100%">
- |								<tr>
- |									<td align="center" style="color: #ffffff;" width="100%">
- |										Alerta PMO<br/>
- |									</td>
- |								</tr>
- |            </table>
- |						</td>
- |					</tr>
- |					<tr>
- |						<td bgcolor="#ffffff" style="padding: 40px 30px 40px 30px;">
- |							<table border="0" cellpadding="0" cellspacing="0" width="100%">
- |								<tr>
- |									<td style="color: #153643; font-family: Arial, sans-serif; font-size: 24px;">
- |										<b>${programName}</b>
- |									</td>
- |								</tr>
- |								<tr>
- |									<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
- |										<b>${regards}</b>
- |									</td>
- |								</tr>
- |								<tr>
- |									<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
- |										${alertTitle}
- |									</td>
- |								</tr>
- |								<tr>
- |									<td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;">
- |                    Adicionalmente se presentan los siguientes riesgos:
- |										${risksLst}
- |									</td>
- |								</tr>
- |								<tr>
- |									<td>
- |										<table border="0" cellpadding="0" cellspacing="0" width="100%">
- |											<tr>
- |												<td width="260" valign="top">
- |													<table border="0" cellpadding="0" cellspacing="0" width="100%">
- |														<tr>
- |															<td>
- |																<img src="images/left.gif" alt="" width="100%" height="140" style="display: block;" />
- |															</td>
- |														</tr>
- |														<tr>
- |															<td style="padding: 25px 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;">
- |																<table border="0" cellpadding="0" cellspacing="0" width="100%">
- |																	<tr>
- |																		<td colspan="2" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;">
- |																		PROYECTOS
- |																		</td>
- |																	</tr>
- |                                  ${projectsLst}
- |																</table>
- |															</td>
- |														</tr>
- |													</table>
- |												</td>
- |												<td style="font-size: 0; line-height: 0;" width="20">
- |													&nbsp;
- |												</td>
- |												<td width="260" valign="top">
- |													<table border="0" cellpadding="0" cellspacing="0" width="100%">
- |														<tr>
- |															<td>
- |																<img src="images/right.gif" alt="" width="100%" height="140" style="display: block;" />
- |															</td>
- |														</tr>
- |														<tr>
- |															<td style="padding: 25px 0 0 0; color: #153643; font-family: Arial, sans-serif; font-size: 12px; line-height: 20px;">
- |																<table border="0" cellpadding="0" cellspacing="0" width="100%">
- |																	<tr>
- |																		<td colspan="2" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;">
- |																		PROYECTOS
- |																		</td>
- |																	</tr>
- |                                    ${alertLst}
- |																</table>
- |															</td>
- |														</tr>
- |													</table>
- |												</td>
- |											</tr>
- |										</table>
- |									</td>
- |								</tr>
- |							</table>
- |						</td>
- |					</tr>
- |					<tr>
- |						<td bgcolor="#002464" style="padding: 30px 30px 30px 30px;">
- |							<table border="0" cellpadding="0" cellspacing="0" width="100%">
- |								<tr>
- |									<td style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;" width="75%">
- |										&reg; BCH - Herramienta de Control y Seguimiento de Proyectos<br/>
- |									</td>
- |									<td align="right" width="25%">
- |										<table border="0" cellpadding="0" cellspacing="0">
- |											<tr>
- |												<td style="font-family: Arial, sans-serif; font-size: 12px; font-weight: bold;">
- |													<a href="http://www.twitter.com/bancodechile" style="color: #ffffff;">
- |														<img src="images/tw.gif" alt="Twitter" width="38" height="38" style="display: block;" border="0" />
- |													</a>
- |												</td>
- |												<td style="font-size: 0; line-height: 0;" width="20">&nbsp;</td>
- |												<td style="font-family: Arial, sans-serif; font-size: 12px; font-weight: bold;">
- |													<a href="http://www.facebook.com/bancochile.cl" style="color: #ffffff;">
- |														<img src="images/fb.gif" alt="Facebook" width="38" height="38" style="display: block;" border="0" />
- |													</a>
- |												</td>
- |											</tr>
- |										</table>
- |									</td>
- |								</tr>
- |							</table>
- |						</td>
- |					</tr>
- |				</table>
- |			</td>
- |		</tr>
- |	</table>
- |</body>
- |</html>
-        """.stripMargin
-
-      //mail.sendHtml("<html><div> Hola,<br/>" + message.toString() + "</br></div></html>")
-      mail.sendHtml(html.toString)
     } catch {
-      case ex: Exception => return "Check SMTP Details"
+      case ex: Exception => return ex.getMessage
     }
 
     "Success"
