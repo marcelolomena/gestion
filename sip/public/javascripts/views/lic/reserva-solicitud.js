@@ -10,10 +10,6 @@
         detalleCompraTramiteGrid.renderGrid(url, gridID);
     }
 
-    function beforeShowForm(form) {
-        var getID = form;
-    }
-
 
 
 
