@@ -368,6 +368,7 @@ roadmap.selectProject=--Seleccionar Proyecto--
 button.update=Actualización
 button.add=Agregar
 button.cancel=Cancelar
+button.preview=Ver
 button.cropImage=Recortar
 button.upload=Subir
 button.save=Guardar

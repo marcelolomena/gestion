@@ -1290,6 +1290,7 @@ function renderSearchReportSubmit() {
 
 }
 
+/*
 function renderSearchAlertSubmit() {
 
 	$('.loader').css('display', 'block');
@@ -1318,7 +1319,7 @@ function renderSearchAlertSubmit() {
 		}
 	});
 }
-
+*/
 function renderSearchProgramSubmit() {
 
 	$('.loader').css('display', 'block');
