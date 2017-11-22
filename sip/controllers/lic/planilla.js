@@ -6,72 +6,6 @@ var sequelize = require('../../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var _ = require('lodash');
 
-var entity = models.producto;
-entity.belongsTo(models.fabricante, { foreignKey: 'idFabricante' });
-entity.belongsTo(models.clasificacion, { foreignKey: 'idClasificacion' });
-entity.belongsTo(models.tipoInstalacion, { foreignKey: 'idTipoInstalacion' });
-entity.belongsTo(models.tipoLicenciamiento, { foreignKey: 'idTipoLicenciamiento' });
-entity.hasMany(models.compra, { sourceKey: 'id', foreignKey: 'idProducto' });
-var includes = [
-    {
-        model: models.fabricante
-    }, {
-        model: models.clasificacion
-    }, {
-        model: models.tipoInstalacion
-    }, {
-        model: models.tipoLicenciamiento
-    }, {
-        model: models.compra,
-        include: [
-            {
-                model: models.moneda
-            }, {
-                model: models.proveedor
-            }
-        ]
-    }
-];
-var childEntity = models.compra;
-
-function excelMapper(data) {
-    var result = [];
-    _.each(data, function (item) {
-        if (item.compras) {
-            _.each(item.compras, function (sItem) {
-                result.push([sItem.contrato,
-                sItem.ordenCompra || '',
-                sItem.estructuracuibch ? sItem.estructuracuibch.cui : '',
-                sItem.sap || '',
-                item.fabricante ? item.fabricante.nombre : '',
-                sItem.proveedor.razonsocial,
-                item.nombre,
-                item.tipoInstalacion ? item.tipoInstalacion.nombre : '',
-                item.clasificacion ? item.clasificacion.nombre : '',
-                item.clasificacion ? item.tipoLicenciamiento.nombre : '',
-                base.fromDate(sItem.fechaCompra),
-                base.fromDate(sItem.fechaExpiracion),
-                sItem.licCompradas || '',
-                sItem.cantidadSoporte || '',
-                sItem.moneda.moneda,
-                sItem.valorLicencia || '',
-                sItem.valorSoporte || '',
-                base.fromDate(sItem.fechaRenovaSoporte),
-                sItem.factura || '',
-                item.licStock || '',
-                item.licOcupadas || '',
-                item.alertaRenovacion ? 'Al día' : 'Vencida',
-                sItem.comprador || '',
-                sItem.correoComprador || '',
-                item.utilidad || '',
-                item.comentarios || '']
-                );
-            });
-        }
-    });
-    return result;
-}
-
 function update(entity, data, res) {
     var oc = data.ordencompra == "" ? "NULL" : data.ordencompra;
     var sap = data.sap == "" ? "NULL" : data.sap;
@@ -225,124 +159,14 @@ function list(req, res) {
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
-            return create(entity, map(req), res);
+            return create(req, res);//NO existe ADD en esta pantalla.
         case 'edit':
-            return update(entity, req.body, res);
+            return update(req.body, res);
         case 'del':
-            return destroy(entity, req.body.id, res);
+            return destroy(req.body.id, res);
     }
 }
 
-function excelOld(req, res) {
-    var cols = [
-        {
-            caption: 'Contrato',
-            type: 'string',
-            width: 80
-        }, {
-            caption: 'OrdenCompra',
-            type: 'string',
-            width: 80
-        }, {
-            caption: 'CUI',
-            type: 'string',
-            width: 80
-        }, {
-            caption: 'SAP',
-            type: 'string',
-            width: 80
-        }, {
-            caption: 'Fabricante',
-            type: 'string',
-            width: 180
-        }, {
-            caption: 'Proveedor',
-            type: 'string',
-            width: 300
-        }, {
-            caption: 'Software',
-            type: 'string',
-            width: 200
-        }, {
-            caption: 'DondeEstaInstalada',
-            type: 'string',
-            width: 160
-        }, {
-            caption: 'Clasificacion',
-            type: 'string',
-            width: 170
-        }, {
-            caption: 'TipoLicenciamiento',
-            type: 'string',
-            width: 200
-        }, {
-            caption: 'FechaCompra',
-            type: 'string',
-            width: 125
-        }, {
-            caption: 'FechaExpiracion',
-            type: 'string',
-            width: 70
-        }, {
-            caption: 'LicenciaCompradas',
-            type: 'string',
-            width: 110
-        }, {
-            caption: 'Soporte',
-            type: 'string',
-            width: 110
-        }, {
-            caption: 'Moneda',
-            type: 'string',
-            width: 110
-        }, {
-            caption: 'ValorLicencias',
-            type: 'string',
-            width: 125
-        }, {
-            caption: 'ValorSoportes',
-            type: 'string',
-            width: 80
-        }, {
-            caption: 'FechaRenovacion',
-            type: 'string',
-            width: 125
-        }, {
-            caption: 'Factura',
-            type: 'string',
-            width: 125
-        }, {
-            caption: 'NLicenciaCompradas',
-            type: 'string',
-            width: 100
-        }, {
-            caption: 'NLicenciaInstaladas',
-            type: 'string',
-            width: 100
-        }, {
-            caption: 'AlertaRenovacion',
-            type: 'string',
-            width: 40
-        }, {
-            caption: 'Comprador',
-            type: 'string',
-            width: 200
-        }, {
-            caption: 'CorreoComprador',
-            type: 'string',
-            width: 200
-        }, {
-            caption: 'Utilidad',
-            type: 'string',
-            width: 200
-        }, {
-            caption: 'Comentarios',
-            type: 'string',
-            width: 200
-        }
-    ];
-    base.exportList(req, res, entity, includes, excelMapper, cols, 'InventarioLicencias');
-}
 module.exports = {
     list: list,
     action: action,
@@ -358,33 +182,7 @@ function excel(req, res) {
     var condition = "";
     logger.debug("En getExcel");
     var conf = {}
-/*
-Contrato
-O.C.
-CUI
-SAP
-Fabricante
-Proveedor
-Software
-¿Donde está instalada?
-Clasificación
-Tipo de Licenciamiento
-Fecha Compra
-Fecha Expiración
-Perpetua
-N° Lic Compradas
-Moneda
-Valor Licencias
-Valor Soportes
-Fecha Renovación Soporte
-Factura
-Cant. Compradas
-N° Lic. Instaladas
-Alerta de Renovación
-Comprador
-Correo Comprador
-Comentarios
-*/
+
     conf.cols = [{
       caption: 'id',
       type: 'number',
@@ -396,25 +194,35 @@ Comentarios
         width: 10
       },
       {
+        caption: 'O.C.',
+        type: 'string',
+        width: 10
+      },      
+      {
         caption: 'CUI',
         type: 'string',
-        width: 40
+        width: 10
       },
       {
         caption: 'SAP',
         type: 'string',
-        width: 40
+        width: 10
       },
       {
         caption: 'Fabricante',
         type: 'string',
-        width: 20
+        width: 40
       },
       {
         caption: 'Proveedor',
         type: 'string',
-        width: 10
+        width: 40
       },
+      {
+        caption: 'Software',
+        type: 'string',
+        width: 40
+      },      
       {
         caption: '¿Donde está instalada?',
         type: 'string',
@@ -433,62 +241,62 @@ Comentarios
       {
         caption: 'Fecha Compra',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'Fecha Expiración',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'Perpetua',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'N° Lic Compradas',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'Moneda',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'Valor Licencias',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
-        caption: 'Valor Soportes',
+        caption: 'Valor Soporte',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'Fecha Renovación Soporte',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'Factura',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'Cant. Compradas',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'N° Lic. Instaladas',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'Alerta de Renovación',
         type: 'string',
-        width: 30
+        width: 10
       },
       {
         caption: 'Comprador',
@@ -503,11 +311,14 @@ Comentarios
       {
         caption: 'Comentarios',
         type: 'string',
-        width: 30
+        width: 50
       }
     ];
   
-    var sql = "SELECT a.*, b.*, c.id idFabricante, h.razonsocial, c.nombre nombreFab, d.id idClasificacion, d.nombre nombreClas, "+
+    var sql = "SELECT a.*, b.id, b.idproducto, b.contrato, b.ordencompra, b.idcui, b.sap, b.idproveedor, convert(VARCHAR(10), b.fechacompra,105) fechacompra, "+
+    "convert(VARCHAR(10), b.fechaexpiracion,105) fechaexpiracion, convert(VARCHAR(10), b.liccompradas) liccompradas, "+
+    "b.cantidadsoporte, b.idmoneda, Format( valorlicencia ,'N','en-US' ) valorlicencia, Format( valorsoporte ,'N','en-US' ) valorsoporte, convert(VARCHAR(10), b.fecharenovasoporte,105) fecharenovasoporte, b.factura, b.comprador, b.correocomprador, "+
+    "b.alertarenovacion, b.perpetua, b.fechacambioalerta, c.id idFabricante, h.razonsocial, c.nombre nombreFab, d.id idClasificacion, d.nombre nombreClas, "+
     "e.id idTipoLic, e.nombre nombreTipoLic, f.id idTipoInst, f.nombre nombreTipoInst, g.moneda  "+
     "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto  "+
     "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id  "+
@@ -515,18 +326,13 @@ Comentarios
     "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id  "+
     "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id  "+
     "LEFT JOIN sip.moneda g on b.idmoneda = g.id  "+
-    "LEFT JOIN sip.proveedor h ON b.idproveedor=h.id ";
-  
+    "LEFT JOIN sip.proveedor h ON b.idproveedor=h.id";
+    console.log("query excel:"+sql);
     sequelize.query(sql)
       .spread(function (planilla) {
         var arr = []
         for (var i = 0; i < planilla.length; i++) {
-/*id, idfabricante, nombre, idtipoinstalacion, idclasificacion, idtipolicenciamiento, licstock, licocupadas, alertarenovacion, comentarios,
- lictramite, ilimitado, snow, addm, estado, id, idproducto, contrato, ordencompra, idcui, sap, idproveedor, fechacompra, fechaexpiracion,
-  liccompradas, cantidadsoporte, idmoneda, valorlicencia, valorsoporte, fecharenovasoporte, factura, comprador, correocomprador, 
-  alertarenovacion, perpetua, fechacambioalerta, idFabricante, razonsocial, nombreFab, idClasificacion, nombreClas, idTipoLic, 
-  nombreTipoLic, idTipoInst, nombreTipoInst, moneda */ 
-          a = [i + 1, planilla[i].contrato,
+          var a = [i + 1, planilla[i].contrato,
             planilla[i].ordencompra,
             planilla[i].idcui,
             planilla[i].sap,
@@ -538,7 +344,7 @@ Comentarios
             planilla[i].nombreTipoLic,
             planilla[i].fechacompra,
             planilla[i].fechaexpiracion,
-            planilla[i].perpetua,
+            (planilla[i].perpetua==1)? 'Perpetua':'Transitoria',
             planilla[i].licstock,
             planilla[i].moneda,
             planilla[i].valorlicencia,
@@ -547,12 +353,14 @@ Comentarios
             planilla[i].factura,
             planilla[i].liccompradas,
             planilla[i].licocupadas,
-            planilla[i].alertarenovacion,
+            (planilla[i].alertarenovacion == 'bAl Dia' || planilla[i].alertarenovacion == 'aGris') ? planilla[i].alertarenovacion.substring(1):planilla[i].alertarenovacion,
             planilla[i].comprador,
             planilla[i].correocomprador,
-            planilla[i].comentarios,                        
+            planilla[i].comentarios                        
           ];
           arr.push(a);
+          console.log(a);
+          console.log("JSON:"+JSON.stringify(a));
         }
         conf.rows = arr;
   
@@ -562,7 +370,7 @@ Comentarios
         res.end(result, 'binary');
   
       }).catch(function (err) {
-        logger.err(err);
+        logger.error(err);
         res.json({ error_code: 100 });
       });
   
