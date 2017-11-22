@@ -100,7 +100,7 @@ object SendEmail {
       alert.get.criticality.get.toInt match {
         case 1=> alert_criticality = "Alto"
         case 2=> alert_criticality = "Medio"
-        case 3=> alert_criticality = "\t\t\toptions(\"1\"->\"Alto\", \"2\"->\"Medio\",\"3\"->\"Bajo\"),"
+        case 3=> alert_criticality = "Bajo"
 
       }
 
