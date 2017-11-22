@@ -953,6 +953,7 @@ object UserService extends CustomColumns {
    * get user derails by Id
    */
   def findUserDetails(uId: Integer) = {
+    println("ENTRO A LA WEA " + uId)
     DB.withConnection { implicit connection =>
       val result = SQL(
         "select * from art_user where uId = {uId}").on(

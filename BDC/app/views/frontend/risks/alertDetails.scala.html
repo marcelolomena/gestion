@@ -92,12 +92,28 @@
                     </tr>
 
                     <tr>
-                        <td class="table_header"><strong>Responsables</strong></td>
+                        <td class="table_header"><strong>Fecha Inicio</strong></td>
                         <td class="p_values width380px">
-                            @alert.get.person_invloved
+                            @alert.get.event_date
                         </td>
                         <td class="table_header"><strong>Responsables</strong></td>
                         <td class="p_values">
+                            @for(s <- alert.get.person_invloved.get.split(",")) {
+                            <div class="width_full">
+                                @UserService.findUserDetails(s.toInt).get.first_name @UserService.findUserDetails(s.toInt).get.last_name
+                            </div>
+                            }
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="table_header"><strong>Fecha Cierre</strong></td>
+                        <td class="p_values width380px">
+                            @alert.get.change_state.get.format("yyyy-MM-dd")
+                        </td>
+                        <td class="table_header"><strong>Intentos</strong></td>
+                        <td class="p_values">
+                            @alert.get.reiteration
                         </td>
                     </tr>
 
