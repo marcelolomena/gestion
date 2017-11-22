@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define('reservaSolicitud', {
+    return sequelize.define('reserva', {
         id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -39,7 +39,8 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: true
         },
-        comentario: {
+        comentarioSolicitud: {
+            field: 'comentariosolicitud',
             type: DataTypes.STRING,
             allowNull: true
         },
@@ -60,10 +61,30 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'art_user',
                 key: 'id'
             }
+        },
+        fechaAprobacion: {
+            field: 'fechaaprobacion',
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        comentarioSolicitud: {
+            field: 'comentariosolicitud',
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        fechaAprobacion: {
+            field: 'fechaaprobacion',
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        comentarioAutorizacion: {
+            field: 'comentarioautorizacion',
+            type: DataTypes.STRING,
+            allowNull: true
         }
     }, {
         schema: 'lic',
         timestamps: false,
-        tableName: 'reservasolicitud'
+        tableName: 'reserva'
     });
 };
