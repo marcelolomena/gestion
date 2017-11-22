@@ -1175,6 +1175,51 @@ object RiskService extends CustomColumns {
     }
   }
 
+  def countCurrentAlerts(alert_id: String): Long = {
+    DB.withConnection { implicit connection =>
+      val count: Long = SQL("""
+         SELECT count(*) cant FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
+         WHERE b.description = 'Vigente' AND a.is_active = 1 AND b.is_active = 1 AND a.risk_id = (SELECT risk_id FROM art_risk_alert WHERE id = {alert_id})
+        """)
+        .on(
+          'alert_id -> alert_id).as(scalar[Long].single)
+
+      count;
+    }
+  }
+
+  def riskCategory(id: String): String = {
+    DB.withConnection { implicit connection =>
+     SQL("""
+           SELECT b.category_name FROM art_risk a JOIN art_risk_category b ON a.risk_category = b.id
+           WHERE a.id = (SELECT risk_id FROM art_risk_alert WHERE id = {id})
+        """)
+        .on(
+          'id -> id).as(scalar[String].single)
+    }
+  }
+
+  def riskState(id: String): String = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+            SELECT b.state_name FROM art_risk a JOIN art_risk_state b ON a.risk_state = b.id
+            WHERE a.id = (SELECT risk_id FROM art_risk_alert WHERE id = {id})
+        """)
+        .on(
+          'id -> id).as(scalar[String].single)
+    }
+  }
+/**/
+  def riskImapct(id: String): String = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+            SELECT a.imapct FROM art_risk a WHERE a.id = (SELECT risk_id FROM art_risk_alert WHERE id = {id})
+        """)
+        .on(
+          'id -> id).as(scalar[String].single)
+    }
+  }
+
   def countRisk(parent_id: String, probablity: Int, impact: Int): Long = {
     DB.withConnection { implicit connection =>
       val count1: Long = SQL("""
@@ -1711,7 +1756,7 @@ object RiskService extends CustomColumns {
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(RiskCategory.category *)
     }
-  }    
+  }
 
   def riskAutomaticAlert() {
     val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
