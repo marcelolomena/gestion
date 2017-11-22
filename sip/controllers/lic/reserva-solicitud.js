@@ -51,7 +51,7 @@ function mapper(data) {
             fechaSolicitud: base.fromDate(item.fechaSolicitud),
             cui: item.cui,
             sap: item.sap,
-            comentario: item.comentario,
+            comentarioSolicitud: item.comentarioSolicitud,
             idEstado: item.idEstado,
             estado: {
                 nombre: item.parametro.nombre

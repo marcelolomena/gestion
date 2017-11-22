@@ -7,7 +7,7 @@
         var gridID = divid + '_t';
         var pagerID = 'p_' + gridID;
         $('#' + divid).append('<table id=' + gridID + '></table><div id=' + pagerID + ' class=scroll></div>');
-        detalleCompraTramiteGrid.renderGrid(url, gridID);
+        viewreservaaprobacionGrid.renderGrid(url, gridID);
     }
 
     function beforeShowForm(form){
@@ -55,7 +55,7 @@
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'producto.nombre',
-                width: 250,
+                width: 350,
                 align: 'center',
                 sortable: false,
                 editable: true,
@@ -140,7 +140,7 @@
             {
                 label: 'Comentario',
                 name: 'comentarioSolicitud',
-                width: 500,
+                width: 700,
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
@@ -152,7 +152,6 @@
                 },
                 search: false
             }
-
         ];
         initGrid(viewModel);
     });
