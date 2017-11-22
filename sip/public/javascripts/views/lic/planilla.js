@@ -3,23 +3,23 @@
     var zs = window.zs;
 
     function beforeSubmit(postdata, formid) {
-        if (!postdata.idFabricante) {
+        if (!postdata.idfabricante) {
             return [false, "Fabricante: Debe escoger un valor.", ""];
-        } else if (!postdata.idProveedor) {
+        } else if (!postdata.idproveedor) {
             return [false, "Proveedor: Debe escoger un valor.", ""];
         } else if (postdata.nombre.trim().length == 0) {
             return [false, "Software: Debe ingresar un software.", ""];
-        } else if (!postdata.idTipoInstalacion) {
+        } else if (!postdata.idtipoinstalacion) {
             return [false, "¿Donde está instalada?: Debe escoger un valor.", ""];
-        } else if (!postdata.idClasificacion) {
+        } else if (!postdata.idclasificacion) {
             return [false, "Clasificación: Debe escoger un valor.", ""];
-        } else if (!postdata.idTipoLicenciamiento) {
+        } else if (!postdata.idtipolicenciamiento) {
             return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
-        } else if (postdata.licCompradas.trim().length == 0) {
+        } else if (postdata.liccompradas.trim().length == 0) {
             return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
-        } else if (!postdata.idMoneda) {
+        } else if (!postdata.idmoneda) {
             return [false, "Moneda: Debe escoger un valor.", ""];
-        } else if (postdata.valorSoporte.trim().length == 0) {
+        } else if (postdata.valorsoporte.trim().length == 0) {
             return [false, "Valor Soportes: Debe ingresar un valor.", ""];
         } else {
             return [true, "", ""];
@@ -108,7 +108,7 @@
         }, {
             label: 'Fabricante',
             name: 'idfabricante',
-            jsonmap: 'fabricante.nombre',
+            jsonmap: 'nombreFab',
             width: 180,
             align: 'center',
             sortable: false,
@@ -140,7 +140,7 @@
         }, {
             label: 'Proveedor',
             name: 'idproveedor',
-            jsonmap: 'proveedor.nombre',
+            jsonmap: 'razonsocial',
             width: 300,
             align: 'center',
             sortable: false,
@@ -162,6 +162,7 @@
         }, {
             label: 'Software',
             name: 'nombre',
+            sortable: false,
             width: 200,
             align: 'center',
             editable: true,
@@ -172,7 +173,7 @@
         }, {
             label: '¿Donde está instalada?',
             name: 'idtipoinstalacion',
-            jsonmap: 'tipoInstalacion.nombre',
+            jsonmap: 'nombreTipoInst',
             width: 160,
             align: 'center',
             editable: true,
@@ -204,7 +205,7 @@
         }, {
             label: 'Clasificación',
             name: 'idclasificacion',
-            jsonmap: 'clasificacion.nombre',
+            jsonmap: 'nombreClas',
             width: 150,
             align: 'center',
             sortable: false,
@@ -236,7 +237,7 @@
         }, {
             label: 'Tipo de Licenciamiento',
             name: 'idtipolicenciamiento',
-            jsonmap: 'tipoLicenciamiento.nombre',
+            jsonmap: 'nombreTipoLic',
             width: 170,
             align: 'center',
             sortable: false,
@@ -268,7 +269,7 @@
         }, {
             label: 'Fecha Compra',
             name: 'fechacompra',
-            width: 200,
+            width: 125,
             align: 'center',
             sortable: false,
             editable: true,
@@ -301,7 +302,7 @@
             label: 'Fecha Expiración',
             name: 'fechaexpiracion',
             align: 'center',
-            width: 200,
+            width: 125,
             sortable: false,
             editable: true,
             formatter: function (cellvalue, options, rowObject) {
@@ -330,6 +331,32 @@
             },
             search: false
         }, {
+            label: 'Perpetua',
+            name: 'perpetua',
+            align: 'center',
+            width: 70,
+            sortable: false,
+            editable: true,
+            search: false,
+            edittype: "custom",
+            editoptions: {
+                custom_value: sipLibrary.getRadioElementValue,
+                custom_element: sipLibrary.radioElemPerpetua               
+            },            
+            formatter: function (cellvalue, options, rowObject) {
+                var val = rowObject.perpetua;
+                if (val != null) {
+                    if (val == 1)
+                        return 'Perpetua';
+                    else 
+                        return 'Suscripción';
+                } else {
+                    return '';
+                }
+            },
+        
+        },
+        {
             label: 'N° Lic Compradas',
             name: 'liccompradas',
             width: 125,
@@ -348,7 +375,7 @@
         }, {
             label: 'Moneda',
             name: 'idmoneda',
-            jsonmap: 'moneda.nombre',
+            jsonmap: 'moneda',
             width: 70,
             align: 'center',
             sortable: false,
@@ -440,16 +467,18 @@
             search: false
         },
         {
-            label: 'N° Lic. Adquiridas',
+            label: 'Cant. Compradas',
             name: 'licstock',
             width: 125,
             align: 'center',
             sortable: false,
-            editable: false,
+            editable: true,
             editoptions: {
                 defaultValue: '0'
             },
-            formatter: 'integer',
+            formatter: function (cellvalue, options, rowObject) {
+                return rowObject.ilimitado ? 'Ilimitado' : cellvalue;
+            },            
             search: false
         }, {
             label: 'N° Lic. Instaladas',
@@ -470,7 +499,29 @@
             align: 'center',
             sortable: false,
             editable: false,
-            search: false
+            search: false,
+            formatter: function (cellvalue, options, rowObject) {
+                var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
+                var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
+                if(rowObject.alertarenovacion === 'aGris'){
+                    return gris;
+                }else{
+                    if (rowObject.alertarenovacion === 'Vencida') {
+                        return rojo;
+                    } else {
+                        if (rowObject.alertarenovacion === 'Renovar') {
+                            return amarillo;
+                        } else {
+                            if (rowObject.alertarenovacion === 'bAl Dia')
+                            
+                            
+                            return verde;
+                        }
+                    }    
+                }   
+            }            
         }, {
             label: 'Comprador',
             name: 'comprador',

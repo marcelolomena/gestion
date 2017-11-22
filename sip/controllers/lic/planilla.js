@@ -34,89 +34,6 @@ var includes = [
 ];
 var childEntity = models.compra;
 
-function map(req) {
-    return {
-        id: req.body.idProducto || 0,
-        idFabricante: req.body.idFabricante,
-        nombre: req.body.nombre,
-        idTipoInstalacion: req.body.idTipoInstalacion,
-        idClasificacion: req.body.idClasificacion,
-        idTipoLicenciamiento: req.body.idTipoLicenciamiento,
-        licStock: req.body.licCompradas,
-        licOcupadas: req.body.licOcupadas,
-        utilidad: req.body.utilidad,
-        idFabricante: req.body.idFabricante,
-        comentarios: req.body.comentarios,
-        compra: {
-            id: req.body.id || 0,
-            idProducto: req.body.idProducto,
-            contrato: req.body.contrato,
-            ordenCompra: req.body.ordenCompra,
-            idCui: req.body.idCui || null,
-            sap: req.body.sap,
-            idProveedor: req.body.idProveedor,
-            fechaCompra: req.body.fechaCompra,
-            fechaExpiracion: req.body.fechaExpiracion,
-            licCompradas: req.body.licCompradas,
-            idMoneda: req.body.idMoneda,
-            valorLicencia: req.body.valorLicencia,
-            valorSoporte: req.body.valorSoporte,
-            fechaRenovaSoporte: req.body.fechaRenovaSoporte,
-            factura: req.body.factura,
-            comprador: req.body.comprador,
-            correoComprador: req.body.correoComprador
-        }
-    };
-
-}
-function mapper(data) {
-    var result = [];
-    _.each(data, function (item) {
-        if (item.compras) {
-            _.each(item.compras, function (sItem) {
-                result.push({
-                    id: sItem.id,
-                    idProducto: item.id,
-                    contrato: sItem.contrato,
-                    ordenCompra: sItem.ordenCompra,
-                    idCui: sItem.idCui,
-                    sap: sItem.sap,
-                    idFabricante: item.idFabricante,
-                    idProveedor: sItem.idProveedor,
-                    nombre: item.nombre,
-                    idTipoInstalacion: item.idTipoInstalacion,
-                    idClasificacion: item.idClasificacion,
-                    idTipoLicenciamiento: item.idTipoLicenciamiento,
-                    licStock: item.licStock,
-                    comentarios: item.comentarios,
-                    licOcupadas: item.licOcupadas,
-                    fechaCompra: sItem.fechaCompra,
-                    fechaExpiracion: sItem.fechaExpiracion,
-                    licCompradas: sItem.licCompradas,
-                    cantidadSoporte: sItem.cantidadSoporte,
-                    idMoneda: sItem.idMoneda,
-                    valorLicencia: sItem.valorLicencia,
-                    valorSoporte: sItem.valorSoporte,
-                    fechaRenovaSoporte: sItem.fechaRenovaSoporte,
-                    factura: sItem.factura,
-                    comprador: sItem.comprador,
-                    correoComprador: sItem.correoComprador,
-                    alertaRenovacion: item.alertaRenovacion ? 'Al día' : 'Vencida',
-                    utilidad: item.utilidad,
-                    fabricante: { nombre: item.fabricante ? item.fabricante.nombre : '' },
-                    clasificacion: { nombre: item.clasificacion ? item.clasificacion.nombre : '' },
-                    tipoInstalacion: { nombre: item.tipoInstalacion ? item.tipoInstalacion.nombre : '' },
-                    tipoLicenciamiento: { nombre: item.tipoLicenciamiento ? item.tipoLicenciamiento.nombre : '' },
-                    moneda: { nombre: sItem.moneda.moneda },
-                    cui: { nombre: sItem.estructuracuibch ? sItem.estructuracuibch.cui : '' },
-                    estructuracui: { nombre: sItem.estructuracuibch ? sItem.estructuracuibch.cui : '' },
-                    proveedor: { nombre: sItem.proveedor.razonsocial }
-                });
-            });
-        }
-    });
-    return result;
-}
 function excelMapper(data) {
     var result = [];
     _.each(data, function (item) {
@@ -155,102 +72,60 @@ function excelMapper(data) {
     return result;
 }
 
-
-function listxxx(req, res, entity, includes, transformer) {
-    var page = parseInt(req.query.page);
-    var rows = parseInt(req.query.rows);
-    var orden = [[req.query.sidx || 'id', req.query.sord || 'desc']];
-    var whereClause = base.getFilters(req.query.filters);
-
-    return entity.findAll({
-        where: whereClause,
-        order: orden,
-        include: includes
-    }).then(function (data) {
-        var resultData = transformer(data);
-        var records = resultData.length;
-        var total = Math.ceil(records / rows);
-        var ini = rows * (page - 1);
-        var fin = ini + rows;
-        var result = _.filter(resultData, function (item, index) {
-            return index >= ini && index < fin;
-        });
-        return res.json({ records: records, total: total, page: page, rows: result });
-    }).catch(function (err) {
-        logger.error(err.message);
-        return res.json({ error_code: 1 });
-    });
-}
-function create(entity, data, res) {
-    entity.create(data).then(function (created) {
-        data.compra.idProducto = created.id;
-        childEntity.create(data.compra).then(function (created) {
-            return res.json({ error: 0, glosa: '' });
-        }).catch(function (err) {
-            logger.error(err);
-            return res.json({ error: 1, glosa: err.message });
-        });
-    }).catch(function (err) {
-        logger.error(err);
-        return res.json({ error: 1, glosa: err.message });
-    });
-}
-
-
-
 function update(entity, data, res) {
-    var oc = data.compra.ordenCompra == "" ? "NULL" : data.compra.ordenCompra;
-    var sap = data.compra.sap == "" ? "NULL" : data.compra.sap;
-    var idcui = data.compra.idCui == "0" ? "NULL" : data.compra.idCui;
+    var oc = data.ordencompra == "" ? "NULL" : data.ordencompra;
+    var sap = data.sap == "" ? "NULL" : data.sap;
+    var idcui = data.idcui == "0" ? "NULL" : data.idcui;
     var sql = "UPDATE lic.compra SET " +
-        "idproducto = " + data.compra.idProducto + ", " +
-        "contrato = '" + data.compra.contrato + "', " +
+        "idproducto = " + data.idproducto + ", " +
+        "contrato = '" + data.contrato + "', " +
         "ordencompra = " + oc + ", " +
         "idcui =" + idcui + ", " +
         "sap = " + sap + ", " +
-        "idproveedor = " + data.compra.idProveedor + ", ";
-    console.log("fechacompra:'" + data.compra.fechaCompra + "', " + data.compra.fechaCompra.length);
-    if (data.compra.fechaCompra.length > 0) {
-        sql = sql + "fechacompra = '" + base.strToDateDB(data.compra.fechaCompra) + "', ";
+        "perpetua = " + data.perpetua + ", " +
+        "idproveedor = " + data.idproveedor + ", ";
+    console.log("fechacompra:'" + data.fechacompra + "', " + data.fechacompra.length);
+    if (data.fechacompra.length > 0) {
+        sql = sql + "fechacompra = '" + base.strToDateDB(data.fechacompra) + "', ";
     } else {
         sql = sql + "fechacompra = NULL, ";
     }
 
-    if (data.compra.fechaExpiracion.length > 0) {
-        sql = sql + "fechaexpiracion = '" + base.strToDateDB(data.compra.fechaExpiracion) + "', ";
+    if (data.fechaexpiracion.length > 0) {
+        sql = sql + "fechaexpiracion = '" + base.strToDateDB(data.fechaexpiracion) + "', ";
     } else {
-        sql = sql + "fechaExpiracion = NULL, ";
+        sql = sql + "fechaexpiracion = NULL, ";
     }
-    sql = sql + "liccompradas = " + data.compra.licCompradas + ", ";
-    sql = sql + "idmoneda = " + data.compra.idMoneda + ", ";
-    sql = sql + "valorlicencia = " + data.compra.valorLicencia + ", ";
-    sql = sql + "valorsoporte = " + data.compra.valorSoporte + ", ";
-    if (data.compra.factura.length > 0) {
-        sql = sql + "factura = " + data.compra.factura + ", ";
+    sql = sql + "liccompradas = " + data.liccompradas + ", ";
+    sql = sql + "idmoneda = " + data.idmoneda + ", ";
+    sql = sql + "valorlicencia = " + data.valorlicencia + ", ";
+    sql = sql + "valorsoporte = " + data.valorsoporte + ", ";
+    if (data.factura.length > 0) {
+        sql = sql + "factura = " + data.factura + ", ";
     } else {
         sql = sql + "factura = NULL, ";
     }
-    if (data.compra.fechaRenovaSoporte.length > 0) {
-        sql = sql + "fecharenovasoporte = '" + base.strToDateDB(data.compra.fechaRenovaSoporte) + "', ";
+    if (data.fecharenovasoporte.length > 0) {
+        sql = sql + "fecharenovasoporte = '" + base.strToDateDB(data.fecharenovasoporte) + "', ";
     } else {
         sql = sql + "fecharenovasoporte = NULL, ";
     }
-    sql = sql + "comprador = '" + data.compra.comprador + "', ";
-    sql = sql + "correocomprador ='" + data.compra.correoComprador;
-    sql = sql + "' where id=" + data.compra.id;
+    sql = sql + "comprador = '" + data.comprador + "', ";
+    sql = sql + "correocomprador ='" + data.correocomprador;
+    sql = sql + "' where id=" + data.id;
     console.log("sql:" + sql);
     sequelize.query(sql
     ).then(function (updated) {
         var sql2 = "UPDATE lic.producto " +
-            "SET idfabricante = " + data.idFabricante + ", " +
-            "idtipoinstalacion =" + data.idTipoInstalacion + ", " +
-            "idclasificacion =" + data.idClasificacion + ", " +
-            "idtipolicenciamiento =" + data.idTipoLicenciamiento + ", " +
-            "licstock = " + data.licStock + ", " +
-            "licocupadas =" + data.licOcupadas + ", " +
+            "SET idfabricante = " + data.idfabricante + ", " +
+            "idtipoinstalacion =" + data.idtipoinstalacion + ", " +
+            "idclasificacion =" + data.idclasificacion + ", " +
+            "idtipolicenciamiento =" + data.idtipolicenciamiento + ", " +
+            "licstock = " + data.licstock + ", " +
+            "licocupadas =" + data.licocupadas + ", " +
             "comentarios ='" + data.comentarios + "', " +
             "nombre ='" + data.nombre + "' " +
-            "where id='" + data.id + "'";
+            "where id='" + data.idproducto + "'";
         console.log("sql2:" + sql2);
         sequelize.query(sql2).then(function (updated) {
             return res.json({ error: 0, glosa: '' });
@@ -279,11 +154,6 @@ function destroy(entity, id, res) {
 
     });
 }
-
-function listMalo(req, res) {
-    listxxx(req, res, entity, includes, mapper);
-}
-
 
 function list(req, res) {
     var page = req.query.page;
@@ -320,14 +190,15 @@ function list(req, res) {
       "SELECT @PageSize=" + rowspp + "; " +
       "DECLARE @PageNumber INT; " +
       "SELECT @PageNumber=" + page + "; " +
-      "SELECT a.*, b.*, c.id idFabricante, c.nombre nombreFab, d.id idClasificacion, d.nombre nombreClas, "+
-      "e.id idTipoLic, e.nombre nombreTipoLic, f.id idTipoInst, f.nombre nombreTipoInst, g.moneda "+     
+      "SELECT a.*, b.*, h.razonsocial, c.nombre nombreFab, d.nombre nombreClas, "+
+      "e.nombre nombreTipoLic, f.nombre nombreTipoInst, g.moneda "+     
       "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto "+
       "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id "+
       "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id "+
       "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id "+
       "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id "+
-      "LEFT JOIN sip.moneda g on b.idmoneda = g.id";
+      "LEFT JOIN sip.moneda g on b.idmoneda = g.id "+
+      "LEFT JOIN sip.proveedor h ON b.idproveedor=h.id ";
     if (filters && condition != "") {
       sql += "WHERE " + condition + " ";
       logger.debug("**" + sql + "**");
@@ -356,13 +227,13 @@ function action(req, res) {
         case 'add':
             return create(entity, map(req), res);
         case 'edit':
-            return update(entity, map(req), res);
+            return update(entity, req.body, res);
         case 'del':
             return destroy(entity, req.body.id, res);
     }
 }
 
-function excel(req, res) {
+function excelOld(req, res) {
     var cols = [
         {
             caption: 'Contrato',
@@ -477,3 +348,222 @@ module.exports = {
     action: action,
     excel: excel
 }
+
+function excel(req, res) {
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var condition = "";
+    logger.debug("En getExcel");
+    var conf = {}
+/*
+Contrato
+O.C.
+CUI
+SAP
+Fabricante
+Proveedor
+Software
+¿Donde está instalada?
+Clasificación
+Tipo de Licenciamiento
+Fecha Compra
+Fecha Expiración
+Perpetua
+N° Lic Compradas
+Moneda
+Valor Licencias
+Valor Soportes
+Fecha Renovación Soporte
+Factura
+Cant. Compradas
+N° Lic. Instaladas
+Alerta de Renovación
+Comprador
+Correo Comprador
+Comentarios
+*/
+    conf.cols = [{
+      caption: 'id',
+      type: 'number',
+      width: 3
+    },
+      {
+        caption: 'Contrato',
+        type: 'string',
+        width: 10
+      },
+      {
+        caption: 'CUI',
+        type: 'string',
+        width: 40
+      },
+      {
+        caption: 'SAP',
+        type: 'string',
+        width: 40
+      },
+      {
+        caption: 'Fabricante',
+        type: 'string',
+        width: 20
+      },
+      {
+        caption: 'Proveedor',
+        type: 'string',
+        width: 10
+      },
+      {
+        caption: '¿Donde está instalada?',
+        type: 'string',
+        width: 15
+      },
+      {
+        caption: 'Clasificación',
+        type: 'string',
+        width: 15
+      },
+      {
+        caption: 'Tipo de Licenciamiento',
+        type: 'string',
+        width: 15
+      },
+      {
+        caption: 'Fecha Compra',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Fecha Expiración',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Perpetua',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'N° Lic Compradas',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Moneda',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Valor Licencias',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Valor Soportes',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Fecha Renovación Soporte',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Factura',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Cant. Compradas',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'N° Lic. Instaladas',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Alerta de Renovación',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Comprador',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Correo Comprador',
+        type: 'string',
+        width: 30
+      },
+      {
+        caption: 'Comentarios',
+        type: 'string',
+        width: 30
+      }
+    ];
+  
+    var sql = "SELECT a.*, b.*, c.id idFabricante, h.razonsocial, c.nombre nombreFab, d.id idClasificacion, d.nombre nombreClas, "+
+    "e.id idTipoLic, e.nombre nombreTipoLic, f.id idTipoInst, f.nombre nombreTipoInst, g.moneda  "+
+    "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto  "+
+    "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id  "+
+    "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id  "+
+    "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id  "+
+    "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id  "+
+    "LEFT JOIN sip.moneda g on b.idmoneda = g.id  "+
+    "LEFT JOIN sip.proveedor h ON b.idproveedor=h.id ";
+  
+    sequelize.query(sql)
+      .spread(function (planilla) {
+        var arr = []
+        for (var i = 0; i < planilla.length; i++) {
+/*id, idfabricante, nombre, idtipoinstalacion, idclasificacion, idtipolicenciamiento, licstock, licocupadas, alertarenovacion, comentarios,
+ lictramite, ilimitado, snow, addm, estado, id, idproducto, contrato, ordencompra, idcui, sap, idproveedor, fechacompra, fechaexpiracion,
+  liccompradas, cantidadsoporte, idmoneda, valorlicencia, valorsoporte, fecharenovasoporte, factura, comprador, correocomprador, 
+  alertarenovacion, perpetua, fechacambioalerta, idFabricante, razonsocial, nombreFab, idClasificacion, nombreClas, idTipoLic, 
+  nombreTipoLic, idTipoInst, nombreTipoInst, moneda */ 
+          a = [i + 1, planilla[i].contrato,
+            planilla[i].ordencompra,
+            planilla[i].idcui,
+            planilla[i].sap,
+            planilla[i].nombreFab,
+            planilla[i].razonsocial,
+            planilla[i].nombre,
+            planilla[i].nombreTipoInst,
+            planilla[i].nombreClas,
+            planilla[i].nombreTipoLic,
+            planilla[i].fechacompra,
+            planilla[i].fechaexpiracion,
+            planilla[i].perpetua,
+            planilla[i].licstock,
+            planilla[i].moneda,
+            planilla[i].valorlicencia,
+            planilla[i].valorsoporte,
+            planilla[i].fecharenovasoporte,
+            planilla[i].factura,
+            planilla[i].liccompradas,
+            planilla[i].licocupadas,
+            planilla[i].alertarenovacion,
+            planilla[i].comprador,
+            planilla[i].correocomprador,
+            planilla[i].comentarios,                        
+          ];
+          arr.push(a);
+        }
+        conf.rows = arr;
+  
+        var result = nodeExcel.execute(conf);
+        res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+        res.setHeader("Content-Disposition", "attachment;filename=" + "InventarioLicencias.xlsx");
+        res.end(result, 'binary');
+  
+      }).catch(function (err) {
+        logger.err(err);
+        res.json({ error_code: 100 });
+      });
+  
+  };

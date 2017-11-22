@@ -307,5 +307,19 @@ var sipLibrary = {
         }
         return str;
 
-    }
+    },
+        radioElemPerpetua: function (value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="perpetua" value="1"',
+            breakline = '/>Perpetua</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="perpetua" value="0"',
+            endnaradio = '/>Suscripción</label>';
+
+        if (value === 'Perpetua') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === 'Suscripción') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+    },
 }
