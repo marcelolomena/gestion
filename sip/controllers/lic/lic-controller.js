@@ -85,7 +85,8 @@ function list(req, res, entity, includes, transformer) {
     var page = parseInt(req.query.page);
     var rows = parseInt(req.query.rows);
     var orden = [
-        [req.query.sidx || 'id', req.query.sord || 'asc']
+        [req.query.sidx, req.query.sord || 'asc']
+        // [req.query.sidx || 'id', req.query.sord || 'asc']
     ];
     var whereClause = getFilters(req.query.filters);
 
