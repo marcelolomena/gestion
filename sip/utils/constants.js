@@ -13,6 +13,10 @@ define("PMO", "PMO");
 define("ADMINISTRADOR", "ADMINISTRADOR");
 define("NEGOCIADOR", "NEGOCIADOR");
 define("CONTRATO", "CONTRATO");
+//define roles sistema licencias LIC
+define("USERLIC", "USERLIC");
+define("JEFELIC", "JEFELIC");
+define("ADMINLIC", "ADMINLIC");
 
 //Define constantes para log de transacciones, contiene id de tabla sip.transaccion
 //*contratos

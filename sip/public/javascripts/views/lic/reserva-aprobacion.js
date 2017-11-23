@@ -13,9 +13,9 @@
             {
                 label: 'Producto',
                 name: 'idProducto',
-                jsonmap: 'producto.nombre',
+                jsonmap: 'nombre',
                 align: 'center',
-                width: 100,
+                width: 200,
                 editable: true,
                 editoptions: {
                     fullRow: true,
@@ -28,10 +28,10 @@
                 search: false
             },
             {
-                label: 'Número de Licencias',
-                name: 'numero',
+                label: 'Cantidad',
+                name: 'numlicencia',
                 align: 'center',
-                width: 100,
+                width: 70,
                 editable: true,
                 editoptions: {
                     readonly: 'readonly'
@@ -44,33 +44,21 @@
             },
             {
                 label: 'Fecha de Uso',
-                name: 'fechaEstimada',
+                name: 'fechauso',
                 width: 110,
                 align: 'center',
                 sortable: false,
                 editable: true,
-                editoptions: {
-                    'data-provide': 'datepicker',
-                    dataInit: function (element) {
-                        $(element).mask("00-00-0000", {
-                            placeholder: "DD-MM-AAAA"
-                        });
-                        $(element).datepicker({
-                            language: 'es',
-                            weekStart: 1,
-                            format: 'dd-mm-yyyy',
-                            autoclose: true
-                        })
-                    },
-                    dataEvents: [{
-                        type: 'change',
-                        fn: function (e) {
-
-                        }
-                    }],
-                },
-                editrules: {
-                    required: true
+                formatter: function (cellvalue, options, rowObject) {
+                    //2017-12-31T00:00:00.000Z
+                    var val = rowObject.fechauso;
+                    if (val != null) {
+                        val = val.substring(0,10);
+                        var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                        return fechaok;
+                    } else {
+                        return '';
+                    }
                 },
                 search: false
             },
@@ -78,8 +66,8 @@
             {
                 label: 'CUI',
                 name: 'idCui',
-                jsonmap: 'cui.unidad',
-                width: 200,
+                jsonmap: 'cui',
+                width: 50,
                 align: 'center',
                 sortable: false,
                 editable: true,
@@ -102,13 +90,13 @@
                 label: 'SAP',
                 name: 'sap',
                 align: 'center',
-                width: 100,
+                width: 50,
                 editable: true,
                 search: false
             }, {
                 label: 'Comentario de Solicitud',
-                name: 'comentario',
-                width: 400,
+                name: 'comentariosolicitud',
+                width: 300,
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
@@ -122,7 +110,7 @@
                 },
                 search: false
             }, {
-                label: 'Estado de Aprobación',
+                label: 'Estado',
                 name: 'estado',
                 width: 90,
                 align: 'center',
@@ -152,8 +140,8 @@
             },
             {
                 label: 'Comentario de Aprobación',
-                name: 'comentario',
-                width: 400,
+                name: 'comentarioaprobacion',
+                width: 300,
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
@@ -166,7 +154,7 @@
                 search: false
             }
         ];
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Aprobación de Reserva', 'Editar Aprobación', 'Agregar Aprobación', '/lic/reserva', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Aprobación de Reserva', 'Editar Aprobación', 'Agregar Aprobación', '/lic/reserva-aprobacion', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         grid.build();
     });
 

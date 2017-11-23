@@ -32,6 +32,7 @@ var detalleRecepcionController = require('../controllers/lic/detalle-recepcion')
 var snowController = require('../controllers/lic/snow');
 var reservaSolicitudController = require('../controllers/lic/reserva-solicitud');
 var addmController = require('../controllers/lic/addm');
+var aprobacionController = require('../controllers/lic/reserva-aprobacion');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -177,8 +178,8 @@ module.exports = function (passport) {
         router.route('/lic/usuariocui')
         .get(isAuthenticated, reservaSolicitudController.usuariocui);
 
-    // router.route('/lic/reservaJ')
-    //     .get(isAuthenticated, reservaController.getPresupuestoPaginados);
+    router.route('/lic/reserva-aprobacion')
+         .get(isAuthenticated, aprobacionController.list);
 
 
     return router;
