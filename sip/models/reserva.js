@@ -44,14 +44,9 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
-        idEstado: {
-            field: 'idestado',
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            references: {
-                model: 'parametro',
-                key: 'id'
-            }
+        estado: {
+            type: DataTypes.STRING,
+            allowNull: true
         },
         idUsuario: {
             field: 'idusuario',

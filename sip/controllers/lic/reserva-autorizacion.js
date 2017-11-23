@@ -186,7 +186,12 @@ function listAprobados(req, res) {
                                     producto: {
                                         nombre: item.producto.nombre
                                     },
-                                    numLicencia: item.numlicencia
+                                    numLicencia: item.numlicencia,
+                                    fechaUso: base.fromDate(item.fechaUso),
+                                    cui: item.cui,
+                                    sap: item.sap,
+                                    comentarioSolicitud: item.comentarioSolicitud,
+                                    estadoAprobacion: item.estadoAprobacion
                                 });
                             }
                         });

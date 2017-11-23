@@ -59,8 +59,7 @@
                 search: false
             }, {
                 label: 'CUI',
-                name: 'idCui',
-                jsonmap: 'cui.unidad',
+                name: 'cui',
                 align: 'center',
                 width: 100,
                 editable: true,
@@ -74,7 +73,7 @@
                 search: false
             }, {
                 label: 'Comentario de Solicitud',
-                name: 'comentario',
+                name: 'comentarioSolicitud',
                 width: 400,
                 hidden: false,
                 editable: true,
@@ -86,7 +85,7 @@
             }, 
             {
                 label: 'Estado de Aprobación',
-                name: 'estado',
+                name: 'estadoAprobacion',
                 width: 90,
                 align: 'center',
                 hidden: true,
