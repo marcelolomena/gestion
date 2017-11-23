@@ -20,7 +20,6 @@ import play.Play
 import play.api.Play.current
 import play.api.GlobalSettings
 import play.api.Logger
-
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import akka.actor.Props
 import utils.ImportFromExcel
@@ -33,6 +32,7 @@ import akka.actor._
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
 //import play.libs.Time.CronExpression
+import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import org.omg.CosNaming.NamingContextPackage.NotFound
@@ -42,6 +42,8 @@ import java.io.IOException
 import java.io.FileNotFoundException
 import scala.io.Source
 import java.io.{ FileReader, FileNotFoundException, IOException }
+
+case object Message
 
 object Global extends GlobalSettings {
 
@@ -59,7 +61,19 @@ object Global extends GlobalSettings {
     Results.BadRequest("Bad Request: " + error)
   }*/
 
+  def startScheduler(akkaSystem: ActorSystem) {
+    val scheduler = QuartzSchedulerExtension(akkaSystem)
+
+    val dailyBatch01 = akkaSystem.actorOf(Props[DailyBatch01])
+
+    scheduler.schedule("Every15Seconds", dailyBatch01, Message)
+    Logger.info("SampleAQ :: start()")
+  }
+
   override def onStart(app: Application) {
+
+    Logger.info("Application onStart*********************************************")
+    startScheduler(Akka.system)
     
     /*
     var filePath = ""
@@ -331,3 +345,19 @@ object Global extends GlobalSettings {
   }
 }
 
+
+class DailyBatch01 extends Actor
+{
+  def receive = {
+    case Message =>
+      Logger.info("Tick")
+    case _ =>
+      Logger.info("none")
+
+  }
+
+}
+
+object DaliyBatch01 {
+
+}

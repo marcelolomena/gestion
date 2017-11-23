@@ -1032,9 +1032,11 @@ object Risks extends Controller {
               rowhead.createCell(13).setCellValue("alert_reiteration")
               rowhead.createCell(14).setCellValue("alert_responsible_answer")
               rowhead.createCell(15).setCellValue("risk_name")
+              rowhead.createCell(16).setCellValue("alert_event_date")
+              rowhead.createCell(17).setCellValue("alert_change_state")
+              rowhead.createCell(18).setCellValue("diff_in_days")
 
-
-              for (j <- 0 to 15)
+              for (j <- 0 to 18)
                 rowhead.getCell(j).setCellStyle(style)
 
               val panel = RiskService.findReportAlerts(
@@ -1095,12 +1097,21 @@ object Risks extends Controller {
                 val cel15 = row.createCell(cNum + 15)
                 cel15.setCellValue(s.risk_name)
 
+                val cel16 = row.createCell(cNum + 16)
+                cel16.setCellValue(s.event_date)
+
+                val cel17 = row.createCell(cNum + 17)
+                cel17.setCellValue(s.change_state)
+
+                val cel18 = row.createCell(cNum + 18)
+                cel18.setCellValue(s.diff_in_days.toString)
+
                 rNum = rNum + 1
                 cNum = 0
 
               }
 
-              for (a <- 0 to 15) {
+              for (a <- 0 to 17) {
                 sheet.autoSizeColumn((a.toInt));
               }
 

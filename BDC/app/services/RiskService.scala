@@ -18,7 +18,7 @@ import models.Project
 import scala.util.Random
 import models.Tasks
 import models.RiskManagement
-import models.AlertReport
+import models.AlertReportFull
 import models.ProgramDates
 import org.apache.commons.lang3.StringUtils
 //import net.sf.mpxj.planner.schema.Calendar
@@ -1347,7 +1347,7 @@ object RiskService extends CustomColumns {
     }
   }
 
-  def findReportAlerts(alert_criticality_id: Int, alert_status_id: Int, alert_event_code_id: Int, alert_category_id: Int): Seq[AlertReport] = {
+  def findReportAlerts(alert_criticality_id: Int, alert_status_id: Int, alert_event_code_id: Int, alert_category_id: Int): Seq[AlertReportFull] = {
     var sql :String = ""
     val sqlString =
       """
@@ -1517,7 +1517,10 @@ object RiskService extends CustomColumns {
                 a.criticality alert_criticality_id,
                 a.status_id alert_status_id,
                 a.event_code alert_event_code_id,
-                a.category_id alert_category_id
+                a.category_id alert_category_id,
+        				FORMAT(a.event_date, 'yyyy-MM-dd') event_date,
+      	  			ISNULL(FORMAT(a.change_state, 'yyyy-MM-dd'),'') change_state,
+                dbo.BusinessDays(a.event_date,a.change_state) diff_in_days
                 FROM art_risk_alert a
                 JOIN art_risk b ON a.risk_id = b.id
                 JOIN art_risk_alert_category c ON c.id = a.category_id
@@ -1534,6 +1537,7 @@ object RiskService extends CustomColumns {
         ) K
         WHERE K.program_program_code IS NOT NULL
         ${sql}
+        ORDER BY K.alert_id
       """
 
     if(alert_criticality_id > 0) {
@@ -1556,7 +1560,7 @@ object RiskService extends CustomColumns {
     //println(qrysql)
 
     DB.withConnection { implicit connection =>
-      SQL(qrysql).as(AlertReport.reportAlert *)
+      SQL(qrysql).as(AlertReportFull.alertFull *)
 
     }
 

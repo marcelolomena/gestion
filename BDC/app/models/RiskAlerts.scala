@@ -359,3 +359,95 @@ object AlertsSearch extends CustomColumns {
     }
   }
 }
+
+case class AlertReportFull(
+                        program_program_code: Int,
+                        alert_id: Int,
+                        program_workflow_status: String,
+                        program_program_name: String,
+                        alert_impacted_variable: String,
+                        risk_category: String,
+                        risk_sub_category: String,
+                        alert_category: String,
+                        alert_criticality: String,
+                        program_program_manager: String,
+                        alert_responsible: String,
+                        alert_event_title: String,
+                        alert_status: String,
+                        alert_reiteration: Int,
+                        alert_responsible_answer: String,
+                        risk_name: String,
+                        alert_criticality_id: Int,
+                        event_date: String,
+                        change_state: String,
+                        diff_in_days: Int
+                      )
+
+object AlertReportFull {
+
+  val alertFull = {
+    get[Int]("program_program_code") ~
+      get[Int]("alert_id") ~
+      get[String]("program_workflow_status") ~
+      get[String]("program_program_name") ~
+      get[String]("alert_impacted_variable") ~
+      get[String]("risk_category") ~
+      get[String]("risk_sub_category") ~
+      get[String]("alert_category") ~
+      get[String]("alert_criticality") ~
+      get[String]("program_program_manager") ~
+      get[String]("alert_responsible") ~
+      get[String]("alert_event_title") ~
+      get[String]("alert_status") ~
+      get[Int]("alert_reiteration") ~
+      get[String]("alert_responsible_answer") ~
+      get[String]("risk_name") ~
+      get[Int]("alert_criticality_id") ~
+      get[String]("event_date") ~
+      get[String]("change_state") ~
+      get[Int]("diff_in_days") map {
+      case
+        program_program_code ~
+          alert_id ~
+          program_workflow_status ~
+          program_program_name ~
+          alert_impacted_variable ~
+          risk_category ~
+          risk_sub_category ~
+          alert_category ~
+          alert_criticality ~
+          program_program_manager ~
+          alert_responsible ~
+          alert_event_title ~
+          alert_status ~
+          alert_reiteration ~
+          alert_responsible_answer ~
+          risk_name  ~
+          alert_criticality_id ~
+          event_date ~
+          change_state ~
+          diff_in_days => AlertReportFull(
+        program_program_code,
+        alert_id,
+        program_workflow_status,
+        program_program_name,
+        alert_impacted_variable,
+        risk_category,
+        risk_sub_category,
+        alert_category,
+        alert_criticality,
+        program_program_manager,
+        alert_responsible,
+        alert_event_title,
+        alert_status,
+        alert_reiteration,
+        alert_responsible_answer,
+        risk_name,
+        alert_criticality_id,
+        event_date,
+        change_state,
+        diff_in_days)
+    }
+  }
+  implicit val alertFullWrites = Json.writes[AlertReportFull]
+}
