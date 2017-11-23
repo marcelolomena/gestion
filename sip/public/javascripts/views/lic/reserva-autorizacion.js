@@ -124,7 +124,7 @@
             },
             {
                 label: 'Estado de Autorización',
-                name: 'estado',
+                name: 'estadoauto',
                 width: 90,
                 align: 'center',
                 editable: true,
@@ -167,7 +167,7 @@
                 search: false
             }
         ];
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Autorización de Reserva', 'Editar Autorización', 'Agregar Autorización', '/lic/reservaAutorizado', viewModel, 'idEstado', '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Autorización de Reserva', 'Editar Autorización', 'Agregar Autorización', '/lic/reservaAutorizado', viewModel, 'estado', '/lic/getsession', ['Administrador LIC']);
         grid.build();
     });
 

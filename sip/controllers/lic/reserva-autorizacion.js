@@ -9,17 +9,12 @@ var entity = models.reserva;
 entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
-// entity.belongsTo(models.parametro, {
-//     foreignKey: 'idEstado'
-// });
 // entity.belongsTo(models.user, {
 //     foreignKey: 'idUsuario'
 // });
 
 var includes = [{
     model: models.producto
-}, {
-    model: models.parametro
 }];
 
 // function mapper(data) {
@@ -157,50 +152,30 @@ function map(req) {
 
 
 function listAprobados(req, res) {
-    models.parametro.findAll({
-        where: {
-            tipo: 'reservasolicitud',
-            nombre: 'Aprobado'
-        }
-    }).then(function (estado1) {
-        if (estado1.length != 0) {
-            var aprobado = estado1[0].dataValues.id;
-            models.parametro.findAll({
-                where: {
-                    tipo: 'reservasolicitud',
-                    nombre: 'Autorizado'
-                }
-            }).then(function (estado2) {
-                if (estado2.length != 0) {
-                    var autorizado = estado2[0].dataValues.id;
-                    var ntt = models.reserva;
-                    base.list(req, res, ntt, [{
-                        model: models.producto
-                    }], function (data) {
-                        var result = [];
-                        _.each(data, function (item) {
-                            if (item.idEstado === aprobado || item.idEstado === autorizado) {
-                                result.push({
-                                    id: item.id,
-                                    idProducto: item.idProducto,
-                                    producto: {
-                                        nombre: item.producto.nombre
-                                    },
-                                    numLicencia: item.numlicencia,
-                                    fechaUso: base.fromDate(item.fechaUso),
-                                    cui: item.cui,
-                                    sap: item.sap,
-                                    comentarioSolicitud: item.comentarioSolicitud,
-                                    estadoAprobacion: item.estadoAprobacion
-                                });
-                            }
-                        });
-                        return result;
-                    })
-                }
-            });
-        }
-    });
+    var ntt = models.reserva;
+    base.list(req, res, ntt, [{
+        model: models.producto
+    }], function (data) {
+        var result = [];
+        _.each(data, function (item) {
+            if (item.estado === 'Aprobado' || item.estado === 'Autorizado') {
+                result.push({
+                    id: item.id,
+                    idProducto: item.idProducto,
+                    producto: {
+                        nombre: item.producto.nombre
+                    },
+                    numLicencia: item.numlicencia,
+                    fechaUso: base.fromDate(item.fechaUso),
+                    cui: item.cui,
+                    sap: item.sap,
+                    comentarioSolicitud: item.comentarioSolicitud,
+                    estado: item.estado
+                });
+            }
+        });
+        return result;
+    })
 }
 
 
