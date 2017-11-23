@@ -350,7 +350,8 @@ class DailyBatch01 extends Actor
 {
   def receive = {
     case Message =>
-      Logger.info("Tick")
+      Logger.info("Larry is sending emails")
+      RiskService.automaticAlert
     case _ =>
       Logger.info("none")
 

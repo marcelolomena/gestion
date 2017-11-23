@@ -25,7 +25,7 @@ import java.io.{File, FileInputStream, FileOutputStream}
 import java.util.UUID
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
-
+import java.text.SimpleDateFormat
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
@@ -1117,7 +1117,12 @@ object Risks extends Controller {
 
               wb.write(fileOut);
               fileOut.close();
-              Ok.sendFile(content = file, fileName = _ => "alert.xlsx")
+
+
+              val FormattedDATE = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")
+              val now = FormattedDATE.format(new Date().getTime).toString
+
+              Ok.sendFile(content = file, fileName = _ => "alert_" + now + ".xlsx")
 
             })
 

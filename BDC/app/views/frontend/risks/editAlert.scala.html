@@ -54,6 +54,15 @@
 		         </div>
 
 		      	<div class="left width_full">
+					<div class="left width-pr50 padding-top-3px" >
+						@select(
+						alertForm("category_id"),
+						options(alert_category),
+						'class -> "input-xlarge ",
+						'_label ->  Messages("newAlert.alertCategory"),
+						'_default -> Messages("newAlert.placeholder.alert_category")
+						)
+					</div>
                     <div class="right width-pr50 padding-top-3px" >
                         @select(
                         alertForm("task_id"),
@@ -63,48 +72,40 @@
                         '_default -> Messages("newAlert.placeholder.alert_task")
                         )
                     </div>
-			      	<div class="right width-pr50 padding-top-3px" >
-		         				@select(
-				            	alertForm("status_id"),
-				       			options(alert_states),
-								'class -> "input-xlarge ",
-								'_label ->  Messages("newAlert.alertStatus"),
-								'_default -> Messages("newAlert.placeholder.alert_status")
-								)
-	            	</div>
+
 		         </div>
 
 		      	<div class="left width_full">
-			      	<div class="right width-pr50 padding-top-3px" >
-		         				@select(
-				            	alertForm("category_id"),
-				       			options(alert_category),
-								'class -> "input-xlarge ",
-								'_label ->  Messages("newAlert.alertCategory"),
-								'_default -> Messages("newAlert.placeholder.alert_category")
-								)
-	            	</div>
-		      		<div class="left width-pr50 padding-top-3px" >
-			      		@inputText(
-			                alertForm("impacted_variable"),
-			                'class -> "span5",
-			                '_label -> Messages("newAlert.alertImpactedVariable"),
-			                'placeholder ->Messages("newAlert.introImpactedVariable")
-			            )
+					<div class="left width-pr50 padding-top-3px" >
+						@inputText(
+						alertForm("impacted_variable"),
+						'class -> "span5",
+						'_label -> Messages("newAlert.alertImpactedVariable"),
+						'placeholder ->Messages("newAlert.introImpactedVariable")
+						)
+					</div>
+					<div class="right width-pr50 padding-top-3px" >
+						@textarea(
+						alertForm("event_title"),
+						'class -> "span5",
+						'_label ->  Messages("newAlert.alertTitle"),
+						'placeholder -> Messages("newAlert.placeholder.introTitle"),
+						'rows -> 3,
+						'cols -> 60
+						)
 					</div>
 		         </div>
 
 				<div class="left width_full">
-                    <div class="left width-pr50 padding-top-3px" >
-                        @textarea(
-                        alertForm("event_title"),
-                        'class -> "span5",
-                        '_label ->  Messages("newAlert.alertTitle"),
-                        'placeholder -> Messages("newAlert.placeholder.introTitle"),
-                        'rows -> 3,
-                        'cols -> 60
-                        )
-                    </div>
+					<div class="left width-pr50 padding-top-3px" >
+						@select(
+						alertForm("status_id"),
+						options(alert_states),
+						'class -> "input-xlarge ",
+						'_label ->  Messages("newAlert.alertStatus"),
+						'_default -> Messages("newAlert.placeholder.alert_status")
+						)
+					</div>
                     <div class="right width-pr50 padding-top-3px" >
                         @textarea(
                         alertForm("responsible_answer"),
@@ -255,6 +256,18 @@ $(document).ready(function(){
 	   });
 	   
 	   $('#send-alert').on('click', renderSendAlert);
+
+		$('#status_id').on('change', function() {
+			var thisvalue= $("#status_id option:selected" ).text();
+		 if(thisvalue==='Cerrada'){
+		 	$("#responsible_answer").attr("disabled", false);
+		 }else{
+		 	$("#responsible_answer").attr("disabled", true);
+		 }
+
+		});
+
+		$("#responsible_answer").attr("disabled", true);
 });	   
 </script>
 		

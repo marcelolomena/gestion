@@ -3,7 +3,6 @@ package services
 import anorm.SQL
 import anorm.SqlParser.scalar
 import anorm.sqlToSimple
-//import anorm.toParameterValue
 import models.CustomColumns
 import models.RiskManagementMaster
 import models.RiskManagementIssue
@@ -11,16 +10,19 @@ import play.api.Play.current
 import play.api.db.DB
 import play.i18n.Lang
 import java.util.Date
+
 import models.ProgramMaster
 import models.RiskStatus
 import anorm.NotAssigned
 import models.Project
+
 import scala.util.Random
 import models.Tasks
 import models.RiskManagement
 import models.AlertReportFull
 import models.ProgramDates
 import org.apache.commons.lang3.StringUtils
+import play.api.Logger
 //import net.sf.mpxj.planner.schema.Calendar
 import java.util.Calendar
 //import org.joda.time.DateTime
@@ -185,7 +187,7 @@ object RiskService extends CustomColumns {
         'responsible_answer -> alert.responsible_answer).executeUpdate()
 
       if(tmp.toInt <= 3) {
-        sendAutomaticAlerts(alert.id.get.toString, increment)
+        sendEmailAlerts(alert.id.get.toString, increment)
       }
     }
   }
@@ -1136,7 +1138,7 @@ object RiskService extends CustomColumns {
       println("last_index : " + last_index)
       println("reiteration : " + risk.reiteration.get.toInt)
 
-      sendAutomaticAlerts(last_index.toString,risk.reiteration.get)
+      sendEmailAlerts(last_index.toString,risk.reiteration.get)
 
       last_index
     }
@@ -1161,6 +1163,32 @@ object RiskService extends CustomColumns {
 
   def findAllActiveAlerts(): Seq[RiskAlerts] = {
     val sqlString = "SELECT * FROM art_risk_alert where is_active=1"
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).as(RiskAlerts.alerts *)
+      result
+    }
+  }
+
+  def findAllFirstExpiredAlerts(): Seq[RiskAlerts] = {
+    val sqlString =
+      """
+        SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
+        WHERE dbo.BusinessDays(a.event_date, CAST(a.change_state AS DATE)) > 2
+        AND b.description = 'Vigente' AND a.reiteration = 1
+      """
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).as(RiskAlerts.alerts *)
+      result
+    }
+  }
+
+  def findAllSecondExpiredAlerts(): Seq[RiskAlerts] = {
+    val sqlString =
+      """
+        SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
+        WHERE dbo.BusinessDays(a.event_date, CAST(a.change_state AS DATE)) > 8
+        AND b.description = 'Vencida' AND a.reiteration = 2
+      """
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(RiskAlerts.alerts *)
       result
@@ -1520,7 +1548,7 @@ object RiskService extends CustomColumns {
                 a.category_id alert_category_id,
         				FORMAT(a.event_date, 'yyyy-MM-dd') event_date,
       	  			ISNULL(FORMAT(a.change_state, 'yyyy-MM-dd'),'') change_state,
-                dbo.BusinessDays(a.event_date,a.change_state) diff_in_days
+                dbo.BusinessDays(a.event_date,CAST(a.change_state AS DATE)) diff_in_days
                 FROM art_risk_alert a
                 JOIN art_risk b ON a.risk_id = b.id
                 JOIN art_risk_alert_category c ON c.id = a.category_id
@@ -1762,6 +1790,81 @@ object RiskService extends CustomColumns {
     }
   }
 
+  def updateFirstAlertCronMail(alert_id: String, reiteration: Int) = {
+    DB.withConnection { implicit connection =>
+
+      SQL(
+        """
+          update art_risk_alert SET
+          reiteration={reiteration},
+          status_id=(SELECT id FROM art_risk_alert_status WHERE description = 'Vencida'),
+          change_state=GETDATE()
+          where id={alert_id}
+          """).on(
+        'alert_id -> alert_id,
+        'reiteration -> reiteration).executeUpdate()
+
+    }
+  }
+
+  def updateSecondAlertCronMail(alert_id: String, reiteration: Int) = {
+    DB.withConnection { implicit connection =>
+
+      SQL(
+        """
+          update art_risk_alert SET
+          reiteration={reiteration},
+          change_state=GETDATE()
+          where id={alert_id}
+          """).on(
+        'alert_id -> alert_id,
+        'reiteration -> reiteration).executeUpdate()
+
+    }
+  }
+
+  def automaticAlert() {
+    //first iteration
+    val firstCandidates = RiskService.findAllFirstExpiredAlerts()
+    if(!firstCandidates.isEmpty) {
+      for (t <- firstCandidates) {
+        Logger.info("First round : " + t.id.get.toString + " " + t.reiteration.get.toInt)
+        val round = t.reiteration.get.toInt + 1
+
+        sendEmailAlerts(t.id.get.toString, round) match {
+          case "OK" =>
+            // update Alert
+            Logger.info("Update Alert [" + t.id.get.toString + "] reiteration [" + round + "]")
+            updateFirstAlertCronMail(t.id.get.toString, round)
+          case _   => Logger.info("I DO NOT SEND THE MAIL!!")
+        }
+
+      } //first iteration
+    }else{
+      Logger.info("No existen alertas vigentes con mas de dos dias de atrazo")
+    }
+
+    //second iteration
+    val secondCandidates = RiskService.findAllSecondExpiredAlerts()
+    if(!secondCandidates.isEmpty) {
+      for (r <- secondCandidates) {
+        Logger.info("Second round : " + r.id.get.toString + " " + r.reiteration.get.toInt)
+        val round = r.reiteration.get.toInt + 1
+
+        sendEmailAlerts(r.id.get.toString, round) match {
+          case "OK" =>
+            // update Alert
+            Logger.info("Update Alert [" + r.id.get.toString + "] reiteration [" + round + "]")
+            updateFirstAlertCronMail(r.id.get.toString, round)
+          case _   => Logger.info("I DO NOT SEND THE MAIL!!")
+        }
+
+      } //second iteration
+    } else {
+      Logger.info("No existen alertas vigentes con mas de ocho dias de atrazo")
+    }
+  }
+
   def riskAutomaticAlert() {
     val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
     val todaydate = format.parse(format.format(new java.util.Date()))
@@ -1901,7 +2004,9 @@ object RiskService extends CustomColumns {
   /*
   author: marcelol marcelol@loso.cl
    */
-  def sendAutomaticAlerts(alert_id: String, increment: Int) {
+  def sendEmailAlerts(alert_id: String, increment: Int) : String = {
+
+    var response: String = "NOK"
 
     if (!StringUtils.isEmpty(alert_id)) {
 
@@ -1952,7 +2057,7 @@ object RiskService extends CustomColumns {
                       cc = cc + "," + bigboss.get.toString
                   }
 
-                  val response=utils.SendEmail.sendEmailRiskAlert(
+                  response=utils.SendEmail.sendEmailRiskAlert(
                     user,
                     program,
                     alert,
@@ -1963,6 +2068,8 @@ object RiskService extends CustomColumns {
                     cc)
 
                   println("RESPUESTA : " + response)
+
+
                 }
 
               }
@@ -1974,6 +2081,8 @@ object RiskService extends CustomColumns {
       }
 
     }
+
+    response
 
   }
 

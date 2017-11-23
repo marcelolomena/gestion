@@ -193,9 +193,11 @@
 			<h3 id="productNm">
 				<span class="left"></span>
 			</h3>
-		 	<div class="program-div" id="new-risk">
-		 		<span><a href="/new-alert/@risk.get.id">Agregar Alerta</a></span>
+			@if(utils.UserAccess.checkAccess(req,"alert_create")){
+			<div class="program-div" id="new-risk">
+				<span><a href="/new-alert/@risk.get.id">Agregar Alerta</a></span>
 			</div>
+			}
 			<div class="content-box">
 				<div class="content-box-header">
 					<ul class="content-box-tabs dashboard-overview-tab" style="width:100%;">

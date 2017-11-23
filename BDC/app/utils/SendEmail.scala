@@ -62,11 +62,12 @@ object SendEmail {
       val program_release_date = ProgramService.findClouseDateBaslineChange(program.get.program_id.get.toString)
       val alert_count_current = RiskService.countCurrentAlerts(alert.get.id.get.toString).toString
 
-      println("program_impact_type : " + program_impact_type )
-      println("program_internal_state : " + program_internal_state )
-      println("program_program_manager : " + program_program_manager )
-      println("program_release_date : " + program_release_date )
-      println("alert_count_current : " + alert_count_current )
+      println("subject : " + subject )
+      //println("program_impact_type : " + program_impact_type )
+      //println("program_internal_state : " + program_internal_state )
+      //println("program_program_manager : " + program_program_manager )
+      //println("program_release_date : " + program_release_date )
+      //println("alert_count_current : " + alert_count_current )
       /////
 
       /////
@@ -104,12 +105,12 @@ object SendEmail {
 
       }
 
-      println("risk_category_name : " + risk_category_name )
-      println("risk_imapct : " + risk_imapct )
-      println("risk_state : " + risk_state )
-      println("alert_event_code : " + alert_event_code )
-      println("risk_variable_imapact : " + risk_variable_imapact )
-      println("alert_criticality : " + alert_criticality )
+      //println("risk_category_name : " + risk_category_name )
+      //println("risk_imapct : " + risk_imapct )
+      //println("risk_state : " + risk_state )
+      //println("alert_event_code : " + alert_event_code )
+      //println("risk_variable_imapact : " + risk_variable_imapact )
+      //println("alert_criticality : " + alert_criticality )
       /////
 
       if (increment>1)
@@ -129,7 +130,7 @@ object SendEmail {
       for (r <- risks) {
         builderRisk.append(r.name + "\n")
       }
-
+/*
       val html = template.replaceAllLiterally("${program.program_description}",program.get.program_description.get.toString)
         .replaceAllLiterally("${user.first_name}",user.get.first_name)
         .replaceAllLiterally("${user.last_name}",user.get.last_name)
@@ -152,12 +153,12 @@ object SendEmail {
         .replaceAllLiterally("${alert_criticality}",alert_criticality)
 
       mail.sendHtml(html)
-
+*/
 
     } catch {
       case ex: Exception => return ex.getMessage
     }
 
-    "Success"
+    "OK"
   }
 }
