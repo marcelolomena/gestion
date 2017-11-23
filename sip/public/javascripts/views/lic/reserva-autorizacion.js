@@ -8,14 +8,14 @@
                 name: 'id',
                 key: true,
                 hidden: true,
-                editable: false
-            },
-            {
+                editable: false,
+                search: false
+            }, {
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'producto.nombre',
                 align: 'center',
-                width: 100,
+                width: 200,
                 editable: true,
                 editoptions: {
                     fullRow: true,
@@ -24,14 +24,14 @@
             },
             {
                 label: 'Número de Licencias',
-                name: 'numero',
+                name: 'numLicencia',
                 align: 'center',
                 width: 100,
                 editable: true,
                 search: false
             }, {
                 label: 'Fecha de Uso',
-                name: 'fechaEstimada',
+                name: 'fechaUso',
                 width: 110,
                 align: 'center',
                 sortable: false,
@@ -113,7 +113,7 @@
             },
             {
                 label: 'Comentario de Aprobación',
-                name: 'comentario',
+                name: 'comentarioAprobacion',
                 width: 400,
                 hidden: false,
                 editable: true,
@@ -154,7 +154,7 @@
             },
             {
                 label: 'Comentario de Autorización',
-                name: 'comentario',
+                name: 'comentarioAutorizacion',
                 width: 400,
                 hidden: false,
                 editable: true,
@@ -168,7 +168,7 @@
                 search: false
             }
         ];
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Autorización de Reserva', 'Editar Autorización', 'Agregar Autorización', '/lic/reserva', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Autorización de Reserva', 'Editar Autorización', 'Agregar Autorización', '/lic/reservaAutorizado', viewModel, 'idEstado', '/lic/getsession', ['Administrador LIC']);
         grid.build();
     });
 
