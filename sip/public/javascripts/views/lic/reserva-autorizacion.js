@@ -26,7 +26,7 @@
                 label: 'Número de Licencias',
                 name: 'numLicencia',
                 align: 'center',
-                width: 100,
+                width: 135,
                 editable: true,
                 search: false
             }, {
@@ -88,7 +88,7 @@
                 name: 'estadoAprobacion',
                 width: 90,
                 align: 'center',
-                hidden: true,
+                hidden: false,
                 editable: false,
                 edittype: "custom",
                 editoptions: {
