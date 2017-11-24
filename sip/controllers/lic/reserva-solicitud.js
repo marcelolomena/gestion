@@ -47,10 +47,7 @@ function mapper(data) {
             cui: item.cui,
             sap: item.sap,
             comentarioSolicitud: item.comentarioSolicitud,
-            estado: item.estado,
-            estado: {
-                nombre: item.parametro.nombre
-            }
+            estado: item.estado
         }
     });
 }
@@ -67,6 +64,8 @@ function action(req, res) {
             req.body.idUsuario = req.session.passport.user;
             return base.create(entity, map(req), res);
         case 'edit':
+            req.body.estado = 'Pendiente'
+            req.body.idUsuario = req.session.passport.user;
             return base.update(entity, map(req), res);
         case 'del':
             return base.destroy(entity, req.body.id, res);
