@@ -20,19 +20,18 @@ var includes = [{
 function map(req) {
     return {
         id: req.body.id || 0,
-        idProducto: req.body.idProducto || req.params.pId
-        // numlicencia: req.body.numlicencia,
-        // fechaUso: base.toDate(req.body.fechaUso),
-        // fechaSolicitud: base.toDate(req.body.fechaSolicitud),
-        // cui: req.body.cui,
-        // sap: req.body.sap,
-        // comentarioSolicitud: req.body.comentarioSolicitud,
-        // idEstado: req.body.idEstado,
-        // idUsuario: req.body.idUsuario,
-        // fechaAprobacion: null,
-        // comentarioAprobacion: null,
-        // fechaAutorizacion: null,
-        // comentarioAutorizacion: null
+        idProducto: req.body.idProducto || req.params.pId,
+        numLicencia: req.body.numLicencia,
+        fechaUso: base.toDate(req.body.fechaUso),
+        cui: req.body.cui,
+        sap: req.body.sap,
+        comentarioSolicitud: req.body.comentarioSolicitud,
+        estado: req.body.estadoAutorizacion,
+        idUsuario: req.body.idUsuario,
+        fechaAprobacion: base.toDate(req.body.fechaAprobacion),
+        comentarioAprobacion: req.body.comentarioAprobacion,
+        fechaAutorizacion: req.body.fechaAutorizacion,
+        comentarioAutorizacion:req.body.comentarioAutorizacion
     }
 }
 
@@ -55,7 +54,7 @@ function listAprobados(req, res) {
                     cui: item.cui,
                     sap: item.sap,
                     idUsuario: item.idUsuario,
-                    fechaAprobacion: item.fechaAprobacion,
+                    fechaAprobacion: base.fromDate(item.fechaAprobacion),
                     comentarioSolicitud: item.comentarioSolicitud,
                     comentarioAprobacion: item.comentarioAprobacion,
                     estadoAprobacion: item.estado,
@@ -76,6 +75,10 @@ function action(req, res) {
         case 'add':
             return base.create(entity, map(req), res);
         case 'edit':
+            var hoy = "" + new Date().toISOString();
+            
+            req.body.fechaAutorizacion = hoy;
+            
             return base.update(entity, map(req), res);
         case 'del':
             return base.destroy(entity, req.body.id, res);

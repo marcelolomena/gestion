@@ -47,10 +47,7 @@ function mapper(data) {
             cui: item.cui,
             sap: item.sap,
             comentarioSolicitud: item.comentarioSolicitud,
-            estado: item.estado,
-            estado: {
-                nombre: item.parametro.nombre
-            }
+            estado: item.estado
         }
     });
 }
@@ -67,6 +64,8 @@ function action(req, res) {
             req.body.idUsuario = req.session.passport.user;
             return base.create(entity, map(req), res);
         case 'edit':
+            req.body.estado = 'Pendiente'
+            req.body.idUsuario = req.session.passport.user;
             return base.update(entity, map(req), res);
         case 'del':
             return base.destroy(entity, req.body.id, res);
@@ -74,26 +73,22 @@ function action(req, res) {
 }
 
 function estado(req, res) {
-    var ntt = models.detalleRecepcion;
+    var ntt = models.reserva;
     base.listChilds(req, res, ntt, 'id', [{
-        model: models.producto,
-        model: models.fabricante,
-        model: models.moneda
+        model: models.producto
+        // model: models.user
     }], function (data) {
         var result = [];
         _.each(data, function (item) {
 
             var row = {
                 id: item.id,
-                producto: item.nombre,
-                idFabricante: item.idFabricante.nombre,
-                fechaInicio: base.fromDate(item.fechaInicio),
-                fechaTermino: base.fromDate(item.fechaTermino),
-                fechaControl: base.fromDate(item.fechaControl),
-                idMoneda: item.moneda.moneda,
-                monto: item.monto,
-                cantidad: item.cantidad,
-                comentario: item.comentario
+                estado: item.estado,
+                fechaAprobacion: item.fechaAprobacion,
+                comentarioAprobacion: item.comentarioAprobacion,
+                fechaAprobacion: base.fromDate(item.fechaAprobacion),
+                fechaAutorizacion: base.fromDate(item.fechaAutorizacion),
+                comentarioAutorizacion: item.comentarioAutorizacion
             };
             result.push(row);
         });

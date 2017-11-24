@@ -48,9 +48,9 @@ var sipLibrary = {
     },
 
     radioElemReservaAutorizacion: function (value, options) {
-        var receivedradio = '<label class="radio-inline"><input type="radio" name="estado" value="1"',
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="estado" value="Autorizado"',
             breakline = '/>Autorizado</label>',
-            naradio = '<label class="radio-inline"><input type="radio" name="estado" value="0"',
+            naradio = '<label class="radio-inline"><input type="radio" name="estado" value="Denegado"',
             endnaradio = '/>Denegado</label>';
 
         if (value === 'Autorizado') {

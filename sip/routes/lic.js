@@ -186,7 +186,8 @@ module.exports = function (passport) {
          
     router.route('/lic/reservaAutorizado')
         .get(isAuthenticated, reservaAutorizacionController.listAprobados)
-    
+        .post(isAuthenticated, reservaAutorizacionController.action);
+
 
     // router.route('/lic/reservaAutorizado')
     //     .get(isAuthenticated, recepcionController.listAprobados);

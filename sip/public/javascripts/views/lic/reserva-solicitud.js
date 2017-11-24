@@ -139,7 +139,7 @@
             {
                 label: 'Comentario',
                 name: 'comentarioSolicitud',
-                width: 700,
+                width: 500,
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
