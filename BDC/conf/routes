@@ -48,6 +48,11 @@ GET    /edit-division                                                           
 POST   /edit-division                                                                                 controllers.Division.updateDivision()
 POST   /update-division                                                                               controllers.Division.divisionUpdateStatus(id :String,status:Boolean)
 
+#Category
+GET    /category-list                                                                                 controllers.Category.categoryList
+GET    /category_edit                                                                                 controllers.Category.editCategory(id :String)
+POST   /category_edit                                                                                 controllers.Category.updateCategory()
+
 #Genrencia
 GET    /genrencia-list                                                                                controllers.Genrencia.genrenciaList	
 GET    /create-genrencia                                                                              controllers.Genrencia.createGenrencia

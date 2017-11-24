@@ -1,64 +1,9 @@
-package art_forms;
+package art_forms
 
 import scala.math.BigDecimal.int2bigDecimal
 import anorm.NotAssigned
-import models.BudgetTypes
-import models.DashboardSearch
-import models.Deliverables
-import models.Departments
-import models.Divisions
-import models.DocumentTypes
-import models.Documents
-import models.EmployeeSearchMaster
-import models.Expenditure
-import models.ForgotPasswordMaster
-import models.ForgotPasswordUserNameMaster
-import models.GenericProjectTypes
-import models.GenericTask
-import models.GenericTaskDetails
-import models.Genrencias
-import models.GernericProject
-import models.ImpactTypes
-import models.Investment
-import models.LoginMaster
-import models.OfficeMaster
-import models.PasswordMaster
-import models.PasswordRecoverMaster
-import models.PredefinedTasks
-import models.ProfileImage
-import models.ProgramDate
-import models.ProgramDetail
-import models.ProgramMembers
-import models.ProgramStatus
-import models.ProgramTypeCase
-import models.Program_Master
-import models.Program_Members_Master
-import models.Programs
-import models.ProjectExpenditure
-import models.ProjectInvestment
-import models.ProjectMasters
-import models.ProjectSAP
-import models.ProjectStatus
-import models.ConfigMailAlert
-import models.ProjectWorkflow
-import models.SAPMaster
-import models.SearchCriteria
-import models.SearchMaster
-import models.AlertsSearch
-import models.SkillsMaster
-import models.Stages
-import models.SubTaskMaster
-import models.SubTaskStatus
-import models.SubTypeCase
-import models.TaskDesciplineChild
-import models.TaskDetails
-import models.TaskMaster
-import models.TaskStatus
-import models.TimesheetMaster
-import models.UserMaster
-import models.UserRoleChild
-import models.Workflows
-import models.InputPert
+import models._
+import services._
 import play.api.data.Form
 import play.api.data.Forms.email
 import play.api.data.Forms.mapping
@@ -73,28 +18,6 @@ import play.api.data.format.Formats.doubleFormat
 import play.api.data.format.Formats.longFormat
 import play.i18n.Lang
 import play.i18n.Messages
-import services.GenericProjectService
-import services.ProgramService
-import services.UserService
-import models.ServiceCatalogue
-import models.ServiceCatalogues
-import models.ProgramHours
-import models.ProgramSearch
-import models.RiskManagement
-import models.RiskState
-import models.RiskManagementIssue
-import models.UserProfiles
-import models.GenericProjectType
-import models.RiskAlerts
-import models.SAPMasterEdit
-import models.PaidInvestment
-import models.PaidExpenditure
-import models.CommittedInvestment
-import models.CommittedExpenditure
-import models.NonCommittedExpenditure
-import models.NonCommittedInvestment
-import models.AvailableInvestment
-import models.AvailableExpenditure
 
 object ARTForms {
 
@@ -647,6 +570,13 @@ object ARTForms {
       "updated_by" -> optional(number),
       "updation_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
       "is_deleted" -> number)(Divisions.apply)(Divisions.unapply))
+
+  val categoryForm: Form[Categories] = Form(
+    mapping(
+      "id" -> optional(number),
+      "description" -> nonEmptyText,
+      "is_active" -> number)(Categories.apply)(Categories.unapply))
+
 
   val departmentForm: Form[Departments] = Form(
     mapping(

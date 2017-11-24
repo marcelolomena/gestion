@@ -466,6 +466,10 @@ addDepartment.editdepartment=Editar detalles del Departamento
 addDepartment.employee=Empleado
 addDepartment.rut=RUT
 
+addCategory.category=Categoría
+addCategory.id=Id
+addCategory.active=Estado
+addCategory.list=Lista Categorías
 
 addDivison.division=División
 divison.division=Divisiónes
@@ -1077,6 +1081,7 @@ dashboard.report=Informe
 budgettype.isactive=Activo
 
 leftnav.divconfmail=Configuración Correo
+leftnav.category=Categorías Alerta
 leftnav.divmanagement=Divisiones 
 leftnav.gerenciamanagement=Gerencias
 leftnav.departmentmanagement=Departamentos

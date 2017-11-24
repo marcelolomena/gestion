@@ -3,7 +3,6 @@ import anorm.SqlParser._
 import play.api.Play.current
 import java.util.Date
 import anorm._
-import play.api.db.DB
 import play.api.libs.json._
 
 case class Divisions(

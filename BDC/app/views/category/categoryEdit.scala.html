@@ -1,0 +1,66 @@
+@(categoryForm :play.api.data.Form[Categories])(implicit lang:Lang)
+@import helper._
+@import services._
+<!--
+Header panel
+ -->
+@header()
+
+</head>
+
+<!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
+<!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
+<!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
+<!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<body class="">
+<!--<![endif]-->
+
+<!-- Top Navigation bar -->
+@topNav("Admin")
+
+<!-- Left Navigation Bar -->
+@leftNav()
+
+
+<div class="content">
+    <div class="header">
+        <h1 class="page-title"> @Messages("divison.division")</h1>
+    </div>
+
+    <ul class="breadcrumb">
+        <li><a href="@routes.Application.index">@Messages("addDepartment.home")</a> <span class="divider">/</span></li>
+        <li><a href='@routes.Division.divisionList'>@Messages("addDivison.divisionlist")</a> <span class="divider">/</span></li>
+        <li class="active"> @Messages("addDivison.editdivision")</li>
+    </ul>
+
+    <div class="container-fluid">
+
+        <div class="row-fluid">
+
+            <div class="block">
+                <p class="block-heading">@Messages("addDivison.updatedivision")</p>
+
+                <div class="block-body">
+
+                    @form(action = routes.Category.updateCategory, 'id->"myDivision") {
+                    <input type="hidden" value='@categoryForm.data.get("is_active")' name="is_active" id="is_active"/>
+                    <input type="hidden" value='@categoryForm.data.get("id").get' name="id" id="id"/>
+                    @inputText(categoryForm("description"),'name->"description",'class->"span4",'_label->Messages("addCategory.category"))
+                    <div> <input class="btn pull-left" value="@Messages("button.save")" type="submit"/><a href="javascript:history.back(-1);" class="btn push-left20px pull-left">@Messages("button.cancel")</a></div>
+                    <div class="clearfix"></div>
+
+                    }
+                </div>
+
+            </div>
+        </div>
+        <!-- Footer panel -->
+        @footer()
+    </div>
+</div>
+</div>
+
+
+</body>
+</html>
