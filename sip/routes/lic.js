@@ -179,7 +179,8 @@ module.exports = function (passport) {
         .get(isAuthenticated, reservaSolicitudController.usuariocui);
 
     router.route('/lic/reserva-aprobacion')
-         .get(isAuthenticated, aprobacionController.list);
+         .get(isAuthenticated, aprobacionController.list)
+         .post(isAuthenticated, aprobacionController.action);
 
 
     return router;

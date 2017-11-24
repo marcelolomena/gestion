@@ -6,18 +6,20 @@ var sequelize = require('../../models/index').sequelize;
 var constants = require("../../utils/constants");
 
 exports.action = function (req, res) {
-  var estado = req.body.estado;
-  var estadoaprob='271';
-  if (estado == 'Aprobar'){
-    estadoaprob='271';
-  } else {
-    estadoaprob='272';
-  }
+  var action = req.body.oper;
+
   switch (action) {
     case "edit":
       //Codigo de update
-      var sql="UPDATE lic.reserva SET idestado="+estadoaprob+", comentarioaprobacion='"+req.body.comentarioaprobacion+"', "+
-      "fechaaprobacion=getdate() WHERE id ="+req.body.id;
+      var sql="UPDATE lic.reserva SET estado='"+req.body.estado+"', comentarioaprobacion='"+req.body.comentarioaprobacion+"', "+
+      "cui="+req.body.cui +", fechaaprobacion=getdate() WHERE id ="+req.body.id;
+      console.log("query:"+sql);
+      sequelize.query(sql).then(function (ok) {
+        res.json({ error_code: 0 });
+      }).catch(function (err) {
+        logger.error(err);
+        res.json({ error_code: 1 });
+      });
     break;
   }
 }
@@ -121,9 +123,8 @@ exports.list = function (req, res) {
         "SELECT @PageSize=" + rowspp + "; " +
         "DECLARE @PageNumber INT; " +
         "SELECT @PageNumber=" + page + "; " +
-        "SELECT a.*, b.nombre, c.nombre estado "+ 
+        "SELECT a.*, b.nombre "+ 
         "FROM lic.reserva a JOIN lic.producto b ON a.idproducto=b.id "+
-        "JOIN sip.parametro c ON a.idestado=c.id "+
         "WHERE cui IN (" + elcui + ") ";
 
       if (filters && condition != "") {

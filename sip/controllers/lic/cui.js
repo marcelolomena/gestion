@@ -5,25 +5,29 @@ var base = require('./lic-controller');
 
 var entity = models.estructuracuibch;
 
-function listAll(req, res) {
-    base.listAll(req, res, entity, function (item) {
-        return {
-            id: item.cui,
-            nombre: item.cui + ' - ' + item.unidad
-        };
-    });
-}
-function listAllRes(req, res) {
-    base.listAll(req, res, entity, function (item) {
-        return {
-            id: item.id,
-            nombre: item.cui + ' - ' + item.unidad
-        };
-    });
-}
 
+exports.listAll = function (req, res) {
 
-module.exports = {
-    listAll: listAll,
-    listAllRes: listAllRes
+  var sql = "SELECT cui id, convert(VARCHAR(10), cui)+' '+unidad AS nombre FROM lic.estructuracuibch WHERE estado='Activado'";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
 };
+
+
+exports.listAllRes = function (req, res) {
+
+  var sql = "SELECT cui id, convert(VARCHAR(10), cui)+' '+unidad AS nombre FROM lic.estructuracuibch WHERE estado='Activado'";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+
+
+

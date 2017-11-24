@@ -65,7 +65,7 @@
 
             {
                 label: 'CUI',
-                name: 'idCui',
+                name: 'cui',
                 jsonmap: 'cui',
                 width: 50,
                 align: 'center',
@@ -118,23 +118,9 @@
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
-                    custom_element: sipLibrary.radioElemReserva,
-                    defaultValue: "Aprobar"
+                    custom_element: sipLibrary.radioElemReserva
+                    //defaultValue: "Aprobar"
                     // fullRow: true
-                },
-                formatter: function (cellvalue, options, rowObject) {
-                    var dato = '';
-                    var val = rowObject.estado;
-                    if (val == 1) {
-                        dato = 'Aprobar';
-
-                    } else if (val == 0) {
-                        dato = 'Rechazar';
-                    }
-                    return dato;
-                },
-                editrules: {
-                    required: true
                 },
                 search: false
             },
