@@ -10,8 +10,7 @@ function renderGrid(loadurl, tableId) {
         },
         {
             label: 'Estado',
-            name: 'idEstado',
-            jsonmap: 'estado.nombre',
+            name: 'estado',
             align: 'center',
             width: 100,
             editable: false,
@@ -113,7 +112,7 @@ function renderGrid(loadurl, tableId) {
         }
 
     ];
-    var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle Aprobación', 'Editar Aprobación', 'Agregar Aprobación', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+    var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle Aprobación', 'Editar Aprobación', 'Agregar Aprobación', loadurl, viewModel, 'estado', '/lic/getsession', ['Administrador LIC']);
     grid.navParameters.add = false;
     grid.navParameters.edit = false;
     grid.navParameters.del = false;

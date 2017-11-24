@@ -67,8 +67,8 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
-        fechaAprobacion: {
-            field: 'fechaaprobacion',
+        fechaAutorizacion: {
+            field: 'fechaautorizacion',
             type: DataTypes.DATE,
             allowNull: true
         },
