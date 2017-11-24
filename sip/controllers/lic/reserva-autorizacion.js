@@ -17,91 +17,6 @@ var includes = [{
     model: models.producto
 }];
 
-// function mapper(data) {
-//     var result = [];
-//     _.each(data, function (item) {
-//         if (item.idEstado === 271) {
-//             var row = {
-//                 id: item.id,
-//                 idProducto: items.idProducto,
-//                 producto: {
-//                     nombre: item.producto.nombre
-//                 }
-//             };
-//             result.push(row);
-//         }
-//     });
-//     return result;
-// }
-
-
-
-
-
-// function mapper(data) {
-//     if(data.idEstado == 271){
-//         _.each(data, function(item){
-//             return _.map(item, function (items) {
-//                 return {
-//                     id: items.id,
-//                     idProducto: items.idProducto
-//                     // producto: {
-//                     //     nombre: item.producto.nombre
-//                     // }
-//                 };
-//             });
-
-
-
-
-
-//         })
-
-
-
-
-//     }
-
-
-
-// }
-
-
-
-// function mapper(data) {
-
-//     _.each(data, function(item){
-//         if(item.idEstado === 271){
-//             _.each(entity, function(sItem) {
-//                 return 
-//             );
-
-
-
-
-//             })
-//         }
-//     })
-
-
-
-//     if (data.idEstado === 270) {
-//         return _.map(data, function (item) {
-
-//             var result = {
-//                 id: item.id,
-//                 idProducto: item.idProducto
-//                 // producto: {
-//                 //     nombre: item.producto.nombre
-//                 // }
-//             };
-//             return result;
-
-//         });
-//     }
-
-// }
-
 function map(req) {
     return {
         id: req.body.id || 0,
@@ -121,36 +36,6 @@ function map(req) {
     }
 }
 
-// function mapper(data) {
-//     return _.map(data, function (item) {
-//         if (data.idEstado === 271) {
-//             return {
-//                 id: item.id,
-//                 idProducto: item.idProducto,
-//                 producto: {
-//                     nombre: item.producto.nombre
-//                 }
-//                 // numlicencia: item.numlicencia,
-//                 // fechaUso: base.fromDate(item.fechaUso),
-//                 // fechaSolicitud: base.fromDate(item.fechaSolicitud),
-//                 // cui: item.cui,
-//                 // sap: item.sap,
-//                 // comentarioSolicitud: item.comentarioSolicitud,
-//                 // idEstado: item.idEstado,
-//                 // estado: {
-//                 //     nombre: item.parametro.nombre
-//                 // },
-//                 // fechaAprobacion: base.fromDate(fechaAprobacion),
-//                 // comentarioAprobacion: item.comentarioAprobacion,
-//                 // fechaAutorizacion: base.fromDate(fechaAutorizacion),
-//                 // comentarioAutorizacion: item.comentarioAutorizacion
-
-//             }
-//         }
-//     });
-// }
-
-
 function listAprobados(req, res) {
     var ntt = models.reserva;
     base.list(req, res, ntt, [{
@@ -169,8 +54,12 @@ function listAprobados(req, res) {
                     fechaUso: base.fromDate(item.fechaUso),
                     cui: item.cui,
                     sap: item.sap,
+                    idUsuario: item.idUsuario,
+                    fechaAprobacion: item.fechaAprobacion,
                     comentarioSolicitud: item.comentarioSolicitud,
-                    estado: item.estado
+                    comentarioAprobacion: item.comentarioAprobacion,
+                    estadoAprobacion: item.estado,
+                    comentarioAutorizacion: item.comentarioAutorizacion
                 });
             }
         });
@@ -178,35 +67,13 @@ function listAprobados(req, res) {
     })
 }
 
-
-
-
-
-
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
 }
 
-
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
-            // models.parametro.findAll({
-            //     where: {
-            //         tipo: 'reservasolicitud',
-            //         nombre: 'Pendiente'
-            //     }
-            // }).then(function (estado) {
-            //     if (estado.length != 0) {
-            //         req.body.idEstado = estado[0].dataValues.id;
-
-            //     }
-            //     req.body.idUsuario = req.session.passport.user;
-            //     return base.create(entity, map(req), res);
-            // })
-
-
-
             return base.create(entity, map(req), res);
         case 'edit':
             return base.update(entity, map(req), res);
@@ -223,9 +90,6 @@ function usuariocui(req, res) {
         return res.json(rows);
     });
 }
-
-
-
 
 module.exports = {
     list: list,

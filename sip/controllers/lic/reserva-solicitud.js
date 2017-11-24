@@ -8,15 +8,10 @@ var entity = models.reserva;
 entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
-entity.belongsTo(models.parametro, {
-    foreignKey: 'idEstado'
-});
 
 
 var includes = [{
     model: models.producto
-}, {
-    model: models.parametro
 }];
 
 function map(req) {
@@ -29,8 +24,8 @@ function map(req) {
         cui: req.body.cui,
         sap: req.body.sap,
         comentarioSolicitud: req.body.comentarioSolicitud,
-        idEstado: req.body.idEstado,
-        idUsuario : req.body.idUsuario,
+        estado: req.body.estado,
+        idUsuario: req.body.idUsuario,
         fechaAprobacion: null,
         comentarioAprobacion: null,
         fechaAutorizacion: null,
@@ -52,7 +47,7 @@ function mapper(data) {
             cui: item.cui,
             sap: item.sap,
             comentarioSolicitud: item.comentarioSolicitud,
-            idEstado: item.idEstado,
+            estado: item.estado,
             estado: {
                 nombre: item.parametro.nombre
             }
@@ -68,23 +63,9 @@ function list(req, res) {
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
-            models.parametro.findAll({
-                where: {
-                    tipo: 'reservasolicitud',
-                    nombre: 'Pendiente'
-                }
-            }).then(function(estado){
-                if(estado.length!=0){
-                    req.body.idEstado = estado[0].dataValues.id;
-
-                }
-                req.body.idUsuario = req.session.passport.user;
-                return base.create(entity, map(req), res);
-            })
-        
-        
-        
-        
+            req.body.estado = 'Pendiente'
+            req.body.idUsuario = req.session.passport.user;
+            return base.create(entity, map(req), res);
         case 'edit':
             return base.update(entity, map(req), res);
         case 'del':
@@ -120,11 +101,11 @@ function estado(req, res) {
     })
 }
 
-function usuariocui(req, res){
-    
+function usuariocui(req, res) {
+
     models.sequelize.query("select b.cui from dbo.art_user a " +
-    "join dbo.RecursosHumanos b on a.email = b.emailTrab " +
-    "where a.uid = " + req.session.passport.user + " and periodo = (select max(periodo) from dbo.RecursosHumanos)").spread(function (rows) {
+        "join dbo.RecursosHumanos b on a.email = b.emailTrab " +
+        "where a.uid = " + req.session.passport.user + " and periodo = (select max(periodo) from dbo.RecursosHumanos)").spread(function (rows) {
         return res.json(rows);
     });
 }

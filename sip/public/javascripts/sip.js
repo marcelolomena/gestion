@@ -61,6 +61,21 @@ var sipLibrary = {
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
     },
 
+    radioElemReservaAutorizado: function (value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="autorizado" value="Autorizado"',
+            breakline = '/>Autorizado</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="denegado" value="Denegado"',
+            endnaradio = '/>Denegar</label>';
+
+        if (value === 'Autorizado') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === 'Denegado') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+    },
+
     radioElemCompraTramite: function (value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="estado" value="1"',
             breakline = '/>En Trámite</label>',

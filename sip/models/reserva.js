@@ -62,8 +62,8 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DATE,
             allowNull: true
         },
-        comentarioSolicitud: {
-            field: 'comentariosolicitud',
+        comentarioAprobacion: {
+            field: 'comentarioaprobacion',
             type: DataTypes.STRING,
             allowNull: true
         },

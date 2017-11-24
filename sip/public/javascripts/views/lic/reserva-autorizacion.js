@@ -94,17 +94,17 @@
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
                     custom_element: sipLibrary.radioElemReserva,
-                    defaultValue: "Aprobar",
+                    defaultValue: "Aprobado",
                     fullRow: true
                 },
                 formatter: function (cellvalue, options, rowObject) {
                     var dato = '';
                     var val = rowObject.estado;
-                    if (val == 1) {
-                        dato = 'Aprobar';
+                    if (val == 'Aprobado') {
+                        dato = 'Aprobado';
 
-                    } else if (val == 0) {
-                        dato = 'Rechazar';
+                    } else if (val == 'Rechazado') {
+                        dato = 'Rechazado';
                     }
                     return dato;
                 },
@@ -124,25 +124,25 @@
             },
             {
                 label: 'Estado de Autorización',
-                name: 'estadoauto',
-                width: 90,
+                name: 'estadoAutorizacion',
+                width: 155,
                 align: 'center',
                 editable: true,
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
-                    custom_element: sipLibrary.radioElemReserva,
-                    defaultValue: "Aprobar"
+                    custom_element: sipLibrary.radioElemReservaAutorizado,
+                    defaultValue: "Autorizado"
                     // fullRow: true
                 },
                 formatter: function (cellvalue, options, rowObject) {
                     var dato = '';
                     var val = rowObject.estado;
-                    if (val == 1) {
-                        dato = 'Aprobar';
+                    if (val == 'Autorizado') {
+                        dato = 'Autorizado';
 
-                    } else if (val == 0) {
-                        dato = 'Rechazar';
+                    } else if (val == 'Denegado') {
+                        dato = 'Denegado';
                     }
                     return dato;
                 },
@@ -154,7 +154,7 @@
             {
                 label: 'Comentario de Autorización',
                 name: 'comentarioAutorizacion',
-                width: 400,
+                width: 300,
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
