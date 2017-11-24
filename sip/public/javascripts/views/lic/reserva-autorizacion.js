@@ -82,7 +82,7 @@
                     fullRow: true
                 },
                 search: false
-            }, 
+            },
             {
                 label: 'Estado de Aprobación',
                 name: 'estadoAprobacion',
@@ -121,33 +121,28 @@
                     fullRow: true
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Estado de Autorización',
                 name: 'estadoAutorizacion',
-                width: 155,
+                width: 90,
                 align: 'center',
                 editable: true,
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
-                    custom_element: sipLibrary.radioElemReservaAutorizado,
-                    defaultValue: "Autorizado"
-                    // fullRow: true
+                    custom_element: sipLibrary.radioElemReservaAutorizacion,
+                    defaultValue: "Autorizado",
                 },
                 formatter: function (cellvalue, options, rowObject) {
                     var dato = '';
                     var val = rowObject.estado;
-                    if (val == 'Autorizado') {
+                    if (val == 1) {
                         dato = 'Autorizado';
 
-                    } else if (val == 'Denegado') {
+                    } else if (val == 0) {
                         dato = 'Denegado';
                     }
                     return dato;
-                },
-                editrules: {
-                    required: true
                 },
                 search: false
             },
@@ -168,6 +163,20 @@
             }
         ];
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Autorización de Reserva', 'Editar Autorización', 'Agregar Autorización', '/lic/reservaAutorizado', viewModel, 'estado', '/lic/getsession', ['Administrador LIC']);
+        grid.navParameters.add = false;
+        grid.prmEdit.onInitializeForm = function (formid, action) {
+            if (action === 'edit') {
+                setTimeout(function () {
+                    $('input#idFabricante').attr('readonly', 'readonly');
+                    $('input#otroFabricante').attr('readonly', 'readonly');
+                    $('select#idProducto').attr('readonly', 'readonly');
+                    $('input#otroProducto').attr('readonly', 'readonly');
+                    $('select#idClasificacion').attr('readonly', 'readonly');
+                    $('select#idTipoInstalacion').attr('readonly', 'readonly');
+                    $('select#idTipoLicenciamiento').attr('readonly', 'readonly');
+                }, 500);
+            }
+        };
         grid.build();
     });
 

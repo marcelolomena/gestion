@@ -76,6 +76,15 @@ module.exports = function (sequelize, DataTypes) {
             field: 'comentarioautorizacion',
             type: DataTypes.STRING,
             allowNull: true
+        },
+        idUsuarioJefe: {
+            field: 'idusuariojefe',
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: 'art_user',
+                key: 'id'
+            }
         }
     }, {
         schema: 'lic',
