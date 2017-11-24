@@ -1,3 +1,4 @@
+
 (function ($, _) {
     'use strict';
     var zs = window.zs;
@@ -73,7 +74,7 @@
                 editable: true,
                 edittype: 'select',
                 editoptions: {
-                    dataUrl: '/lic/cuibchres',
+                    dataUrl: '/lic/cuisjefe',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.id;

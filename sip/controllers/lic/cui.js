@@ -1,7 +1,6 @@
 'use strict';
 var models = require('../../models');
-var base = require('./lic-controller');
-
+var sequelize = require('../../models/index').sequelize;
 
 var entity = models.estructuracuibch;
 
