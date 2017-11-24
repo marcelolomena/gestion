@@ -11,7 +11,7 @@ module.exports = function (sequelize, DataTypes) {
         idProducto: {
             field: 'idproducto',
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'producto',
                 key: 'id'
@@ -44,14 +44,9 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
-        idEstado: {
-            field: 'idestado',
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            references: {
-                model: 'parametro',
-                key: 'id'
-            }
+        estado: {
+            type: DataTypes.STRING,
+            allowNull: true
         },
         idUsuario: {
             field: 'idusuario',
@@ -67,8 +62,8 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DATE,
             allowNull: true
         },
-        comentarioSolicitud: {
-            field: 'comentariosolicitud',
+        comentarioAprobacion: {
+            field: 'comentarioaprobacion',
             type: DataTypes.STRING,
             allowNull: true
         },
@@ -81,6 +76,15 @@ module.exports = function (sequelize, DataTypes) {
             field: 'comentarioautorizacion',
             type: DataTypes.STRING,
             allowNull: true
+        },
+        idUsuarioJefe: {
+            field: 'idusuariojefe',
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: 'art_user',
+                key: 'id'
+            }
         }
     }, {
         schema: 'lic',

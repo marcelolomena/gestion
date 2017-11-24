@@ -46,7 +46,23 @@ var sipLibrary = {
         jQuery(document.body).html(xht.responseText);
 
     },
-    
+
+    radioElemReservaAutorizacion: function (value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="estado" value="1"',
+            breakline = '/>Autorizado</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="estado" value="0"',
+            endnaradio = '/>Denegado</label>';
+
+        if (value === 'Autorizado') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === 'Denegado') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+    },
+
+
     radioElemCompraTramite: function (value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="estado" value="1"',
             breakline = '/>En Trámite</label>',
@@ -294,7 +310,7 @@ var sipLibrary = {
         return str;
 
     },
-        radioElemPerpetua: function (value, options) {
+    radioElemPerpetua: function (value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="perpetua" value="1"',
             breakline = '/>Perpetua</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="perpetua" value="0"',

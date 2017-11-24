@@ -29,7 +29,7 @@
     
     }
     var initGrid = function (viewModel) {
-        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Solicitud de Reserva', 'Editar Solicitud', 'Agregar Solicitud', '/lic/reserva', viewModel, 'idEstado', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Solicitud de Reserva', 'Editar Solicitud', 'Agregar Solicitud', '/lic/reserva', viewModel, 'estado', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.prmAdd.beforeShowForm = beforeShowForm;
         grid.build();
     };
@@ -45,8 +45,7 @@
             },
             {
                 label: 'Estado',
-                name: 'idEstado',
-                jsonmap: 'estado.nombre',
+                name: 'estado',
                 align: 'center',
                 width: 100,
                 editable: false,

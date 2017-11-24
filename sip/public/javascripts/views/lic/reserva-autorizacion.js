@@ -8,14 +8,14 @@
                 name: 'id',
                 key: true,
                 hidden: true,
-                editable: false
-            },
-            {
+                editable: false,
+                search: false
+            }, {
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'producto.nombre',
                 align: 'center',
-                width: 100,
+                width: 200,
                 editable: true,
                 editoptions: {
                     fullRow: true,
@@ -24,14 +24,14 @@
             },
             {
                 label: 'Número de Licencias',
-                name: 'numero',
+                name: 'numLicencia',
                 align: 'center',
                 width: 100,
                 editable: true,
                 search: false
             }, {
                 label: 'Fecha de Uso',
-                name: 'fechaEstimada',
+                name: 'fechaUso',
                 width: 110,
                 align: 'center',
                 sortable: false,
@@ -59,8 +59,7 @@
                 search: false
             }, {
                 label: 'CUI',
-                name: 'idCui',
-                jsonmap: 'cui.unidad',
+                name: 'cui',
                 align: 'center',
                 width: 100,
                 editable: true,
@@ -74,7 +73,7 @@
                 search: false
             }, {
                 label: 'Comentario de Solicitud',
-                name: 'comentario',
+                name: 'comentarioSolicitud',
                 width: 400,
                 hidden: false,
                 editable: true,
@@ -83,10 +82,10 @@
                     fullRow: true
                 },
                 search: false
-            }, 
+            },
             {
                 label: 'Estado de Aprobación',
-                name: 'estado',
+                name: 'estadoAprobacion',
                 width: 90,
                 align: 'center',
                 hidden: true,
@@ -95,17 +94,17 @@
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
                     custom_element: sipLibrary.radioElemReserva,
-                    defaultValue: "Aprobar",
+                    defaultValue: "Aprobado",
                     fullRow: true
                 },
                 formatter: function (cellvalue, options, rowObject) {
                     var dato = '';
                     var val = rowObject.estado;
-                    if (val == 1) {
-                        dato = 'Aprobar';
+                    if (val == 'Aprobado') {
+                        dato = 'Aprobado';
 
-                    } else if (val == 0) {
-                        dato = 'Rechazar';
+                    } else if (val == 'Rechazado') {
+                        dato = 'Rechazado';
                     }
                     return dato;
                 },
@@ -113,7 +112,7 @@
             },
             {
                 label: 'Comentario de Aprobación',
-                name: 'comentario',
+                name: 'comentarioAprobacion',
                 width: 400,
                 hidden: false,
                 editable: true,
@@ -122,40 +121,35 @@
                     fullRow: true
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Estado de Autorización',
-                name: 'estado',
+                name: 'estadoAutorizacion',
                 width: 90,
                 align: 'center',
                 editable: true,
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
-                    custom_element: sipLibrary.radioElemReserva,
-                    defaultValue: "Aprobar"
-                    // fullRow: true
+                    custom_element: sipLibrary.radioElemReservaAutorizacion,
+                    defaultValue: "Autorizado",
                 },
                 formatter: function (cellvalue, options, rowObject) {
                     var dato = '';
                     var val = rowObject.estado;
                     if (val == 1) {
-                        dato = 'Aprobar';
+                        dato = 'Autorizado';
 
                     } else if (val == 0) {
-                        dato = 'Rechazar';
+                        dato = 'Denegado';
                     }
                     return dato;
-                },
-                editrules: {
-                    required: true
                 },
                 search: false
             },
             {
                 label: 'Comentario de Autorización',
-                name: 'comentario',
-                width: 400,
+                name: 'comentarioAutorizacion',
+                width: 300,
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
@@ -168,7 +162,21 @@
                 search: false
             }
         ];
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Autorización de Reserva', 'Editar Autorización', 'Agregar Autorización', '/lic/reserva', viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Autorización de Reserva', 'Editar Autorización', 'Agregar Autorización', '/lic/reservaAutorizado', viewModel, 'estado', '/lic/getsession', ['Administrador LIC']);
+        grid.navParameters.add = false;
+        grid.prmEdit.onInitializeForm = function (formid, action) {
+            if (action === 'edit') {
+                setTimeout(function () {
+                    $('input#idFabricante').attr('readonly', 'readonly');
+                    $('input#otroFabricante').attr('readonly', 'readonly');
+                    $('select#idProducto').attr('readonly', 'readonly');
+                    $('input#otroProducto').attr('readonly', 'readonly');
+                    $('select#idClasificacion').attr('readonly', 'readonly');
+                    $('select#idTipoInstalacion').attr('readonly', 'readonly');
+                    $('select#idTipoLicenciamiento').attr('readonly', 'readonly');
+                }, 500);
+            }
+        };
         grid.build();
     });
 
