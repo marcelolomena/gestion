@@ -1,5 +1,7 @@
 package services
 
+import java.text.SimpleDateFormat
+
 import anorm.SQL
 import anorm.SqlParser.scalar
 import anorm.sqlToSimple
@@ -1717,8 +1719,18 @@ object RiskService extends CustomColumns {
       """
 
     DB.withConnection { implicit connection =>
+      /*
       SQL(sqlString).on(
         'emailEmployee -> emailEmployee).as(scalar[Option[String]].single)
+        */
+      val rowOption = SQL(sqlString)
+        .on('emailEmployee -> emailEmployee)
+        .apply
+        .headOption
+      rowOption match {
+        case Some(row) => Some(row[String]("emailTrab"))
+        case None => None
+      }
     }
   }
 
@@ -1739,8 +1751,18 @@ object RiskService extends CustomColumns {
       """
 
     DB.withConnection { implicit connection =>
+      /*
       SQL(sqlString).on(
         'emailEmployee -> emailEmployee).as(scalar[Option[String]].single)
+        */
+      val rowOption = SQL(sqlString)
+        .on('emailEmployee -> emailEmployee)
+        .apply
+        .headOption
+      rowOption match {
+        case Some(row) => Some(row[String]("emailTrab"))
+        case None => None
+      }
     }
   }
 
@@ -1824,6 +1846,8 @@ object RiskService extends CustomColumns {
   }
 
   def automaticAlert() {
+    val FormattedDATE = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")
+    val now = FormattedDATE.format(new Date().getTime).toString
     //first iteration
     val firstCandidates = RiskService.findAllFirstExpiredAlerts()
     if(!firstCandidates.isEmpty) {
@@ -1841,7 +1865,7 @@ object RiskService extends CustomColumns {
 
       } //first iteration
     }else{
-      Logger.info("No existen alertas vigentes con mas de dos dias de atrazo")
+      Logger.info("["  + now + "] There are no valid alerts with more than two days of delay.")
     }
 
     //second iteration
@@ -1861,7 +1885,7 @@ object RiskService extends CustomColumns {
 
       } //second iteration
     } else {
-      Logger.info("No existen alertas vigentes con mas de ocho dias de atrazo")
+      Logger.info("["  + now + "] There are no valid alerts with more than eight days of delay.")
     }
   }
 
@@ -2048,8 +2072,12 @@ object RiskService extends CustomColumns {
 
                   if(increment == 2) {
                     val boss = findBossMail(email)
-                    if(!boss.isEmpty)
+                    if(!boss.isEmpty) {
+                      println("el jefe es : " + boss.get.toString)
                       cc = cc + "," + boss.get.toString
+                    }else{
+                      println("no tiene jefe")
+                    }
 
                   } else if (increment == 3) {
                     val bigboss = findBigBossMail(email)
