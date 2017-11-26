@@ -120,7 +120,7 @@ object SendEmail {
 
       mail.setSubject(subject)
       mail.setFrom(fromEmail.toString())
-      mail.setRecipient("marcelo.mlomena@gmail.com"/*user.get.email.toString()*/)
+      mail.setRecipient(user.get.email.toString())
 
       val mylist  = cc.split(",").toList
       mail.setCc(mylist:_*)
@@ -130,7 +130,7 @@ object SendEmail {
       for (r <- risks) {
         builderRisk.append(r.name + "\n")
       }
-/*
+
       val html = template.replaceAllLiterally("${program.program_description}",program.get.program_description.get.toString)
         .replaceAllLiterally("${user.first_name}",user.get.first_name)
         .replaceAllLiterally("${user.last_name}",user.get.last_name)
@@ -153,7 +153,7 @@ object SendEmail {
         .replaceAllLiterally("${alert_criticality}",alert_criticality)
 
       mail.sendHtml(html)
-*/
+
 
     } catch {
       case ex: Exception => return ex.getMessage

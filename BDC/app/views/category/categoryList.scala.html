@@ -38,7 +38,7 @@ Header panel
         <div class="row-fluid">
 
             <div class="btn-toolbar">
-                <a href="@routes.Division.createDivision"><span class="btn"><i class="icon-plus"></i> @Messages("addDivison.newdivision") </span></a>
+                <a href="@routes.Category.createCategory"><span class="btn"><i class="icon-plus"></i> @Messages("addCategory.newcategory") </span></a>
                 <div class="btn-group">
                 </div>
             </div>
@@ -56,18 +56,15 @@ Header panel
                     <tbody>
                     @for((div,index) <- divisions.zipWithIndex) {
                     <tr>
-                        <td><a href="@routes.Division.editDivision(div.id.get.toString())">@div.id </a></td>
-                        <td><a href="@routes.Division.editDivision(div.id.get.toString())">@div.description </a></td>
-                        <td><a href="@routes.Division.editDivision(div.id.get.toString())">
+                        <td>@div.id</td>
+                        <td>@div.description</td>
+                        <td>
                             @if(div.is_active.toLong ==1){
-                            Inactive
+                            Activo
                             }else {
-                            Active
+                            Inactivo
                             }
-                        </a>
                         </td>
-
-
                         <td>
                             <a href="@routes.Category.editCategory(div.id.get.toString())"><i class="icon-pencil "></i></a>
                             <a  role="button" data-toggle="modal" >
@@ -151,7 +148,7 @@ Header panel
 							width : 300,
 							buttons : {
 								"Yes" : function() {
-									var url = "/update-division?id=" + deletion_id+"&status="+_status;
+									var url = "/category-update?id=" + deletion_id+"&status="+_status;
 
 									$.post(url, function(data) {
 										if (data == "Success") {

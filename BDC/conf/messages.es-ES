@@ -470,6 +470,7 @@ addCategory.category=Categoría
 addCategory.id=Id
 addCategory.active=Estado
 addCategory.list=Lista Categorías
+addCategory.newcategory=Nueva Categoría
 
 addDivison.division=División
 divison.division=Divisiónes

@@ -6266,3 +6266,7 @@ h3.header-background{
     font-weight: bold;
     padding-left: 5px;
 }
+
+div.oculto {
+    display: none;
+}

@@ -41,19 +41,6 @@ object CategoryServices extends CustomColumns {
     }
   }
 
-  def saveCategory(cat: Categories): Long = {
-    DB.withConnection { implicit connection =>
-      val lastsaved = SQL(
-        """
-          insert art_risk_alert_category ( description, is_active) values (
-           {description},{is_active})
-          """).on(
-        'description -> cat.description,
-        'is_active -> cat.is_active).executeInsert(scalar[Long].singleOpt)
-      lastsaved.last
-    }
-  }
-
   def updateCategory(cat: Categories): Int = {
     DB.withConnection { implicit connection =>
       SQL(
@@ -70,6 +57,26 @@ object CategoryServices extends CustomColumns {
     }
   }
 
+  def findCategoryByName(description: String) = {
+    DB.withConnection { implicit connection =>
+      SQL("select * from art_risk_alert_category where is_active = 1 AND description = {description}").on(
+        'description -> description).as(Categories.category *)
+    }
+  }
+
+  def saveCategory(cat: Categories): Long = {
+    DB.withConnection { implicit connection =>
+      val lastsaved = SQL(
+        """
+          insert art_risk_alert_category ( description, is_active) values (
+           {description},{is_active})
+          """).on(
+        'description -> cat.description.trim(),
+        'is_active -> cat.is_active).executeInsert(scalar[Long].singleOpt)
+      lastsaved.last
+    }
+  }
+
   def validateCategoryForm(form: Form[Categories]): Form[Categories] = {
     var newform: Form[Categories] = null
     val category_id = form.data.get("id").get.trim()
@@ -83,6 +90,19 @@ object CategoryServices extends CustomColumns {
       newform
     } else {
       form
+    }
+  }
+
+  def changeStatusCategoryStatus(id: Integer, is_active: Int): Int = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          update art_risk_alert_category
+          set
+			    is_active={is_active}
+          """).on(
+        'id -> id,
+        'is_active -> is_active).executeUpdate()
     }
   }
 

@@ -1378,15 +1378,13 @@ function renderRemoveProfileRole(){
 function renderAlertDetails(){
 	var _this = $(this);
 	var id = _this.attr("id").split("_")[1];
-	if($("#ad_"+id).hasClass("display-none")){
+	if($("#ad_"+id).hasClass("oculto")){
 		$("#ad_"+id).slideDown(1000);
-		$("#ad_"+id).removeClass("display-none");
+		$("#ad_"+id).removeClass("oculto");
 	}else{
 		$("#ad_"+id).slideUp(1000);
-		$("#ad_"+id).addClass("display-none");
+		$("#ad_"+id).addClass("oculto");
 	}
-	
-	
 }
 
 function renderRemoveSkill(){

@@ -63,7 +63,7 @@ object User extends Controller {
       val employeeOffice = UserService.findUserOfficeDetails(employeeid.intValue())
       val programs = UserService.findProgramListForUser(employeeid.toString())
       val pUserProjectList = null // UserService.findProjectsByUser(Integer.parseInt(employee.get.uid.get.toString()))
-      val alerts = RiskService.findUserAlertsIds(employeeid.toString())
+      val alerts = RiskService.findNewUserAlertsIds(employeeid.toString())
       val availability = UserProfileServices.findAvailability(employeeid.intValue())
       
       var consumos = new JSONArray();

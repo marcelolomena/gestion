@@ -1171,6 +1171,14 @@ object RiskService extends CustomColumns {
     }
   }
 
+  def findAllOpenAlerts(): Seq[RiskAlerts] = {
+    val sqlString = "SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'"
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).as(RiskAlerts.alerts *)
+      result
+    }
+  }
+
   def findAllFirstExpiredAlerts(): Seq[RiskAlerts] = {
     val sqlString =
       """
@@ -1599,6 +1607,7 @@ object RiskService extends CustomColumns {
 
 
   def findRiskAlertsIncreasedById(id: String): Option[RiskAlertsIncreased] = {
+    Logger.info("Tendra datos ??? " + id)
     if (!StringUtils.isEmpty(id)) {
       /*
       var sqlString = "EXEC art.risk_alert_details {id}"
@@ -1769,10 +1778,11 @@ object RiskService extends CustomColumns {
 
   def findUserAlertsIds(employeeid: String): String = {
     var risk_ids = ""
+    Logger.info("aca empieza el weveo ono  "  + employeeid)
     val risksAlerts = RiskService.findAllActiveAlerts()
     for (r <- risksAlerts) {
 
-      if (!r.person_invloved.isEmpty) {
+      if (!r.person_invloved.isEmpty) {//obtiene los id de alerta en que figura el usuario
         if (r.person_invloved.get.contains(employeeid)) {
           if (StringUtils.isEmpty(risk_ids)) {
             risk_ids = r.id.get.toString()
@@ -1783,6 +1793,29 @@ object RiskService extends CustomColumns {
       }
 
     }
+
+    return risk_ids
+  }
+
+  def findNewUserAlertsIds(employeeid: String): String = {
+    var risk_ids = ""
+    Logger.info("aca empieza el weveo "  + employeeid)
+    val risksAlerts = RiskService.findAllOpenAlerts()
+    for (r <- risksAlerts) {
+
+      if (!r.person_invloved.isEmpty) {//obtiene los id de alerta en que figura el usuario
+        if (r.person_invloved.get.contains(employeeid)) {
+          if (StringUtils.isEmpty(risk_ids)) {
+            risk_ids = r.id.get.toString()
+          } else {
+            risk_ids = risk_ids + "," + r.id.get.toString()
+          }
+        }
+      }
+
+    }
+
+    println("chorizo : " + risk_ids)
 
     return risk_ids
   }

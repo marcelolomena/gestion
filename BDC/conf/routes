@@ -52,6 +52,9 @@ POST   /update-division                                                         
 GET    /category-list                                                                                 controllers.Category.categoryList
 GET    /category_edit                                                                                 controllers.Category.editCategory(id :String)
 POST   /category_edit                                                                                 controllers.Category.updateCategory()
+GET    /category-create                                                                               controllers.Category.createCategory
+POST   /category-save                                                                                 controllers.Category.saveCategory
+POST   /category-update                                                                               controllers.Category.categoryUpdateStatus(id :String,status:Boolean)
 
 #Genrencia
 GET    /genrencia-list                                                                                controllers.Genrencia.genrenciaList	
