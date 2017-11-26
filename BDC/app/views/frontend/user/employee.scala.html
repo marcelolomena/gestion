@@ -228,7 +228,7 @@
 						}
 				
 					<div class="width_full dash_detail_1_right border-none risk-alerts-header"> 
-						<h3>@Messages("employeeProfile.myalerts")</h3>
+						<h3>@Messages("employeeProfile.myalerts")<img width="16px" height="16px" src="@routes.Assets.at("frontend/images/warning-16.png")" alt=""/></h3>
 						<div class="width_full">
 						@for((id,index) <- alerts.split(",").zipWithIndex){
 							<div id="rsk_@id" class=" width290px @if(index%2==0){dash_right_data_2_odd}else{dash_right_data_2}">

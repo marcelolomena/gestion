@@ -33,30 +33,7 @@
 	 		@alert.get.title
 	 	</span>
 	 	</li>	 
-@*	 
-	 	<li>
-	 	<span class="alert-label">@Messages("profile.riskeventType")</span>
-	 	<span class="alert-text">
-	 		@{
-		 		alert.get.event_type.get match{
-		 			case 1=>"Automatic"
-		 			case 2=>"Manual"		
-		 		}
-	 		}
-	 	</span>
-	 	</li>
-	 	<li>
-	 	<span class="alert-label">@Messages("profile.riskalertType")</span>
-	 	<span class="alert-text">
-	 		@{
-		 		alert.get.alert_type.get match{
-		 			case 1=>"RISK-General"
-		 			case 2=>"RISK-Serious"		
-		 		}
-	 		}
-	 	</span>
-	 	</li>
-*@		
+
 	 	<li>
 		 	<span class="alert-label">@Messages("dashboard.risk")</span>
 		 	<span class="alert-text">
@@ -69,20 +46,28 @@
 		 		@{
 		 			
 			 		alert.get.event_code.get match{
-						case 1=>"Risk"
-						case 2=>"Issue" 			
+						case 1=>"Riesgo"
+						case 2=>"Incidente"
 			 		}
 		 		}	
 			 </span>
 	 	</li>
 	 	<li>
-		 	<span class="alert-label">@Messages("profile.eventdetails")</span>
+		 	<span class="alert-label">@Messages("profile.impacted_variable")</span>
 		 	<span class="alert-text">
-			 	@if(!alert.get.event_details.isEmpty){
-			 			@alert.get.event_details.get
+			 	@if(!alert.get.impacted_variable.isEmpty){
+			 			@alert.get.impacted_variable.get
 			 	}
 		 	 </span>
 	 	</li>
+		 <li>
+			 <span class="alert-label">@Messages("profile.pmo")</span>
+			 <span class="alert-text">
+			 	@if(!alert.get.pmo.isEmpty){
+			 			@alert.get.pmo.get
+			 	}
+		 	 </span>
+		 </li>
 	 	<li>
 		 	<span class="alert-label">@Messages("booktime.date")</span>
 		 	<span class="alert-text">

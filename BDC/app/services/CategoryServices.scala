@@ -82,8 +82,8 @@ object CategoryServices extends CustomColumns {
     val category_id = form.data.get("id").get.trim()
 
     val descriptionlegth = form.data.get("description").get.trim().length
-    if (descriptionlegth <= 10) {
-      newform = form.withError("description", Messages.get(langObj, ("error.description.minmax")))
+    if (descriptionlegth <= 8) {
+      newform = form.withError("description", Messages.get(langObj, ("error.description.short")))
     }
 
     if (newform != null) {
@@ -94,12 +94,14 @@ object CategoryServices extends CustomColumns {
   }
 
   def changeStatusCategoryStatus(id: Integer, is_active: Int): Int = {
+
     DB.withConnection { implicit connection =>
       SQL(
         """
           update art_risk_alert_category
           set
 			    is_active={is_active}
+          where id={id}
           """).on(
         'id -> id,
         'is_active -> is_active).executeUpdate()

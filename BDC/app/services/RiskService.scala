@@ -1620,10 +1620,11 @@ object RiskService extends CustomColumns {
                         	SELECT
                             X.id,
                               X.risk_id,
+                              Z.pmo,
                               X.event_code,
                               X.event_date,
                               X.event_title,
-                              X.event_details,
+                              X.impacted_variable,
                               X.responsible,
                               X.person_invloved,
                               X.criticality,
@@ -1654,6 +1655,9 @@ object RiskService extends CustomColumns {
                         	END program_name
                         	  FROM art_risk a) Y
                         	ON X.risk_id=Y.id
+                          JOIN
+                          (SELECT uid, u.first_name + ' '+ u.last_name pmo FROM art_user u) Z
+                          ON X.responsible = Z.uid
                         	WHERE
                         	X.is_active=1 AND
                         	X.id={id}

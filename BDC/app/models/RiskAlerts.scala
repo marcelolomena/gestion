@@ -7,11 +7,11 @@ import play.api.libs.json._
 
 case class RiskAlertsIncreased(id: Option[Int],
                                risk_id: Int,
-                               //event_type: Option[Int],
+                               pmo: Option[String],
                                event_code: Option[Int],
                                event_date: Option[Date],
                                event_title: String,
-                               event_details: Option[String],
+                               impacted_variable: Option[String],
                                responsible: Option[Int],
                                person_invloved: Option[String],
                                //alert_type: Option[Int],
@@ -25,11 +25,11 @@ object RiskAlertsIncreased extends CustomColumns {
   val alertsIncreased = {
     get[Option[Int]]("id") ~
       get[Int]("risk_id") ~
-      //get[Option[Int]]("event_type") ~
+      get[Option[String]]("pmo") ~
       get[Option[Int]]("event_code") ~
       get[Option[Date]]("event_date") ~
       get[String]("event_title") ~
-      get[Option[String]]("event_details") ~
+      get[Option[String]]("impacted_variable") ~
       get[Option[Int]]("responsible") ~
       get[Option[String]]("person_invloved") ~
       //get[Option[Int]]("alert_type") ~
@@ -39,11 +39,11 @@ object RiskAlertsIncreased extends CustomColumns {
       get[String]("program_name") map {
         case id ~
           risk_id ~
-          //event_type ~
+          pmo ~
           event_code ~
           event_date ~
           event_title ~
-          event_details ~
+          impacted_variable ~
           responsible ~
           person_invloved ~
           //alert_type ~
@@ -51,11 +51,11 @@ object RiskAlertsIncreased extends CustomColumns {
           is_active ~ level ~ title ~ program_name =>
           RiskAlertsIncreased(id,
             risk_id,
-            //event_type,
+            pmo,
             event_code,
             event_date,
             event_title,
-            event_details,
+            impacted_variable,
             responsible,
             person_invloved,
             //alert_type,

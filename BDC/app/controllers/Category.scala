@@ -79,7 +79,7 @@ object Category extends Controller with Secured  {
         val username = request.session.get("username").get.toString
         val description = success.description.trim()
         val obj = CategoryServices.findCategoryByName(description)
-        //println(obj.size)
+
         if (obj.size > 0) {
           BadRequest(views.html.category.categoryAdd(username,ARTForms.categoryForm.withError("description", Messages.get(langObj, "Ya existe esta categoría")).fill(success)))
         } else {
@@ -101,7 +101,6 @@ object Category extends Controller with Secured  {
   def updateCategory() = IsAuthenticatedAdmin() { _ =>
   { implicit request =>
     val myForm = ARTForms.categoryForm.bindFromRequest
-    println(myForm)
 
     myForm.fold(
       hasErrors => {
@@ -132,9 +131,9 @@ object Category extends Controller with Secured  {
     if (StringUtils.isNotBlank(id)) {
 
       val category_id = Integer.parseInt(id)
-      var is_deleted = 1
+      var is_deleted = 0
       if (status) {
-        is_deleted = 0
+        is_deleted = 1
       }
 
       CategoryServices.changeStatusCategoryStatus(category_id, is_deleted)

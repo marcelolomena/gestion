@@ -26,7 +26,7 @@ Header panel
 <div class="content">
 
     <div class="header">
-        <h1 class="page-title">Categorías</h1>
+        <h1 class="page-title">@Messages("category.category")</h1>
     </div>
 
     <ul class="breadcrumb">
@@ -68,7 +68,7 @@ Header panel
                         <td>
                             <a href="@routes.Category.editCategory(div.id.get.toString())"><i class="icon-pencil "></i></a>
                             <a  role="button" data-toggle="modal" >
-                                @if(div.is_active.toLong ==1){
+                                @if(div.is_active.toLong ==0){
                                 <i id="division_@div.id" class="activate-status status_update" style="cursor: pointer;" title="Actualizar Estado"></i>
                                 }else {
                                 <i id="division_@div.id" class="icon-remove status_update" style="cursor: pointer;" title="Actualizar Estado"></i>
@@ -138,7 +138,7 @@ Header panel
 				var _status = _this.hasClass('activate-status');
 
 				var deletion_id = _this.attr("id").split("_")[1];
-				$("#dialog-confirm").html("@Messages("delete.confirm1.division")");
+				$("#dialog-confirm").html("@Messages("delete.confirm.category")");
 						// Define the Dialog and its properties.
 						$("#dialog-confirm").dialog({
 							resizable : false,
@@ -147,7 +147,7 @@ Header panel
 							height : 150,
 							width : 300,
 							buttons : {
-								"Yes" : function() {
+								"Si" : function() {
 									var url = "/category-update?id=" + deletion_id+"&status="+_status;
 
 									$.post(url, function(data) {

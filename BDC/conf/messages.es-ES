@@ -43,6 +43,7 @@ error.project.total_sap=SAP total de Dębe Ser El Número positivo
 program_type.alreadyexist=Tipo de programa ya existe. 
 
 error.description.minmax=Descripción debería ser menos más de 4 caracteres y menos de 500 caracteres.
+error.description.short=Debe tener a lo menos 8 caracteres.
 
 error.task.projectId=Por favor, seleccione proyecto
 error.task.milestone_title=Título de la tarea debe tener mínimo 4 y máximo de 60 caracteres.
@@ -466,11 +467,16 @@ addDepartment.editdepartment=Editar detalles del Departamento
 addDepartment.employee=Empleado
 addDepartment.rut=RUT
 
-addCategory.category=Categoría
+category.category=Categorías
+addCategory.category=Categoría de Alerta
 addCategory.id=Id
+addCategory.editcategory=Editar Categoría
+addCategory.addcategory=Agregar Categoría
+addCategory.updatecategory=Actualizar Categoría
 addCategory.active=Estado
 addCategory.list=Lista Categorías
 addCategory.newcategory=Nueva Categoría
+delete.confirm.category=¿Desea cambiar el estado a esta categoría?
 
 addDivison.division=División
 divison.division=Divisiónes
