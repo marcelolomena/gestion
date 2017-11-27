@@ -148,11 +148,7 @@
                 width: 90,
                 align: 'center',
                 editable: true,
-<<<<<<< HEAD
                 hidden:true,
-=======
-                hidden: true,
->>>>>>> jcastro
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
