@@ -150,6 +150,26 @@
                     required: true
                 },
                 search: false
+            },
+            {
+                label: 'Usuario',
+                name: 'idUsuario',
+                jsonmap: 'user.first_name',
+                align: 'center',
+                width: 100,
+                hidden: true,
+                editable: false,
+                search: false
+            },
+            {
+                label: 'Usuario',
+                name: 'idUsuarioJefe',
+                jsonmap: 'userJefe.first_name',
+                align: 'center',
+                width: 100,
+                hidden: true,
+                editable: false,
+                search: false
             }
         ];
         initGrid(viewModel);

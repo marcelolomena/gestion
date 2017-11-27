@@ -8,11 +8,18 @@ var entity = models.reserva;
 entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
+entity.belongsTo(models.user, {
+    foreignKey: 'idUsuario'
+});
 
 
 var includes = [{
-    model: models.producto
-}];
+        model: models.producto
+    },
+    {
+        model: models.user
+    }
+];
 
 function map(req) {
     return {
@@ -47,24 +54,39 @@ function mapper(data) {
             cui: item.cui,
             sap: item.sap,
             comentarioSolicitud: item.comentarioSolicitud,
-            estado: item.estado
+            estado: item.estado,
+            idUsuario: item.idUsuario,
+            user: {
+                first_name: item.user.first_name +''+ item.user.last_name
+            },
+            idUsuarioJefe: item.idUsuarioJefe,
+            userJefe: {
+                first_name: item.user.first_name
+            }
         }
     });
 }
 
 function list(req, res) {
-    base.list(req, res, entity, includes, mapper);
+    req.query.sord = 'asc',
+        base.list(req, res, entity, includes, mapper);
 }
+
+function listDESC(req, res) {
+    base.listDESC(req, res, entity, includes, mapper);
+}
+
+
 
 
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
-            req.body.estado = 'Pendiente'
+            req.body.estado = 'A la Espera'
             req.body.idUsuario = req.session.passport.user;
             return base.create(entity, map(req), res);
         case 'edit':
-            req.body.estado = 'Pendiente'
+            req.body.estado = 'A la Espera'
             req.body.idUsuario = req.session.passport.user;
             return base.update(entity, map(req), res);
         case 'del':
@@ -75,8 +97,8 @@ function action(req, res) {
 function estado(req, res) {
     var ntt = models.reserva;
     base.listChilds(req, res, ntt, 'id', [{
-        model: models.producto
-        // model: models.user
+        model: models.producto,
+        model: models.user
     }], function (data) {
         var result = [];
         _.each(data, function (item) {
@@ -88,7 +110,16 @@ function estado(req, res) {
                 comentarioAprobacion: item.comentarioAprobacion,
                 fechaAprobacion: base.fromDate(item.fechaAprobacion),
                 fechaAutorizacion: base.fromDate(item.fechaAutorizacion),
-                comentarioAutorizacion: item.comentarioAutorizacion
+                comentarioAutorizacion: item.comentarioAutorizacion,
+                idUsuario: item.idUsuario,
+                user: {
+                    first_name: item.user.first_name
+                },
+                idUsuarioJefe: item.idUsuarioJefe,
+                userJefe: {
+                    first_name: item.user.first_name
+                }
+
             };
             result.push(row);
         });
@@ -107,6 +138,7 @@ function usuariocui(req, res) {
 
 module.exports = {
     list: list,
+    listDESC: listDESC,
     action: action,
     estado: estado,
     usuariocui: usuariocui

@@ -11,6 +11,21 @@
                 editable: false
             },
             {
+                label: 'Estado',
+                name: 'estado',
+                width: 90,
+                align: 'center',
+                editable: false,
+                edittype: "custom",
+                editoptions: {
+                    custom_value: sipLibrary.getRadioElementValue,
+                    custom_element: sipLibrary.radioElemReserva
+                    //defaultValue: "Aprobar"
+                    // fullRow: true
+                },
+                search: false
+            },
+            {
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'nombre',
@@ -115,6 +130,7 @@
                 width: 90,
                 align: 'center',
                 editable: true,
+                hidden: true,
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,

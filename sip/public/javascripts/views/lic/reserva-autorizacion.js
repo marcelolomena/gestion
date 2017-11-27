@@ -108,6 +108,15 @@
                 editable: true,
                 search: false
             }, {
+                label: 'Solicitante',
+                name: 'idUsuario',
+                jsonmap: 'user.first_name',
+                align: 'center',
+                width: 100,
+                editable: false,
+                search: false
+            },
+            {
                 label: 'Comentario de Solicitud',
                 name: 'comentarioSolicitud',
                 width: 300,
@@ -118,7 +127,17 @@
                     fullRow: true
                 },
                 search: false
-            }, {
+            },
+            {
+                label: 'Aprobador',
+                name: 'idUsuarioJefe',
+                jsonmap: 'userJefe.first_name',
+                align: 'center',
+                width: 100,
+                editable: false,
+                search: false
+            },
+            {
                 label: 'Comentario de Aprobación',
                 name: 'comentarioAprobacion',
                 width: 300,
