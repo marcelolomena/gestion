@@ -182,10 +182,12 @@ module.exports = function (passport) {
     router.route('/lic/reserva-aprobacion')
          .get(isAuthenticated, aprobacionController.list)
          .post(isAuthenticated, aprobacionController.action);
-
+    router.get('/lic/cuisjefe', aprobacionController.getCUIs);
+         
     router.route('/lic/reservaAutorizado')
         .get(isAuthenticated, reservaAutorizacionController.listAprobados)
         .post(isAuthenticated, reservaAutorizacionController.action);
+
 
     // router.route('/lic/reservaAutorizado')
     //     .get(isAuthenticated, recepcionController.listAprobados);

@@ -12,7 +12,9 @@ exports.action = function (req, res) {
     case "edit":
       //Codigo de update
       var sql="UPDATE lic.reserva SET estado='"+req.body.estado+"', comentarioaprobacion='"+req.body.comentarioaprobacion+"', "+
-      "cui="+req.body.cui +", fechaaprobacion=getdate() WHERE id ="+req.body.id;
+      "cui="+req.body.cui +", fechaaprobacion=getdate(), idusuariojefe="+req.session.passport.user+" "+
+      "WHERE id ="+req.body.id;
+       
       console.log("query:"+sql);
       sequelize.query(sql).then(function (ok) {
         res.json({ error_code: 0 });
@@ -54,7 +56,7 @@ exports.list = function (req, res) {
           }
         }).then(function (servicio) {
           var sql = "DECLARE @idcui INT;" +
-            "SET @idcui=" + idcui + ";" +
+            "SET @idcui= sip.obtienecuipadrebch("+idcui+"); "+
             "select a.cui " +
             "from   lic.estructuracuibch a " +
             "where  a.cui =  @idcui  " +
@@ -149,5 +151,63 @@ exports.list = function (req, res) {
   })
 }
 
+exports.getCUIs = function (req, res) {
+  var rol = req.session.passport.sidebar[0].rid;
+  console.log("ROLNEGOCIO getCUIs:"+rol);
+  if (rol == constants.JEFELIC) {
+    console.log("entro");
+    var idcui=0;
+    var sql1 = "DECLARE @email VARCHAR(255); " +
+      "SELECT @email=email FROM art_user WHERE uid=" + req.session.passport.user + ";" +
+      "SELECT cui FROM RecursosHumanos WHERE emailTrab=@email AND periodo=(SELECT max(periodo) FROM RecursosHumanos)";
+    logger.debug("query:" + sql1);
+    sequelize.query(sql1)
+      .spread(function (rows) {
+        if (rows.length > 0) {
+          logger.debug("query:" + rows + ", valor:" + rows[0].cui);
+          idcui = rows[0].cui;
+        } else {
+          idcui = 0; //cui no existente para que no encuentre nada
+        }
+      }).then(function (servicio) {
+        var sql = "DECLARE @idcui INT;" +
+          "SET @idcui= sip.obtienecuipadrebch("+idcui+"); "+
+          "select a.cui id, convert(VARCHAR(10), a.cui)+' '+a.unidad AS nombre " +
+          "from   lic.estructuracuibch a " +
+          "where  a.cui =  @idcui  " +
+          "union " +
+          "select b.cui id, convert(VARCHAR(10), b.cui)+' '+b.unidad AS nombre " +
+          "from   lic.estructuracuibch a,lic.estructuracuibch b " +
+          "where  a.cui =  @idcui  " +
+          "  and  a.cui = b.cuipadre " +
+          "union " +
+          "select c.cui id, convert(VARCHAR(10), c.cui)+' '+c.unidad AS nombre " +
+          "from   lic.estructuracuibch a,lic.estructuracuibch b,lic.estructuracuibch c " +
+          "where  a.cui =  @idcui  " +
+          "  and  a.cui = b.cuipadre " +
+          "  and  b.cui = c.cuipadre " +
+          "union " +
+          "select d.cui id, convert(VARCHAR(10), d.cui)+' '+d.unidad AS nombre " +
+          "from   lic.estructuracuibch a,lic.estructuracuibch b,lic.estructuracuibch c,lic.estructuracuibch d " +
+          "where  a.cui =  @idcui  " +
+          "  and  a.cui = b.cuipadre " +
+          "  and  b.cui = c.cuipadre " +
+          "  and  c.cui = d.cuipadre";
+        logger.debug("query2:" + sql);
+        sequelize.query(sql)
+        .spread(function (rows) {
+          res.json(rows);
+        });
+      });
+  } else {
+    var sql = "SELECT cui id, convert(VARCHAR(10), cui)+' '+unidad AS nombre FROM lic.estructuracuibch WHERE estado='Activado'";
+    logger.debug("query3:" + sql);
+      sequelize.query(sql)
+        .spread(function (rows) {
+          res.json(rows);
+        });
+  }
+
+};
 
 
