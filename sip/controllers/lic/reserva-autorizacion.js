@@ -9,13 +9,17 @@ var entity = models.reserva;
 entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
-// entity.belongsTo(models.user, {
-//     foreignKey: 'idUsuario'
-// });
+entity.belongsTo(models.user, {
+    foreignKey: 'idUsuario'
+});
 
 var includes = [{
-    model: models.producto
-}];
+        model: models.producto
+    },
+    {
+        model: models.user
+    }
+];
 
 function map(req) {
     return {
@@ -31,15 +35,19 @@ function map(req) {
         fechaAprobacion: base.toDate(req.body.fechaAprobacion),
         comentarioAprobacion: req.body.comentarioAprobacion,
         fechaAutorizacion: req.body.fechaAutorizacion,
-        comentarioAutorizacion:req.body.comentarioAutorizacion
+        comentarioAutorizacion: req.body.comentarioAutorizacion
     }
 }
 
 function listAprobados(req, res) {
     var ntt = models.reserva;
     base.list(req, res, ntt, [{
-        model: models.producto
-    }], function (data) {
+            model: models.producto
+        },
+        {
+            model: models.user
+        }
+    ], function (data) {
         var result = [];
         _.each(data, function (item) {
             if (item.estado === 'Aprobado' || item.estado === 'Autorizado') {
@@ -53,12 +61,19 @@ function listAprobados(req, res) {
                     fechaUso: base.fromDate(item.fechaUso),
                     cui: item.cui,
                     sap: item.sap,
-                    idUsuario: item.idUsuario,
                     fechaAprobacion: base.fromDate(item.fechaAprobacion),
                     comentarioSolicitud: item.comentarioSolicitud,
                     comentarioAprobacion: item.comentarioAprobacion,
                     estadoAprobacion: item.estado,
-                    comentarioAutorizacion: item.comentarioAutorizacion
+                    comentarioAutorizacion: item.comentarioAutorizacion,
+                    idUsuario: item.idUsuario,
+                    user: {
+                        first_name: item.user.first_name  + '  ' +  item.user.last_name
+                    },
+                    idUsuarioJefe: item.idUsuarioJefe,
+                    userJefe: {
+                        first_name: item.user.first_name  + '  ' +  item.user.last_name
+                    }
                 });
             }
         });
@@ -76,9 +91,9 @@ function action(req, res) {
             return base.create(entity, map(req), res);
         case 'edit':
             var hoy = "" + new Date().toISOString();
-            
+
             req.body.fechaAutorizacion = hoy;
-            
+
             return base.update(entity, map(req), res);
         case 'del':
             return base.destroy(entity, req.body.id, res);
