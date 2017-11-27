@@ -1607,7 +1607,7 @@ object RiskService extends CustomColumns {
 
 
   def findRiskAlertsIncreasedById(id: String): Option[RiskAlertsIncreased] = {
-    Logger.info("Tendra datos ??? " + id)
+
     if (!StringUtils.isEmpty(id)) {
       /*
       var sqlString = "EXEC art.risk_alert_details {id}"
@@ -1782,7 +1782,6 @@ object RiskService extends CustomColumns {
 
   def findUserAlertsIds(employeeid: String): String = {
     var risk_ids = ""
-    Logger.info("aca empieza el weveo ono  "  + employeeid)
     val risksAlerts = RiskService.findAllActiveAlerts()
     for (r <- risksAlerts) {
 
@@ -1803,7 +1802,6 @@ object RiskService extends CustomColumns {
 
   def findNewUserAlertsIds(employeeid: String): String = {
     var risk_ids = ""
-    Logger.info("aca empieza el weveo "  + employeeid)
     val risksAlerts = RiskService.findAllOpenAlerts()
     for (r <- risksAlerts) {
 
@@ -1818,8 +1816,6 @@ object RiskService extends CustomColumns {
       }
 
     }
-
-    println("chorizo : " + risk_ids)
 
     return risk_ids
   }
@@ -2118,8 +2114,12 @@ object RiskService extends CustomColumns {
 
                   } else if (increment == 3) {
                     val bigboss = findBigBossMail(email)
-                    if(!bigboss.isEmpty)
+                    if(!bigboss.isEmpty) {
+                      println("el gran jefe : " + bigboss.get.toString)
                       cc = cc + "," + bigboss.get.toString
+                    }else{
+                      println("no tiene gran jefe")
+                    }
                   }
 
                   response=utils.SendEmail.sendEmailRiskAlert(

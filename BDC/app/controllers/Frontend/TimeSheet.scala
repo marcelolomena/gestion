@@ -28,7 +28,6 @@ import play.api.libs.functional.syntax._
 import java.util.regex.Pattern
 import models.TimesheetExternal
 import java.text.DecimalFormat
-//import com.google.gson.JsonObject
 import java.util.ArrayList
 
 import scala.math.BigDecimal.RoundingMode
