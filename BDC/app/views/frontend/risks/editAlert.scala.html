@@ -118,7 +118,11 @@
                     </div>
                 </div>
 
-		         <div class="left width_full">
+				@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
+		         <div class="left width_full oculto">
+				} else {
+				 <div class="left width_full">
+				}
 			      	<div class="left width-pr50 padding-top-3px" >
 					
 			      		<dl id="members_involved_field1" class=" ">
@@ -142,6 +146,7 @@
 							</dd>
 						    
 						</dl>
+
 						<div class="left width_full">
 			      	      	@inputText(
 				                alertForm("person_invloved"),
@@ -149,7 +154,7 @@
 				                '_label -> "",
 				                'type -> "hidden"
 				            )
-				            </div>
+				        </div>
 			         </div>
 		         </div>
 		         
