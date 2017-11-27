@@ -13,7 +13,7 @@
             }, {
                 label: 'Estado',
                 name: 'estado',
-                width: 90,
+                width: 70,
                 align: 'center',
                 editable: false,
                 edittype: "custom",
@@ -40,7 +40,7 @@
                 label: 'Cantidad',
                 name: 'numlicencia',
                 align: 'center',
-                width: 70,
+                width: 60,
                 editable: true,
                 editoptions: {
                     readonly: 'readonly'
@@ -51,6 +51,14 @@
                 },
                 search: false
             },
+            {
+                label: 'Usuario',
+                name: 'usuario',
+                align: 'center',
+                width: 180,
+                editable: false,
+                search: false
+            },            
             {
                 label: 'Fecha de Uso',
                 name: 'fechauso',
@@ -142,9 +150,6 @@
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
-                // editoptions: {
-                //     fullRow: true
-                // },
                 editrules: {
                     required: true
                 },

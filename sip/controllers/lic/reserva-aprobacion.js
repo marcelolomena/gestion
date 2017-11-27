@@ -125,8 +125,9 @@ exports.list = function (req, res) {
         "SELECT @PageSize=" + rowspp + "; " +
         "DECLARE @PageNumber INT; " +
         "SELECT @PageNumber=" + page + "; " +
-        "SELECT a.*, b.nombre "+ 
+        "SELECT a.*, b.nombre, c.first_name+' '+c.last_name AS usuario "+ 
         "FROM lic.reserva a JOIN lic.producto b ON a.idproducto=b.id "+
+        "JOIN art_user c ON a.idusuario = c.uid "+
         "WHERE cui IN (" + elcui + ") ";
 
       if (filters && condition != "") {
