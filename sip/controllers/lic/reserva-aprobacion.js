@@ -111,7 +111,7 @@ exports.list = function (req, res) {
       logger.debug("***CONDICION:" + condition);
     }
   }
-  var sqlcount = "SELECT count(*) AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto ";
+  var sqlcount = "SELECT count(*) AS count FROM lic.reserva a JOIN lic.producto b ON a.idproducto=b.id ";
   if (filters && condition != "") {
     sqlcount += " WHERE " + condition + " ";
   }
@@ -130,10 +130,10 @@ exports.list = function (req, res) {
         "WHERE cui IN (" + elcui + ") ";
 
       if (filters && condition != "") {
-        sql += "WHERE " + condition + " ";
+        sql += "AND " + condition + " ";
         logger.debug("**" + sql + "**");
       }
-      var sql2 = sql + "ORDER BY b.id desc OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+      var sql2 = sql + "ORDER BY a.estado OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
       var records;
       logger.debug("query:" + sql2);
 
@@ -147,6 +147,9 @@ exports.list = function (req, res) {
           res.json({ error_code: 1 });
         });
       })
+    } else {
+      logger.error("Sin acceso a funcionalidad");
+      res.json({ error_code: 0 });      
     }
   })
 }

@@ -10,6 +10,14 @@
                 key: true,
                 hidden: true,
                 editable: false
+            }, {
+                label: 'Estado',
+                name: 'estado',
+                width: 90,
+                align: 'center',
+                editable: false,
+                edittype: "custom",
+                search: false
             },
             {
                 label: 'Producto',
@@ -110,12 +118,14 @@
                     edithidden: false
                 },
                 search: false
-            }, {
+            },
+            {
                 label: 'Estado',
                 name: 'estado',
                 width: 90,
                 align: 'center',
                 editable: true,
+                hidden:true,
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
@@ -124,7 +134,7 @@
                     // fullRow: true
                 },
                 search: false
-            },
+            },            
             {
                 label: 'Comentario de Aprobación',
                 name: 'comentarioaprobacion',
