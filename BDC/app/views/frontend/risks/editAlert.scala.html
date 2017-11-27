@@ -23,17 +23,51 @@
 				@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
 					<!--debe ingresar respuesta-->
 					<form action="/edit-alert/@alert_id" method="POST" id="risk-management-alert-form">
+						<input type="hidden" value="@alert.get.criticality.get.toInt" name="criticality" id="criticality"/>
+						<input type="hidden" value="@alert.get.event_code.get.toInt" name="event_code" id="event_code"/>
+						<input type="hidden" value="@alert.get.category_id.get.toString" name="category_id" id="category_id"/>
+						<input type="hidden" value="@alert.get.task_id.get.toInt" name="task_id" id="task_id"/>
+						<input type="hidden" value="@alert.get.impacted_variable.get.toString" name="impacted_variable" id="impacted_variable"/>
+						<input type="hidden" value="@alert.get.event_title" name="event_title" id="event_title"/>
 				}else{
 						<!--debe mandar correo-->
 					<form action="/edit-alert-mail/@alert_id" method="POST" id="risk-management-alert-form">
 				}
-				@*@form(action = controllers.Frontend.routes.Risks.updateAlert(alert_id), 'id->"risk-management-alert-form") {*@
+
 				<input type="hidden" value="@risk_id" name="risk_id" id="risk_id"/>
 				<input type="hidden" value="@alert_id" name="alert_id" id="alert_id"/>
 				<input type="hidden" value="@alert.get.reiteration.get.toString" name="reiteration" id="reiteration"/>
 				<input type="hidden" value="*" name="event_details" id="event_details"/>
 				<input type="hidden" value="@(new java.util.Date().format("dd-MM-yyyy"))" name="change_state" id="change_state"/>
+
 		         <div class="left width_full">
+					 @if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
+					 <li>
+						 <span class="header">Severidad</span>
+						 <span class="program-data">
+                            @{
+                            alert.get.criticality.get.toInt match{
+                                case 1 => "Alto"
+                                case 2 => "Medio"
+                                case 3 => "Bajo"
+                            }
+                            }
+						</span>
+					 </li>
+
+					 <li>
+						 <span class="header">Tipo de Evento</span>
+						 <span class="program-data">
+                            @{
+                            alert.get.event_code.get.toInt match{
+                            case 1 => "Riesgo"
+                            case 2 => "Incidente"
+                            }
+                            }
+						</span>
+					 </li>
+					 }else{
+
 		         	<div class="left width-pr50 padding-top-3px" >
 			      		@select(
 					         alertForm("criticality"),
@@ -41,7 +75,7 @@
 					         'class -> "input-xlarge ",
 					         '_label -> "*Severidad"
 					      )
-				      </div>
+				    </div>
 
 		       		<div class="right width-pr50 padding-top-3px" >
 		      			@select(
@@ -51,49 +85,84 @@
 					         '_label -> "*Tipo de Evento"
 					      )
 					</div>
+					}
+
+				 </div>
+
+		      	<div class="left width_full">
+					@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
+					<li>
+						<span class="header">Categoría</span>
+						<span class="program-data">
+							@RiskService.findDescriptionCategoryAlert(alert.get.category_id.get.toString).get.toString
+						</span>
+					</li>
+
+					<li>
+						<span class="header">Tarea</span>
+						<span class="program-data">
+							@TaskService.findActiveTaskDetailsByTaskId(alert.get.task_id.get.toInt).get.task_description
+						</span>
+					</li>
+					}else{
+						<div class="left width-pr50 padding-top-3px" >
+							@select(
+							alertForm("category_id"),
+							options(alert_category),
+							'class -> "input-xlarge ",
+							'_label ->  Messages("newAlert.alertCategory"),
+							'_default -> Messages("newAlert.placeholder.alert_category")
+							)
+						</div>
+						<div class="right width-pr50 padding-top-3px" >
+							@select(
+							alertForm("task_id"),
+							options(alert_task),
+							'class -> "input-xlarge ",
+							'_label ->  Messages("newAlert.alertTask"),
+							'_default -> Messages("newAlert.placeholder.alert_task")
+							)
+						</div>
+					}
+
 		         </div>
 
 		      	<div class="left width_full">
-					<div class="left width-pr50 padding-top-3px" >
-						@select(
-						alertForm("category_id"),
-						options(alert_category),
-						'class -> "input-xlarge ",
-						'_label ->  Messages("newAlert.alertCategory"),
-						'_default -> Messages("newAlert.placeholder.alert_category")
-						)
-					</div>
-                    <div class="right width-pr50 padding-top-3px" >
-                        @select(
-                        alertForm("task_id"),
-                        options(alert_task),
-                        'class -> "input-xlarge ",
-                        '_label ->  Messages("newAlert.alertTask"),
-                        '_default -> Messages("newAlert.placeholder.alert_task")
-                        )
-                    </div>
+					@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
+					<li>
+						<span class="header">Variable impactada</span>
+						<span class="program-data">
+							@alert.get.impacted_variable.get.toString
+						</span>
+					</li>
 
-		         </div>
+					<li>
+						<span class="header">Descripción</span>
+						<span class="program-data">
+							@alert.get.event_title
+						</span>
+					</li>
+					}else{
 
-		      	<div class="left width_full">
-					<div class="left width-pr50 padding-top-3px" >
-						@inputText(
-						alertForm("impacted_variable"),
-						'class -> "span5",
-						'_label -> Messages("newAlert.alertImpactedVariable"),
-						'placeholder ->Messages("newAlert.introImpactedVariable")
-						)
-					</div>
-					<div class="right width-pr50 padding-top-3px" >
-						@textarea(
-						alertForm("event_title"),
-						'class -> "span5",
-						'_label ->  Messages("newAlert.alertTitle"),
-						'placeholder -> Messages("newAlert.placeholder.introTitle"),
-						'rows -> 3,
-						'cols -> 60
-						)
-					</div>
+						<div class="left width-pr50 padding-top-3px" >
+							@inputText(
+							alertForm("impacted_variable"),
+							'class -> "span5",
+							'_label -> Messages("newAlert.alertImpactedVariable"),
+							'placeholder ->Messages("newAlert.introImpactedVariable")
+							)
+						</div>
+						<div class="right width-pr50 padding-top-3px" >
+							@textarea(
+							alertForm("event_title"),
+							'class -> "span5",
+							'_label ->  Messages("newAlert.alertTitle"),
+							'placeholder -> Messages("newAlert.placeholder.introTitle"),
+							'rows -> 3,
+							'cols -> 60
+							)
+						</div>
+					}
 		         </div>
 
 				<div class="left width_full">

@@ -2114,8 +2114,12 @@ object RiskService extends CustomColumns {
 
                   } else if (increment == 3) {
                     val bigboss = findBigBossMail(email)
-                    if(!bigboss.isEmpty)
+                    if(!bigboss.isEmpty) {
+                      println("el gran jefe : " + bigboss.get.toString)
                       cc = cc + "," + bigboss.get.toString
+                    }else{
+                      println("no tiene gran jefe")
+                    }
                   }
 
                   response=utils.SendEmail.sendEmailRiskAlert(
