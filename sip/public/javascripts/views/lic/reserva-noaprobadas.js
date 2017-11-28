@@ -94,7 +94,7 @@ $(document).ready(function () {
         search: false
     },
     {
-        label: 'Usuario',
+        label: 'Solicitante',
         name: 'usuario',
         align: 'center',
         width: 100,
@@ -190,6 +190,18 @@ $(document).ready(function () {
         search: false
     },
     {
+        label: 'Aprobador',
+        name: 'usuariojefe',
+        align: 'center',
+        width: 100,
+        editable: true,
+        search: false,
+        editoptions: {
+            fullRow: true,
+            readonly: 'readonly'
+        }        
+    },     
+    {
         label: 'Comentario de Aprobación',
         name: 'comentarioaprobacion',
         width: 300,
@@ -203,7 +215,7 @@ $(document).ready(function () {
     }
 ];
     $("#grid").jqGrid({
-        url: '/lic/reserva-aprobacion',
+        url: '/lic/reserva-noaprobadas',
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -214,7 +226,7 @@ $(document).ready(function () {
         sortable: "true",
         width: null,
         shrinkToFit: false,
-        caption: 'Aprobación Reservas',
+        caption: 'Reservas No Aprobadas',
         pager: "#pager",
         viewrecords: true,
         rowList: [10, 20, 30, 40, 50],
@@ -226,7 +238,7 @@ $(document).ready(function () {
     $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $('#grid').jqGrid('navGrid', "#pager", {
-        edit: true,
+        edit: false,
         add: false,
         del: false,    
         refresh: true,

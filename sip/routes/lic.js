@@ -34,6 +34,7 @@ var reservaSolicitudController = require('../controllers/lic/reserva-solicitud')
 var reservaAutorizacionController = require('../controllers/lic/reserva-autorizacion');
 var addmController = require('../controllers/lic/addm');
 var aprobacionController = require('../controllers/lic/reserva-aprobacion');
+var noaprobadasController = require('../controllers/lic/reserva-noaprobadas');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -187,7 +188,9 @@ module.exports = function (passport) {
     router.route('/lic/reservaAutorizado')
         .get(isAuthenticated, reservaAutorizacionController.listAprobados)
         .post(isAuthenticated, reservaAutorizacionController.action);
-
+        
+    router.route('/lic/reserva-noaprobadas')
+        .get(isAuthenticated, noaprobadasController.list)
 
     // router.route('/lic/reservaAutorizado')
     //     .get(isAuthenticated, recepcionController.listAprobados);
