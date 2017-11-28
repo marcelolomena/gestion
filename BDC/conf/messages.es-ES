@@ -1383,7 +1383,7 @@ dashboard.plannedpercentage=% Planificado
 
 profile.riskeventType=Tipo de Evento
 profile.riskalertType=Tipo de Alertas
-profile.eventcode=Código de evento
+profile.eventcode=Tipo de Evento
 profile.eventdetails=Evento Detalles
 profile.criticality=Criticidad
 

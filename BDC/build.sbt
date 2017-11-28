@@ -1,12 +1,12 @@
-
-
-//fork in run := true
-
 name := "BDC"
 
 version := "1.0-SNAPSHOT"
 
 scalaVersion := "2.11.11"
+
+resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
+
+scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
 
 libraryDependencies ++= Seq(
   ws,
@@ -20,7 +20,8 @@ libraryDependencies ++= Seq(
   "org.apache.poi" % "poi-ooxml" % "3.10.1",
   "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.1",
   "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.0-akka-2.4.x",
-  "org.apache.commons" % "commons-email" % "1.3"
+  "org.apache.commons" % "commons-email" % "1.4",
+  "com.google.guava" % "guava" % "16.0.1"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)

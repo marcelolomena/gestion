@@ -6,16 +6,13 @@ import models._
 import anorm._
 import com.typesafe.plugin._
 import play.api.mvc._
-import play.api.libs.ws.WS
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import com.ning.http.client.Realm.AuthScheme
-import play.api.libs.ws.Response
 import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.concurrent.Future
-import play.api.libs.ws.Response
 import java.net.URLEncoder
 import akka.util.Timeout
 import scala.concurrent.ExecutionContext.Implicits.global

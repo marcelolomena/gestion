@@ -9,233 +9,261 @@
 <body>
 @frontend.topLayout()
 <div class="main">
-@frontend.header()
-<section class="slider" id="pDetail_page">
+	@frontend.header()
+	<section class="slider" id="pDetail_page">
 
-			<div id="new_program_header" class="">
-				<p> 
-					<span class="title-head">Actualizar Alerta</span>
-					<span class="title-head-status" style="padding-right: 20px"></span>
-				</p>
+		<div class="product_main" style="float: left; height: auto; overflow: hidden;">
+			<div class="product_detail_1 ">
+				<h3 id="productNm" class="parent-new-h3">
+					<span class="parent-icon"> &#60; </span>
+					@{
+					Html("<a href='/risk-details/"+risk_id+"' style='font-weight: bold'><span class='left'>Volver</span></a>")
+					}
+					<span class="left"></span>
+					</a>
+
+					<span class=""></span>
+				</h3>
+
+
+				<h3 id="productNm">
+					<span class="left">@alert.get.event_title</span>
+				</h3>
+
 			</div>
 
-			<div class="width_full" id="earn-value-info">
-				@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
-					<!--debe ingresar respuesta-->
-					<form action="/edit-alert/@alert_id" method="POST" id="risk-management-alert-form">
-						<input type="hidden" value="@alert.get.criticality.get.toInt" name="criticality" id="criticality"/>
-						<input type="hidden" value="@alert.get.event_code.get.toInt" name="event_code" id="event_code"/>
-						<input type="hidden" value="@alert.get.category_id.get.toString" name="category_id" id="category_id"/>
-						<input type="hidden" value="@alert.get.task_id.get.toInt" name="task_id" id="task_id"/>
-						<input type="hidden" value="@alert.get.impacted_variable.get.toString" name="impacted_variable" id="impacted_variable"/>
-						<input type="hidden" value="@alert.get.event_title" name="event_title" id="event_title"/>
+			@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
+			<!--debe ingresar respuesta-->
+			<form action="/edit-alert/@alert_id" method="POST" id="risk-edit-alert-form">
+				<input type="hidden" value="@alert.get.criticality.get.toInt" name="criticality" id="criticality"/>
+				<input type="hidden" value="@alert.get.event_code.get.toInt" name="event_code" id="event_code"/>
+				<input type="hidden" value="@alert.get.category_id.get.toString" name="category_id" id="category_id"/>
+				<input type="hidden" value="@alert.get.task_id.get.toInt" name="task_id" id="task_id"/>
+				<input type="hidden" value="@alert.get.impacted_variable.get.toString" name="impacted_variable" id="impacted_variable"/>
+				<input type="hidden" value="@alert.get.event_title" name="event_title" id="event_title"/>
 				}else{
-						<!--debe mandar correo-->
-					<form action="/edit-alert-mail/@alert_id" method="POST" id="risk-management-alert-form">
-						<input type="hidden" value="@alert.get.status_id" name="status_id" id="status_id"/>
-				}
+				<!--debe mandar correo-->
+				<form action="/edit-alert-mail/@alert_id" method="POST" id="risk-edit-alert-form">
+					<input type="hidden" value="@alert.get.status_id" name="status_id" id="status_id"/>
+					}
 
-				<input type="hidden" value="@risk_id" name="risk_id" id="risk_id"/>
-				<input type="hidden" value="@alert_id" name="alert_id" id="alert_id"/>
-				<input type="hidden" value="@alert.get.reiteration.get.toString" name="reiteration" id="reiteration"/>
-				<input type="hidden" value="*" name="event_details" id="event_details"/>
-				<input type="hidden" value="@(new java.util.Date().format("dd-MM-yyyy"))" name="change_state" id="change_state"/>
+					<input type="hidden" value="@risk_id" name="risk_id" id="risk_id"/>
+					<input type="hidden" value="@alert_id" name="alert_id" id="alert_id"/>
+					<input type="hidden" value="@alert.get.reiteration.get.toString" name="reiteration" id="reiteration"/>
+					<input type="hidden" value="*" name="event_details" id="event_details"/>
+					<input type="hidden" value="@(new java.util.Date().format("dd-MM-yyyy"))" name="change_state" id="change_state"/>
 
-					 @if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
-					 <table id="subtask-details">
-						 <tbody>
-						 <tr>
-							 <td class="table_header">Severidad</td>
-							 <td class="p_values width160px">
-							 <span>
-								@{
-								alert.get.criticality.get.toInt match{
+					@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
+					<div class="width_full push_top10px" id="project_task_details">
+						<table>
+							<tbody>
+							<tr>
+								<td class="table_header"><strong>Severidad</strong></td>
+								<td class="p_values width380px">
+									@{
+									alert.get.criticality.get.toInt match{
 									case 1 => "Alto"
 									case 2 => "Medio"
 									case 3 => "Bajo"
-								}
-								}
-							 </span>
-							 </td>
-							 <td class="table_header">Tipo de Evento</td>
-							 <td class="p_values width160px"><span>
-								@{
-								alert.get.event_code.get.toInt match{
-								case 1 => "Riesgo"
-								case 2 => "Incidente"
-								}
-								}
-							 </span></td>
-						 </tr>
+									}
+									}
+								</td>
+								<td class="table_header"><strong>Tipo de Evento</strong></td>
+								<td class="p_values">
+									@{
+									alert.get.event_code.get.toInt match{
+									case 1 => "Riesgo"
+									case 2 => "Incidente"
+									}
+									}
+								</td>
+							</tr>
 
-						 <tr>
-							 <td class="table_header">Categoría</td>
-							 <td class="p_values width160px"><span>@RiskService.findDescriptionCategoryAlert(alert.get.category_id.get.toString).get.toString</span></td>
-							 <td class="table_header">Tarea</td>
-							 <td class="p_values width160px"><span>@TaskService.findActiveTaskDetailsByTaskId(alert.get.task_id.get.toInt).get.task_title</span></td>
-						 </tr>
-						 <tr>
-							 <td class="table_header">Variable impactada</td>
-							 <td class="p_values width160px"><span>@alert.get.impacted_variable.get.toString</span></td>
-							 <td class="table_header">Descripción</td>
-							 <td class="p_values width160px"><span>@alert.get.event_title</span></td>
-						 </tr>
-						 </tbody>
-					 </table>
-						 <div class="left width_full">
-							 <div class="left width-pr50 padding-top-3px" >
-								 @select(
-								 alertForm("status_id"),
-								 options(alert_states),
-								 'class -> "input-xlarge ",
-								 '_label ->  Messages("newAlert.alertStatus"),
-								 '_default -> Messages("newAlert.placeholder.alert_status")
-								 )
-							 </div>
-							 <div class="right width-pr50 padding-top-3px" >
-								 @textarea(
-								 alertForm("responsible_answer"),
-								 'class -> "span5",
-								 '_label ->  Messages("newAlert.alertAnswer"),
-								 'placeholder -> Messages("newAlert.placeholder.introAnswer"),
-								 'rows -> 3,
-								 'cols -> 60
-								 )
-							 </div>
-						 </div>
-					 }else{
+							<tr>
+								<td class="table_header"><strong>Categoría</strong></td>
+								<td class="p_values width380px">@RiskService.findDescriptionCategoryAlert(alert.get.category_id.get.toString).get.toString</td>
+								<td class="table_header"><strong>Tarea</strong></td>
+								<td class="p_values">@TaskService.findActiveTaskDetailsByTaskId(alert.get.task_id.get.toInt).get.task_title</td>
+							</tr>
 
-						<div class="left width_full">
-							<div class="left width-pr50 padding-top-3px">
-								@select(
-									 alertForm("criticality"),
-									 options("1"->"Alto", "2"->"Medio","3"->"Bajo"),
-									 'class -> "input-xlarge ",
-									 '_label -> "*Severidad"
-								  )
-							</div>
+							<tr>
+								<td class="table_header"><strong>Variable impactada</strong></td>
+								<td class="p_values width380px">@alert.get.impacted_variable.get.toString</td>
+								<td class="table_header"><strong>Descripción</strong></td>
+								<td class="p_values">@alert.get.event_title</td>
+							</tr>
 
-							<div class="right width-pr50 padding-top-3px">
-								@select(
-									 alertForm("event_code"),
-									 options("1"->"Riesgo", "2"->"Incidente"),
-									 'class -> "input-xlarge",
-									 '_label -> "*Tipo de Evento"
-								  )
-							</div>
-				 		</div>
+							</tbody>
+						</table>
 
-						 <div class="left width_full">
-							 <div class="left width-pr50 padding-top-3px" >
-								 @select(
-								 alertForm("category_id"),
-								 options(alert_category),
-								 'class -> "input-xlarge ",
-								 '_label ->  Messages("newAlert.alertCategory"),
-								 '_default -> Messages("newAlert.placeholder.alert_category")
-								 )
-							 </div>
-							 <div class="right width-pr50 padding-top-3px" >
-								 @select(
-								 alertForm("task_id"),
-								 options(alert_task),
-								 'class -> "input-xlarge ",
-								 '_label ->  Messages("newAlert.alertTask"),
-								 '_default -> Messages("newAlert.placeholder.alert_task")
-								 )
-							 </div>
-						 </div>
-						 <div class="left width_full">
-							 <div class="left width-pr50 padding-top-3px" >
-								 @inputText(
-								 alertForm("impacted_variable"),
-								 'class -> "span5",
-								 '_label -> Messages("newAlert.alertImpactedVariable"),
-								 'placeholder ->Messages("newAlert.introImpactedVariable")
-								 )
-							 </div>
-							 <div class="right width-pr50 padding-top-3px" >
-								 @textarea(
-								 alertForm("event_title"),
-								 'class -> "span5",
-								 '_label ->  Messages("newAlert.alertTitle"),
-								 'placeholder -> Messages("newAlert.placeholder.introTitle"),
-								 'rows -> 3,
-								 'cols -> 60
-								 )
-							 </div>
-						 </div>
-					}
+					</div>
+
+					<div class="left width_full">
+					<h3 id="productNm" style="margin: 25px 0px 25px 0px;">
+						<span class="left">Ingresar comentario de cierre de alerta</span>
+					</h3>
+					</div>
 
 
-				@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
-		         <div class="left width_full oculto">
-				} else {
-				 <div class="left width_full">
-				}
-			      	<div class="left width-pr50 padding-top-3px" >
-					
-			      		<dl id="members_involved_field1" class=" ">
-						    <dt><label for="members_involved1">Responsables</label></dt>
-						    <dd>
-						    	 <div class="mutliSelect">
-						            <ul class="width_full">
-						            @if(userMap.size>0){
-						            		@for(ts <- userMap){
-									 	          <li class="width_full">
-								                    <span class="left"><input name="user_list" id="user_list_@ts.uid.get" type="checkbox" value="@ts.uid.get" /></span> 
-								                    <span class="left issue-member">@ts.first_name.substring(0,1) .&nbsp;@ts.last_name</span>
-								                 </li>
-							 				}
-							 		}else{
-							 		<span style="float: left;color:#666;margin:10px 0 10px;"> No Members Available...  </span>
-				    				}     
-						                
-						            </ul>
-						        </div>
-							</dd>
-						    
-						</dl>
-
-						<div class="left width_full">
-			      	      	@inputText(
-				                alertForm("person_invloved"),
-				                'class -> "span5 ", 
-				                '_label -> "",
-				                'type -> "hidden"
-				            )
-				        </div>
-			         </div>
-		         </div>
-		         
-		         <dl id="member_id_search_field " class=" display-none">
-	   				<dt>
-	   					<label for="member_id_search"> @Messages("newmember.member")</label>
-	   				</dt>
-		    		<dd>
-		   			 <input type="text" value="" id="member_id_search" name="member_id_search" placeholder="Search Member"/>	
-					</dd>
-		    	</dl>
-	      		<div class="width_full" style="margin-top: 20px;">
-					@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
-						<!--debe ingresar respuesta-->
+					<div class="left width_full">
 						<div class="left width-pr50 padding-top-3px" >
-							<input class="btn form-button" value="Guardar" id="send-alert"  type="button"/>
+							@select(
+							alertForm("status_id"),
+							options(alert_states),
+							'class -> "input-xlarge ",
+							'_label ->  Messages("newAlert.alertStatus"),
+							'_default -> Messages("newAlert.placeholder.alert_status")
+							)
 						</div>
+						<div class="right width-pr50 padding-top-3px" >
+							@textarea(
+							alertForm("responsible_answer"),
+							'class -> "span5",
+							'_label ->  Messages("newAlert.alertAnswer"),
+							'placeholder -> Messages("newAlert.placeholder.introAnswer"),
+							'rows -> 3,
+							'cols -> 60
+							)
+						</div>
+					</div>
 					}else{
-						<!--debe mandar correo-->
-						<div class="left width-pr50 padding-top-3px" >
-							<input class="btn form-button" value="Enviar Alerta" id="send-alert"  type="button"/>
+
+					<div class="left width_full">
+						<div class="left width-pr50 padding-top-3px">
+							@select(
+							alertForm("criticality"),
+							options("1"->"Alto", "2"->"Medio","3"->"Bajo"),
+							'class -> "input-xlarge ",
+							'_label -> "*Severidad"
+							)
 						</div>
+
+						<div class="right width-pr50 padding-top-3px">
+							@select(
+							alertForm("event_code"),
+							options("1"->"Riesgo", "2"->"Incidente"),
+							'class -> "input-xlarge",
+							'_label -> "*Tipo de Evento"
+							)
+						</div>
+					</div>
+
+					<div class="left width_full">
+						<div class="left width-pr50 padding-top-3px" >
+							@select(
+							alertForm("category_id"),
+							options(alert_category),
+							'class -> "input-xlarge ",
+							'_label ->  Messages("newAlert.alertCategory"),
+							'_default -> Messages("newAlert.placeholder.alert_category")
+							)
+						</div>
+						<div class="right width-pr50 padding-top-3px" >
+							@select(
+							alertForm("task_id"),
+							options(alert_task),
+							'class -> "input-xlarge ",
+							'_label ->  Messages("newAlert.alertTask"),
+							'_default -> Messages("newAlert.placeholder.alert_task")
+							)
+						</div>
+					</div>
+					<div class="left width_full">
+						<div class="left width-pr50 padding-top-3px" >
+							@inputText(
+							alertForm("impacted_variable"),
+							'class -> "span5",
+							'_label -> Messages("newAlert.alertImpactedVariable"),
+							'placeholder ->Messages("newAlert.introImpactedVariable")
+							)
+						</div>
+						<div class="right width-pr50 padding-top-3px" >
+							@textarea(
+							alertForm("event_title"),
+							'class -> "span5",
+							'_label ->  Messages("newAlert.alertTitle"),
+							'placeholder -> Messages("newAlert.placeholder.introTitle"),
+							'rows -> 3,
+							'cols -> 60
+							)
+						</div>
+					</div>
 					}
-                    <div class="right width-pr50 padding-top-3px" >
-			         	<input id="cancel-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>
-			       	</div>
-	          	</div>
-			</form>
-			</div>
-  		@frontend.footer()
-	</section>			
+
+
+					@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
+					<div class="left width_full oculto">
+					} else {
+					<div class="left width_full">
+					}
+							<div class="left width-pr50 padding-top-3px" >
+
+								<dl id="members_involved_field1" class=" ">
+									<dt><label for="members_involved1">Responsables</label></dt>
+									<dd>
+										<div class="mutliSelect">
+											<ul class="width_full">
+												@if(userMap.size>0){
+												@for(ts <- userMap){
+												<li class="width_full">
+													<span class="left"><input name="user_list" id="user_list_@ts.uid.get" type="checkbox" value="@ts.uid.get" /></span>
+													<span class="left issue-member">@ts.first_name.substring(0,1) .&nbsp;@ts.last_name</span>
+												</li>
+												}
+												}else{
+												<span style="float: left;color:#666;margin:10px 0 10px;"> No Members Available...  </span>
+												}
+
+											</ul>
+										</div>
+									</dd>
+
+								</dl>
+
+								<div class="left width_full">
+									@inputText(
+									alertForm("person_invloved"),
+									'class -> "span5 ",
+									'_label -> "",
+									'type -> "hidden"
+									)
+								</div>
+							</div>
+						</div>
+
+						<dl id="member_id_search_field " class=" display-none">
+							<dt>
+								<label for="member_id_search"> @Messages("newmember.member")</label>
+							</dt>
+							<dd>
+								<input type="text" value="" id="member_id_search" name="member_id_search" placeholder="Search Member"/>
+							</dd>
+						</dl>
+						<div class="width_full" style="text-align:center;">
+							@if(session.get("uId").get.toInt != alert.get.responsible.get.toInt){
+								<!--debe ingresar respuesta-->
+								<span>
+									<input class="btn form-button" value="Guardar" id="send-alert"  type="button"/>
+								</span>
+							}else{
+								<!--debe mandar correo-->
+								<span>
+									@if(alert.get.reiteration.get.toString == "1"){
+										<input class="btn form-button" value="primer reenvío" id="send-alert"  type="button"/>
+									} else {
+										<input class="btn form-button" value="segundo reenvío" id="send-alert"  type="button"/>
+									}
+								</span>
+							}
+							<span class="" style="margin-left:30px;">
+								<input id="cancel-alert" class="btn form-button" value="@Messages("button.cancel")" type="button"/>
+							</span>
+						</div>
+					</div>
+				</form>
+
+		@frontend.footer()
+	</section>
 </div>
 </body>
 @frontend.headerScripts()
@@ -244,9 +272,9 @@
 <script type="text/javascript">
 function renderSendAlert() {
 
-	var url = $("#risk-management-alert-form").attr("action");
+	var url = $("#risk-edit-alert-form").attr("action");
 
-	var sData = $('#risk-management-alert-form').serialize();
+	var sData = $('#risk-edit-alert-form').serialize();
 
 	$.post(url, sData, function(data) {
 
@@ -283,15 +311,15 @@ function renderSendAlert() {
 
 		}
 	});
-}	   
+}
 
 $(document).ready(function(){
-	
+
 		var ids = $("#person_invloved").val().split(",");
 		for ( var i in ids) {
 			$("#user_list_" + ids[i]).attr("checked", "checked");
 		}
-		
+
 		$('.mutliSelect').on('click', function() {
 			var ids = ""
 			$(this).find(':checked').map(function() {
@@ -302,13 +330,13 @@ $(document).ready(function(){
 				}
 			});
 			$("#person_invloved").val(ids);
-	
+
 		});
-	
+
 	   $('#cancel-alert').on('click',function() {
 		 window.location.href='/risk-details/@risk_id';
 	   });
-	   
+
 	   $('#send-alert').on('click', renderSendAlert);
 
 		$('#status_id').on('change', function() {
@@ -322,8 +350,5 @@ $(document).ready(function(){
 		});
 
 		$("#responsible_answer").attr("disabled", true);
-});	   
+});
 </script>
-		
-
-	

@@ -6270,3 +6270,42 @@ h3.header-background{
 div.oculto {
     display: none;
 }
+
+#risk-edit-alert-form textarea,#risk-edit-alert-form input{
+	margin-top: 0px !important;
+}
+#risk-edit-alert-form{
+	background: none;
+    padding: 10px 20px 0px 0px;
+    width: 99.2%;
+     float: left;
+    margin-bottom: 18px;
+
+}
+#risk-edit-alert-form label{
+	color: #666;
+	font-weight: bold;
+}
+#risk-edit-alert-form dd.error{
+	float: left;
+	color: red;
+}
+#risk-edit-alert-form #user_list{
+	height: 100px
+}
+#risk-edit-alert-form select{
+	width: 92%;
+	color: #5bc3e6;
+	float: left;
+	font-size: 13px;
+	height: 33px;
+	padding: 4px 2px 6px;
+	margin: 0px 0 0px;
+	color: #315663 !important;
+}
+
+#risk-edit-alert-form .mutliSelect{
+	border: 1px solid #666;
+    float: left;
+    padding: 6px;
+}
