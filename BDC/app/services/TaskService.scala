@@ -471,6 +471,7 @@ object TaskService extends CustomColumns {
    * get milestone details by milestone id
    */
   def findActiveTaskDetailsByTaskId(tId: Integer) = {
+    println("--------------------------->>>>>>>>>>>>>>>>>>>" + tId)
     val sqlString = "select * from art_task where is_active = 1 AND tId = " + tId
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(
