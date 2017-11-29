@@ -85,6 +85,15 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'art_user',
                 key: 'id'
             }
+        },
+        codAutoriza: {
+            field: 'codautoriza',
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        secuencia: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }
     }, {
         schema: 'lic',

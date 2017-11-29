@@ -39,6 +39,62 @@ function map(req) {
     }
 }
 
+
+function listAuto(req, res) {
+    var id = req.params.id;
+
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.reserva.belongsTo(models.proveedor, {
+                foreignKey: 'idproveedor'
+            });
+
+            models.proveedorsugerido.count({
+                where: {
+                    idserviciorequerido: id
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.proveedorsugerido.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    //order: orden,
+                    where: {
+                        idserviciorequerido: id
+                    },
+                    include: [{
+                        model: models.proveedor
+                    }]
+                }).then(function (proveedorsugerido) {
+                    //logger.debug(solicitudcotizacion)
+                    return res.json({
+                        records: records,
+                        total: total,
+                        page: page,
+                        rows: proveedorsugerido
+                    });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({
+                        error_code: 1
+                    });
+                });
+            })
+        }
+    });
+}
+
+
+
+
+
 function listAprobados(req, res) {
     var ntt = models.reserva;
     base.list(req, res, ntt, [{
@@ -50,7 +106,7 @@ function listAprobados(req, res) {
     ], function (data) {
         var result = [];
         _.each(data, function (item) {
-            if (item.estado === 'Aprobado' || item.estado === 'Autorizado') {
+            if (item.estado === 'Aprobado' || item.estado === 'Autorizado' || item.estado === 'Denegado') {
                 result.push({
                     id: item.id,
                     idProducto: item.idProducto,
@@ -68,11 +124,11 @@ function listAprobados(req, res) {
                     comentarioAutorizacion: item.comentarioAutorizacion,
                     idUsuario: item.idUsuario,
                     user: {
-                        first_name: item.user.first_name  + '  ' +  item.user.last_name
+                        first_name: item.user.first_name + '  ' + item.user.last_name
                     },
                     idUsuarioJefe: item.idUsuarioJefe,
                     userJefe: {
-                        first_name: item.user.first_name  + '  ' +  item.user.last_name
+                        first_name: item.user.first_name + '  ' + item.user.last_name
                     }
                 });
             }
@@ -113,5 +169,6 @@ module.exports = {
     list: list,
     action: action,
     usuariocui: usuariocui,
-    listAprobados: listAprobados
+    listAprobados: listAprobados,
+    listAuto: listAuto
 };
