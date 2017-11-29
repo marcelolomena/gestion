@@ -325,6 +325,7 @@ var sipLibrary = {
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
     },
     radioElemReserva: function (value, options) {
+        console.log('aloha');
         var receivedradio = '<label class="radio-inline"><input type="radio" name="estado" value="Aprobado"',
             breakline = '/>Aprobado</label>',
             naradio = '<label class="radio-inline"><input type="radio" name="estado" value="Rechazado"',
