@@ -40,9 +40,7 @@ function map(req) {
 }
 
 function listAprobados(req, res) {
-
-    var ntt = entity;
-
+    var ntt = models.reserva;
     base.list(req, res, ntt, [{
             model: models.producto
         },
@@ -52,56 +50,35 @@ function listAprobados(req, res) {
     ], function (data) {
         var result = [];
         _.each(data, function (item) {
-            var idReserva = item.id;
-            var sql = 'select b.first_name, b.last_name from lic.reserva a join dbo.art_user b on a.idusuariojefe = b.uid where a.id = ' + idReserva;
-            sequelize.query(sql)
-                .spread(function (rows) {
-                    var userJefe = rows[0].first_name + ' ' + rows[0].last_name;
-                    if (item.estado === 'Aprobado' || item.estado === 'Autorizado') {
-                        result.push({
-                            id: item.id,
-                            idProducto: item.idProducto,
-                            producto: {
-                                nombre: item.producto.nombre
-                            },
-                            numLicencia: item.numlicencia,
-                            fechaUso: base.fromDate(item.fechaUso),
-                            cui: item.cui,
-                            sap: item.sap,
-                            fechaAprobacion: base.fromDate(item.fechaAprobacion),
-                            comentarioSolicitud: item.comentarioSolicitud,
-                            comentarioAprobacion: item.comentarioAprobacion,
-                            estadoAprobacion: item.estado,
-                            comentarioAutorizacion: item.comentarioAutorizacion,
-                            idUsuario: item.idUsuario,
-                            user: {
-                                first_name: item.user.first_name + '  ' + item.user.last_name
-                            },
-                            idUsuarioJefe: item.idUsuarioJefe,
-                            userJefe: userJefe
-                        });
+            if (item.estado === 'Aprobado' || item.estado === 'Autorizado') {
+                result.push({
+                    id: item.id,
+                    idProducto: item.idProducto,
+                    producto: {
+                        nombre: item.producto.nombre
+                    },
+                    numLicencia: item.numlicencia,
+                    fechaUso: base.fromDate(item.fechaUso),
+                    cui: item.cui,
+                    sap: item.sap,
+                    fechaAprobacion: base.fromDate(item.fechaAprobacion),
+                    comentarioSolicitud: item.comentarioSolicitud,
+                    comentarioAprobacion: item.comentarioAprobacion,
+                    estadoAprobacion: item.estado,
+                    comentarioAutorizacion: item.comentarioAutorizacion,
+                    idUsuario: item.idUsuario,
+                    user: {
+                        first_name: item.user.first_name  + '  ' +  item.user.last_name
+                    },
+                    idUsuarioJefe: item.idUsuarioJefe,
+                    userJefe: {
+                        first_name: item.user.first_name  + '  ' +  item.user.last_name
                     }
-
-
-                })
-
-
-
+                });
+            }
         });
         return result;
-
-
-
-
-    });
-
-
-
-
-
-
-
-
+    })
 }
 
 function list(req, res) {
