@@ -17,6 +17,10 @@ define("CONTRATO", "CONTRATO");
 define("USERLIC", "USERLIC");
 define("JEFELIC", "JEFELIC");
 define("ADMINLIC", "ADMINLIC");
+//define estados sistema licencias
+define("RECHAZADO", "Rechazado");
+define("ALAESPERA", "A la Espera");
+
 
 //Define constantes para log de transacciones, contiene id de tabla sip.transaccion
 //*contratos
