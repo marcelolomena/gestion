@@ -171,7 +171,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, traduccionController.listChilds);
 
     router.route('/lic/reserva')
-        .get(isAuthenticated, reservaSolicitudController.list)
+        .get(isAuthenticated, reservaSolicitudController.listSolicitud)
         .post(isAuthenticated, reservaSolicitudController.action);
 
     router.route('/lic/estado/:pId')
@@ -186,7 +186,7 @@ module.exports = function (passport) {
     router.get('/lic/cuisjefe', aprobacionController.getCUIs);
          
     router.route('/lic/reservaAutorizado')
-        .get(isAuthenticated, reservaAutorizacionController.listAprobados)
+        .get(isAuthenticated, reservaAutorizacionController.listAuto)
         .post(isAuthenticated, reservaAutorizacionController.action);
         
     router.route('/lic/reserva-noaprobadas')

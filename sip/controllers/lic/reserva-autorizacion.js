@@ -1,6 +1,7 @@
 'use strict';
 var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
+var utilSeq = require('../../utils/seq');
 var base = require('./lic-controller');
 var _ = require('lodash');
 var logger = require('../../utils/logger');
@@ -42,7 +43,9 @@ function map(req) {
 
 function listAuto(req, res) {
     var id = req.params.id;
-
+    var aprob = 'Aprobado'
+    var autorizado = 'Autorizado'
+    var denegado = 'Denegado'
     var page = 1
     var rows = 10
     var filters = req.params.filters
@@ -52,33 +55,39 @@ function listAuto(req, res) {
             logger.debug("->>> " + err)
         } else {
             //logger.debug(data)
-            models.reserva.belongsTo(models.proveedor, {
-                foreignKey: 'idproveedor'
+            models.reserva.belongsTo(models.producto, {
+                foreignKey: 'idProducto'
+            });
+            models.reserva.belongsTo(models.user, {
+                foreignKey: 'idUsuario'
+            });
+            models.reserva.belongsTo(models.user, {
+                foreignKey: 'idUsuarioJefe'
             });
 
-            models.proveedorsugerido.count({
-                where: {
-                    idserviciorequerido: id
-                }
+            models.reserva.count({
+                
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.proveedorsugerido.findAll({
+                models.reserva.findAll({
                     offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    //order: orden,
+                    limit: parseInt(rows), 
+                    order: ['estado'],
                     where: {
-                        idserviciorequerido: id
+                        estado: [aprob,autorizado,denegado]
                     },
                     include: [{
-                        model: models.proveedor
+                        model: models.producto
+                    },{
+                        model: models.user
                     }]
-                }).then(function (proveedorsugerido) {
+                }).then(function (autorizados) {
                     //logger.debug(solicitudcotizacion)
                     return res.json({
                         records: records,
                         total: total,
                         page: page,
-                        rows: proveedorsugerido
+                        rows: autorizados
                     });
                 }).catch(function (err) {
                     logger.error(err);

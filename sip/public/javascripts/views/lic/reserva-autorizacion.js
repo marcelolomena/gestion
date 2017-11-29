@@ -13,7 +13,7 @@
             },
             {
                 label: 'Estado Aprobación',
-                name: 'estadoAprobacion',
+                name: 'estado',
                 width: 130,
                 align: 'center',
                 editable: false,
@@ -60,40 +60,69 @@
             // },
             {
                 label: 'Número Licencias',
-                name: 'numLicencia',
+                name: 'numlicencia',
                 align: 'center',
                 width: 120,
                 editable: true,
                 search: false
-            }, {
-                label: 'Fecha de Uso',
-                name: 'fechaUso',
-                width: 95,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                editoptions: {
-                    'data-provide': 'datepicker',
-                    dataInit: function (element) {
-                        $(element).mask("00-00-0000", {
-                            placeholder: "DD-MM-AAAA"
-                        });
-                        $(element).datepicker({
-                            language: 'es',
-                            weekStart: 1,
-                            format: 'dd-mm-yyyy',
-                            autoclose: true
-                        })
-                    },
-                    dataEvents: [{
-                        type: 'change',
-                        fn: function (e) {
+            },
+            //  {
+            //     label: 'Fecha de Uso',
+            //     name: 'fechaUso',
+            //     width: 95,
+            //     align: 'center',
+            //     sortable: false,
+            //     editable: true,
+            //     editoptions: {
+            //         'data-provide': 'datepicker',
+            //         dataInit: function (element) {
+            //             $(element).mask("00-00-0000", {
+            //                 placeholder: "DD-MM-AAAA"
+            //             });
+            //             $(element).datepicker({
+            //                 language: 'es',
+            //                 weekStart: 1,
+            //                 format: 'dd-mm-yyyy',
+            //                 autoclose: true
+            //             })
+            //         },
+            //         dataEvents: [{
+            //             type: 'change',
+            //             fn: function (e) {
 
-                        }
-                    }],
+            //             }
+            //         }],
+            //     },
+            //     search: false
+            // }
+            {
+                label: 'Fecha de Uso', name: 'fechaUso', width: 150, align: 'center', search: false,
+                formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+                editable: true, editrules: { required: true },
+                searchoptions: {
+                    dataInit: function (el) {
+                        $(el).datepicker({
+                            language: 'es',
+                            format: 'dd-mm-yyyy',
+                            autoclose: true,
+                            onSelect: function (dateText, inst) {
+                                setTimeout(function () {
+                                    $gridTab[0].triggerToolbar();
+                                }, 100);
+                            }
+                        });
+                    },
+                    sopt: ["eq", "le", "ge"]
                 },
-                search: false
-            }, {
+                editoptions: {
+                    size: 10, maxlengh: 10,
+                    dataInit: function (element) {
+                        $(element).mask("00-00-0000", { placeholder: "__-__-____" });
+                        $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                    }
+                },
+            }
+            , {
                 label: 'CUI',
                 name: 'cui',
                 align: 'center',

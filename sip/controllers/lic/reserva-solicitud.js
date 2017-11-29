@@ -63,6 +63,69 @@ function mapper(data) {
     });
 }
 
+function listSolicitud(req, res) {
+    var id = req.params.id;
+    var usuario = req.session.passport.user
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.reserva.belongsTo(models.producto, {
+                foreignKey: 'idProducto'
+            });
+            models.reserva.belongsTo(models.user, {
+                foreignKey: 'idUsuario'
+            });
+            models.reserva.belongsTo(models.user, {
+                foreignKey: 'idUsuarioJefe'
+            });
+
+            models.reserva.count({
+                where: {
+                    idUsuario: usuario
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.reserva.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows), 
+                    order: ['estado'],
+                    where: {
+                        idUsuario: usuario
+                    },
+                    include: [{
+                        model: models.producto
+                    },{
+                        model: models.user
+                    }]
+                }).then(function (autorizados) {
+                    //logger.debug(solicitudcotizacion)
+                    return res.json({
+                        records: records,
+                        total: total,
+                        page: page,
+                        rows: autorizados
+                    });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({
+                        error_code: 1
+                    });
+                });
+            })
+        }
+    });
+}
+
+
+
+
+
 function list(req, res) {
     req.query.sord = 'asc',
         base.list(req, res, entity, includes, mapper);
@@ -201,5 +264,6 @@ module.exports = {
     nombreJefe: nombreJefe,
     action: action,
     estado: estado,
-    usuariocui: usuariocui
+    usuariocui: usuariocui,
+    listSolicitud: listSolicitud
 };
