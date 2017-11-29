@@ -1,0 +1,66 @@
+@(title: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/font-awesome.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+
+        <script type="text/javascript" src="@routes.ApplicationController.jsMessages()"></script>
+
+        <script src="@routes.Assets.at("javascripts/jquery/jquery-2.1.0.min.js")" type="text/javascript"></script>
+
+        <link href="@routes.Assets.at("stylesheets/material-wfont.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.at("stylesheets/jquery-ui.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.at("stylesheets/jquery-ui.structure.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.at("stylesheets/jquery-ui.theme.min.css")" rel="stylesheet">
+
+        <link href="@routes.Assets.at("stylesheets/snackbar.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.at("stylesheets/bootstrap-editable.css")" rel="stylesheet">
+        <link href="@routes.Assets.at("stylesheets/ripples.min.css")" rel="stylesheet">
+
+        <script src="@routes.Assets.at("javascripts/bootstrap/bootstrap.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap/bootstrap-editable.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap/material.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap/ripples.min.js")"></script>
+
+        <script src="@routes.Assets.at("javascripts/jquery/jquery.nouislider.all.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/jquery/jquery-ui.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/jquery/jquery.ui.touch-punch.min.js")" type="text/javascript"></script>
+
+        <script src="@routes.Assets.at("javascripts/bootstrap/snackbar.min.js")" type="text/javascript"></script>
+
+        <script src="@routes.Assets.at("javascripts/jquery/jquery.validate.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/jquery/additional-methods.min.js")" type="text/javascript"></script>
+
+        <script src="@routes.Assets.at("javascripts/globals.js")"></script>
+        <script src="@routes.Assets.at("javascripts/authLevel.js")"></script>
+        <script src="@routes.Assets.at("javascripts/htmlTemplates.js")"></script>
+        <script src="@routes.Assets.at("javascripts/modalTemplates.js")"></script>
+        <script src="@routes.Assets.at("javascripts/validate.js")"></script>
+        <script src="@routes.Assets.at("javascripts/socketActions.js")"></script>
+
+        <script src="@routes.Assets.at("javascripts/action.js")"></script>
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+            @content
+            </div>
+        </div>
+
+    </body>
+
+    <script>
+    $(document).ready(function() {
+        $.material.init();
+    });
+    </script>
+</html>

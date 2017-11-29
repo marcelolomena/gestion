@@ -1,0 +1,51 @@
+@(loginForm: Form[model.ExistingUser])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+
+@form(routes.PersonnelController.getUserInternal(), 'class -> "form-horizontal") {
+    <div class="modal-body">
+    @if(loginForm.hasGlobalErrors) {
+        <ul>
+        @for(error <- loginForm.globalErrors) {
+            <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">"Error: "</span>
+                @error.message
+            </div>
+        }
+        </ul>
+    }
+
+    <fieldset>
+        @inputText(
+            loginForm("email"),
+            'placeholder -> Messages("email"),
+            '_label -> Messages("signin.your.email"),
+            '_help -> "",
+            'class -> "form-control",
+            '_error -> loginForm.error("email")
+        )
+        @inputText(
+            loginForm("username"),
+            'placeholder -> Messages("username"),
+            '_label -> Messages("signin.your.username"),
+            '_help -> "",
+            'class -> "form-control"
+        )
+        @inputPassword(
+            loginForm("password"),
+            '_label -> Messages("signin.your.password"),
+            'placeholder -> Messages("password"),
+            '_help -> "",
+            'class -> "form-control"
+        )
+    </fieldset>
+
+        <div class="form-actions">
+            <input type="submit" class="btn btn-primary" value="@Messages("signin.signin")">
+        </div>
+    </div>
+}

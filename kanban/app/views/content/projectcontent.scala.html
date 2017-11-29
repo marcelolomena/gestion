@@ -1,0 +1,50 @@
+@(implicit project : model.FullProject, user: model.UserBase)
+@import scala.Int; project.columns.sortBy(_.position);
+
+@if(project.columns.isEmpty) {
+    <div class="panel-body">No Active Columns!</div>
+} else {
+    <div style="display:flex;flex-wrap:wrap;">
+    @for(column <- project.columns) {
+        @content.kolumncontent(column, project.project.boardId)
+    }
+    </div>
+    <script>
+    $(document).ready(function() {
+        var oldKolumnId;
+        var newKolumnId;
+        $ ( "@project.columns.map(_.id.get).mkString("#sortable", ", #sortable", "")").sortable({
+            items: "div.ui-state-default:not(.disabled .ticket-description)",
+            connectWith : ".connectedSortable@project.project.id",
+            update:function(event, ui){
+            },
+            start: function(event, ui) {
+                oldKolumnId = $(event.target).data("options").id;
+            },
+            receive: function(event, ui) {
+                console.log(event)
+                newKolumnId = $(event.target).data("options").id;
+                var ticketId = $(event.toElement).data("options").id;
+                var values = {
+                    "ticketId" : parseInt(ticketId),
+                    "userId": @user.id,
+                    "oldKolumnId" : parseInt(oldKolumnId),
+                    "newKolumnId" : parseInt(newKolumnId),
+                    "projectId" : @project.project.id
+                };
+                $.ajax({
+                    url:"http://localhost:8081/moveTicket",
+                    data: JSON.stringify(values),
+                    dataType: 'json',
+                    contentType: "application/json;charset=utf-8",
+                    type: 'PATCH',
+                    success: function(data) {
+                        console.log(data);
+                        return false;
+                    }
+                });
+            }
+        }).disableSelection();
+    });
+    </script>
+}

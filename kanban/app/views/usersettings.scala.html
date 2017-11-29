@@ -1,0 +1,111 @@
+@(editUserForm: Form[model.PersonnelValidators.EditUser], user: model.UserBase, success: Boolean)
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@navbar(Option(user))
+@main("Settings") {
+    <div class="container">
+        <div class="container well well-sm" style="width:50%">
+            <h3>@Messages("edit.user")</h3>
+            @if(success) {
+                <div class="container">
+                    <span class="label label-success">Success!</span>
+                </div>
+            }
+            @form(action=routes.PersonnelController.editUserInternal(), 'class -> "form-horizontal") {
+                <div class="modal-body">
+
+                    @if(editUserForm.hasGlobalErrors) {
+                        <p class="error">
+                            <span class="label label-danger">@editUserForm.globalError.head.message</span>
+                        </p>
+                    }
+
+                    <fieldset>
+                        @inputText(
+                            editUserForm("firstName"),
+                            'placeholder -> user.firstName,
+                            '_label -> Messages("signup.your.first.name"),
+                            '_help -> "",
+                            'class -> "form-control"
+                        )
+                        @inputText(
+                            editUserForm("lastName"),
+                            'placeholder -> user.lastName.getOrElse(""),
+                            '_label -> Messages("signup.your.last.name"),
+                            '_help -> "",
+                            'class -> "form-control"
+                        )
+                        @inputPassword(
+                            editUserForm("oldPassword"),
+                            'placeholder -> Messages("edit.old.password"),
+                            '_label -> Messages("edit.old.password"),
+                            '_help -> "",
+                            'class -> "form-control"
+                        )
+                        @inputPassword(
+                            editUserForm("newPassword"),
+                            'placeholder -> Messages("edit.new.password"),
+                            '_label -> Messages("edit.new.password"),
+                            '_help -> "",
+                            'class -> "form-control"
+                        )
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">@Messages("avatar")</label>
+                            <div class="col-lg-9">
+                                <div class="radio radio-primary">
+                                    <label>
+                                        <input type="radio" name="avatar" id="optionsRadios1" value="/assets/images/account/default-avatar-gray.jpg" @if(user.avatarUrl.get.equals("/assets/images/account/default-avatar-gray.jpg")){ checked="" }>
+                                        <img class="av-chooser" src="/assets/images/account/default-avatar-gray.jpg" />
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="avatar" id="optionsRadios2" value="/assets/images/account/default-avatar-calico.jpg" @if(user.avatarUrl.get.equals("/assets/images/account/default-avatar-calico.jpg")){ checked="" }>
+                                        <img class="av-chooser" src="/assets/images/account/default-avatar-calico.jpg" />
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="avatar" id="optionsRadios3" value="/assets/images/account/default-avatar-cat.jpg" @if(user.avatarUrl.get.equals("/assets/images/account/default-avatar-cat.jpg")){ checked="" }>
+                                        <img class="av-chooser" src="/assets/images/account/default-avatar-cat.jpg" />
+                                    </label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <label>
+                                        <input type="radio" name="avatar" id="optionsRadios4" value="/assets/images/account/default-avatar-siamese.jpg" @if(user.avatarUrl.get.equals("/assets/images/account/default-avatar-siamese.jpg")){ checked="" }>
+                                        <img class="av-chooser" src="/assets/images/account/default-avatar-siamese.jpg" />
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="avatar" id="optionsRadios5" value="/assets/images/account/default-avatar-white.jpg" @if(user.avatarUrl.get.equals("/assets/images/account/default-avatar-white.jpg")){ checked="" }>
+                                        <img class="av-chooser" src="/assets/images/account/default-avatar-white.jpg" />
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="avatar" id="optionsRadios6" value="/assets/images/account/moose.png" @if(user.avatarUrl.get.equals("/assets/images/account/moose.png")){ checked="" }>
+                                        <img class="av-chooser" src="/assets/images/account/moose.png" />
+                                    </label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <label>
+                                        <input type="radio" name="avatar" id="optionsRadios7" value="/assets/images/account/girl_default.png" @if(user.avatarUrl.get.equals("/assets/images/account/girl_default.png")){ checked="" }>
+                                        <img class="av-chooser" src="/assets/images/account/girl_default.png" />
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="avatar" id="optionsRadios8" value="/assets/images/account/freddie_mercury.png" @if(user.avatarUrl.get.equals("/assets/images/account/freddie_mercury.png")){ checked="" }>
+                                        <img class="av-chooser" src="/assets/images/account/freddie_mercury.png" />
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="avatar" id="optionsRadios9" value="/assets/images/account/linux_logo.png" @if(user.avatarUrl.get.equals("/assets/images/account/linux_logo.png")){ checked="" }>
+                                        <img class="av-chooser" src="/assets/images/account/linux_logo.png" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <input type="hidden" name="id" value="@user.id.get"
+                <div class="form-actions">
+                    <input type="submit" class="btn btn-primary" value="@Messages("make.changes")">
+                </div>
+            }
+        </div>
+    </div>
+}

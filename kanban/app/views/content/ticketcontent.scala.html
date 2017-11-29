@@ -1,0 +1,57 @@
+@(ticket : model.Ticket, boardId: Long)
+@import play.api.libs.json;
+
+<div id="ticket@ticket.id" class="well well-lg ui-state-default btn btn-raised ticket" data-options='{"id":"@ticket.id", "board_id":@boardId}' style="max-width:100%">
+    <div class="disabled" data-options='{"id":"@ticket.id"}'>@ticket.name</div>
+    <div class="disabled ticket-description" data-options='{"id":"@ticket.id"}'>@ticket.description.getOrElse("")</div>
+    <div id="collab_container@ticket.id" style="padding-top:12px;">
+    @if(ticket.collaborators.isDefined) {
+        @for(collaborator <- ticket.collaborators.get) {
+            <div class="btn avatar" style="background:url(@collaborator.avatarUrl);" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="@collaborator.username"></div>
+        }
+    }
+    </div>
+    </br>
+    <div>@Messages("difficulty")</div>
+    <div class="progress progress-striped">
+        @ticket.difficulty.get match {
+            case n if 0 until 3 contains n => {
+                <div class="progress-bar progress-bar-info" style="width : @{n}0%"></div>
+            }
+            case n if 4 until 6 contains n => {
+                <div class="progress-bar progress-bar-success" style="width : @{n}0%"></div>
+            }
+            case n if 5 until 7 contains n => {
+                <div class="progress-bar progress-bar-warning" style="width : @{n}0%"></div>
+            }
+            case _ => {
+                <div class="progress-bar progress-bar-danger" style="width : @{ticket.difficulty.get}0%"></div>
+            }
+        }
+    </div>
+    <div>@Messages("priority")</div>
+    <div class="progress progress-striped">
+        @ticket.priority.get match {
+            case n if n == 5 || n == 4 => {
+                <div class="progress-bar progress-bar-info" style="width : @{math.abs(((n-1)*2)-10)}0%"></div>
+            }
+            case n if n == 3 => {
+                <div class="progress-bar progress-bar-success" style="width : @{math.abs(((n-1)*2)-10)}0%"></div>
+            }
+            case n if n == 2 => {
+                <div class="progress-bar progress-bar-warning" style="width : @{math.abs(((n-1)*2)-10)}0%"></div>
+            }
+            case n if n == 1 => {
+                <div class="progress-bar progress-bar-danger" style="width : @{math.abs(((n-1)*2)-10)}0%"></div>
+            }
+        }
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    var ticket@ticket.id = JSON.parse("@json.Json.stringify(json.Json.toJson(ticket)) ".replace(/&quot;/g,'"'));
+    ticket@ticket.id .boardId = @boardId;
+    ticketMap[@ticket.id] = ticket@ticket.id;
+});
+</script>

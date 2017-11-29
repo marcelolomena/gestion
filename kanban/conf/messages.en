@@ -1,0 +1,85 @@
+title=Æsir
+
+confirm=Confirmation
+email=Email
+fullname=Full Name
+firstname=First Name
+lastname=Last Name
+username=Username
+goback=Go Back
+logout=Logout
+password=Password
+error.technical=Technical Error, please Retry
+validate=Validate
+reset=Reset
+
+name=Name
+difficulty=Difficulty
+priority=Priority
+name.of.board=Name of Board
+name.of.kolumn=Name of Column
+name.of.ticket=Name of Ticket
+
+account.not.validated.check.mail=Account not validated. Check your emails.
+edit.old.password=Old Password
+edit.new.password=New Password
+edit.user=Edit User
+
+avatar=Avatar
+
+invalid.user.or.password=Invalid user or password
+youve.been.logged.out=You've been logged out
+error.sending.email=Error sending email
+error.sending.confirm.email=Error while sending confirmation mail
+error.email.already.exist=Email already exist
+error.account.already.validated=Account already validated
+error.unknown.email=Unknown email
+error.confirm=Confirmation failed
+error.expiredresetlink=This password reset has expired.
+error.expiredmaillink=This mail change has expired.
+
+account.settings.password=Click OK to receive instructions by mail.
+account.settings.email=Enter your new email address. Click OK to receive instructions on this new mail.
+
+signin.signin=Sign In
+signin.your.email=Your email address
+signin.your.password=Your password
+signin.your.username=Your username
+forgot.password=Forgot password ?
+
+signup.signup=Sign Up
+signup.your.first.name=Your first name
+signup.your.last.name=Your last name
+
+signup.successfull=Sign Up - Successful !
+signup.new=New?
+signup.reset.password=Reset your password
+signup.generate.password=Generate a password
+signup.msg.created=You will receive a confirmation email soon. Check your email to activate your account.
+signup.valid.email=Invalid Email
+
+resetpassword=Reset Password
+resetpassword.mailsent=A mail has been sent, please check your mail.
+resetpassword.success=Your password has been reset.
+resetpassword.new.password=New password :
+
+changemail.mailsent=A mail has been sent, please check your mail.
+
+mail.confirm.subject=Welcome to PlayStartApp - Ask for confirmation
+mail.confirm.message=Welcome to PlayStartApp. <br> Click on this link : {0} to confirm your email.
+
+mail.welcome.subject=Welcome to PlayStartApp
+mail.welcome.message=Welcome to PlayStartApp. <br> Your account is validated. Enjoy !
+
+mail.reset.ask.subject=PlayStartApp - New password
+# Cannot use You've unescaped here, as the single quote stops the {0}
+mail.reset.ask.message=You asked for your password to be reset.  <br> Click on this link : {0} to change your password.
+
+mail.change.ask.subject=PlayStartApp - Validate email
+mail.change.ask.message=You asked for your email to be changed.  <br> Click on this link : {0} to validate your email.
+
+mail.reset.fail.subject=Account Access Attempted
+mail.reset.fail.message=You (or someone else) entered this email address when trying to change the password.  However, this email address is not on our list of registered users, and so the attempted password reset has failed.
+
+mail.reset.confirm.subject=PlayStartApp - New password
+mail.reset.confirm.message=Hello, <br><br> Your password has been reset.

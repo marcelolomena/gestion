@@ -1,0 +1,49 @@
+@()(implicit user : model.UserBase, request: RequestHeader)
+@import play.api.libs.json;
+
+@navbar(Option(user))
+@main("Dashboard") {
+    <div class="container-fluid">
+        <div class="well col-center">
+            <div class="center-block text-center">Hello @user.firstName @user.lastName.get</div>
+        </div>
+        <div class="panel-group" id="accordionBoard" role="tablist" aria-multiselectable="true">
+        </div>
+    </div>
+    <div id="footer">
+        <span class="btn btn-info btn-fab btn-raised" id="addBoardTooltip" style="position:fixed;bottom:0;right:0;margin-right:20px;margin-bottom:20px" data-toggle="tooltip" title="Add Board" data-original-title="Add Board" data-placement="top">
+            <button id="addBoardButton" type="button" class="btn btn-info btn-fab btn-raised mdi-content-add"  style="position:fixed;bottom:0;right:0;margin-right:20px;margin-bottom:20px" data-toggle="modal" onclick="$(newBoardModal()).modal()"></button>
+        </span>
+        <span class="btn btn-info btn-fab btn-raised" id="addUserTooltip" style="display:none;position:fixed;bottom:0;right:80px;margin-right:20px;margin-bottom:20px" data-toggle="tooltip" data-original-title="Add User" data-placement="top">
+            <button id="addUserButton" type="button" class="btn btn-success btn-fab btn-raised mdi-social-person-add"  style="position:fixed;bottom:0;right:80px;margin-right:20px;margin-bottom:20px" data-toggle="modal"></button>
+        </span>
+        <span class="btn btn-info btn-fab btn-raised" id="addProjectTooltip" style="position:fixed;bottom:0;right:0;margin-right:20px;margin-bottom:20px" data-toggle="tooltip" title="Add Project" data-original-title="Add Project" data-placement="top">
+            <button id="addProjectButton" type="button" class="btn btn-warning btn-fab btn-raised mdi-content-add-circle-outline"  style="position:fixed;bottom:0;right:0;margin-right:20px;margin-bottom:20px" data-toggle="modal"></button>
+        </span>
+        <span class="btn btn-info btn-fab btn-raised" id="addTicketTooltip" style="position:fixed;bottom:0;right:0;margin-right:20px;margin-bottom:20px" data-toggle="tooltip" title="Add Ticket" data-original-title="Add Ticket" data-placement="top">
+            <button id="addTicketButton" type="button" class="btn btn-danger btn-fab btn-raised mdi-content-create"  style="position:fixed;bottom:0;right:0;margin-right:20px;margin-bottom:20px" data-toggle="modal"></button>
+        </span>
+        <span class="btn btn-info btn-fab btn-raised" id="addColumnTooltip" style="display:none;position:fixed;bottom:0;right:80px;margin-right:20px;margin-bottom:20px" data-toggle="tooltip" data-original-title="Add Column" data-placement="top">
+            <button id="addColumnButton" type="button" class="btn btn-info btn-fab btn-raised mdi-action-view-carousel"  style="position:fixed;bottom:0;right:80px;margin-right:20px;margin-bottom:20px" data-toggle="modal"></button>
+        </span>
+    </div>
+    <script>
+        currentUser = JSON.parse("@json.Json.stringify(json.Json.toJson(user))".replace(/&quot;/g,'"'));
+
+        $(document).ready(function() {
+            $.ajax({
+                type: 'POST',
+                url:"getBoardsForUser",
+                data: JSON.stringify({"id":currentUser.id}),
+                dataType: 'json',
+                contentType: "application/json;charset=utf-8",
+                success: function(data) {
+                    for(board in data.data) {
+                        $(boardTemplateHtml(data.data[board])).appendTo($("#accordionBoard"));
+                    }
+                    return false;
+                }
+            });
+        });
+    </script>
+}

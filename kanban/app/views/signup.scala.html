@@ -1,0 +1,117 @@
+@(signupForm : Form[model.UserBase])
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@main("Sign Up") {
+    <h1 style="text-align:center">@Messages("title")</h1>
+    <div class="container">
+        <div class="container well well-sm" style="width:50%">
+    <h3>@Messages("signup.signup")</h3>
+
+    @form(routes.PersonnelController.newUserInternal(), 'class -> "form-horizontal") {
+        <div class="modal-body">
+
+        @if(signupForm.hasGlobalErrors) {
+            <p class="error">
+                <span class="label label-danger">@signupForm.globalError.head.message</span>
+            </p>
+        }
+
+        <fieldset>
+            @inputText(
+                signupForm("email"),
+                'placeholder -> Messages("email"),
+                '_label -> Messages("signin.your.email"),
+                '_help -> "",
+                'class -> "form-control"
+            )
+            @inputText(
+                signupForm("username"),
+                'placeholder -> Messages("username"),
+                '_label -> Messages("signin.your.username"),
+                '_help -> "",
+                'class -> "form-control"
+            )
+            @inputText(
+                signupForm("firstName"),
+                'placeholder -> Messages("firstname"),
+                '_label -> Messages("signup.your.first.name"),
+                '_help -> "",
+                'class -> "form-control"
+            )
+            @inputText(
+                signupForm("lastName"),
+                'placeholder -> Messages("lastname"),
+                '_label -> Messages("signup.your.last.name"),
+                '_help -> "",
+                'class -> "form-control"
+            )
+            @inputPassword(
+                signupForm("password"),
+                'placeholder -> Messages("password"),
+                '_label -> Messages("signin.your.password"),
+                '_help -> "",
+                'class -> "form-control"
+            )
+            <div class="form-group">
+                <label class="col-lg-3 control-label">@Messages("avatar")</label>
+                <div class="col-lg-9">
+                    <div class="radio radio-primary">
+                        <label>
+                            <input type="radio" name="avatar" id="optionsRadios1" value="/assets/images/account/default-avatar-gray.jpg" checked="">
+                            <img class="av-chooser" src="/assets/images/account/default-avatar-gray.jpg" />
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" id="optionsRadios2" value="/assets/images/account/default-avatar-calico.jpg">
+                            <img class="av-chooser" src="/assets/images/account/default-avatar-calico.jpg" />
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" id="optionsRadios3" value="/assets/images/account/default-avatar-cat.jpg">
+                            <img class="av-chooser" src="/assets/images/account/default-avatar-cat.jpg" />
+                        </label>
+                    </div>
+                    <div class="radio radio-primary">
+                        <label>
+                            <input type="radio" name="avatar" id="optionsRadios4" value="/assets/images/account/default-avatar-siamese.jpg">
+                            <img class="av-chooser" src="/assets/images/account/default-avatar-siamese.jpg" />
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" id="optionsRadios5" value="/assets/images/account/default-avatar-white.jpg">
+                            <img class="av-chooser" src="/assets/images/account/default-avatar-white.jpg" />
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" id="optionsRadios6" value="/assets/images/account/moose.png">
+                            <img class="av-chooser" src="/assets/images/account/moose.png" />
+                        </label>
+                    </div>
+                    <div class="radio radio-primary">
+                        <label>
+                            <input type="radio" name="avatar" id="optionsRadios7" value="/assets/images/account/girl_default.png">
+                            <img class="av-chooser" src="/assets/images/account/girl_default.png" />
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" id="optionsRadios8" value="/assets/images/account/freddie_mercury.png">
+                            <img class="av-chooser" src="/assets/images/account/freddie_mercury.png" />
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" id="optionsRadios9" value="/assets/images/account/linux_logo.png">
+                            <img class="av-chooser" src="/assets/images/account/linux_logo.png" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        </div>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-primary" value="@Messages("signup.signup")">
+        </div>
+    }
+        </div>
+        <div class="container" style="text-align:center;">
+            <small><a href="@controllers.routes.PersonnelController.signIn()">@Messages("signin.signin")</a></small>
+        </div>
+    </div>
+}
