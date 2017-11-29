@@ -2,6 +2,7 @@
 var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
 var base = require('./lic-controller');
+var utilSeq = require('../../utils/seq');
 var _ = require('lodash');
 
 var entity = models.reserva;
@@ -11,7 +12,9 @@ entity.belongsTo(models.producto, {
 entity.belongsTo(models.user, {
     foreignKey: 'idUsuario'
 });
-
+entity.belongsTo(models.user, {
+    foreignKey: 'idUsuarioJefe'
+});
 
 var includes = [{
         model: models.producto
@@ -55,14 +58,7 @@ function mapper(data) {
             sap: item.sap,
             comentarioSolicitud: item.comentarioSolicitud,
             estado: item.estado,
-            idUsuario: item.idUsuario,
-            user: {
-                first_name: item.user.first_name +''+ item.user.last_name
-            },
-            idUsuarioJefe: item.idUsuarioJefe,
-            userJefe: {
-                first_name: item.user.first_name
-            }
+            idUsuarioJefe: item.idUsuarioJefe
         }
     });
 }
@@ -71,13 +67,6 @@ function list(req, res) {
     req.query.sord = 'asc',
         base.list(req, res, entity, includes, mapper);
 }
-
-function listDESC(req, res) {
-    base.listDESC(req, res, entity, includes, mapper);
-}
-
-
-
 
 function action(req, res) {
     switch (req.body.oper) {
@@ -94,37 +83,108 @@ function action(req, res) {
     }
 }
 
-function estado(req, res) {
-    var ntt = models.reserva;
-    base.listChilds(req, res, ntt, 'id', [{
-        model: models.producto,
-        model: models.user
-    }], function (data) {
-        var result = [];
-        _.each(data, function (item) {
-
-            var row = {
-                id: item.id,
-                estado: item.estado,
-                fechaAprobacion: item.fechaAprobacion,
-                comentarioAprobacion: item.comentarioAprobacion,
-                fechaAprobacion: base.fromDate(item.fechaAprobacion),
-                fechaAutorizacion: base.fromDate(item.fechaAutorizacion),
-                comentarioAutorizacion: item.comentarioAutorizacion,
-                idUsuario: item.idUsuario,
-                user: {
-                    first_name: item.user.first_name
-                },
-                idUsuarioJefe: item.idUsuarioJefe,
-                userJefe: {
-                    first_name: item.user.first_name
-                }
-
-            };
-            result.push(row);
+function nombreJefe(req, res) {
+    var id = req.params.pId;
+    var sql = 'select b.first_name, b.last_name from lic.reserva a join dbo.art_user b on a.idusuariojefe = b.uid where a.id = ' + id;
+    sequelize.query(sql)
+        .spread(function (rows) {
+            return res.json(rows);
         });
-        return result;
-    })
+}
+
+function estado(req, res) {
+    var ntt = entity;
+    var idReserva = req.params.pId;
+    
+    
+        var sql = 'select b.first_name, b.last_name from lic.reserva a join dbo.art_user b on a.idusuariojefe = b.uid where a.id = ' + idReserva;
+        sequelize.query(sql)
+            .spread(function (rows) {
+                 
+                if(rows.length > 0){
+                    var userJefe = rows[0].first_name + ' ' + rows[0].last_name;
+                    
+                    base.listChilds(req, res, ntt, 'id', [{
+                            model: models.producto
+                        },
+                        {
+                            model: models.user
+                        }
+                    ], function (data) {
+                        var result = [];
+                        
+                        _.each(data, function (item) {
+                            var row = {
+                                id: item.id,
+                                estado: item.estado,
+                                fechaAprobacion: item.fechaAprobacion,
+                                comentarioAprobacion: item.comentarioAprobacion,
+                                fechaAprobacion: base.fromDate(item.fechaAprobacion),
+                                fechaAutorizacion: base.fromDate(item.fechaAutorizacion),
+                                comentarioAutorizacion: item.comentarioAutorizacion,
+                                idUsuarioJefe: item.idUsuarioJefe,
+                                userJefe: userJefe
+                            };
+                            result.push(row);
+                        });
+                        return result;
+                    });
+                }else{
+                    var idUsuarioJe = null;
+                    base.listChilds(req, res, ntt, 'id', [{
+                        model: models.producto
+                    },
+                    {
+                        model: models.user
+                    }
+                ], function (data) {
+                    var result = [];
+                    
+                    _.each(data, function (item) {
+                        var row = {
+                            id: item.id,
+                            estado: item.estado,
+                            fechaAprobacion: item.fechaAprobacion,
+                            comentarioAprobacion: item.comentarioAprobacion,
+                            fechaAprobacion: base.fromDate(item.fechaAprobacion),
+                            fechaAutorizacion: base.fromDate(item.fechaAutorizacion),
+                            comentarioAutorizacion: item.comentarioAutorizacion,
+                            idUsuarioJefe: item.idUsuarioJefe,
+                            userJefe: idUsuarioJe
+                        };
+                        result.push(row);
+                    });
+                    return result;
+                });
+                }
+                
+                
+                
+                
+                
+                
+                
+                
+                
+    
+    
+    
+            });
+    
+
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
 }
 
 function usuariocui(req, res) {
@@ -138,7 +198,7 @@ function usuariocui(req, res) {
 
 module.exports = {
     list: list,
-    listDESC: listDESC,
+    nombreJefe: nombreJefe,
     action: action,
     estado: estado,
     usuariocui: usuariocui

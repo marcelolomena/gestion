@@ -131,7 +131,7 @@
             {
                 label: 'Aprobador',
                 name: 'idUsuarioJefe',
-                jsonmap: 'userJefe.first_name',
+                jsonmap: 'userJefe',
                 align: 'center',
                 width: 100,
                 editable: false,
