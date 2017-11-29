@@ -4,7 +4,7 @@ var base = require('./lic-controller');
 var logger = require('../../utils/logger');
 var sequelize = require('../../models/index').sequelize;
 var constants = require("../../utils/constants");
-
+var secuencia = require("../../utils/secuencia");
 
 exports.list = function (req, res) {
   var page = req.query.page;
@@ -16,6 +16,9 @@ exports.list = function (req, res) {
   var proveedor = req.params.proveedor
   var filters = req.query.filters;
   var condition = "";
+
+  secuencia.getSecuencia(0, function (err, sec) {
+    console.log("***Secuencia:"+sec);
 
   if (filters) {
     var jsonObj = JSON.parse(filters);
@@ -66,8 +69,8 @@ exports.list = function (req, res) {
       res.json({ error_code: 1 });
     });
   })
+}) //end secuencia
+
 }
-
-
 
 
