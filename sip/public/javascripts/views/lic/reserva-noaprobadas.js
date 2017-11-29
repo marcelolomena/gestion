@@ -59,7 +59,8 @@ $(document).ready(function () {
             custom_value: sipLibrary.getRadioElementValue,
             custom_element: sipLibrary.radioElemReserva
         },
-        search: false
+        search: false,
+        sortable: false
     },
     {
         label: 'Producto',
@@ -76,7 +77,8 @@ $(document).ready(function () {
             required: false,
             edithidden: false
         },
-        search: false
+        search: false,
+        sortable: false
     },
     {
         label: 'Cantidad',
@@ -91,7 +93,8 @@ $(document).ready(function () {
             required: false,
             edithidden: false
         },
-        search: false
+        search: false,
+        sortable: false
     },
     {
         label: 'Solicitante',
@@ -100,6 +103,7 @@ $(document).ready(function () {
         width: 100,
         editable: true,
         search: false,
+        sortable: false,
         editoptions: {
             fullRow: true,
             readonly: 'readonly'
@@ -138,7 +142,8 @@ $(document).ready(function () {
         align: 'center',
         sortable: false,
         editable: true,
-        edittype: 'select', 
+        edittype: 'select',
+        sortable: false, 
         editrules: {
             required: true
         },
@@ -171,7 +176,8 @@ $(document).ready(function () {
         align: 'center',
         width: 50,
         editable: true,
-        search: false
+        search: false,
+        sortable: false
     }, {
         label: 'Comentario de Solicitud',
         name: 'comentariosolicitud',
@@ -187,7 +193,8 @@ $(document).ready(function () {
             required: false,
             edithidden: false
         },
-        search: false
+        search: false,
+        sortable: false
     },
     {
         label: 'Aprobador',
@@ -199,7 +206,8 @@ $(document).ready(function () {
         editoptions: {
             fullRow: true,
             readonly: 'readonly'
-        }        
+        },
+        sortable: false   
     },     
     {
         label: 'Comentario de Aprobación',
@@ -211,7 +219,8 @@ $(document).ready(function () {
         editrules: {
             required: true
         },
-        search: false
+        search: false,
+        sortable: false
     }
 ];
     $("#grid").jqGrid({
