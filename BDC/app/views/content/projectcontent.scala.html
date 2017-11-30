@@ -2,7 +2,7 @@
 @import scala.Int; project.columns.sortBy(_.position);
 
 @if(project.columns.isEmpty) {
-    <div class="panel-body">No Active Columns!</div>
+    <div class="panel-body">No hay columnas activas!</div>
 } else {
     <div style="display:flex;flex-wrap:wrap;">
     @for(column <- project.columns) {

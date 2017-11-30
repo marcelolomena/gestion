@@ -9,14 +9,14 @@ import play.api.Play.current
 
 /**
  */
-protected trait ProjectService {
+protected trait KanbanProjectService {
   def insertNewProject(project : Project): ServiceResponse[Long] = {
     DB.withConnection { implicit c =>
       SQL(
         s"""
            |SELECT
            |COUNT(*) COUNT
-           |FROM [art_live].[dbo].[board]
+           |FROM board
            |WHERE id=${project.boardId}
          """.stripMargin
       ).apply().head[Int]("COUNT") match {
@@ -26,7 +26,7 @@ protected trait ProjectService {
         case _ =>
           implicit val id : Long = SQL(
             s"""
-               |INSERT INTO [art_live].[dbo].[project](board_id, name, prefix, created_by_user)
+               |INSERT INTO project (board_id, name, prefix, created_by_user)
                |VALUES(${project.boardId}, '{project.name}', '${project.prefix}', ${project.createdByUserId})
                """.stripMargin
           ).executeInsert(scalar[Long].single)
@@ -34,7 +34,7 @@ protected trait ProjectService {
           KanbanSocketController.addProject(FullProject(project, Seq[Kolumn](), Seq[Ticket]()), SQL(
             s"""
                |SELECT *
-               |FROM [art_live].[dbo].[user]
+               |FROM [user]
                |WHERE id=${project.createdByUserId}
              """.stripMargin
           ).as(UserBase.userParser.*).head)
@@ -46,7 +46,7 @@ protected trait ProjectService {
     DB.withConnection { implicit c =>
       SQL(
         s"""
-           |SELECT * FROM [art_live].[dbo].[project]
+           |SELECT * FROM project
            |WHERE board_id
            |IN (${ids.mkString(",")})
          """.stripMargin

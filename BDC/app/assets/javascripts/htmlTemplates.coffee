@@ -16,33 +16,33 @@ window.ticketModalHtml = (ticket) ->
                     </div>
                     <div class=\"col-md-6\">
                       <div class=\"row\">
-                        <span id=\"note\" class=\"pull-right\">COLLABORATORS</span>
-                        <a href=\"#\" data-original-title=\"Add user\" data-placement=\"right\" class=\"editable-open pull-right\"  id=\"pencil\">
+                        <span id=\"note\" class=\"pull-right\">COLABORADORES</span>
+                        <a href=\"#\" data-original-title=\"Agregar Usuario\" data-placement=\"right\" class=\"editable-open pull-right\"  id=\"pencil\">
                           <button type=\"button\" id='collab' class=\"mdi-content-add\" style=\"z-index:1501;padding:0;margin:0;border-radius:10px;border-color: currentColor;background-color: white;margin-right: 5px;margin-top: 1px;\"></button>
                         </a>
                       </div>
                       <div id=\"collabDiv\" class=\"row\">
                         #{collaboratorHtml(collaborator, 'right',) for collaborator in ticket.collaborators}
                       </div>
-                      <div class=\"row\">#{Messages("difficulty")}</div>
+                      <div class=\"row\">#{Messages("kanban.difficulty")}</div>
                       <div class=\"row\">
                         <div id=\"difficultyModalSlider\" class=\"slider shor\"></div>
                       </div>
-                      <div class=\"row\">#{Messages("priority")}</div>
+                      <div class=\"row\">#{Messages("kanban.priority")}</div>
                       <div class=\"row\">
                         <div id=\"priorityModalSlider\" class=\"slider shor\"></div>
                       </div>
                     </div>
                   </div>
                   <div class=\"row\">
-                    <h4 class=\"modal-header modal-title\">Activity</h4>
+                    <h4 class=\"modal-header modal-title\">Actividad</h4>
                     <div class=\"form-group\" style=\"padding-top:10px\">
                       <label for=\"inputComment\" class=\"col-sm-1 control-label\" style=\"padding-left:22;padding-top:10\">
                         #{collaboratorHtml(currentUser, 'none')}
                       </label>
                       <div class=\"col-lg-10\">
                         <textarea class=\"form-control\" rows=\"3\" id=\"inputComment\" name=\"comment\" style=\"outline-color:mediumaquamarine;outline-style:groove;\"></textarea>
-                        <button id=\"commentButton\" type=\"button\" class=\"btn btn-primary\" style=\"float:right;margin-right:-5;\">#{Messages("comment")}</button>
+                        <button id=\"commentButton\" type=\"button\" class=\"btn btn-primary\" style=\"float:right;margin-right:-5;\">#{Messages("kanban.comment")}</button>
                         <script>
                            $(document).ready(function() {
                               $('#commentButton').on('click', function() {
@@ -84,7 +84,7 @@ window.ticketContentTemplateHtml = (ticket, boardId) ->
     for collaborator in ticket.collaborators
       str += "<div class=\"btn avatar\" style=\"background:url(#{collaborator.avatarUrl});\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" data-original-title=\"#{collaborator.username}\" data-options=\"{'id':#{ticket.id}, 'board_id':#{boardId}}\"></div>"
 
-  str += "</div></br><div>#{Messages("difficulty")}</div><div data-options=\"{'id':#{ticket.id}, 'board_id':#{boardId}}\" class=\"progress progress-striped\">"
+  str += "</div></br><div>#{Messages("kanban.difficulty")}</div><div data-options=\"{'id':#{ticket.id}, 'board_id':#{boardId}}\" class=\"progress progress-striped\">"
 
   if ticket.difficulty > 0 and ticket.difficulty < 3
     str += "<div class=\"progress-bar progress-bar-info\" data-options=\"{'id':#{ticket.id}, 'board_id':#{boardId}}\" style=\"width : #{ticket.difficulty}0%\"></div>"
@@ -96,7 +96,7 @@ window.ticketContentTemplateHtml = (ticket, boardId) ->
     str += "<div class=\"progress-bar progress-bar-danger\" data-options=\"{'id':#{ticket.id}, 'board_id':#{boardId}}\" style=\"width : #{ticket.difficulty}0%\"></div>"
 
   str += "</div>
-          <div>#{Messages("priority")}</div>
+          <div>#{Messages("kanban.priority")}</div>
           <div data-options=\"{'id':#{ticket.id}, 'board_id':#{boardId}}\" class=\"progress progress-striped\">"
 
   if ticket.priority == 5 || ticket.priority == 4

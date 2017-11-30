@@ -14,7 +14,7 @@ class ModalBase
                       #{@body}
                     </div>
                     <div class=\"modal-footer\">
-                      <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">#{Messages("close")}</button>
+                      <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">#{Messages("kanban.close")}</button>
                       <button type=\"submit\" class=\"btn btn-primary\" id=\"submitModal\">#{@submitButtonTitle}</button>
                     </div>
                   </form>
@@ -26,19 +26,19 @@ class NewUserModal extends ModalBase
   newUserTemplateForm = () ->
     return "<fieldset>
               <div class=\"form-group\">
-                <label for=\"inputUserName\" class=\"col-lg-3 control-label\">#{Messages("username")}</label>
+                <label for=\"inputUserName\" class=\"col-lg-3 control-label\">#{Messages("kanban.username")}</label>
                 <div class=\"col-lg-9\">
-                  <input type=\"text\" class=\"form-control\" id=\"inputUserName\" name=\"username\" placeholder=\"#{Messages("username")}\">
+                  <input type=\"text\" class=\"form-control\" id=\"inputUserName\" name=\"username\" placeholder=\"#{Messages("kanban.username")}\">
                 </div>
               </div>
               <div class=\"form-group\">
-                <label for=\"authLevel\" class=\"col-lg-3 control-label\">#{Messages("authorization.level")}</label>
+                <label for=\"authLevel\" class=\"col-lg-3 control-label\">#{Messages("kanban.authorization.level")}</label>
                 <div class=\"col-lg-7\">
                   <select class=\"form-control\" id=\"authLevel\" name=\"authLevel\">
                     <option>SuperAdmin</option>
                     <option>Admin</option>
-                    <option>Contributor</option>
-                    <option>Reader</option>
+                    <option>Contribuyente</option>
+                    <option>Lector</option>
                   </select>
                 </div>
               </div>
@@ -47,27 +47,27 @@ class NewUserModal extends ModalBase
     super("newUserModal",
           "newUserForm",
           "{'board_id':#{boardId}}"
-          Messages("new.user"),
+          Messages("kanban.add.user"),
           newUserTemplateForm(),
-          Messages("add.new.user"))
+          Messages("kanban.add.new.user"))
 
 class NewTicketModal extends ModalBase
   newTicketTemplateForm = () ->
     return "<fieldset>
               <div class=\"form-group\">
-                <label for=\"inputName\" class=\"col-lg-2 control-label\">#{Messages("name")}</label>
+                <label for=\"inputName\" class=\"col-lg-2 control-label\">#{Messages("kanban.name")}</label>
                 <div class=\"col-lg-7\">
-                  <input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\" placeholder=\"#{Messages("name.of.ticket")}\">
+                  <input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\" placeholder=\"#{Messages("kanban.name.of.ticket")}\">
                 </div>
               </div>
               <div class=\"form-group\">
-                <label for=\"inputDescription\" class=\"col-lg-2 control-label\">#{Messages("description")}</label>
+                <label for=\"inputDescription\" class=\"col-lg-2 control-label\">#{Messages("kanban.description")}</label>
                 <div class=\"col-lg-7\">
                   <textarea class=\"form-control\" rows=\"3\" id=\"inputDescription\" name=\"description\"></textarea>
                 </div>
               </div>
               <div class=\"form-group\">
-              <label for=\"priority\" class=\"col-lg-2 control-label\">#{Messages("priority")}</label>
+              <label for=\"priority\" class=\"col-lg-2 control-label\">#{Messages("kanban.priority")}</label>
               <div class=\"col-lg-7\">
                 <select class=\"form-control\" id=\"priority\" name=\"priority\">
                   <option>1</option>
@@ -79,7 +79,7 @@ class NewTicketModal extends ModalBase
               </div>
             </div>
             <div class=\"form-group\">
-              <label for=\"difficultySlider\" class=\"col-lg-2 control-label\">#{Messages("difficulty")}</label>
+              <label for=\"difficultySlider\" class=\"col-lg-2 control-label\">#{Messages("kanban.difficulty")}</label>
               <div class=\"col-lg-7\">
                 <div class=\"slider shor slider-cyan-300\" id=\"difficultySlider\"></div>
               </div>
@@ -89,32 +89,32 @@ class NewTicketModal extends ModalBase
     super("createTicketModal",
           "newTicketForm",
           "{'project_id':#{projectId}}"
-          Messages("new.ticket"),
+          Messages("kanban.new.ticket"),
           newTicketTemplateForm(),
-          Messages("add.new.ticket"))
+          Messages("kanban.add.new.ticket"))
 
 class NewColumnModal extends ModalBase
   newColumnTemplateForm = ()->
     return "<fieldset>
               <div class=\"form-group\">
-                <label for=\"inputName\" class=\"col-lg-2 control-label\">#{Messages("name")}</label>
+                <label for=\"inputName\" class=\"col-lg-2 control-label\">#{Messages("kanban.name")}</label>
                 <div class=\"col-lg-7\">
-                  <input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\" placeholder=\"#{Messages("name.of.kolumn")}\">
+                  <input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\" placeholder=\"#{Messages("kanban.name.of.kolumn")}\">
                 </div>
               </div>
               <div class=\"form-group\">
-                <label for=\"inputPosition\" class=\"col-lg-2 control-label\">#{Messages("position")}</label>
+                <label for=\"inputPosition\" class=\"col-lg-2 control-label\">#{Messages("kanban.position")}</label>
                 <div class=\"col-lg-7\">
-                  <input type=\"number\" class=\"form-control\" id=\"inputPosition\" name=\"position\" placeholder=\"#{Messages("position.of.kolumn")}\">
+                  <input type=\"number\" class=\"form-control\" id=\"inputPosition\" name=\"position\" placeholder=\"#{Messages("kanban.position.of.kolumn")}\">
                 </div>
               </div>
               <div class=\"form-group\">
-                <label for=\"inputThreshold\" class=\"col-lg-2 control-label\">#{Messages("threshold")}</label>
+                <label for=\"inputThreshold\" class=\"col-lg-2 control-label\">#{Messages("kanban.threshold")}</label>
                 <div class=\"col-lg-7\">
-                  <input type=\"number\" class=\"form-control\" id=\"inputThreshold\" name=\"threshold\" placeholder=\"#{Messages("ticket.threshold.of.column")}\">
+                  <input type=\"number\" class=\"form-control\" id=\"inputThreshold\" name=\"threshold\" placeholder=\"#{Messages("kanban.ticket.threshold.of.column")}\">
                   <div class=\"checkbox\">
                     <label>
-                        <input type=\"checkbox\" id=\"inputArchive\" name=\"isArchiveKolumn\">Is this column for archiving Tickets?
+                        <input type=\"checkbox\" id=\"inputArchive\" name=\"isArchiveKolumn\">¿Esta columna es para archivar tickets?
                     </label>
                   </div>
                 </div>
@@ -124,23 +124,23 @@ class NewColumnModal extends ModalBase
     super("createColumnModal",
           "newColumnForm",
           "{'project_id':#{projectId}}",
-          Messages("new.column"),
+          Messages("kanban.new.column"),
           newColumnTemplateForm(),
-          Messages("save.new.column"))
+          Messages("kanban.save.new.column"))
 
 class NewProjectModal extends ModalBase
   newProjectTemplateForm = ()->
     return "<fieldset>
               <div class=\"form-group\">
-                <label for=\"inputName\" class=\"col-lg-2 control-label\">#{Messages("name")}</label>
+                <label for=\"inputName\" class=\"col-lg-2 control-label\">#{Messages("kanban.name")}</label>
                 <div class=\"col-lg-9\">
-                  <input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\" placeholder=\"#{Messages("name.of.project")}\">
+                  <input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\" placeholder=\"#{Messages("kanban.name.of.project")}\">
                 </div>
               </div>
               <div class=\"form-group\">
-                <label for=\"inputPrefix\" class=\"col-lg-2 control-label\">#{Messages("project.prefix")}</label>
+                <label for=\"inputPrefix\" class=\"col-lg-2 control-label\">#{Messages("kanban.project.prefix")}</label>
                 <div class=\"col-lg-9\">
-                  <input type=\"text\" class=\"form-control\" id=\"inputPrefix\" name=\"prefix\" placeholder=\"#{Messages("project.abbreviation")}\">
+                  <input type=\"text\" class=\"form-control\" id=\"inputPrefix\" name=\"prefix\" placeholder=\"#{Messages("kanban.project.abbreviation")}\">
                 </div>
               </div>
             </fieldset>"
@@ -148,17 +148,17 @@ class NewProjectModal extends ModalBase
     super("createProjectModal",
           "newProjectForm",
           "{'board_id':#{boardId}}",
-          Messages("new.project"),
+          Messages("kanban.new.project"),
           newProjectTemplateForm(),
-          Messages("save.new.project"))
+          Messages("kanban.save.new.project"))
 
 class NewBoardModal extends ModalBase
   newBoardTemplateForm = () ->
     return "<fieldset>
               <div class=\"form-group\">
-                <label for=\"inputName\" class=\"col-lg-2 control-label\">#{Messages("name")}</label>
+                <label for=\"inputName\" class=\"col-lg-2 control-label\">#{Messages("kanban.name")}</label>
                 <div class=\"col-lg-9\">
-                  <input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\" placeholder=\"#{Messages("name.of.board")}\">
+                  <input type=\"text\" class=\"form-control\" id=\"inputName\" name=\"name\" placeholder=\"#{Messages("kanban.name.of.board")}\">
                 </div>
               </div>
             </fieldset>"
@@ -167,9 +167,9 @@ class NewBoardModal extends ModalBase
     super("createBoardModal",
           "newBoardForm",
           "{\"user_id\":#{currentUser.id}}",
-          Messages("new.board"),
+          Messages("kanban.new.board"),
           newBoardTemplateForm(),
-          Messages("create.new.board"))
+          Messages("kanban.create.new.board"))
 
 
 window.newBoardModal = () ->

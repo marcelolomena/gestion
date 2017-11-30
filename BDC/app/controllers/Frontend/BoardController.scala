@@ -6,7 +6,7 @@ import play.api.mvc.Action
 import service.KanbanService
 
 /**
- * Controller for all actions related to the actual board itself.
+ *Controlador para todas las acciones relacionadas con el tablero mismo.
  */
 object BoardController extends CoreController {
   def createNewTicket = Action(parse.json) { implicit request =>

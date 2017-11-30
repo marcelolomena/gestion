@@ -1458,3 +1458,112 @@ newpert.plantilla=Plantilla
 newpert.cajero=Cajero
 newpert.direccion=Dirección
 newpert.fecha=Fecha
+
+#KANBAN
+kanban.title=Estimado
+kanban.confirm=Confirmación
+kanban.email=Email
+kanban.fullname=Nombre Completo
+kanban.firstname=Nombre
+kanban.lastname=Apellido
+kanban.username=Nombre Usuario
+kanban.goback=Volver
+kanban.logout=Logout
+kanban.password=Password
+kanban.error.technical=Error técnico, por favor reintente
+kanban.validate=Validar
+kanban.reset=Reiniciar
+kanban.new.column=Nueva columna
+kanban.add.column=Agregar Columna
+kanban.add.ticket=Agregar Ticket
+kanban.add.project=Agregar Proyecto
+kanban.add.board=Agregar Tablero
+kanban.add.user=Agregar Usuario
+kanban.add.new.user=Agregar Nuevo Usuario
+kanban.save.new.column=Guardar nueva columna
+kanban.description=Descripción
+kanban.name=Nombre
+kanban.difficulty=Dificultad
+kanban.priority=Prioridad
+kanban.name.of.board=Nombre del Tablero
+kanban.name.of.kolumn=Nombre de la columna
+kanban.name.of.ticket=Nombre del Ticket
+kanban.comment=Comentario
+kanban.account.not.validated.check.mail=Cuenta no comprobada. Revise sus correos.
+kanban.edit.old.password=Antigua Clave
+kanban.edit.new.password=Nueva Clave
+kanban.edit.user=Editar Usuario
+kanban.authorization.level=Nivel Autorización
+kanban.avatar=Avatar
+
+kanban.invalid.user.or.password=Invalid user or password
+kanban.youve.been.logged.out=You've been logged out
+kanban.error.sending.email=Error sending email
+kanban.error.sending.confirm.email=Error while sending confirmation mail
+kanban.error.email.already.exist=Email already exist
+kanban.error.account.already.validated=Account already validated
+kanban.error.unknown.email=Unknown email
+kanban.error.confirm=Confirmation failed
+kanban.error.expiredresetlink=This password reset has expired.
+kanban.error.expiredmaillink=This mail change has expired.
+
+kanban.account.settings.password=Click OK to receive instructions by mail.
+kanban.account.settings.email=Enter your new email address. Click OK to receive instructions on this new mail.
+
+kanban.signin.signin=Sign In
+kanban.signin.your.email=Your email address
+kanban.signin.your.password=Your password
+kanban.signin.your.username=Your username
+kanban.forgot.password=Forgot password ?
+
+kanban.signup.signup=Sign Up
+kanban.signup.your.first.name=Your first name
+kanban.signup.your.last.name=Your last name
+
+kanban.signup.successfull=Sign Up - Successful !
+kanban.signup.new=New?
+kanban.signup.reset.password=Reset your password
+kanban.signup.generate.password=Generate a password
+kanban.signup.msg.created=You will receive a confirmation email soon. Check your email to activate your account.
+kanban.signup.valid.email=Invalid Email
+
+kanban.resetpassword=Reset Password
+kanban.resetpassword.mailsent=A mail has been sent, please check your mail.
+kanban.resetpassword.success=Your password has been reset.
+kanban.resetpassword.new.password=New password :
+
+kanban.changemail.mailsent=A mail has been sent, please check your mail.
+
+kanban.mail.confirm.subject=Welcome to PlayStartApp - Ask for confirmation
+kanban.mail.confirm.message=Welcome to PlayStartApp. <br> Click on this link : {0} to confirm your email.
+
+kanban.mail.welcome.subject=Welcome to PlayStartApp
+kanban.mail.welcome.message=Welcome to PlayStartApp. <br> Your account is validated. Enjoy !
+
+kanban.mail.reset.ask.subject=PlayStartApp - New password
+# Cannot use You've unescaped here, as the single quote stops the {0}
+kanban.mail.reset.ask.message=You asked for your password to be reset.  <br> Click on this link : {0} to change your password.
+
+kanban.mail.change.ask.subject=PlayStartApp - Validate email
+kanban.mail.change.ask.message=You asked for your email to be changed.  <br> Click on this link : {0} to validate your email.
+
+kanban.mail.reset.fail.subject=Account Access Attempted
+kanban.mail.reset.fail.message=You (or someone else) entered this email address when trying to change the password.  However, this email address is not on our list of registered users, and so the attempted password reset has failed.
+
+kanban.mail.reset.confirm.subject=PlayStartApp - New password
+kanban.mail.reset.confirm.message=Hello, <br><br> Your password has been reset.
+
+kanban.name.of.project=Nombre del Proyecto
+kanban.project.abbreviation=Abreviatura
+kanban.project.prefix=Abreviatura
+kanban.new.project=Nuevo Proyecto
+kanban.save.new.project=Guadar Nuevo Proyecto
+kanban.new.board=Nuevo Tablero
+kanban.create.new.board=Crear Nuevo Tablero
+kanban.close=Cerrar
+kanban.new.ticket=Nuevo Ticket
+kanban.add.new.ticket=Agregar Nuevo Ticket
+kanban.position=Posición
+kanban.threshold=Límite
+kanban.position.of.kolumn=Posición de la columna
+kanban.ticket.threshold.of.column=Límite de la columna

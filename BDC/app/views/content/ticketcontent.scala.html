@@ -12,7 +12,7 @@
     }
     </div>
     </br>
-    <div>@Messages("difficulty")</div>
+    <div>@Messages("kanban.difficulty")</div>
     <div class="progress progress-striped">
         @ticket.difficulty.get match {
             case n if 0 until 3 contains n => {
@@ -29,7 +29,7 @@
             }
         }
     </div>
-    <div>@Messages("priority")</div>
+    <div>@Messages("kanban.priority")</div>
     <div class="progress progress-striped">
         @ticket.priority.get match {
             case n if n == 5 || n == 4 => {

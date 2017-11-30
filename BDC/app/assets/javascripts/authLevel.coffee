@@ -1,5 +1,5 @@
 window.authLevelEnum =
   "SuperAdmin" : 0
   "Admin" : 1
-  "Contributor" : 2
-  "Reader" : 3
+  "Contribuyente" : 2
+  "Lector" : 3

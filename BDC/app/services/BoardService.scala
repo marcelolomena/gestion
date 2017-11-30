@@ -25,8 +25,8 @@ protected trait BoardService {
       SQL(
         s"""
            |SELECT board.id,board.name
-           |FROM [art_live].[dbo].[board]
-           |JOIN [art_live].[dbo].[user_authorized_boards]
+           |FROM board
+           |JOIN user_authorized_boards
            |ON board.id=user_authorized_boards.board_id
            |WHERE user_authorized_boards.user_id=$id
         """.stripMargin
@@ -46,8 +46,8 @@ protected trait BoardService {
       val authorizedUsersPreProcessed = SQL(
         s"""
            |SELECT *
-           |FROM [art_live].[dbo].[user_authorized_boards]
-           |JOIN [art_live].[dbo].[user]
+           |FROM user_authorized_boards
+           |JOIN [user]
            |ON [user].id=user_authorized_boards.user_id WHERE
            |(${ids.mkString("user_authorized_boards.board_id="," OR user_authorized_boards.board_id=","")})
          """.stripMargin
@@ -81,7 +81,7 @@ protected trait BoardService {
         s"""
            |SELECT
            |auth_level
-           |FROM [art_live].[dbo].[user_authorized_boards]
+           |FROM user_authorized_boards
            |WHERE board_id=$boardId
             |AND user_id=$userId
          """.stripMargin
@@ -99,13 +99,13 @@ protected trait BoardService {
     DB.withConnection { implicit c =>
       implicit val boardId = SQL(
         s"""
-           |INSERT INTO [art_live].[dbo].[board] (name)
+           |INSERT INTO board (name)
            |VALUES('${newBoardValidator.name}')
          """.stripMargin
       ).executeInsert(scalar[Long].single)
       SQL(
         s"""
-           |INSERT INTO [art_live].[dbo].[user_authorized_boards] (user_id, board_id, auth_level)
+           |INSERT INTO user_authorized_boards (user_id, board_id, auth_level)
            |VALUES(${newBoardValidator.userId}, $boardId, ${AuthLevel.SuperAdmin})
          """.stripMargin
       ).executeInsert()

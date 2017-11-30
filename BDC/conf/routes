@@ -681,7 +681,7 @@ GET    /listScenario/$id<[A-Za-z0-9_-]+>                                        
 
 #Kanban
 
-GET          /socket                        controllers.Frontend.ApplicationController.socket(userId: Long, boardId: Option[Long])
+GET          /kanbansocket                  controllers.Frontend.ApplicationController.socket(userId: Long, boardId: Option[Long])
 GET          /jsMessages                    controllers.Frontend.ApplicationController.jsMessages
 GET          /kanban                        controllers.Frontend.ApplicationController.kanban
 

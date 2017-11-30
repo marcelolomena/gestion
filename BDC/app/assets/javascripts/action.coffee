@@ -60,7 +60,7 @@ window.hideButtons = () ->
 window.matButtons = []
 
 $(document).on ready: ->
-
+  console.log(socketUri)
   window.floatingSocket = new WS("#{socketUri}socket?userId=#{currentUser.id}")
   floatingSocket.onopen = () ->
     floatingSocket.onmessage = (message) ->

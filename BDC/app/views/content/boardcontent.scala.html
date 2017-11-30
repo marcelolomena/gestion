@@ -32,12 +32,12 @@
                     mainButton.toggleClass("mdi-content-add mdi-content-create");
                     mainButton.toggleClass("btn-warning btn-danger");
                     mainButton.attr("data-target", "#createTicketModal@project.project.id");
-                    mainButtonTooltip.attr("data-original-title", "Add Ticket")
+                    mainButtonTooltip.attr("data-original-title", "Agregar Ticket")
 
                     secondaryButton.toggleClass("mdi-social-person-add mdi-action-view-carousel")
                     secondaryButton.toggleClass("btn-success btn-info")
                     secondaryButton.attr("data-target", "#createKolumnModal")
-                    secondaryButtonTooltip.attr("data-original-title", "Add Column")
+                    secondaryButtonTooltip.attr("data-original-title", "Agregar Columna")
                 });
                 collapsedProject@project.project.id .on('hide.bs.collapse', function(event) {
                     event.stopPropagation();

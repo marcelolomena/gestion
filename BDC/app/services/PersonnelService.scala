@@ -20,7 +20,7 @@ object PersonnelService {
       val password = Hex.encodeHex(crypt.digest()).mkString
       implicit val userId : Long = SQL(
         s"""
-           |INSERT [art_live].[dbo].[user] (email, first_name, last_name, username, password, avatar)
+           |INSERT [user] (email, first_name, last_name, username, password, avatar)
            |VALUES ('${user.email}','${user.firstName}','${user.lastName.get}','${user.username}','$password', '${user.avatarUrl.get}')
          """.stripMargin
       ).executeInsert(scalar[Long].single)
@@ -33,7 +33,7 @@ object PersonnelService {
       SQL(
         s"""
            |SELECT *
-           |FROM [art_live].[dbo].[user]
+           |FROM [user]
            |WHERE id=$userId
          """.stripMargin
       ).as(UserBase.userParser.*).head
@@ -45,7 +45,7 @@ object PersonnelService {
       val res = SQL(
         s"""
            |SELECT *
-           |FROM [art_live].[dbo].[user]
+           |FROM [user]
            |WHERE username='${uname}'
          """.stripMargin
       ).as(UserBase.userParser.*)
@@ -67,7 +67,7 @@ object PersonnelService {
       val res = SQL(
         s"""
            |SELECT *
-           |FROM [art_live].[dbo].[user]
+           |FROM [user]
            |WHERE (email='${existingUser.email.getOrElse(-1)}'
            |OR username='${existingUser.username.getOrElse(-1)}')
            |AND password='$password'
@@ -91,7 +91,7 @@ object PersonnelService {
         val password = Hex.encodeHex(crypt.digest()).mkString
         SQL(
           s"""SELECT COUNT(*)
-             |FROM [art_live].[dbo].[user]
+             |FROM [user]
              |WHERE id=${editUser.id}
              |AND password=$password""".stripMargin
         ).as(scalar[Long].single) match {
@@ -110,7 +110,7 @@ object PersonnelService {
         }
       }
       val buildQuery = new StringBuilder
-      buildQuery ++=  "UPDATE [art_live].[dbo].[user] SET "
+      buildQuery ++=  "UPDATE [user] SET "
       val userMap = editUser.map
       for((k,v) <- userMap) {
         if(v.isDefined)
@@ -118,7 +118,7 @@ object PersonnelService {
       }
       buildQuery ++= s"WHERE id=${editUser.id}"
       SQL(buildQuery.toString()).executeUpdate()
-      implicit val userBase = Option(SQL(s"SELECT * FROM [art_live].[dbo].[user] WHERE id=${editUser.id}").as(UserBase.userParser.*).head)
+      implicit val userBase = Option(SQL(s"SELECT * FROM [user] WHERE id=${editUser.id}").as(UserBase.userParser.*).head)
       ServiceResponse(StatusCode.OK)
     }
   }

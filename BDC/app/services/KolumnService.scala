@@ -20,7 +20,7 @@ protected trait KolumnService {
     DB.withConnection{ implicit c =>
       SQL(
         s"""
-           |SELECT * FROM [art_live].[dbo].[kolumn]
+           |SELECT * FROM kolumn
            |WHERE project_id
            |IN (${ids.mkString(",")})
          """.stripMargin
@@ -40,19 +40,19 @@ protected trait KolumnService {
         s"""
            |SELECT
            |COUNT(*) COUNT
-           |FROM [art_live].[dbo].[project]
+           |FROM project
            |WHERE id=${kolumn.projectId}
          """.stripMargin
       ).apply().head[Int]("COUNT") match {
         case 0 =>
           implicit val error = -1L
           ServiceResponse(StatusCode.IdentifierNotFound,
-            message=s"projectId ${kolumn.projectId} not found")
+            message=s"projectId ${kolumn.projectId} no se encuentra")
         case _ =>
           //implicit val is_archive = bool2int(kolumn.isArchiveKolumn)
           implicit val insertedKolumn : Long = SQL(
             s"""
-               |INSERT INTO [art_live].[dbo].[kolumn] (project_id,name,position,threshold,created_by_user,is_archive_kolumn)
+               |INSERT INTO kolumn (project_id,name,position,threshold,created_by_user,is_archive_kolumn)
                |VALUES(
                |${kolumn.projectId},
                |'${kolumn.name}',
@@ -65,8 +65,8 @@ protected trait KolumnService {
           kolumn.id = Option(insertedKolumn)
           KanbanSocketController.newKolumn(
             kolumn,
-            SQL(s"SELECT * FROM [art_live].[dbo].[user] WHERE id=${kolumn.createdByUserId}").as(UserBase.userParser.*).head,
-            SQL(s"SELECT board_id FROM [art_live].[dbo].[project] WHERE id=${kolumn.projectId}").as(scalar[Long].single))
+            SQL(s"SELECT * FROM [user] WHERE id=${kolumn.createdByUserId}").as(UserBase.userParser.*).head,
+            SQL(s"SELECT board_id FROM project WHERE id=${kolumn.projectId}").as(scalar[Long].single))
           ServiceResponse(StatusCode.OK)
       }
     }

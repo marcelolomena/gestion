@@ -54,7 +54,7 @@ protected trait TicketService {
                  |AND ticket.id=collaborators.ticket_id
             """.stripMargin
             ).as(Ticket.collaboratorParser.*).head,
-            SQL(s"SELECT * FROM user WHERE id=${ticket.assignerId}").as(UserBase.userParser.*).head,
+            SQL(s"SELECT * FROM [user] WHERE id=${ticket.assignerId}").as(UserBase.userParser.*).head,
             SQL(s"SELECT board_id FROM project WHERE id=${ticket.projectId}").as(scalar[Long].single)
           )
           ServiceResponse(StatusCode.OK)
@@ -89,7 +89,7 @@ protected trait TicketService {
           ).executeUpdate()
           KanbanSocketController.moveTicket(
             SQL(s"SELECT * FROM ticket WHERE id=${moveTicketValidator.ticketId}").as(Ticket.parser.*).head,
-            SQL(s"SELECT * FROM user WHERE id=${moveTicketValidator.userId}").as(UserBase.userParser.*).head,
+            SQL(s"SELECT * FROM [user] WHERE id=${moveTicketValidator.userId}").as(UserBase.userParser.*).head,
             SQL(s"SELECT board_id FROM project WHERE id=${moveTicketValidator.projectId}").as(scalar[Long].single)
           )
           ServiceResponse(StatusCode.OK)
@@ -124,22 +124,22 @@ protected trait TicketService {
               ).executeInsert(scalar[Long].single)
               KanbanSocketController.addCollaboratorsForTicket(
                 SQL(s"SELECT * from ticket where id=${collaborator.ticketId}").as(Ticket.parser.*).head,
-                SQL(s"SELECT * from user where id=${collaborator.userId}").as(UserBase.userParser.*).head,
-                SQL(s"SELECT * from user where id=${collaborator.assignerId.get}").as(UserBase.userParser.*).head,
+                SQL(s"SELECT * from [user] where id=${collaborator.userId}").as(UserBase.userParser.*).head,
+                SQL(s"SELECT * from [user] where id=${collaborator.assignerId.get}").as(UserBase.userParser.*).head,
                 collaborator.boardId
               )
               ServiceResponse(StatusCode.OK)
             case _ =>
               implicit val error = 0L
               ServiceResponse(StatusCode.IdentifierNotFound,
-                message=s"user id already assigned to ticket"
+                message=s"ID de usuario ya asignado al ticket"
               )
           }
 
         case _ =>
           implicit val error = 0L
           ServiceResponse(StatusCode.IdentifierNotFound,
-            message=s"${collaborator.assignerId} does not have authorization to add collaborators"
+            message=s"${collaborator.assignerId} no tiene autorización para agregar colaboradores"
           )
       }
     )
@@ -163,13 +163,13 @@ protected trait TicketService {
           implicit val collaboratorId : Long = SQL(
             s"""
                |INSERT INTO comments(user_id, ticket_id, comment)
-               |VALUES(${commentItem.userId.get}, ${commentItem.ticketId.get}, "${commentItem.comment.get}")
+               |VALUES(${commentItem.userId.get}, ${commentItem.ticketId.get}, ${commentItem.comment.get})
              """.stripMargin
           ).executeInsert(scalar[Long].single)
           commentItem.id = Option(collaboratorId)
           KanbanSocketController.newComment(
             commentItem.ticketId.get,
-            SQL(s"SELECT * from user where id=${commentItem.userId.get}").as(UserBase.userParser.*).head,
+            SQL(s"SELECT * from [user] where id=${commentItem.userId.get}").as(UserBase.userParser.*).head,
             SQL(s"SELECT board_id from project JOIN ticket where ticket.id=${commentItem.ticketId.get} AND project.id=ticket.project_id").as(scalar[Long].single),
             commentItem.comment.get
           )
@@ -177,28 +177,31 @@ protected trait TicketService {
         case _ =>
           implicit val error = 0L
           ServiceResponse(StatusCode.IdentifierNotFound,
-            message=s"${commentItem.userId} does not have authorization to add comment"
+            message=s"${commentItem.userId} no tiene autorización para agregar comentario"
           )
       }
     )
   }
 
   protected def getTicketsForProjects(ids: Seq[Long]): Seq[Ticket] = {
+    println("CHUUUUUUUUUUUUUUU")
+    println(ids)
     DB.withConnection { implicit c =>
       val ticketsPreProcessed = SQL(
         s"""
-           |SELECT * FROM [art_live].[dbo].[ticket]
-           |INNER JOIN [art_live].[dbo].[collaborators]
+           |SELECT * FROM ticket
+           |INNER JOIN collaborators
            |ON ticket.id = collaborators.ticket_id
-           |INNER JOIN [art_live].[dbo].[user]
+           |INNER JOIN [user]
            |ON collaborators.user_id=[user].id
-           |LEFT OUTER JOIN [art_live].[dbo].[comments]
+           |LEFT OUTER JOIN comments
            |ON ticket.id=comments.ticket_id
            |WHERE project_id
            |IN (${ids.mkString(",")})
            |AND ticket.id=collaborators.ticket_id
          """.stripMargin
       ).as(Ticket.collaboratorParser.*)
+      println("nocaga")
       implicit val ticketsPostProcessed = mutable.MutableList[model.Ticket]()
       for ((k,v) <- ticketsPreProcessed.groupBy(_.id.get)) {
         ticketsPostProcessed += v.head.copy(

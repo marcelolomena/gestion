@@ -11,13 +11,13 @@ import play.api.Play.current
 import scala.collection.mutable
 
 /**
- * Master Child class for the entirety of the "Board Services".
+ * Clase Master Child para la totalidad del "Board Services".
  * Combination of BoardService, KolumnService, TicketService, ProjectService
  */
 object KanbanService extends BoardService
                         with KolumnService
                         with TicketService
-                        with ProjectService {
+                        with KanbanProjectService {
 
   /**
    * Return full boards (with projects, kolumns, tickets, etc.) authorized for a user
@@ -62,10 +62,10 @@ object KanbanService extends BoardService
   }
 
   /**
-   * Give user authorization to use a board
+   * Dar autorización al usuario para usar un tablero
    * @param userBoardAuthorization user authorization case to look up user by username, and then
    *                               add them to the appropriate boardId
-   * @return id on collaborators table from insert
+   * @return id en la tabla de colaboradores despues de la inserción
    */
   def addUserToBoard(userBoardAuthorization: UserBoardAuthorization): ServiceResponse[Long] = {
     DB.withConnection { implicit c =>
@@ -76,12 +76,12 @@ object KanbanService extends BoardService
             s"""
                |SELECT
                |id
-               |FROM [art_live].[dbo].[user]
+               |FROM [user]
                |WHERE username='${userBoardAuthorization.username}'
             """.stripMargin
           ).as(scalar[Long].singleOpt).getOrElse(-1) match {
             case -1 =>
-              ServiceResponse(StatusCode.IdentifierNotFound, s"no user for username ${userBoardAuthorization.username}")
+              ServiceResponse(StatusCode.IdentifierNotFound, s"no hay usuario para username ${userBoardAuthorization.username}")
             case userIdFromUsername : Long =>
               retId = SQL(
                 s"""
@@ -96,14 +96,14 @@ object KanbanService extends BoardService
 
               KanbanSocketController.addUserToBoard(
                 board,
-                SQL(s"SELECT * FROM [art_live].[dbo].[user] WHERE id=$userIdFromUsername").as(UserBase.userParser.*).head,
-                SQL(s"SELECT * FROM [art_live].[dbo].[user] WHERE id=${userBoardAuthorization.assignerId}").as(UserBase.userParser.*).head
+                SQL(s"SELECT * FROM [user] WHERE id=$userIdFromUsername").as(UserBase.userParser.*).head,
+                SQL(s"SELECT * FROM [user] WHERE id=${userBoardAuthorization.assignerId}").as(UserBase.userParser.*).head
               )
 
               ServiceResponse(StatusCode.OK)
           }
         case _ =>
-          ServiceResponse(StatusCode.Unauthorized, "assigner not authorized to add user")
+          ServiceResponse(StatusCode.Unauthorized, "asignador no está autorizado a agregar usuario")
       }
     }
   }
