@@ -25,4 +25,8 @@ sip/public/docs
 sip/.vscode
 sip/lic.njsproj
 sip/lic.sln
+kanban/.idea
+kanban/target
+kanban/project
+
 sip/config
