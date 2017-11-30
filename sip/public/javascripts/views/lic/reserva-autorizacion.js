@@ -241,9 +241,8 @@
         grid.prmEdit.onInitializeForm = function (formid, action) {
             if (action === 'edit') {
                 setTimeout(function () {
-                    $("#idProducto").attr('disabled', true);
                     $("#fechaUso").attr('disabled', true);
-                    $('input#numLicencia').attr('readonly', 'readonly');
+                    $('input#numlicencia').attr('readonly', 'readonly');
                     $('input#cui').attr('readonly', 'readonly');
                     $('input#sap').attr('readonly', 'readonly');
                     $('textarea#comentarioSolicitud').attr('readonly', 'readonly');

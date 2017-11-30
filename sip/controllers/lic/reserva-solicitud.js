@@ -93,14 +93,14 @@ function listSolicitud(req, res) {
                 var total = Math.ceil(records / rows);
                 models.reserva.findAll({
                     offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows), 
+                    limit: parseInt(rows),
                     order: ['estado'],
                     where: {
                         idUsuario: usuario
                     },
                     include: [{
                         model: models.producto
-                    },{
+                    }, {
                         model: models.user
                     }]
                 }).then(function (autorizados) {
@@ -138,7 +138,6 @@ function action(req, res) {
             req.body.idUsuario = req.session.passport.user;
             return base.create(entity, map(req), res);
         case 'edit':
-            req.body.estado = 'A la Espera'
             req.body.idUsuario = req.session.passport.user;
             return base.update(entity, map(req), res);
         case 'del':
@@ -158,43 +157,16 @@ function nombreJefe(req, res) {
 function estado(req, res) {
     var ntt = entity;
     var idReserva = req.params.pId;
-    
-    
-        var sql = 'select b.first_name, b.last_name from lic.reserva a join dbo.art_user b on a.idusuariojefe = b.uid where a.id = ' + idReserva;
-        sequelize.query(sql)
-            .spread(function (rows) {
-                 
-                if(rows.length > 0){
-                    var userJefe = rows[0].first_name + ' ' + rows[0].last_name;
-                    
-                    base.listChilds(req, res, ntt, 'id', [{
-                            model: models.producto
-                        },
-                        {
-                            model: models.user
-                        }
-                    ], function (data) {
-                        var result = [];
-                        
-                        _.each(data, function (item) {
-                            var row = {
-                                id: item.id,
-                                estado: item.estado,
-                                fechaAprobacion: item.fechaAprobacion,
-                                comentarioAprobacion: item.comentarioAprobacion,
-                                fechaAprobacion: base.fromDate(item.fechaAprobacion),
-                                fechaAutorizacion: base.fromDate(item.fechaAutorizacion),
-                                comentarioAutorizacion: item.comentarioAutorizacion,
-                                idUsuarioJefe: item.idUsuarioJefe,
-                                userJefe: userJefe
-                            };
-                            result.push(row);
-                        });
-                        return result;
-                    });
-                }else{
-                    var idUsuarioJe = null;
-                    base.listChilds(req, res, ntt, 'id', [{
+
+
+    var sql = 'select b.first_name, b.last_name from lic.reserva a join dbo.art_user b on a.idusuariojefe = b.uid where a.id = ' + idReserva;
+    sequelize.query(sql)
+        .spread(function (rows) {
+
+            if (rows.length > 0) {
+                var userJefe = rows[0].first_name + ' ' + rows[0].last_name;
+
+                base.listChilds(req, res, ntt, 'id', [{
                         model: models.producto
                     },
                     {
@@ -202,7 +174,34 @@ function estado(req, res) {
                     }
                 ], function (data) {
                     var result = [];
-                    
+
+                    _.each(data, function (item) {
+                        var row = {
+                            id: item.id,
+                            estado: item.estado,
+                            fechaAprobacion: item.fechaAprobacion,
+                            comentarioAprobacion: item.comentarioAprobacion,
+                            fechaAprobacion: base.fromDate(item.fechaAprobacion),
+                            fechaAutorizacion: base.fromDate(item.fechaAutorizacion),
+                            comentarioAutorizacion: item.comentarioAutorizacion,
+                            idUsuarioJefe: item.idUsuarioJefe,
+                            userJefe: userJefe
+                        };
+                        result.push(row);
+                    });
+                    return result;
+                });
+            } else {
+                var idUsuarioJe = null;
+                base.listChilds(req, res, ntt, 'id', [{
+                        model: models.producto
+                    },
+                    {
+                        model: models.user
+                    }
+                ], function (data) {
+                    var result = [];
+
                     _.each(data, function (item) {
                         var row = {
                             id: item.id,
@@ -219,26 +218,26 @@ function estado(req, res) {
                     });
                     return result;
                 });
-                }
-                
-                
-                
-                
-                
-                
-                
-                
-                
-    
-    
-    
-            });
-    
+            }
 
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
 
 
 
@@ -259,11 +258,18 @@ function usuariocui(req, res) {
     });
 }
 
+function cambioEstado(req, res) {
+    models.sequelize.query("SELECT estado FROM lic.reserva WHERE id = " + req.params.pId).spread(function (rows) {
+        return res.json(rows);
+    });
+}
+
 module.exports = {
     list: list,
     nombreJefe: nombreJefe,
     action: action,
     estado: estado,
     usuariocui: usuariocui,
-    listSolicitud: listSolicitud
+    listSolicitud: listSolicitud,
+    cambioEstado: cambioEstado
 };

@@ -25,12 +25,33 @@
                 }
             }
         }); 
+    }
 
+    function beforeShowFormEdit(form){
+        var grid = $("#gridMaster");
+        var rowKey = grid.getGridParam("selrow");
+        var rowData = grid.getRowData(rowKey);
+        var estad = rowData.estado;
+        if(estad != 'A la Espera'){
+            setTimeout(function () {
+                $("#idProducto").attr('disabled', true);
+                $("#numlicencia").attr('disabled', true);
+                $("#fechaUso").attr('disabled', true);
+                $("#cui").attr('disabled', true);
+                $("#sap").attr('disabled', true);
+                $("#comentarioSolicitud").attr('disabled', true);
+            }, 500);
+            
+        }
     
     }
+
+
     var initGrid = function (viewModel) {
         var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Solicitud de Reserva', 'Editar Solicitud', 'Agregar Solicitud', '/lic/reserva', viewModel, 'estado', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.prmAdd.beforeShowForm = beforeShowForm;
+        grid.prmEdit.beforeShowForm = beforeShowFormEdit;
+        
         grid.build();
     };
 
