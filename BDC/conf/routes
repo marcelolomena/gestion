@@ -678,3 +678,42 @@ GET    /histograma-excel                                                        
 GET    /userStory                                                                                     controllers.Frontend.UserStory.home
 GET    /userStoryList                                                                                 controllers.Frontend.UserStory.list
 GET    /listScenario/$id<[A-Za-z0-9_-]+>                                                              controllers.Frontend.UserStory.listScenario(id:String)
+
+#Kanban
+
+GET          /socket                        controllers.Frontend.ApplicationController.socket(userId: Long, boardId: Option[Long])
+GET          /jsMessages                    controllers.Frontend.ApplicationController.jsMessages
+GET          /kanban                        controllers.Frontend.ApplicationController.kanban
+
+# Authorization & Settings
+#GET          /signIn                        controllers.Frontend.PersonnelController.signIn
+#GET          /signUp                        controllers.Frontend.PersonnelController.signUp
+#GET          /signOut                       controllers.Frontend.PersonnelController.logoutUserInternal
+#GET          /settings                      controllers.Frontend.PersonnelController.userSettings(success: Boolean)
+#GET          /editUser                      controllers.Frontend.PersonnelController.editUserInternal
+
+# Board
+#~ Create
+POST         /createNewProject              controllers.Frontend.BoardController.createNewProject
+POST         /createNewBoard                controllers.Frontend.BoardController.createNewBoard
+POST         /createNewKolumn               controllers.Frontend.BoardController.createNewKolumn
+POST         /createNewTicket               controllers.Frontend.BoardController.createNewTicket
+
+#~ Retrieve
+POST         /getBoardsForUser              controllers.Frontend.BoardController.getBoardsForUser
+
+#~ Edit
+PATCH        /moveTicket                    controllers.Frontend.BoardController.moveTicket
+POST         /userBoardAuthorization        controllers.Frontend.BoardController.userBoardAuthorization
+POST         /addCollaborator               controllers.Frontend.BoardController.bindCollaboratorToTicket
+POST         /addComment                    controllers.Frontend.BoardController.postCommentToTicket
+
+# Personnel
+#POST         /getUser                       controllers.Frontend.PersonnelController.getUserInternal
+#GET          /getUser                       controllers.Frontend.PersonnelController.getUserExternal
+
+#POST         /newUser                       controllers.Frontend.PersonnelController.newUserInternal
+#GET          /newUser                       controllers.Frontend.PersonnelController.newUserExternal
+
+# Map static resources from the /public folder to the /assets URL path
+GET          /assets/*file                  controllers.Assets.at(path="/public", file)

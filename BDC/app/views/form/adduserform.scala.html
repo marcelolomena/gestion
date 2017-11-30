@@ -1,0 +1,63 @@
+@(board : model.FullBoard, userBase : model.UserBase)
+
+@import helper._
+@import play.api.Logger
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+<fieldset>
+    <div class="form-group">
+        <label for="inputUserName" class="col-lg-2 control-label">@Messages("username")</label>
+        <div class="col-lg-9">
+            <input type="text" class="form-control" id="inputUserName" name="username" placeholder="@Messages("username")">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="authLevel" class="col-lg-2 control-label">Authorization Level</label>
+        <div class="col-lg-7">
+            <select class="form-control" id="authLevel" name="authLevel">
+                <option>SuperAdmin</option>
+                <option>Admin</option>
+                <option>Contributor</option>
+                <option>Reader</option>
+            </select>
+        </div>
+    </div>
+</fieldset>
+
+<script>
+$(document).ready( function(){
+    $("#addUserForm@board.board.id").validate({
+        rules: {
+            username: {
+                required : true
+            }
+        },
+        errorPlacement: function(error, element) {
+            error.insertBefore(element);
+        },
+        submitHandler: function(form) {
+            var values = {};
+            $.each($(form).serializeArray(), function(i, field) {
+                values[field.name] = field.value;
+            });
+            values["boardId"] = @board.board.id;
+            values["assignerId"] = @userBase.id;
+            values["authLevel"] = authLevelEnum[$("#authLevel" ).val()];
+
+            console.log("SENDING " + JSON.stringify(values));
+            $.ajax({
+                url:"/userBoardAuthorization",
+                data: JSON.stringify(values),
+                dataType: 'json',
+                contentType: "application/json;charset=utf-8",
+                type: 'POST',
+                success: function(data) {
+                    console.log(data);
+                    return false;
+                }
+            });
+        }
+    });
+});
+</script>

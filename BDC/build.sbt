@@ -21,7 +21,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.1",
   "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.0-akka-2.4.x",
   "org.apache.commons" % "commons-email" % "1.4",
-  "com.google.guava" % "guava" % "16.0.1"
+  "com.google.guava" % "guava" % "16.0.1",
+  "org.julienrf" %% "play-jsmessages" % "1.6.2"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)

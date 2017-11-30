@@ -1,0 +1,21 @@
+@(board : model.FullBoard, userBase : model.UserBase)
+
+<div class="modal fade" id="createProjectModal@board.board.id" tabindex="-1" role="dialog" aria-hidden="true" style="z-index:1500;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">New Project</h4>
+            </div>
+            <form class="form-horizontal" id="newProjectForm@board.board.id">
+                <div class="modal-body">
+                        @form.projectform(board, userBase)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="saveNewProject">Save new project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+@(column: model.Kolumn, boardId: Long)(implicit project : model.FullProject)
+
+<ul id="sortable@column.id.get" class="sortable connectedSortable@project.project.id" data-options='{"id":"@column.id"}'>
+    <div style="text-align:center;" id="sortableKol@column.id.get" class="disabled">
+        @if(column.isArchiveKolumn == 1) {
+            <span class="btn btn-info btn-success" style="width:100%;">@column.name</span>
+        } else {
+            <span id="sortableKolName@column.id.get" class="btn btn-info btn-raised" style="width:100%;">@column.name</span>
+        }
+        @for(ticket <- project.tickets.filter(_.currentKolumnId == column.id.get)) {
+            @content.ticketcontent(ticket, boardId)
+        }
+    </div>
+</ul>
