@@ -69,7 +69,11 @@ function action(req, res) {
 
 function listCompras(req, res) {
     var ntt = models.compraTramite;
-    base.list(req, res, ntt, [], function (data) {
+    base.list(req, res, ntt, [{
+        model: models.proveedor
+    },{
+        model: models.estructuracuibch 
+    }], function (data) {
         var result = [];
         _.each(data, function (item) {
             if (item.estado === 1) {

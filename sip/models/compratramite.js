@@ -53,8 +53,7 @@ module.exports = function (sequelize, DataTypes) {
         },
         estado: {
             type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 1 
+            allowNull: true
         },
         fechaRecepcion: {
             field: 'fecharecepcion',
