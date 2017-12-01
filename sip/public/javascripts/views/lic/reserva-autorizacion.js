@@ -46,18 +46,6 @@
                 },
                 search: false
             },
-            // {
-            //     label: 'Producto',
-            //     name: 'idProducto',
-            //     jsonmap: 'producto.nombre',
-            //     align: 'center',
-            //     width: 200,
-            //     editable: true,
-            //     editoptions: {
-            //         fullRow: true,
-            //     },
-            //     search: false
-            // },
             {
                 label: 'Número Licencias',
                 name: 'numlicencia',
@@ -66,35 +54,6 @@
                 editable: true,
                 search: false
             },
-            //  {
-            //     label: 'Fecha de Uso',
-            //     name: 'fechaUso',
-            //     width: 95,
-            //     align: 'center',
-            //     sortable: false,
-            //     editable: true,
-            //     editoptions: {
-            //         'data-provide': 'datepicker',
-            //         dataInit: function (element) {
-            //             $(element).mask("00-00-0000", {
-            //                 placeholder: "DD-MM-AAAA"
-            //             });
-            //             $(element).datepicker({
-            //                 language: 'es',
-            //                 weekStart: 1,
-            //                 format: 'dd-mm-yyyy',
-            //                 autoclose: true
-            //             })
-            //         },
-            //         dataEvents: [{
-            //             type: 'change',
-            //             fn: function (e) {
-
-            //             }
-            //         }],
-            //     },
-            //     search: false
-            // }
             {
                 label: 'Fecha de Uso', name: 'fechaUso', width: 150, align: 'center', search: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
@@ -139,7 +98,7 @@
             }, {
                 label: 'Solicitante',
                 name: 'idUsuario',
-                jsonmap: 'user.first_name',
+                jsonmap: 'user.first_name' + 'user.last_name',
                 align: 'center',
                 width: 100,
                 editable: false,
@@ -160,7 +119,7 @@
             {
                 label: 'Aprobador',
                 name: 'idUsuarioJefe',
-                jsonmap: 'userJefe',
+                jsonmap: 'user.first_name' + 'user.last_name' ,
                 align: 'center',
                 width: 100,
                 editable: false,

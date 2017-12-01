@@ -33,16 +33,16 @@ function map(req) {
         idProducto: req.body.idProducto || req.params.pId,
         numlicencia: req.body.numlicencia,
         fechaUso: base.toDate(req.body.fechaUso),
-        fechaSolicitud: base.toDate(req.body.fechaSolicitud),
+        fechaSolicitud: req.body.fechaSolicitud,
         cui: req.body.cui,
         sap: req.body.sap,
         comentarioSolicitud: req.body.comentarioSolicitud,
         estado: req.body.estado,
         idUsuario: req.body.idUsuario,
-        fechaAprobacion: null,
-        comentarioAprobacion: null,
-        fechaAutorizacion: null,
-        comentarioAutorizacion: null
+        fechaAprobacion: req.body.fechaAprobacion,
+        comentarioAprobacion: req.body.comentarioAprobacion,
+        fechaAutorizacion: req.body.fechaAutorizacion,
+        comentarioAutorizacion: req.body.comentarioAutorizacion
     }
 }
 
@@ -137,8 +137,10 @@ function list(req, res) {
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
+            var hoy = "" + new Date().toISOString();
             req.body.estado = 'A la Espera'
             req.body.idUsuario = req.session.passport.user;
+            req.body.fechaSolicitud = hoy;
             return base.create(entity, map(req), res);
         case 'edit':
             req.body.idUsuario = req.session.passport.user;
@@ -294,7 +296,7 @@ function solicitudReservaPDF(req, res) {
              WHERE id =:id
             `
         //Si continuidad sql_1, proyectos sql_2
-        
+
         //console.log("****SQL:"+sql_ok);
         sequelize.query(sql_ok, {
             replacements: {
@@ -302,12 +304,12 @@ function solicitudReservaPDF(req, res) {
             },
             type: sequelize.QueryTypes.SELECT
         }).then(function (rows) {
-            
+
             var datum = {
                 "reserva": rows
             }
 
-            
+
 
             jsreport.init().then(function () {
                 return jsreport.render({

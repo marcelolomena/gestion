@@ -10,6 +10,10 @@ function getCodAutoriza(data) {
     return data[0].codautoriza;
 }
 
+function getProducto(data) {
+    return data[0].idproducto;
+}
+
 function getId(data) {
     return data[0].id;
 }

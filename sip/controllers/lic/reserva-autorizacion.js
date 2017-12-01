@@ -14,6 +14,12 @@ entity.belongsTo(models.producto, {
 entity.belongsTo(models.user, {
     foreignKey: 'idUsuario'
 });
+entity.belongsTo(models.user, {
+    foreignKey: 'idUsuarioJefe'
+});
+entity.belongsTo(models.user, {
+    foreignKey: 'idUsuarioAutoriza'
+});
 
 var includes = [{
         model: models.producto
@@ -25,21 +31,13 @@ var includes = [{
 
 function map(req) {
     return {
-        id: req.body.id || 0,
-        idProducto: req.body.idProducto || req.params.pId,
-        numLicencia: req.body.numLicencia,
-        fechaUso: base.toDate(req.body.fechaUso),
-        cui: req.body.cui,
-        sap: req.body.sap,
-        comentarioSolicitud: req.body.comentarioSolicitud,
+        id: req.body.id,
+        idProducto: req.body.idProducto,
         estado: req.body.estadoAutorizacion,
-        idUsuario: req.body.idUsuario,
-        fechaAprobacion: base.toDate(req.body.fechaAprobacion),
-        comentarioAprobacion: req.body.comentarioAprobacion,
         fechaAutorizacion: req.body.fechaAutorizacion,
         comentarioAutorizacion: req.body.comentarioAutorizacion,
-        codAutoriza: req.body.codAutoriza ? req.body.codAutoriza : null
-
+        codAutoriza: req.body.codAutoriza,
+        idUsuarioAutoriza: req.body.idUsuarioAutoriza
     }
 }
 
@@ -52,10 +50,6 @@ function listAuto(req, res) {
     var page = 1
     var rows = 10
     var filters = req.params.filters
-
-
-
-
     utilSeq.buildCondition(filters, function (err, data) {
         if (err) {
             logger.debug("->>> " + err)
@@ -72,7 +66,9 @@ function listAuto(req, res) {
             });
 
             models.reserva.count({
-
+                where: {
+                    estado: [aprob, autorizado, denegado]
+                },
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 models.reserva.findAll({
@@ -120,6 +116,7 @@ function action(req, res) {
             case 'edit':
                 var hoy = "" + new Date().toISOString();
                 req.body.codAutoriza = sec;
+                req.body.idUsuarioAutoriza = req.session.passport.user;
                 req.body.fechaAutorizacion = hoy;
                 return base.update(entity, map(req), res);
             case 'del':

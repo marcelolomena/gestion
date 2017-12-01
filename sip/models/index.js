@@ -8,8 +8,8 @@ var config = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
 var logger = require("../utils/logger");
 config.logging = function(sql){
 
-  //logger.debug(sql)
-  //console.log(sql);
+  logger.debug(sql)
+  console.log(sql);
   
   var sqlchico = sql.toLowerCase();
 
