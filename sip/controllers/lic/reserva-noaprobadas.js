@@ -17,8 +17,8 @@ exports.list = function (req, res) {
   var filters = req.query.filters;
   var condition = "";
 
-  secuencia.getSecuencia(0, function (err, sec) {
-    console.log("***Secuencia:"+sec);
+//  secuencia.getSecuencia(0, function (err, sec) {
+//    console.log("***Secuencia:"+sec);
 
   if (filters) {
     var jsonObj = JSON.parse(filters);
@@ -69,7 +69,7 @@ exports.list = function (req, res) {
       res.json({ error_code: 1 });
     });
   })
-}) //end secuencia
+//}) //end secuencia
 
 }
 

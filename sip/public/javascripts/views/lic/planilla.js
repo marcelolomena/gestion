@@ -81,6 +81,7 @@
             editable: true,
             edittype: 'select',
             editoptions: {
+                defaultValue: '0',
                 dataUrl: '/lic/cui',
                 buildSelect: function (response) {
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
@@ -537,8 +538,8 @@
             editable: true,
             search: false
         }, {
-            label: 'Comentarios',
-            name: 'comentarios',
+            label: 'Comentario',
+            name: 'comentario',
             hidden: false,
             sortable: false,
             editable: true,

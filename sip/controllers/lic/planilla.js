@@ -6,10 +6,10 @@ var sequelize = require('../../models/index').sequelize;
 var nodeExcel = require('excel-export');
 var _ = require('lodash');
 
-function update(entity, data, res) {
+function update(data, res) {
     var oc = data.ordencompra == "" ? "NULL" : data.ordencompra;
     var sap = data.sap == "" ? "NULL" : data.sap;
-    var idcui = data.idcui == "0" ? "NULL" : data.idcui;
+    var idcui = (data.idcui == "0" || data.idcui == '') ? "NULL" : data.idcui;
     var sql = "UPDATE lic.compra SET " +
         "idproducto = " + data.idproducto + ", " +
         "contrato = '" + data.contrato + "', " +
@@ -34,6 +34,8 @@ function update(entity, data, res) {
     sql = sql + "idmoneda = " + data.idmoneda + ", ";
     sql = sql + "valorlicencia = " + data.valorlicencia + ", ";
     sql = sql + "valorsoporte = " + data.valorsoporte + ", ";
+    sql = sql + "comentario ='" + data.comentario + "', ";
+    
     if (data.factura.length > 0) {
         sql = sql + "factura = " + data.factura + ", ";
     } else {
@@ -57,7 +59,6 @@ function update(entity, data, res) {
             "idtipolicenciamiento =" + data.idtipolicenciamiento + ", " +
             "licstock = " + data.licstock + ", " +
             "licocupadas =" + data.licocupadas + ", " +
-            "comentarios ='" + data.comentarios + "', " +
             "nombre ='" + data.nombre + "' " +
             "where id='" + data.idproducto + "'";
         console.log("sql2:" + sql2);
@@ -72,7 +73,7 @@ function update(entity, data, res) {
         return res.json({ error: 1, glosa: err.message });
     });
 }
-function destroy(entity, id, res) {
+function destroy(id, res) {
     models.compra.destroy({
         where: {
           id: id

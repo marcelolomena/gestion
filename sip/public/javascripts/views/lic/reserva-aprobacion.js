@@ -26,7 +26,7 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Comentario Solicitud {comentariosolicitd}</div>";
+    tmpl += "<div class='column-full'>Comentario Solicitud {comentariosolicitud}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
