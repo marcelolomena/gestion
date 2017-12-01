@@ -90,10 +90,6 @@ module.exports = function (sequelize, DataTypes) {
             field: 'codautoriza',
             type: DataTypes.STRING,
             allowNull: true
-        },
-        secuencia: {
-            type: DataTypes.INTEGER,
-            allowNull: true
         }
     }, {
         schema: 'lic',

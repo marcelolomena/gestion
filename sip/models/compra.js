@@ -111,8 +111,11 @@ module.exports = function (sequelize, DataTypes) {
     perpetua: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    comentario: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
-
   }, {
     schema: 'lic',
     timestamps: false,

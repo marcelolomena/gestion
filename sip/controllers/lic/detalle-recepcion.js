@@ -21,29 +21,24 @@ entity.belongsTo(models.moneda, {
 entity.belongsTo(models.compra, {
     foreignKey: 'idCompra'
 });
-// entity.belongsTo(models.estructuracuibch, { foreignKey: 'idCui' });
 var includes = [{
-        model: models.proveedor
+    model: models.proveedor
+}, {
+    model: models.fabricante
+}, {
+    model: models.producto,
+    include: [{
+        model: models.clasificacion
     }, {
-        model: models.fabricante
+        model: models.tipoInstalacion
     }, {
-        model: models.producto,
-        include: [{
-            model: models.clasificacion
-        }, {
-            model: models.tipoInstalacion
-        }, {
-            model: models.tipoLicenciamiento
-        }]
-    }, {
-        model: models.moneda
-    }, {
-        model: models.compra
-    }
-    // , {
-    //     model: models.estructuracuibch
-    // }
-];
+        model: models.tipoLicenciamiento
+    }]
+}, {
+    model: models.moneda
+}, {
+    model: models.compra
+}];
 
 function map(req) {
     return {
@@ -179,8 +174,8 @@ function mapCompra(data) {
         comprador: data.comprador,
         correoComprador: data.mailComprador,
         idCompra: data.idCompra,
-        alertaRenovacion: data.alertaRenovacion
-
+        alertaRenovacion: data.alertaRenovacion,
+        comentario: data.comentario
     };
 }
 
@@ -207,58 +202,6 @@ function addDetalle(data, res) {
         data.fechaInicio = base.strToDateDB(data.fechaInicio);
         data.fechaTermino = base.strToDateDB(data.fechaTermino);
         data.fechaControl = base.strToDateDB(data.fechaControl);
-        // var hoy = "" + new Date().toISOString();
-        // var f1 = data.fechaControl;
-        // var f2 = data.fechaTermino;
-        // var f1compare = f1.replace(/-/g, "")
-        // var f2compare = f2.replace(/-/g, "")
-        // var fhoycompare = hoy.substr(0, 10).replace(/-/g, "");
-        // if (f1compare < fhoycompare) {
-        //     if (f2compare < fhoycompare) {
-        //         data.alertaRenovacion = 'Vencida';
-        //         return base.createP(models.compra, mapCompra(data))
-        //             .then(function (createdd) {
-        //                 models.sequelize.query('EXECUTE lic.alertaRenoSoporteCON ' + data.idProducto + ';');
-        //                 return addDetalle(data, res);
-        //             }).catch(function (err) {
-        //                 logger.error('compra.Stock Upd, ' + err);
-        //                 return res.json({
-        //                     error: 1,
-        //                     glosa: err.message
-        //                 });
-        //             })
-        //     } else {
-        //         data.alertaRenovacion = 'Renovar';
-        //         return base.createP(models.compra, mapCompra(data))
-        //             .then(function (createdd) {
-        //                 data.idCompra = createdd.id;
-        //                 models.sequelize.query('EXECUTE lic.alertaRenoSoporteCON ' + data.idProducto + ';');
-        //                 return addDetalle(data, res);
-        //             }).catch(function (err) {
-        //                 logger.error('compra.Stock Upd, ' + err);
-        //                 return res.json({
-        //                     error: 1,
-        //                     glosa: err.message
-        //                 });
-        //             })
-
-        //     }
-        // } else {
-        //     data.alertaRenovacion = 'bAl Dia';
-        //     return base.createP(models.compra, mapCompra(data))
-        //         .then(function (createdd) {
-        //             data.idCompra = createdd.id;
-        //             models.sequelize.query('EXECUTE lic.alertaRenoSoporteCON ' + data.idProducto + ';');
-        //             return addDetalle(data, res);
-        //         }).catch(function (err) {
-        //             logger.error('compra.Stock Upd, ' + err);
-        //             return res.json({
-        //                 error: 1,
-        //                 glosa: err.message
-        //             });
-        //         })
-        // }
-
         data.alertaRenovacion = 'bAl Dia';
         return base.createP(models.compra, mapCompra(data))
             .then(function (createdd) {
@@ -272,23 +215,11 @@ function addDetalle(data, res) {
                     glosa: err.message
                 });
             })
-
     } else {
-        // data.fechaInicio = base.strToDateDB(data.fechaInicio);
-        // data.fechaTermino = base.strToDateDB(data.fechaTermino);
-        // data.fechaControl = base.strToDateDB(data.fechaControl);
-
-        // var hoy = "" + new Date().toISOString();
-
         return base.createP(entity, data)
             .then(function (created) {
                 return base.findById(models.producto, data.idProducto)
                     .then(function (item) {
-                        // var f1 = data.fechaControl;
-                        // var f2 = data.fechaTermino;
-                        // var f1compare = f1.replace(/-/g, "")
-                        // var f2compare = f2.replace(/-/g, "")
-                        // var fhoycompare = hoy.substr(0, 10).replace(/-/g, "");
                         var prdData = {
                             id: data.idProducto,
                             ilimitado: data.ilimitado,
@@ -306,48 +237,7 @@ function addDetalle(data, res) {
                         if (item.idTipoLicenciamiento) {
                             prdData.idTipoLicenciamiento = data.idTipoLicenciamiento;
                         }
-                        // if (f1compare < fhoycompare) {
-                        //     if (f2compare < fhoycompare) {
-                        //         models.parametro.findAll({
-                        //             where: {
-                        //                 tipo: 'alertarenosoporte',
-                        //                 nombre: 'Vencida'
-                        //             }
-                        //         }).then(function (alerta) {
-
-                        //             if (alerta.length != 0) {
-                        //                 prdData.alertaRenovacion = alerta[0].dataValues.id;
-                        //                 return base.update(models.producto, prdData, res);
-                        //             }
-                        //         });
-                        //     } else {
-                        //         models.parametro.findAll({
-                        //             where: {
-                        //                 tipo: 'alertarenosoporte',
-                        //                 nombre: 'Renovar'
-                        //             }
-                        //         }).then(function (alerta) {
-                        //             if (alerta.length != 0) {
-                        //                 prdData.alertaRenovacion = alerta[0].dataValues.id;
-                        //                 return base.update(models.producto, prdData, res);
-                        //             }
-                        //         });
-                        //     }
-                        // } else {
-                        //     models.parametro.findAll({
-                        //         where: {
-                        //             tipo: 'alertarenosoporte',
-                        //             nombre: 'Al Día'
-                        //         }
-                        //     }).then(function (alerta) {
-                        //         if (alerta.length != 0) {
-                        //             prdData.alertaRenovacion = alerta[0].dataValues.id;
-                        //             return base.update(models.producto, prdData, res);
-                        //         }
-                        //     });
-                        // }
                         return base.update(models.producto, prdData, res);
-
                     }).catch(function (err) {
                         logger.error('producto.Stock Upd, ' + err);
                         return res.json({
@@ -355,7 +245,6 @@ function addDetalle(data, res) {
                             glosa: err.message
                         });
                     })
-
             }).catch(function (err) {
                 logger.error(entity.name + ':create, ' + err);
                 return res.json({
@@ -389,12 +278,6 @@ function action(req, res) {
             data.fechaInicio = base.strToDateDB(data.fechaInicio);
             data.fechaTermino = base.strToDateDB(data.fechaTermino);
             data.fechaControl = base.strToDateDB(data.fechaControl);
-            // var hoy = "" + new Date().toISOString();
-            // var f1 = data.fechaControl;
-            // var f2 = data.fechaTermino;
-            // var f1compare = f1.replace(/-/g, "")
-            // var f2compare = f2.replace(/-/g, "")
-            // var fhoycompare = hoy.substr(0, 10).replace(/-/g, "");
             return base.findById(entity, req.body.id)
                 .then(function (detalle) {
                     return base.updateP(entity, data)
@@ -408,7 +291,6 @@ function action(req, res) {
                                     if (!updData.ilimitado) {
                                         updData.licStock = item.licStock - detalle.cantidad + data.cantidad
                                     }
-
                                     return base.findById(models.compra, detalle.idCompra)
                                         .then(function (items) {
                                             return base.findById(models.compra, detalle.idCompra)
@@ -417,35 +299,12 @@ function action(req, res) {
                                                         id: detalle.idCompra,
                                                         alertarenovacion: null
                                                     };
-                                                    // if (f1compare < fhoycompare) {
-                                                    //     if (f2compare < fhoycompare) {
-                                                    //         updcData.alertaRenovacion = 'Vencida';
-                                                    //         updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
-                                                            
-                                                            
-                                                    //         base.update(models.compra, updcData, res);
-
-                                                    //     } else {
-                                                    //         updcData.alertaRenovacion = 'Renovar';
-                                                    //         updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
-                                                    //         base.update(models.compra, updcData, res);
-
-
-                                                    //     }
-                                                    // } else {
-                                                    //     updcData.alertaRenovacion = 'bAl Dia';
-                                                    //     updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
-                                                        
-                                                        
-                                                    //     base.update(models.compra, updcData, res);
-
-                                                    // }
                                                     updcData.alertaRenovacion = 'bAl Dia';
                                                     updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
                                                     base.update(models.compra, updcData, res);
                                                     models.sequelize.query('EXECUTE lic.alertaRenoSoporteCON ' + updData.id + ';');
                                                     return base.update(models.producto, updData, res);
-                                                    
+
                                                 }).catch(function (err) {
                                                     logger.error('producto.Stock Upd, ' + err);
                                                     return res.json({

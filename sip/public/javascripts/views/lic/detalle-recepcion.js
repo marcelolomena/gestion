@@ -484,7 +484,7 @@ var detalleRecepcionGrid = {
                 editable: false
             }
         ];
-        var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'cantidad', '/lic/getsession', ['Administrador LIC']);
 
         function beforeSubmit(postdata, formid) {
             if (!(postdata.idFabricante || postdata.otroFabricante)) {

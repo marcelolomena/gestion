@@ -61,6 +61,7 @@ function mapper(data) {
 
 
 function list(req, res) {
+    req.query.sord = 'desc',
     base.list(req, res, entity, includes, mapper);
 }
 

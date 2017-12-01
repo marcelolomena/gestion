@@ -3,6 +3,9 @@ var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
 var base = require('./lic-controller');
 var utilSeq = require('../../utils/seq');
+var logger = require('../../utils/logger');
+var fs = require('fs');
+var path = require("path");
 var _ = require('lodash');
 
 var entity = models.reserva;
@@ -63,6 +66,69 @@ function mapper(data) {
     });
 }
 
+function listSolicitud(req, res) {
+    var id = req.params.id;
+    var usuario = req.session.passport.user
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.reserva.belongsTo(models.producto, {
+                foreignKey: 'idProducto'
+            });
+            models.reserva.belongsTo(models.user, {
+                foreignKey: 'idUsuario'
+            });
+            models.reserva.belongsTo(models.user, {
+                foreignKey: 'idUsuarioJefe'
+            });
+
+            models.reserva.count({
+                where: {
+                    idUsuario: usuario
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.reserva.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    order: ['estado'],
+                    where: {
+                        idUsuario: usuario
+                    },
+                    include: [{
+                        model: models.producto
+                    }, {
+                        model: models.user
+                    }]
+                }).then(function (autorizados) {
+                    //logger.debug(solicitudcotizacion)
+                    return res.json({
+                        records: records,
+                        total: total,
+                        page: page,
+                        rows: autorizados
+                    });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({
+                        error_code: 1
+                    });
+                });
+            })
+        }
+    });
+}
+
+
+
+
+
 function list(req, res) {
     req.query.sord = 'asc',
         base.list(req, res, entity, includes, mapper);
@@ -75,7 +141,6 @@ function action(req, res) {
             req.body.idUsuario = req.session.passport.user;
             return base.create(entity, map(req), res);
         case 'edit':
-            req.body.estado = 'A la Espera'
             req.body.idUsuario = req.session.passport.user;
             return base.update(entity, map(req), res);
         case 'del':
@@ -95,43 +160,16 @@ function nombreJefe(req, res) {
 function estado(req, res) {
     var ntt = entity;
     var idReserva = req.params.pId;
-    
-    
-        var sql = 'select b.first_name, b.last_name from lic.reserva a join dbo.art_user b on a.idusuariojefe = b.uid where a.id = ' + idReserva;
-        sequelize.query(sql)
-            .spread(function (rows) {
-                 
-                if(rows.length > 0){
-                    var userJefe = rows[0].first_name + ' ' + rows[0].last_name;
-                    
-                    base.listChilds(req, res, ntt, 'id', [{
-                            model: models.producto
-                        },
-                        {
-                            model: models.user
-                        }
-                    ], function (data) {
-                        var result = [];
-                        
-                        _.each(data, function (item) {
-                            var row = {
-                                id: item.id,
-                                estado: item.estado,
-                                fechaAprobacion: item.fechaAprobacion,
-                                comentarioAprobacion: item.comentarioAprobacion,
-                                fechaAprobacion: base.fromDate(item.fechaAprobacion),
-                                fechaAutorizacion: base.fromDate(item.fechaAutorizacion),
-                                comentarioAutorizacion: item.comentarioAutorizacion,
-                                idUsuarioJefe: item.idUsuarioJefe,
-                                userJefe: userJefe
-                            };
-                            result.push(row);
-                        });
-                        return result;
-                    });
-                }else{
-                    var idUsuarioJe = null;
-                    base.listChilds(req, res, ntt, 'id', [{
+
+
+    var sql = 'select b.first_name, b.last_name from lic.reserva a join dbo.art_user b on a.idusuariojefe = b.uid where a.id = ' + idReserva;
+    sequelize.query(sql)
+        .spread(function (rows) {
+
+            if (rows.length > 0) {
+                var userJefe = rows[0].first_name + ' ' + rows[0].last_name;
+
+                base.listChilds(req, res, ntt, 'id', [{
                         model: models.producto
                     },
                     {
@@ -139,7 +177,34 @@ function estado(req, res) {
                     }
                 ], function (data) {
                     var result = [];
-                    
+
+                    _.each(data, function (item) {
+                        var row = {
+                            id: item.id,
+                            estado: item.estado,
+                            fechaAprobacion: item.fechaAprobacion,
+                            comentarioAprobacion: item.comentarioAprobacion,
+                            fechaAprobacion: base.fromDate(item.fechaAprobacion),
+                            fechaAutorizacion: base.fromDate(item.fechaAutorizacion),
+                            comentarioAutorizacion: item.comentarioAutorizacion,
+                            idUsuarioJefe: item.idUsuarioJefe,
+                            userJefe: userJefe
+                        };
+                        result.push(row);
+                    });
+                    return result;
+                });
+            } else {
+                var idUsuarioJe = null;
+                base.listChilds(req, res, ntt, 'id', [{
+                        model: models.producto
+                    },
+                    {
+                        model: models.user
+                    }
+                ], function (data) {
+                    var result = [];
+
                     _.each(data, function (item) {
                         var row = {
                             id: item.id,
@@ -156,26 +221,26 @@ function estado(req, res) {
                     });
                     return result;
                 });
-                }
-                
-                
-                
-                
-                
-                
-                
-                
-                
-    
-    
-    
-            });
-    
+            }
 
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
 
 
 
@@ -196,10 +261,99 @@ function usuariocui(req, res) {
     });
 }
 
+function cambioEstado(req, res) {
+    models.sequelize.query("SELECT estado FROM lic.reserva WHERE id = " + req.params.pId).spread(function (rows) {
+        return res.json(rows);
+    });
+}
+
+function solicitudReservaPDF(req, res) {
+    try {
+        var jsreport = require('jsreport-core')()
+        var helpers = fs.readFileSync(path.join(__dirname, '', 'helpers', 'reserva.js'), 'utf8');
+        var sql_ok =
+            `
+            SELECT 
+            id,
+            idproducto,
+            numlicencia,
+            fechauso,
+            fechasolicitud,
+            cui,
+            sap,
+            comentariosolicitud,
+            estado,
+            idusuario,
+            fechaaprobacion,
+            comentarioaprobacion,
+            fechaautorizacion,
+            comentarioautorizacion,
+            idusuariojefe,
+            codautoriza,
+            secuencia
+             FROM lic.reserva 
+             WHERE id =:id
+            `
+        //Si continuidad sql_1, proyectos sql_2
+        
+        //console.log("****SQL:"+sql_ok);
+        sequelize.query(sql_ok, {
+            replacements: {
+                id: req.params.id
+            },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (rows) {
+            
+            var datum = {
+                "reserva": rows
+            }
+
+            
+
+            jsreport.init().then(function () {
+                return jsreport.render({
+                    template: {
+                        content: fs.readFileSync(path.join(__dirname, '', 'templates', 'reserva.html'), 'utf8'),
+                        helpers: helpers,
+                        engine: 'handlebars',
+                        recipe: 'phantom-pdf',
+                        phantom: {
+                            orientation: 'portrait',
+                            format: 'Letter',
+                            margin: '1cm'
+                        }
+                    },
+                    data: datum
+                }).then(function (resp) {
+                    res.header('Content-type', 'application/pdf');
+                    resp.stream.pipe(res);
+                    //console.info("es nuevo")
+                }).catch(function (e) {
+                    logger.error(e)
+                })
+
+            }).catch(function (e) {
+                logger.error(e)
+            })
+
+        }).catch(function (err) {
+            logger.error(err)
+        });
+
+    } catch (e) {
+        logger.error(e)
+    }
+
+
+}
+
 module.exports = {
     list: list,
     nombreJefe: nombreJefe,
     action: action,
     estado: estado,
-    usuariocui: usuariocui
+    usuariocui: usuariocui,
+    listSolicitud: listSolicitud,
+    cambioEstado: cambioEstado,
+    solicitudReservaPDF: solicitudReservaPDF
 };

@@ -1,9 +1,11 @@
 'use strict';
 var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
+var utilSeq = require('../../utils/seq');
 var base = require('./lic-controller');
 var _ = require('lodash');
 var logger = require('../../utils/logger');
+var secuencia = require("../../utils/secuencia");
 
 var entity = models.reserva;
 entity.belongsTo(models.producto, {
@@ -35,50 +37,63 @@ function map(req) {
         fechaAprobacion: base.toDate(req.body.fechaAprobacion),
         comentarioAprobacion: req.body.comentarioAprobacion,
         fechaAutorizacion: req.body.fechaAutorizacion,
-        comentarioAutorizacion: req.body.comentarioAutorizacion
+        comentarioAutorizacion: req.body.comentarioAutorizacion,
+        codAutoriza: req.body.codAutoriza ? req.body.codAutoriza : null
+
     }
 }
 
 
 function listAuto(req, res) {
     var id = req.params.id;
-
+    var aprob = 'Aprobado'
+    var autorizado = 'Autorizado'
+    var denegado = 'Denegado'
     var page = 1
     var rows = 10
     var filters = req.params.filters
+
+
+
 
     utilSeq.buildCondition(filters, function (err, data) {
         if (err) {
             logger.debug("->>> " + err)
         } else {
             //logger.debug(data)
-            models.reserva.belongsTo(models.proveedor, {
-                foreignKey: 'idproveedor'
+            models.reserva.belongsTo(models.producto, {
+                foreignKey: 'idProducto'
+            });
+            models.reserva.belongsTo(models.user, {
+                foreignKey: 'idUsuario'
+            });
+            models.reserva.belongsTo(models.user, {
+                foreignKey: 'idUsuarioJefe'
             });
 
-            models.proveedorsugerido.count({
-                where: {
-                    idserviciorequerido: id
-                }
+            models.reserva.count({
+
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.proveedorsugerido.findAll({
+                models.reserva.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    //order: orden,
+                    order: ['estado'],
                     where: {
-                        idserviciorequerido: id
+                        estado: [aprob, autorizado, denegado]
                     },
                     include: [{
-                        model: models.proveedor
+                        model: models.producto
+                    }, {
+                        model: models.user
                     }]
-                }).then(function (proveedorsugerido) {
+                }).then(function (autorizados) {
                     //logger.debug(solicitudcotizacion)
                     return res.json({
                         records: records,
                         total: total,
                         page: page,
-                        rows: proveedorsugerido
+                        rows: autorizados
                     });
                 }).catch(function (err) {
                     logger.error(err);
@@ -91,69 +106,26 @@ function listAuto(req, res) {
     });
 }
 
-
-
-
-
-function listAprobados(req, res) {
-    var ntt = models.reserva;
-    base.list(req, res, ntt, [{
-            model: models.producto
-        },
-        {
-            model: models.user
-        }
-    ], function (data) {
-        var result = [];
-        _.each(data, function (item) {
-            if (item.estado === 'Aprobado' || item.estado === 'Autorizado' || item.estado === 'Denegado') {
-                result.push({
-                    id: item.id,
-                    idProducto: item.idProducto,
-                    producto: {
-                        nombre: item.producto.nombre
-                    },
-                    numLicencia: item.numlicencia,
-                    fechaUso: base.fromDate(item.fechaUso),
-                    cui: item.cui,
-                    sap: item.sap,
-                    fechaAprobacion: base.fromDate(item.fechaAprobacion),
-                    comentarioSolicitud: item.comentarioSolicitud,
-                    comentarioAprobacion: item.comentarioAprobacion,
-                    estadoAprobacion: item.estado,
-                    comentarioAutorizacion: item.comentarioAutorizacion,
-                    idUsuario: item.idUsuario,
-                    user: {
-                        first_name: item.user.first_name + '  ' + item.user.last_name
-                    },
-                    idUsuarioJefe: item.idUsuarioJefe,
-                    userJefe: {
-                        first_name: item.user.first_name + '  ' + item.user.last_name
-                    }
-                });
-            }
-        });
-        return result;
-    })
-}
-
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
 }
 
 function action(req, res) {
-    switch (req.body.oper) {
-        case 'add':
-            return base.create(entity, map(req), res);
-        case 'edit':
-            var hoy = "" + new Date().toISOString();
+    secuencia.getSecuencia(0, function (err, sec) {
 
-            req.body.fechaAutorizacion = hoy;
-
-            return base.update(entity, map(req), res);
-        case 'del':
-            return base.destroy(entity, req.body.id, res);
-    }
+        switch (req.body.oper) {
+            case 'add':
+                req.body.codAutoriza = sec;
+                return base.create(entity, map(req), res);
+            case 'edit':
+                var hoy = "" + new Date().toISOString();
+                req.body.codAutoriza = sec;
+                req.body.fechaAutorizacion = hoy;
+                return base.update(entity, map(req), res);
+            case 'del':
+                return base.destroy(entity, req.body.id, res);
+        }
+    });
 }
 
 function usuariocui(req, res) {
@@ -169,6 +141,5 @@ module.exports = {
     list: list,
     action: action,
     usuariocui: usuariocui,
-    listAprobados: listAprobados,
     listAuto: listAuto
 };
