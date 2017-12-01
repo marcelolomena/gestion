@@ -57,7 +57,11 @@
 
 
     function returnTaskLink(cellValue, options, rowdata, action) {
-        return "<a target='_blank' href='/lic/solicitudReservaPDF/" + rowdata.id + "/' >" + cellValue + " <img src='../../../../images/export_pdf.png' alt='PDF'></a>";
+        if (rowdata.estado === 'Autorizado') {
+            return "<a target='_blank' href='/lic/solicitudReservaPDF/" + rowdata.id + "/' >" + cellValue + " <img src='../../../../images/export_pdf.png' alt='PDF'></a>";
+        }else{
+            return ''
+        }
     }
 
     $(function () {
