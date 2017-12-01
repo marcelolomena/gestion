@@ -289,8 +289,7 @@ function solicitudReservaPDF(req, res) {
             fechaautorizacion,
             comentarioautorizacion,
             idusuariojefe,
-            codautoriza,
-            secuencia
+            codautoriza
              FROM lic.reserva 
              WHERE id =:id
             `
