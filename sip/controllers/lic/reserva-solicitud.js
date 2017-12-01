@@ -275,25 +275,29 @@ function solicitudReservaPDF(req, res) {
         var helpers = fs.readFileSync(path.join(__dirname, '', 'helpers', 'reserva.js'), 'utf8');
         var sql_ok =
             `
-            SELECT 
-            id,
-            idproducto,
-            numlicencia,
-            fechauso,
-            fechasolicitud,
-            cui,
-            sap,
-            comentariosolicitud,
-            estado,
-            idusuario,
-            fechaaprobacion,
-            comentarioaprobacion,
-            fechaautorizacion,
-            comentarioautorizacion,
-            idusuariojefe,
-            codautoriza
-             FROM lic.reserva 
-             WHERE id =:id
+            SELECT
+            a.id,
+            a.idproducto,
+            a.numlicencia,
+            a.fechauso,
+            a.fechasolicitud,
+            a.cui,
+            a.sap,
+            a.comentariosolicitud,
+            a.estado,
+			a.idusuario,
+            a.fechaaprobacion,
+            a.comentarioaprobacion,
+            a.fechaautorizacion,
+            a.comentarioautorizacion,
+            a.idusuariojefe,
+            a.codautoriza,
+			b.nombre,
+			c.first_name +''+ c.last_name AS usuarioauto
+             FROM lic.reserva a 
+			 join lic.producto b on a.idproducto = b.id
+			 join dbo.art_user c on a.idusuarioautoriza = c.uid
+             WHERE a.id = :id
             `
         //Si continuidad sql_1, proyectos sql_2
 
@@ -304,7 +308,12 @@ function solicitudReservaPDF(req, res) {
             },
             type: sequelize.QueryTypes.SELECT
         }).then(function (rows) {
-
+            var fechaAutoriza = rows[0].fechaautorizacion;
+            var fechaUS = rows[0].fechauso;
+            fechaAutoriza = fechaAutoriza.toISOString().substring(0,10);
+            fechaUS = fechaUS.toISOString().substring(0,10);
+            rows[0].fechaautorizacion = fechaAutoriza.substring(8)+'-'+fechaAutoriza.substring(5,7)+'-'+fechaAutoriza.substring(0,4);
+            rows[0].fechauso = fechaUS.substring(8)+'-'+fechaUS.substring(5,7)+'-'+fechaUS.substring(0,4);
             var datum = {
                 "reserva": rows
             }
