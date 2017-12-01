@@ -3,6 +3,9 @@ var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
 var base = require('./lic-controller');
 var utilSeq = require('../../utils/seq');
+var logger = require('../../utils/logger');
+var fs = require('fs');
+var path = require("path");
 var _ = require('lodash');
 
 var entity = models.reserva;
@@ -264,6 +267,86 @@ function cambioEstado(req, res) {
     });
 }
 
+function solicitudReservaPDF(req, res) {
+    try {
+        var jsreport = require('jsreport-core')()
+        var helpers = fs.readFileSync(path.join(__dirname, '', 'helpers', 'reserva.js'), 'utf8');
+        var sql_ok =
+            `
+            SELECT 
+            id,
+            idproducto,
+            numlicencia,
+            fechauso,
+            fechasolicitud,
+            cui,
+            sap,
+            comentariosolicitud,
+            estado,
+            idusuario,
+            fechaaprobacion,
+            comentarioaprobacion,
+            fechaautorizacion,
+            comentarioautorizacion,
+            idusuariojefe,
+            codautoriza,
+            secuencia
+             FROM lic.reserva 
+             WHERE id =:id
+            `
+        //Si continuidad sql_1, proyectos sql_2
+        
+        //console.log("****SQL:"+sql_ok);
+        sequelize.query(sql_ok, {
+            replacements: {
+                id: req.params.id
+            },
+            type: sequelize.QueryTypes.SELECT
+        }).then(function (rows) {
+            
+            var datum = {
+                "reserva": rows
+            }
+
+            
+
+            jsreport.init().then(function () {
+                return jsreport.render({
+                    template: {
+                        content: fs.readFileSync(path.join(__dirname, '', 'templates', 'reserva.html'), 'utf8'),
+                        helpers: helpers,
+                        engine: 'handlebars',
+                        recipe: 'phantom-pdf',
+                        phantom: {
+                            orientation: 'portrait',
+                            format: 'Letter',
+                            margin: '1cm'
+                        }
+                    },
+                    data: datum
+                }).then(function (resp) {
+                    res.header('Content-type', 'application/pdf');
+                    resp.stream.pipe(res);
+                    //console.info("es nuevo")
+                }).catch(function (e) {
+                    logger.error(e)
+                })
+
+            }).catch(function (e) {
+                logger.error(e)
+            })
+
+        }).catch(function (err) {
+            logger.error(err)
+        });
+
+    } catch (e) {
+        logger.error(e)
+    }
+
+
+}
+
 module.exports = {
     list: list,
     nombreJefe: nombreJefe,
@@ -271,5 +354,6 @@ module.exports = {
     estado: estado,
     usuariocui: usuariocui,
     listSolicitud: listSolicitud,
-    cambioEstado: cambioEstado
+    cambioEstado: cambioEstado,
+    solicitudReservaPDF: solicitudReservaPDF
 };

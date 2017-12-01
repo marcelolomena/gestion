@@ -181,16 +181,19 @@ module.exports = function (passport) {
         .get(isAuthenticated, reservaSolicitudController.usuariocui);
 
     router.route('/lic/reserva-aprobacion')
-         .get(isAuthenticated, aprobacionController.list)
-         .post(isAuthenticated, aprobacionController.action);
+        .get(isAuthenticated, aprobacionController.list)
+        .post(isAuthenticated, aprobacionController.action);
     router.get('/lic/cuisjefe', aprobacionController.getCUIs);
-         
+
     router.route('/lic/reservaAutorizado')
         .get(isAuthenticated, reservaAutorizacionController.listAuto)
         .post(isAuthenticated, reservaAutorizacionController.action);
-        
+
     router.route('/lic/reserva-noaprobadas')
-        .get(isAuthenticated, noaprobadasController.list)
+        .get(isAuthenticated, noaprobadasController.list);
+
+    router.route('/lic/solicitudReservaPDF/:id')
+        .get(isAuthenticated, reservaSolicitudController.solicitudReservaPDF);
 
     // router.route('/lic/reservaAutorizado')
     //     .get(isAuthenticated, recepcionController.listAprobados);
