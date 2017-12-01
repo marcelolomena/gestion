@@ -71,20 +71,7 @@ object UserBase {
         UserBase(email, firstName, lastName, username, password, avatarUrl, Option(Set(authorizedBoards.get)), Option(id))
     }
   }
-  /*
-  implicit val userParser: RowParser[UserBase] = {
-      get[String]("user.email") ~
-      get[String]("user.first_name") ~
-      get[Option[String]]("user.last_name") ~
-      get[String]("user.username") ~
-      get[String]("user.password") ~
-      get[Option[String]]("user.avatar") ~
-      get[Long]("user.id") map {
-      case email~firstName~lastName~username~password~avatarUrl~id =>
-        UserBase(email, firstName, lastName, username, password, avatarUrl, Option(Set()), Option(id))
-    }
-  }
-  */
+
   implicit val userParser: RowParser[UserBase] = {
     get[String]("email") ~
       get[String]("first_name") ~

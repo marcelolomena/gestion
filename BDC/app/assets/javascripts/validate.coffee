@@ -105,7 +105,10 @@ $(document).on ready: ->
           else
             value = field.value
           values[field.name] = value
-        values["isArchiveKolumn"] = $("#inputArchive").is(":checked")
+        if($("#inputArchive").is(":checked"))
+            values["isArchiveKolumn"] = 1
+        else
+            values["isArchiveKolumn"] = 0
         values["projectId"] = data.project_id;
         values["createdByUserId"] = currentUser.id;
         console.log("Dispatch Create Board: " + JSON.stringify(values))

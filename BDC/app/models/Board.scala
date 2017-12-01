@@ -17,10 +17,10 @@ object CommentItem {
   implicit val reads = Json.reads[CommentItem]
   implicit val writes = Json.writes[CommentItem]
   implicit val parser : RowParser[CommentItem] = {
-    get[Option[Long]]("comments.ticket_id") ~
-    get[Option[String]]("comments.comment") ~
-    get[Option[Long]]("comments.user_id") ~
-    get[Option[Long]]("comments.id") map {
+    get[Option[Long]]("ticket_id") ~
+    get[Option[String]]("comment") ~
+    get[Option[Long]]("user_id") ~
+    get[Option[Long]]("id") map {
       case ticketId~comment~userId~id =>
         CommentItem(ticketId, comment, userId, id)
     }
@@ -62,29 +62,6 @@ object Ticket {
   implicit val writes = Json.writes[Ticket]
 
   //TODO: Ticket Row Parser
-  /*
-  implicit val collaboratorParser: RowParser[Ticket] = {
-      get[Long]("ticket.project_id") ~
-      get[String]("ticket.name") ~
-      get[Option[String]]("ticket.description") ~
-      UserBase.userParser.? ~
-      CommentItem.parser.? ~
-      get[Option[Boolean]]("ticket.ready_for_next_stage") ~
-      get[Option[Boolean]]("ticket.blocked") ~
-      get[Long]("ticket.current_kolumn_id") ~
-      get[Option[DateTime]]("ticket.due_date") ~
-      get[Option[Boolean]]("ticket.archived") ~
-      get[Option[Int]]("ticket.priority") ~
-      get[Option[Int]]("ticket.difficulty") ~
-      get[Long]("ticket.assigner_id") ~
-      get[Long]("ticket.id") map {
-      case projectId~name~description~userId~commentItems~readyForNextStage~blocked~kolumnId
-        ~dueDate~archived~priority~difficulty~assignerId~id =>
-        Ticket(projectId, name, description, Option(Seq(userId.get)), Option(Seq(commentItems.getOrElse(CommentItem(None, None, None, None)))), readyForNextStage, blocked,
-          kolumnId, dueDate, archived, priority, difficulty, assignerId, Option(id))
-    }
-  }
-  */
   implicit val collaboratorParser: RowParser[Ticket] = {
     get[Long]("project_id") ~
       get[String]("name") ~
@@ -133,7 +110,11 @@ object Ticket {
  * @param name name of column
  * @param position position in row of columns
  * @param threshold how many issues allowed in column
+  *
+  *
+  *
  */
+//{name: "TO DO", position: 1, threshold: 1, isArchiveKolumn: false, projectId: 1, createdByUserId: 1}
 case class Kolumn(projectId : Long,
                   var name : String,
                   var position : Int,
@@ -204,20 +185,6 @@ object Board {
   }
 }
 
-/*
-case class Board(name : String, id : Option[Long])
-object Board {
-  implicit val reads = Json.reads[Board]
-  implicit val writes = Json.writes[Board]
-  implicit val parser: RowParser[Board] = {
-    get[String]("board.name") ~
-      get[Long]("board.id") map {
-      case name~id =>
-        Board(name,Option(id))
-    }
-  }
-}
-*/
 /**
  * Project with its columns and tickets
  * @param project project case
