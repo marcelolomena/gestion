@@ -17,10 +17,10 @@ object CommentItem {
   implicit val reads = Json.reads[CommentItem]
   implicit val writes = Json.writes[CommentItem]
   implicit val parser : RowParser[CommentItem] = {
-    get[Option[Long]]("comments.ticket_id") ~
-    get[Option[String]]("comments.comment") ~
-    get[Option[Long]]("comments.user_id") ~
-    get[Option[Long]]("comments.id") map {
+    get[Option[Long]]("ticket_id") ~
+    get[Option[String]]("comment") ~
+    get[Option[Long]]("user_id") ~
+    get[Option[Long]]("id") map {
       case ticketId~comment~userId~id =>
         CommentItem(ticketId, comment, userId, id)
     }
@@ -62,29 +62,6 @@ object Ticket {
   implicit val writes = Json.writes[Ticket]
 
   //TODO: Ticket Row Parser
-  /*
-  implicit val collaboratorParser: RowParser[Ticket] = {
-      get[Long]("ticket.project_id") ~
-      get[String]("ticket.name") ~
-      get[Option[String]]("ticket.description") ~
-      UserBase.userParser.? ~
-      CommentItem.parser.? ~
-      get[Option[Boolean]]("ticket.ready_for_next_stage") ~
-      get[Option[Boolean]]("ticket.blocked") ~
-      get[Long]("ticket.current_kolumn_id") ~
-      get[Option[DateTime]]("ticket.due_date") ~
-      get[Option[Boolean]]("ticket.archived") ~
-      get[Option[Int]]("ticket.priority") ~
-      get[Option[Int]]("ticket.difficulty") ~
-      get[Long]("ticket.assigner_id") ~
-      get[Long]("ticket.id") map {
-      case projectId~name~description~userId~commentItems~readyForNextStage~blocked~kolumnId
-        ~dueDate~archived~priority~difficulty~assignerId~id =>
-        Ticket(projectId, name, description, Option(Seq(userId.get)), Option(Seq(commentItems.getOrElse(CommentItem(None, None, None, None)))), readyForNextStage, blocked,
-          kolumnId, dueDate, archived, priority, difficulty, assignerId, Option(id))
-    }
-  }
-  */
   implicit val collaboratorParser: RowParser[Ticket] = {
     get[Long]("project_id") ~
       get[String]("name") ~
@@ -102,7 +79,8 @@ object Ticket {
       get[Long]("id") map {
       case projectId~name~description~userId~commentItems~readyForNextStage~blocked~kolumnId
         ~dueDate~archived~priority~difficulty~assignerId~id =>
-        Ticket(projectId, name, description, Option(Seq(userId.get)), Option(Seq(commentItems.getOrElse(CommentItem(None, None, None, None)))), readyForNextStage, blocked,
+        Ticket(projectId, name, description, Option(Seq(userId.get)),
+          Option(Seq(commentItems.getOrElse(CommentItem(Option.empty[Long], Option.empty[String], Option.empty[Long], Option.empty[Long])))), readyForNextStage, blocked,
           kolumnId, dueDate, archived, priority, difficulty, assignerId, Option(id))
     }
   }
