@@ -111,7 +111,11 @@ object Ticket {
  * @param name name of column
  * @param position position in row of columns
  * @param threshold how many issues allowed in column
+  *
+  *
+  *
  */
+//{name: "TO DO", position: 1, threshold: 1, isArchiveKolumn: false, projectId: 1, createdByUserId: 1}
 case class Kolumn(projectId : Long,
                   var name : String,
                   var position : Int,
@@ -182,20 +186,6 @@ object Board {
   }
 }
 
-/*
-case class Board(name : String, id : Option[Long])
-object Board {
-  implicit val reads = Json.reads[Board]
-  implicit val writes = Json.writes[Board]
-  implicit val parser: RowParser[Board] = {
-    get[String]("board.name") ~
-      get[Long]("board.id") map {
-      case name~id =>
-        Board(name,Option(id))
-    }
-  }
-}
-*/
 /**
  * Project with its columns and tickets
  * @param project project case
