@@ -3,7 +3,6 @@ import play.api.Play.current
 import play.api.db.DB
 import anorm.SqlParser._
 import models._
-import anorm.Id
 import anorm._
 //import org.joda.time._
 import com.typesafe.plugin._

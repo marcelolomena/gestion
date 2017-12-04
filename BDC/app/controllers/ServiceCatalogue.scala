@@ -16,7 +16,6 @@ import services.DivisionService
 import services.TaskDesciplineService
 import services.UserRoleService
 import services.ServiceCatalogueService
-import anorm.NotAssigned
 import java.util.Date
 import services.ServiceCatalogueService
 import services.UserService

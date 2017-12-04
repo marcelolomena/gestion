@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
 //import org.codehaus.jackson.JsonNode
 import play.api.libs.json.{ JsNull, Json, JsString, JsValue }
-import anorm.NotAssigned
 import models.Activity
 import models.ActivityTypes
 import models.SubTasks

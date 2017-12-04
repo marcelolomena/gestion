@@ -12,14 +12,14 @@ import play.api.Play.current
 protected trait KanbanProjectService {
   def insertNewProject(project : Project): ServiceResponse[Long] = {
     DB.withConnection { implicit c =>
-      SQL(
-        s"""
-           |SELECT
-           |COUNT(*) COUNT
-           |FROM board
-           |WHERE id=${project.boardId}
+        SQL(
+          s"""
+             |SELECT
+             |COUNT(*) COUNT
+             |FROM board
+             |WHERE id=${project.boardId}
          """.stripMargin
-      ).apply().head[Int]("COUNT") match {
+        ).as(scalar[Int].single) match {
         case 0 =>
           implicit val id = -1L
           ServiceResponse(StatusCode.IdentifierNotFound, s"boardId ${project.boardId} not found")

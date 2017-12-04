@@ -4,7 +4,6 @@ import java.util.Date
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
-import anorm.NotAssigned
 import art_forms.ARTForms
 import models.Activity
 import models.ActivityTypes

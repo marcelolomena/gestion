@@ -1,6 +1,5 @@
 package controllers.Frontend
 
-import anorm.NotAssigned
 import java.util.Date
 import java.text.SimpleDateFormat
 //import org.joda.time.DateTime

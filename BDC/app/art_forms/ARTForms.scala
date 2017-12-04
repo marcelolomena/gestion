@@ -1,7 +1,6 @@
 package art_forms
 
 import scala.math.BigDecimal.int2bigDecimal
-import anorm.NotAssigned
 import models._
 import services._
 import play.api.data.Form

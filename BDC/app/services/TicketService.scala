@@ -17,14 +17,14 @@ protected trait TicketService {
   def insertNewTicket(ticket : Ticket): ServiceResponse[Long] = {
     DB.withConnection { implicit c =>
       implicit var retId: Long = -1L
-      SQL(
-        s"""
-           |SELECT
-           |COUNT(*) COUNT
-           |FROM project
-           |WHERE id=${ticket.projectId}
+        SQL(
+          s"""
+             |SELECT
+             |COUNT(*) COUNT
+             |FROM project
+             |WHERE id=${ticket.projectId}
          """.stripMargin
-      ).apply().head[Int]("COUNT") match {
+        ).as(scalar[Int].single) match {
         case 0 =>
           ServiceResponse(StatusCode.IdentifierNotFound, message=s"projectId ${ticket.projectId} not found")
         case _ =>
@@ -70,10 +70,10 @@ protected trait TicketService {
            |COUNT(*) COUNT
            |FROM ticket
            |WHERE id=${moveTicketValidator.ticketId}
-            |AND current_kolumn_id=${moveTicketValidator.oldKolumnId}
-            |AND project_id=${moveTicketValidator.projectId}
+           |AND current_kolumn_id=${moveTicketValidator.oldKolumnId}
+           |AND project_id=${moveTicketValidator.projectId}
          """.stripMargin
-      ).apply().head[Int]("COUNT") match {
+      ).as(scalar[Int].single) match {
         case 0 =>
           implicit val error = 0
           ServiceResponse(StatusCode.IdentifierNotFound,
@@ -113,8 +113,9 @@ protected trait TicketService {
                |SELECT COUNT(*) COUNT
                |FROM collaborators
                |WHERE user_id=${collaborator.userId}
-                |AND ticket_id=${collaborator.ticketId}
-            """.stripMargin).apply().head[Int]("COUNT") match {
+               |AND ticket_id=${collaborator.ticketId}
+         """.stripMargin
+          ).as(scalar[Int].single) match {
             case 0 =>
               implicit val collaboratorId : Long = SQL(
                 s"""

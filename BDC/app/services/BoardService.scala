@@ -77,15 +77,26 @@ protected trait BoardService {
    */
   protected def getAuthLevelForBoard(userId: Long, boardId: Long): AuthLevel = {
     DB.withConnection { implicit c =>
+
       SQL(
         s"""
            |SELECT
            |auth_level
            |FROM user_authorized_boards
            |WHERE board_id=$boardId
-            |AND user_id=$userId
+           |AND user_id=$userId
          """.stripMargin
-      ).apply().head[Int]("auth_level")
+      ).as(scalar[Int].single)
+  /*
+      SQL(
+        s"""
+           |SELECT
+           |auth_level
+           |FROM user_authorized_boards
+           |WHERE board_id=$boardId
+           |AND user_id=$userId
+         """.stripMargin
+      ).apply().head[Int]("auth_level")*/
     }
   }
 

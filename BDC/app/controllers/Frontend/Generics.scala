@@ -4,7 +4,6 @@ import java.util.Date
 import scala.math.BigDecimal.int2bigDecimal
 import scala.util.Random
 import org.apache.commons.lang3.StringUtils
-import anorm.NotAssigned
 import art_forms.ARTForms
 import models.GenericTaskDetails
 import models.GenericTask

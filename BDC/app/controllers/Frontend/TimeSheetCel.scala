@@ -8,7 +8,6 @@ import java.util.Date
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
 import play.api.libs.json.{ JsNull, Json, JsString, JsValue }
-import anorm.NotAssigned
 import models.Activity
 import models.ActivityTypes
 import models.SubTasks

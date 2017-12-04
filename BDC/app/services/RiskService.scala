@@ -15,7 +15,6 @@ import java.util.Date
 
 import models.ProgramMaster
 import models.RiskStatus
-import anorm.NotAssigned
 import models.Project
 
 import scala.util.Random
@@ -1732,10 +1731,11 @@ object RiskService extends CustomColumns {
       """
 
     DB.withConnection { implicit connection =>
-      /*
+
       SQL(sqlString).on(
         'emailEmployee -> emailEmployee).as(scalar[Option[String]].single)
-        */
+
+      /*
       val rowOption = SQL(sqlString)
         .on('emailEmployee -> emailEmployee)
         .apply
@@ -1744,6 +1744,7 @@ object RiskService extends CustomColumns {
         case Some(row) => Some(row[String]("emailTrab"))
         case None => None
       }
+      */
     }
   }
 
@@ -1764,10 +1765,10 @@ object RiskService extends CustomColumns {
       """
 
     DB.withConnection { implicit connection =>
-      /*
+
       SQL(sqlString).on(
         'emailEmployee -> emailEmployee).as(scalar[Option[String]].single)
-        */
+      /*
       val rowOption = SQL(sqlString)
         .on('emailEmployee -> emailEmployee)
         .apply
@@ -1776,6 +1777,7 @@ object RiskService extends CustomColumns {
         case Some(row) => Some(row[String]("emailTrab"))
         case None => None
       }
+      */
     }
   }
 

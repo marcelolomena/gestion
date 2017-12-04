@@ -43,7 +43,7 @@ protected trait KolumnService {
            |FROM project
            |WHERE id=${kolumn.projectId}
          """.stripMargin
-      ).apply().head[Int]("COUNT") match {
+      ).as(scalar[Int].single) match {
         case 0 =>
           implicit val error = -1L
           ServiceResponse(StatusCode.IdentifierNotFound,
