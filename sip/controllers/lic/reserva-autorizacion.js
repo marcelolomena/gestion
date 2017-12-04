@@ -12,9 +12,11 @@ entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
 entity.belongsTo(models.user, {
+    as: 'solicitante',
     foreignKey: 'idUsuario'
 });
 entity.belongsTo(models.user, {
+    as: 'aprobador',
     foreignKey: 'idUsuarioJefe'
 });
 entity.belongsTo(models.user, {
@@ -59,9 +61,11 @@ function listAuto(req, res) {
                 foreignKey: 'idProducto'
             });
             models.reserva.belongsTo(models.user, {
+                as: 'solicitante',
                 foreignKey: 'idUsuario'
             });
             models.reserva.belongsTo(models.user, {
+                as: 'aprobador',
                 foreignKey: 'idUsuarioJefe'
             });
 
@@ -81,7 +85,11 @@ function listAuto(req, res) {
                     include: [{
                         model: models.producto
                     }, {
-                        model: models.user
+                        model: models.user,
+                        as: 'solicitante'
+                    }, {
+                        model: models.user,
+                        as: 'aprobador'
                     }]
                 }).then(function (autorizados) {
                     //logger.debug(solicitudcotizacion)

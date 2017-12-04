@@ -1,6 +1,24 @@
 (function ($, _) {
     'use strict';
     var zs = window.zs;
+
+    function returnSolicitante(cellValue, options, rowdata, action) {
+        if (rowdata.solicitante != null)
+            return rowdata.solicitante.first_name + ' ' + rowdata.solicitante.last_name;
+        else
+            return '';
+    }
+
+    function returnAprobador(cellValue, options, rowdata, action) {
+        if (rowdata.aprobador != null)
+            return rowdata.aprobador.first_name + ' ' + rowdata.aprobador.last_name;
+        else
+            return '';
+    }
+
+
+
+
     $(function () {
         var $table = $('#gridMaster');
         var viewModel = [{
@@ -98,10 +116,11 @@
             }, {
                 label: 'Solicitante',
                 name: 'idUsuario',
-                jsonmap: 'user.first_name' + 'user.last_name',
+                jsonmap: 'solicitante.first_name',
                 align: 'center',
                 width: 100,
                 editable: false,
+                formatter: returnSolicitante,
                 search: false
             },
             {
@@ -119,10 +138,11 @@
             {
                 label: 'Aprobador',
                 name: 'idUsuarioJefe',
-                jsonmap: 'user.first_name' + 'user.last_name' ,
+                jsonmap: 'aprobador.first_name',
                 align: 'center',
                 width: 100,
                 editable: false,
+                formatter: returnAprobador,
                 search: false
             },
             {

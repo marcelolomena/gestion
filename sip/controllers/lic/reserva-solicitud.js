@@ -82,9 +82,11 @@ function listSolicitud(req, res) {
                 foreignKey: 'idProducto'
             });
             models.reserva.belongsTo(models.user, {
+                as: 'solicitante',
                 foreignKey: 'idUsuario'
             });
             models.reserva.belongsTo(models.user, {
+                as: 'aprobador',
                 foreignKey: 'idUsuarioJefe'
             });
 
@@ -312,10 +314,10 @@ function solicitudReservaPDF(req, res) {
         }).then(function (rows) {
             var fechaAutoriza = rows[0].fechaautorizacion;
             var fechaUS = rows[0].fechauso;
-            fechaAutoriza = fechaAutoriza.toISOString().substring(0,10);
-            fechaUS = fechaUS.toISOString().substring(0,10);
-            rows[0].fechaautorizacion = fechaAutoriza.substring(8)+'-'+fechaAutoriza.substring(5,7)+'-'+fechaAutoriza.substring(0,4);
-            rows[0].fechauso = fechaUS.substring(8)+'-'+fechaUS.substring(5,7)+'-'+fechaUS.substring(0,4);
+            fechaAutoriza = fechaAutoriza.toISOString().substring(0, 10);
+            fechaUS = fechaUS.toISOString().substring(0, 10);
+            rows[0].fechaautorizacion = fechaAutoriza.substring(8) + '-' + fechaAutoriza.substring(5, 7) + '-' + fechaAutoriza.substring(0, 4);
+            rows[0].fechauso = fechaUS.substring(8) + '-' + fechaUS.substring(5, 7) + '-' + fechaUS.substring(0, 4);
             var datum = {
                 "reserva": rows
             }
