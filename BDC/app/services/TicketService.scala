@@ -148,16 +148,28 @@ protected trait TicketService {
   def addCommentToTicket(commentItem: CommentItem): ServiceResponse[Long] = {
     DB.withConnection( implicit c =>
       SQL(
+/*
         s"""
-           |SELECT auth_level
+           |SELECT TOP 1 auth_level
            |FROM user_authorized_boards
            |JOIN ticket
            |JOIN project
            |WHERE user_authorized_boards.user_id = ${commentItem.userId.get}
            |AND (ticket.project_id = ${commentItem.ticketId.get}
            |AND project.board_id = user_authorized_boards.board_id)
-           |LIMIT 1
          """.stripMargin
+*/
+        s"""
+           |SELECT TOP 1 auth_level
+           |FROM user_authorized_boards
+           |JOIN project ON project.board_id = user_authorized_boards.board_id
+           |JOIN ticket ON ticket.project_id = project.id
+           |WHERE user_authorized_boards.user_id = ${commentItem.userId.get}
+           |AND ticket.project_id = ${commentItem.ticketId.get}
+           |
+         """.stripMargin
+
+
       ).as(scalar[Int].single) match {
         case AuthLevel.SuperAdmin|AuthLevel.Admin|AuthLevel.Contributor =>
           implicit val collaboratorId : Long = SQL(

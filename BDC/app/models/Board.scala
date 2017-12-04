@@ -16,7 +16,7 @@ case class CommentItem(ticketId: Option[Long], comment: Option[String], userId: 
 object CommentItem {
   implicit val reads = Json.reads[CommentItem]
   implicit val writes = Json.writes[CommentItem]
-  implicit val parser : RowParser[CommentItem] = {
+  implicit val commentParser : RowParser[CommentItem] = {
     get[Option[Long]]("ticket_id") ~
     get[Option[String]]("comment") ~
     get[Option[Long]]("user_id") ~
@@ -66,8 +66,8 @@ object Ticket {
     get[Long]("project_id") ~
       get[String]("name") ~
       get[Option[String]]("description") ~
-      UserBase.userParser.? ~
-      CommentItem.parser.? ~
+      (UserBase.userParser.?) ~
+      (CommentItem.commentParser.?) ~
       get[Option[Boolean]]("ready_for_next_stage") ~
       get[Option[Boolean]]("blocked") ~
       get[Long]("current_kolumn_id") ~
@@ -80,7 +80,8 @@ object Ticket {
       case projectId~name~description~userId~commentItems~readyForNextStage~blocked~kolumnId
         ~dueDate~archived~priority~difficulty~assignerId~id =>
         Ticket(projectId, name, description, Option(Seq(userId.get)),
-          Option(Seq(commentItems.getOrElse(CommentItem(Option.empty[Long], Option.empty[String], Option.empty[Long], Option.empty[Long])))), readyForNextStage, blocked,
+          Option(Seq(commentItems.getOrElse(CommentItem(Option.empty[Long], Option.empty[String], Option.empty[Long], Option.empty[Long])))),
+          readyForNextStage, blocked,
           kolumnId, dueDate, archived, priority, difficulty, assignerId, Option(id))
     }
   }
