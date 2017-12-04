@@ -75,6 +75,10 @@ function getUsuarioAutorizador(data) {
     return data[0].usuarioauto;
 }
 
+function getUsuarioSolicitante(data) {
+    return data[0].usuariosoli;
+}
+
 
 
 

@@ -293,10 +293,12 @@ function solicitudReservaPDF(req, res) {
             a.idusuariojefe,
             a.codautoriza,
 			b.nombre,
-			c.first_name +''+ c.last_name AS usuarioauto
-             FROM lic.reserva a 
+            c.first_name + ' ' + c.last_name AS usuarioauto,
+            d.first_name + ' ' + d.last_name AS usuariosoli
+            FROM lic.reserva a 
 			 join lic.producto b on a.idproducto = b.id
-			 join dbo.art_user c on a.idusuarioautoriza = c.uid
+             join dbo.art_user c on a.idusuarioautoriza = c.uid
+             join dbo.art_user d on a.idusuario = d.uid
              WHERE a.id = :id
             `
         //Si continuidad sql_1, proyectos sql_2

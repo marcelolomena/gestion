@@ -91,7 +91,7 @@
             label: 'Producto',
             name: 'idProducto',
             jsonmap: 'producto.nombre',
-            width: 350,
+            width: 250,
             align: 'center',
             sortable: false,
             editable: true,
@@ -184,7 +184,7 @@
         }, {
             label: 'Comentario',
             name: 'comentarioSolicitud',
-            width: 500,
+            width: 400,
             hidden: false,
             editable: true,
             edittype: 'textarea',
