@@ -236,7 +236,7 @@ exports.getRoles = function (req, res) {
 
   var sql = "select * from sip.rol " +
     "where borrado=1 order by glosarol";
-
+  console.log("SQL:"+sql);
   sequelize.query(sql)
     .spread(function (rows) {
       res.json(rows);
