@@ -361,6 +361,12 @@ function solicitudReservaPDF(req, res) {
 
 }
 
+function listChilds(req, res) {
+    base.listChilds(req, res, entity, 'idProducto', includes, mapper);
+}
+
+
+
 module.exports = {
     list: list,
     nombreJefe: nombreJefe,
@@ -369,5 +375,6 @@ module.exports = {
     usuariocui: usuariocui,
     listSolicitud: listSolicitud,
     cambioEstado: cambioEstado,
-    solicitudReservaPDF: solicitudReservaPDF
+    solicitudReservaPDF: solicitudReservaPDF,
+    listChilds: listChilds
 };

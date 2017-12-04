@@ -98,7 +98,7 @@
             edittype: 'select',
             editoptions: {
                 fullRow: true,
-                dataUrl: '/lic/producto',
+                dataUrl: '/lic/getProductoCompra',
                 buildSelect: function (response) {
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.nombre;

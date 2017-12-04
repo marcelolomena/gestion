@@ -42,7 +42,8 @@ function map(req) {
         alertaRenovacion: req.body.alertaRenovacion,
         utilidad: req.body.utilidad,
         comentarios: req.body.comentarios,
-        licTramite: req.body.licTramite
+        licTramite: req.body.licTramite,
+        licReserva: req.body.licReserva
     }
 }
 
@@ -78,7 +79,8 @@ function mapper(data) {
             //     nombre: item.parametro ? item.parametro.nombre : ''
             // },
             licTramite: item.licTramite,
-            estado: item.estado ? 'De Baja' : 'Vigente'
+            estado: item.estado ? 'De Baja' : 'Vigente',
+            licReserva: item.licReserva
         }
     });
 }
@@ -213,6 +215,17 @@ function getProducto(req, res) {
 
 };
 
+function getProductoCompra(req, res) {
+    var idFabricante = req.params.idFabricante;
+    var sql = 'select a.id, a.nombre from lic.producto a ' +
+                'join lic.compra b on a.id = b.idproducto';
+    sequelize.query(sql)
+        .spread(function (rows) {
+            return res.json(rows);
+        });
+
+};
+
 function getProductoLicTramite(req, res) {
     var idProducto = parseInt(req.idProducto);
     entity
@@ -285,5 +298,6 @@ module.exports = {
     getFabricante: getFabricante,
     getProducto: getProducto,
     getProductoLicTramite: getProductoLicTramite,
-    listcompratramite: listcompratramite
+    listcompratramite: listcompratramite,
+    getProductoCompra: getProductoCompra
 }

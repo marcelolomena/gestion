@@ -195,6 +195,11 @@ module.exports = function (passport) {
     router.route('/lic/solicitudReservaPDF/:id')
         .get(isAuthenticated, reservaSolicitudController.solicitudReservaPDF);
 
+    router.route('/lic/reserva/:pId')
+        .get(isAuthenticated, reservaSolicitudController.listChilds);
+
+        router.route('/lic/getProductoCompra')
+        .get(isAuthenticated, productoController.getProductoCompra);
     // router.route('/lic/reservaAutorizado')
     //     .get(isAuthenticated, recepcionController.listAprobados);
     // router.route('/lic/reservaAprobacion')

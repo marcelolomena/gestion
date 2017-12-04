@@ -93,6 +93,12 @@ module.exports = function (sequelize, DataTypes) {
         estado: {
             type: DataTypes.INTEGER,
             allowNull: true
+        },
+        licReserva: {
+            field: 'licreserva',
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
         }
     }, {
         schema: 'lic',
