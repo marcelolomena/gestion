@@ -33,16 +33,16 @@ function map(req) {
         idProducto: req.body.idProducto || req.params.pId,
         numlicencia: req.body.numlicencia,
         fechaUso: base.toDate(req.body.fechaUso),
-        fechaSolicitud: base.toDate(req.body.fechaSolicitud),
+        fechaSolicitud: req.body.fechaSolicitud,
         cui: req.body.cui,
         sap: req.body.sap,
         comentarioSolicitud: req.body.comentarioSolicitud,
         estado: req.body.estado,
         idUsuario: req.body.idUsuario,
-        fechaAprobacion: null,
-        comentarioAprobacion: null,
-        fechaAutorizacion: null,
-        comentarioAutorizacion: null
+        fechaAprobacion: req.body.fechaAprobacion,
+        comentarioAprobacion: req.body.comentarioAprobacion,
+        fechaAutorizacion: req.body.fechaAutorizacion,
+        comentarioAutorizacion: req.body.comentarioAutorizacion
     }
 }
 
@@ -82,9 +82,11 @@ function listSolicitud(req, res) {
                 foreignKey: 'idProducto'
             });
             models.reserva.belongsTo(models.user, {
+                as: 'solicitante',
                 foreignKey: 'idUsuario'
             });
             models.reserva.belongsTo(models.user, {
+                as: 'aprobador',
                 foreignKey: 'idUsuarioJefe'
             });
 
@@ -137,8 +139,10 @@ function list(req, res) {
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
+            var hoy = "" + new Date().toISOString();
             req.body.estado = 'A la Espera'
             req.body.idUsuario = req.session.passport.user;
+            req.body.fechaSolicitud = hoy;
             return base.create(entity, map(req), res);
         case 'edit':
             req.body.idUsuario = req.session.passport.user;
@@ -273,29 +277,34 @@ function solicitudReservaPDF(req, res) {
         var helpers = fs.readFileSync(path.join(__dirname, '', 'helpers', 'reserva.js'), 'utf8');
         var sql_ok =
             `
-            SELECT 
-            id,
-            idproducto,
-            numlicencia,
-            fechauso,
-            fechasolicitud,
-            cui,
-            sap,
-            comentariosolicitud,
-            estado,
-            idusuario,
-            fechaaprobacion,
-            comentarioaprobacion,
-            fechaautorizacion,
-            comentarioautorizacion,
-            idusuariojefe,
-            codautoriza,
-            secuencia
-             FROM lic.reserva 
-             WHERE id =:id
+            SELECT
+            a.id,
+            a.idproducto,
+            a.numlicencia,
+            a.fechauso,
+            a.fechasolicitud,
+            a.cui,
+            a.sap,
+            a.comentariosolicitud,
+            a.estado,
+			a.idusuario,
+            a.fechaaprobacion,
+            a.comentarioaprobacion,
+            a.fechaautorizacion,
+            a.comentarioautorizacion,
+            a.idusuariojefe,
+            a.codautoriza,
+			b.nombre,
+            c.first_name + ' ' + c.last_name AS usuarioauto,
+            d.first_name + ' ' + d.last_name AS usuariosoli
+            FROM lic.reserva a 
+			 join lic.producto b on a.idproducto = b.id
+             join dbo.art_user c on a.idusuarioautoriza = c.uid
+             join dbo.art_user d on a.idusuario = d.uid
+             WHERE a.id = :id
             `
         //Si continuidad sql_1, proyectos sql_2
-        
+
         //console.log("****SQL:"+sql_ok);
         sequelize.query(sql_ok, {
             replacements: {
@@ -303,12 +312,17 @@ function solicitudReservaPDF(req, res) {
             },
             type: sequelize.QueryTypes.SELECT
         }).then(function (rows) {
-            
+            var fechaAutoriza = rows[0].fechaautorizacion;
+            var fechaUS = rows[0].fechauso;
+            fechaAutoriza = fechaAutoriza.toISOString().substring(0, 10);
+            fechaUS = fechaUS.toISOString().substring(0, 10);
+            rows[0].fechaautorizacion = fechaAutoriza.substring(8) + '-' + fechaAutoriza.substring(5, 7) + '-' + fechaAutoriza.substring(0, 4);
+            rows[0].fechauso = fechaUS.substring(8) + '-' + fechaUS.substring(5, 7) + '-' + fechaUS.substring(0, 4);
             var datum = {
                 "reserva": rows
             }
 
-            
+
 
             jsreport.init().then(function () {
                 return jsreport.render({
@@ -347,6 +361,12 @@ function solicitudReservaPDF(req, res) {
 
 }
 
+function listChilds(req, res) {
+    base.listChilds(req, res, entity, 'idProducto', includes, mapper);
+}
+
+
+
 module.exports = {
     list: list,
     nombreJefe: nombreJefe,
@@ -355,5 +375,6 @@ module.exports = {
     usuariocui: usuariocui,
     listSolicitud: listSolicitud,
     cambioEstado: cambioEstado,
-    solicitudReservaPDF: solicitudReservaPDF
+    solicitudReservaPDF: solicitudReservaPDF,
+    listChilds: listChilds
 };

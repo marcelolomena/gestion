@@ -175,7 +175,8 @@ function mapCompra(data) {
         correoComprador: data.mailComprador,
         idCompra: data.idCompra,
         alertaRenovacion: data.alertaRenovacion,
-        comentario: data.comentario
+        comentario: data.comentario,
+        perpetua: 0
     };
 }
 

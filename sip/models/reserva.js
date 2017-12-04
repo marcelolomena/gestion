@@ -90,6 +90,15 @@ module.exports = function (sequelize, DataTypes) {
             field: 'codautoriza',
             type: DataTypes.STRING,
             allowNull: true
+        },
+        idUsuarioAutoriza: {
+            field: 'idusuarioautoriza',
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: 'art_user',
+                key: 'id'
+            }
         }
     }, {
         schema: 'lic',

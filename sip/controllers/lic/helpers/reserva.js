@@ -10,6 +10,10 @@ function getCodAutoriza(data) {
     return data[0].codautoriza;
 }
 
+function getIdProducto(data) {
+    return data[0].idproducto;
+}
+
 function getId(data) {
     return data[0].id;
 }
@@ -61,6 +65,18 @@ function getComentarioAutorizacion(data) {
 
 function getIdUsuarioJefe(data) {
     return data[0].idusuariojefe;
+}
+
+function getProducto(data) {
+    return data[0].nombre;
+}
+
+function getUsuarioAutorizador(data) {
+    return data[0].usuarioauto;
+}
+
+function getUsuarioSolicitante(data) {
+    return data[0].usuariosoli;
 }
 
 

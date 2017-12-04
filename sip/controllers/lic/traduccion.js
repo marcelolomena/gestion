@@ -8,7 +8,9 @@ entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
 
-var includes = [{ model: models.producto }];
+var includes = [{
+    model: models.producto
+}];
 
 function map(req) {
     return {
@@ -34,24 +36,26 @@ function mapper(data) {
 }
 
 function list(req, res) {
-            base.list(req, res, entity, includes, mapper);
-        }
+    base.list(req, res, entity, includes, mapper);
+}
+
 function listChilds(req, res) {
-            base.listChilds(req, res, entity, 'idProducto', includes, mapper);
-        }
+    base.listChilds(req, res, entity, 'idProducto', includes, mapper);
+}
+
 function action(req, res) {
-            switch (req.body.oper) {
-                case 'add':
-                    return base.create(entity, map(req), res);
-                case 'edit':
-                    return base.update(entity, map(req), res);
-                case 'del':
-                    return base.destroy(entity, req.body.id, res);
-            }
-        }
+    switch (req.body.oper) {
+        case 'add':
+            return base.create(entity, map(req), res);
+        case 'edit':
+            return base.update(entity, map(req), res);
+        case 'del':
+            return base.destroy(entity, req.body.id, res);
+    }
+}
 
 module.exports = {
-            list: list,
-            listChilds: listChilds,
-            action: action
-        };
+    list: list,
+    listChilds: listChilds,
+    action: action
+};

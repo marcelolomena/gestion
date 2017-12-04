@@ -2,116 +2,87 @@
 <meta charset="utf-8">
 <link href="http://152.139.147.41:3000/stylesheets/bootstrap.min.css" rel="stylesheet" />
 <style>
-body {
-	transform-origin: 0 0; 
-	-webkit-transform-origin: 0 0; 
-	transform: scale(0.95); 
-	-webkit-transform: scale(0.95);
-	font-size: 100%;
-	/*white-space: nowrap;*/
-}
+	body {
+		transform-origin: 0 0;
+		-webkit-transform-origin: 0 0;
+		transform: scale(0.95);
+		-webkit-transform: scale(0.95);
+		font-size: 100%;
+		/*white-space: nowrap;*/
+	}
 </style>
 <script src="http://152.139.147.41:3000/javascripts/jquery-1.12.3.js" />
 <script>
-    $(function () { 
-        var reserva = {{{toJSON reserva}}}
+	$(function () {
+		var reserva = {
+			{
+				{
+					toJSON reserva
+				}
+			}
+		}
 
-        var reserva = data.map(function(b) { return [ id,
-            idproducto,
-            numlicencia,
-            fechauso,
-            fechasolicitud,
-            cui,
-            sap,
-            comentariosolicitud,
-            estado,
-            idusuario,
-            fechaaprobacion,
-            comentarioaprobacion,
-            fechaautorizacion,
-            comentarioautorizacion,
-            idusuariojefe,
-            codautoriza,
-            secuencia
-		]});
-    });
-	
+		var reserva = data.map(function (b) {
+			return [id,
+				idproducto,
+				numlicencia,
+				fechauso,
+				fechasolicitud,
+				cui,
+				sap,
+				comentariosolicitud,
+				estado,
+				idusuario,
+				fechaaprobacion,
+				comentarioaprobacion,
+				fechaautorizacion,
+				comentarioautorizacion,
+				idusuariojefe,
+				codautoriza
+			]
+		});
+	});
 </script>
 <div class="container">
 	<div class="row">
 		<!-- /container-->
 		<div class="row" style="border:none; background:white; height:210px;">
 			<div class="col-xs-6">
-				<h1><img src="http://152.139.147.41:3000/images/logo.png" style="height:151px;"></h1>
+				<h1>
+					<img src="http://152.139.147.41:3000/images/logo.png" style="height:151px;">
+				</h1>
 			</div>
 			<div class="col-xs-6 text-right">
-				<h1>CÓDIGO AUTORIZACIÓN Nº {{getCodAutoriza reserva}}</h1>
-				<h2><small>Nº Contrato: {{getCodAutoriza reserva}} <br/>Fecha: {{getCodAutoriza reserva}}</small></h2>
+				<h2>
+					<small>Fecha de Autorización: {{getFechaAutorizacion reserva}}</small>
+				</h2>
 			</div>
-
+			
 		</div>
 		<hr>
+		
+		<body>
+			<h3>Estimados</h3>
+			<h4>Se autoriza la instalación del producto detallado a continuación:</h4>
+		</body>
 		<div class="row">
-			<div class="col-xs-5">
+			<div class="col-xs-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h4>Cui: {{getCodAutoriza reserva}}</h4>
-
-					</div>
-					<div class="panel-body">
-						<p>Responsable: {{getCodAutoriza reserva}}</p>
-						<p>Cargo: {{getCodAutoriza reserva}}</p>
-						<p>Email: {{getCodAutoriza reserva}}</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-5 col-xs-offset-2 text-right">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h4>Proveedor: {{getCodAutoriza reserva}} </h4>
-
-					</div>
-					<div class="panel-body">
-						<p>Rut : {{getCodAutoriza reserva}}</p>
-						<p>Contacto: {{getCodAutoriza reserva}}</p>
-						<p>Email: {{getCodAutoriza reserva}}</p>
+						<h4>Código de Autorizacion	: {{getCodAutoriza reserva}}</h4>
+						<h4>Producto				: {{getProducto reserva}}</h4>
+						<h4>Cantidad				: {{getNumLicencia reserva}}</h4>
+						<h4>Fecha de Uso			: {{getFechaUso reserva}}</h4>
+						<h4>Solicitante				: {{getUsuarioSolicitante reserva}}</h4>
+						<h4>CUI						: {{getCui reserva}}</h4>
+						<h4>SAP						: {{getSap reserva}}</h4>
 					</div>
 				</div>
 			</div>
 		</div>
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th>
-						<h4 align="center">Código</h4>
-					</th>					
-					<th>
-						<h4 align="left">Servicio</h4>
-					</th>
-					<th>
-						<h4 align="center">Cantidad</h4>
-					</th>
-					<th>
-						<h4 align="center">Precio  </h4>
-					</th>
-					<th>
-						<h4 align="center">Abono</h4>
-					</th>
-					<th>
-						<h4 align="center">Descuento</h4>
-					</th>
-					<th>
-						<h4 align="center">Total  </h4>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				
-			</tbody>
-		</table> 
 		<div class="row text-right">
-			<div class="col-xs-3 col-xs-offset-7"><strong>Subtotal:<br>(IVA 19%):<br>Total:<br></strong></div>
-			<div class="col-xs-2"><strong>$ {{getCodAutoriza reserva}}<br>$ {{getCodAutoriza reserva}}<br>$ {{getCodAutoriza reserva}}<br></strong></div>
+				<h4>{{getUsuarioAutorizador reserva}}</h4>
+				<h4> División Operaciones y Tecnologías</h4>
 		</div>
 	</div>
 </div>

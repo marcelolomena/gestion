@@ -1,6 +1,24 @@
 (function ($, _) {
     'use strict';
     var zs = window.zs;
+
+    function returnSolicitante(cellValue, options, rowdata, action) {
+        if (rowdata.solicitante != null)
+            return rowdata.solicitante.first_name + ' ' + rowdata.solicitante.last_name;
+        else
+            return '';
+    }
+
+    function returnAprobador(cellValue, options, rowdata, action) {
+        if (rowdata.aprobador != null)
+            return rowdata.aprobador.first_name + ' ' + rowdata.aprobador.last_name;
+        else
+            return '';
+    }
+
+
+
+
     $(function () {
         var $table = $('#gridMaster');
         var viewModel = [{
@@ -46,18 +64,6 @@
                 },
                 search: false
             },
-            // {
-            //     label: 'Producto',
-            //     name: 'idProducto',
-            //     jsonmap: 'producto.nombre',
-            //     align: 'center',
-            //     width: 200,
-            //     editable: true,
-            //     editoptions: {
-            //         fullRow: true,
-            //     },
-            //     search: false
-            // },
             {
                 label: 'Número Licencias',
                 name: 'numlicencia',
@@ -66,35 +72,6 @@
                 editable: true,
                 search: false
             },
-            //  {
-            //     label: 'Fecha de Uso',
-            //     name: 'fechaUso',
-            //     width: 95,
-            //     align: 'center',
-            //     sortable: false,
-            //     editable: true,
-            //     editoptions: {
-            //         'data-provide': 'datepicker',
-            //         dataInit: function (element) {
-            //             $(element).mask("00-00-0000", {
-            //                 placeholder: "DD-MM-AAAA"
-            //             });
-            //             $(element).datepicker({
-            //                 language: 'es',
-            //                 weekStart: 1,
-            //                 format: 'dd-mm-yyyy',
-            //                 autoclose: true
-            //             })
-            //         },
-            //         dataEvents: [{
-            //             type: 'change',
-            //             fn: function (e) {
-
-            //             }
-            //         }],
-            //     },
-            //     search: false
-            // }
             {
                 label: 'Fecha de Uso', name: 'fechaUso', width: 150, align: 'center', search: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
@@ -139,10 +116,11 @@
             }, {
                 label: 'Solicitante',
                 name: 'idUsuario',
-                jsonmap: 'user.first_name',
+                jsonmap: 'solicitante.first_name',
                 align: 'center',
                 width: 100,
                 editable: false,
+                formatter: returnSolicitante,
                 search: false
             },
             {
@@ -160,10 +138,11 @@
             {
                 label: 'Aprobador',
                 name: 'idUsuarioJefe',
-                jsonmap: 'userJefe',
+                jsonmap: 'aprobador.first_name',
                 align: 'center',
                 width: 100,
                 editable: false,
+                formatter: returnAprobador,
                 search: false
             },
             {

@@ -47,6 +47,8 @@
                 return bitacoraGrid;
             case '#addm':
                 return tabAddmGrid;
+            case '#reserva':
+                return tabReservaGrid;
         }
     };
 
@@ -166,6 +168,15 @@
                 hidden: false,
                 search: false
             }, {
+                label: 'Reserva',
+                name: 'licReserva',
+                width: 75,
+                align: 'center',
+                formatter: 'integer',
+                editable: false,
+                search: false
+            },
+            {
                 label: 'Alerta Renovación',
                 name: 'alertarenovacion',
                 width: 80,
@@ -179,9 +190,9 @@
                     var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
                     var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
                     var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
-                    if(rowObject.alertarenovacion === 'aGris'){
+                    if (rowObject.alertarenovacion === 'aGris') {
                         return gris;
-                    }else{
+                    } else {
                         if (rowObject.alertarenovacion === 'Vencida') {
                             return rojo;
                         } else {
@@ -189,12 +200,12 @@
                                 return amarillo;
                             } else {
                                 if (rowObject.alertarenovacion === 'bAl Dia')
-                                
-                                
-                                return verde;
+
+
+                                    return verde;
                             }
-                        }    
-                    }   
+                        }
+                    }
                 }
             }, {
                 label: '¿Donde está instalada?',
@@ -312,6 +323,9 @@
         }, {
             id: 'addm',
             nom: 'ADDM'
+        }, {
+            id: 'reserva',
+            nom: 'Reserva'
         }, {
             id: 'traduccion',
             nom: 'Traducciones'

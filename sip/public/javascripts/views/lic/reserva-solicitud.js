@@ -57,7 +57,11 @@
 
 
     function returnTaskLink(cellValue, options, rowdata, action) {
-        return "<a target='_blank' href='/lic/solicitudReservaPDF/" + rowdata.id + "/' >" + cellValue + " <img src='../../../../images/export_pdf.png' alt='PDF'></a>";
+        if (rowdata.estado === 'Autorizado') {
+            return "<a target='_blank' href='/lic/solicitudReservaPDF/" + rowdata.id + "/' >" + cellValue + " <img src='../../../../images/export_pdf.png' alt='PDF'></a>";
+        }else{
+            return ''
+        }
     }
 
     $(function () {
@@ -87,14 +91,14 @@
             label: 'Producto',
             name: 'idProducto',
             jsonmap: 'producto.nombre',
-            width: 350,
+            width: 250,
             align: 'center',
             sortable: false,
             editable: true,
             edittype: 'select',
             editoptions: {
                 fullRow: true,
-                dataUrl: '/lic/producto',
+                dataUrl: '/lic/getProductoCompra',
                 buildSelect: function (response) {
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.nombre;
@@ -180,7 +184,7 @@
         }, {
             label: 'Comentario',
             name: 'comentarioSolicitud',
-            width: 500,
+            width: 400,
             hidden: false,
             editable: true,
             edittype: 'textarea',
