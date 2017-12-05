@@ -88,6 +88,7 @@ object Ticket {
           )
     }
   }
+
   implicit val parser: RowParser[Ticket] = {
       get[Long]("project_id") ~
       get[String]("name") ~
