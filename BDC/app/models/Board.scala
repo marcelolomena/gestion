@@ -27,6 +27,59 @@ object CommentItem {
   }
 
 }
+
+case class Task(projectId : Long,
+                  name : String,
+                  description : Option[String],
+                  readyForNextStage : Option[Boolean],
+                  blocked : Option[Boolean],
+                  currentKolumnId : Long,
+                  dueDate : Option[DateTime],
+                  archived : Option[Boolean],
+                  priority : Option[Int],
+                  difficulty : Option[Int],
+                  assignerId : Long,
+                  id: Option[Long],
+                  var collaborators : Seq[UserBase],
+                  var comments : Seq[CommentItem]
+                 )
+object Task {
+  implicit val reads = Json.reads[Task]
+  implicit val writes = Json.writes[Task]
+
+  //simple
+  implicit val simple: RowParser[Task] = {
+    get[Long]("project_id") ~
+      get[String]("name") ~
+      get[Option[String]]("description") ~
+      get[Option[Boolean]]("ready_for_next_stage") ~
+      get[Option[Boolean]]("blocked") ~
+      get[Long]("current_kolumn_id") ~
+      get[Option[DateTime]]("due_date") ~
+      get[Option[Boolean]]("archived") ~
+      get[Option[Int]]("priority") ~
+      get[Option[Int]]("difficulty") ~
+      get[Long]("assigner_id") ~
+      get[Option[Long]]("id")  map {
+      case projectId~name~description~readyForNextStage~
+        blocked~kolumnId~dueDate~archived~priority~difficulty~assignerId~id =>
+        Task(projectId, name, description,
+          readyForNextStage, blocked,
+          kolumnId, dueDate, archived, priority, difficulty, assignerId, id,
+          Nil,
+          Nil)
+    }
+  }
+
+  //TODO: Task Row Parser
+  implicit val fakeParser: RowParser[(Task,Option[UserBase],Option[CommentItem])] = {
+      simple ~
+      UserBase.userParser.? ~
+      CommentItem.commentParser.? map {
+      case task~users~comments => (task,users,comments)
+    }
+  }
+}
 /**
  * New issue.
  * @param projectId id of linked project
@@ -75,14 +128,14 @@ object Ticket {
       get[Option[Int]]("priority") ~
       get[Option[Int]]("difficulty") ~
       get[Long]("assigner_id") ~
-      get[Long]("id") ~
+      get[Option[Long]]("id") ~
       UserBase.userParser.? ~
       CommentItem.commentParser.? map {
       case projectId~name~description~readyForNextStage~
         blocked~kolumnId~dueDate~archived~priority~difficulty~assignerId~id~userId~commentItems =>
           Ticket(projectId, name, description,
           readyForNextStage, blocked,
-          kolumnId, dueDate, archived, priority, difficulty, assignerId, Option(id),
+          kolumnId, dueDate, archived, priority, difficulty, assignerId, id,
             Option(Seq(userId.get)),
             Option(Seq(commentItems.getOrElse(CommentItem(None,None,None,None))))
           )
@@ -101,12 +154,12 @@ object Ticket {
       get[Option[Int]]("priority") ~
       get[Option[Int]]("difficulty") ~
       get[Long]("assigner_id") ~
-      get[Long]("id") map{
+      get[Option[Long]]("id") map{
       case projectId~name~description~readyForNextStage~blocked~kolumnId
             ~dueDate~archived~priority~difficulty~assignerId~id =>
         Ticket(projectId, name, description,readyForNextStage, blocked,
           kolumnId, dueDate, archived, priority, difficulty, assignerId,
-          Option(id),
+          id,
           None,
           None
         )

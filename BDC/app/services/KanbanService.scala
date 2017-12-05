@@ -29,6 +29,7 @@ object KanbanService extends BoardService
     var authorizedProjects = Seq[Project]()
     var projectKolumns = Seq[Kolumn]()
     var tickets = Seq[Ticket]()
+    var tasks = Seq[Task]()
 
     val authorizedBoards = getBoardsAuthorizedForUser(id.id)
 
@@ -42,6 +43,11 @@ object KanbanService extends BoardService
 
     projectKolumns = getKolumnsForProjects(authorizedProjects.map(_.id.get))
 
+    tasks = getTaskForProjects(authorizedProjects.map(_.id.get))
+    println("chocho")
+    println(tasks)
+
+
     tickets = getTicketsForProjects(authorizedProjects.map(_.id.get))
 
     def createFullBoard : ServiceResponse[Seq[FullBoard]] = {
@@ -52,6 +58,8 @@ object KanbanService extends BoardService
         for (project <- projectsForBoard) { // iterate through filtered projects
           val kolumnsForProject: Seq[model.Kolumn] = projectKolumns.filter(kolumn => kolumn.projectId == project.id.get) // filter kolumns for this project
           val ticketsForProject: Seq[model.Ticket] = tickets.filter(ticket => ticket.projectId == project.id.get) // filter tickets for this project
+          val ticketsFakeForProject: Seq[model.Task] = tasks.filter(task => task.projectId == project.id.get)
+
           fullProjects += FullProject(project, kolumnsForProject, ticketsForProject)
         }
         fullBoards += FullBoard(board, fullProjects, authorizedUsers.filter(user => user.authorizedBoards.get.contains(board.id.get)))

@@ -197,8 +197,6 @@ protected trait TicketService {
   }
 
   protected def getTicketsForProjects(ids: Seq[Long]): Seq[Ticket] = {
-    println("CHUUUUUUUUUUUUUUU")
-    println(ids)
     DB.withConnection { implicit c =>
       val ticketsPreProcessed = SQL(
         s"""
@@ -213,8 +211,8 @@ protected trait TicketService {
            |IN (${ids.mkString(",")})
            |AND ticket.id=collaborators.ticket_id
          """.stripMargin
-      ).as(Ticket.collaboratorParser.*)
-      println("nocaga")
+        ).as(Ticket.collaboratorParser.*)
+
       implicit val ticketsPostProcessed = mutable.MutableList[model.Ticket]()
       for ((k,v) <- ticketsPreProcessed.groupBy(_.id.get)) {
         ticketsPostProcessed += v.head.copy(
@@ -225,4 +223,28 @@ protected trait TicketService {
       ticketsPostProcessed
     }
   }
+
+  protected def getTaskForProjects(ids: Seq[Long]): Seq[Task] = {
+    DB.withConnection { implicit c =>
+      SQL(
+        s"""
+           |SELECT * FROM ticket
+           |INNER JOIN collaborators
+           |ON ticket.id = collaborators.ticket_id
+           |INNER JOIN [user]
+           |ON collaborators.user_id=[user].id
+           |LEFT OUTER JOIN comments
+           |ON ticket.id=comments.ticket_id
+           |WHERE project_id
+           |IN (${ids.mkString(",")})
+           |AND ticket.id=collaborators.ticket_id
+         """.stripMargin
+      ).as(Task.fakeParser *).groupBy(_._1)
+        .mapValues(_.map(_._2).flatten)
+        .map{ case (task,userId) => task.copy(collaborators = userId) }
+        .toList
+    }
+  }
+
+
 }
