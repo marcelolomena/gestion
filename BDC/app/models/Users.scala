@@ -1,48 +1,10 @@
 package models;
 
 import java.util.Date
-import org.joda.time.LocalDateTime
 import anorm._
 import anorm.SqlParser._
-import play.api.Play.current
-import play.api.db.DB
-import org.joda.time.DateTime
 import play.i18n._
-import play.mvc._
-import play.api.data._
-import play.api.data.Forms._
-import play.api.data.format.Formats._
-import play.i18n._
-import play.api.Play.current
 import play.api.libs.json._
-//0 normal
-//1 admin
-//2 PMo
-//3 ceo
-//4 PL
-
-/*case class Users(uid: Option[Int],
-	uname: String,
-	password: String,
-	first_name: String,
-	last_name: String,
-	department: Integer,
-	email: String,
-	birth_date: Date,
-	office_number: String,
-	joining_date: Date,
-	isadmin: Int,
-	isverify: Int,
-	verify_code: String,
-	verify_date: Date,
-	status: String,
-	added_date: Date,
-	rut_number: String,
-	rate_hour: Integer,
-	contact_number: String,
-	user_type: Integer,
-	work_hours: BigDecimal,
-	bonus_app: Integer)*/
 
 case class EmployeeSearchMaster(search_filter: Option[String], division: Option[String], gerencia: Option[String], department: Option[String],
                                 parent_type: Option[String], parent_id: Option[String],start:Option[Int],end:Option[Int])
@@ -182,18 +144,9 @@ object UserSkills {
   }
 }
 
-trait ConvertToDate {
-
-  def convertDate(in: AnyRef): Date = in match {
-    case d: java.util.Date => d
-    case j: DateTime       => j.toDate
-    case l: LocalDateTime  => l.toDateTime.toDate
-  }
-}
-
 case class Users(uid: Option[Int], uname: String, profile_image: Option[String], first_name: String, last_name: String, email: String, password: String, birth_date: Date, rut_number: String, contact_number: String, isverify: Option[Int], verify_code: Option[String], verify_date: Option[Date], status: Int, added_date: Date, user_profile: String)
 
-object Users extends ConvertToDate {
+object Users {
 
   val langObj = new Lang(Lang.forCode("es-ES"))
 
