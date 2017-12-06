@@ -53,7 +53,7 @@ protected trait TicketService {
                  |WHERE ticket.id=$retId
                  |AND ticket.id=collaborators.ticket_id
             """.stripMargin
-            ).as(Ticket.collaboratorParser.*).head,
+            ).as(Ticket.collaboratorParser.*).head._1,
             SQL(s"SELECT * FROM [user] WHERE id=${ticket.assignerId}").as(UserBase.userParser.*).head,
             SQL(s"SELECT board_id FROM project WHERE id=${ticket.projectId}").as(scalar[Long].single)
           )
@@ -195,7 +195,7 @@ protected trait TicketService {
       }
     )
   }
-
+/*
   protected def getTicketsForProjects(ids: Seq[Long]): Seq[Ticket] = {
     DB.withConnection { implicit c =>
       val ticketsPreProcessed = SQL(
@@ -223,8 +223,9 @@ protected trait TicketService {
       ticketsPostProcessed
     }
   }
+*/
 
-  protected def getTaskForProjects(ids: Seq[Long]): Seq[Task] = {
+  protected def getTicketsForProjects(ids: Seq[Long]): Seq[Ticket] = {
     DB.withConnection { implicit c =>
       SQL(
         s"""
@@ -239,12 +240,11 @@ protected trait TicketService {
            |IN (${ids.mkString(",")})
            |AND ticket.id=collaborators.ticket_id
          """.stripMargin
-      ).as(Task.fakeParser *).groupBy(_._1)
+      ).as(Ticket.collaboratorParser *).groupBy(_._1)
         .mapValues(_.map(_._2).flatten)
-        .map{ case (task,userId) => task.copy(collaborators = userId) }
+        .map{ case (task,collaborators) => task.copy(collaborators = collaborators) }
         .toList
     }
   }
-
 
 }
