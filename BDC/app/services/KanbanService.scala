@@ -52,7 +52,7 @@ object KanbanService extends BoardService
         for (project <- projectsForBoard) { // iterate through filtered projects
           val kolumnsForProject: Seq[model.Kolumn] = projectKolumns.filter(kolumn => kolumn.projectId == project.id.get) // filter kolumns for this project
           val ticketsForProject: Seq[model.Ticket] = tickets.filter(ticket => ticket.projectId == project.id.get) // filter tickets for this project
-
+          println(ticketsForProject)
           fullProjects += FullProject(project, kolumnsForProject, ticketsForProject)
         }
         fullBoards += FullBoard(board, fullProjects, authorizedUsers.filter(user => user.authorizedBoards.get.contains(board.id.get)))

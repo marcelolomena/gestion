@@ -227,6 +227,25 @@ protected trait TicketService {
 
   protected def getTicketsForProjects(ids: Seq[Long]): Seq[Ticket] = {
     DB.withConnection { implicit c =>
+
+      val tickets=SQL(
+        s"""
+           |SELECT * FROM ticket a
+           |INNER JOIN collaborators b ON a.id = b.ticket_id
+           |INNER JOIN [user] c ON b.user_id=c.id
+           |LEFT OUTER JOIN comments d ON a.id=d.ticket_id
+           |WHERE
+           |project_id IN (${ids.mkString(",")})
+           |AND a.id=b.ticket_id
+         """.stripMargin
+      ).as(Ticket.collaboratorParser *)
+
+      println("culiao")
+      for (t <- tickets){
+        println("los ids : " + t._1.id + " name : " + t._1.assignerId)
+      }
+
+
       SQL(
         s"""
            |SELECT * FROM ticket
@@ -242,7 +261,7 @@ protected trait TicketService {
          """.stripMargin
       ).as(Ticket.collaboratorParser *).groupBy(_._1)
         .mapValues(_.map(_._2).flatten)
-        .map{ case (task,collaborators) => task.copy(collaborators = collaborators) }
+        .map{ case (ticket,collaborators) => ticket.copy(collaborators = Option(collaborators)) }
         .toList
     }
   }

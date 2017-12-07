@@ -177,7 +177,7 @@ window.addColumnSortableForProject = (project)->
   $(".sortable_groups#{project.project.id}").sortable
     handle: ".kol-header#{project.project.id}"
   .disableSelection()
-
+  console.log("project.project.id: " + project.project.id)
   $(".sortable_cols#{project.project.id}").sortable
     connectWith : ".sortable_cols#{project.project.id}"
     items: ">*:not(.kol-header#{project.project.id})"
@@ -188,8 +188,10 @@ window.addColumnSortableForProject = (project)->
       target = $(event.target)
 
       newKolumnId = JSON.parse(target.data('options').replace(/'/g, '"')).id
+      console.log("newKolumnId: " + newKolumnId)
+      console.dir(ui.item.context)
       ticketId = JSON.parse($(ui.item.context).data('options').replace(/'/g, '"')).id
-
+      console.log("ticketId: " + ticketId)
       values = {
         ticketId: parseInt(ticketId)
         userId: currentUser.id
