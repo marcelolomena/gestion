@@ -82,18 +82,19 @@ function mapProducto(data) {
     return {
         nombre: data.otroProducto,
         idFabricante: data.idFabricante,
-        // licTramite: data.numero
+        licTramite: data.numero
     };
 }
 
 function mapFabricante(data) {
     return {
-        nombre: data.otroFabricante
+        nombre: data.otroFabricante,
+        idProducto: data.idProducto
     };
 }
 
 function saveProducto(data, res) {
-    if (!data.idProducto) {
+    if (data.idProducto == null) {
         base.createP(models.producto, mapProducto(data))
             .then(function (created) {
                 data.idProducto = created.id;
@@ -140,7 +141,7 @@ function action(req, res) {
     var data = map(req);
     switch (req.body.oper) {
         case 'add':
-            if (!data.idFabricante) {
+            if (data.idFabricante == null) {
                 base.createP(models.fabricante, mapFabricante(data))
                     .then(function (created) {
                         data.idFabricante = created.id;
@@ -155,6 +156,7 @@ function action(req, res) {
             } else {
                 return saveProducto(data, res);
             }
+            break;
         case 'edit':
             return base.findById(entity, req.body.id)
                 .then(function (detalle) {
@@ -203,33 +205,34 @@ function action(req, res) {
                         glosa: err.message
                     });
                 });
+                break;
         case 'del':
             return base.findById(entity, req.body.id)
                 .then(function (detalle) {
                     if (detalle.estado == 0) {
                         return base.destroyP(entity, detalle.id)
-                        .then(function (deleted) {
-                            return base.findById(models.producto, detalle.idProducto)
-                                .then(function (item) {
-                                    return base.update(models.producto, {
-                                        id: detalle.idProducto,
-                                        licTramite: item.licTramite + detalle.numero
-                                    }, res);
-                                }).catch(function (err) {
-                                    logger.error('producto.LicTramite Upd, ' + err);
-                                    return res.json({
-                                        error: 1,
-                                        glosa: err.message
-                                    });
-                                })
-                        })
-                        .catch(function (err) {
-                            logger.error(entity.name + ':destroy, ' + err);
-                            return res.json({
-                                success: false,
-                                glosa: err.message
+                            .then(function (deleted) {
+                                return base.findById(models.producto, detalle.idProducto)
+                                    .then(function (item) {
+                                        return base.update(models.producto, {
+                                            id: detalle.idProducto,
+                                            licTramite: item.licTramite + detalle.numero
+                                        }, res);
+                                    }).catch(function (err) {
+                                        logger.error('producto.LicTramite Upd, ' + err);
+                                        return res.json({
+                                            error: 1,
+                                            glosa: err.message
+                                        });
+                                    })
+                            })
+                            .catch(function (err) {
+                                logger.error(entity.name + ':destroy, ' + err);
+                                return res.json({
+                                    success: false,
+                                    glosa: err.message
+                                });
                             });
-                        });
                     } else {
                         return base.destroyP(entity, detalle.id)
                             .then(function (deleted) {
@@ -263,6 +266,7 @@ function action(req, res) {
                         glosa: err.message
                     });
                 });
+                break;
     }
 }
 
