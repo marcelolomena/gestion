@@ -224,20 +224,23 @@ function addDetalle(data, res) {
                         var prdData = {
                             id: data.idProducto,
                             ilimitado: data.ilimitado,
-                            alertaRenovacion: null
+                            alertaRenovacion: null,
+                            idClasificacion: data.idClasificacion,
+                            idTipoInstalacion: data.idTipoInstalacion,
+                            idTipoLicenciamiento: data.idTipoLicenciamiento
                         };
                         if (!prdData.ilimitado) {
                             prdData.licStock = parseInt(item.licStock) + parseInt(data.cantidad);
                         }
-                        if (item.idClasificacion) {
-                            prdData.idClasificacion = data.idClasificacion;
-                        }
-                        if (item.idTipoInstalacion) {
-                            prdData.idTipoInstalacion = data.idTipoInstalacion;
-                        }
-                        if (item.idTipoLicenciamiento) {
-                            prdData.idTipoLicenciamiento = data.idTipoLicenciamiento;
-                        }
+                        // if (!item.idClasificacion) {
+                        //     prdData.idClasificacion = data.idClasificacion;
+                        // }
+                        // if (!item.idTipoInstalacion) {
+                        //     prdData.idTipoInstalacion = data.idTipoInstalacion;
+                        // }
+                        // if (!item.idTipoLicenciamiento) {
+                        //     prdData.idTipoLicenciamiento = data.idTipoLicenciamiento;
+                        // }
                         return base.update(models.producto, prdData, res);
                     }).catch(function (err) {
                         logger.error('producto.Stock Upd, ' + err);
@@ -275,6 +278,7 @@ function action(req, res) {
             } else {
                 return saveProducto(data, res);
             }
+            break;
         case 'edit':
             data.fechaInicio = base.strToDateDB(data.fechaInicio);
             data.fechaTermino = base.strToDateDB(data.fechaTermino);
@@ -341,6 +345,7 @@ function action(req, res) {
                         glosa: err.message
                     });
                 });
+                break;
         case 'del':
             return base.findById(entity, req.body.id)
                 .then(function (detalle) {
@@ -392,6 +397,7 @@ function action(req, res) {
                         glosa: err.message
                     });
                 });
+                break;
     }
 }
 

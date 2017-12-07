@@ -180,14 +180,14 @@ var compraGrid = {
             search: false
         }, {
             label: 'Valor Licencias',
-            name: 'valorLicencias',
+            name: 'valorLicencia',
             width: 110,
             align: 'center',
             sortable: false,
             editable: true,
             search: false
         }, {
-            label: 'Valor Soportes',
+            label: 'Valor Soporte',
             name: 'valorSoporte',
             width: 110,
             align: 'center',

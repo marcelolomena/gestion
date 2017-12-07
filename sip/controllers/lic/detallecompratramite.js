@@ -20,8 +20,8 @@ function map(req) {
     return {
         id: parseInt(req.body.id) || 0,
         idCompraTramite: req.body.idCompraTramite || req.params.pId,
-        otroProducto: req.body.otroProducto,
-        otroFabricante: req.body.otroFabricante,
+        otroProducto: req.body.otroProducto ? req.body.otroProducto : null,
+        otroFabricante: req.body.otroFabricante ? req.body.otroFabricante : null,
         fechaInicio: base.toDate(req.body.fechaInicio),
         fechaTermino: base.toDate(req.body.fechaTermino),
         fechaControl: base.toDate(req.body.fechaControl),
