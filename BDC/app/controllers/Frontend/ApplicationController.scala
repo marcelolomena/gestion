@@ -36,6 +36,7 @@ object ApplicationController extends Controller {
    */
   def kanban = Action { implicit request =>
     request.session.get("username").map { user =>
+      Logger.debug("USUARIO : " + user)
       val response = PersonnelService.bypass(user)
       response.statusCode match {
         case StatusCode.OK =>
@@ -47,10 +48,6 @@ object ApplicationController extends Controller {
           Logger.info("failure get user")
           Redirect(routes.Login.loginUser())
       }
-
-
-
-
     }.getOrElse {
       Logger.info("no user cookie")
       //PersonnelController.signInView

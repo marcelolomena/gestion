@@ -17,4 +17,5 @@ object SocketActions extends Enumeration {
   val newBoard = "newBoard"
   val newProject = "newProject"
   val newComment = "newComment"
+  val listCollaborator  = "listCollaborator"
 }

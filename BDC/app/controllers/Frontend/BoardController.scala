@@ -44,4 +44,8 @@ object BoardController extends CoreController {
   def userBoardAuthorization = Action(parse.json) { implicit request =>
     resultDispatch[UserBoardAuthorization, Long](KanbanService.addUserToBoard)
   }
+
+  def getUsers() = Action(parse.json) { implicit request =>
+    resultDispatch[Autocomplete, Long](KanbanService.listUser)
+  }
 }

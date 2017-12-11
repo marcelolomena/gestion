@@ -711,7 +711,7 @@ POST         /addComment                    controllers.Frontend.BoardController
 # Personnel
 #POST         /getUser                       controllers.Frontend.PersonnelController.getUserInternal
 #GET          /getUser                       controllers.Frontend.PersonnelController.getUserExternal
-
+POST          /getUsers                      controllers.Frontend.BoardController.getUsers
 #POST         /newUser                       controllers.Frontend.PersonnelController.newUserInternal
 #GET          /newUser                       controllers.Frontend.PersonnelController.newUserExternal
 

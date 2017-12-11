@@ -84,20 +84,83 @@ object UserBase {
         UserBase(email, firstName, lastName, username, password, avatarUrl, Option(Set()), Option(id))
     }
   }
+
+  implicit val userTParser: RowParser[UserBase] = {
+    get[String]("email") ~
+      get[String]("first_name") ~
+      get[Option[String]]("last_name") ~
+      get[String]("username") ~
+      get[String]("password") ~
+      get[Option[String]]("avatar") ~
+      get[Long]("id_user") map {
+      case email~firstName~lastName~username~password~avatarUrl~id =>
+        UserBase(email, firstName, lastName, username, password, avatarUrl, Option(Set()), Option(id))
+    }
+  }
 }
 
 /**
  * Case class for assigning users to tickets
  * @param userId user to be assigned (assignee)
  * @param ticketId ticket to be assigned to
- * @param boardId board ticket is a part of
- * @param assignerId user who is assigning the ticket
+ * //@param boardId board ticket is a part of
+ * //@param assignerId user who is assigning the ticket
  */
-case class Collaborator(userId: Long, ticketId: Long, boardId: Long, assignerId: Option[Long])
+case class Collaborator(userId: Long, ticketId: Long, boardId: Long, assignerId: Option[Long], id: Option[Long])
 object Collaborator {
   implicit val reads = Json.reads[Collaborator]
   implicit val writes = Json.writes[Collaborator]
+
+  implicit val parser: RowParser[Collaborator] = {
+    get[Long]("user_id") ~
+      get[Long]("ticket_id") ~
+      get[Long]("board_id") ~
+      get[Option[Long]]("assigner_id") ~
+      get[Option[Long]]("id") map {
+      case userId~ticketId~boardId~assignerId~id =>
+        Collaborator(userId,ticketId,boardId,assignerId,id)
+    }
+  }
+
+  implicit val collaboratorParser: RowParser[Collaborator] = {
+    get[Long]("user_id") ~
+      get[Long]("ticket_id") ~
+      get[Long]("board_id") ~
+      get[Option[Long]]("assigner_id") ~
+      get[Option[Long]]("id_collaborators") map {
+      case userId~ticketId~boardId~assignerId~id =>
+        Collaborator(userId,ticketId,boardId,assignerId,id)
+    }
+  }
 }
+
+case class Autocomplete(text: Option[String])
+object Autocomplete {
+  implicit val reads = Json.reads[Autocomplete]
+  implicit val writes = Json.writes[Autocomplete]
+
+  implicit val parser: RowParser[Autocomplete] = {
+    get[Option[String]]("text") map {
+      case text =>
+        Autocomplete(text)
+    }
+  }
+}
+
+case class ResultAutocomplete(label: Option[String],value: Option[String])
+object ResultAutocomplete {
+  implicit val reads = Json.reads[ResultAutocomplete]
+  implicit val writes = Json.writes[ResultAutocomplete]
+
+  implicit val parser: RowParser[ResultAutocomplete] = {
+    get[Option[String]]("label")  ~
+      get[Option[String]]("value") map {
+      case label ~ value =>
+        ResultAutocomplete(label,value)
+    }
+  }
+}
+
 
 /**
  * Enum for various authorization levels.

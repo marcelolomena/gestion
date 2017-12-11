@@ -20,7 +20,7 @@ object CommentItem {
     get[Option[Long]]("ticket_id") ~
     get[Option[String]]("comment") ~
     get[Option[Long]]("user_id") ~
-    get[Option[Long]]("id") map {
+    get[Option[Long]]("id_comments") map {
       case ticketId~comment~userId~id =>
         CommentItem(ticketId, comment, userId, id)
     }
@@ -43,7 +43,6 @@ object CommentItem {
  * @param difficulty difficulty of ticket
  * @param assignerId id of person assigning the ticket
  */
-/*
 case class Ticket(projectId : Long,
                   name : String,
                   description : Option[String],
@@ -55,81 +54,10 @@ case class Ticket(projectId : Long,
                   var priority : Option[Int],
                   var difficulty : Option[Int],
                   var assignerId : Long,
-                  id : Option[Long],
+                  id: Option[Int],
+                  var users : Option[Seq[Collaborator]],
                   var collaborators : Option[Seq[UserBase]],
                   var comments : Option[Seq[CommentItem]]
-                 )
-object Ticket {
-  implicit val reads = Json.reads[Ticket]
-  implicit val writes = Json.writes[Ticket]
-
-  //TODO: Ticket Row Parser
-  implicit val collaboratorParser: RowParser[Ticket] = {
-    get[Long]("project_id") ~
-      get[String]("name") ~
-      get[Option[String]]("description") ~
-      get[Option[Boolean]]("ready_for_next_stage") ~
-      get[Option[Boolean]]("blocked") ~
-      get[Long]("current_kolumn_id") ~
-      get[Option[DateTime]]("due_date") ~
-      get[Option[Boolean]]("archived") ~
-      get[Option[Int]]("priority") ~
-      get[Option[Int]]("difficulty") ~
-      get[Long]("assigner_id") ~
-      get[Option[Long]]("id") ~
-      UserBase.userParser.? ~
-      CommentItem.commentParser.? map {
-      case projectId~name~description~readyForNextStage~
-        blocked~kolumnId~dueDate~archived~priority~difficulty~assignerId~id~userId~commentItems =>
-          Ticket(projectId, name, description,
-          readyForNextStage, blocked,
-          kolumnId, dueDate, archived, priority, difficulty, assignerId, id,
-            Option(Seq(userId.get)),
-            Option(Seq(commentItems.getOrElse(CommentItem(None,None,None,None))))
-          )
-    }
-  }
-
-  implicit val parser: RowParser[Ticket] = {
-      get[Long]("project_id") ~
-      get[String]("name") ~
-      get[Option[String]]("description") ~
-      get[Option[Boolean]]("ready_for_next_stage") ~
-      get[Option[Boolean]]("blocked") ~
-      get[Long]("current_kolumn_id") ~
-      get[Option[DateTime]]("due_date") ~
-      get[Option[Boolean]]("archived") ~
-      get[Option[Int]]("priority") ~
-      get[Option[Int]]("difficulty") ~
-      get[Long]("assigner_id") ~
-      get[Option[Long]]("id") map{
-      case projectId~name~description~readyForNextStage~blocked~kolumnId
-            ~dueDate~archived~priority~difficulty~assignerId~id =>
-        Ticket(projectId, name, description,readyForNextStage, blocked,
-          kolumnId, dueDate, archived, priority, difficulty, assignerId,
-          id,
-          None,
-          None
-        )
-    }
-  }
-}
-*/
-
-case class Ticket(projectId : Long,
-                  name : String,
-                  description : Option[String],
-                  var collaborators : Option[Seq[UserBase]],
-                  var comments : Option[Seq[CommentItem]],
-                  readyForNextStage : Option[Boolean],
-                  blocked : Option[Boolean],
-                  currentKolumnId : Long,
-                  dueDate : Option[DateTime],
-                  archived : Option[Boolean],
-                  var priority : Option[Int],
-                  var difficulty : Option[Int],
-                  var assignerId : Long,
-                  id: Option[Int]
                  )
 object Ticket {
   implicit val reads = Json.reads[Ticket]
@@ -150,17 +78,18 @@ object Ticket {
       get[Option[Int]]("id")  map {
       case projectId~name~description~readyForNextStage~
         blocked~kolumnId~dueDate~archived~priority~difficulty~assignerId~id =>
-        Ticket(projectId, name, description,None,None,
+        Ticket(projectId, name, description,
           readyForNextStage, blocked,
-          kolumnId, dueDate, archived, priority, difficulty, assignerId, id)
+          kolumnId, dueDate, archived, priority, difficulty, assignerId, id, None, None, None)
     }
   }
 
-  implicit val collaboratorParser: RowParser[(Ticket,Option[UserBase],Option[CommentItem])] = {
-    Ticket.parser ~
-      UserBase.userParser.? ~
+  implicit val collaboratorParser: RowParser[(Ticket,Option[Collaborator],Option[UserBase],Option[CommentItem])] = {
+      Ticket.parser ~
+      Collaborator.collaboratorParser.? ~
+      UserBase.userTParser.? ~
       CommentItem.commentParser.? map {
-      case ticket~users~comments => (ticket,users,comments)
+      case ticket~users~collaborator~comments => (ticket,users,collaborator,comments)
     }
   }
 }

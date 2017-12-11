@@ -8,7 +8,37 @@ import java.util.Date
 import models.Activity
 import models.ActivityTypes
 
-object ConfigMail extends Controller {
+object ConfigMail extends Controller with Secured {
+
+
+  def mailList() = IsAuthenticatedAdmin() { _ =>
+  { implicit request =>
+    val username = request.session.get("username").get
+    val pagNo = request.getQueryString("page")
+    val pageRecord = request.getQueryString("record")
+    val searchKey = request.getQueryString("search")
+
+    var pageNumber = "1"
+    var recordOnPage = "10"
+    var search = ""
+
+    if (pagNo != None) {
+      pageNumber = pagNo.get.toString()
+    }
+    if (pageRecord != None) {
+      recordOnPage = pageRecord.get.toString()
+    }
+    if (searchKey != None) {
+      search = searchKey.get.toString()
+    }
+
+    val mailAlert = ConfigMailAlertService.findMailList(pageNumber, recordOnPage)
+    val totalCount = ConfigMailAlertService.count()
+    val pagination = Application.Pagination(totalCount, pageNumber, recordOnPage, search)
+    Ok(views.html.configMail.mailList(mailAlert, username, totalCount, pagination))
+  }
+  }
+
 
   def editConfig() = Action { implicit request =>
     val username = request.session.get("username").get

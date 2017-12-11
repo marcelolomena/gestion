@@ -16,7 +16,7 @@ window.ticketModalHtml = (ticket) ->
                     </div>
                     <div class=\"col-md-6\">
                       <div class=\"row\">
-                        <span id=\"note\" class=\"pull-right\">COLABORADORES</span>
+                        <span id=\"note\" class=\"pull-right\">RESPONSABLES</span>
                         <a href=\"#\" data-original-title=\"Agregar Usuario\" data-placement=\"right\" class=\"editable-open pull-right\"  id=\"pencil\">
                           <button type=\"button\" id='collab' class=\"mdi-content-add\" style=\"z-index:1501;padding:0;margin:0;border-radius:10px;border-color: currentColor;background-color: white;margin-right: 5px;margin-top: 1px;\"></button>
                         </a>

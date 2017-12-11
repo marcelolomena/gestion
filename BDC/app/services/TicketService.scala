@@ -35,10 +35,23 @@ protected trait TicketService {
                |${ticket.priority.get}, ${ticket.difficulty.get}, ${ticket.assignerId}, ${ticket.currentKolumnId})
              """.stripMargin
           ).executeInsert(scalar[Long].single)
+
+
+
+          val bId=SQL(
+            s"""
+               |SELECT
+               |board_id
+               |FROM project
+               |WHERE id=${ticket.projectId}
+         """.stripMargin
+          ).as(scalar[Int].single)
+
+
           SQL(
             s"""
-               |INSERT INTO collaborators(user_id, ticket_id)
-               |VALUES(${ticket.assignerId}, $retId)
+               |INSERT INTO collaborators(user_id, ticket_id, board_id, assigner_id)
+               |VALUES(${ticket.assignerId}, $retId, $bId, ${ticket.assignerId})
            """.stripMargin
           ).executeInsert()
 
@@ -225,12 +238,42 @@ protected trait TicketService {
   }
 */
 
+
   protected def getTicketsForProjects(ids: Seq[Long]): Seq[Ticket] = {
     DB.withConnection { implicit c =>
 
-      val tickets=SQL(
+     SQL(
         s"""
-           |SELECT * FROM ticket a
+           |SELECT
+           |a.project_id,
+           |a.name,
+           |a.description,
+           |a.ready_for_next_stage,
+           |a.blocked,
+           |a.current_kolumn_id,
+           |a.due_date,
+           |a.archived,
+           |a.priority,
+           |a.difficulty,
+           |a.assigner_id,
+           |a.id,
+           |b.user_id,
+           |b.ticket_id,
+           |b.board_id,
+           |b.assigner_id,
+           |b.id AS id_collaborators,
+           |c.email,
+           |c.first_name,
+           |c.last_name,
+           |c.username,
+           |c.password,
+           |c.avatar,
+           |c.id AS id_user,
+           |d.ticket_id,
+           |d.comment,
+           |d.user_id,
+           |d.id AS id_comments
+           |FROM ticket a
            |INNER JOIN collaborators b ON a.id = b.ticket_id
            |INNER JOIN [user] c ON b.user_id=c.id
            |LEFT OUTER JOIN comments d ON a.id=d.ticket_id
@@ -238,14 +281,19 @@ protected trait TicketService {
            |project_id IN (${ids.mkString(",")})
            |AND a.id=b.ticket_id
          """.stripMargin
-      ).as(Ticket.collaboratorParser *)
+      ).as(Ticket.collaboratorParser *).groupBy(_._1)
+        .mapValues(_.map(_._3).flatten)
+        .map{ case (ticket,collaborators) => ticket.copy(collaborators = Option(collaborators)) }
+        .toList
 
+      /*
       println("culiao")
       for (t <- tickets){
-        println("los ids : " + t._1.id + " name : " + t._1.assignerId)
+        println(t._1.id.get)
       }
+      */
 
-
+/*
       SQL(
         s"""
            |SELECT * FROM ticket
@@ -260,9 +308,10 @@ protected trait TicketService {
            |AND ticket.id=collaborators.ticket_id
          """.stripMargin
       ).as(Ticket.collaboratorParser *).groupBy(_._1)
-        .mapValues(_.map(_._2).flatten)
+        .mapValues(_.map(_._3).flatten)
         .map{ case (ticket,collaborators) => ticket.copy(collaborators = Option(collaborators)) }
         .toList
+*/
     }
   }
 

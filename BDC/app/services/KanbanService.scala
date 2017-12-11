@@ -4,7 +4,7 @@ import anorm.SqlParser._
 import anorm._
 import controllers.Frontend.KanbanSocketController
 import model.BoardValidators.IDValidator
-import model._
+import model.{Autocomplete, _}
 import play.api.db.DB
 import play.api.Play.current
 
@@ -19,6 +19,16 @@ object KanbanService extends BoardService
                         with TicketService
                         with KanbanProjectService {
 
+  def listUser (auto: Autocomplete): ServiceResponse[Long] ={
+    DB.withConnection { implicit c =>
+      implicit val board : Long = -1L
+      KanbanSocketController.listUserAutocomplete(
+        board,
+        SQL(s"SELECT id AS value, first_name AS label FROM [user] WHERE first_name like '${auto.text}'").as(ResultAutocomplete.parser.*)
+      )
+      ServiceResponse(StatusCode.OK)
+    }
+  }
   /**
    * Return full boards (with projects, kolumns, tickets, etc.) authorized for a user
    * @param id id of user
@@ -52,7 +62,6 @@ object KanbanService extends BoardService
         for (project <- projectsForBoard) { // iterate through filtered projects
           val kolumnsForProject: Seq[model.Kolumn] = projectKolumns.filter(kolumn => kolumn.projectId == project.id.get) // filter kolumns for this project
           val ticketsForProject: Seq[model.Ticket] = tickets.filter(ticket => ticket.projectId == project.id.get) // filter tickets for this project
-          println(ticketsForProject)
           fullProjects += FullProject(project, kolumnsForProject, ticketsForProject)
         }
         fullBoards += FullBoard(board, fullProjects, authorizedUsers.filter(user => user.authorizedBoards.get.contains(board.id.get)))

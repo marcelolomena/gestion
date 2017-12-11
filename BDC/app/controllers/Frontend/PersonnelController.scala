@@ -11,6 +11,7 @@ import model.PersonnelValidators._
  */
 object PersonnelController extends CoreController {
 
+
   /*
   def newUserInternal = Action { implicit request =>
     newUserForm.bindFromRequest.fold(

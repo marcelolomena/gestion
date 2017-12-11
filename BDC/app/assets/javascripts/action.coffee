@@ -139,8 +139,25 @@ $(document).on ready: ->
     )
     $('#pencil').on shown:(e,editable) ->
       ticket = ticketMap[ticketId]
+      console.log("PENE")
+      console.dir(ticket)
+      console.dir(ticket.collaborators)
+      console.log("CHUCHA")
+      console.log(collab)
+      console.log("POTO")
+      availableTags = ["ActionScript","AppleScript","Asp","BASIC","C","C++","Clojure","COBOL","ColdFusion","Erlang","Fortran","Groovy","Haskell","Java","JavaScript","Lisp","Perl","PHP","Python","Ruby","Scala","Scheme"];
       $('.collab').autocomplete(
-        source: (user for user in userMap[ticket.boardId] when user.id not in (collab.id for collab in ticket.collaborators))
+        source: ( request, response ) ->
+                    $.ajax({
+                      url: "getUsers"
+                      data: JSON.stringify($('#pencil').data('options'))
+                      contentType: 'application/json;charset=utf-8'
+                      type: 'POST'
+                      success: ( data ) ->
+                        response([
+                          { label: "Example", value: 'Testing'}
+                        ])
+                    })
         focus: (event, ui) ->
           console.log(event)
           console.log(ui.item.username)

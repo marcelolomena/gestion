@@ -15,6 +15,26 @@ object ConfigMailAlertService extends CustomColumns {
 
   val langObj = new Lang(Lang.forCode("es-ES"))
 
+
+  def findMailList(pagNo: String, recordOnPage: String): Seq[ConfigMailAlert] = {
+
+    val rec = Integer.parseInt(pagNo.toInt.toString) * Integer.parseInt(recordOnPage.toInt.toString)
+    val start = rec - Integer.parseInt(recordOnPage.toInt.toString)
+    val end = Integer.parseInt(recordOnPage.toInt.toString)
+    var sqlString = ""
+
+    sqlString = "SELECT * FROM  (SELECT  ROW_NUMBER() OVER(ORDER BY id) AS Row, * FROM art_risk_alert_conf AS tbl)as ss WHERE  (  Row >=" + (start + 1) + " AND Row <= " + (start + end) + ")"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ConfigMailAlert.config *)
+    }
+  }
+
+  def count(): Long = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT count(*) from art_risk_alert_conf").as(scalar[Long].single)
+    }
+  }
+
   def findLastConfig() : Option[ConfigMailAlert] = {
     DB.withConnection { implicit connection =>
       SQL("SELECT TOP 1 * FROM art_risk_alert_conf ORDER BY id DESC").as(ConfigMailAlert.config.singleOpt)
