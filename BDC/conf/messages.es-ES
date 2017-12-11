@@ -637,6 +637,7 @@ confmail.em1=Correo 1
 confmail.em2=Correo 2
 confmail.em3=Correo 3
 confmail.tpl=Template
+confmail.addConfig=Agregar nuevo template
 confmail.placeholder.em1=Introduzca Correo 1
 confmail.placeholder.em2=Introduzca Correo 2
 confmail.placeholder.em3=Introduzca Correo 3

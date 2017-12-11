@@ -47,13 +47,30 @@ object ConfigMail extends Controller with Secured {
     } else {
       val objSM = ConfigMailAlertService.findLastConfig()
       if (!objSM.isEmpty) {
-        val obj = ConfigMailAlert(objSM.get.id, objSM.get.uid, objSM.get.em1, objSM.get.em2, objSM.get.em3, objSM.get.tpl, objSM.get.fec)
+        val obj = ConfigMailAlert(objSM.get.id,
+          objSM.get.uid,
+          objSM.get.em1,
+          objSM.get.em2,
+          objSM.get.em3,
+          objSM.get.tpl,
+          objSM.get.fec,
+          objSM.get.is_active
+        )
         Ok(views.html.configMail.editConfigMail(username, ARTForms.configMailForm.fill(obj)))
       } else {
         Redirect(routes.ConfigMail.editConfig())
       }
     }
   }
+
+  def createConfig = IsAuthenticatedAdmin() { _ =>
+  { implicit request =>
+    val username = request.session.get("username").get
+
+    Ok(views.html.configMail.mailAdd(username,ARTForms.configMailForm))
+  }
+  }
+
 
   def updateConfig() = Action { implicit request =>
     val username = request.session.get("username").get
@@ -71,7 +88,14 @@ object ConfigMail extends Controller with Secured {
             BadRequest(views.html.configMail.editConfigMail(username, the_Form))
           } else {
             val uid = Integer.parseInt(request.session.get("uId").get.toString())
-            val objUpdate = ConfigMailAlert(success.id, uid, success.em1, success.em2, success.em3, success.tpl, success.fec)
+            val objUpdate = ConfigMailAlert(success.id,
+              uid,
+              success.em1,
+              success.em2,
+              success.em3,
+              success.tpl,
+              success.fec,
+              success.is_active)
             val lastid = ConfigMailAlertService.updateConfig(objUpdate)
             //println("lastid : "+ lastid.get.toString)
             /**

@@ -66,7 +66,6 @@ object Category extends Controller with Secured  {
   }
   }
 
-
   def saveCategory = IsAuthenticatedAdmin() { _ =>
   { implicit request =>
 

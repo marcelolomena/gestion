@@ -1,4 +1,4 @@
-@(divisions: Seq[ConfigMailAlert],username:String,totalCount:Long,pagination:String)(implicit lang:Lang)
+@(mails: Seq[ConfigMailAlert],username:String,totalCount:Long,pagination:String)(implicit lang:Lang)
 @import services.UserService
 <!--
 Header panel
@@ -27,19 +27,19 @@ Header panel
 <div class="content">
 
     <div class="header">
-        <h1 class="page-title">@Messages("category.category")</h1>
+        <h1 class="page-title">@Messages("leftnav.divconfmail")</h1>
     </div>
 
     <ul class="breadcrumb">
-        <li><a href="@routes.Application.index"> @Messages("addDepartment.home")</a> <span class="divider">/</span></li>
-        <li class="active">  @Messages("addCategory.list")</li>
+        <li><a href="@routes.Application.index">@Messages("confmail.home")</a> <span class="divider">/</span></li>
+        <li class="active">@Messages("confmail.list")</li>
     </ul>
 
     <div class="container-fluid">
         <div class="row-fluid">
 
             <div class="btn-toolbar">
-                <a href="@routes.Category.createCategory"><span class="btn"><i class="icon-plus"></i> @Messages("addCategory.newcategory") </span></a>
+                <a href="@routes.ConfigMail.createConfig"><span class="btn"><i class="icon-plus"></i> @Messages("confmail.addConfig") </span></a>
                 <div class="btn-group">
                 </div>
             </div>
@@ -49,20 +49,36 @@ Header panel
                     <thead>
                     <tr class="first-row">
                         <th> @Messages("addCategory.id") </th>
-                        <th> @Messages("addCategory.category")</th>
+                        <th> @Messages("confmail.em1")</th>
+                        <th> @Messages("confmail.em2")</th>
+                        <th> @Messages("confmail.em3")</th>
                         <th>@Messages("addCategory.active")</th>
                         <th style="width: 26px;">@Messages("addDepartment.action") </th>
                     </tr>
                     </thead>
                     <tbody>
-                    @for((div,index) <- divisions.zipWithIndex) {
+                    @for((div,index) <- mails.zipWithIndex) {
                     <tr>
                         <td>@div.id</td>
                         <td>@div.em1</td>
                         <td>@div.em2</td>
                         <td>@div.em3</td>
                         <td>
+                            @if(div.is_active.toLong ==1){
+                            Activo
+                            }else {
+                            Inactivo
+                            }
+                        </td>
+                        <td>
                             <a href="@routes.Category.editCategory(div.id.get.toString())"><i class="icon-pencil "></i></a>
+                            <a  role="button" data-toggle="modal" >
+                                @if(div.is_active.toLong ==0){
+                                <i id="division_@div.id" class="activate-status status_update" style="cursor: pointer;" title="Actualizar Estado"></i>
+                                }else {
+                                <i id="division_@div.id" class="icon-remove status_update" style="cursor: pointer;" title="Actualizar Estado"></i>
+                                }
+                            </a>
                         </td>
                     </tr>
                     }
@@ -121,6 +137,57 @@ Header panel
 </div>
 <script type="text/javascript">
 	  $(document).ready(function(){
+		  $(".status_update").on("click", renderDeleteItemFromList);
+			function renderDeleteItemFromList(){
+				var _this = $(this);
+				var _status = _this.hasClass('activate-status');
+
+				var deletion_id = _this.attr("id").split("_")[1];
+				$("#dialog-confirm").html("@Messages("delete.confirm.category")");
+						// Define the Dialog and its properties.
+						$("#dialog-confirm").dialog({
+							resizable : false,
+							modal : true,
+							title : "@Messages("delete.confirm.title")",
+							height : 150,
+							width : 300,
+							buttons : {
+								"Si" : function() {
+									var url = "/category-update?id=" + deletion_id+"&status="+_status;
+
+									$.post(url, function(data) {
+										if (data == "Success") {
+											//window.location.reload();
+											if($(_this).parents("tbody").children().length==1){
+											       if(typeof getUrlParameter("page") !== "undefined" && getUrlParameter("page") !== null){
+											        var page_num = parseInt(getUrlParameter("page"));
+											        var record =  parseInt(getUrlParameter("record"));
+											        page_num= page_num - 1;
+											        var sPageURL = window.location.href;
+											        var sURLVariables = sPageURL.split('?')[0];
+											        window.location.href =sURLVariables+"?page="+page_num+"&record="+record
+											       }else{
+											        window.location.reload();
+											       }
+   											}else{
+   											 window.location.reload();
+   											}
+										}
+									});
+									$(this).dialog('close');
+									$("#pop-box-over").css("display", "none");
+									$("#dialog-confirm").css("display", "none");
+								},
+								"No" : function() {
+									$(this).dialog('close');
+									$("#pop-box-over").css("display", "none");
+									$("#dialog-confirm").css("display", "none");
+								}
+							}
+						});
+						$("#pop-box-over").css("display", "block");
+						$("#dialog-confirm").css("display", "block");
+					}
 	    });
     </script>
 </body>
