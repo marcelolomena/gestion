@@ -41,11 +41,40 @@ object ConfigMailAlertService extends CustomColumns {
     }
   }
 
-  def updateConfig(obj: ConfigMailAlert): Option[Long] = {
+  def findConfigById(id: String) = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        "select * from art_risk_alert_conf  where id = {id}").on(
+        'id -> id).as(
+        ConfigMailAlert.config.singleOpt)
+
+    }
+  }
+
+  def saveConfig(conf: ConfigMailAlert): Long = {
+    DB.withConnection { implicit connection =>
+      val lastsaved = SQL(
+        """
+          insert art_risk_alert_conf ( uid, em1, em2, em3, tpl, fec, is_active) values (
+           {uid},{em1},{em2},{em3},{tpl},{fec},{is_active})
+          """).on(
+        'description -> conf.uid,
+        'em1 -> conf.em1,
+        'em2 -> conf.em2,
+        'em3 -> conf.em3,
+        'tpl -> conf.tpl,
+        'fec -> conf.fec,
+        'is_active -> conf.is_active).executeInsert(scalar[Long].singleOpt)
+      lastsaved.last
+    }
+  }
+
+
+  def updateConfig(obj: ConfigMailAlert): Int = {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          INSERT art_risk_alert_conf (uid, em1, em2, em3, tpl, fec) VALUES ( {uid},{em1},{em2},{em3},{tpl},{fec} )
+          UPDATE art_risk_alert_conf SET uid={uid},em1={em1},em2={em2},em3={em3},tpl={tpl},fec={fec} WHERE id = {id}
         """).on(
         'id -> obj.id.get,
         'uid -> obj.uid,
@@ -53,7 +82,22 @@ object ConfigMailAlertService extends CustomColumns {
         'em2 -> obj.em2,
         'em3 -> obj.em3,
         'tpl -> obj.tpl,
-        'fec -> new Date()).executeInsert(scalar[Long].singleOpt)
+        'fec -> new Date()).executeUpdate()
+    }
+  }
+
+  def changeStatusConfig(id: Integer, is_active: Int): Int = {
+
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          update art_risk_alert_conf
+          set
+			    is_active={is_active}
+          where id={id}
+          """).on(
+        'id -> id,
+        'is_active -> is_active).executeUpdate()
     }
   }
 

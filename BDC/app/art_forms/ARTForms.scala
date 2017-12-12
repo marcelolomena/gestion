@@ -998,22 +998,7 @@ object ARTForms {
    * Author - Balkrishna
    * Date - 25-02-2015
    */
- /*
-  val alertsForm: Form[RiskAlerts] = Form(
-    mapping(
-      "id" -> optional(number),
-      "risk_id" -> number,
-      "event_type" -> optional(number),
-      "event_code" -> optional(number),
-      "event_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "event_title" -> text.verifying("Por favor, introduzca el título de alerta", event_title => (event_title.trim().length() > 0)),
-      "event_details" -> optional(text),
-      "responsible" -> optional(number),
-      "person_invloved" -> optional(text).verifying("Please select at least one member", person_invloved => (person_invloved.getOrElse("").trim().length() > 0)),
-      "alert_type" -> optional(number),
-      "criticality" -> optional(number),
-      "is_active" -> optional(number))(RiskAlerts.apply)(RiskAlerts.unapply))
-*/
+
   val pertForm: Form[InputPert] = Form(
     mapping(
       "programa" -> number,

@@ -477,6 +477,7 @@ addCategory.active=Estado
 addCategory.list=Lista Categorías
 addCategory.newcategory=Nueva Categoría
 delete.confirm.category=¿Desea cambiar el estado a esta categoría?
+delete.confirm.confMail=¿Desea cambiar el estado a esta configuración?
 
 addDivison.division=División
 divison.division=Divisiónes

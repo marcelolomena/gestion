@@ -45,8 +45,9 @@ Header panel
                     @textarea(myConfigMailForm("tpl"),'_label -> Messages("confmail.tpl"),'placeholder->Messages("confmail.placeholder.tpl"),'class->"span4",'name->"tpl",'rows->"10",'cols->"60")
                     <input type="hidden" value="@myConfigMailForm.data.get("uid")" name="uid"/>
                     <input type="hidden" value="@myConfigMailForm.data.get("id")" name="id"/>
-                    <input id="fec" name="fec" type="hidden" value="@(new java.util.Date().format("yyyy-MM-dd"))" >
-                    <div> <input style="margin-left:12px;margin-right:12px;" class="btn" value="@Messages("button.save")" type="submit"/><a href="#" id="preview" class="btn">@Messages("button.preview")</a></div>
+                    <input type="hidden" value="@(new java.util.Date().format("yyyy-MM-dd"))" name="fec">
+                    <input type="hidden" value="1" name="is_active">
+                    <div> <input style="margin-left:12px;margin-right:12px;" class="btn" value="@Messages("button.save")" type="submit"/><a href="#" id="preview" class="btn">@Messages("button.preview")</a><a href="@routes.ConfigMail.mailList" class="btn push-left20px pull-left">@Messages("button.cancel")</a></div>
                     <div class="clearfix"></div>
                     }
                 </div>

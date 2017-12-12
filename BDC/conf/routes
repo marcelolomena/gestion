@@ -36,11 +36,13 @@ GET    /get-report_to-list                                                      
 
 #ConfMailAlert
 GET    /edit-conf-mail-alert                                                                          controllers.ConfigMail.editConfig()
+GET    /edition-conf-mail-alert                                                                       controllers.ConfigMail.editConfiguration(id : String)
 POST   /edit-conf-mail-alert                                                                          controllers.ConfigMail.updateConfig()
 GET    /alert-search                                                                                  controllers.Frontend.Risks.alertSearch
 POST   /alert-search-result                                                                           controllers.Frontend.Risks.searchResult
 GET    /list-conf-mail-alert                                                                          controllers.ConfigMail.mailList
 GET    /add-conf-mail-alert                                                                           controllers.ConfigMail.createConfig
+POST   /update-conf-mail-alert                                                                        controllers.ConfigMail.updateStatusConfig(id :String,status:Boolean)
 
 #Division
 GET    /division-list                                                                                 controllers.Division.divisionList	

@@ -311,7 +311,8 @@ function renderSelectTask() {
 	 * 
 	 */
 	var task = $("#project_mode").val();
-	var plan_time = $("#plan_time").val();
+	var plan_time = $("#plan_time_"+id).val();
+	console.log("plan_time : " + plan_time)
 	var tds = $("#selected_task_dependency_" + id).val();
 	if (typeof (tds) == 'undefined') {
 		tds = ""

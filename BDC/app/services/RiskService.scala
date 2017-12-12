@@ -1705,7 +1705,7 @@ object RiskService extends CustomColumns {
 
   def findTmplMail() : String = {
     var sqlString = ""
-    sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf ORDER BY id DESC"
+    sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf WHERE is_active = 1 ORDER BY id DESC"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(scalar[String].single)
     }
@@ -2101,7 +2101,7 @@ object RiskService extends CustomColumns {
               if (!user.isEmpty) {
                 val email = user.get.email.toString()
 
-                println(email)
+                //println(email)
 
                 if (!StringUtils.isEmpty(email)) {
 
