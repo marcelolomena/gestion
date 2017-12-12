@@ -32,6 +32,7 @@
     "jsreport-xlsx": "latest",
     "lodash": "^4.17.4",
     "mssql": "latest",
+    "nodemailer": "^4.4.1",
     "passport": "latest",
     "passport-local": "latest",
     "pug": "latest",
