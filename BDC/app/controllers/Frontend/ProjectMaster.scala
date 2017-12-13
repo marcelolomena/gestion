@@ -863,6 +863,9 @@ object ProjectMaster extends Controller {
       node.put("PAE", s.pae + " %")
       node.put("HP", s.hp + " hrs")
       node.put("HA", s.ha + " hrs")
+	  //RRM
+	  node.put("AGI", s.ev/s.hp*100)
+	  node.put("AGE", s.pv/s.hp*100)		  
     }    
     Ok(node.toString())
   }

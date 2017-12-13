@@ -203,7 +203,7 @@
 
 		<li>
 			<span class="header">@Messages("programDetails.ha")</span>
-			<span class="program-data ">
+			<span class="program-data" id="planned_hours">
 				<span style="float: left;width:73px">
 				@if(!program.get.planned_hours.isEmpty){
 					<input type="text"  disabled="disabled" value="@program.get.planned_hours.get.toLong" min="0" maxlength="9" readonly="readonly" class="planned_hours" />
@@ -331,6 +331,15 @@
 							<td class="table_header">@Messages("programDetails.pae")</td>
 							<td class="p_values width160px"><span id="pae2"></span></td>
 						</tr>
+						<!--  RRM: Agrega dos filas nuevas -->
+						<tr>
+							<td class="table_header">@Messages("programDetails.agi")</td>
+							<td class="p_values width160px"><span id="agi"></span></td>
+						</tr>	
+						<tr>
+							<td class="table_header">@Messages("programDetails.age")</td>
+							<td class="p_values width160px"><span id="age"></span></td>
+						</tr>							
 						</tbody>
 					</table>
 	  			</div>
@@ -1355,6 +1364,7 @@
 						renderProgramEarnValuepro($("#program").val());
 						var changeSet = $("#program_changeset").val();
 						var relelaseDateChanges = "";
+						var programHoursChanges = "";
 						var initialPlannedDateChanges = "";
 						var clouserDateChanges = "";
 						if (changeSet != '') {
@@ -1375,6 +1385,11 @@
 															+ "<span style='text-decoration: line-through;'>"
 															+ obj.org_value
 															+ "</span><br>";
+												} else if (obj.fieldName == "programs_hours") {
+													programHoursChanges = programHoursChanges
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
 												}
 											});
 						}
@@ -1388,6 +1403,8 @@
 												return initialPlannedDateChanges;
 											} else if ($(this).attr('id') == "release_date") {
 												return relelaseDateChanges;
+											} else if ($(this).attr('id') == "planned_hours") {
+												return programHoursChanges;
 											}
 
 										});

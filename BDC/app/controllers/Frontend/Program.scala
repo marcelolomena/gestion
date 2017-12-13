@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat
 //import org.joda.time.DateTimeConstants
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
+import org.json.JSONArray
 import art_forms.ARTForms
 import models.Activity
 import models.ActivityTypes
@@ -1160,6 +1161,8 @@ object Program extends Controller {
 
           val dm = program.demand_manager
           val old_program_data = ProgramService.findProgramMasterDetailsById(id)
+          //RRM: Agrega registro de cambio en baseline
+          val programact = ProgramService.findProgramMasterDetailsById(id);
 
           var programDates = ProgramService.findProgramDateDetailsById(id)
           ProgramService.updateProgram(id, program)
@@ -1199,6 +1202,19 @@ object Program extends Controller {
           if (program.program_dates.release_date != null) {
             releaseDateAfterUpdate = program.program_dates.release_date
           }
+		  
+
+			//RRM: Agrega registro de cambio en baseline 
+			var changeState = new JSONArray();
+			var changeStateObject = new JSONObject();
+			changeStateObject.put("fieldName", "programs_hours");
+			changeStateObject.put("org_value", programact.get.planned_hours.get);
+			println("planned_hours: " + program.planned_hours)
+			changeStateObject.put("new_value", program.planned_hours.get);
+			changeState.put(changeStateObject);  
+			val baseline = Baseline(None, changeState.toString(), Integer.parseInt(request.session.get("uId").get), new Date(), "program", Integer.parseInt(id));
+			Baseline.insert(baseline);		  
+			
           ProgramService.programBasline(programDates, initiationPalnnedDateAfterUpdate, clouserDateAfterUpadate, releaseDateAfterUpdate, request.session.get("uId").get, id)
           Redirect(routes.Program.programDetails(id))
         }
@@ -1386,6 +1402,9 @@ object Program extends Controller {
       node.put("PAE", s.pae + " %")
       node.put("HP", s.hp + " hrs")
       node.put("HA", s.ha + " hrs")
+	  //RRM
+	  node.put("AGI", s.ev/s.hp*100)
+	  node.put("AGE", s.pv/s.hp*100)	  
     }
 
     Ok(node.toString())
@@ -2615,6 +2634,8 @@ object Program extends Controller {
       val actual_planned_hours = hours.toDouble
       var project_planned_hours: Double = 0
       val projects = ProjectService.findProjectListForProgram(program)
+	  //RRM: Agrega registro de cambio en baseline
+	  val programact = ProgramService.findProgramMasterDetailsById(program);	  
       for (p <- projects) {
         if (!p.planned_hours.isEmpty) {
           project_planned_hours += p.planned_hours.get
@@ -2632,6 +2653,15 @@ object Program extends Controller {
         Activity.saveLog(act)
         node.put("status", "Sucess")
       }
+	  //RRM: Agrega registro de cambio en baseline 
+	  var changeState = new JSONArray();
+      var changeStateObject = new JSONObject();
+      changeStateObject.put("fieldName", "programs_hours");
+      changeStateObject.put("org_value", programact.get.planned_hours.get);
+      changeStateObject.put("new_value", hours);
+      changeState.put(changeStateObject);  
+	  val baseline = Baseline(None, changeState.toString(), Integer.parseInt(request.session.get("uId").get), new Date(), "program", Integer.parseInt(program));
+	  Baseline.insert(baseline);
 
       Ok(node.toString())
 
@@ -2689,6 +2719,16 @@ object Program extends Controller {
                 node.put("message", "Total hours associated with tasks are more than planned hours for a project, please enter valid hours.")
               } else {
                 SAPServices.updateProjectPlannedHours(project, hours)
+				
+				//RRM: Agrega registro de cambio en baseline 
+				var changeState = new JSONArray();
+				var changeStateObject = new JSONObject();
+				changeStateObject.put("fieldName", "project_hours");
+				changeStateObject.put("org_value", projectDetails.get.planned_hours.get);
+				changeStateObject.put("new_value", hours);
+				changeState.put(changeStateObject);  	
+				val baseline = Baseline(None, changeState.toString(), Integer.parseInt(request.session.get("uId").get), new Date(), "project", Integer.parseInt(project));
+				Baseline.insert(baseline);				
                 /**
                  * Activity log
                  */

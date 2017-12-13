@@ -6,6 +6,7 @@ import scala.collection.mutable.ListBuffer
 import scala.math.BigDecimal.int2bigDecimal
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
+import org.json.JSONArray
 import art_forms.ARTForms
 import models.Activity
 import models.ActivityTypes
@@ -523,6 +524,16 @@ object Task extends Controller {
            * Update Baseline...
            */
           TaskService.taskBasline(task, success.plan_start_date, success.plan_end_date, request.session.get("uId").get.toString())
+		  
+		  //RRM: Agrega registro de cambio en baseline 
+		  var changeState = new JSONArray();
+		  var changeStateObject = new JSONObject();
+		  changeStateObject.put("fieldName", "task_hours");
+		  changeStateObject.put("org_value", task.get.plan_time.toString());
+		  changeStateObject.put("new_value", success.plan_time);
+		  changeState.put(changeStateObject);  	
+		  val baseline = Baseline(None, changeState.toString(), Integer.parseInt(request.session.get("uId").get), new Date(), "task", Integer.parseInt(id));
+		  Baseline.insert(baseline);		  
 
           Redirect(routes.Task.projectTaskDetails(id))
         }
@@ -792,6 +803,9 @@ object Task extends Controller {
       node.put("PAE", s.pae + " %")
       node.put("HP", s.hp + " hrs")
       node.put("HA", s.ha + " hrs")
+	  //RRM
+	  node.put("AGI", s.ev/s.hp*100)
+	  node.put("AGE", s.pv/s.hp*100)	  	  
     }
     Ok(node.toString())
   }

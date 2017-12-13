@@ -2592,6 +2592,12 @@ function renderEarnValuepro(id) {
 			$("#pae2").html(obj.PAE);
 			//$("#hp2").html(obj.HP);
 			//$("#ha2").html(obj.HA);
+			//RRM:Llena dos filas nuevas en TaskDetails
+			console.log("Hola Task:"+obj.AGI);
+			var num = obj.AGI;
+			$("#agi").html(num.toFixed(2)+' %');
+			var num2 = obj.AGE;
+			$("#age").html(num2.toFixed(2)+' %');			
 		} else {
 			$("#subtask-details").addClass("display-none");
 		}
@@ -3565,7 +3571,13 @@ function renderProjectEarnValuepro(id) {
 			//$("#etc").html(obj.ETC);
 			$("#pae2").html(obj.PAE);
 			//$("#hp").html(obj.HP);
-			//$("#ha").html(obj.HA);			
+			//$("#ha").html(obj.HA);	
+			//RRM:Llena dos filas nuevas en TaskDetails
+			console.log("HOla Project:"+obj.AGI);
+			var num = obj.AGI;
+			$("#agi").html(num.toFixed(2)+' %');
+			var num2 = obj.AGE;
+			$("#age").html(num2.toFixed(2)+' %');			
 		} else {
 			$("#subtask-details").addClass("display-none");
 		}
@@ -3720,6 +3732,11 @@ function renderProgramEarnValuepro(id) {
 			$("#pae2").html(obj.PAE);
 			//$("#hp").html(obj.HP);
 			//$("#ha").html(obj.HA);
+			console.log("HOla:"+obj.AGI);
+			var num = obj.AGI;
+			$("#agi").html(num.toFixed(2)+' %');
+			var num2 = obj.AGE;
+			$("#age").html(num2.toFixed(2)+' %');			
 		} else {
 			$("#subtask-details").addClass("display-none");
 		}
@@ -5001,6 +5018,8 @@ function renderSubmitProjectHours() {
 			$(".edit-project-hours").removeClass("update-hours");
 			$(".edit-project-hours").off("click").on("click",
 					renderEditprojectHours);
+			//RRM:Refresac pantalla al cambiar las Horas del proyecto
+			location.reload(true);
 
 		});
 		$(".loader").css("display", "none");
@@ -5231,6 +5250,9 @@ function renderSubmitProgramHours() {
 			$(".update-hours").unbind();
 			$(".edit-hours").removeClass("update-hours");
 			$(".edit-hours").off("click").on("click", renderEditProgramHours);
+			
+			//RRM:Refresac pantalla al cambiar las Horas del programa
+			location.reload(true);
 		});
 	}
 

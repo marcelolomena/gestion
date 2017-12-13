@@ -152,7 +152,7 @@
 							<td class="table_header">@Messages("programDetails.pae")</td>
 							<td class="p_values width160px"><span id="pae"></span></td>
 							<td class="table_header">@Messages("programDetails.hp")</td>
-							<td class="p_values width160px"><span id="hp"></span></td>
+							<td class="p_values width160px"><span id="hp" class="task-data"></span></td>
 						</tr>
 						</tbody>
 					</table>
@@ -175,6 +175,15 @@
 							<td class="table_header">@Messages("programDetails.pae")</td>
 							<td class="p_values width160px"><span id="pae2"></span></td>
 						</tr>
+						<!--  RRM: Agrega dos filas nuevas -->
+						<tr>
+							<td class="table_header">@Messages("programDetails.agi")</td>
+							<td class="p_values width160px"><span id="agi"></span></td>
+						</tr>	
+						<tr>
+							<td class="table_header">@Messages("programDetails.age")</td>
+							<td class="p_values width160px"><span id="age"></span></td>
+						</tr>							
 						</tbody>
 					</table>
 	  			</div>
@@ -680,6 +689,7 @@
 		var changeSet = $("#task_changeset").val();
 						var endDateChanges = "";
 						var startDate = "";
+						var taskHoursChanges = "";
 						if (changeSet != '') {
 							var jsonObj = $.parseJSON(changeSet);
 							$
@@ -696,6 +706,11 @@
 															+ "<span style='text-decoration: line-through;'>"
 															+ obj.org_value
 															+ "</span><br>";
+												} else if (obj.fieldName == "task_hours") {
+													taskHoursChanges = taskHoursChanges
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
 												}
 											});
 						}
@@ -704,6 +719,10 @@
 								return endDateChanges;
 							} else if ($(this).attr('id') == "plan_start_date") {
 								return startDate;
+							} else if ($(this).attr('id') == "hp") {
+								//$("#hp").html(obj.HP);
+								console.log("horas:"+taskHoursChanges);
+								return taskHoursChanges;
 							}
 
 						});

@@ -1,4 +1,5 @@
-@(expected_completion_percentage_for_project :String,completion_percentage_forProject :String,project:Option[Project],tasks:Seq[Tasks], countList:Seq[String], documents : Seq[DocumentMaster], changeSet : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@import org.json.JSONObject 
+@(expected_completion_percentage_for_project :String,completion_percentage_forProject :String,project:Option[Project],tasks:Seq[Tasks], allocatedForTasks:JSONObject, countList:Seq[String], documents : Seq[DocumentMaster], changeSet : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
 @frontend.layout()
 @import services._
 @import play.api.i18n._
@@ -26,8 +27,7 @@
 		   <h3 id="productNm" class="parent-new-h3">
 		   		<span class="parent-icon"> &#60; </span>
 			    <a href="/program-details/@project.get.program"><span class="left width700px">@if(ProgramService.findProgramMasterDetailsById(project.get.program.toString()).get.program_name.length>120){@ProgramService.findProgramMasterDetailsById(project.get.program.toString()).get.program_name.substring(0, 120) ...}else{@ProgramService.findProgramMasterDetailsById(project.get.program.toString()).get.program_name}</span></a>
-			    
-			    @if(utils.UserAccess.checkAccess(req,"project_update") && utils.UserAccess.isAuthenticaedProject(req,project.get.pId.get.toString)){
+			    @if(ProjectService.permisosProyecto(project.get.pId.get.toString,session.get("uId").get)==1){
 				   	<a href="/edit-project/@project.get.pId" style="float:right;margin-right:45px;"> 
 				 		<span class="edit-project edit-icon edit-text" style="margin-right: -11px;">@Messages("programDetails.edit") </span>
 				 	</a>
@@ -46,9 +46,6 @@
 		    <div class="desc">
 		        <span  class="left project_manager_name"> <span class="sub_title_h3"></span> </span>
 		        <span  class="left project_manager_name push_left140px"> <span class="sub_title_h3"> </span></span>
-		       @* <span  class="right sap_code">SAP Code : <span class="sub_title_h3">@project.get.sap_code </span></span>*@
-			    
-			    
 			
 		    	<div class="width_full" id="project_details_main">
 		    	<table>
@@ -64,75 +61,16 @@
 				  			}
 				  	
 				  		</tr>
-				  		@*<tr>
-				  			
-				  			<td class="table_header">@Messages("newProjectDeatils.sapcode")</strong></td>
-				  			<td  class="p_values">@project.get.sap_code</td>
-				  			<td class="table_header">@Messages("newProjectDeatils.saptotal")   </strong></td>
-				  			<td  class="p_values">$@project.get.total_sap  </td>
-				  			
-				  		</tr>*@	
 				  		<tr>
 				  			<td class="table_header">@Messages("newProjectDeatils.startdate")</strong></td>
 				  			<td  class="p_values"><span id="start_date" class="project-data" style="width:auto;">@project.get.start_date.format("dd-MM-yyyy")</span></td>
 				  			<td class="table_header"><strong>@Messages("newProjectDeatils.enddate")  </strong></td>
 				  			<td class="p_values "><span id="final_release_date" class="project-data" style="width:auto;">@project.get.final_release_date.format("dd-MM-yyyy")</span></td>
 				  		</tr>
-				  		@*<tr>
-				  			<td class="table_header">Budget/Staff</strong></td>
-				  			<td  class="p_values">$@project.get.budget_approved_staff </td>
-				  			<td class="table_header">Budget/Contractor</strong></td>
-				  			<td  class="p_values">$@project.get.budget_approved_contractor  </td>
-				 		</tr>*@
-				 		
-				  		@*<tr>
-				  			<td class="table_header">Budget/Hardware</strong></td>
-				  			<td>$@project.get.budget_approved_hardware </td>
-						</tr>
-						<tr>
-				  			<td class="table_header">Budget/Software</strong></td>
-				  			<td>$@project.get.budget_approved_software </td>
-				  		</tr>*@
-				  			<tr>
-				  			<td class="table_header"><strong> @Messages("programDetails.completionpercentage")</strong></td>
-							<td  class="p_values">@completion_percentage_forProject </td>
-							@*<td class="table_header"><strong> @Messages("programDetails.expectedcompletionpercentage")</strong></td>
-							<td  class="p_values">@expected_completion_percentage_for_project </td>*@
-				  		</tr>	
-				  		<tr>
-				  			<td class="table_header"><strong>@Messages("newProjectDeatils.plannedhours")</strong></td>
-							<td  class="p_values">@ProjectService.findAllocatedHoursForProject(project.get.pId.get.toString) </td>
-							<td class="table_header"><strong>@Messages("projectdetails.workflow") @*<strong>@Messages("newProjectDeatils.actualBudgetspent")</strong>*@</td>
-				  			<td  class="p_values">@if(!project.get.work_flow_status.isEmpty){
-			  						@if(!ProjectWorkflowStatusService.findProjectWorkflowStatusById(project.get.work_flow_status.get.toString).isEmpty){
-			  							@ProjectWorkflowStatusService.findProjectWorkflowStatusById(project.get.work_flow_status.get.toString).get.project_workflow_status	
-			  						}
-			  					}
-			  					@*$@if(String.valueOf(SubTaskServices.calculateActaulBudgetSpent(project.get.pId.get.toString)).length()>10){@String.valueOf(SubTaskServices.calculateActaulBudgetSpent(project.get.pId.get.toString)).substring(0, 9)}else{@SubTaskServices.calculateActaulBudgetSpent(project.get.pId.get.toString)} *@</td>
-				  		</tr>	
-				  		<tr>
-				  			
-				  			<td class="table_header"<strong>@Messages("newProjectDeatils.allocatedhrs")  </strong></td>
-							<td  class="p_values">@ProjectService.findSpentHoursForProject(project.get.pId.get.toString) </td>
-							<td class="table_header">@* <strong>@Messages("newProjectDeatils.allocatedbudget")</strong>*@</td>
-							<td  class="p_values"> @* $@SAPServices.calculateProjectSAPInvestmentAllocated(project.get.pId.get.toString) *@  </td>
-								
-				  		</tr>
-				  		<tr style="border:none;">
-				  			<td class="table_header"><strong>@Messages("newProjectDeatils.bookedhours") </strong></td>
-				  			<td  class="p_values"><strong>@ProjectService.findBookedHoursForProject(project.get.pId.get.toString) </td>
-				  			<td class="table_header"></strong></td>
-				  			<td  class="p_values">
-			  					
-				  			 </td>
-				  		</tr>
+
 				  		<tr style="border:none;">
 				  			<td class="table_header"><strong>@Messages("newProjectDeatils.plannedhours")</strong></td>
 				  			<td  class="p_values">
-				  			@*@if(!project.get.planned_hours.isEmpty){
-				  				@project.get.planned_hours.get
-				  			} *@
-				  			
 				  					<span style="float: left;width:73px">
 									@if(!project.get.planned_hours.isEmpty){
 										<input type="text" disabled="disabled" value="@project.get.planned_hours.get.toLong"  maxlength="8" readonly="readonly" class="planned_hours" />
@@ -141,12 +79,17 @@
 										<input type="text" disabled="disabled"  value="0" maxlength="8"  class="planned_hours" readonly="readonly"/>
 									}
 									</span>
-									@if(utils.UserAccess.checkAccess(req,"project_plan_hours")){
+									@if(ProjectService.permisosProyecto(project.get.pId.get.toString,session.get("uId").get)==1){
 										<span class="edit-project-hours"></span>
 									}
-									
-									
 				  			</td>
+							<td class="table_header"><strong>@Messages("projectdetails.workflow")</td>
+				  			<td  class="p_values">@if(!project.get.work_flow_status.isEmpty){
+			  						@if(!ProjectWorkflowStatusService.findProjectWorkflowStatusById(project.get.work_flow_status.get.toString).isEmpty){
+			  							@ProjectWorkflowStatusService.findProjectWorkflowStatusById(project.get.work_flow_status.get.toString).get.project_workflow_status	
+			  						}
+			  					}
+			  				</td>
 				  		
 				  		</tr>
 					</tbody>
@@ -159,20 +102,83 @@
 		   		</div>
 		  
 		    </div>
-		   
-		  	
-		   @* @if(project.get.document !=""){
-		    <div class="download_div">
-		        <div class="sButton download_button" >
-		        	<a href="@routes.Assets.at("uploads/"+ project.get.document)" target="_blank">Download</a>
-		        </div>
-		       
-		    </div>
-		    }
-			*@   
-			
-		  
+
 		  </div>
+
+
+		@if(tasks.size>0 && utils.UserAccess.checkAccess(req,"task_listing")){
+			  <div class="width_full  " id="earn-value-info"  >
+				<h3 id="productNm">
+				    <span class="left"> @Messages("programDetails.earnedvalueanalysis") </span>
+			    </h3> 
+					 <table id="subtask-details">
+						<tbody>
+						<tr>
+							<td class="table_header">@Messages("programDetails.earnedvalue") </td>
+							<td class="p_values width160px"><span id="ev"></span></td>
+							<td class="table_header">@Messages("programDetails.scheduleperformanceindex")</td>
+							<td class="p_values width160px"><span id="spi"></span></td>
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.plannedvalue")  </td>
+							<td class="p_values width160px"><span id="pv"></span></td>
+							<td class="table_header">@Messages("programDetails.costperformanceindex") </td>
+							<td class="p_values width160px"><span id="cpi"></span></td>
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.actualcost")</td>
+							<td class="p_values width160px"><span id="ac"></span></td>
+							@if(ProjectService.permisosProyecto(project.get.pId.get.toString,session.get("uId").get)==1){
+							<td class="table_header">@Messages("programDetails.estimatetocomplete")</td>
+							<td class="p_values width160px"><span id="etc"></span></td>		
+							}					
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.ha")</td>
+							<td class="p_values width160px"><span id="ha"></span></td>	
+							@if(ProjectService.permisosProyecto(project.get.pId.get.toString,session.get("uId").get)==1){					
+							<td class="table_header">@Messages("programDetails.estimetcopmletion")</td>
+							<td class="p_values width160px"><span id="eac"></span></td>
+							}
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.scheduledvar")</td>
+							<td class="p_values width160px"><span id="pai"></span></td>		
+							<td class="table_header">&nbsp;</td>
+							<td class="p_values width160px">&nbsp;</td>											
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.pae")</td>
+							<td class="p_values width160px"><span id="pae"></span></td>
+							<td class="table_header">@Messages("programDetails.hp")</td>
+							<td class="p_values width160px"><span id="hp"></span></td>
+						</tr>
+						</tbody>
+					</table>
+	  			</div>
+	  			
+	  			
+	  			<div class="width_full  " id="earn-value-info"  >
+				<h3 id="productNm">
+				    <span class="left"> Análisis del Valor Ganado Proporcional </span>
+			    </h3> 
+					 <table id="subtask-details">
+						<tbody>
+						<tr>
+							<td class="table_header">@Messages("programDetails.plannedvalue")  </td>
+							<td class="p_values width160px"><span id="pv2"></span></td>
+							<td class="table_header">@Messages("programDetails.scheduleperformanceindex")</td>
+							<td class="p_values width160px"><span id="spi2"></span></td>
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.pae")</td>
+							<td class="p_values width160px"><span id="pae2"></span></td>
+						</tr>
+						</tbody>
+					</table>
+	  			</div>
+ 		  }
+
 		  
 		
 		<h3 class="layer-title" style="margin-top: 20px;line-height: 15px;  padding: 7px 0 0 !important; width: 100%;">
@@ -180,10 +186,11 @@
 			    
 	   	</h3>
 		<div class="program-div" id="new-risk">
-	   		<span><a href="@controllers.Frontend.routes.Risks.riskManagement(project.get.pId.get.toString,riskParentType.Project.id)"> @Messages("programdetails.addrisk")</a></span>
+			<span><a href="@controllers.Frontend.routes.Risks.addRisk(project.get.pId.get.toString,riskParentType.Project.id)"> @Messages("programdetails.addrisk")</a></span>
+	   		@*<span><a href="@controllers.Frontend.routes.Risks.riskManagement(project.get.pId.get.toString,riskParentType.Project.id)"> @Messages("programdetails.addrisk")</a></span>*@
 		</div>
 		<div class="width_full">
-			@frontend.risks.riskListing(project.get.pId.toString(),riskParentType.Project.id)
+			@frontend.risks.riskListing(project.get.pId.get.toString(),riskParentType.Project.id)
 		</div>  
 		  
 		@if(utils.UserAccess.checkAccess(req,"project_sap_listing")){
@@ -193,36 +200,15 @@
 	   		</h3>
 	   		@if(utils.UserAccess.checkAccess(req,"project_sap_add") && utils.UserAccess.isAuthenticaedProject(req,project.get.pId.get.toString)){
 			   	<div class="program-div" id="new-project-sap">
-			   		<span><a href="@controllers.Frontend.routes.ProjectMaster.newProjectSAP(project.get.pId.toString)">@Messages("programdetails.addsap")</a></span>
+			   		<span><a href="@controllers.Frontend.routes.ProjectMaster.newProjectSAP(project.get.pId.get.toString)">@Messages("programdetails.addsap")</a></span>
 				</div>
 			}
 			<div class="width_full" id="project_sap_listing">
-				@frontend.project.projectSapListing(project.get.pId.toString)
+				@frontend.project.projectSapListing(project.get.pId.get.toString)
 			</div>
 		
 		}
-		
-		
-					@if( utils.UserAccess.checkAccess(req,"project_gantt")){
-	  	 <h3 id="productNm_earnedvalueanalysis" style="margin-top: 20px">
-		    <span class="left"> @Messages("programDetails.earnedvalueanalysis")  </span>
-		 </h3>
-		<div class="width_full" id="earn-value">
-		     <div id="container_id" style="height: 300px;"> </div>
-		    <div id="container_2" style="height: 300px;"> </div>
-		 @*   <div id="container_3" style="height: 300px;"> </div>*@
-		</div>
-	}else{
-		 <div class="width_full" id="earn-value" style="display: none;">
-	          <div id="container_id" style="height: 300px;"></div>
-	 		  <div id="container_2" style="height: 300px;"></div>
-	 		@*  <div id="container_3" style="height: 300px;"></div>*@
-		 </div>
-	 	 <div class="project_list project-list-none">
-			<p>@Messages("programDetails.noprojectsavailable") </p>
-		</div>
-	}	
-	
+
 	
 		@if(utils.UserAccess.checkAccess(req,"task_listing")){
 		  <div class="product_detail_2" id="p_page">
@@ -268,15 +254,15 @@
 
 			    <ul class="width_full" id="t_data_list">
 			    	<li class="header_task">
-			    		<div class="task_title">@Messages("newProjectDeatils.task") </div>
-			    		<div class="task_owner_name">@Messages("newProjectDeatils.taskowner") </div>
-			    		<div class="task_plan_start_date">@Messages("newProjectDeatils.plannedstartdate") </div>
-			    		<div class="task_plan_end_date">@Messages("newProjectDeatils.plannedenddate")</div>
-			    		<div class="task_plan_time">@Messages("newProjectDeatils.assignedhrs")  </div>
-			    		<div class="task_staus" @if(!project.get.baseline) {style="width:8%"}else{style="width:7%"}>@Messages("newProjectDeatils.subtasks") </div>
-			    		<div class="baseline_status">@Messages("newProjectDeatils.trackchanges")</div>
-			    		<div class="left task_staus" @if(!project.get.baseline) {style="width:8%;float:left;"}else{style="width:7%;float:left;"} >@Messages("addDepartment.projectworkflowstatus")</div>
-			    		<div class="left task_action " style="margin-left:15px;">@Messages("newProjectDeatils.action") </div>
+			    		<div class="task_title" style="width: 320px;">@Messages("newProjectDeatils.task") </div>
+			    		<div class="task_owner_name" style="width: 100px;">@Messages("newProjectDeatils.taskowner") </div>
+			    		<div class="task_plan_start_date" style="width: 65px; text-align: left;">@Messages("newProjectDeatils.plannedstartdate") </div>
+			    		<div class="task_plan_end_date" style="width: 65px; text-align: left;">@Messages("newProjectDeatils.plannedenddate")</div>
+			    		<div class="task_plan_time" style="width: 65px; text-align: left;">@Messages("newProjectDeatils.assignedhrs")  </div>
+			    		<div class="task_staus" style="width: 65px;">@Messages("newProjectDeatils.subtasks") </div>
+			    		<div class="baseline_status" style="width: 50px;">@Messages("newProjectDeatils.trackchanges")</div>
+			    		<div class="left task_staus" @if(!project.get.baseline) {style="width: 50px;"}else{style="width: 40px;"} >@Messages("addDepartment.projectworkflowstatus")</div>
+			    		<div class="left task_action " style="margin-left:15px;width: 70px;">@Messages("newProjectDeatils.action") </div>
 			    	</li>
     			    @if(tasks.size>0){
 				    	@for( (m , index)<- tasks.zipWithIndex){
@@ -284,23 +270,25 @@
 				    	<li class='width_full task_data @{if((index+1)%2==0){"task_odd_row"}else{"task_even_row"}}'>
 				    	 	<div class="main_task_data">
 					    		<a href="/project-task-details/@m.tId">	
-					    		<div class="task_title">
+					    		<div class="task_title" style="width: 320px;">
 				    				<span class="status_@m.task_status"></span>
 					    			<span style="float:left;width:83%;word-wrap: break-word;" class="show-task-details" id="mt_@m.tId.get">
-					    				@if(m.task_title.length>17){@m.task_title.substring(0,17)...}else{ @m.task_title }
+					    				@if(m.task_title.length>42){@m.task_title.substring(0,42)...}else{ @m.task_title }
 					    			</span> 
 					    			<span class="display-none" id="task_@m.tId.get">@m.task_title </span>
 				    			</div>
 				    			
-					    		<div class="task_owner_name" >@if(m.owner != -1){@UserService.findUserDetailsById(m.owner.toLong).get.first_name}</div>
-					    		<div class="task_plan_start_date"  style="">@m.plan_start_date.format("dd-MM-yyyy") </div>
-					    		<div class="task_plan_end_date" style="">@m.plan_end_date.format("dd-MM-yyyy") </div>
-					    		<div class="task_plan_time" style="">@m.plan_time </div>
-					    		@*<div class="task_plan_time" style="">@m.milestone_status </div>*@
-					    		<div class="task_staus" @if(!project.get.baseline) {style="width:8%"}else{style="width:7%"}>@TaskService.findSubTaskListByTaskId(m.tId.toString()).size </div>
+					    		<div class="task_owner_name" style="width: 100px;">@if(m.owner != -1){@UserService.findUserDetailsById(m.owner.toLong).get.first_name @UserService.findUserDetailsById(m.owner.toLong).get.last_name}</div>
+					    		<div class="task_plan_start_date" style="width: 65px; text-align: left;">@m.plan_start_date.format("dd-MM-yyyy") </div>
+					    		<div class="task_plan_end_date" style="width: 65px; text-align: left;">@m.plan_end_date.format("dd-MM-yyyy") </div>
 					    		
-					    		<div class="baseline_status change-status-base" >@if(!project.get.baseline){No} else {Yes}</div>
-					    		<div class="left task_staus" @if(!project.get.baseline) {style="margin-right:25px;width:8%"}else{style="margin-right:25px;width:7%;"} >
+					    		<div class="task_plan_time" style="width: 65px;text-align: center;">@allocatedForTasks.get(m.tId.toString())</div>
+					    		@*<div class="task_plan_time" style="">@m.milestone_status </div>*@
+					    		<div class="task_staus" style="width: 65px;text-align: center;">@TaskService.findSubTaskListByTaskId(m.tId.get.toString()).size </div>
+					    		
+					    		<div class="baseline_status change-status-base" style="width: 50px;text-align: center;">@if(!project.get.baseline){No} else {Yes}</div>
+					    		  
+					    		<div class="left task_staus" @if(!project.get.baseline) {style="margin-right:25px;width: 50px;"}else{style="margin-right:25px;width: 40px;"} >
 					    		@{
 						    			if(!TaskService.findTaskStatus(m.tId.get.toString()).isEmpty){
 						    				TaskService.findTaskStatus(m.tId.get.toString()).get.status match{
@@ -314,20 +302,21 @@
 					    		}
 					    		
 					    		</div>
+					    		
 					    		</a>
-					    		<div  class="left task_action">
+					    		<div  class="left task_action" style="width: 70px; float:right;">
 
 					    			<span id="st_@m.tId" class="show_tasks_details"></span>	
-					    			@if(utils.UserAccess.checkAccess(req,"task_delete") && utils.UserAccess.isAuthenticaedProject(req,project.get.pId.get.toString)){
+					    			@if(utils.UserAccess.checkAccess(req,"task_delete") && utils.UserAccess.isAuthenticaedProject(req,project.get.pId.get.toString) && TaskService.canDeletedTask(m.tId.get.toString()) ){
 					    				<span id="dt_@m.tId" class="delete_tasks_details">
 					    				<input type="hidden" value="@TaskService.validateTasksDependency(m.pId.toString(),m.tId.get.toString())"></span>
 					    			}
 					    			
-					    			@*if(TaskService.findSubTaskListByTaskId(m.tId.toString()).size == 0){
+					    			@*if(TaskService.findSubTaskListByTaskId(m.tId.get.toString()).size == 0){
 	    			  				
 	    			  				}*@
 	    			  				
-					    			@*@if(TaskService.findSubTaskListByTaskId(m.tId.toString()).size == 0){
+					    			@*@if(TaskService.findSubTaskListByTaskId(m.tId.get.toString()).size == 0){
 					    				<a href="/project-task-details/@m.tId">	<span id="st_@m.tId" class="show_tasks_details"></span>	</a>
 					    				
 					    			}else{
@@ -395,49 +384,7 @@
 		  
 		  }
 		  
-		  @if(tasks.size>0 && utils.UserAccess.checkAccess(req,"task_listing")){
-			  <div class="width_full display-none" id="earn-value"  >
-				<h3 id="productNm">
-				    <span class="left"> @Messages("programDetails.earnedvalueanalysis") </span>
-			    </h3> 
-			   
-				    <table id="subtask-details">
-						<tbody>
-						<tr>
-							<td class="th-header">@Messages("programDetails.earnedvalue")</td>
-							<td class="earn-data"><span id="ev"></span> </td>
-							<td class="th-header">@Messages("programDetails.scheduleperformanceindex") </td>
-							<td class="earn-data"><span id="spi"></span></td>
-						</tr>
-						<tr>
-							<td class="th-header">@Messages("programDetails.plannedvalue")  </td>
-							<td class="earn-data"><span id="pv"></span>  </td>
-							<td class="th-header">@Messages("programDetails.costperformanceindex")</td>
-							<td class="earn-data"><span id="cpi"></span></td>
-						</tr>
-						<tr>
-							<td class="th-header">@Messages("programDetails.actualcost")</td>
-							<td class="earn-data"><span id="ac"></span></td>
-							<td class="th-header">@Messages("programDetails.estimetcopmletion")</td>
-							<td class="earn-data"><span id="eac"></span></td>
-						</tr>
-						<tr>
-							<td class="th-header">@Messages("programDetails.costvariance")</td>
-							<td class="earn-data"><span id="cv"></span></td>
-							<td class="th-header">@Messages("programDetails.estimatetocomplete") </td>
-							<td class="earn-data"><span id="etc"></span></td>
-						</tr>
-						<tr>
-							<td class="th-header">@Messages("programDetails.scheduledvar")</td>
-							<td class="earn-data"><span id="sv"></span></td>
-							<td class="th-header">@Messages("programDetails.completionpercentage")</td>
-							<td class="earn-data">	<div style="float: right; margin-right: 30px;">%</div>
-							<div id="cp" class="percentagesComplete"></div></td>
-						</tr>
-						</tbody>
-					</table>
-	  			</div>
- 		  }
+		  
  		  @*else{
 			<div class="project_list project-list-none">
 				<p>@Messages("programDetails.notasksavailable") </p>
@@ -487,14 +434,14 @@
 											@for((doc, index) <- documents.zipWithIndex){
 												<li class="@if( index%2==0 ){ search-result-datarow-even current-doc-listing}else{ search-result-datarow-odd current-doc-listing}">
 													<span class="doc_title">@doc.title</span> 
-													<span class="doc_version">@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.version_alias</span>
-													<span class="doc_date"> @DocumentService.findAllCurrentVersions(doc.Id.toString()).get.creation_date.format("dd/MM/YYYY")</span> 
-													<span class="doc_user">@UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.toString()).get.user_id.toLong).get.first_name @UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.toString()).get.user_id.toLong).get.last_name</span>
+													<span class="doc_version">@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.version_alias</span>
+													<span class="doc_date"> @DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.creation_date.format("dd/MM/YYYY")</span> 
+													<span class="doc_user">@UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.user_id.toLong).get.first_name @UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.user_id.toLong).get.last_name</span>
 													<span class="doc_action"> 
-														<span class="doc_info" title="@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.version_notes"></span>
-														<a href='/documents/@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
-														<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), "PROJECT", "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
-														<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id="Proyecto_@doc.Id.toString()" class="delete-doc @doc.Id.toString()"><span class="doc-delete" title="Delete Document"></span></a>
+														<span class="doc_info" title="@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.version_notes"></span>
+														<a href='/documents/@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
+														<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.get.toString(), "PROJECT", "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+														<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.get.toString())' id="Proyecto_@doc.Id.get.toString()" class="delete-doc @doc.Id.get.toString()"><span class="doc-delete" title="Delete Document"></span></a>
 													</span>
 												</li>
 											}
@@ -512,10 +459,10 @@
 														<span class="doc_action bold"> @Messages("document.action")</span>
 											</li>
 											@for(doc <- documents){
-												@if(!DocumentService.findAllPreviousVersionDocuments(doc.Id.toString()).isEmpty){
-													@for(version <- DocumentService.findAllPreviousVersionDocuments(doc.Id.toString())){
+												@if(!DocumentService.findAllPreviousVersionDocuments(doc.Id.get.toString()).isEmpty){
+													@for(version <- DocumentService.findAllPreviousVersionDocuments(doc.Id.get.toString())){
 														@{i = i+1}
-														<li class="@if( i%2==0 ){ search-result-datarow-even prev-doc-listing prev-doc-listing-@doc.Id.toString()}else{ search-result-datarow-odd prev-doc-listing prev-doc-listing-@doc.Id.toString()}">
+														<li class="@if( i%2==0 ){ search-result-datarow-even prev-doc-listing prev-doc-listing-@doc.Id.get.toString()}else{ search-result-datarow-odd prev-doc-listing prev-doc-listing-@doc.Id.get.toString()}">
 															<span class="doc_title">@doc.title</span> 
 															<span class="doc_version">@version.version_alias</span>
 															<span class="doc_date"> @version.creation_date.format("dd/MM/YYYY")</span> 
@@ -523,8 +470,8 @@
 															<span class="doc_action"> 
 																<span class="doc_info" title="@version.version_notes"></span>
 																<a href='/documents/@version.file_name' target='_blank'><span class="doc_view" title="Click to download the document"></span></a>
-																<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), "PROJECT", "UPDATE")' class="update-doc display-none"><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
-																<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id="Proyecto_@doc.Id.toString()" class="delete-doc @doc.Id.toString() display-none"><span class="doc-delete" title="Delete Document"></span></a>
+																<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.get.toString(), "PROJECT", "UPDATE")' class="update-doc display-none"><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+																<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.get.toString())' id="Proyecto_@doc.Id.toString()" class="delete-doc @doc.Id.toString() display-none"><span class="doc-delete" title="Delete Document"></span></a>
 															</span>
 														</li>
 													}
@@ -540,6 +487,26 @@
 				</div>
 			</div>
 		}
+		@if( utils.UserAccess.checkAccess(req,"project_gantt")){
+		  	 <h3 id="productNm_earnedvalueanalysis" style="margin-top: 20px" class="width_full display-none" >
+			    <span class="left"> @Messages("programDetails.earnedvalueanalysis")  </span>
+			 </h3>
+			<div class="width_full display-none" id="earn-value">
+			     <div id="container_id" style="height: 300px;"> </div>
+			    <div id="container_2" style="height: 300px;"> </div>
+			 @*   <div id="container_3" style="height: 300px;"> </div>*@
+			</div>
+		}else{
+			 <div class="width_full " id="earn-value" style="display: none;">
+		          <div id="container_id" style="height: 300px;"></div>
+		 		  <div id="container_2" style="height: 300px;"></div>
+		 		@*  <div id="container_3" style="height: 300px;"></div>*@
+			 </div>
+		 	 <div class="project_list project-list-none">
+				<p>@Messages("programDetails.noprojectsavailable") </p>
+			</div>
+		}	
+
   </div>
   <div id="dialog-confirm"></div>	
 	  @frontend.footer()
@@ -564,7 +531,7 @@
 <script src="@routes.Assets.at("frontend/js/documents.js")" type="text/javascript"></script>
 <script type="text/javascript">
 jQuery(document).ready(function() {
-	 @if( utils.UserAccess.checkAccess(req,"project_gantt")){
+	@* @if( utils.UserAccess.checkAccess(req,"project_gantt")){
 				var url ="/get-spi-graph-project?project_id=@project.get.pId.toString()";
 				$.get(url, function(data) {
 				 var json_var = $.parseJSON(data);
@@ -787,7 +754,7 @@ jQuery(document).ready(function() {
 							zoomType : 'xy'
 						},
 							   title: {
-					            text: 'Earn Value Chart'
+					            text: 'Gráfico Valor Ganado'
 					        },
 
 						xAxis : {
@@ -819,7 +786,7 @@ jQuery(document).ready(function() {
 				 }
 					});//ajax get end
 				
-			}	
+			}	*@
 	
 	
 	
@@ -924,7 +891,8 @@ jQuery(document).ready(function() {
 					   	@if(tasks.size!=0 && utils.UserAccess.checkAccess(req,"task_listing")){
 							getRenderGanttChart(10);
 						}
-					@*	renderProjectEarnValue($("#project_id").val()); *@
+						renderProjectEarnValue($("#project_id").val()); 
+						renderProjectEarnValuepro($("#project_id").val()); 
 
 						var changeSet = $("#project_changeset").val();
 						var finalReleaseChanges = "";

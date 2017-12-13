@@ -12,7 +12,7 @@ libraryDependencies ++= Seq(
   ws,
   jdbc,
   anorm,
-  "net.liftweb" %% "lift-json" % "3.0",
+  "net.liftweb" %% "lift-json" % "2.6.3",
   "org.json" % "json" % "20160810",
   "org.mindrot" % "jbcrypt" % "0.3m",
   "org.imgscalr" % "imgscalr-lib" % "4.2",

@@ -70,8 +70,8 @@
 
 				  		<tr style="border:none;">
 				  			<td class="table_header"><strong>@Messages("newProjectDeatils.plannedhours")</strong></td>
-				  			<td  class="p_values">
-				  					<span style="float: left;width:73px">
+				  			<td  class="p_values" >
+				  					<span class="project-data" id="planned_hours" style="float: left;width:73px">
 									@if(!project.get.planned_hours.isEmpty){
 										<input type="text" disabled="disabled" value="@project.get.planned_hours.get.toLong"  maxlength="8" readonly="readonly" class="planned_hours" />
 										
@@ -174,6 +174,15 @@
 							<td class="table_header">@Messages("programDetails.pae")</td>
 							<td class="p_values width160px"><span id="pae2"></span></td>
 						</tr>
+						<!--  RRM: Agrega dos filas nuevas -->
+						<tr>
+							<td class="table_header">@Messages("programDetails.agi")</td>
+							<td class="p_values width160px"><span id="agi"></span></td>
+						</tr>	
+						<tr>
+							<td class="table_header">@Messages("programDetails.age")</td>
+							<td class="p_values width160px"><span id="age"></span></td>
+						</tr>							
 						</tbody>
 					</table>
 	  			</div>
@@ -896,6 +905,7 @@ jQuery(document).ready(function() {
 
 						var changeSet = $("#project_changeset").val();
 						var finalReleaseChanges = "";
+						var projectHoursChanges = "";
 						var startDate = "";
 						if (changeSet != '') {
 							var jsonObj = $.parseJSON(changeSet);
@@ -913,6 +923,11 @@ jQuery(document).ready(function() {
 															+ "<span style='text-decoration: line-through;'>"
 															+ obj.org_value
 															+ "</span><br>";
+												} else if (obj.fieldName == "project_hours") {
+													projectHoursChanges = projectHoursChanges
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
 												}
 											});
 						}
@@ -921,6 +936,9 @@ jQuery(document).ready(function() {
 								return finalReleaseChanges;
 							} else if ($(this).attr('id') == "start_date") {
 								return startDate;
+							} else if ($(this).attr('id') == "planned_hours") {
+								//console.log("horas:"+projectHoursChanges);
+								return projectHoursChanges;
 							}
 
 						});

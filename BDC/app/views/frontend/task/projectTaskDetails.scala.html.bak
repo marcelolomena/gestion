@@ -1,4 +1,5 @@
-@(compl_per_task_show :String ,taskDetail:Option[Tasks],project:Option[Project], documents : Seq[DocumentMaster],actual_completion_date: java.util.Date)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@import org.json.JSONObject 
+@(compl_per_task_show :String ,taskDetail:Option[Tasks],project:Option[Project], documents : Seq[DocumentMaster],actual_completion_date: java.util.Date,changeSet : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
 @frontend.layout()
 @import services._
 @import org.apache.commons.lang3.StringUtils
@@ -18,6 +19,7 @@
 	
 		<input id="projectId" value="@project.get.pId" class="display-none"/>
 		<input id="project_id" value="@project.get.project_id" class="display-none"/>
+		<input id="task_changeset" name="task_changeset" value="@changeSet" type="hidden"/>
 		<input id="task_end_date" type="hidden" value="@taskDetail.get.plan_end_date.format("dd-MM-yyyy")"/>
 		<div class="product_main" style="   float: left; height: auto; overflow: hidden;">
 		  <div class="product_detail_1 ">
@@ -30,9 +32,9 @@
 			  	   <a href="/project-details/@project.get.pId">
 			  	   		<span class="left">@if(project.get.project_name.length()>55){@project.get.project_name.substring(0, 55) ...}else{@project.get.project_name}</span>
 			  	   </a>
-			  	 
+			  	@if(TaskService.permisosTarea(taskDetail.get.tId.get.toString,session.get("uId").get)==1){
 			 		<a href="/task-edit/@taskDetail.get.tId" style="float:right"><span id="et_@taskDetail.get.tId"class="edit-project edit-icon edit-text edit_tasks_details " style="float:right;margin-right:27px">@Messages("employee.edit")</span></a>
-			 
+			 	}
 			  	  <span  class=""></span>
 			  </h3>
 			 
@@ -48,16 +50,17 @@
 				  		<tr>
 				  			
 				  			<td class="table_header">@Messages("projectTaskDetails.description")</strong></td>
-				  			<td  class="p_values width380px"> @taskDetail.get.task_description </td>
+				  			<td class="p_values width380px"> @taskDetail.get.task_description </td>
 				  			<td class="table_header">@Messages("projectTaskDetails.plannedstartdate") </strong></td>
-				  			<td  class="p_values">@taskDetail.get.plan_start_date.format("dd-MM-yyyy") </td>
+				  			<td class="p_values"><span id="plan_start_date" class="task-data" style="width:auto;">@taskDetail.get.plan_start_date.format("dd-MM-yyyy")</span></td>
 				  		</tr>	
 				
 				  		<tr>
-				  			<td class="table_header">@Messages("projectTaskDetails.allocatedhrs")</strong></td>
-				  			<td  class="p_values width380px">@taskDetail.get.plan_time</td>
+				  			<td class="table_header">@Messages("projectTaskDetails.owner") </strong></td>
+				  			<td  class="p_values">
+				  			@if(taskDetail.get.owner != -1){<a href="/employee/@taskDetail.get.owner.toLong" class="progDemandMgr">@UserService.findUserDetailsById(taskDetail.get.owner.toLong).get.first_name&nbsp;@UserService.findUserDetailsById(taskDetail.get.owner.toLong).get.last_name </a> }</td>
 				  			<td class="table_header" style="width:185px;">@Messages("projectTaskDetails.plannedenddate")</strong></td>
-				  			<td class="p_values">@taskDetail.get.plan_end_date.format("dd-MM-yyyy")</td>
+				  			<td class="p_values"><span id="plan_end_date" class="task-data" style="width:auto;">@taskDetail.get.plan_end_date.format("dd-MM-yyyy")</span></td>
 				  		</tr>
 				  		<tr>
 				  			<td class="table_header">@Messages("projectTaskDetails.taskdiscipline")</strong></td>
@@ -69,13 +72,14 @@
 							
 							<td class="table_header">@Messages("projecttaskdetail.realstart") </strong></td>
 				  			<td  class="p_values">
-				  				@if(TaskService.findActualStartDateForTask(taskDetail.get.tId.get.toString()) != null){@TaskService.findActualStartDateForTask(taskDetail.get.tId.get.toString()).get.format("dd-MM-yyyy")}else{NA}
+				  				@*@if(TaskService.findActualStartDateForTask(taskDetail.get.tId.get.toString()) != null){@TaskService.findActualStartDateForTask(taskDetail.get.tId.get.toString()).get.format("dd-MM-yyyy")}else{NA}*@
+				  				@TaskService.findActualStartDateForTask(taskDetail.get.tId.get.toString())
 				  			</td>
 							
 				  		</tr>	
-				  		<tr style="border:none;">
-				  			<td class="table_header left">@Messages("projectTaskDetails.taskdependancy")</strong></td>
-							<td  class="p_values width380px;" style="text-align: left; vertical-align: middle;">
+				  		<tr>
+				  			<td class="table_header">@Messages("projectTaskDetails.taskdependancy")</strong></td>
+							<td  class="p_values width380px;">
 							@if(!taskDetail.get.task_depend.isEmpty){
 								@for(t <- taskDetail.get.task_depend.get.split(",")){
 									@if(!StringUtils.isEmpty(t.trim())){
@@ -85,62 +89,104 @@
 										
 									}
 								}
-							@*TaskService.findMilestoneDetailsByMilestoneId(taskDetail.get.task_depend.get).get.milestone_title*@
 							}else{
 								None
 							} 
 							 </td>
-							@*<td class="table_header left">@Messages("projectTaskDetails.dependencytype")</strong></td>
-				  			<td  class="p_values " style=" text-align: left; vertical-align: middle;">
-				  			@if(!taskDetail.get.task_depend.isEmpty){
-			  					@{
-			  						taskDetail.get.dependencies_type.get match{
-			  							case 1 => "Finish-Start"
-			  							case 2 => "Start-Start"
-			  							case 3 => "Start-Finish"
-			  							case 4 =>"Finish-Finish"
-			  						}
-			  					}
-			  				
-			  				}else{
-								None
-							}
-				  			</td>*@
-				  			
-				  			
 				  			<td class="table_header"> @Messages("projecttaskdetail.realend")  </strong></td>
 				  			<td  class="p_values">
-				  				@if(TaskService.findActualEndDateForTask(taskDetail.get.tId.get.toString()) != null){@TaskService.findActualEndDateForTask(taskDetail.get.tId.get.toString()).get.format("dd-MM-yyyy")}else{NA}
+				  				@*@if(TaskService.findActualEndDateForTask(taskDetail.get.tId.get.toString()) != null){@TaskService.findActualEndDateForTask(taskDetail.get.tId.get.toString()).get.format("dd-MM-yyyy")}else{NA}*@
+				  				@TaskService.findActualEndDateForTask(taskDetail.get.tId.get.toString())
 							</td>
 				  			
-				  		</tr>
-				  		<tr>
-				  			<td class="table_header"> @Messages("programDetails.completionpercentage")</strong></td>
-				  			<td  class="p_values width380px">@compl_per_task_show %</td>
-				  			@*@if(actual_completion_date!=null){
-					  			<td class="table_header"> Actual End Date</strong></td>
-					  			<td  class="p_values width380px">
-					  				@actual_completion_date
-				  				</td>
-				  				}*@
-				  			
-				  		</tr>
-				  		<tr>
-				  			<td class="table_header">@Messages("projectTaskDetails.owner") </strong></td>
-				  			<td  class="p_values">
-				  			@if(taskDetail.get.owner != -1){<a href="/employee/@taskDetail.get.owner.toLong" class="progDemandMgr">@UserService.findUserDetailsById(taskDetail.get.owner.toLong).get.first_name&nbsp;@UserService.findUserDetailsById(taskDetail.get.owner.toLong).get.last_name </a> }</td>
 				  		</tr>
 					</tbody>
 		  		</table>
 	    	
 	      </div> 
+ 
+ 
+ 		 @if(TaskService.findSubTaskListByTaskId(taskDetail.get.tId.get.toString()).size>0 && utils.UserAccess.checkAccess(req,"sub_task_gantt")){
+			   <div class="width_full push_top10px" id="earn-value-info"  >
+		  		<h3 id="productNm">
+			    	<span class="left"> @Messages("programDetails.earnedvalueanalysis")  </span>
+		    	</h3> 
+				
+				    <table id="subtask-details">
+						<tbody>
+						<tr>
+							<td class="table_header">@Messages("programDetails.earnedvalue") </td>
+							<td class="p_values width160px"><span id="ev"></span></td>
+							<td class="table_header">@Messages("programDetails.scheduleperformanceindex")</td>
+							<td class="p_values width160px"><span id="spi"></span></td>
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.plannedvalue")  </td>
+							<td class="p_values width160px"><span id="pv"></span></td>
+							<td class="table_header">@Messages("programDetails.costperformanceindex") </td>
+							<td class="p_values width160px"><span id="cpi"></span></td>
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.actualcost")</td>
+							<td class="p_values width160px"><span id="ac"></span></td>
+							@if(TaskService.permisosTarea(taskDetail.get.tId.get.toString,session.get("uId").get)==1){
+							<td class="table_header">@Messages("programDetails.estimatetocomplete")</td>
+							<td class="p_values width160px"><span id="etc"></span></td>	
+							}						
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.ha")</td>
+							<td class="p_values width160px"><span id="ha"></span></td>	
+							@if(TaskService.permisosTarea(taskDetail.get.tId.get.toString,session.get("uId").get)==1){					
+							<td class="table_header">@Messages("programDetails.estimetcopmletion")</td>
+							<td class="p_values width160px"><span id="eac"></span></td>
+							}
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.scheduledvar")</td>
+							<td class="p_values width160px"><span id="pai"></span></td>		
+							<td class="table_header">&nbsp;</td>
+							<td class="p_values width160px">&nbsp;</td>											
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.pae")</td>
+							<td class="p_values width160px"><span id="pae"></span></td>
+							<td class="table_header">@Messages("programDetails.hp")</td>
+							<td class="p_values width160px"><span id="hp"></span></td>
+						</tr>
+						</tbody>
+					</table>
+	  			</div>
+	  			
+	  			<div class="width_full push_top10px" id="earn-value-info"  >
+		  		<h3 id="productNm">
+			    	<span class="left"> Análisis del Valor Ganado Proporcional  </span>
+		    	</h3> 
+				
+				    <table id="subtask-details">
+						<tbody>
+						<tr>
+							<td class="table_header">@Messages("programDetails.plannedvalue")  </td>
+							<td class="p_values width160px"><span id="pv2"></span></td>
+							<td class="table_header">@Messages("programDetails.scheduleperformanceindex")</td>
+							<td class="p_values width160px"><span id="spi2"></span></td>
+						</tr>
+						<tr>
+							<td class="table_header">@Messages("programDetails.pae")</td>
+							<td class="p_values width160px"><span id="pae2"></span></td>
+						</tr>
+						</tbody>
+					</table>
+	  			</div>
+ 		}
     	  
     	  	<h3 class="layer-title" style="margin-top: 20px;line-height: 15px;  padding: 7px 0 0 !important; width: 100%;">
 			    <span class="left">@Messages("subtaskdetail.taskrisk")</span>
 			    
 		   	</h3>
 			<div class="program-div" id="new-risk">
-		   		<span><a href="@controllers.Frontend.routes.Risks.riskManagement(taskDetail.get.tId.get.toString,riskParentType.Task.id)"> @Messages("programdetails.addrisk")</a></span>
+				<span><a href="@controllers.Frontend.routes.Risks.addRisk(taskDetail.get.tId.get.toString,riskParentType.Task.id)"> @Messages("programdetails.addrisk")</a></span>
+		   		@*<span><a href="@controllers.Frontend.routes.Risks.riskManagement(taskDetail.get.tId.get.toString,riskParentType.Task.id)"> @Messages("programdetails.addrisk")</a></span>*@
 			</div>
 			<div class="width_full">
 				@frontend.risks.riskListing(taskDetail.get.tId.get.toString(),riskParentType.Task.id)
@@ -159,42 +205,39 @@
 				@frontend.task.issueListing(taskDetail.get.tId.get.toString(),riskParentType.Task.id)
 			</div> 
 			
-			
-			
 			@if( utils.UserAccess.checkAccess(req,"project_gantt")){
-	  	 <h3 id="productNm_earnedvalueanalysis" style="margin-top: 20px">
-		    <span class="left"> @Messages("programDetails.earnedvalueanalysis")  </span>
-		 </h3>
-		<div class="width_full" id="earn-value">
-		     <div id="container_id" style="height: 300px;"> </div>
-		    <div id="container_2" style="height: 300px;"> </div>
-		 @*   <div id="container_3" style="height: 300px;"> </div>*@
-		</div>
-	}else{
-		 <div class="width_full" id="earn-value" style="display: none;">
-	          <div id="container_id" style="height: 300px;"></div>
-	 		  <div id="container_2" style="height: 300px;"></div>
-	 		@*  <div id="container_3" style="height: 300px;"></div>*@
-		 </div>
-	 	 <div class="project_list project-list-none">
-			<p>@Messages("programDetails.noprojectsavailable") </p>
-		</div>
-	}		
-		
+		  	 <h3 id="productNm_earnedvalueanalysis" class="width_full display-none" style="margin-top: 20px">
+			    <span class="left"> @Messages("programDetails.earnedvalueanalysis")  </span>
+			 </h3>
+			<div class="width_full display-none" id="earn-value">
+			     <div id="container_id" style="height: 300px;"> </div>
+			    <div id="container_2" style="height: 300px;"> </div>
+			 @*   <div id="container_3" style="height: 300px;"> </div>*@
+			</div>
+		}else{
+			 <div class="width_full " id="earn-value" style="display: none;">
+		          <div id="container_id" style="height: 300px;"></div>
+		 		  <div id="container_2" style="height: 300px;"></div>
+		 		@*  <div id="container_3" style="height: 300px;"></div>*@
+			 </div>
+		 	 <div class="project_list project-list-none">
+				<p>@Messages("programDetails.noprojectsavailable") </p>
+			</div>
+		}
+	
 		  <div class="product_detail_2" id="p_page">
 		  
-		
-		   
 		   <h3 id="productNm">
 			    <span class="left">@Messages("projectTaskDetails.subtasks") </span>
 					     
 		   </h3>
-		   @if(utils.UserAccess.checkAccess(req,"sub_task_new")){  
+		   @*@if(utils.UserAccess.checkAccess(req,"sub_task_new")){*@  
+		   @if(utils.UserAccess.canCreateSubTask(req,taskDetail.get.tId.get.toString())){  
 			   <a href="/new-subtask/@taskDetail.get.tId"> 
 			    		<span class="add_subtask">@Messages("projectTaskDetails.newsubtasks") </span>
 			   </a>
 		   }
-		    @if(TaskService.findSubTaskListByTaskId(taskDetail.get.tId.toString()).size>0 && utils.UserAccess.checkAccess(req,"sub_task_gantt")){
+		    @if(TaskService.findSubTaskListByTaskId(taskDetail.get.tId.get.toString()).size>0 && utils.UserAccess.checkAccess(req,"sub_task_gantt")){
 		    	<span class="left width_full push-bottom-px5">
 	 					<input type="checkbox" name="sub_task_critical_path" id="sub_task_critical_path" class="left">
 	 					<label for="sub_task_critical_path" class="label-for baseline-label " style="margin-top: 7px">@Messages("projectTaskDetails.criticalpath")</label>
@@ -209,15 +252,16 @@
 		   	 @if(utils.UserAccess.checkAccess(req,"sub_task_gantt")){  
 			     <div id="project_task_list" class="width_full">
 			     	
-				    @if(TaskService.findSubTaskListByTaskId(taskDetail.get.tId.toString()).size>0){
+				    @if(TaskService.findSubTaskListByTaskId(taskDetail.get.tId.get.toString()).size>0){
 				         <div class="tab-content default-tab" id="tabProduct">
 							
 						    <div class="tabbed_1_left width956px" id="flot-placeholder">
 						    </div>
 						 </div>
+						 
 						 <div class="team_task_div">
 						 </div>
-				    
+				    	
 				    	
 					} else{
 					<div class="no-subtask">@Messages("projectTaskDetails.nosubTaskAvailable")</div>
@@ -249,53 +293,9 @@
 		  <div id="pop-box" class="display-none"> 
 		  </div>
 		  
-		   @if(TaskService.findSubTaskListByTaskId(taskDetail.get.tId.toString()).size>0 && utils.UserAccess.checkAccess(req,"sub_task_gantt")){
-			   <div class="width_full display-none" id="earn-value"  >
-		  		<h3 id="productNm">
-			    	<span class="left"> @Messages("programDetails.earnedvalueanalysis")  </span>
-		    	</h3> 
-				
-				    <table id="subtask-details">
-						<tbody>
-						<tr>
-							<td class="th-header">@Messages("programDetails.earnedvalue") </td>
-							<td class="earn-data"><span id="ev"></span> </td>
-							<td class="th-header">@Messages("programDetails.scheduleperformanceindex")</td>
-							<td class="earn-data"><span id="spi"></span></td>
-						</tr>
-						<tr>
-							<td class="th-header">@Messages("programDetails.plannedvalue")  </td>
-							<td class="earn-data"><span id="pv"></span>  </td>
-							<td class="th-header">@Messages("programDetails.costperformanceindex") </td>
-							<td class="earn-data"><span id="cpi"></span></td>
-						</tr>
-						<tr>
-							<td class="th-header">@Messages("programDetails.actualcost")</td>
-							<td class="earn-data"><span id="ac"></span></td>
-							<td class="th-header">@Messages("programDetails.estimetcopmletion")</td>
-							<td class="earn-data"><span id="eac"></span></td>
-						</tr>
-						<tr>
-							<td class="th-header">@Messages("programDetails.costvariance")</td>
-							<td class="earn-data"><span id="cv"></span></td>
-							<td class="th-header">@Messages("programDetails.estimatetocomplete")</td>
-							<td class="earn-data"><span id="etc"></span></td>
-						</tr>
-						<tr>
-							<td class="th-header">@Messages("programDetails.scheduledvar")</td>
-							<td class="earn-data"><span id="sv"></span></td>
-							<td class="th-header">@Messages("programDetails.completionpercentage") </td>
-							<td class="earn-data">
-							<div style="float: right; margin-right: 30px;">%</div>
-							<div id="cp" class="percentagesComplete"></div>
-							</td>
-						</tr>
-						</tbody>
-					</table>
-	  			</div>
-  			}
+		  
   			
-  			<div class="product_detail_2" id="">
+  			<div class="product_detail_2">
 		   		<h3 id="productNm"><span class="left">@Messages("topNav.documents")</span></h3>
 		   		<div class="program-div" id="new-program"><span><a href='@controllers.Frontend.routes.Documents.uploadDocument(taskDetail.get.tId.get.toString, "TASK", "ADD")'> @Messages("uploaddocument.uploaddocument")</a></span></div>
 		   		<div id="docuement-overview" class="task-documents">
@@ -329,14 +329,14 @@
 										@for((doc, index) <- documents.zipWithIndex){
 											<li class="@if( index%2==0 ){ search-result-datarow-even current-doc-listing}else{ search-result-datarow-odd current-doc-listing}">
 												<span class="doc_title">@doc.title</span> 
-												<span class="doc_version">@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.version_alias</span>
-												<span class="doc_date"> @DocumentService.findAllCurrentVersions(doc.Id.toString()).get.creation_date.format("dd/MM/YYYY")</span> 
-												<span class="doc_user">@UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.toString()).get.user_id.toLong).get.first_name @UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.toString()).get.user_id.toLong).get.last_name</span>
+												<span class="doc_version">@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.version_alias</span>
+												<span class="doc_date"> @DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.creation_date.format("dd/MM/YYYY")</span> 
+												<span class="doc_user">@UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.user_id.toLong).get.first_name @UserService.findUserDetailsById(DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.user_id.toLong).get.last_name</span>
 												<span class="doc_action"> 
-													<span class="doc_info" title="@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.version_notes"></span>
-													<a href='/documents/@DocumentService.findAllCurrentVersions(doc.Id.toString()).get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
-													<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), "TASK", "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
-													<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id="Tarea_@doc.Id.toString()" class="delete-doc @doc.Id.toString()"><span class="doc-delete" title="Delete Document"></span></a>
+													<span class="doc_info" title="@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.version_notes"></span>
+													<a href='/documents/@DocumentService.findAllCurrentVersions(doc.Id.get.toString()).get.file_name' target='_blank'><span class="doc_view" title="Click to download the document."></span></a>
+													<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.get.toString(), "TASK", "UPDATE")'><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+													<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.get.toString())' id="Tarea_@doc.Id.get.toString()" class="delete-doc @doc.Id.get.toString()"><span class="doc-delete" title="Delete Document"></span></a>
 												</span>
 											</li>
 										}
@@ -354,8 +354,8 @@
 													<span class="doc_action bold"> @Messages("document.action")</span>
 										</li>
 										@for(doc <- documents){
-											@if(!DocumentService.findAllPreviousVersionDocuments(doc.Id.toString()).isEmpty){
-												@for(version <- DocumentService.findAllPreviousVersionDocuments(doc.Id.toString())){
+											@if(!DocumentService.findAllPreviousVersionDocuments(doc.Id.get.toString()).isEmpty){
+												@for(version <- DocumentService.findAllPreviousVersionDocuments(doc.Id.get.toString())){
 													@{i = i+1}
 													<li class="@if( i%2==0 ){ search-result-datarow-even prev-doc-listing prev-doc-listing-@doc.Id.toString()}else{ search-result-datarow-odd prev-doc-listing prev-doc-listing-@doc.Id.toString()}">
 														<span class="doc_title">@doc.title</span> 
@@ -365,8 +365,8 @@
 														<span class="doc_action"> 
 															<span class="doc_info" title="@version.version_notes"></span>
 															<a href='/documents/@version.file_name' target='_blank'><span class="doc_view" title="Click to download the document"></span></a>
-															<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.toString(), "TASK", "UPDATE")' class="update-doc display-none"><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
-															<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.toString())' id="Tarea_@doc.Id.toString()" class="delete-doc @doc.Id.toString() display-none"><span class="doc-delete" title="Delete Document"></span></a>
+															<a href='@controllers.Frontend.routes.Documents.uploadDocument(doc.Id.get.toString(), "TASK", "UPDATE")' class="update-doc display-none"><span class="doc_edit" title="Click to uplaod the new version of the document."></span> </a>
+															<a href='@controllers.Frontend.routes.Documents.documentDelete(doc.Id.get.toString())' id="Tarea_@doc.Id.toString()" class="delete-doc @doc.Id.toString() display-none"><span class="doc-delete" title="Delete Document"></span></a>
 														</span>
 													</li>
 												}
@@ -381,7 +381,9 @@
 	 				</div>
 				</div>
 		  </div>
-    	
+		  
+		  
+   		
 		    
 		  </div> 
 		  <div id="dialog-confirm"></div>
@@ -417,7 +419,7 @@
 		
 		renderSubTaskGanttChart();
 		
-			 @if( utils.UserAccess.checkAccess(req,"project_gantt")){
+			 @*@if( utils.UserAccess.checkAccess(req,"project_gantt")){
 				var url ="/get-spi-graph-task?task_id=@taskDetail.get.tId.get.toString()";
 				$.get(url, function(data) {
 				 var json_var = $.parseJSON(data);
@@ -640,7 +642,7 @@
 							zoomType : 'xy'
 						},
 							   title: {
-					            text: 'Earn Value Chart'
+					            text: 'Gráfico Valor Ganado'
 					        },
 
 						xAxis : {
@@ -672,8 +674,44 @@
 				 }
 					});//ajax get end
 				
-			}	
-		@*renderEarnValue($("#task_id").val());*@
+			}*@	
+		renderEarnValue($("#task_id").val());
+		renderEarnValuepro($("#task_id").val());
+		var changeSet = $("#task_changeset").val();
+						var endDateChanges = "";
+						var startDate = "";
+						if (changeSet != '') {
+							var jsonObj = $.parseJSON(changeSet);
+							$
+									.each(
+											jsonObj,
+											function(idx, obj) {
+												if (obj.fieldName == "Planned End Date") {
+													endDateChanges = endDateChanges
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
+												} else if (obj.fieldName == "Planned Start Date") {
+													startDate = startDate
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
+												}
+											});
+						}
+						$('.task-data').data('powertip', function() {
+							if ($(this).attr('id') == "plan_end_date") {
+								return endDateChanges;
+							} else if ($(this).attr('id') == "plan_start_date") {
+								return startDate;
+							}
+
+						});
+
+						$('.task-data').powerTip({
+							placement : 'ne', // north-east tooltip position
+							mouseOnToPopup : true
+						});
 	});
 
 	function isIE() {
@@ -683,7 +721,4 @@
 	}
 </script>
 </body>	
-	
-	
 </html>
-
