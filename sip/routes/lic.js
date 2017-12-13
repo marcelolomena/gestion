@@ -19,7 +19,7 @@ var traduccionController = require('../controllers/lic/traduccion');
 
 var planillaController = require('../controllers/lic/planilla');
 
-var instalacionController = require('../controllers/lic/instalacion');
+// var instalacionController = require('../controllers/lic/instalacion');
 var ajusteController = require('../controllers/lic/ajuste');
 
 var compraTramiteController = require('../controllers/lic/compratramite');
@@ -116,9 +116,9 @@ module.exports = function (passport) {
     router.route('/lic/traduccion')
         .get(isAuthenticated, traduccionController.list);
 
-    router.route('/lic/instalacion')
-        .get(isAuthenticated, instalacionController.list)
-        .post(isAuthenticated, instalacionController.action);
+    // router.route('/lic/instalacion')
+    //     .get(isAuthenticated, instalacionController.list)
+    //     .post(isAuthenticated, instalacionController.action);
 
     router.route('/lic/ajuste')
         .get(isAuthenticated, ajusteController.list)
@@ -204,6 +204,9 @@ module.exports = function (passport) {
 
     router.route('lic/instalacionSolicitud')
         .get(isAuthenticated, instalacionSolicitudController.list)
+
+    router.route('/lic/misAutorizaciones')
+        .get(isAuthenticated, instalacionSolicitudController.misAutorizaciones);
 
 
     // router.route('/lic/reservaAutorizado')

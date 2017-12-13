@@ -12,7 +12,6 @@ entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
 entity.belongsTo(models.user, {
-    as: 'solicitante',
     foreignKey: 'idUsuario'
 });
 
@@ -27,18 +26,14 @@ var includes = [{
 function map(req) {
     return {
         id: req.body.id,
-        idProducto: req.body.idProducto,
-        estado: req.body.estadoAutorizacion,
-        fechaAutorizacion: req.body.fechaAutorizacion,
-        comentarioAutorizacion: req.body.comentarioAutorizacion,
-        codAutoriza: req.body.codAutoriza,
-        idUsuarioAutoriza: req.body.idUsuarioAutoriza
+        idProducto: req.body.idProducto
     }
 }
 
 
 function list(req, res) {
     var id = req.params.id;
+    var usuario = req.session.passport.user;
     var page = 1
     var rows = 10
     var filters = req.params.filters
@@ -51,30 +46,27 @@ function list(req, res) {
                 foreignKey: 'idProducto'
             });
             models.instalacion.belongsTo(models.user, {
-                as: 'solicitante',
                 foreignKey: 'idUsuario'
             });
             models.instalacion.count({
-                // where: {
-                //     estado: [aprob, autorizado, denegado]
-                // },
+                where: {
+                    idUsuario: usuario
+                },
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 models.instalacion.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
                     order: ['estado'],
-                    // where: {
-                    //     estado: [aprob, autorizado, denegado]
-                    // },
+                    where: {
+                        idUsuario: usuario
+                    },
                     include: [{
                         model: models.producto
                     }, {
-                        model: models.user,
-                        as: 'solicitante'
+                        model: models.user
                     }]
                 }).then(function (instal) {
-                    //logger.debug(solicitudcotizacion)
                     return res.json({
                         records: records,
                         total: total,
@@ -92,6 +84,16 @@ function list(req, res) {
     });
 }
 
+function misAutorizaciones(req, res) {
+    models.sequelize.query("select a.idproducto, b.nombre " +
+    "from lic.reserva a " +
+    "join lic.producto b on a.idproducto = b.id " +
+    "where a.idusuario = " + req.session.passport.user + " and a.estado = 'Autorizado'").spread(function (rows) {
+        return res.json(rows);
+    });
+}
+
 module.exports = {
-    list: list
+    list: list,
+    misAutorizaciones: misAutorizaciones
 };

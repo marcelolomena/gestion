@@ -36,7 +36,7 @@
                 editable: true,
                 edittype: 'select',
                 editoptions: {
-                    dataUrl: '/lic/getProductoCompra',
+                    dataUrl: '/lic/misAutorizaciones',
                     buildSelect: function (response) {
                         var rowData = $table.getRowData($table.getGridParam('selrow'));
                         var thissid = rowData.nombre;
