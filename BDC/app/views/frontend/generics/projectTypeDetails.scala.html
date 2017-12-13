@@ -72,15 +72,13 @@
 
 			    <ul class="width_full" id="t_data_list">
 			    	<li class="header_task">
-			    		<div class="task_title"> @Messages("maintenance.task")</div>
-			    		<div class="task_owner_name"> @Messages("maintenance.tasktype")</div>
-			    		<div class="task_discipline"> @Messages("maintenance.discipline")</div>
+			    		<div class="task_title">@Messages("maintenance.task")</div>
+			    		<div class="task_owner_name">@Messages("maintenance.tasktype")</div>
+			    		<div class="task_discipline">@Messages("maintenance.discipline")</div>
 			    		<div class="task_user_role">@Messages("maintenance.userrole")</div>
-			    		
-			    		<div class="task_staus"> @Messages("maintenance.deliverable")</div>
-			    		<div class="task_plan_time"> @*@Messages("maintenance.remark")*@
-			    								Dependencias</div>
-			    		<div class="task_action"> @Messages("maintenance.action")</div>
+			    		<div class="task_staus">@Messages("maintenance.deliverable")</div>
+			    		<div class="task_plan_time">Dependencias</div>
+			    		<div class="task_action">@Messages("maintenance.action")</div>
 			    	</li>
     			    @if(tasks.size>0){
 				    	@for( (m , index)<- tasks.zipWithIndex){
@@ -132,9 +130,7 @@
 			    				}
 					    			
 					    		</div>
-					    		
-					    		</div>
-				    		
+
 					    		<div  class="task_action">
 				    				@*<a href="@controllers.Frontend.routes.Generics.editGenericTask(m.tId.get.toString)" class="edit-icon display-none" style="margin-left:17px;">	<span id="st_@m.tId" class="show_tasks_details"></span>	</a>
 				    				

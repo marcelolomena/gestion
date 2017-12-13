@@ -55,8 +55,8 @@ object ConfigMailAlertService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val lastsaved = SQL(
         """
-          insert art_risk_alert_conf ( uid, em1, em2, em3, tpl, fec, is_active) values (
-           {uid},{em1},{em2},{em3},{tpl},{fec},{is_active})
+          insert art_risk_alert_conf ( uid, em1, em2, em3, tpl, fec, is_active, description) values (
+           {uid},{em1},{em2},{em3},{tpl},{fec},{is_active},{description})
           """).on(
         'description -> conf.uid,
         'em1 -> conf.em1,
@@ -64,7 +64,8 @@ object ConfigMailAlertService extends CustomColumns {
         'em3 -> conf.em3,
         'tpl -> conf.tpl,
         'fec -> conf.fec,
-        'is_active -> conf.is_active).executeInsert(scalar[Long].singleOpt)
+        'is_active -> conf.is_active,
+        'description ->conf.description).executeInsert(scalar[Long].singleOpt)
       lastsaved.last
     }
   }
@@ -74,7 +75,7 @@ object ConfigMailAlertService extends CustomColumns {
     DB.withConnection { implicit connection =>
       SQL(
         """
-          UPDATE art_risk_alert_conf SET uid={uid},em1={em1},em2={em2},em3={em3},tpl={tpl},fec={fec} WHERE id = {id}
+          UPDATE art_risk_alert_conf SET uid={uid},em1={em1},em2={em2},em3={em3},tpl={tpl},fec={fec},description={description} WHERE id = {id}
         """).on(
         'id -> obj.id.get,
         'uid -> obj.uid,
@@ -82,7 +83,8 @@ object ConfigMailAlertService extends CustomColumns {
         'em2 -> obj.em2,
         'em3 -> obj.em3,
         'tpl -> obj.tpl,
-        'fec -> new Date()).executeUpdate()
+        'fec -> new Date(),
+        'description -> obj.description).executeUpdate()
     }
   }
 

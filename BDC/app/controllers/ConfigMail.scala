@@ -49,7 +49,8 @@ object ConfigMail extends Controller with Secured {
         case None =>
           Redirect(routes.Category.categoryList())
         case Some(conf: ConfigMailAlert) =>
-          val obj = ConfigMailAlert(conf.id, conf.uid, conf.em1, conf.em2, conf.em3, conf.tpl, conf.fec, conf.is_active)
+          val obj = ConfigMailAlert(conf.id, conf.uid, conf.em1, conf.em2, conf.em3,
+            conf.tpl, conf.fec, conf.is_active, conf.description)
           Ok(views.html.configMail.editConfigMail(username, ARTForms.configMailForm.fill(obj)))
       }
     } else {
@@ -72,7 +73,8 @@ object ConfigMail extends Controller with Secured {
           objSM.get.em3,
           objSM.get.tpl,
           objSM.get.fec,
-          objSM.get.is_active
+          objSM.get.is_active,
+          objSM.get.description
         )
         Ok(views.html.configMail.editConfigMail(username, ARTForms.configMailForm.fill(obj)))
       } else {
@@ -112,7 +114,8 @@ object ConfigMail extends Controller with Secured {
           //BadRequest(views.html.category.categoryAdd(username,ARTForms.categoryForm.withError("description", Messages.get(langObj, "Ya existe esta categoría")).fill(success)))
         //} else {
           val uid = Integer.parseInt(request.session.get("uId").get)
-          val obj = ConfigMailAlert(success.id, uid, success.em1,success.em2,success.em3,success.tpl,success.fec, active)
+          val obj = ConfigMailAlert(success.id, uid, success.em1,
+            success.em2,success.em3,success.tpl,success.fec, active, success.description)
           val last = ConfigMailAlertService.saveConfig(obj)
           /**
             * Activity log
@@ -171,7 +174,8 @@ object ConfigMail extends Controller with Secured {
               success.em3,
               success.tpl,
               success.fec,
-              success.is_active)
+              success.is_active,
+              success.description)
             val lastid = ConfigMailAlertService.updateConfig(objUpdate)
             //println("lastid : "+ lastid.get.toString)
             /**

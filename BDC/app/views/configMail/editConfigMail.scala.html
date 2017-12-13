@@ -38,7 +38,7 @@ Header panel
                 <p class="block-heading">@Messages("confmail.edit")</p>
                 <div class="block-body">
                     @form(action = routes.ConfigMail.updateConfig, 'id->"myConfigMailEdit") {
-
+                    @inputText(myConfigMailForm("description"),'_label ->Messages("confmail.desc"),'placeholder->Messages("confmail.placeholder.desc"),'class->"span4",'name -> "description")
                     @inputText(myConfigMailForm("em1"),'_label ->Messages("confmail.em1"),'placeholder->Messages("confmail.placeholder.em1"),'class->"span4",'name -> "em1")
                     @inputText(myConfigMailForm("em2"),'_label ->Messages("confmail.em2"),'placeholder->Messages("confmail.placeholder.em2"),'class->"span4",'name -> "em2")
                     @inputText(myConfigMailForm("em3"),'_label ->Messages("confmail.em3"),'placeholder->Messages("confmail.placeholder.em3"),'class->"span4",'name -> "em3")

@@ -5,38 +5,15 @@ import java.text.SimpleDateFormat
 import anorm.SQL
 import anorm.SqlParser.scalar
 import anorm.sqlToSimple
-import models.CustomColumns
-import models.RiskManagementMaster
-import models.RiskManagementIssue
 import play.api.Play.current
 import play.api.db.DB
 import play.i18n.Lang
 import java.util.Date
-
-import models.ProgramMaster
-import models.RiskStatus
-import models.Project
-
 import scala.util.Random
-import models.Tasks
-import models.RiskManagement
-import models.AlertReportFull
-import models.ProgramDates
+import models._
 import org.apache.commons.lang3.StringUtils
 import play.api.Logger
-//import net.sf.mpxj.planner.schema.Calendar
-import java.util.Calendar
-//import org.joda.time.DateTime
-import models.RiskAlerts
-import models.RiskAlertsExtended
-import models.RiskCategory
-import models.Users
-import models.SpiCpiCalculations
-//import views.html.frontend.task.issueDetails
-import models.UserSetting
 import play.Play
-import models.RiskManagementIssueMain
-import models.RiskAlertsIncreased
 
 object RiskService extends CustomColumns {
 

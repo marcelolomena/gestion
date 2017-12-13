@@ -23,7 +23,7 @@
 					@if(utils.UserAccess.isBoss(req)){
 						<li><a id="personal" href="/personal" > @Messages("header.personal")</a></li>
 					}
-     				 <li><a href="@controllers.Frontend.routes.ApplicationController.kanban" id="kanban_id">Kanban</a></li>
+     				@*<li><a href="@controllers.Frontend.routes.ApplicationController.kanban" id="kanban_id">Kanban</a></li>*@
 					@if(utils.UserAccess.checkAccess(req,"tab_program")){
 						<li><a id="programs" href="/programs" > @Messages("header.programs")</a></li>
 					}

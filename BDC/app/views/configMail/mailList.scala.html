@@ -48,18 +48,20 @@ Header panel
                 <table class="table">
                     <thead>
                     <tr class="first-row">
-                        <th> @Messages("addCategory.id") </th>
-                        <th> @Messages("confmail.em1")</th>
-                        <th> @Messages("confmail.em2")</th>
-                        <th> @Messages("confmail.em3")</th>
+                        <th>@Messages("addCategory.id")</th>
+                        <th>@Messages("confmail.desc")</th>
+                        <th>@Messages("confmail.em1")</th>
+                        <th>@Messages("confmail.em2")</th>
+                        <th>@Messages("confmail.em3")</th>
                         <th>@Messages("addCategory.active")</th>
-                        <th style="width: 26px;">@Messages("addDepartment.action") </th>
+                        <th style="width: 26px;">@Messages("addDepartment.action")</th>
                     </tr>
                     </thead>
                     <tbody>
                     @for((div,index) <- mails.zipWithIndex) {
                     <tr>
                         <td>@div.id</td>
+                        <td>@div.description</td>
                         <td>@div.em1</td>
                         <td>@div.em2</td>
                         <td>@div.em3</td>
