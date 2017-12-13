@@ -44,7 +44,7 @@
 	   	   *@
    @for(t <- tasks){
    		<span class="multiselect" id="multiselect_@t.tId.get" >
-   			 			<label><input type="checkbox" name="task_depend[]" value="@t.tId.get" />@if(t.task_title.length()>200){@t.task_title.substring(0,200)...}else{@t.task_title}</label>
+   		 			<label><input type="checkbox" name="task_depend[]" value="@t.tId.get" />@if(t.task_title.length()>200){@t.task_title.substring(0,200)...}else{@t.task_title}</label>
    		</span>
    }
 
