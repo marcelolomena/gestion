@@ -21,7 +21,7 @@
     }
 
     var initGrid = function (viewModel) {
-        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'estado', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.prmEdit.beforeSubmit = beforeSubmit;
 

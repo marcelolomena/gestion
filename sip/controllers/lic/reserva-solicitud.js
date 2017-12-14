@@ -109,7 +109,6 @@ function listSolicitud(req, res) {
                         model: models.user
                     }]
                 }).then(function (autorizados) {
-                    //logger.debug(solicitudcotizacion)
                     return res.json({
                         records: records,
                         total: total,
@@ -126,10 +125,6 @@ function listSolicitud(req, res) {
         }
     });
 }
-
-
-
-
 
 function list(req, res) {
     req.query.sord = 'asc',
@@ -226,34 +221,7 @@ function estado(req, res) {
                     return result;
                 });
             }
-
-
-
-
-
-
-
-
-
-
-
-
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 function usuariocui(req, res) {
@@ -303,9 +271,6 @@ function solicitudReservaPDF(req, res) {
              join dbo.art_user d on a.idusuario = d.uid
              WHERE a.id = :id
             `
-        //Si continuidad sql_1, proyectos sql_2
-
-        //console.log("****SQL:"+sql_ok);
         sequelize.query(sql_ok, {
             replacements: {
                 id: req.params.id
@@ -321,9 +286,6 @@ function solicitudReservaPDF(req, res) {
             var datum = {
                 "reserva": rows
             }
-
-
-
             jsreport.init().then(function () {
                 return jsreport.render({
                     template: {
@@ -364,8 +326,6 @@ function solicitudReservaPDF(req, res) {
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idProducto', includes, mapper);
 }
-
-
 
 module.exports = {
     list: list,

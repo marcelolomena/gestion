@@ -19,7 +19,7 @@ var traduccionController = require('../controllers/lic/traduccion');
 
 var planillaController = require('../controllers/lic/planilla');
 
-var instalacionController = require('../controllers/lic/instalacion');
+// var instalacionController = require('../controllers/lic/instalacion');
 var ajusteController = require('../controllers/lic/ajuste');
 
 var compraTramiteController = require('../controllers/lic/compratramite');
@@ -32,6 +32,7 @@ var detalleRecepcionController = require('../controllers/lic/detalle-recepcion')
 var snowController = require('../controllers/lic/snow');
 var reservaSolicitudController = require('../controllers/lic/reserva-solicitud');
 var reservaAutorizacionController = require('../controllers/lic/reserva-autorizacion');
+var instalacionSolicitudController = require('../controllers/lic/instalacion');
 var addmController = require('../controllers/lic/addm');
 var aprobacionController = require('../controllers/lic/reserva-aprobacion');
 var noaprobadasController = require('../controllers/lic/reserva-noaprobadas');
@@ -116,9 +117,9 @@ module.exports = function (passport) {
     router.route('/lic/traduccion')
         .get(isAuthenticated, traduccionController.list);
 
-    router.route('/lic/instalacion')
-        .get(isAuthenticated, instalacionController.list)
-        .post(isAuthenticated, instalacionController.action);
+    // router.route('/lic/instalacion')
+    //     .get(isAuthenticated, instalacionController.list)
+    //     .post(isAuthenticated, instalacionController.action);
 
     router.route('/lic/ajuste')
         .get(isAuthenticated, ajusteController.list)
@@ -199,8 +200,16 @@ module.exports = function (passport) {
     router.route('/lic/reserva/:pId')
         .get(isAuthenticated, reservaSolicitudController.listChilds);
 
-        router.route('/lic/getProductoCompra')
+    router.route('/lic/getProductoCompra')
         .get(isAuthenticated, productoController.getProductoCompra);
+
+    router.route('lic/instalacionSolicitud')
+        .get(isAuthenticated, instalacionSolicitudController.list)
+
+    router.route('/lic/misAutorizaciones')
+        .get(isAuthenticated, instalacionSolicitudController.misAutorizaciones);
+
+
     // router.route('/lic/reservaAutorizado')
     //     .get(isAuthenticated, recepcionController.listAprobados);
     // router.route('/lic/reservaAprobacion')

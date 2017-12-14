@@ -122,11 +122,29 @@ function action(req, res) {
                 req.body.codAutoriza = sec;
                 return base.create(entity, map(req), res);
             case 'edit':
-                var hoy = "" + new Date().toISOString();
-                req.body.codAutoriza = sec;
-                req.body.idUsuarioAutoriza = req.session.passport.user;
-                req.body.fechaAutorizacion = hoy;
-                return base.update(entity, map(req), res);
+                return base.findById(entity, req.body.id)
+                    .then(function (reser) {
+                        if (reser.estado!='Autorizado') {
+                            return base.findById(models.producto, req.body.idProducto)
+                                .then(function (prod) {
+                                    var updData = {
+                                        id: reser.idProducto
+                                    }
+                                    updData.licReserva = prod.licReserva + reser.numlicencia;
+                                    base.update(models.producto, updData, res);
+                                    var hoy = "" + new Date().toISOString();
+                                    req.body.codAutoriza = sec;
+                                    req.body.idUsuarioAutoriza = req.session.passport.user;
+                                    req.body.fechaAutorizacion = hoy;
+                                    return base.update(entity, map(req), res);
+                                })
+                        }
+                    })
+
+
+
+
+
             case 'del':
                 return base.destroy(entity, req.body.id, res);
         }

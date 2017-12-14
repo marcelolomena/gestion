@@ -1,45 +1,99 @@
 'use strict';
 var models = require('../../models');
+var sequelize = require('../../models/index').sequelize;
+var utilSeq = require('../../utils/seq');
 var base = require('./lic-controller');
-
+var _ = require('lodash');
+var logger = require('../../utils/logger');
+var secuencia = require("../../utils/secuencia");
 
 var entity = models.instalacion;
+entity.belongsTo(models.producto, {
+    foreignKey: 'idProducto'
+});
+entity.belongsTo(models.user, {
+    foreignKey: 'idUsuario'
+});
+
+var includes = [{
+        model: models.producto
+    },
+    {
+        model: models.user
+    }
+];
+
 function map(req) {
     return {
-        id: req.body.id || 0,
-        idFabricante: req.body.idFabricante,
-        idTipoInstalacion: req.body.idTipoInstalacion,
-        idClasificacion: req.body.idClasificacion,
-        idTipoLicenciamiento: req.body.idTipoLicenciamiento,
-        licStock: req.body.licStock,
-        licDisponible: req.body.licDisponible,
-        idAlertaRenovacion: req.body.idAlertaRenovacion,
-        utilidad: req.body.utilidad,
-        comentarios: req.body.comentarios,
-        software: req.body.software,
-        borrado: req.body.borrado || 1
+        id: req.body.id,
+        idProducto: req.body.idProducto
     }
 }
 
+
 function list(req, res) {
-    base.list(req, res, entity, [], function (data) {
-        return data;
+    var id = req.params.id;
+    var usuario = req.session.passport.user;
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            //logger.debug(data)
+            models.instalacion.belongsTo(models.producto, {
+                foreignKey: 'idProducto'
+            });
+            models.instalacion.belongsTo(models.user, {
+                foreignKey: 'idUsuario'
+            });
+            models.instalacion.count({
+                where: {
+                    idUsuario: usuario
+                },
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.instalacion.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    order: ['estado'],
+                    where: {
+                        idUsuario: usuario
+                    },
+                    include: [{
+                        model: models.producto
+                    }, {
+                        model: models.user
+                    }]
+                }).then(function (instal) {
+                    return res.json({
+                        records: records,
+                        total: total,
+                        page: page,
+                        rows: instal
+                    });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({
+                        error_code: 1
+                    });
+                });
+            })
+        }
     });
 }
 
-function action(req, res) {
-    switch (req.body.oper) {
-        case 'add':
-            return base.create(entity, map(req), res);
-        case 'edit':
-            return base.update(entity, map(req), res);
-        case 'del':
-            return base.destroy(entity, req.body.id, res);
-    }
+function misAutorizaciones(req, res) {
+    models.sequelize.query("select a.idproducto, b.nombre " +
+    "from lic.reserva a " +
+    "join lic.producto b on a.idproducto = b.id " +
+    "where a.idusuario = " + req.session.passport.user + " and a.estado = 'Autorizado'").spread(function (rows) {
+        return res.json(rows);
+    });
 }
-
 
 module.exports = {
     list: list,
-    action: action
+    misAutorizaciones: misAutorizaciones
 };
