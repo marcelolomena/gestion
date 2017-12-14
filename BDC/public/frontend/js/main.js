@@ -111,10 +111,11 @@ $(document).ready(
 			$(".edit-hours").off("click").on("click", renderEditProgramHours);
 			
 			$(".edit-status").off("click").live("click", renderEditProgramStatus);
-			
 
 			$(".edit-estimated-cost").off("click").on("click",
 					renderEditProgramEstimatedCost);
+
+			//$(".edit-plan-time").off("click").on("click",renderEditPlanTime);
 
 			$(".edit-project-hours").on("click", renderEditprojectHours);
 
@@ -5264,6 +5265,7 @@ function renderSubmitProgramHours() {
  */
 function renderEditProgramEstimatedCost() {
 	var _this = $(".edit-estimated-cost");
+	console.log(_this)
 	if ($(".estimated_cost").hasClass("add-border") == false) {
 		_this.addClass("update-cost");
 		$(".estimated_cost_program").addClass("add-border");

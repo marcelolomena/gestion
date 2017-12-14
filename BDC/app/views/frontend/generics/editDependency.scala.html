@@ -29,24 +29,189 @@
     background-color:#5BC3E6;
 }
 
-</style>          
+</style>
+<script>
+$(document).ready(function() {
+	$('.edit-plan-time').click(function(){
+		var key = $(this).attr('id').split("_")[1]
+		console.log("key : " + key)
+		renderEditPlanTime(key)
+	});
+
+	/**
+	 * Update plan time hours
+	 */
+	function renderEditPlanTime(key) {
+		var _this = $("#spn_"+key);
+		console.dir(_this)
+		if ($("#ptd_"+key).hasClass("add-border") == false) {
+			_this.addClass("update-plan-time");
+			$("#ptd_"+key).addClass("add-border");
+			//$(".update-plan-time").on("click", renderSubmitTaskPlantime);
+			$("#ptd_"+key).removeAttr('readonly');
+			$("#ptd_"+key).removeAttr('disabled');
+		} else {
+			$("#ptd_"+key).removeClass("add-border");
+			_this.removeClass("update-plan-time");
+			$("#ptd_"+key).attr('readonly', true);
+			$("#ptd_"+key).attr("disabled", "disabled");
+			$(".update-plan-time").unbind();
+		}
+	}
+
+
+	function renderSubmitTaskPlanTime() {
+		var program = $("#program").val();
+		var bool = true;
+		var estimated_cost = $(".plan_time_task").val().replace(/\./g, '');
+		if (estimated_cost == "") {
+			estimated_cost = "0"
+		} else {
+			var _value = estimated_cost;
+			var _message = "Por favor ingrese un número válido";
+			bool = validateNumeric(_value, _message, "est_cost");
+		}
+		if (bool) {
+			var url = "/update-task-plan-time?program=" + program
+					+ "&estimated_cost=" + estimated_cost;
+
+			$(".loader").css("display", "block");
+			$
+					.post(
+							url,
+							function(data) {
+								var json = $.parseJSON(data);
+								if (json.status == "Success") {
+									$("#dialog-confirm")
+											.html(
+													"Costo estimado del programa guardado"); // /Information
+									$("#dialog-confirm")
+											.dialog(
+													{
+														resizable : false,
+														modal : true,
+														title : "Información",
+														height : 150,
+														width : 300,
+														buttons : {
+															"Ok" : function() {
+																$(this).dialog(
+																		'close');
+																$("#pop-box-over")
+																		.css(
+																				"display",
+																				"none");
+																$("#dialog-confirm")
+																		.css(
+																				"display",
+																				"none");
+																$(
+																		".plan_time_task")
+																		.removeClass(
+																				"add-border");
+																$(
+																		".plan_time_task")
+																		.attr(
+																				"readonly",
+																				"readonly");
+																$(
+																		".plan_time_task")
+																		.attr(
+																				"disabled",
+																				"disabled");
+																$(
+																		".edit-plan-time")
+																		.removeClass(
+																				"update-plan-time");
+																$(".update-plan-time")
+																		.unbind();
+																return false;
+															}
+														}
+													});
+								} else {
+									$("#dialog-confirm").html(json.message); // /warning
+									$("#dialog-confirm")
+											.dialog(
+													{
+														resizable : false,
+														modal : true,
+														title : "Advertencia",
+														height : 150,
+														width : 500,
+														buttons : {
+															"Ok" : function() {
+																$(this).dialog(
+																		'close');
+																$("#pop-box-over")
+																		.css(
+																				"display",
+																				"none");
+																$("#dialog-confirm")
+																		.css(
+																				"display",
+																				"none");
+																$(
+																		".estimated_cost_program")
+																		.addClass(
+																				"add-red-border");
+																$(
+																		".estimated_cost_program")
+																		.removeAttr(
+																				"readonly");
+																$(
+																		".estimated_cost_program")
+																		.removeAttr(
+																				"disabled");
+																$(
+																		".edit-estimated-cost")
+																		.addClass(
+																				"update-cost");
+																$(".update-cost")
+																		.unbind();
+																return false;
+															}
+														}
+													});
+								}
+								$(".update-cost").unbind();
+								$(".edit-estimated-cost")
+										.removeClass("update-cost");
+								$(".edit-estimated-cost").off("click").on("click",
+										renderEditProgramEstimatedCost);
+							});
+			$(".loader").css("display", "none");
+		}
+	}
+});
+</script>
 <div class="block-body width_full" style="min-height:220px;float: left;" id="manage-tasks">
 <p style="width:96%"><span class="type">@Messages("task.manageTask.selecttasks")</span><span class="close-popup-box"></span></p>
 <div class="dependency-select" style="width: 90%">
 	<div class="width_full" id="depends-task-list">
-	
-	       @*<select name="task" id="task" class="input-xlarge ">
-	       <option value=""> @Messages("task.manageTask.nodependencies")</option>
-	       @for(t <- tasks){
-	       		  	<option value="@t.tId.get" >@t.task_title </option>
-	       }
-	   	   </select> 
-	   	   *@
-   @for(t <- tasks){
+		<table>
+		@for((t,index) <- tasks.zipWithIndex){
+			<tr>
+				<td>
    		<span class="multiselect" id="multiselect_@t.tId.get" >
-   		 			<label><input type="checkbox" name="task_depend[]" value="@t.tId.get" />@if(t.task_title.length()>200){@t.task_title.substring(0,200)...}else{@t.task_title}</label>
+   		 	<label><input type="checkbox" name="task_depend[]" value="@t.tId.get" />@if(t.task_title.length()>200){@t.task_title.substring(0,200)...}else{@t.task_title}</label>
+
    		</span>
-   }
+				</td>
+				<td>
+					<table>
+						<tr>
+					@if(t.plan_time.floatValue()>0){
+						<td><input id="ptd_@t.tId.get" type="text" disabled="disabled" value="@t.plan_time" maxlength="5" class="plan_time_task" readonly="readonly"/></td>
+					}else{
+						<td><input id="ptd_@t.tId.get" type="text" disabled="disabled" value="0" maxlength="5" class="plan_time_task" readonly="readonly"/></td>
+					}<td><span id="spn_@t.tId.get" class="edit-plan-time"></span></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+	   }
+		</table>
 
 	<span style="margin-top: 20px;float:left" class="display-none">
 	       <select name="dependency_type" id="dependency_type" class="input-xlarge ">
@@ -71,3 +236,4 @@
 	<input type="hidden" id="myTasks" value="@selected_tasks"/> 
 	<input type="hidden" id="task_id" value="@task_id"/>
 </div>
+<div id="dialog-confirm"></div>

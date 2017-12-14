@@ -5461,7 +5461,7 @@ form button {
 	padding: 0;
 }
 
-.program-data .planned_hours,.p_values .estimated_cost_program {
+.program-data .planned_hours,.p_values .estimated_cost_program .plan_time_task{
 	border: none;
 	color: #666;
 	margin: 0;
@@ -5470,7 +5470,7 @@ form button {
 	background: #CFD3D3;
 }
 
-.estimated_cost_program{
+.estimated_cost_program, .plan_time_task{
 		border: none;
 	color: #666;
 	margin: 0;
@@ -5479,8 +5479,7 @@ form button {
 	background: #CFD3D3;
 }
 
-
-.edit-hours,.edit-project-hours ,.edit-estimated-cost{
+.edit-hours,.edit-project-hours ,.edit-estimated-cost, .edit-plan-time{
 	background-image: url("../images/edit.png");
 	background-repeat: no-repeat;
 	float: left;
@@ -5511,7 +5510,7 @@ form button {
 	margin-top: 0;
 	width: 23px;
 }
-.update-cost {
+.update-cost, .update-plan-time {
 	background-image: url("../images/right_sign.png");
 	background-repeat: no-repeat;
 	height: 22px;
