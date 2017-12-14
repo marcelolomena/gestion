@@ -8,10 +8,6 @@ module.exports = function(sequelize, DataTypes) {
         primaryKey: true,
         autoIncrement: true
       },
-      traduccion: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-      },
       type: {
         type: DataTypes.STRING(255),
         allowNull: true
