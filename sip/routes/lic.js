@@ -219,15 +219,21 @@ module.exports = function (passport) {
 
     // router.route('/lic/reservaAutorizacion')
     //     .get(isAuthenticated, reservaSolicitudController.list
-
-    router.route('/graficolicencia')
+     
+    router.route('/graficolicencia/:id')
         .get(isAuthenticated, graficoController.getGraficoLicencia);
         
-    router.route('/graficosoporte')
+    router.route('/graficosoporte/:id')
         .get(isAuthenticated, graficoController.getGraficoSoporte);  
         
     router.route('/fabricantesgrafico')
         .get(isAuthenticated, graficoController.getFabricantesConCompras);        
+        
+    router.route('/graficogetcompras/:id')
+        .get(isAuthenticated, graficoController.getCompras);          
+        
+    router.route('/graficogetcomprassop/:id')
+        .get(isAuthenticated, graficoController.getComprasSoporte);     
         
     return router;
 };

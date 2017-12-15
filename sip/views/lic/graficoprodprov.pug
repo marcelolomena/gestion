@@ -1,14 +1,4 @@
-extends base.pug
-block titulo
-  title SIP Banco de Chile - Sistema Integrado de Presupuesto - Contratos
-  link(rel='stylesheet', href='/stylesheets/formulario_consulta.css', type='text/css', media='screen', charset='utf-8')    
-block jsgrilla
-    script(src='/javascripts/highcharts/highcharts.js')
-    script(type='text/javascript', src='/javascripts/views/lic/graficoprodprov.js')
-block titulogrilla
-  .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Seguimiento de Proveedor
-block grilla
+.row
   .cajaFormulario
     .formSap
       | Fabricante :  
@@ -21,6 +11,6 @@ block grilla
     #container(style='width: 50%; float: left; display: inline-block;')
       table#grid
       #pager  
-    #container2(style='width: 100%; float: center; display: inline-block;')
+    #container2(style='width: 50%; float: center; display: inline-block;')
       table#grid2
       #pager2         
