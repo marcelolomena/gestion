@@ -283,29 +283,12 @@ object GenericService extends CustomColumns {
 
   def findAllPredefinedTasksDetails(task_mode: String) = {
     DB.withConnection { implicit connection =>
-      //val genericTasks = GenericService.findGenericProjectTypeTasks(task_mode);
       var sqlString = "select * from art_predefined_task where is_active=1 AND tId NOT IN (select t.predefined_task_id from art_generic_task t where t.is_active=1 and t.task_mode='" + task_mode + "')";
-      // println("sqlString     "+sqlString)
       val result = SQL(sqlString).as(PredefinedTasks.predefined_tasks *)
-
       result
     }
   }
 
-  /*def getDependentTaskDetails(tasks:String)= {
-    DB.withConnection { implicit connection =>
-      for( s <- tasks.split(",")){
-        
-      }
-      //val genericTasks = GenericService.findGenericProjectTypeTasks(task_mode);
-      var sqlString =""
-      //"select * from art_predefined_task where is_active=1 AND tId NOT IN (select t.predefined_task_id from art_generic_task t where t.is_active=1 and t.task_mode='" + task_mode + "')";
-     // println("sqlString     "+sqlString)
-      val result = SQL(sqlString).as(PredefinedTasks.predefined_tasks *)
-
-      result
-    }
-  }*/
   def getPredefinedTasks(task_title: String) = {
     var isPresent = false
     DB.withConnection { implicit connection =>
@@ -356,6 +339,14 @@ object GenericService extends CustomColumns {
       newform
     } else {
       form
+    }
+  }
+
+  def updatePlanTime(task_id: String, plan_time: String) : Int = {
+    DB.withConnection { implicit connection =>
+      SQL("UPDATE art_generic_task SET plan_time = {plan_time} WHERE tId = {task_id}").on(
+        'task_id -> task_id,
+      'plan_time -> plan_time).executeUpdate()
     }
   }
 }

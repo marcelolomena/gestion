@@ -6,23 +6,7 @@
  */
 $(document).ready(
 		function() {
-			
-			Date.now = Date.now || function() { return +new Date; }; 
-
-			// $("#new-task").off("click").on("click", renderNewTask);
-
-			// $(".task_edit").live("click", renderTaskEdit);
-			// $(".edit_tasks_details").live("click", renderTaskEdit);
-
-			// $(".add_subtask").on("click", renderNewSubTask);
-
-			// $(".edit-sub-task").live("click", renderEditSubTask);
-
-			// $('#add-sub-task-form label').unbind('click');
-			
-			
-			
-			
+			Date.now = Date.now || function() { return +new Date; };
 			$('form label').click(
 					function(e) {
 						e.preventDefault();
@@ -114,8 +98,6 @@ $(document).ready(
 
 			$(".edit-estimated-cost").off("click").on("click",
 					renderEditProgramEstimatedCost);
-
-			//$(".edit-plan-time").off("click").on("click",renderEditPlanTime);
 
 			$(".edit-project-hours").on("click", renderEditprojectHours);
 
@@ -5265,7 +5247,6 @@ function renderSubmitProgramHours() {
  */
 function renderEditProgramEstimatedCost() {
 	var _this = $(".edit-estimated-cost");
-	console.log(_this)
 	if ($(".estimated_cost").hasClass("add-border") == false) {
 		_this.addClass("update-cost");
 		$(".estimated_cost_program").addClass("add-border");

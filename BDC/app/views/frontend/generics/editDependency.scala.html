@@ -34,7 +34,6 @@
 $(document).ready(function() {
 	$('.edit-plan-time').click(function(){
 		var key = $(this).attr('id').split("_")[1]
-		console.log("key : " + key)
 		renderEditPlanTime(key)
 	});
 
@@ -42,51 +41,44 @@ $(document).ready(function() {
 	 * Update plan time hours
 	 */
 	function renderEditPlanTime(key) {
-		var _this = $("#spn_"+key);
-		console.dir(_this)
 		if ($("#ptd_"+key).hasClass("add-border") == false) {
-			_this.addClass("update-plan-time");
-			$("#ptd_"+key).addClass("add-border");
-			//$(".update-plan-time").on("click", renderSubmitTaskPlantime);
-			$("#ptd_"+key).removeAttr('readonly');
-			$("#ptd_"+key).removeAttr('disabled');
+			$("#spn_" + key).addClass("update-plan-time");
+			$("#ptd_" + key).addClass("add-border");
+			$("#spn_" + key).click(function(){
+				renderSubmitTaskPlanTime(key)
+			});
+			$("#ptd_" + key).removeAttr('readonly');
+			$("#ptd_" + key).removeAttr('disabled');
 		} else {
-			$("#ptd_"+key).removeClass("add-border");
-			_this.removeClass("update-plan-time");
-			$("#ptd_"+key).attr('readonly', true);
-			$("#ptd_"+key).attr("disabled", "disabled");
+			$("#ptd_" + key).removeClass("add-border");
+			$("#spn_" + key).removeClass("update-plan-time");
+			$("#ptd_" + key).attr('readonly', true);
+			$("#ptd_" + key).attr("disabled", "disabled");
 			$(".update-plan-time").unbind();
 		}
 	}
 
-
-	function renderSubmitTaskPlanTime() {
-		var program = $("#program").val();
+	function renderSubmitTaskPlanTime(key) {
 		var bool = true;
-		var estimated_cost = $(".plan_time_task").val().replace(/\./g, '');
-		if (estimated_cost == "") {
-			estimated_cost = "0"
+		var plan_time = $("#ptd_"+key).val().replace(/\./g, '');
+
+		if (plan_time == "") {
+			plan_time = "0"
 		} else {
-			var _value = estimated_cost;
+			var _value = plan_time;
 			var _message = "Por favor ingrese un número válido";
 			bool = validateNumeric(_value, _message, "est_cost");
 		}
 		if (bool) {
-			var url = "/update-task-plan-time?program=" + program
-					+ "&estimated_cost=" + estimated_cost;
+			var url = "/update-task-plan-time?task_id=" + key
+					+ "&plan_time=" + plan_time;
 
 			$(".loader").css("display", "block");
-			$
-					.post(
-							url,
-							function(data) {
+			$.post(url, function(data) {
 								var json = $.parseJSON(data);
 								if (json.status == "Success") {
-									$("#dialog-confirm")
-											.html(
-													"Costo estimado del programa guardado"); // /Information
-									$("#dialog-confirm")
-											.dialog(
+									$("#dialog-confirm").html("Plan time saved"); // /Information
+									$("#dialog-confirm").dialog(
 													{
 														resizable : false,
 														modal : true,
@@ -95,44 +87,21 @@ $(document).ready(function() {
 														width : 300,
 														buttons : {
 															"Ok" : function() {
-																$(this).dialog(
-																		'close');
-																$("#pop-box-over")
-																		.css(
-																				"display",
-																				"none");
-																$("#dialog-confirm")
-																		.css(
-																				"display",
-																				"none");
-																$(
-																		".plan_time_task")
-																		.removeClass(
-																				"add-border");
-																$(
-																		".plan_time_task")
-																		.attr(
-																				"readonly",
-																				"readonly");
-																$(
-																		".plan_time_task")
-																		.attr(
-																				"disabled",
-																				"disabled");
-																$(
-																		".edit-plan-time")
-																		.removeClass(
-																				"update-plan-time");
-																$(".update-plan-time")
-																		.unbind();
+																$(this).dialog('close');
+																$("#pop-box-over").css("display", "none");
+																$("#dialog-confirm").css("display",	"none");
+																$("#ptd_" + key).removeClass("add-border");
+																$("#ptd_" + key).attr("readonly", "readonly");
+																$("#ptd_" + key).attr("disabled", "disabled");
+																$("#spn_" + key).removeClass("update-plan-time");
+																$(".update-plan-time").unbind();
 																return false;
 															}
 														}
 													});
 								} else {
 									$("#dialog-confirm").html(json.message); // /warning
-									$("#dialog-confirm")
-											.dialog(
+									$("#dialog-confirm").dialog(
 													{
 														resizable : false,
 														modal : true,
@@ -141,46 +110,66 @@ $(document).ready(function() {
 														width : 500,
 														buttons : {
 															"Ok" : function() {
-																$(this).dialog(
-																		'close');
-																$("#pop-box-over")
-																		.css(
-																				"display",
-																				"none");
-																$("#dialog-confirm")
-																		.css(
-																				"display",
-																				"none");
-																$(
-																		".estimated_cost_program")
-																		.addClass(
-																				"add-red-border");
-																$(
-																		".estimated_cost_program")
-																		.removeAttr(
-																				"readonly");
-																$(
-																		".estimated_cost_program")
-																		.removeAttr(
-																				"disabled");
-																$(
-																		".edit-estimated-cost")
-																		.addClass(
-																				"update-cost");
-																$(".update-cost")
-																		.unbind();
+																$(this).dialog('close');
+																$("#pop-box-over").css("display", "none");
+																$("#dialog-confirm").css("display", "none");
+																$("#ptd_" + key).addClass("add-red-border");
+																$("#ptd_" + key).removeAttr("readonly");
+																$("#ptd_" + key).removeAttr("disabled");
+																$("#spn_" + key).addClass("update-plan-time");
+																$(".update-plan-time").unbind();
 																return false;
 															}
 														}
 													});
 								}
-								$(".update-cost").unbind();
-								$(".edit-estimated-cost")
-										.removeClass("update-cost");
-								$(".edit-estimated-cost").off("click").on("click",
-										renderEditProgramEstimatedCost);
+								$(".update-plan-time").unbind();
+								$("#spn_" + key).removeClass("update-plan-time");
+								$("#spn_" + key).off("click").on("click", renderEditPlanTime(key));
 							});
 			$(".loader").css("display", "none");
+		}
+	}
+
+	function validateNumeric(_value, _message, key) {
+		var test_result = /^\d+$/.test(_value);
+		var isNotNumeric = false;
+		var chars = "0123456789";
+		var len = _value.length;
+		var char = "";
+		for (i = 0; i < len; i++) {
+			char = _value.charAt(i);
+			if (chars.indexOf(char) == -1) {
+				isNotNumeric = true;
+			}
+		}
+
+		if (isNotNumeric) {
+			$("#dialog-confirm").html(_message); // /warning
+			$("#dialog-confirm").dialog(
+					{
+						resizable : false,
+						modal : true,
+						title : "Warning",
+						height : 150,
+						width : 500,
+						buttons : {
+							"Ok" : function() {
+								$(this).dialog('close');
+								//$("#pop-box-over").css("display", "none");
+								$("#dialog-confirm").css("display", "none");
+								$("#ptd_" + key).addClass("add-red-border");
+								$("#ptd_" + key).removeAttr("readonly");
+								$("#ptd_" + key).removeAttr("disabled");
+								$("#spn_" + key).addClass("update-plan-time");
+
+								return false;
+							}
+						}
+					});
+			return false;
+		} else {
+			return true;
 		}
 	}
 });

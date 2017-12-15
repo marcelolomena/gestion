@@ -548,12 +548,12 @@ GET    /edit-project-type/$id<[A-Za-z0-9_-]+>                                   
 POST   /edit-project-type/$id<[A-Za-z0-9_-]+>                                                         controllers.Frontend.Generics.updateProjectType(id:String)
 GET    /edit-historic-project-type/$id<[A-Za-z0-9_-]+>                                                controllers.Frontend.Generics.editHistoricProjectType(id:String)
 POST   /edit-historic-project-type/$id<[A-Za-z0-9_-]+>                                                controllers.Frontend.Generics.updateHistoricProjectType(id:String)
+POST   /update-task-plan-time                                                                         controllers.Frontend.Generics.updatePlanTime(task_id: String,plan_time: String)
 
-
-#GET    /add-generic-project                         	controllers.Frontend.Generics.addGenericProject() 
-#POST   /add-generic-project                            controllers.Frontend.Generics.saveGenericProject()
-#GET    /edit-generic-project/$id<[A-Za-z0-9_-]+>       controllers.Frontend.Generics.editGenericProject(id:String)
-#POST   /edit-generic-project/$id<[A-Za-z0-9_-]+>       controllers.Frontend.Generics.updateGenericProject(id:String)
+#GET    /add-generic-project                         	                                              controllers.Frontend.Generics.addGenericProject()
+#POST   /add-generic-project                                                                          controllers.Frontend.Generics.saveGenericProject()
+#GET    /edit-generic-project/$id<[A-Za-z0-9_-]+>                                                     controllers.Frontend.Generics.editGenericProject(id:String)
+#POST   /edit-generic-project/$id<[A-Za-z0-9_-]+>                                                     controllers.Frontend.Generics.updateGenericProject(id:String)
 
 GET    /overview                                                                                      controllers.Frontend.Generics.overview
 GET    /historic-overview                                                                             controllers.Frontend.Generics.historicOverview

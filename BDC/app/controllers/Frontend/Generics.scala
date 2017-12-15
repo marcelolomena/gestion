@@ -881,6 +881,35 @@ object Generics extends Controller {
     }
   }
 
+  def updatePlanTime(task_id: String, plan_time: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      var node = new JSONObject()
+      //var project_estimated_cost: Double = 0
+      if (!StringUtils.isEmpty(task_id)) {
+        if (!StringUtils.isEmpty(plan_time)) {
+          val last_update = GenericService.updatePlanTime(task_id, plan_time)
+          /**
+            * Activity log
+            */
+          val act = Activity(ActivityTypes.Generic_Project_Type.id, "Generic Task update by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last_update)
+          Activity.saveLog(act)
+
+          node.put("status", "Success")
+        } else {
+          node.put("status", "Fail")
+          node.put("message", "Plan time Should not empty.")
+        }
+      } else {
+        node.put("status", "Fail")
+        node.put("message", "Task is not present.")
+      }
+      Ok(node.toString());
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+
+
   def updateTaskDependency(task_id: String, selected_task: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var node = new JSONObject()
