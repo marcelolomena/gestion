@@ -1,4 +1,4 @@
-@(projectTypes:Seq[ProjectType])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@(countProjectTypes:Long,paginationProjectTypes:String,projectTypes:Seq[ProjectType])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @import services._
 @import java.text.SimpleDateFormat
 
@@ -60,7 +60,7 @@
 				    				<a href="@controllers.Frontend.routes.Generics.editProjectType(pType.id.get.toString())" class="edit-icon" ></a>
 				    				@* <a href="@controllers.Frontend.routes.GenericProjectMaster.deleteProjectType("")" class="doc_delete"> delete</a>*@
 				    			</span>
-				    			
+
 		      				</div>
 		      			
 		      			}
@@ -69,6 +69,12 @@
 		    		}
    	   </div>
     </div>
+</div>
+<!-- Pagination -->
+<div class="pagination">
+	<ul>
+		@Html(paginationProjectTypes)
+	</ul>
 </div>
 
 

@@ -5,26 +5,13 @@ import scala.math.BigDecimal.int2bigDecimal
 import scala.util.Random
 import org.apache.commons.lang3.StringUtils
 import art_forms.ARTForms
-import models.GenericTaskDetails
-import models.GenericTask
-import models.GenericTasks
-import models.PredefinedTasks
-import models.ProjectType
+import models._
+import services._
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import services.DeliverableService
-import services.GenericProjectService
-import services.GenericProjectTypeService
-import services.GenericService
-import services.StageService
-import services.TaskDesciplineService
-import services.UserRoleService
-import services.UserService
+
 import org.json.JSONObject
-import models.GenericProjectTypes
-import models.Activity
-import models.ActivityTypes
-import services.ServiceCatalogueService
+
 object Generics extends Controller {
 
   var pmMap = new java.util.HashMap[String, String]()
@@ -32,10 +19,39 @@ object Generics extends Controller {
   def overview() = Action {
     implicit request =>
       request.session.get("username").map { user =>
-        println("por aca")
-        val projectTypes = GenericProjectService.findAllProjectTypes();
-        val predefinedTasks = GenericProjectService.findAllPredefinedTasks();
-        Ok(views.html.frontend.generics.overview(projectTypes, predefinedTasks))
+        var pageNumber = "1"
+        var recordOnPage = "10"
+        var search = ""
+        val result = request.session.get("username")
+        val pagNo = request.getQueryString("page")
+        val pageRecord = request.getQueryString("record")
+        val searchKey = request.getQueryString("search")
+        if (pagNo != None) {
+          pageNumber = pagNo.get.toString()
+        }
+        if (pageRecord != None) {
+          recordOnPage = pageRecord.get.toString()
+        }
+        if (searchKey != None) {
+          search = searchKey.get.toString()
+        }
+
+        val projectTypes = GenericProjectService.findAllProjectTypes(pageNumber, recordOnPage)
+        val countProjectTypes = GenericProjectService.projectTypesCount
+        val paginationProjectTypes = controllers.Application.Pagination(countProjectTypes, pageNumber, recordOnPage, search)
+
+        val predefinedTasks = GenericProjectService.findAllPredefinedTasks(pageNumber, recordOnPage)
+        val countPredefinedTasks = GenericProjectService.predefinedTasksCount
+        val paginationPredefinedTasks = controllers.Application.Pagination(countPredefinedTasks,pageNumber, recordOnPage, search)
+
+        Ok(views.html.frontend.generics.overview(
+          countProjectTypes,
+          paginationProjectTypes,
+          countPredefinedTasks,
+          paginationPredefinedTasks,
+          projectTypes,
+          predefinedTasks))
+
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }

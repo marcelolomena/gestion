@@ -21,8 +21,7 @@ object DivisionService extends CustomColumns {
     var sqlString = ""
 
     sqlString = "SELECT * FROM  (SELECT  ROW_NUMBER() OVER(ORDER BY dId) AS Row, * FROM art_division_master AS tbl)as ss WHERE  (  Row >=" + (start + 1) + " AND Row <= " + (start + end) + ")"
-    //sqlString = "SELECT  d.* from art_division_master d, art_user u where ( d.user_id=u.uid) AND d.is_deleted = 0 limit " + start + "," + end
-    // println(sqlString)
+
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(Divisions.division *)
     }

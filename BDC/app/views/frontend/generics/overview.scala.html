@@ -1,4 +1,4 @@
-@(projectTypes:Seq[ProjectType],predefinedTasks: Seq[PredefinedTasks])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@(countProjectTypes:Long,paginationProjectTypes:String,countPredefinedTasks,paginationPredefinedTasks,projectTypes:Seq[ProjectType],predefinedTasks: Seq[PredefinedTasks])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import services._
 @import java.text.SimpleDateFormat
@@ -23,7 +23,7 @@
 			    <a href="@controllers.Frontend.routes.Generics.historicOverview()"><span  style="float: right;">@Messages("generics.overview.showhistoricprojecttypes")  </span></a>
 			</div>
 			
-			@frontend.generics.projectTypesListing(projectTypes)
+			@frontend.generics.projectTypesListing(countProjectTypes,paginationProjectTypes,projectTypes)
 			
 			
 		</div>
@@ -36,7 +36,7 @@
     			<a href="@controllers.Frontend.routes.Generics.addPredefinedTask()"><span>@Messages("generics.overview.newpredefinedtask")</span></a>
 			</div>
 			
-			@frontend.generics.predefinedTaskListing(predefinedTasks)
+			@frontend.generics.predefinedTaskListing(countPredefinedTasks,paginationPredefinedTasks,predefinedTasks)
 			
 			
 		</div>
@@ -63,12 +63,14 @@
 <script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
  <script type="text/javascript">
 $(document).ready(function(){
+/*
 	var items = $("#predefined_Task .predefined-data");
 	var numItems = items.length;
 	if(numItems > 10){
 		$('#predefined_id').addClass('page-for-predefined-task');
 	var perPage =10;
 	items.slice(perPage).hide();
+
 	$("#predefined_id").pagination({
 		items : numItems,
 		itemsOnPage : perPage,
@@ -86,6 +88,7 @@ $(document).ready(function(){
 	}else if(numItems === 0){
 		$('#predefined_id').css('display', 'none');
 	}
+*/
 });
 </script>
 </body>	

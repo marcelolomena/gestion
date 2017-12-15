@@ -191,9 +191,9 @@ $(document).ready(function() {
 					<table>
 						<tr>
 					@if(t.plan_time.floatValue()>0){
-						<td><input id="ptd_@t.tId.get" type="text" disabled="disabled" value="@t.plan_time" maxlength="5" class="plan_time_task" readonly="readonly"/></td>
+						<td><input id="ptd_@t.tId.get" type="text" disabled="disabled" value="@t.plan_time" maxlength="5" placeholder="Días" class="plan_time_task" readonly="readonly"/></td>
 					}else{
-						<td><input id="ptd_@t.tId.get" type="text" disabled="disabled" value="0" maxlength="5" class="plan_time_task" readonly="readonly"/></td>
+						<td><input id="ptd_@t.tId.get" type="text" disabled="disabled" value="0" maxlength="5" placeholder="Días" class="plan_time_task" readonly="readonly"/></td>
 					}<td><span id="spn_@t.tId.get" class="edit-plan-time"></span></td>
 						</tr>
 					</table>

@@ -3,12 +3,11 @@ package services;
 import java.util.Date
 
 import scala.Option.option2Iterable
-
 import org.apache.commons.lang3.StringUtils
-
 import anorm.SQL
 import anorm.SqlParser.scalar
 import anorm.sqlToSimple
+import play.api.Logger
 //import anorm.toParameterValue
 import models.CustomColumns
 import models.GenericProjectType
@@ -74,11 +73,18 @@ object GenericProjectService extends CustomColumns {
     }
   }
 
-  def findAllProjectTypes(): Seq[ProjectType] = {
-    println("Por aca")
-    val sqlSting = "select * from art_project_type_master where states=0"
+  def findAllProjectTypes(pagNo: String, recordOnPage: String): Seq[ProjectType] = {
+    val pageSize = Integer.parseInt(recordOnPage.toInt.toString)
+    val pageNumber = Integer.parseInt(pagNo.toInt.toString)
+    val sqlSting = "SELECT * FROM art_project_type_master WHERE states=0 ORDER BY creation_date DESC OFFSET " + pageSize * (pageNumber - 1) + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY"
     DB.withConnection { implicit connection =>
       SQL(sqlSting).as(ProjectType.projectDisplay *)
+    }
+  }
+
+  def projectTypesCount(): Long = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT count(*) FROM art_project_type_master WHERE states=0").as(scalar[Long].single)
     }
   }
 
@@ -352,10 +358,19 @@ object GenericProjectService extends CustomColumns {
   /**
    *   Predefined tasks
    */
-  def findAllPredefinedTasks(): Seq[PredefinedTasks] = {
-    val sqlSting = "select * from art_predefined_task where is_active=1"
+  def findAllPredefinedTasks(pagNo: String, recordOnPage: String): Seq[PredefinedTasks] = {
+    val pageSize = Integer.parseInt(recordOnPage.toInt.toString)
+    val pageNumber = Integer.parseInt(pagNo.toInt.toString)
+    val sqlSting = "SELECT * FROM art_predefined_task WHERE is_active=1 ORDER BY tId DESC OFFSET " + pageSize * (pageNumber - 1) + " ROWS FETCH NEXT " + pageSize + " ROWS ONLY"
+
     DB.withConnection { implicit connection =>
       SQL(sqlSting).as(PredefinedTasks.predefined_tasks *)
+    }
+  }
+
+  def predefinedTasksCount(): Long = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT count(*) FROM art_predefined_task WHERE is_active=1").as(scalar[Long].single)
     }
   }
 
