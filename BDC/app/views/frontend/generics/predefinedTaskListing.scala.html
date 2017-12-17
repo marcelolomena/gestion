@@ -1,4 +1,4 @@
-@(countPredefinedTasks :Long,paginationPredefinedTasks :String,predefinedTasks: Seq[PredefinedTasks])(implicit session: play.api.mvc.Session,lang:Lang)
+@(pagination :String, predefinedTasks: Seq[PredefinedTasks])(implicit session: play.api.mvc.Session,lang:Lang)
 @import services._
 @import java.text.SimpleDateFormat
 
@@ -51,6 +51,9 @@
    	   </div>
     </div>
 </div>
-<!--
- <div id="predefined_id"> </div>
--->
+<!-- Pagination -->
+<div class="pagination">
+	<ul>
+		@Html(pagination)
+	</ul>
+</div>

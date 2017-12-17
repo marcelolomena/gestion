@@ -19,38 +19,34 @@ object Generics extends Controller {
   def overview() = Action {
     implicit request =>
       request.session.get("username").map { user =>
-        var pageNumber = "1"
-        var recordOnPage = "10"
-        var search = ""
-        val result = request.session.get("username")
+        var pageNumber = 1
+        var recordOnPage = 10
+
         val pagNo = request.getQueryString("page")
         val pageRecord = request.getQueryString("record")
-        val searchKey = request.getQueryString("search")
+
         if (pagNo != None) {
-          pageNumber = pagNo.get.toString()
+          pageNumber = pagNo.get.toInt
         }
+
         if (pageRecord != None) {
-          recordOnPage = pageRecord.get.toString()
-        }
-        if (searchKey != None) {
-          search = searchKey.get.toString()
+          recordOnPage = pageRecord.get.toInt
         }
 
         val projectTypes = GenericProjectService.findAllProjectTypes(pageNumber, recordOnPage)
         val countProjectTypes = GenericProjectService.projectTypesCount
-        val paginationProjectTypes = controllers.Application.Pagination(countProjectTypes, pageNumber, recordOnPage, search)
+        val paginationProjectTypes = controllers.Application.PaginationProject(countProjectTypes, pageNumber, recordOnPage)
 
         val predefinedTasks = GenericProjectService.findAllPredefinedTasks(pageNumber, recordOnPage)
         val countPredefinedTasks = GenericProjectService.predefinedTasksCount
-        val paginationPredefinedTasks = controllers.Application.Pagination(countPredefinedTasks,pageNumber, recordOnPage, search)
+        val paginationPredefinedTasks = controllers.Application.PaginationTask(countPredefinedTasks,pageNumber, recordOnPage)
 
         Ok(views.html.frontend.generics.overview(
-          countProjectTypes,
           paginationProjectTypes,
-          countPredefinedTasks,
-          paginationPredefinedTasks,
           projectTypes,
+          paginationPredefinedTasks,
           predefinedTasks))
+
 
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession

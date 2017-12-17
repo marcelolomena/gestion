@@ -374,7 +374,7 @@ object Application extends Controller with Secured {
   def Pagination(count: Long, page: String, recordOnPage: String, search: String): String = {
     var i = 0
     var str = ""
-    var pagedisplay = Math.ceil(count.toInt / Integer.parseInt(recordOnPage.toString()).toFloat).toInt
+    var pagedisplay = Math.ceil(count.toInt / Integer.parseInt(recordOnPage)).toInt
     if (pagedisplay != 1) {
       if (page != "1") {
         str += "<li class=preItem><a href=?page=1&record=" + recordOnPage + ">First</a></li>"
@@ -388,6 +388,50 @@ object Application extends Controller with Secured {
       }
 
       if (page.toInt != pagedisplay && count != 0) {
+        str += "<li class=preItem><a href=?page=" + pagedisplay + "&record=" + recordOnPage + ">Last</a></li>"
+      }
+    }
+    return str
+  }
+
+  def PaginationProject(count: Int, page: Int, recordOnPage: Int): String = {
+    var str = ""
+    val pagedisplay = Math.ceil(count / recordOnPage).toInt
+    if (pagedisplay != 1) {
+      if (page != 1) {
+        str += "<li class=preItem><a href=?page=1&record=" + recordOnPage + ">First</a></li>"
+      }
+      for (i <- 1 to pagedisplay) {
+        if (page == i) {
+          str += "<li><a href=javascript:void(0) class=color-black >" + i + "</a></li>"
+        } else {
+          str += "<li><a href=?page=" + i + "&record=" + recordOnPage + ">" + i + "</a></li>"
+        }
+      }
+
+      if (page != pagedisplay && count != 0) {
+        str += "<li class=preItem><a href=?page=" + pagedisplay + "&record=" + recordOnPage + ">Last</a></li>"
+      }
+    }
+    return str
+  }
+
+  def PaginationTask(count: Int, page: Int, recordOnPage: Int): String = {
+    var str = ""
+    val pagedisplay = Math.ceil(count / recordOnPage).toInt
+    if (pagedisplay != 1) {
+      if (page != 1) {
+        str += "<li class=preItem><a href=?page=1&record=" + recordOnPage + ">First</a></li>"
+      }
+      for (i <- 1 to pagedisplay) {
+        if (page == i) {
+          str += "<li><a href=javascript:void(0) class=color-black >" + i + "</a></li>"
+        } else {
+          str += "<li><a href=?page=" + i + "&record=" + recordOnPage + ">" + i + "</a></li>"
+        }
+      }
+
+      if (page != pagedisplay && count != 0) {
         str += "<li class=preItem><a href=?page=" + pagedisplay + "&record=" + recordOnPage + ">Last</a></li>"
       }
     }

@@ -1,4 +1,4 @@
-@(countProjectTypes:Long,paginationProjectTypes:String,countPredefinedTasks,paginationPredefinedTasks,projectTypes:Seq[ProjectType],predefinedTasks: Seq[PredefinedTasks])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(paginationProjectTypes :String, projectTypes :Seq[ProjectType], paginationPredefinedTasks :String, predefinedTasks :Seq[PredefinedTasks])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import services._
 @import java.text.SimpleDateFormat
@@ -23,22 +23,19 @@
 			    <a href="@controllers.Frontend.routes.Generics.historicOverview()"><span  style="float: right;">@Messages("generics.overview.showhistoricprojecttypes")  </span></a>
 			</div>
 			
-			@frontend.generics.projectTypesListing(countProjectTypes,paginationProjectTypes,projectTypes)
-			
-			
+			@frontend.generics.projectTypesListing(paginationProjectTypes, projectTypes)
+
 		</div>
 		<div class="width_full">
 			<h3 id="productNm" style="width: 99.4%;margin-top: 10px;">
 	    		<span class="left">@Messages("generics.overview.listofpredefinedtask")</span>
    			</h3>
-		  	
 		  	<div class="program-div" id="new-document">
     			<a href="@controllers.Frontend.routes.Generics.addPredefinedTask()"><span>@Messages("generics.overview.newpredefinedtask")</span></a>
 			</div>
 			
-			@frontend.generics.predefinedTaskListing(countPredefinedTasks,paginationPredefinedTasks,predefinedTasks)
-			
-			
+			@frontend.generics.predefinedTaskListing(paginationPredefinedTasks, predefinedTasks)
+
 		</div>
 		
 		<div id="dialog-confirm"></div>
@@ -61,35 +58,5 @@
 <link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/generics.css")">
 
 <script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
- <script type="text/javascript">
-$(document).ready(function(){
-/*
-	var items = $("#predefined_Task .predefined-data");
-	var numItems = items.length;
-	if(numItems > 10){
-		$('#predefined_id').addClass('page-for-predefined-task');
-	var perPage =10;
-	items.slice(perPage).hide();
-
-	$("#predefined_id").pagination({
-		items : numItems,
-		itemsOnPage : perPage,
-		cssStyle : "light-theme",
-		onPageClick : function(pageNumber) { // this is where the magic happens
-			// someone changed page, lets hide/show trs appropriately
-
-			var showFrom = perPage * (pageNumber - 1);
-			var showTo = showFrom + perPage;
-
-			items.hide() // first hide everything, then show for the new page
-			.slice(showFrom, showTo).show();
-		}
-	});
-	}else if(numItems === 0){
-		$('#predefined_id').css('display', 'none');
-	}
-*/
-});
-</script>
-</body>	
+</body>
 </html>

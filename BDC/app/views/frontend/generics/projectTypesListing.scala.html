@@ -1,4 +1,4 @@
-@(countProjectTypes:Long,paginationProjectTypes:String,projectTypes:Seq[ProjectType])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(pagination :String, projectTypes:Seq[ProjectType])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @import services._
 @import java.text.SimpleDateFormat
 
@@ -73,7 +73,7 @@
 <!-- Pagination -->
 <div class="pagination">
 	<ul>
-		@Html(paginationProjectTypes)
+		@Html(pagination)
 	</ul>
 </div>
 
