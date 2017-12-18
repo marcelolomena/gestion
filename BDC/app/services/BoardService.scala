@@ -45,10 +45,10 @@ protected trait BoardService {
       implicit val authorizedUsers = mutable.MutableList[UserBase]()
       val authorizedUsersPreProcessed = SQL(
         s"""
-           |SELECT *
+           |SELECT user_id,board_id,email,first_name,last_name,uname username,password,profile_image avatar
            |FROM user_authorized_boards
-           |JOIN [user]
-           |ON [user].id=user_authorized_boards.user_id WHERE
+           |JOIN art_user
+           |ON art_user.uid=user_authorized_boards.user_id WHERE
            |(${ids.mkString("user_authorized_boards.board_id="," OR user_authorized_boards.board_id=","")})
          """.stripMargin
       ).as(UserBase.authParser.*)
@@ -87,16 +87,7 @@ protected trait BoardService {
            |AND user_id=$userId
          """.stripMargin
       ).as(scalar[Int].single)
-  /*
-      SQL(
-        s"""
-           |SELECT
-           |auth_level
-           |FROM user_authorized_boards
-           |WHERE board_id=$boardId
-           |AND user_id=$userId
-         """.stripMargin
-      ).apply().head[Int]("auth_level")*/
+
     }
   }
 

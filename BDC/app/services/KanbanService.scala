@@ -24,7 +24,7 @@ object KanbanService extends BoardService
       implicit val board : Long = -1L
       KanbanSocketController.listUserAutocomplete(
         board,
-        SQL(s"SELECT id AS value, first_name AS label FROM [user] WHERE first_name like '${auto.text}'").as(ResultAutocomplete.parser.*)
+        SQL(s"SELECT uid AS value, first_name AS label FROM art_user WHERE first_name like '${auto.text}'").as(ResultAutocomplete.parser.*)
       )
       ServiceResponse(StatusCode.OK)
     }
@@ -85,9 +85,9 @@ object KanbanService extends BoardService
           SQL(
             s"""
                |SELECT
-               |id
-               |FROM [user]
-               |WHERE username='${userBoardAuthorization.username}'
+               |uid
+               |FROM art_user
+               |WHERE uname='${userBoardAuthorization.username}'
             """.stripMargin
           ).as(scalar[Long].singleOpt).getOrElse(-1) match {
             case -1 =>
@@ -106,8 +106,8 @@ object KanbanService extends BoardService
 
               KanbanSocketController.addUserToBoard(
                 board,
-                SQL(s"SELECT * FROM [user] WHERE id=$userIdFromUsername").as(UserBase.userParser.*).head,
-                SQL(s"SELECT * FROM [user] WHERE id=${userBoardAuthorization.assignerId}").as(UserBase.userParser.*).head
+                SQL(s"SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar FROM art_user WHERE uid=$userIdFromUsername").as(UserBase.userParser.*).head,
+                SQL(s"SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar FROM art_user WHERE uid=${userBoardAuthorization.assignerId}").as(UserBase.userParser.*).head
               )
 
               ServiceResponse(StatusCode.OK)

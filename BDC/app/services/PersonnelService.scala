@@ -32,9 +32,9 @@ object PersonnelService {
     DB.withConnection { implicit c =>
       SQL(
         s"""
-           |SELECT *
-           |FROM [user]
-           |WHERE id=$userId
+           |SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar
+           |FROM art_user
+           |WHERE uid=$userId
          """.stripMargin
       ).as(UserBase.userParser.*).head
     }
@@ -44,9 +44,9 @@ object PersonnelService {
     DB.withConnection { implicit c =>
       val res = SQL(
         s"""
-           |SELECT *
-           |FROM [user]
-           |WHERE username='${uname}'
+           |SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar
+           |FROM art_user
+           |WHERE uname='${uname}'
          """.stripMargin
       ).as(UserBase.userParser.*)
       res.size match {
@@ -66,10 +66,10 @@ object PersonnelService {
       val password = Hex.encodeHex(crypt.digest()).mkString
       val res = SQL(
         s"""
-           |SELECT *
-           |FROM [user]
+           |SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar
+           |FROM art_user
            |WHERE (email='${existingUser.email.getOrElse(-1)}'
-           |OR username='${existingUser.username.getOrElse(-1)}')
+           |OR uname='${existingUser.username.getOrElse(-1)}')
            |AND password='$password'
          """.stripMargin
       ).as(UserBase.userParser.*)
@@ -91,8 +91,8 @@ object PersonnelService {
         val password = Hex.encodeHex(crypt.digest()).mkString
         SQL(
           s"""SELECT COUNT(*)
-             |FROM [user]
-             |WHERE id=${editUser.id}
+             |FROM art_user
+             |WHERE uid=${editUser.id}
              |AND password=$password""".stripMargin
         ).as(scalar[Long].single) match {
           case 0 =>

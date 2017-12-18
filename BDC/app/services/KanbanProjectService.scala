@@ -33,9 +33,9 @@ protected trait KanbanProjectService {
           project.id = Option(id)
           KanbanSocketController.addProject(FullProject(project, Seq[Kolumn](), Seq[Ticket]()), SQL(
             s"""
-               |SELECT *
-               |FROM [user]
-               |WHERE id=${project.createdByUserId}
+               |SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar
+               |FROM art_user
+               |WHERE uid=${project.createdByUserId}
              """.stripMargin
           ).as(UserBase.userParser.*).head)
           ServiceResponse(StatusCode.OK)

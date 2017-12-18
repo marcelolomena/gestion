@@ -65,7 +65,7 @@ protected trait KolumnService {
           kolumn.id = Option(insertedKolumn)
           KanbanSocketController.newKolumn(
             kolumn,
-            SQL(s"SELECT * FROM [user] WHERE id=${kolumn.createdByUserId}").as(UserBase.userParser.*).head,
+            SQL(s"SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar FROM art_user WHERE uid=${kolumn.createdByUserId}").as(UserBase.userParser.*).head,
             SQL(s"SELECT board_id FROM project WHERE id=${kolumn.projectId}").as(scalar[Long].single))
           ServiceResponse(StatusCode.OK)
       }
