@@ -22,8 +22,14 @@ object Generics extends Controller {
         var pageNumber = 1
         var recordOnPage = 10
 
+        var pageNumberTwo = 1
+        var recordOnPageTwo = 25
+
         val pagNo = request.getQueryString("page")
         val pageRecord = request.getQueryString("record")
+
+        val pagNoTwo = request.getQueryString("pages")
+        val pageRecordTwo = request.getQueryString("records")
 
         if (pagNo != None) {
           pageNumber = pagNo.get.toInt
@@ -33,13 +39,21 @@ object Generics extends Controller {
           recordOnPage = pageRecord.get.toInt
         }
 
+        if (pagNoTwo != None) {
+          pageNumberTwo = pagNoTwo.get.toInt
+        }
+
+        if (pageRecordTwo != None) {
+          recordOnPageTwo = pageRecordTwo.get.toInt
+        }
+
         val projectTypes = GenericProjectService.findAllProjectTypes(pageNumber, recordOnPage)
         val countProjectTypes = GenericProjectService.projectTypesCount
         val paginationProjectTypes = controllers.Application.PaginationProject(countProjectTypes, pageNumber, recordOnPage)
 
-        val predefinedTasks = GenericProjectService.findAllPredefinedTasks(pageNumber, recordOnPage)
+        val predefinedTasks = GenericProjectService.findAllPredefinedTasks(pageNumberTwo, recordOnPageTwo)
         val countPredefinedTasks = GenericProjectService.predefinedTasksCount
-        val paginationPredefinedTasks = controllers.Application.PaginationTask(countPredefinedTasks,pageNumber, recordOnPage)
+        val paginationPredefinedTasks = controllers.Application.PaginationTask(countPredefinedTasks,pageNumberTwo, recordOnPageTwo)
 
         Ok(views.html.frontend.generics.overview(
           paginationProjectTypes,

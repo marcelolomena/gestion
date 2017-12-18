@@ -357,7 +357,7 @@ object GenericProjectService extends CustomColumns {
    *   Predefined tasks
    */
   def findAllPredefinedTasks(pagNo: Int, recordOnPage: Int): Seq[PredefinedTasks] = {
-    val sqlSting = "SELECT * FROM art_predefined_task WHERE is_active=1 ORDER BY tId DESC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
+    val sqlSting = "SELECT * FROM art_predefined_task WHERE is_active=1 ORDER BY task_title ASC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
     DB.withConnection { implicit connection =>
       SQL(sqlSting).as(PredefinedTasks.predefined_tasks *)
     }
