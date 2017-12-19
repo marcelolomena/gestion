@@ -134,29 +134,30 @@ object Collaborator {
   }
 }
 
-case class Autocomplete(text: Option[String])
+case class Autocomplete(boardId: Long,text: Option[String])
 object Autocomplete {
   implicit val reads = Json.reads[Autocomplete]
   implicit val writes = Json.writes[Autocomplete]
 
   implicit val parser: RowParser[Autocomplete] = {
+    get[Long]("boardId") ~
     get[Option[String]]("text") map {
-      case text =>
-        Autocomplete(text)
+      case boardId~text =>
+        Autocomplete(boardId,text)
     }
   }
 }
 
-case class ResultAutocomplete(label: Option[String],value: Option[String])
+case class ResultAutocomplete(value: Int, label: String)
 object ResultAutocomplete {
   implicit val reads = Json.reads[ResultAutocomplete]
   implicit val writes = Json.writes[ResultAutocomplete]
 
   implicit val parser: RowParser[ResultAutocomplete] = {
-    get[Option[String]]("label")  ~
-      get[Option[String]]("value") map {
-      case label ~ value =>
-        ResultAutocomplete(label,value)
+    get[Int]("value")  ~
+      get[String]("label") map {
+      case value ~ label =>
+        ResultAutocomplete(value, label)
     }
   }
 }

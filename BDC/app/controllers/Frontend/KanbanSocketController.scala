@@ -127,21 +127,31 @@ object KanbanSocketController {
       ))
     }
   }
-
-
+/*
   def listUserAutocomplete(boardId: Long,resAuto: Seq[ResultAutocomplete]): Unit = {
-    Logger.warn("sending move ticket")
+    Logger.warn("sending autocomplete")
     connected.get(boardId).get.foreach { actor =>
-      Logger.warn("sending move ticket for user")
+      Logger.warn("sending autocomplete to user")
       actor ! Json.stringify(Json.obj(
         "action" -> JsString(SocketActions.listCollaborator),
         "data" -> Json.obj(
-          "user" -> Json.toJson(resAuto),
+          "list" -> Json.toJson(resAuto),
           "boardId" -> boardId
         )
       ))
     }
   }
+*/
+def listUserAutocomplete(boardId: Long,resAuto: Seq[ResultAutocomplete]): Unit = {
+  Logger.warn("sending autocomplete")
+  connected.get(boardId).get.foreach { actor =>
+    Logger.warn("sending autocomplete to user")
+    actor ! Json.stringify(Json.obj(
+      "action" -> JsString(SocketActions.listCollaborator),
+      "data" -> resAuto
+    ))
+  }
+}
 
   def addUserToBoard(board: FullBoard, userAdded: UserBase, userAdding: UserBase): Unit = {
     Logger.warn("sending added user to board")

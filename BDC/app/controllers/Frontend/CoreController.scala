@@ -3,7 +3,7 @@ package controllers.Frontend
 import model.{ServiceResponse, StatusCode}
 import play.api.libs.json._
 import play.api.mvc.{Controller, Request}
-
+import play.Logger
 /**
  * Base trait for all Controllers to be inheriting from
  */
@@ -23,6 +23,7 @@ trait CoreController extends Controller {
       case true =>
         val response = serviceMethod(validationResult.get) // call method with passed object
         // check status code and serialize return data, then return to client
+        Logger.debug("concha  : " + response.toString)
         response.statusCode match {
           case StatusCode.OK =>
             Ok(Json.obj(

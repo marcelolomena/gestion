@@ -121,6 +121,7 @@ $(document).on ready: ->
 
     $('#pencil').editable(
       type: 'text'
+      id:'canario'
       name: 'username'
       title: 'Enter username'
       display: false
@@ -139,27 +140,25 @@ $(document).on ready: ->
     )
     $('#pencil').on shown:(e,editable) ->
       ticket = ticketMap[ticketId]
-      console.log("PENE")
+      console.log("LAPIZ")
       console.dir(ticket)
       console.dir(ticket.collaborators)
-      console.log("CHUCHA")
       console.log(collab)
-      console.log("POTO")
-      availableTags = ["ActionScript","AppleScript","Asp","BASIC","C","C++","Clojure","COBOL","ColdFusion","Erlang","Fortran","Groovy","Haskell","Java","JavaScript","Lisp","Perl","PHP","Python","Ruby","Scala","Scheme"];
       $('.collab').autocomplete(
         source: ( request, response ) ->
                     $.ajax({
                       url: "getUsers"
-                      data: JSON.stringify($('#pencil').data('options'))
+                      data: JSON.stringify({boardId:ticket.boardId,text:request.term})
                       contentType: 'application/json;charset=utf-8'
                       type: 'POST'
                       success: ( data ) ->
-                        response([
-                          { label: "Example", value: 'Testing'}
-                        ])
+                        console.log("aqui")
+                        console.dir(data)
+                        return false
                     })
         focus: (event, ui) ->
-          console.log(event)
+          console.log("aca")
+          console.dir(event)
           console.log(ui.item.username)
           $(event.target).val(ui.item.username)
         select: (event, ui) ->

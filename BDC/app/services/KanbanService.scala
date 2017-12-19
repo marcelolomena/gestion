@@ -19,14 +19,22 @@ object KanbanService extends BoardService
                         with TicketService
                         with KanbanProjectService {
 
-  def listUser (auto: Autocomplete): ServiceResponse[Long] ={
+  def listUser (auto: Autocomplete): ServiceResponse[Seq[ResultAutocomplete]] ={
     DB.withConnection { implicit c =>
-      implicit val board : Long = -1L
+      //implicit val board : Long = auto.boardId//-1L
+      /*
       KanbanSocketController.listUserAutocomplete(
         board,
-        SQL(s"SELECT uid AS value, first_name AS label FROM art_user WHERE first_name like '${auto.text}'").as(ResultAutocomplete.parser.*)
+        SQL(s"SELECT uid AS value, first_name + ' ' + last_name AS label FROM art_user WHERE first_name like '%${auto.text.get}%'").as(ResultAutocomplete.parser.*)
       )
-      ServiceResponse(StatusCode.OK)
+      */
+
+      def createComboBox : ServiceResponse[Seq[ResultAutocomplete]] = {
+        implicit val fullBox = new mutable.MutableList[ResultAutocomplete]()
+        val res = SQL(s"SELECT uid AS value, first_name + ' ' + last_name AS label FROM art_user WHERE first_name like '%${auto.text.get}%'").as(ResultAutocomplete.parser.*)
+        ServiceResponse(StatusCode.OK)
+      }
+      createComboBox
     }
   }
   /**

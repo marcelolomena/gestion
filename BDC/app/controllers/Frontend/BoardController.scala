@@ -46,6 +46,6 @@ object BoardController extends CoreController {
   }
 
   def getUsers() = Action(parse.json) { implicit request =>
-    resultDispatch[Autocomplete, Long](KanbanService.listUser)
+    resultDispatch[Autocomplete, Seq[ResultAutocomplete]](KanbanService.listUser)
   }
 }
