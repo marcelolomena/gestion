@@ -210,6 +210,19 @@ module.exports = function (passport) {
     router.route('/lic/misAutorizaciones')
         .get(isAuthenticated, instalacionSolicitudController.misAutorizaciones);
 
+    router.route('/lic/miscodigos/:idProducto')
+        .get(isAuthenticated, instalacionSolicitudController.miscodigos);
+
+    router.route('/lic/imagenEquipo/upload')
+        .post(isAuthenticated, instalacionSolicitudController.upload);
+
+    router.route('/lic/tipoInstalacion')
+        .post(isAuthenticated, tipoInstalacionController.action)
+        .get(isAuthenticated, tipoInstalacionController.list);
+
+        router.route('/lic/tipoInstalacion/upload')
+        .post(isAuthenticated, tipoInstalacionController.upload);
+
 
     // router.route('/lic/reservaAutorizado')
     //     .get(isAuthenticated, recepcionController.listAprobados);
