@@ -69,6 +69,16 @@ module.exports = function (sequelize, DataTypes) {
       field: 'fechamodificacion',
       type: DataTypes.DATE,
       allowNull: true
+    },
+    comentariovisiacion: {
+      field: 'comentarioVisiacion',
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    comentarioinstalacion: {
+      field: 'comentarioInstalacion',
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     schema: 'lic',
