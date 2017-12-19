@@ -50,6 +50,25 @@ module.exports = function (sequelize, DataTypes) {
     instalador: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    idTipoInstalacion: {
+      field: 'idtipoinstalacion',
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'tipoinstalacion',
+        key: 'id'
+      }
+    },
+    fechaVisacion: {
+      field: 'fechavisacion',
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    fechaModificacion: {
+      field: 'fechamodificacion',
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     schema: 'lic',
