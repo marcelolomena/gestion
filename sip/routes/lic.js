@@ -36,6 +36,7 @@ var instalacionSolicitudController = require('../controllers/lic/instalacion');
 var addmController = require('../controllers/lic/addm');
 var aprobacionController = require('../controllers/lic/reserva-aprobacion');
 var noaprobadasController = require('../controllers/lic/reserva-noaprobadas');
+var graficoController = require('../controllers/lic/graficoprodprov');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -231,7 +232,21 @@ module.exports = function (passport) {
 
     // router.route('/lic/reservaAutorizacion')
     //     .get(isAuthenticated, reservaSolicitudController.list
-
-
+     
+    router.route('/graficolicencia/:id')
+        .get(isAuthenticated, graficoController.getGraficoLicencia);
+        
+    router.route('/graficosoporte/:id')
+        .get(isAuthenticated, graficoController.getGraficoSoporte);  
+        
+    router.route('/fabricantesgrafico')
+        .get(isAuthenticated, graficoController.getFabricantesConCompras);        
+        
+    router.route('/graficogetcompras/:id')
+        .get(isAuthenticated, graficoController.getCompras);          
+        
+    router.route('/graficogetcomprassop/:id')
+        .get(isAuthenticated, graficoController.getComprasSoporte);     
+        
     return router;
 };
