@@ -2,7 +2,7 @@
 $(document).ready(function () {
     var total = 0;
     $.getJSON("/fabricantesgrafico", function (j) {
-        $('#fabricante').append('<option value="0"> - Escoger Fabricante - </option>');
+        //$('#fabricante').append('<option value="0"> - Escoger Fabricante - </option>');
         $.each(j, function (i, item) {
             $('#fabricante').append('<option value="' + item.id + '">' + item.nombre + '</option>');
         });
@@ -141,7 +141,7 @@ function loadGrid(producto) {
     var formatter = new Intl.NumberFormat();
     if (leida) {
         $("#grid").setGridParam({ postData: { page: 1, rows: 10 } });
-        $("#grid").jqGrid('setCaption', "Compras por Fabricante").jqGrid('setGridParam', { url: url, page: 1 }).jqGrid("setGridParam", { datatype: "json" }).trigger("reloadGrid");
+        $("#grid").jqGrid('setCaption', "Compras de Licencias").jqGrid('setGridParam', { url: url, page: 1 }).jqGrid("setGridParam", { datatype: "json" }).trigger("reloadGrid");
     } else {
         showDocumentos(producto);
     }
@@ -171,6 +171,23 @@ function showDocumentos(producto) {
                 hidden: true
             },
             {
+                label: 'Fecha',
+                name: 'fechacompra',
+                search: false,
+                align: 'left',
+                width: 70,
+                formatter: function (cellvalue, options, rowObject) {
+                    var val = rowObject.fechacompra;
+                    if (val != null) {
+                        val = val.substring(0,10);
+                        var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                        return fechaok;
+                    } else {
+                        return '';
+                    }
+                },
+            },            
+            {
                 label: 'Producto',
                 name: 'nombre',
                 search: false,
@@ -179,33 +196,27 @@ function showDocumentos(producto) {
                 width: 200
             },
             {
-                label: 'Fecha Compra',
-                name: 'fechacompra',
-                search: false,
-                align: 'left',
-                width: 50
-            },
-            {
                 label: 'Proveedor ',
                 name: 'razonsocial',
                 search: false,
                 align: 'left',
-                width: 200
+                width: 180
             },
             {
-                label: 'Monto Licencia',
+                label: 'Monto',
                 name: 'valorlicencia',
-                width: 50,
+                width: 70,
                 search: false,
                 align: 'left',
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
             {
-                label: 'Comprador',
-                name: 'comprador',
-                width: 150,
+                label: 'Cantidad',
+                name: 'liccompradas',
+                width: 70,
                 align: 'right',
-                search: false
+                search: false,
+                formatter: 'number', formatoptions: { decimalPlaces: 0 }
             }
         ],
         caption: "Compras por Licencia",
@@ -217,7 +228,7 @@ function showDocumentos(producto) {
         jsonReader: { cell: "" },
         page: 1,
         rowNum: 10,
-        rowList: [5, 10, 20, 50],
+        rowList: [10, 20, 30, 50],
         sortname: 'id',
         sortorder: 'asc',
         viewrecords: true,
@@ -252,7 +263,7 @@ function loadGrid2(producto) {
     var formatter = new Intl.NumberFormat();
     if (leida2) {
         $("#grid2").setGridParam({ postData: { page: 1, rows: 10 } });
-        $("#grid2").jqGrid('setCaption', "Soporte por Producto").jqGrid('setGridParam', { url: url, page: 1 }).jqGrid("setGridParam", { datatype: "json" }).trigger("reloadGrid");
+        $("#grid2").jqGrid('setCaption', "Compras de Soporte").jqGrid('setGridParam', { url: url, page: 1 }).jqGrid("setGridParam", { datatype: "json" }).trigger("reloadGrid");
     } else {
         showDocumentos2(producto);
     }
@@ -282,6 +293,24 @@ function showDocumentos2(producto) {
                     hidden: true
                 },
                 {
+                    label: 'Fecha',
+                    name: 'fechacompra',
+                    search: false,
+                    align: 'left',
+                    width: 70,
+                    formatter: function (cellvalue, options, rowObject) {
+                        var val = rowObject.fechacompra;
+                        if (val != null) {
+                            val = val.substring(0,10);
+                            var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                            return fechaok;
+                        } else {
+                            return '';
+                        }
+                    },
+                            
+                },                
+                {
                     label: 'Producto',
                     name: 'nombre',
                     search: false,
@@ -290,33 +319,27 @@ function showDocumentos2(producto) {
                     width: 200
                 },
                 {
-                    label: 'Fecha Compra',
-                    name: 'fechacompra',
-                    search: false,
-                    align: 'left',
-                    width: 50
-                },
-                {
                     label: 'Proveedor ',
                     name: 'razonsocial',
                     search: false,
                     align: 'left',
-                    width: 200
+                    width: 180
                 },
                 {
-                    label: 'Monto Soporte',
+                    label: 'Monto',
                     name: 'valorsoporte',
-                    width: 50,
+                    width: 70,
                     search: false,
                     align: 'left',
                     formatter: 'number', formatoptions: { decimalPlaces: 2 }
                 },
                 {
-                    label: 'Comprador',
-                    name: 'comprador',
-                    width: 150,
+                    label: 'Cantidad',
+                    name: 'liccompradas',
+                    width: 70,
                     align: 'right',
-                    search: false
+                    search: false,
+                    formatter: 'number'
                 }
             ],
             caption: "Compras por Soporte",
@@ -328,7 +351,7 @@ function showDocumentos2(producto) {
             jsonReader: { cell: "" },
             page: 1,
             rowNum: 10,
-            rowList: [5, 10, 20, 50],
+            rowList: [10, 20, 30, 50],
             sortname: 'id',
             sortorder: 'asc',
             viewrecords: true,
