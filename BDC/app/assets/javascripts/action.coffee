@@ -152,27 +152,23 @@ $(document).on ready: ->
                       contentType: 'application/json;charset=utf-8'
                       type: 'POST'
                       success: ( data ) ->
-                        console.log("aqui")
-                        console.dir(data)
-                        return false
+                        response(data.data)
                     })
         focus: (event, ui) ->
-          console.log("aca")
-          console.dir(event)
-          console.log(ui.item.username)
-          $(event.target).val(ui.item.username)
+          console.log(ui.item.label)
+          $(event.target).val(ui.item.label)
         select: (event, ui) ->
           $('#pencil').data('options', {
-            userId: ui.item.id,
+            userId: ui.item.value,
             ticketId: ticketId,
             assignerId: currentUser.id,
             boardId: ticketMap[ticketId].boardId
           })
           console.log($('#pencil').data('options'))
-          $(event.target).val(ui.item.username)
+          $(event.target).val(ui.item.label)
           return false
       ).autocomplete('instance')._renderItem = ( ul, item ) ->
-        return $('<li>').append('<a>' + item.username + '</a>' )
+        return $('<li>').append('<a>' + item.label + '</a>' )
                .appendTo( ul )
 
   $(document).on 'mouseenter', '.avatar', ()->
