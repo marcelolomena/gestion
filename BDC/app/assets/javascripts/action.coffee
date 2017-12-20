@@ -138,9 +138,9 @@ $(document).on ready: ->
             console.log(data)
             return false
     )
+
     $('#pencil').on shown:(e,editable) ->
       ticket = ticketMap[ticketId]
-      console.log("LAPIZ")
       console.dir(ticket)
       console.dir(ticket.collaborators)
       console.log(collab)
@@ -154,6 +154,9 @@ $(document).on ready: ->
                       success: ( data ) ->
                         response(data.data)
                     })
+        close: (event, ui) ->
+          console.log("cerrando")
+          return false
         focus: (event, ui) ->
           console.log(ui.item.label)
           $(event.target).val(ui.item.label)
@@ -164,7 +167,9 @@ $(document).on ready: ->
             assignerId: currentUser.id,
             boardId: ticketMap[ticketId].boardId
           })
+          console.log("quechu")
           console.log($('#pencil').data('options'))
+          console.log("cha")
           $(event.target).val(ui.item.label)
           return false
       ).autocomplete('instance')._renderItem = ( ul, item ) ->
