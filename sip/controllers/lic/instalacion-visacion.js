@@ -72,8 +72,9 @@ exports.list = function (req, res) {
         "SELECT @PageSize=" + rowspp + "; " +
         "DECLARE @PageNumber INT; " +
         "SELECT @PageNumber=" + page + "; " +
-        "SELECT a.*, b.nombre, c.first_name+' '+ c.last_name AS usuario FROM lic.instalacion a JOIN lic.producto b ON a.idproducto=b.id "+
+        "SELECT a.*, b.nombre, c.first_name+' '+ c.last_name AS usuario, d.nombre torre FROM lic.instalacion a JOIN lic.producto b ON a.idproducto=b.id "+
         "JOIN art_user c ON c.uid = a.idusuario "+
+        "JOIN lic.torre d ON a.idtorre = d.id "+
         "WHERE a.idtipoinstalacion = "+14
     } else if (rol == constants.JEFEPC) {
       sql = "DECLARE @PageSize INT; " +
@@ -106,6 +107,17 @@ exports.list = function (req, res) {
         });
       })
 }
+
+exports.getTorres = function (req, res) {
+  
+  var sql = "select id, nombre from lic.torre";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
 
 
 

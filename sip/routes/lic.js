@@ -251,7 +251,10 @@ module.exports = function (passport) {
 
     router.route('/lic/instalacion-visacion')
         .get(isAuthenticated, visacionController.list)
-        .post(isAuthenticated, visacionController.action);        
+        .post(isAuthenticated, visacionController.action); 
+
+    router.route('/lic/torres')
+        .get(isAuthenticated, visacionController.getTorres);    		
         
     return router;
 };
