@@ -1,63 +1,134 @@
 'use strict';
+
 var models = require('../../models');
-var base = require('./lic-controller');
 var sequelize = require('../../models/index').sequelize;
 var utilSeq = require('../../utils/seq');
-var _ = require('lodash');
 var logger = require("../../utils/logger");
 var path = require('path');
 var fs = require('fs');
 var Busboy = require('busboy');
 
-
-var entity = models.tipoInstalacion;
-var includes = [];
-
-function map(req) {
-    return {
-        id: req.body.id || 0,
-        nombre: req.body.nombre,
-        borrado: req.body.borrado || 1
+function action(req, res) {
+    var action = req.body.oper;
+    switch (action) {
+        case "add":
+            models.tipoInstalacion.create({
+                nombre: req.body.nombre,
+                borrado: 1
+            }).then(function (tipoinstal) {
+                return res.json({
+                    id: tipoinstal.id,
+                    message: 'Inicio carga',
+                    success: true
+                });
+            }).catch(function (err) {
+                logger.error(err)
+                return res.json({
+                    id: tipoinstal.id,
+                    message: 'Falla',
+                    success: false
+                });
+            });
+            break;
+        case "edit":
+            models.tipoInstalacion.update({
+                nombre: req.body.nombre
+            }, {
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (clase) {
+                res.json({
+                    id: req.body.id,
+                    message: 'Inicio carga',
+                    success: true
+                });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({
+                    message: err.message,
+                    success: false
+                });
+            });
+            break;
+        case "del":
+            models.tipoInstalacion.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) {
+                if (rowDeleted === 1) {
+                    logger.debug('Deleted successfully');
+                }
+                res.json({
+                    error: 0,
+                    glosa: ''
+                });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({
+                    error: 1,
+                    glosa: err.message
+                });
+            });
+            break;
     }
-}
-
-function mapper(data) {
-    return data;
 }
 
 function list(req, res) {
-    base.list(req, res, entity, includes, mapper);
-}
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
 
-function listAll(req, res) {
-    base.listAll(req, res, entity, function (item) {
-        return {
-            id: item.id,
-            nombre: item.nombre
-        };
+    if (!sidx)
+        sidx = "[nombre]";
+
+    if (!sord)
+        sord = "asc";
+
+    var orden = "[tipoinstalacion]." + sidx + " " + sord;
+
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (data) {
+            //logger.debug(data)
+            models.tipoInstalacion.count({
+                where: data
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.tipoInstalacion.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    order: orden,
+                    where: data
+                }).then(function (tipoinsta) {
+                    //logger.debug(solicitudcotizacion)
+                    res.json({
+                        records: records,
+                        total: total,
+                        page: page,
+                        rows: tipoinsta
+                    });
+                }).catch(function (err) {
+                    logger.error(err.message);
+                    res.json({
+                        error_code: 1
+                    });
+                });
+            })
+        }
     });
-}
 
-function action(req, res) {
-    switch (req.body.oper) {
-        case 'add':
-            return base.create(entity, map(req), res);
-        case 'edit':
-            return base.update(entity, map(req), res);
-        case 'del':
-            return base.destroy(entity, req.body.id, res);
-    }
+
 }
 
 function upload(req, res) {
     if (req.method === 'POST') {
-
         var busboy = new Busboy({
             headers: req.headers
         });
-
         var awaitId = new Promise(function (resolve, reject) {
-
             busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
                 if (fieldname === 'id') {
                     try {
@@ -70,9 +141,7 @@ function upload(req, res) {
                 }
             });
         });
-
         var awaitParent = new Promise(function (resolve, reject) {
-
             busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
                 if (fieldname === 'parent') {
                     try {
@@ -110,20 +179,13 @@ function upload(req, res) {
                 fs.mkdirSync(directory);
             }
         }
-
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-
             var saveTo = path.join(__dirname, '../../docs/', 'tipoinstalacion', filename);
-            
             file.pipe(fs.createWriteStream(saveTo));
-
-            
-
             var dir = path.join(__dirname, '../../', 'public/docs/tipoinstalacion');
             checkDirectorySync(dir);
             var dest = path.join(__dirname, '../../', 'public/docs/tipoinstalacion', filename);
             copyFile(saveTo, dest)
-
             awaitId.then(function (idDetail) {
                 models.tipoInstalacion.update({
                     nombrearchivo: filename
@@ -131,7 +193,7 @@ function upload(req, res) {
                     where: {
                         id: idDetail
                     }
-                }).then(function (instalacion) {}).catch(function (err) {
+                }).then(function (instalac) {}).catch(function (err) {
                     logger.error(err)
                     res.json({
                         id: 0,
@@ -139,7 +201,6 @@ function upload(req, res) {
                         success: false
                     });
                 });
-
             }).catch(function (err) {
                 res.json({
                     error_code: 1,
@@ -148,30 +209,54 @@ function upload(req, res) {
                 });
                 logger.error(err)
             });
-
-
-
         });
-
         busboy.on('finish', function () {
             logger.debug("Finalizo la transferencia del archivo")
-
             res.json({
                 error_code: 0,
                 message: 'Archivo guardado',
                 success: true
             });
         });
-
         return req.pipe(busboy);
     }
-
 }
 
+
+
+
+
+
+
+
+
+
+// var entity = models.tipoInstalacion;
+// var includes = [];
+
+
+// function listAll(req, res) {
+//     base.listAll(req, res, entity, function (item) {
+//         return {
+//             id: item.id,
+//             nombre: item.nombre
+//         };
+//     });
+// }
+
+// function action(req, res) {
+//     switch (req.body.oper) {
+//         case 'add':
+//             return base.create(entity, map(req), res);
+//         case 'edit':
+//             return base.update(entity, map(req), res);
+//         case 'del':
+//             return base.destroy(entity, req.body.id, res);
+//     }
+// }
 
 module.exports = {
     list: list,
     action: action,
-    listAll: listAll,
     upload: upload
 };

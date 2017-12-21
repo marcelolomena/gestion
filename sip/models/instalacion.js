@@ -70,8 +70,8 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
-    comentariovisiacion: {
-      field: 'comentarioVisiacion',
+    comentariovisacion: {
+      field: 'comentarioVisacion',
       type: DataTypes.STRING,
       allowNull: true
     },
