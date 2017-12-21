@@ -226,6 +226,10 @@ module.exports = function (passport) {
 
     router.route('/lic/tiposInstalacion')
         .get(isAuthenticated, tipoInstalacionController.tiposInstalacion);
+
+    router.route('/lic/getplantillatipo/:idtipo')
+        .get(isAuthenticated, tipoInstalacionController.getplantillatipo);
+
     // router.route('/lic/reservaAutorizado')
     //     .get(isAuthenticated, recepcionController.listAprobados);
     // router.route('/lic/reservaAprobacion')
@@ -253,13 +257,13 @@ module.exports = function (passport) {
 
     router.route('/lic/instalacion-visacion')
         .get(isAuthenticated, visacionController.list)
-        .post(isAuthenticated, visacionController.action); 
+        .post(isAuthenticated, visacionController.action);
 
     router.route('/lic/torres')
-        .get(isAuthenticated, visacionController.getTorres);    		
-        
+        .get(isAuthenticated, visacionController.getTorres);
+
     router.route('/lic/downfile/:id')
-        .get(isAuthenticated, visacionController.downFile); 
-		
+        .get(isAuthenticated, visacionController.downFile);
+
     return router;
 };

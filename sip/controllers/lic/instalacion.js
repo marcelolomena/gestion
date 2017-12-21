@@ -201,8 +201,8 @@ function action(req, res) {
                 idUsuario: req.session.passport.user,
                 fechaSolicitud: hoy,
                 idProducto: req.body.idProducto,
-                codAutorizacion: req.body.codautorizacion,
-                informacion: req.body.comentario,
+                codAutorizacion: req.body.codAutorizacion,
+                informacion: req.body.informacion,
                 estado: 'Pendiente',
                 idTipoInstalacion: req.body.idTipoInstalacion
             }).then(function (instal) {

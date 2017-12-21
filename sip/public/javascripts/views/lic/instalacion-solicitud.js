@@ -13,6 +13,8 @@ $(document).ready(function () {
     t1 += "<div class='column-half'>¿Donde está instalada?<span style='color:red'>*</span>{idTipoInstalacion}</div>";
     t1 += "</div>";
 
+    t1 += "<div class='form-row', id='laplantilla'>";
+    t1 += "</div>";
     
     t1 += "<div class='form-row', id='elarchivo'>";
     t1 += "<div class='column-half'>Archivo Actual<span style='color:red'>*</span>{nombrearchivo}</div>";
@@ -113,7 +115,6 @@ $(document).ready(function () {
             {
                 label: '¿Donde está instalada?',
                 name: 'idTipoInstalacion',
-                jsonmap: 'tipoInstalacion.nombre',
                 width: 160,
                 align: 'center',
                 sortable: false,
@@ -139,6 +140,30 @@ $(document).ready(function () {
                         });
                         return s + "</select>";
                     },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var nombretipodocumento = $('option:selected', this).text();
+                            var idtipo = $('option:selected', this).val();
+
+                            $.ajax({
+                                type: "GET",
+                                url: '/lic/getplantillatipo/' + idtipo,
+                                async: false,
+                                success: function (data) {
+                                    if (data.length > 0 && data[0].nombrearchivo != null) {
+                                        $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipoinstalacion/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
+                                        //$("input#program_id").val(data[0].nombrearchivo);
+                                    } else {
+                                        $("#laplantilla").empty().html("<div class='column-full'><span>Tipo de Instalacion no tiene plantilla</span></div>");
+                                    }
+                                }
+                            });
+
+
+
+
+                        }
+                    }],
                 },
                 search: true
             },
