@@ -17,6 +17,9 @@ define("CONTRATO", "CONTRATO");
 define("USERLIC", "USERLIC");
 define("JEFELIC", "JEFELIC");
 define("ADMINLIC", "ADMINLIC");
+define("JEFESERVIDOR", "JEFESERVIDOR");
+define("JEFEPC", "JEFEPC");
+define("INSTALADOR", "INSTALADOR");
 //define estados sistema licencias
 define("RECHAZADO", "Rechazado");
 define("ALAESPERA", "A la Espera");

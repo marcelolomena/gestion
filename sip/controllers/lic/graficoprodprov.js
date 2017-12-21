@@ -76,7 +76,7 @@ exports.getGraficoSoporte = function (req, res) {
   logger.debug("fabricante:"+id);
   
  var sql = "SELECT a.idproducto, b.nombre, sum(isnull(a.valorsoporte,0)) monto FROM lic.compra a JOIN lic.producto b ON a.idproducto=b.id "+
- "WHERE b.idfabricante = "+id +" and a.valorlicencia is not null "+
+ "WHERE b.idfabricante = "+id +" and a.valorsoporte is not null "+
  "GROUP BY a.idproducto, b.nombre;";
 
 console.log("sql:"+sql)
@@ -119,7 +119,7 @@ exports.getCompras = function (req, res) {
   "DECLARE @PageNumber INT; "+
   "SELECT @PageNumber="+page+"; "+ 
   //"With SQLPaging As   ( "+
-  "SELECT a.id, b.nombre, a.fechacompra, c.razonsocial, a.valorlicencia, a.comprador "+ 
+  "SELECT a.id, b.nombre, a.fechacompra, c.razonsocial, a.valorlicencia, a.liccompradas "+ 
   "FROM lic.compra a JOIN lic.producto b ON a.idproducto=b.id "+
   "JOIN sip.proveedor c ON a.idproveedor=c.id "+
   "WHERE a.idproducto="+req.params.id+" ";
@@ -155,7 +155,7 @@ exports.getComprasSoporte = function (req, res) {
   "DECLARE @PageNumber INT; "+
   "SELECT @PageNumber="+page+"; "+ 
   //"With SQLPaging As   ( "+
-  "SELECT a.id, b.nombre, a.fechacompra, c.razonsocial, a.valorsoporte, a.comprador "+ 
+  "SELECT a.id, b.nombre, a.fechacompra, c.razonsocial, a.valorsoporte, a.liccompradas "+ 
   "FROM lic.compra a JOIN lic.producto b ON a.idproducto=b.id "+
   "JOIN sip.proveedor c ON a.idproveedor=c.id "+
   "WHERE a.idproducto="+req.params.id+" ";
@@ -182,7 +182,7 @@ exports.getComprasSoporte = function (req, res) {
 exports.getFabricantesConCompras = function (req, res) {
   
     var sql = "SELECT DISTINCT(a.nombre), a.id FROM lic.fabricante a JOIN lic.producto b ON a.id=b.idfabricante "+
-     "JOIN lic.compra c ON b.id=c.idproducto";
+     "JOIN lic.compra c ON b.id=c.idproducto ORDER BY a.nombre";
   
     sequelize.query(sql)
       .spread(function (rows) {
