@@ -12,8 +12,8 @@ exports.action = function (req, res) {
   switch (action) {
     case "edit":
       //Codigo de update
-      var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "' " +
-        "WHERE id =" + req.body.id;
+      var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "', " +
+        " idtorre = "+ req.body.torre  +" WHERE id =" + req.body.id;
 
       console.log("query:" + sql);
       sequelize.query(sql).then(function (ok) {
@@ -75,7 +75,7 @@ exports.list = function (req, res) {
       "SELECT @PageNumber=" + page + "; " +
       "SELECT a.*, b.nombre, c.first_name+' '+ c.last_name AS usuario, d.nombre torre FROM lic.instalacion a JOIN lic.producto b ON a.idproducto=b.id " +
       "JOIN art_user c ON c.uid = a.idusuario " +
-      "JOIN lic.torre d ON a.idtorre = d.id " +
+      "LEFT JOIN lic.torre d ON a.idtorre = d.id " +
       "WHERE a.idtipoinstalacion = " + constants.Servidor
   } else if (rol == constants.JEFEPC) {
     sql = "DECLARE @PageSize INT; " +
@@ -123,7 +123,7 @@ exports.getTorres = function (req, res) {
 exports.downFile = function (req, res) {
 
   var file = "Documento1.docx";
-  var filePath = "G:\\URBANSOFT\\Proyectos\\BancoChile\\Presupuesto\\GIT\\gestion\\sip\\docs\\lic";
+  var filePath = "docs\\lic";
   var sql = "SELECT nombrearchivo FROM lic.instalacion WHERE id="+req.params.id;
   sequelize.query(sql)
     .spread(function (rows) {
@@ -140,6 +140,9 @@ exports.downFile = function (req, res) {
           res.writeHead(400, { "Content-Type": "text/plain" });
           res.end("ERROR Archivo no Existe");
         }
+      }).catch(function (err) {
+        res.writeHead(400, { "Content-Type": "text/plain" });
+        res.end("ERROR Archivo no Existe");
       });
     });
 
