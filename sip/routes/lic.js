@@ -256,5 +256,8 @@ module.exports = function (passport) {
     router.route('/lic/torres')
         .get(isAuthenticated, visacionController.getTorres);    		
         
+    router.route('/lic/downfile/:id')
+        .get(isAuthenticated, visacionController.downFile); 
+		
     return router;
 };

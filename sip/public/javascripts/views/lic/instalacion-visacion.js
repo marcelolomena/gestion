@@ -134,7 +134,7 @@ $(document).ready(function () {
             var nombre = rowObject.nombrearchivo;
             var id = rowObject.id;
             if (nombre != null) {
-                return "<a href='/lic/documento/"+id+"'>"+nombre+"</a>" ;
+                return "<a href='/lic/downfile/"+id+"'>"+nombre+"</a>" ;
             } else {
                 return "Sin Adjunto";
             }
