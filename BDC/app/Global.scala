@@ -56,21 +56,6 @@ object Global extends GlobalSettings {
     //InitialData.insertUser()
   }
 
-  object InitialData {
-
-    def insertUser() = {
-      val user = UserService.findAllUsers
-
-      if (user.size == 0) {
-        Seq(
-          //UserMaster(NotAssigned, "dandrade", "$2a$10$7.sClLhbsYAGwsmYcztMnOMCQvadp39rJj2xopMrya506BIgPSXaK", "Daniel", "Andrade", 1, 9, 10, "dandrade@toyato.com", new SimpleDateFormat("yyyy-MM-dd").parse("1956-12-06"), " ", new SimpleDateFormat("yyyy-MM-dd").parse("2014-05-20"), 1, 0, "4a89f4e5-d2ee-4889-9ce6-1030b8f37637", 1, "BDC000", 1000, "91588347", 1, "8.00", 0)
-        ).foreach(UserService.insertUser)
-
-      }
-
-    }
-
-  }
 }
 
 class DailyBatch01 extends Actor

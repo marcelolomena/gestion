@@ -85,7 +85,8 @@ object Application extends Controller with Secured {
 
       if (uId != -1) {
         val user = UserService.findUserDetailsById(uId)
-        userSession = request.session + ("uId" -> uId.toString()) + ("username" -> user.get.uname) + ("utype" -> "1") + ("user_profile" -> user.get.user_profile)
+        userSession = request.session +
+          ("uId" -> uId.toString()) + ("username" -> user.get.uname) + ("utype" -> "1") + ("user_profile" -> user.get.user_profile)
 
         username = user.get.uname
       } else {
