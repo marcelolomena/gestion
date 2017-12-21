@@ -25,6 +25,10 @@ $(document).ready(function () {
     tmpl += "<div class='column-half'>Comentario Visación {comentariovisacion}</div>";
     tmpl += "</div>"; 
 
+    tmpl += "<div class='form-half'>";
+    tmpl += "<div class='column-full'>Torre {torre}</div>";
+    tmpl += "</div>";     
+
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
@@ -105,7 +109,7 @@ $(document).ready(function () {
     {
         label: 'Comentario de Solicitud',
         name: 'informacion',
-        width: 300,
+        width: 200,
         hidden: false,
         editable: true,
         edittype: 'textarea',
@@ -120,9 +124,26 @@ $(document).ready(function () {
         search: false
     },
     {
+        label: 'Adjunto',
+        name: 'nombrearchivo',
+        width: 200,
+        hidden: false,
+        editable: true,
+        search: false,
+        formatter: function (cellvalue, options, rowObject) {
+            var nombre = rowObject.nombrearchivo;
+            var id = rowObject.id;
+            if (nombre != null) {
+                return "<a href='/lic/downfile/"+id+"'>"+nombre+"</a>" ;
+            } else {
+                return "Sin Adjunto";
+            }
+        },        
+    },    
+    {
         label: 'Comentario de Visación',
         name: 'comentariovisacion',
-        width: 300,
+        width: 200,
         hidden: false,
         editable: true,
         edittype: 'textarea',
@@ -130,7 +151,42 @@ $(document).ready(function () {
             required: true
         },
         search: false
-    }
+    },
+    {
+        label: 'Torre',
+        name: 'torre',
+        jsonmap: 'torre',
+        width: 50,
+        align: 'center',
+        sortable: false,
+        editable: true,
+        edittype: 'select', 
+        editrules: {
+            required: true
+        },
+        search: false,
+        editoptions: {
+            dataUrl: '/lic/torres',
+            buildSelect: function (response) {
+                var grid = $("#grid");
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                var thissid = rowData.torre;
+                var data = JSON.parse(response);
+                var s = "<select>";
+                var sel=false;
+                s += '<option value="0">--Escoger Torre--</option>';
+                $.each(data, function (i, item) {
+                    if (data[i].id == thissid) {
+                        s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                    } else {
+                        s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                    }
+                });
+                return s + "</select>";
+            }
+        }, dataInit: function (elem) { $(elem).width(200); }        
+    }, 
 ];
     $("#grid").jqGrid({
         url: '/lic/instalacion-visacion',

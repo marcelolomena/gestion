@@ -253,7 +253,18 @@ module.exports = function (passport) {
 
     router.route('/lic/instalacion-visacion')
         .get(isAuthenticated, visacionController.list)
+<<<<<<< HEAD
         .post(isAuthenticated, visacionController.action);
 
+=======
+        .post(isAuthenticated, visacionController.action); 
+
+    router.route('/lic/torres')
+        .get(isAuthenticated, visacionController.getTorres);    		
+        
+    router.route('/lic/downfile/:id')
+        .get(isAuthenticated, visacionController.downFile); 
+		
+>>>>>>> fee665f22104a97d7e8644dc4c0d0acdb32a8339
     return router;
 };

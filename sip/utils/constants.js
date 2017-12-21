@@ -73,3 +73,9 @@ define("BorraItemFactura", 37);
 define("IniciaCargaDTE", 38);
 define("FinExitoCargaDTE", 39);
 define("FinErrorCargaDTE", 40);
+
+//Tipos de instalación
+//define("Servidor", 16);
+//define("PC", 15);
+define("Servidor", 14);
+define("PC", 13);
