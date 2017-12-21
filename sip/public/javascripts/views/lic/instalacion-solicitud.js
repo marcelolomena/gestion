@@ -10,9 +10,6 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half'>¿Donde está instalada?<span style='color:red'>*</span>{idTipoInstalacion}</div>";
-    t1 += "</div>";
-
     t1 += "<div class='form-row', id='laplantilla'>";
     t1 += "</div>";
     
@@ -89,13 +86,28 @@ $(document).ready(function () {
                                 success: function (data) {
                                     if (data.length > 0) {
                                         $("input#codAutorizacion").val(data[0].codautoriza);
-                                        $("select#idTipoInstalacion").val(data[0].idtipoinstalacion);
+                                        var idtipo = data[0].idtipoinstalacion;
+                                        // $("select#idTipoInstalacion").val(data[0].idtipoinstalacion);
+                                        $.ajax({
+                                            type: "GET",
+                                            url: '/lic/getplantillatipo/' + idtipo,
+                                            async: false,
+                                            success: function (data) {
+                                                if (data.length > 0 && data[0].nombrearchivo != null) {
+                                                    $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipoinstalacion/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
+                                                    //$("input#program_id").val(data[0].nombrearchivo);
+                                                } else {
+                                                    $("#laplantilla").empty().html("");
+                                                }
+                                            }
+                                        });
                                     } else {
                                         alert("No existe código de Autorización");
                                         $("input#codautorizacion").val("0");
                                     }
                                 }
                             });
+                            
                         }
                     }],
                 },
@@ -112,61 +124,62 @@ $(document).ready(function () {
                 },
                 search: false
             },
-            {
-                label: '¿Donde está instalada?',
-                name: 'idTipoInstalacion',
-                width: 160,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                hidden: true,
-                edittype: 'select',
-                editoptions: {
-                    dataUrl: '/lic/tiposInstalacion',
-                    buildSelect: function (response) {
-                        var grid = $('#grid');
-                        var rowKey = grid.getGridParam("selrow");
-                        var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.id;
-                        var data = JSON.parse(response);
-                        var s = "<select>";
-                        s += '<option value="0">--Escoger Tipo de Instalación--</option>';
-                        $.each(data, function (i, item) {
-                            if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                            } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                            }
-                        });
-                        return s + "</select>";
-                    },
-                    dataEvents: [{
-                        type: 'change', fn: function (e) {
-                            var nombretipodocumento = $('option:selected', this).text();
-                            var idtipo = $('option:selected', this).val();
+            // {
+            //     label: '¿Donde está instalada?',
+            //     name: 'idTipoInstalacion',
+            //     width: 160,
+            //     align: 'center',
+            //     sortable: false,
+            //     editable: true,
+            //     hidden: true,
+            //     edittype: 'select',
+            //     editoptions: {
+            //         dataUrl: '/lic/tiposInstalacion',
+            //         buildSelect: function (response) {
+            //             var grid = $('#grid');
+            //             var rowKey = grid.getGridParam("selrow");
+            //             var rowData = grid.getRowData(rowKey);
+            //             var thissid = rowData.id;
+            //             var data = JSON.parse(response);
+            //             var s = "<select>";
+            //             s += '<option value="0">--Escoger Tipo de Instalación--</option>';
+            //             $.each(data, function (i, item) {
+            //                 if (data[i].id == thissid) {
+            //                     s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+            //                 } else {
+            //                     s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+            //                 }
+            //             });
+            //             return s + "</select>";
+            //         },
+            //         dataEvents: [{
+            //             type: 'change', fn: function (e) {
+            //                 var nombretipodocumento = $('option:selected', this).text();
+            //                 var idtipo = $('option:selected', this).val();
 
-                            $.ajax({
-                                type: "GET",
-                                url: '/lic/getplantillatipo/' + idtipo,
-                                async: false,
-                                success: function (data) {
-                                    if (data.length > 0 && data[0].nombrearchivo != null) {
-                                        $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipoinstalacion/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
-                                        //$("input#program_id").val(data[0].nombrearchivo);
-                                    } else {
-                                        $("#laplantilla").empty().html("<div class='column-full'><span>Tipo de Instalacion no tiene plantilla</span></div>");
-                                    }
-                                }
-                            });
-
-
+            //                 $.ajax({
+            //                     type: "GET",
+            //                     url: '/lic/getplantillatipo/' + idtipo,
+            //                     async: false,
+            //                     success: function (data) {
+            //                         if (data.length > 0 && data[0].nombrearchivo != null) {
+            //                             $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipoinstalacion/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
+            //                             //$("input#program_id").val(data[0].nombrearchivo);
+            //                         } else {
+            //                             $("#laplantilla").empty().html("<div class='column-full'><span>Tipo de Instalacion no tiene plantilla</span></div>");
+            //                         }
+            //                     }
+            //                 });
 
 
-                        }
-                    }],
-                },
-                search: true
-            },
+
+
+            //             }
+            //         }],
+            //     },
+            //     search: true
+            // }
+            
             {
                 label: 'Nombre de Archivo',
                 name: 'nombrearchivo',
