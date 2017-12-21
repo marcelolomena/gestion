@@ -205,6 +205,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, productoController.getProductoCompra);
 
     router.route('/lic/instalacionSolicitud')
+        .post(isAuthenticated, instalacionSolicitudController.action)
         .get(isAuthenticated, instalacionSolicitudController.list)
 
     router.route('/lic/misAutorizaciones')
@@ -220,10 +221,11 @@ module.exports = function (passport) {
         .post(isAuthenticated, tipoInstalacionController.action)
         .get(isAuthenticated, tipoInstalacionController.list);
 
-        router.route('/lic/tipoInstalacion/upload')
+    router.route('/lic/tipoInstalacion/upload')
         .post(isAuthenticated, tipoInstalacionController.upload);
 
-
+    router.route('/lic/tiposInstalacion')
+        .get(isAuthenticated, tipoInstalacionController.tiposInstalacion);
     // router.route('/lic/reservaAutorizado')
     //     .get(isAuthenticated, recepcionController.listAprobados);
     // router.route('/lic/reservaAprobacion')
@@ -233,21 +235,21 @@ module.exports = function (passport) {
 
     // router.route('/lic/reservaAutorizacion')
     //     .get(isAuthenticated, reservaSolicitudController.list
-     
+
     router.route('/graficolicencia/:id')
         .get(isAuthenticated, graficoController.getGraficoLicencia);
-        
+
     router.route('/graficosoporte/:id')
-        .get(isAuthenticated, graficoController.getGraficoSoporte);  
-        
+        .get(isAuthenticated, graficoController.getGraficoSoporte);
+
     router.route('/fabricantesgrafico')
-        .get(isAuthenticated, graficoController.getFabricantesConCompras);        
-        
+        .get(isAuthenticated, graficoController.getFabricantesConCompras);
+
     router.route('/graficogetcompras/:id')
-        .get(isAuthenticated, graficoController.getCompras);          
-        
+        .get(isAuthenticated, graficoController.getCompras);
+
     router.route('/graficogetcomprassop/:id')
-        .get(isAuthenticated, graficoController.getComprasSoporte);    
+        .get(isAuthenticated, graficoController.getComprasSoporte);
 
     router.route('/lic/instalacion-visacion')
         .get(isAuthenticated, visacionController.list)

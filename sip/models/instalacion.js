@@ -60,6 +60,10 @@ module.exports = function (sequelize, DataTypes) {
         key: 'id'
       }
     },
+    nombrearchivo: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     fechaVisacion: {
       field: 'fechavisacion',
       type: DataTypes.DATE,
