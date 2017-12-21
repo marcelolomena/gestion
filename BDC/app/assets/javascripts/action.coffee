@@ -140,6 +140,10 @@ $(document).on ready: ->
     )
 
     $('#pencil').on shown:(e,editable) ->
+      editable.input.$input.keypress (e) ->
+        if e.which == 13
+          return false
+        return
       ticket = ticketMap[ticketId]
       console.dir(ticket)
       console.dir(ticket.collaborators)
@@ -155,21 +159,19 @@ $(document).on ready: ->
                         response(data.data)
                     })
         close: (event, ui) ->
-          console.log("cerrando")
           return false
         focus: (event, ui) ->
           console.log(ui.item.label)
           $(event.target).val(ui.item.label)
         select: (event, ui) ->
+          event.stopPropagation();
           $('#pencil').data('options', {
             userId: ui.item.value,
             ticketId: ticketId,
             assignerId: currentUser.id,
             boardId: ticketMap[ticketId].boardId
           })
-          console.log("quechu")
           console.log($('#pencil').data('options'))
-          console.log("cha")
           $(event.target).val(ui.item.label)
           return false
       ).autocomplete('instance')._renderItem = ( ul, item ) ->

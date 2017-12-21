@@ -27,7 +27,7 @@ protected trait KanbanProjectService {
           implicit val id : Long = SQL(
             s"""
                |INSERT INTO project (board_id, name, prefix, created_by_user)
-               |VALUES(${project.boardId}, '{project.name}', '${project.prefix}', ${project.createdByUserId})
+               |VALUES(${project.boardId}, '${project.name}', '${project.prefix}', ${project.createdByUserId})
                """.stripMargin
           ).executeInsert(scalar[Long].single)
           project.id = Option(id)

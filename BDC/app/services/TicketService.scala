@@ -133,8 +133,8 @@ protected trait TicketService {
             case 0 =>
               implicit val collaboratorId : Long = SQL(
                 s"""
-                   |INSERT INTO collaborators(user_id, ticket_id)
-                   |VALUES(${collaborator.userId}, ${collaborator.ticketId})
+                   |INSERT INTO collaborators(user_id, ticket_id, board_id,assigner_id)
+                   |VALUES(${collaborator.userId}, ${collaborator.ticketId}, ${collaborator.boardId}, ${collaborator.assignerId.get})
              """.stripMargin
               ).executeInsert(scalar[Long].single)
               KanbanSocketController.addCollaboratorsForTicket(
@@ -170,24 +170,24 @@ protected trait TicketService {
            |JOIN project ON project.board_id = user_authorized_boards.board_id
            |JOIN ticket ON ticket.project_id = project.id
            |WHERE user_authorized_boards.user_id = ${commentItem.userId.get}
-           |AND ticket.project_id = ${commentItem.ticketId.get}
+           |AND ticket.id = ${commentItem.ticketId.get}
            |
          """.stripMargin
-
 
       ).as(scalar[Int].single) match {
         case AuthLevel.SuperAdmin|AuthLevel.Admin|AuthLevel.Contributor =>
           implicit val collaboratorId : Long = SQL(
             s"""
                |INSERT INTO comments(user_id, ticket_id, comment)
-               |VALUES(${commentItem.userId.get}, ${commentItem.ticketId.get}, ${commentItem.comment.get})
+               |VALUES(${commentItem.userId.get}, ${commentItem.ticketId.get}, '${commentItem.comment.get}')
              """.stripMargin
           ).executeInsert(scalar[Long].single)
           commentItem.id = Option(collaboratorId)
           KanbanSocketController.newComment(
             commentItem.ticketId.get,
             SQL(s"SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar from art_user where uid=${commentItem.userId.get}").as(UserBase.userParser.*).head,
-            SQL(s"SELECT board_id from project JOIN ticket where ticket.id=${commentItem.ticketId.get} AND project.id=ticket.project_id").as(scalar[Long].single),
+            //SQL(s"SELECT board_id from project JOIN ticket where ticket.id=${commentItem.ticketId.get} AND project.id=${ticket.project_id}").as(scalar[Long].single),
+            SQL(s"SELECT board_id FROM project a JOIN ticket b ON a.id = b.project_id WHERE b.id = ${commentItem.ticketId.get}").as(scalar[Long].single),
             commentItem.comment.get
           )
           ServiceResponse(StatusCode.OK)

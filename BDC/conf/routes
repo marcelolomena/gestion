@@ -586,8 +586,8 @@ GET    /edit-user-role                                                          
 POST   /edit-user-role                                                                                controllers.UserRole.updateUserRole()
 POST   /update-user-role                                                                              controllers.UserRole.updateUserRoleStatus(id :String,status:Boolean)
 
-
 GET    /documents/:file                                                                               controllers.CustomAssets.at(file)
+GET    /photo/:file                                                                                   controllers.CustomAssets.it(file)
 
 #Pert
 GET    /generatePert                                                                                  controllers.Frontend.Pert.generatePert

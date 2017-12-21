@@ -33,9 +33,9 @@ object KanbanSocketController {
   def props(out: ActorRef, user: UserBase, boardId: Option[Long]) = {
     boardId.isDefined match {
       case true =>
-        Logger.error(s"New Board User! ${user.username} for ${boardId.get}")
+        Logger.debug(s"New Board User! ${user.username} for ${boardId.get}")
       case false =>
-        Logger.error(s"New Floating User! ${user.username}")
+        Logger.debug(s"New Floating User! ${user.username}")
     }
     Props(new KanbanActor(out,user,boardId))
   }
@@ -68,6 +68,22 @@ object KanbanSocketController {
       ))
     }
   }
+
+  def newBoard(board: Board, userAdded: UserBase, userAdding: UserBase): Unit = {
+    Logger.warn("sending new board for user")
+    connected.get(board.id.get).get.foreach { actor =>
+      actor ! Json.stringify(
+        Json.obj(
+          "action" -> JsString(SocketActions.newBoard),
+          "data" -> Json.obj(
+            "board" -> Json.toJson(board),
+            "userAdding" -> Json.toJson(userAdding)
+          )
+        )
+      )
+    }
+  }
+
 
   def newTicket(ticket: Ticket, user: UserBase, boardId: Long): Unit = {
     Logger.warn("sending new ticket")
@@ -113,7 +129,7 @@ object KanbanSocketController {
   }
 
   def addCollaboratorsForTicket(ticket: Ticket, collaboratorAdded: UserBase, user: UserBase, boardId: Long): Unit = {
-    Logger.warn("sending move ticket")
+    Logger.warn("sending move ticket to boardId : " + boardId)
     connected.get(boardId).get.foreach { actor =>
       Logger.warn("sending move ticket for user")
       actor ! Json.stringify(Json.obj(

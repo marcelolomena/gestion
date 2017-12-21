@@ -1,5 +1,6 @@
 window.collaboratorHtml = (collaborator, float) ->
-  return "<div class=\"btn avatar\" style=\"float:#{float};background:url(#{collaborator.avatarUrl});\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" data-original-title=\"#{collaborator.username}\"></div>"
+  avatarUrl="/photo/" + collaborator.avatarUrl
+  return "<div class=\"btn avatar\" style=\"float:#{float};background:url(#{avatarUrl});\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" data-original-title=\"#{collaborator.username}\"></div>"
 
 window.ticketModalHtml = (ticket) ->
   return "<div class=\"modal fade ticket-modal\" id=\"activeTicketModal\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" style=\"z-index:1500;\" data-options='{\"id\":#{ticket.id}}\'>
@@ -82,7 +83,8 @@ window.ticketContentTemplateHtml = (ticket, boardId) ->
             <div id=\"collab_container#{ticket.id}\" data-options=\"{'id':#{ticket.id}, 'board_id':#{boardId}}\" style=\"padding-top:12px;\">"
   if ticket.collaborators != undefined
     for collaborator in ticket.collaborators
-      str += "<div class=\"btn avatar\" style=\"background:url(#{collaborator.avatarUrl});\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" data-original-title=\"#{collaborator.username}\" data-options=\"{'id':#{ticket.id}, 'board_id':#{boardId}}\"></div>"
+      avatarUrl="/photo/" + collaborator.avatarUrl
+      str += "<div class=\"btn avatar\" style=\"background:url(#{avatarUrl});\" data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" data-original-title=\"#{collaborator.username}\" data-options=\"{'id':#{ticket.id}, 'board_id':#{boardId}}\"></div>"
 
   str += "</div></br><div>#{Messages("kanban.difficulty")}</div><div data-options=\"{'id':#{ticket.id}, 'board_id':#{boardId}}\" class=\"progress progress-striped\">"
 
