@@ -86,7 +86,7 @@ $(document).ready(function () {
                                 async: false,
                                 success: function (data) {
                                     if (data.length > 0) {
-                                        $("input#codautorizacion").val(data[0].codautoriza);
+                                        $("input#codAutorizacion").val(data[0].codautoriza);
                                         $("select#idTipoInstalacion").val(data[0].idtipoinstalacion);
                                     } else {
                                         alert("No existe código de Autorización");
