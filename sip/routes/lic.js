@@ -56,7 +56,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, clasificacionController.list)
         .post(isAuthenticated, clasificacionController.action);
 
-    router.get('/lic/tiposInstalacion', tipoInstalacionController.listAll);
+    // router.get('/lic/tiposInstalacion', tipoInstalacionController.listAll);
     router.route('/lic/tipoInstalacion')
         .get(isAuthenticated, tipoInstalacionController.list)
         .post(isAuthenticated, tipoInstalacionController.action);
@@ -204,7 +204,7 @@ module.exports = function (passport) {
     router.route('/lic/getProductoCompra')
         .get(isAuthenticated, productoController.getProductoCompra);
 
-    router.route('lic/instalacionSolicitud')
+    router.route('/lic/instalacionSolicitud')
         .get(isAuthenticated, instalacionSolicitudController.list)
 
     router.route('/lic/misAutorizaciones')

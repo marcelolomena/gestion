@@ -2,8 +2,13 @@ $(document).ready(function () {
 
     var t1 = "<div id='responsive-form' class='clearfix'>";
 
+
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-full'>Nombre<span style='color:red'>*</span>{nombre}</div>";
+    t1 += "<div class='column-full'>Nombre<span style='color:red'>*</span>{nombrecorto}</div>";
+    t1 += "</div>";
+
+    t1 += "<div class='form-row'>";
+    t1 += "<div class='column-full'>Descripción<span style='color:red'>*</span>{descripcionlarga}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row', id='elarchivo'>";
@@ -20,37 +25,23 @@ $(document).ready(function () {
     t1 += "</div>";
 
     var $grid = $("#grid"),
-        tipoInstalacionModel = [{
-                label: 'Plantilla',
-                name: 'id',
-                key: true,
-                hidden: true,
-                width: 50,
-                editable: true,
-                hidedlg: true,
-                sortable: false,
-                editrules: {
-                    edithidden: false
-                },
-                formatter: function (cellvalue, options, rowObject) {
-                    return returnDocLink(cellvalue, options, rowObject);
-                },
+        catalogoclausulasModel = [
+            {
+                label: 'Plantilla', name: 'id', key: true, hidden: false, width: 50,
+                editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
+                formatter: function (cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject); },
             },
+            
+            { label: 'Nombre', name: 'nombrecorto', width: 100, align: "left", editable: true },
+
 
             {
-                label: 'Nombre',
-                name: 'nombre',
-                width: 100,
-                align: "left",
-                editable: true
+                label: 'Descripción', name: 'descripcionlarga', width: 300,
+                align: 'left', edittype: "textarea", editoptions: { maxlength: "250" },
+                search: true, editable: true, hidden: false,
             },
             {
-                label: 'nombrearchivo',
-                name: 'nombrearchivo',
-                hidden: false,
-                width: 100,
-                align: "left",
-                editable: true,
+                label: 'nombrearchivo', name: 'nombrearchivo', hidden: true, width: 100, align: "left", editable: true,
                 editoptions: {
                     custom_element: labelEditFunc,
                     custom_value: getLabelValue
@@ -61,21 +52,23 @@ $(document).ready(function () {
                 hidden: true,
                 editable: true,
                 edittype: 'file',
-                editrules: {
-                    edithidden: true
-                },
+                editrules: { edithidden: true },
                 editoptions: {
                     enctype: "multipart/form-data"
                 },
                 search: false
             }
+
+
+
+
         ];
 
     $grid.jqGrid({
-        url: '/lic/tipoInstalacion',
+        url: '/sic/grid_tipodocumento',
         datatype: "json",
         mtype: "GET",
-        colModel: tipoInstalacionModel,
+        colModel: catalogoclausulasModel,
         page: 1,
         rowNum: 20,
         regional: 'es',
@@ -83,8 +76,8 @@ $(document).ready(function () {
         width: 1200,
         shrinkToFit: true,
         viewrecords: true,
-        editurl: '/lic/tipoInstalacion',
-        caption: 'Tipos de Instalaciones',
+        editurl: '/sic/grid_tipodocumento',
+        caption: 'Tipos de Documento',
         styleUI: "Bootstrap",
         onSelectRow: function (id) {
             var getID = $(this).jqGrid('getCell', id, 'id');
@@ -94,68 +87,59 @@ $(document).ready(function () {
 
     //$grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $grid.jqGrid('navGrid', '#pager', {
-        edit: true,
-        add: true,
-        del: true,
-        search: false
-    }, {
-        editCaption: "Modifica Tipo de Instalación",
-        closeAfterEdit: true,
-        recreateForm: true,
-        ajaxEditOptions: sipLibrary.jsonOptions,
-        serializeEditData: sipLibrary.createJSON,
-        template: t1,
-        // beforeShowForm: function (form) {
-        //     $('input#nombrearchivo', form).attr('readonly', 'readonly');
-        // },
-        // errorTextFormat: function (data) {
-        //     return 'Error: ' + data.responseText
-        // },
-        // beforeSubmit: function (postdata, formid) {
-        //     if (postdata.nombrecorto.trim().length == 0) {
-        //         return [false, "Nombre: El documento debe tener nombre", ""];
-        //     } else {
-        //         return [true, "", ""]
-        //     }
-        // },
-        afterSubmit: UploadDoc
+    $grid.jqGrid('navGrid', '#pager', { edit: true, add: true, del: true, search: false },
+        {
+            editCaption: "Modifica Tipo de Documento",
+            closeAfterEdit: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            template: t1,
+            beforeShowForm: function (form) {
+                $('input#nombrearchivo', form).attr('readonly', 'readonly');
+            },
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
+            }, beforeSubmit: function (postdata, formid) {
+                if (postdata.nombrecorto.trim().length == 0) {
+                    return [false, "Nombre: El documento debe tener nombre", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            }, afterSubmit: UploadDoc
 
-    }, {
-        addCaption: "Agrega Tipo de Documento",
-        closeAfterAdd: true,
-        recreateForm: true,
-        mtype: 'POST',
-        ajaxEditOptions: sipLibrary.jsonOptions,
-        serializeEditData: sipLibrary.createJSON,
-        template: t1,
-        // beforeSubmit: function (postdata, formid) {
-        //     if (postdata.nombrecorto.trim().length == 0) {
-        //         return [false, "Nombre: El documento debe tener nombre", ""];
-        //     } else {
-        //         return [true, "", ""]
-        //     }
-        // },
-        // beforeShowForm: function (form) {
-        //     $("#elarchivo").empty().html('');
-        // },
-        // errorTextFormat: function (data) {
-        //     return 'Error: ' + data.responseText
+        }, {
+            addCaption: "Agrega Tipo de Documento",
+            closeAfterAdd: true,
+            recreateForm: true,
+            mtype: 'POST',
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            template: t1,
+            beforeSubmit: function (postdata, formid) {
+                if (postdata.nombrecorto.trim().length == 0) {
+                    return [false, "Nombre: El documento debe tener nombre", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            },
+            beforeShowForm: function (form) {
+                $("#elarchivo").empty().html('');
+            },
+            errorTextFormat: function (data) {
+                return 'Error: ' + data.responseText
 
-        // },
-        afterSubmit: UploadDoc
-    }, {
+            }, afterSubmit: UploadDoc
+        }, {
 
-    }, {
+        }, {
 
-    });
+        });
 
 })
-
 function labelEditFunc(value, opt) {
     return "<span>" + value + "</span";
 }
-
 function getLabelValue(e, action, textvalue) {
     if (action == 'get') {
         console.log("esto es?")
@@ -168,9 +152,8 @@ function getLabelValue(e, action, textvalue) {
         console.log("o nada??")
     }
 }
-
 function UploadDoc(response, postdata) {
-
+    
     var data = $.parseJSON(response.responseText);
     //console.log(data)
     if (data.success) {
@@ -190,13 +173,11 @@ function ajaxDocUpload(id) {
     });
     dialog.init(function () {
         $.ajaxFileUpload({
-            url: '/lic/tipoInstalacion/upload',
+            url: '/sic/tipodocumento/upload',
             secureuri: false,
             fileElementId: 'fileToUpload',
             dataType: 'json',
-            data: {
-                id: id
-            },
+            data: { id: id },
             success: function (data, status) {
                 if (typeof (data.success) != 'undefined') {
                     if (data.success == true) {
@@ -205,7 +186,8 @@ function ajaxDocUpload(id) {
                     } else {
                         dialog.find('.bootbox-body').html(data.message);
                     }
-                } else {
+                }
+                else {
                     dialog.find('.bootbox-body').html(data.message);
                 }
             },
@@ -215,7 +197,6 @@ function ajaxDocUpload(id) {
         })
     });
 }
-
 function returnDocLink(cellValue, options, rowdata) {
-    return "<a href='/docs/tipoinstalacion/" + rowdata.nombrearchivo + "' ><img border='0'  src='../images/file.gif' width='16' height='16'></a>";
+    return "<a href='/docs/tipodocumento/" + rowdata.nombrearchivo + "' ><img border='0'  src='../images/file.gif' width='16' height='16'></a>";
 }

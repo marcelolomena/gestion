@@ -19,18 +19,33 @@ function list(req, res) {
         if (err) {
             logger.debug("->>> " + err)
         } else {
-            models.instalacion.count({
+            entity.belongsTo(models.producto, {
+                foreignKey: 'idProducto'
+            });
+            entity.belongsTo(models.user, {
+                foreignKey: 'idUsuario'
+            });
+            entity.belongsTo(models.tipoInstalacion, {
+                foreignKey: 'idTipoInstalacion'
+            });
+            entity.count({
                 where: {
                     idUsuario: usuario
                 },
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                models.instalacion.findAll({
+                entity.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
+                    order: ['estado'],
                     where: {
                         idUsuario: usuario
-                    }
+                    },
+                    include: [{
+                        model: models.producto
+                    }, {
+                        model: models.user
+                    }]
                 }).then(function (instal) {
                     return res.json({
                         records: records,
@@ -59,10 +74,10 @@ function misAutorizaciones(req, res) {
 }
 
 function miscodigos(req, res) {
-    var idProducto = req.params.idProducto;
-    models.sequelize.query("select codautoriza" +
-        "from lic.reserva" +
-        "where idusuario = " + req.session.passport.user + " and idproducto = " + idProducto).spread(function (rows) {
+    var idproduct = req.params.idProducto;
+    models.sequelize.query("select codautoriza " +
+        "from lic.reserva " +
+        "where idproducto = " + idproduct).spread(function (rows) {
         return res.json(rows);
     });
 }
