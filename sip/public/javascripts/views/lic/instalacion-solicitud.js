@@ -67,9 +67,9 @@ $(document).ready(function () {
                         s += '<option value="0">--Escoger Producto--</option>';
                         $.each(data, function (i, item) {
                             if (data[i].idproducto == thissid) {
-                                s += '<option value="' + data[i].idproducto + '" selected>' + data[i].nombre + ' - ' + data[i].licReserva + '</option>';
+                                s += '<option value="' + data[i].idproducto + '" selected>' + data[i].nombre + ' - ' + data[i].numlicencia + '</option>';
                             } else {
-                                s += '<option value="' + data[i].idproducto + '">' + data[i].nombre + ' - ' + data[i].licReserva + '</option>';
+                                s += '<option value="' + data[i].idproducto + '">' + data[i].nombre + ' - ' + data[i].numlicencia + '</option>';
                             }
                         });
                         return s + "</select>";

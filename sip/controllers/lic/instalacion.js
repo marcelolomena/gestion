@@ -67,7 +67,7 @@ function list(req, res) {
 }
 
 function misAutorizaciones(req, res) {
-    models.sequelize.query("select a.idproducto, b.nombre, b.licReserva " +
+    models.sequelize.query("select a.idproducto, b.nombre, a.numlicencia " +
         "from lic.reserva a " +
         "join lic.producto b on a.idproducto = b.id " +
         "where a.idusuario = " + req.session.passport.user + " and a.estado = 'Autorizado' and licReserva is not null").spread(function (rows) {
