@@ -222,41 +222,16 @@ function upload(req, res) {
     }
 }
 
-
-
-
-
-
-
-
-
-
-// var entity = models.tipoInstalacion;
-// var includes = [];
-
-
-// function listAll(req, res) {
-//     base.listAll(req, res, entity, function (item) {
-//         return {
-//             id: item.id,
-//             nombre: item.nombre
-//         };
-//     });
-// }
-
-// function action(req, res) {
-//     switch (req.body.oper) {
-//         case 'add':
-//             return base.create(entity, map(req), res);
-//         case 'edit':
-//             return base.update(entity, map(req), res);
-//         case 'del':
-//             return base.destroy(entity, req.body.id, res);
-//     }
-// }
+function tiposInstalacion(req, res) {
+    models.sequelize.query("SELECT * " +
+        "FROM lic.tipoinstalacion ").spread(function (rows) {
+        return res.json(rows);
+    });
+}
 
 module.exports = {
     list: list,
     action: action,
-    upload: upload
+    upload: upload,
+    tiposInstalacion: tiposInstalacion
 };

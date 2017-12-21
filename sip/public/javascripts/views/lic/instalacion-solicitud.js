@@ -1,16 +1,19 @@
 $(document).ready(function () {
 
+
+
     var t1 = "<div id='responsive-form' class='clearfix'>";
 
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half'>Producto<span style='color:red'>*</span>{idProducto}</div>";
-    t1 += "<div class='column-half'>Código de Autorización<span style='color:red'>*</span>{codautorizacion}</div>";
+    t1 += "<div class='column-half'>Código de Autorización<span style='color:red'>*</span>{codAutorizacion}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half'>¿Donde está instalada?<span style='color:red'>*</span>{idTipoInstalacion}</div>";
     t1 += "</div>";
 
+    
     t1 += "<div class='form-row', id='elarchivo'>";
     t1 += "<div class='column-half'>Archivo Actual<span style='color:red'>*</span>{nombrearchivo}</div>";
     t1 += "</div>";
@@ -20,7 +23,7 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-full'>Comentario<span style='color:red'>*</span>{comentario}</div>";
+    t1 += "<div class='column-full'>Comentario<span style='color:red'>*</span>{informacion}</div>";
     t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
@@ -64,9 +67,9 @@ $(document).ready(function () {
                         s += '<option value="0">--Escoger Producto--</option>';
                         $.each(data, function (i, item) {
                             if (data[i].idproducto == thissid) {
-                                s += '<option value="' + data[i].idproducto + '" selected>' + data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].idproducto + '" selected>' + data[i].nombre + ' - ' + data[i].licReserva + '</option>';
                             } else {
-                                s += '<option value="' + data[i].idproducto + '">' + data[i].nombre + '</option>';
+                                s += '<option value="' + data[i].idproducto + '">' + data[i].nombre + ' - ' + data[i].licReserva + '</option>';
                             }
                         });
                         return s + "</select>";
@@ -84,6 +87,7 @@ $(document).ready(function () {
                                 success: function (data) {
                                     if (data.length > 0) {
                                         $("input#codautorizacion").val(data[0].codautoriza);
+                                        $("select#idTipoInstalacion").val(data[0].idtipoinstalacion);
                                     } else {
                                         alert("No existe código de Autorización");
                                         $("input#codautorizacion").val("0");
@@ -97,7 +101,7 @@ $(document).ready(function () {
             },
             {
                 label: 'Código de Autorización',
-                name: 'codautorizacion',
+                name: 'codAutorizacion',
                 align: 'center',
                 width: 100,
                 editable: true,
@@ -119,23 +123,24 @@ $(document).ready(function () {
                 editoptions: {
                     dataUrl: '/lic/tiposInstalacion',
                     buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.tipoInstalacion;
+                        var grid = $('#grid');
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.id;
                         var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
-                    }
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger Tipo de Instalación--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    },
                 },
-                search: true,
-                stype: 'select',
-                searchoptions: {
-                    dataUrl: '/lic/tiposInstalacion',
-                    buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.tipoInstalacion;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
-                    }
-                }
+                search: true
             },
             {
                 label: 'Nombre de Archivo',
@@ -150,10 +155,10 @@ $(document).ready(function () {
                     custom_value: getLabelValue
                 },
                 formatter: function (cellvalue, options, rowObject) {
-                    return returnDocLinkDoc(cellvalue, options, rowObject, parentRowKey);
+                    return returnDocLinkDoc(cellvalue, options, rowObject);
                 },
                 unformat: function (cellvalue, options, rowObject) {
-                    return returnDocLinkDoc2(cellvalue, options, rowObject, parentRowKey);
+                    return returnDocLinkDoc2(cellvalue, options, rowObject);
                 }
             },
             {
@@ -173,7 +178,7 @@ $(document).ready(function () {
             },
             {
                 label: 'Comentario',
-                name: 'comentario',
+                name: 'informacion',
                 width: 400,
                 hidden: false,
                 editable: true,
@@ -258,10 +263,10 @@ $(document).ready(function () {
         beforeShowForm: function (form) {
             $("#elarchivo").empty().html('');
         },
-        // errorTextFormat: function (data) {
-        //     return 'Error: ' + data.responseText
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
 
-        // },
+        },
         afterSubmit: UploadDoc
     }, {
 
@@ -335,16 +340,16 @@ function ajaxDocUpload(id) {
     });
 }
 
-function returnDocLinkDoc(cellValue, options, rowdata, parentRowKey) {
+function returnDocLinkDoc(cellValue, options, rowdata) {
     if (rowdata.nombrearchivo != "") {
-        return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' >" + rowdata.nombrearchivo + "</a>";
+        return "<a href='/docs/lic/" + rowdata.nombrearchivo + "' >" + rowdata.nombrearchivo + "</a>";
     } else {
         return "";
     }
 
 }
 
-function returnDocLinkDoc2(cellValue, options, rowdata, parentRowKey) {
+function returnDocLinkDoc2(cellValue, options, rowdata) {
     if (rowdata.nombrearchivo != "") {
         return rowdata.nombrearchivo;
         //return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' >"+rowdata.nombrearchivo+"</a>";

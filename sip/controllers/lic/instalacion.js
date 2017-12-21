@@ -5,7 +5,9 @@ var utilSeq = require('../../utils/seq');
 var base = require('./lic-controller');
 var _ = require('lodash');
 var logger = require('../../utils/logger');
-var secuencia = require("../../utils/secuencia");
+var path = require('path');
+var fs = require('fs');
+var Busboy = require('busboy');
 
 var entity = models.instalacion;
 
@@ -65,19 +67,20 @@ function list(req, res) {
 }
 
 function misAutorizaciones(req, res) {
-    models.sequelize.query("select a.idproducto, b.nombre " +
+    models.sequelize.query("select a.idproducto, b.nombre, b.licReserva " +
         "from lic.reserva a " +
         "join lic.producto b on a.idproducto = b.id " +
-        "where a.idusuario = " + req.session.passport.user + " and a.estado = 'Autorizado'").spread(function (rows) {
+        "where a.idusuario = " + req.session.passport.user + " and a.estado = 'Autorizado' and licReserva is not null").spread(function (rows) {
         return res.json(rows);
     });
 }
 
 function miscodigos(req, res) {
     var idproduct = req.params.idProducto;
-    models.sequelize.query("select codautoriza " +
-        "from lic.reserva " +
-        "where idproducto = " + idproduct).spread(function (rows) {
+    models.sequelize.query("select a.codautoriza, b.idtipoinstalacion " +
+        "from lic.reserva a " +
+        "join lic.producto b on a.idproducto = b.id " +
+        "where idproducto = " + idproduct + " and a.codautoriza is not null").spread(function (rows) {
         return res.json(rows);
     });
 }
@@ -141,35 +144,26 @@ function upload(req, res) {
         }
 
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-            var saveTo = path.join(__dirname, '../../', 'docs', filename);
+            var saveTo = path.join(__dirname, '../../docs/', 'lic', filename);
             file.pipe(fs.createWriteStream(saveTo));
-            awaitParent.then(function (idParent) {
-                var dir = path.join(__dirname, '../../', 'public/docs/' + idParent);
-                checkDirectorySync(dir);
-                var dest = path.join(__dirname, '../../', 'public/docs/' + idParent, filename);
-                copyFile(saveTo, dest)
-                awaitId.then(function (idDetail) {
-                    models.instalacion.update({
-                        nombrearchivo: filename
-                    }, {
-                        where: {
-                            id: idDetail
-                        }
-                    }).then(function (instalacionn) {}).catch(function (err) {
-                        logger.error(err)
-                        res.json({
-                            id: 0,
-                            message: err.message,
-                            success: false
-                        });
-                    });
-                }).catch(function (err) {
+            var dir = path.join(__dirname, '../../', 'public/docs/lic');
+            checkDirectorySync(dir);
+            var dest = path.join(__dirname, '../../', 'public/docs/lic', filename);
+            copyFile(saveTo, dest)
+            awaitId.then(function (idDetail) {
+                models.instalacion.update({
+                    nombrearchivo: filename
+                }, {
+                    where: {
+                        id: idDetail
+                    }
+                }).then(function (instalacionn) {}).catch(function (err) {
+                    logger.error(err)
                     res.json({
-                        error_code: 1,
+                        id: 0,
                         message: err.message,
                         success: false
                     });
-                    logger.error(err)
                 });
             }).catch(function (err) {
                 res.json({
@@ -179,6 +173,7 @@ function upload(req, res) {
                 });
                 logger.error(err)
             });
+
         });
 
         busboy.on('finish', function () {
@@ -194,9 +189,86 @@ function upload(req, res) {
     }
 }
 
+function action(req, res) {
+    var action = req.body.oper;
+    switch (action) {
+        case "add":
+            var hoy = "" + new Date().toISOString();
+
+
+
+            models.instalacion.create({
+                idUsuario: req.session.passport.user,
+                fechaSolicitud: hoy,
+                idProducto: req.body.idProducto,
+                codAutorizacion: req.body.codautorizacion,
+                informacion: req.body.comentario,
+                estado: 'Pendiente',
+                idTipoInstalacion: req.body.idTipoInstalacion
+            }).then(function (instal) {
+                return res.json({
+                    id: instal.id,
+                    message: 'Inicio carga',
+                    success: true
+                });
+            }).catch(function (err) {
+                logger.error(err)
+                return res.json({
+                    id: instal.id,
+                    message: 'Falla',
+                    success: false
+                });
+            });
+            break;
+        case "edit":
+            models.instalacion.update({
+                nombre: req.body.nombre
+            }, {
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (clase) {
+                res.json({
+                    id: req.body.id,
+                    message: 'Inicio carga',
+                    success: true
+                });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({
+                    message: err.message,
+                    success: false
+                });
+            });
+            break;
+        case "del":
+            models.tipoInstalacion.destroy({
+                where: {
+                    id: req.body.id
+                }
+            }).then(function (rowDeleted) {
+                if (rowDeleted === 1) {
+                    logger.debug('Deleted successfully');
+                }
+                res.json({
+                    error: 0,
+                    glosa: ''
+                });
+            }).catch(function (err) {
+                logger.error(err)
+                res.json({
+                    error: 1,
+                    glosa: err.message
+                });
+            });
+            break;
+    }
+}
+
 module.exports = {
     list: list,
     misAutorizaciones: misAutorizaciones,
     miscodigos: miscodigos,
-    upload: upload
+    upload: upload,
+    action: action,
 };
