@@ -2,11 +2,13 @@ package service
 
 import anorm.SqlParser._
 import anorm._
+import controllers.Frontend.KanbanSocketController
 import model.AuthLevel.AuthLevel
 import model.BoardValidators.NewBoardValidator
 import model._
 import play.api.db.DB
 import play.api.Play.current
+
 import scala.collection.mutable
 
 /**
@@ -111,6 +113,12 @@ protected trait BoardService {
            |VALUES(${newBoardValidator.userId}, $boardId, ${AuthLevel.SuperAdmin})
          """.stripMargin
       ).executeInsert()
+
+      KanbanSocketController.newBoard(
+        new Board(newBoardValidator.name,Option(boardId)),
+        SQL(s"SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar FROM art_user WHERE uid=${newBoardValidator.userId}").as(UserBase.userParser.*).head,
+        SQL(s"SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar FROM art_user WHERE uid=${newBoardValidator.userId}").as(UserBase.userParser.*).head
+      )
       ServiceResponse(StatusCode.OK)
     }
   }

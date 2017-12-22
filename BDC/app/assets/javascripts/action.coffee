@@ -45,7 +45,8 @@ window.affixBoardSocket = (domBoard, webSocketUrl, boardId) ->
     socket.onopen = () ->
       socket.onmessage = (message) ->
         data = JSON.parse(message.data)
-        console.log(data)
+        console.log("why socket?")
+        console.dir(data)
         socketActions[data.action](data.data)
     return false
 

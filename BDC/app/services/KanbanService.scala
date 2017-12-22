@@ -105,7 +105,7 @@ object KanbanService extends BoardService
 
               KanbanSocketController.addUserToBoard(
                 board,
-                SQL(s"SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar FROM art_user WHERE uid=$userIdFromUsername").as(UserBase.userParser.*).head,
+                SQL(s"SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar FROM art_user WHERE uid=${userIdFromUsername}").as(UserBase.userParser.*).head,
                 SQL(s"SELECT uid id,email,first_name,last_name,uname username,password,profile_image avatar FROM art_user WHERE uid=${userBoardAuthorization.assignerId}").as(UserBase.userParser.*).head
               )
 

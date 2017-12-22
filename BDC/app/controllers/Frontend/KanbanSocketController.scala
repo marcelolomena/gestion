@@ -70,8 +70,13 @@ object KanbanSocketController {
   }
 
   def newBoard(board: Board, userAdded: UserBase, userAdding: UserBase): Unit = {
-    Logger.warn("sending new board for user")
-    connected.get(board.id.get).get.foreach { actor =>
+    Logger.debug("sending new board for user with board_id " + board.id.get)
+    Logger.debug(Json.obj(
+      "board" -> Json.toJson(board),
+      "userAdding" -> Json.toJson(userAdding)
+    ).toString())
+    //connected.get(boardId).get.foreach { actor =>
+    connected.getOrElse(board.id.get, Seq[KanbanActor]()).foreach { actor =>
       actor ! Json.stringify(
         Json.obj(
           "action" -> JsString(SocketActions.newBoard),
@@ -117,7 +122,7 @@ object KanbanSocketController {
   def newKolumn(kolumn: Kolumn, user: UserBase, boardId: Long): Unit = {
     Logger.warn("sending new kolumn")
     connected.get(boardId).get.foreach { actor =>
-      Logger.warn("sending move ticket for user")
+      Logger.warn("sending kolumn for user")
       actor ! Json.stringify(Json.obj(
         "action" -> JsString(SocketActions.newKolumn),
         "data" -> Json.obj(

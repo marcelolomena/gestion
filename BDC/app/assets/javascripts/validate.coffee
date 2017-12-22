@@ -65,7 +65,8 @@ $(document).on ready: ->
           contentType: "application/json;charset=utf-8"
           type: 'POST'
           success: (data) ->
-            console.log(data)
+            console.log("success createNewProject")
+            console.dir(data)
             $("#createProjectModal").modal('hide')
             return false
     }
@@ -111,7 +112,7 @@ $(document).on ready: ->
             values["isArchiveKolumn"] = 0
         values["projectId"] = data.project_id;
         values["createdByUserId"] = currentUser.id;
-        console.log("Dispatch Create Board: " + JSON.stringify(values))
+        console.log("Dispatch Create Column: " + JSON.stringify(values))
         $.ajax
           url:"createNewKolumn"
           data: JSON.stringify(values)
@@ -119,7 +120,8 @@ $(document).on ready: ->
           contentType: "application/json;charset=utf-8"
           type: 'POST'
           success: (data) ->
-            console.log(data)
+            console.log("success createNewKolumn")
+            console.dir(data)
             $("#createColumnModal").modal('hide')
             return false
         return false
@@ -155,7 +157,8 @@ $(document).on ready: ->
           contentType: "application/json;charset=utf-8"
           type: 'POST'
           success: (data) ->
-            console.log(data)
+            console.log("success createNewBoard")
+            console.dir(data)
             $("#createBoardModal").modal('hide')
             return false
         return false

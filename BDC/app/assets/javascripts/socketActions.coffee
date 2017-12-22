@@ -29,6 +29,7 @@ window.socketActions =
     addColumnSortableForProject(project)
 
   newProject : (data) ->
+    console.log("new project!")
     console.log(data)
     noColumns = $("#noActiveProjects#{data.project.project.boardId}")
     if(noColumns != undefined)

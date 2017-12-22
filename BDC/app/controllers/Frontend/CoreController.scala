@@ -23,7 +23,7 @@ trait CoreController extends Controller {
       case true =>
         val response = serviceMethod(validationResult.get) // call method with passed object
         // check status code and serialize return data, then return to client
-        Logger.debug("concha  : " + response.toString)
+        Logger.debug(response.toString)
         response.statusCode match {
           case StatusCode.OK =>
             Ok(Json.obj(
