@@ -67,7 +67,7 @@ function list(req, res) {
 }
 
 function misAutorizaciones(req, res) {
-    models.sequelize.query("select a.idproducto, b.nombre, a.numlicencia " +
+    models.sequelize.query("select a.idproducto, b.nombre, a.numlicencia, b.idtipoinstalacion " +
         "from lic.reserva a " +
         "join lic.producto b on a.idproducto = b.id " +
         "where a.idusuario = " + req.session.passport.user + " and a.estado = 'Autorizado' and licReserva is not null").spread(function (rows) {
@@ -193,8 +193,9 @@ function action(req, res) {
     var action = req.body.oper;
     switch (action) {
         case "add":
-            var hoy = "" + new Date().toISOString();
-
+        var numero = req.body.idTipoInstalacion    
+        var hoy = "" + new Date().toISOString();
+            
 
 
             models.instalacion.create({
@@ -204,7 +205,7 @@ function action(req, res) {
                 codAutorizacion: req.body.codAutorizacion,
                 informacion: req.body.informacion,
                 estado: 'Pendiente',
-                idTipoInstalacion: req.body.idTipoInstalacion
+                idTipoInstalacion: numero
             }).then(function (instal) {
                 return res.json({
                     id: instal.id,
@@ -242,7 +243,7 @@ function action(req, res) {
             });
             break;
         case "del":
-            models.tipoInstalacion.destroy({
+            models.instalacion.destroy({
                 where: {
                     id: req.body.id
                 }

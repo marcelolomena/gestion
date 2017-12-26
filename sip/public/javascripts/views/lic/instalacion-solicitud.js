@@ -30,7 +30,10 @@ $(document).ready(function () {
 
     t1 += "</div>";
 
+    var idTipoInstalacion;
+
     var $grid = $("#grid"),
+        
         instalacionModel = [{
                 label: 'Plantilla',
                 name: 'id',
@@ -67,8 +70,10 @@ $(document).ready(function () {
                         $.each(data, function (i, item) {
                             if (data[i].idproducto == thissid) {
                                 s += '<option value="' + data[i].idproducto + '" selected>' + data[i].nombre + ' - ' + data[i].numlicencia + '</option>';
+                                idTipoInstalacion = data[i].idtipoinstalacion;
                             } else {
                                 s += '<option value="' + data[i].idproducto + '">' + data[i].nombre + ' - ' + data[i].numlicencia + '</option>';
+                                idTipoInstalacion = data[i].idtipoinstalacion;
                             }
                         });
                         return s + "</select>";
@@ -291,6 +296,13 @@ $(document).ready(function () {
         ajaxEditOptions: sipLibrary.jsonOptions,
         serializeEditData: sipLibrary.createJSON,
         template: t1,
+        onclickSubmit: function(rowid){
+            
+            
+            
+            
+            return {idTipoInstalacion: idTipoInstalacion}
+        },
         // beforeSubmit: function (postdata, formid) {
         //     if (postdata.nombrecorto.trim().length == 0) {
         //         return [false, "Nombre: El documento debe tener nombre", ""];
@@ -303,7 +315,6 @@ $(document).ready(function () {
         },
         errorTextFormat: function (data) {
             return 'Error: ' + data.responseText
-
         },
         afterSubmit: UploadDoc
     }, {
