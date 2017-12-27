@@ -63,16 +63,16 @@ $(document).ready(function () {
                         var grid = $('#grid');
                         var rowKey = grid.getGridParam("selrow");
                         var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.idproducto;
+                        var thissid = rowData.id;
                         var data = JSON.parse(response);
                         var s = "<select>";
                         s += '<option value="0">--Escoger Producto--</option>';
                         $.each(data, function (i, item) {
-                            if (data[i].idproducto == thissid) {
-                                s += '<option value="' + data[i].idproducto + '" selected>' + data[i].nombre + ' - ' + data[i].numlicencia + '</option>';
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + ' - ' + data[i].codautoriza + '</option>';
                                 idTipoInstalacion = data[i].idtipoinstalacion;
                             } else {
-                                s += '<option value="' + data[i].idproducto + '">' + data[i].nombre + ' - ' + data[i].numlicencia + '</option>';
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + ' - ' + data[i].codautoriza + '</option>';
                                 idTipoInstalacion = data[i].idtipoinstalacion;
                             }
                         });

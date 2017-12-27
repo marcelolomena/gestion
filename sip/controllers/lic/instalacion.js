@@ -67,7 +67,7 @@ function list(req, res) {
 }
 
 function misAutorizaciones(req, res) {
-    models.sequelize.query("select a.idproducto, b.nombre, a.numlicencia, b.idtipoinstalacion " +
+    models.sequelize.query("select a.id, a.idproducto, b.nombre, a.numlicencia, b.idtipoinstalacion, a.codautoriza " +
         "from lic.reserva a " +
         "join lic.producto b on a.idproducto = b.id " +
         "where a.idusuario = " + req.session.passport.user + " and a.estado = 'Autorizado' and licReserva is not null").spread(function (rows) {
@@ -76,11 +76,11 @@ function misAutorizaciones(req, res) {
 }
 
 function miscodigos(req, res) {
-    var idproduct = req.params.idProducto;
+    var id = req.params.idProducto;
     models.sequelize.query("select a.codautoriza, b.idtipoinstalacion " +
         "from lic.reserva a " +
         "join lic.producto b on a.idproducto = b.id " +
-        "where idproducto = " + idproduct + " and a.codautoriza is not null").spread(function (rows) {
+        "where a.id = " + id + " and a.codautoriza is not null").spread(function (rows) {
         return res.json(rows);
     });
 }
