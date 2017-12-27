@@ -5,14 +5,13 @@ $(document).ready(function () {
     var t1 = "<div id='responsive-form' class='clearfix'>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half'>Producto<span style='color:red'>*</span>{idProducto}</div>";
-    t1 += "<div class='column-half'>Código de Autorización<span style='color:red'>*</span>{codAutorizacion}</div>";
+    t1 += "<div class='column-full'>Producto  -  Código de Autorización<span style='color:red'>*</span>{idProducto}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
     t1 += "<div class='form-row', id='laplantilla'>";
     t1 += "</div>";
-    
+
     t1 += "<div class='form-row', id='elarchivo'>";
     t1 += "<div class='column-half'>Archivo Actual<span style='color:red'>*</span>{nombrearchivo}</div>";
     t1 += "</div>";
@@ -31,9 +30,9 @@ $(document).ready(function () {
     t1 += "</div>";
 
     var idTipoInstalacion;
-
+    var codAutorizacion;
     var $grid = $("#grid"),
-        
+
         instalacionModel = [{
                 label: 'Plantilla',
                 name: 'id',
@@ -47,8 +46,7 @@ $(document).ready(function () {
                     edithidden: false
                 }
 
-            },
-            {
+            }, {
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'producto.nombre',
@@ -60,20 +58,22 @@ $(document).ready(function () {
                 editoptions: {
                     dataUrl: '/lic/misAutorizaciones',
                     buildSelect: function (response) {
-                        var grid = $('#grid');
-                        var rowKey = grid.getGridParam("selrow");
-                        var rowData = grid.getRowData(rowKey);
-                        var thissid = rowData.id;
+                        // var grid = $('#grid');
+                        var rowKey = $grid.getGridParam("selrow");
+                        var rowData = $grid.getRowData(rowKey);
+                        var thissid = rowData.idProducto;
                         var data = JSON.parse(response);
                         var s = "<select>";
                         s += '<option value="0">--Escoger Producto--</option>';
                         $.each(data, function (i, item) {
-                            if (data[i].id == thissid) {
+                            if (data[i].nombre == thissid) {
                                 s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + ' - ' + data[i].codautoriza + '</option>';
+                                codAutorizacion = data[i].codautoriza;
                                 idTipoInstalacion = data[i].idtipoinstalacion;
                             } else {
                                 s += '<option value="' + data[i].id + '">' + data[i].nombre + ' - ' + data[i].codautoriza + '</option>';
                                 idTipoInstalacion = data[i].idtipoinstalacion;
+                                codAutorizacion = data[i].codautoriza;
                             }
                         });
                         return s + "</select>";
@@ -81,111 +81,34 @@ $(document).ready(function () {
                     dataEvents: [{
                         type: 'change',
                         fn: function (e) {
-                            var rowKey = $grid.getGridParam("selrow");
-                            var rowData = $grid.getRowData(rowKey);
-                            var thissid = $(this).val();
                             $.ajax({
                                 type: "GET",
-                                url: '/lic/miscodigos/' + thissid,
+                                url: '/lic/getplantillatipo/' + idTipoInstalacion,
                                 async: false,
                                 success: function (data) {
-                                    if (data.length > 0) {
-                                        $("input#codAutorizacion").val(data[0].codautoriza);
-                                        var idtipo = data[0].idtipoinstalacion;
-                                        // $("select#idTipoInstalacion").val(data[0].idtipoinstalacion);
-                                        $.ajax({
-                                            type: "GET",
-                                            url: '/lic/getplantillatipo/' + idtipo,
-                                            async: false,
-                                            success: function (data) {
-                                                if (data.length > 0 && data[0].nombrearchivo != null) {
-                                                    $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipoinstalacion/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
-                                                    //$("input#program_id").val(data[0].nombrearchivo);
-                                                } else {
-                                                    $("#laplantilla").empty().html("");
-                                                }
-                                            }
-                                        });
+                                    if (data.length > 0 && data[0].nombrearchivo != null) {
+                                        $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipoinstalacion/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
+                                        //$("input#program_id").val(data[0].nombrearchivo);
                                     } else {
-                                        alert("No existe código de Autorización");
-                                        $("input#codautorizacion").val("0");
+                                        $("#laplantilla").empty().html("");
                                     }
                                 }
                             });
-                            
                         }
                     }],
                 },
                 search: false
-            },
-            {
+            }, {
                 label: 'Código de Autorización',
                 name: 'codAutorizacion',
                 align: 'center',
                 width: 100,
-                editable: true,
+                editable: false,
                 editrules: {
                     required: true
                 },
                 search: false
-            },
-            // {
-            //     label: '¿Donde está instalada?',
-            //     name: 'idTipoInstalacion',
-            //     width: 160,
-            //     align: 'center',
-            //     sortable: false,
-            //     editable: true,
-            //     hidden: true,
-            //     edittype: 'select',
-            //     editoptions: {
-            //         dataUrl: '/lic/tiposInstalacion',
-            //         buildSelect: function (response) {
-            //             var grid = $('#grid');
-            //             var rowKey = grid.getGridParam("selrow");
-            //             var rowData = grid.getRowData(rowKey);
-            //             var thissid = rowData.id;
-            //             var data = JSON.parse(response);
-            //             var s = "<select>";
-            //             s += '<option value="0">--Escoger Tipo de Instalación--</option>';
-            //             $.each(data, function (i, item) {
-            //                 if (data[i].id == thissid) {
-            //                     s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-            //                 } else {
-            //                     s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-            //                 }
-            //             });
-            //             return s + "</select>";
-            //         },
-            //         dataEvents: [{
-            //             type: 'change', fn: function (e) {
-            //                 var nombretipodocumento = $('option:selected', this).text();
-            //                 var idtipo = $('option:selected', this).val();
-
-            //                 $.ajax({
-            //                     type: "GET",
-            //                     url: '/lic/getplantillatipo/' + idtipo,
-            //                     async: false,
-            //                     success: function (data) {
-            //                         if (data.length > 0 && data[0].nombrearchivo != null) {
-            //                             $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipoinstalacion/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
-            //                             //$("input#program_id").val(data[0].nombrearchivo);
-            //                         } else {
-            //                             $("#laplantilla").empty().html("<div class='column-full'><span>Tipo de Instalacion no tiene plantilla</span></div>");
-            //                         }
-            //                     }
-            //                 });
-
-
-
-
-            //             }
-            //         }],
-            //     },
-            //     search: true
-            // }
-            
-            {
+            }, {
                 label: 'Nombre de Archivo',
                 name: 'nombrearchivo',
                 index: 'nombrearchivo',
@@ -273,9 +196,9 @@ $(document).ready(function () {
         ajaxEditOptions: sipLibrary.jsonOptions,
         serializeEditData: sipLibrary.createJSON,
         template: t1,
-        beforeShowForm: function (form) {
-            $('input#nombrearchivo', form).attr('readonly', 'readonly');
-        },
+        // beforeShowForm: function (form) {
+        //     $('input#nombrearchivo', form).attr('readonly', 'readonly');
+        // },
         // errorTextFormat: function (data) {
         //     return 'Error: ' + data.responseText
         // },
@@ -286,6 +209,20 @@ $(document).ready(function () {
         //         return [true, "", ""]
         //     }
         // },
+        beforeShowForm: function (form) {
+            var rowKey = $grid.getGridParam("selrow");
+            var rowData = $grid.getRowData(rowKey);
+            var thissid = rowData.nombrearchivo;
+            if (thissid != "") {
+                var lol = jQuery(thissid).attr('href');
+                var numero = jQuery(thissid).attr('href').split("/", 3).join("/").length;
+                $('#elarchivo').html("<div class='column-full'>Archivo Actual: " + thissid + "</div>");
+                $('input#nombrearchivo', form).attr('readonly', 'readonly');
+            } else {
+                $('#elarchivo').html("<div class='column-full'>Archivo Actual: </div>");
+                $('input#nombrearchivo', form).attr('readonly', 'readonly');
+            }
+        },
         afterSubmit: UploadDoc
 
     }, {
@@ -296,20 +233,23 @@ $(document).ready(function () {
         ajaxEditOptions: sipLibrary.jsonOptions,
         serializeEditData: sipLibrary.createJSON,
         template: t1,
-        onclickSubmit: function(rowid){
-            
-            
-            
-            
-            return {idTipoInstalacion: idTipoInstalacion}
+        onclickSubmit: function (rowid) {
+
+
+
+
+            return {
+                idTipoInstalacion: idTipoInstalacion,
+                codAutorizacion: codAutorizacion
+            }
         },
-        // beforeSubmit: function (postdata, formid) {
-        //     if (postdata.nombrecorto.trim().length == 0) {
-        //         return [false, "Nombre: El documento debe tener nombre", ""];
-        //     } else {
-        //         return [true, "", ""]
-        //     }
-        // },
+        beforeSubmit: function (postdata, formid) {
+            if (postdata.informacion.trim().length == 0) {
+                return [false, "Comentario: La Instalación debe tener un comentario", ""];
+            } else {
+                return [true, "", ""]
+            }
+        },
         beforeShowForm: function (form) {
             $("#elarchivo").empty().html('');
         },
