@@ -863,6 +863,26 @@ function showSearchAlert() {
 
 }
 
+function showSearchGenericProject() {
+
+	$('.loader').css('display', 'block');
+	if (!$("#overview-tab2").hasClass("current")) {
+		var url = "/generic-project-search";
+		$.get(url, function(data) {
+			$(".content-box-content").html(data);
+			$('.loader').css('display', 'none');
+			$(".focus_on").css("display", "block");
+			$("#overview-tab2").addClass("current");
+			$("#program-tab1").removeClass("current");
+			$("#cancel-program-search-report").on("click", function() {
+				window.location.reload();
+			});
+		});
+	}
+	$('.loader').css('display', 'none');
+
+}
+
 function renderCancelSearchDashboard() {
 	// renderTab5();
 	$('.loader').css('display', 'block');

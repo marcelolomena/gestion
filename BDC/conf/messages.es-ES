@@ -778,6 +778,7 @@ task.manageTask.startfinish=Puesta en Finalizar
 generics.projecttypelist.projecttype=Tipo de Proyecto
 generics.projecttypelist.description=Descripción
 generics.projecttypelist.responsible=Responsable
+generics.projecttypelist.title=Tipos de Proyectos
 generics.projecttypelist.creationdate=Fecha de Creación
 generics.projecttypelist.lastupdate=Última actualización
 generics.projecttypelist.action=Acción

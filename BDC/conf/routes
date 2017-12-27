@@ -166,6 +166,7 @@ POST   /add-generic-project-type                                                
 GET    /edit-generic-project-type                                                                     controllers.GenericProjectType.editGenericProjectType(id :String)
 POST   /edit-generic-project-type                                                                     controllers.GenericProjectType.updateGenericProjectType	
 GET    /delete-generic-project-type                                                                   controllers.GenericProjectType.deleteGenericProjectType(id :String)
+GET    /generic-project-search                                                                        controllers.GenericProjectType.searchProjectType
 
 #Document-type
 GET    /document-type-list                                                                            controllers.DocumentType.documentTypeList	
