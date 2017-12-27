@@ -103,7 +103,7 @@ object Category extends Controller with Secured  {
 
     myForm.fold(
       hasErrors => {
-        println(hasErrors.errors)
+        //println(hasErrors.errors)
         BadRequest(views.html.category.categoryEdit(hasErrors))
       },
       success => {

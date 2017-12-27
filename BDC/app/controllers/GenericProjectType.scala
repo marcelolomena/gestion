@@ -51,36 +51,6 @@ object GenericProjectType extends Controller {
     }
   }
 
-  def searchProjectType() = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-
-      val alert_states = new java.util.LinkedHashMap[String, String]()
-      val status = RiskService.findAllAlertStatus()
-      for (d <- status) {
-        alert_states.put(d.id.get.toString, d.description)
-      }
-
-      val alert_category = new java.util.LinkedHashMap[String, String]()
-      val category = RiskService.findAllAlertCategory()
-      for (d <- category) {
-        alert_category.put(d.id.get.toString, d.description)
-      }
-
-
-      Ok(views.html.frontend.risks.alertForm(
-        ARTForms.alertsSearchForm,
-        alert_states,
-        alert_category)).withSession("username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.GenericProjectType.genericProjectTypeList())
-    }
-  }
-
   def saveGenericProjectType() = Action { implicit request =>
     val result = request.session.get("username")
     var username = result.get

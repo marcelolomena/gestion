@@ -1039,4 +1039,69 @@ object Generics extends Controller {
     }
   }
 
+  def searchProjectType() = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val users = GenericProjectService.findAllResponsible();
+
+      val usersMap = new java.util.LinkedHashMap[String, String]()
+      for (u <- users) {
+        usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
+      }
+
+      Ok(views.html.frontend.generics.searchProjectForm(
+        ARTForms.genericProjectSearchForm,
+        usersMap)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def searchProjectResult() = Action { implicit request =>
+    request.session.get("username").map { user =>
+      ARTForms.genericProjectSearchForm.bindFromRequest.fold(
+        hasErrors => {
+
+          val users = GenericProjectService.findAllResponsible();
+
+          val usersMap = new java.util.LinkedHashMap[String, String]()
+          for (u <- users) {
+            usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
+          }
+
+          BadRequest(views.html.frontend.generics.searchProjectForm(hasErrors, usersMap))
+        },
+        success => {
+          val pageNumber = 1
+          val recordOnPage = 10
+
+          val pageNumberTwo = 1
+          val recordOnPageTwo = 25
+
+          val res_id = success.responsible_id.getOrElse(0)
+          val desc = success.description.getOrElse("")
+
+          val projectTypes = GenericProjectService.findAllProjectTypesFiltered(pageNumber, recordOnPage,desc,res_id)
+          val countProjectTypes = GenericProjectService.projectTypesCountFiltered(desc,res_id)
+          val paginationProjectTypes = controllers.Application.PaginationProject(countProjectTypes, pageNumber, recordOnPage)
+
+          val predefinedTasks = GenericProjectService.findAllPredefinedTasks(pageNumberTwo, recordOnPageTwo)
+          val countPredefinedTasks = GenericProjectService.predefinedTasksCount
+          val paginationPredefinedTasks = controllers.Application.PaginationTask(countPredefinedTasks,pageNumberTwo, recordOnPageTwo)
+
+          Ok(views.html.frontend.generics.overview(
+            paginationProjectTypes,
+            projectTypes,
+            paginationPredefinedTasks,
+            predefinedTasks))
+        })
+  }.getOrElse {
+    Redirect(routes.Login.loginUser());
+  }
+}
+
 }

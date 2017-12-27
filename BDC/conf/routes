@@ -166,7 +166,6 @@ POST   /add-generic-project-type                                                
 GET    /edit-generic-project-type                                                                     controllers.GenericProjectType.editGenericProjectType(id :String)
 POST   /edit-generic-project-type                                                                     controllers.GenericProjectType.updateGenericProjectType	
 GET    /delete-generic-project-type                                                                   controllers.GenericProjectType.deleteGenericProjectType(id :String)
-GET    /generic-project-search                                                                        controllers.GenericProjectType.searchProjectType
 
 #Document-type
 GET    /document-type-list                                                                            controllers.DocumentType.documentTypeList	
@@ -522,7 +521,7 @@ GET    /employee-overview                                                       
 POST   /employee-search                                                                               controllers.Frontend.User.searchEmployeeResult()
 GET    /get-gerencia-by-division/:divisionId                                                          controllers.Frontend.User.getGerenciaForDivision(divisionId : String)
 GET    /get-department-by-gerencia/:gerenciaId                                                        controllers.Frontend.User.getDepartmentForGerencia(gerenciaId : String)
-GET    /find-datos-rrhh                                                                            controllers.Frontend.User.findDatosRRHH(id:String)
+GET    /find-datos-rrhh                                                                               controllers.Frontend.User.findDatosRRHH(id:String)
   
 #Documents
 
@@ -577,7 +576,8 @@ GET    /delete-predefined-task/:task_id                                         
 GET    /add-generic-tasks                                                                             controllers.Frontend.Generics.addGenericTask(task_mode : String)
 GET    /edit-tasks-dependency                                                                         controllers.Frontend.Generics.editTaskDependency(task_id:String,task_mode : String)
 POST   /update-tasks-dependency                                                                       controllers.Frontend.Generics.updateTaskDependency(task_id:String,selected_task : String)
-
+GET    /generic-project-search                                                                        controllers.Frontend.Generics.searchProjectType
+POST   /generic-project-search                                                                        controllers.Frontend.Generics.searchProjectResult
 #User Role
 
 GET    /user-role-list                                                                                controllers.UserRole.userRoleList()

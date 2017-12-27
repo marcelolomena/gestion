@@ -160,3 +160,21 @@ case class GenericTaskDetails(task_type: Int, task_code: String, stage: Option[I
 object GenericTaskDetails {
 
 }
+
+case class ProjectTypeSearch(
+                              description: Option[String],
+                              responsible_id: Option[Int])
+
+object ProjectTypeSearch extends CustomColumns {
+  val search = {
+    get[Option[String]]("description") ~
+      get[Option[Int]]("responsible_id") map {
+      case
+        description ~
+          responsible_id =>
+        ProjectTypeSearch(
+          description,
+          responsible_id)
+    }
+  }
+}

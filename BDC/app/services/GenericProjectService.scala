@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils
 import anorm.SQL
 import anorm.SqlParser.scalar
 import anorm.sqlToSimple
+import models.Users
 import play.api.Logger
 //import anorm.toParameterValue
 import models.CustomColumns
@@ -77,6 +78,40 @@ object GenericProjectService extends CustomColumns {
     val sqlSting = "SELECT * FROM art_project_type_master WHERE states=0 ORDER BY creation_date DESC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
     DB.withConnection { implicit connection =>
       SQL(sqlSting).as(ProjectType.projectDisplay *)
+    }
+  }
+
+  def findAllProjectTypesFiltered(pagNo: Int, recordOnPage: Int, desc: String, id: Int ): Seq[ProjectType] = {
+    var sqlString = "SELECT * FROM art_project_type_master WHERE states=0 ORDER BY creation_date DESC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
+
+    if (!desc.isEmpty)
+      sqlString = "SELECT * FROM art_project_type_master WHERE states=0 AND desc LIKE '%" + desc+ "%' ORDER BY creation_date DESC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
+
+    if (id>0)
+      sqlString = "SELECT * FROM art_project_type_master WHERE states=0 AND responsible = " + id + " ORDER BY creation_date DESC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
+
+    if (!desc.isEmpty && id>0)
+      sqlString = "SELECT * FROM art_project_type_master WHERE states=0 AND responsible = " + id + " AND desc LIKE '%" + desc + "%' ORDER BY creation_date DESC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ProjectType.projectDisplay *)
+    }
+  }
+
+  def projectTypesCountFiltered(desc: String, id: Int ): Int = {
+    var sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0"
+
+    if (!desc.isEmpty)
+      sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0 AND desc LIKE '%" + desc+ "%'"
+
+    if (id>0)
+      sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0 AND responsible = " + id
+
+    if (!desc.isEmpty && id>0)
+      sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0 AND responsible = " + id + " AND desc LIKE '%" + desc + "%'"
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(scalar[Int].single)
     }
   }
 
@@ -379,5 +414,20 @@ object GenericProjectService extends CustomColumns {
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(GernericProject.genericProject *)
     }
+  }
+
+  def findAllResponsible(): Seq[Users] = {
+    DB.withConnection { implicit connection =>
+      val sqlString =
+        """
+          |SELECT * FROM art_user X
+          |JOIN (
+          |SELECT DISTINCT b.uid FROM art_project_type_master a JOIN art_user b ON a.responsible = b.uId WHERE a.states=0 GROUP BY b.uid
+          |) Y ON X.uid = Y.uid
+          |ORDER BY first_name,last_name
+        """.stripMargin
+      SQL(sqlString).as(Users.user *)
+    }
+
   }
 }

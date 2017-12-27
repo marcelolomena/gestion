@@ -1044,6 +1044,10 @@ object ARTForms {
       "category_id" -> optional(number),
       "status_id" -> optional(number))(AlertsSearch.apply)(AlertsSearch.unapply))
 
+  val genericProjectSearchForm: Form[ProjectTypeSearch] = Form(
+    mapping(
+      "description" -> optional(text),
+      "responsible_id" -> optional(number))(ProjectTypeSearch.apply)(ProjectTypeSearch.unapply))
 }
 
 
