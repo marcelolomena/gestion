@@ -10,7 +10,7 @@ $(document).ready(function () {
     tmpl += "</div>";    
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Fecha {fechauso}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Fecha {fechasolicitud}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -124,6 +124,14 @@ $(document).ready(function () {
         search: false
     },
     {
+        label: 'Tipo Instalación',
+        name: 'idtipoinstalacion',
+        width: 200,
+        hidden: true,
+        editable: false,
+        search: false
+    },    
+    {
         label: 'Adjunto',
         name: 'nombrearchivo',
         width: 200,
@@ -230,6 +238,17 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return [true,'Error: ' + data.responseText, ""];
             },
+            beforeShowForm: function (postdata, formid) {
+                var grid = $('#grid');
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                if (rowData.idtipoinstalacion == 13) { //Deshabilita torre en caso de tipo PC
+                    window.setTimeout(function () {
+                        $("#torre").attr('disabled', true);
+                    }, 1000); 
+                    $("#torre",formid).hide();                                           
+                }             
+            },
             beforeSubmit: function (postdata, formid) {
                 console.log("beforeSubmit");
                 var grid = $('#grid');
@@ -246,5 +265,43 @@ $(document).ready(function () {
         {}
     );
 
+    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon glyphicon-check",
+        title: "Derivar",
+        position: "last",
+        onClickButton: function () {
+            var grid = $('#grid');
+            var rowKey = grid.getGridParam("selrow");
+            var rowData = grid.getRowData(rowKey);
+
+            if (rowKey != null) {
+                if (rowData.estado == 'Pendiente') {
+                    if (confirm("¿Esta seguro de 'Derivar' la instalación?")) {
+                        $.ajax({
+                            url: "/lic/derivar/" + rowData.id,
+                            dataType: 'json',
+                            async: false,
+                            success: function (j) {
+                                console.log("j:" + j);
+                                $("#grid").trigger("reloadGrid");
+                                if (j.error_code == 0) {
+                                    $("#grid").trigger("reloadGrid");
+                                } else if (j.error_code == 10) {
+                                    alert("No se pudo derivar solicitud");
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    alert("La solicitud debe estar en estado Pendiente");
+                }
+            } else {
+                alert("Debe seleccionar una fila");
+            }
+        }
+    });
+
     $("#pager_left").css("width", "");
 });
+

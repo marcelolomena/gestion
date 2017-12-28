@@ -260,6 +260,9 @@ module.exports = function (passport) {
         
     router.route('/lic/downfile/:id')
         .get(isAuthenticated, visacionController.downFile); 
+
+    router.route('/lic/derivar/:id')
+        .get(isAuthenticated, visacionController.derivar); 
 		
     return router;
 };

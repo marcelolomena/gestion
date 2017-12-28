@@ -23,6 +23,11 @@ define("INSTALADOR", "INSTALADOR");
 //define estados sistema licencias
 define("RECHAZADO", "Rechazado");
 define("ALAESPERA", "A la Espera");
+//Estados de Instalacion
+define("PENDIENTE", "Pendiente");
+define("APROBADO", "Aprobado");
+define("RECHAZADO", "Rechazado");
+define("DERIVADO", "Derivado");
 
 
 //Define constantes para log de transacciones, contiene id de tabla sip.transaccion

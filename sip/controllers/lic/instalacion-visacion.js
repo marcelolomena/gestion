@@ -5,6 +5,7 @@ var logger = require('../../utils/logger');
 var sequelize = require('../../models/index').sequelize;
 var constants = require("../../utils/constants");
 var fs = require('fs');
+//var mailer = require('../nodemailer');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
@@ -17,6 +18,27 @@ exports.action = function (req, res) {
 
       console.log("query:" + sql);
       sequelize.query(sql).then(function (ok) {
+        //Envía email
+        /*mailer.SMTP = {
+          host: 'host.com', 
+          port:587,
+          use_authentication: true, 
+          user: 'you@example.com', 
+          pass: 'xxxxxx'
+        };
+        fs.readFile("./attachment.txt", function (err, data) {
+          mailer.send_mail({       
+              sender: 'sender@sender.com',
+              to: 'dest@dest.com',
+              subject: 'Attachment!',
+              body: 'mail content...',
+              attachments: [{'filename': 'attachment.txt', 'content': data}]
+          }), function(err, success) {
+              if (err) {
+                  // Handle error
+              }      
+          }
+        });*/        
         res.json({ error_code: 0 });
       }).catch(function (err) {
         logger.error(err);
@@ -38,7 +60,9 @@ exports.list = function (req, res) {
   var condition = "";
 
   var rol = req.session.passport.sidebar[0].rid;//req.user[0].rid;
+  var roles = req.session.passport.sidebar[0].rol;
   console.log("ROL:" + rol);
+  console.log("ROLES:" + JSON.stringify(roles));
   if (filters) {
     var jsonObj = JSON.parse(filters);
     if (JSON.stringify(jsonObj.rules) != '[]') {
@@ -56,15 +80,14 @@ exports.list = function (req, res) {
   }
   var sqlcount;
   if (rol == constants.JEFESERVIDOR) {
-    sqlcount = "SELECT count(*) as count FROM lic.instalacion a WHERE a.idtipoinstalacion =" + 14
-    if (filters && condition != "") {
-      sqlcount += " WHERE " + condition + " ";
-    }
-  } else {
-    sqlcount = "SELECT count(*) as count FROM lic.instalacion a WHERE a.idtipoinstalacion =" + 13
-    if (filters && condition != "") {
-      sqlcount += " WHERE " + condition + " ";
-    }
+    sqlcount = "SELECT count(*) as count FROM lic.instalacion a WHERE a.idtipoinstalacion =" + constants.Servidor
+  } else if (rol == constants.JEFEPC) {
+    sqlcount = "SELECT count(*) as count FROM lic.instalacion a WHERE a.idtipoinstalacion =" + constants.PC
+  } else if (rol == constants.ADMINLIC) {
+    sqlcount = "SELECT count(*) as count FROM lic.instalacion a WHERE a.estado='"+constants.DERIVADO+"'";
+  }
+  if (filters && condition != "") {
+    sqlcount += " AND " + condition + " ";
   }
 
   var sql;
@@ -76,7 +99,7 @@ exports.list = function (req, res) {
       "SELECT a.*, b.nombre, c.first_name+' '+ c.last_name AS usuario, d.nombre torre FROM lic.instalacion a JOIN lic.producto b ON a.idproducto=b.id " +
       "JOIN art_user c ON c.uid = a.idusuario " +
       "LEFT JOIN lic.torre d ON a.idtorre = d.id " +
-      "WHERE a.idtipoinstalacion = " + constants.Servidor
+      "WHERE a.idtipoinstalacion = " + constants.Servidor + " and a.estado <> '"+constants.DERIVADO+"'";
   } else if (rol == constants.JEFEPC) {
     sql = "DECLARE @PageSize INT; " +
       "SELECT @PageSize=" + rowspp + "; " +
@@ -84,16 +107,24 @@ exports.list = function (req, res) {
       "SELECT @PageNumber=" + page + "; " +
       "SELECT a.*, b.nombre, c.first_name+' '+ c.last_name AS usuario FROM lic.instalacion a JOIN lic.producto b ON a.idproducto=b.id " +
       "JOIN art_user c ON c.uid = a.idusuario " +
-      "WHERE a.idtipoinstalacion = " + constants.PC
+      "WHERE a.idtipoinstalacion = " + constants.PC + " and a.estado <> '"+constants.DERIVADO+"'";
+  } else if (rol == constants.ADMINLIC) {
+    sql = "DECLARE @PageSize INT; " +
+      "SELECT @PageSize=" + rowspp + "; " +
+      "DECLARE @PageNumber INT; " +
+      "SELECT @PageNumber=" + page + "; " +
+      "SELECT a.*, b.nombre, c.first_name+' '+ c.last_name AS usuario FROM lic.instalacion a JOIN lic.producto b ON a.idproducto=b.id " +
+      "JOIN art_user c ON c.uid = a.idusuario " +
+      "WHERE a.estado = '" + constants.DERIVADO +"'";
   } else {
     logger.error("Sin acceso a funcionalidad");
     return res.json({ error_code: 0 });
   }
   if (filters && condition != "") {
-    sql += "AND " + condition + " ";
+    sql += " AND " + condition + " ";
     logger.debug("**" + sql + "**");
   }
-  var sql2 = sql + "ORDER BY a.id desc OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+  var sql2 = sql + " ORDER BY a.id desc OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
   logger.debug("query:" + sql2);
 
@@ -112,6 +143,17 @@ exports.list = function (req, res) {
 exports.getTorres = function (req, res) {
 
   var sql = "select id, nombre from lic.torre";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+
+exports.derivar = function (req, res) {
+
+  var sql = "UPDATE lic.instalacion SET estado='"+ constants.DERIVADO +"' WHERE id =" + req.params.id;
 
   sequelize.query(sql)
     .spread(function (rows) {
