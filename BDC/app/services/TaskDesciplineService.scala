@@ -31,6 +31,15 @@ object TaskDesciplineService extends CustomColumns {
     }
   }
 
+
+
+  def findAllTaskDescipline(): Seq[TaskDesciplines] = {
+    val sqlString = "SELECT * FROM art_task_discipline WHERE is_deleted = 0 ORDER BY task_discipline"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(TaskDesciplines.taskDesciplineMaster *)
+    }
+  }
+
   def findTaskDesciplineById(id: String) = {
     var sql = ""
     if (id != "") {

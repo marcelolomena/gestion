@@ -162,8 +162,8 @@ object GenericTaskDetails {
 }
 
 case class ProjectTypeSearch(
-                              type_id: Option[Int],
-                              responsible_id: Option[Int])
+                               type_id: Option[Int],
+                               responsible_id: Option[Int])
 
 object ProjectTypeSearch extends CustomColumns {
   val search = {
@@ -175,6 +175,24 @@ object ProjectTypeSearch extends CustomColumns {
         ProjectTypeSearch(
           type_id,
           responsible_id)
+    }
+  }
+}
+
+case class GenericTaskSearch(
+                              discipline_id: Option[Int],
+                              deliverable_id: Option[Int])
+
+object GenericTaskSearch extends CustomColumns {
+  val search = {
+    get[Option[Int]]("discipline_id") ~
+      get[Option[Int]]("deliverable_id") map {
+      case
+        discipline_id ~
+          deliverable_id =>
+        GenericTaskSearch(
+          discipline_id,
+          deliverable_id)
     }
   }
 }

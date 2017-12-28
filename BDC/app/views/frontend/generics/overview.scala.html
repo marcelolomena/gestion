@@ -14,30 +14,18 @@
 	<div class="product_main">
 
 		<div class="width_full">
-			<!--
-			<h3 id="productNm" style="width: 99.4%;">
-	    		<span class="left"> @Messages("generics.overview.genericprojecttypemaintenance") </span>
-   			</h3>
-		  	-->
 		  	<div class="generic-project-type-div" id="new-document">
     			<a href="@controllers.Frontend.routes.Generics.addProjectType()"><span> @Messages("generics.overview.newprojecttype") </span></a>
 			
 			    <a href="@controllers.Frontend.routes.Generics.historicOverview()"><span  style="float: right;">@Messages("generics.overview.showhistoricprojecttypes")  </span></a>
 			</div>
-			
 			@frontend.generics.projectTypesListing(paginationProjectTypes, projectTypes)
-
 		</div>
 		<div class="width_full">
-			<h3 id="productNm" style="width: 99.4%;margin-top: 10px;">
-	    		<span class="left">@Messages("generics.overview.listofpredefinedtask")</span>
-   			</h3>
 		  	<div class="program-div" id="new-document">
     			<a href="@controllers.Frontend.routes.Generics.addPredefinedTask()"><span>@Messages("generics.overview.newpredefinedtask")</span></a>
 			</div>
-
 			@frontend.generics.predefinedTaskListing(paginationPredefinedTasks, predefinedTasks)
-
 		</div>
 		
 		<div id="dialog-confirm"></div>

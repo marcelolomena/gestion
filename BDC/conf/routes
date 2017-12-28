@@ -577,8 +577,10 @@ GET    /add-generic-tasks                                                       
 GET    /edit-tasks-dependency                                                                         controllers.Frontend.Generics.editTaskDependency(task_id:String,task_mode : String)
 POST   /update-tasks-dependency                                                                       controllers.Frontend.Generics.updateTaskDependency(task_id:String,selected_task : String)
 GET    /form-project-search                                                                           controllers.Frontend.Generics.searchProjectType
+GET    /form-task-search                                                                              controllers.Frontend.Generics.searchGenericTask
 GET    /generic-project-search                                                                        controllers.Frontend.Generics.overview
 POST   /generic-project-search                                                                        controllers.Frontend.Generics.searchProjectResult
+POST   /generic-task-search                                                                           controllers.Frontend.Generics.searchTaskResult
 #User Role
 
 GET    /user-role-list                                                                                controllers.UserRole.userRoleList()

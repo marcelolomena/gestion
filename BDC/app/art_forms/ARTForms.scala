@@ -1048,6 +1048,11 @@ object ARTForms {
     mapping(
       "type_id" -> optional(number),
       "responsible_id" -> optional(number))(ProjectTypeSearch.apply)(ProjectTypeSearch.unapply))
+
+  val genericTaskSearchForm: Form[GenericTaskSearch] = Form(
+    mapping(
+      "discipline_id" -> optional(number),
+      "deliverable_id" -> optional(number))(GenericTaskSearch.apply)(GenericTaskSearch.unapply))
 }
 
 

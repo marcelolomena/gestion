@@ -1116,4 +1116,79 @@ object Generics extends Controller {
   }
 }
 
+  def searchGenericTask() = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val discipline = TaskDesciplineService.findAllTaskDescipline()
+
+      val disciplineMap = new java.util.LinkedHashMap[String, String]()
+      for (u <- discipline) {
+        disciplineMap.put(u.id.get.toString(), u.task_discipline)
+      }
+
+      val deliverable = DeliverableService.findAllDeliverables()
+
+      val deliverableMap = new java.util.LinkedHashMap[String, String]()
+      for (t <- deliverable) {
+        deliverableMap.put(t.id.get.toString, t.deliverable)
+      }
+
+      Ok(views.html.frontend.generics.searchTaskForm(
+        ARTForms.genericTaskSearchForm,
+        disciplineMap,deliverableMap)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def searchTaskResult() = Action { implicit request =>
+    request.session.get("username").map { user =>
+      ARTForms.genericTaskSearchForm.bindFromRequest.fold(
+        hasErrors => {
+
+          val discipline = TaskDesciplineService.findAllTaskDescipline()
+
+          val disciplineMap = new java.util.LinkedHashMap[String, String]()
+          for (u <- discipline) {
+            disciplineMap.put(u.id.get.toString(), u.task_discipline)
+          }
+
+          val deliverable = DeliverableService.findAllDeliverables()
+
+          val deliverableMap = new java.util.LinkedHashMap[String, String]()
+          for (t <- deliverable) {
+            deliverableMap.put(t.id.get.toString, t.deliverable)
+          }
+          BadRequest(views.html.frontend.generics.searchTaskForm(hasErrors, disciplineMap, deliverableMap))
+        },
+        success => {
+          var pageNumber = 1
+          var recordOnPage = 10
+
+          val discipline_id = success.discipline_id.getOrElse(0)
+          val deliverable_id = success.deliverable_id.getOrElse(0)
+
+          val projectTypes = GenericProjectService.findAllProjectTypes(pageNumber, recordOnPage)
+          val countProjectTypes = GenericProjectService.projectTypesCount
+          val paginationProjectTypes = controllers.Application.PaginationProject(countProjectTypes, pageNumber, recordOnPage)
+
+          val predefinedTasks = GenericProjectService.findAllGenericTaskFiltered(discipline_id, deliverable_id)
+          //val countPredefinedTasks = GenericProjectService.predefinedTasksCount
+          val paginationPredefinedTasks = ""
+
+          Ok(views.html.frontend.generics.overview(
+            paginationProjectTypes,
+            projectTypes,
+            paginationPredefinedTasks,
+            predefinedTasks))
+        })
+    }.getOrElse {
+      Redirect(routes.Login.loginUser());
+    }
+  }
+
 }

@@ -90,6 +90,24 @@ object GenericProjectService extends CustomColumns {
     }
   }
 
+  def findAllGenericTaskFiltered(discipline_id: Int, deliverable_id: Int ): Seq[PredefinedTasks] = {
+    var sqlString = "SELECT * FROM art_predefined_task WHERE is_active=1 ORDER BY task_title ASC"
+
+    if (discipline_id>0)
+      sqlString = "SELECT * FROM art_predefined_task WHERE is_active=1 AND task_discipline =" + discipline_id+ " ORDER BY task_title ASC"
+
+    if (deliverable_id>0)
+      sqlString = "SELECT * FROM art_predefined_task WHERE is_active=1 AND deliverable = " + deliverable_id + " ORDER BY task_title ASC"
+
+    if (discipline_id>0 && deliverable_id>0)
+      sqlString = "SELECT * FROM art_predefined_task WHERE is_active=1 AND task_discipline = " + discipline_id + " AND deliverable =" + deliverable_id + " ORDER BY task_title ASC"
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(PredefinedTasks.predefined_tasks *)
+    }
+  }
+
+
   def projectTypesCountFiltered(desc: String, id: Int ): Int = {
     var sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0"
 

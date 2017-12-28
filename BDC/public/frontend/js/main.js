@@ -94,6 +94,8 @@ $(document).ready(
 
 			$(".overview-tab2").on("click", showSearchGenericProject);
 
+			$(".overview-tab3").on("click", showSearchGenericTask);
+
 			$(".edit-hours").off("click").on("click", renderEditProgramHours);
 			
 			$(".edit-status").off("click").live("click", renderEditProgramStatus);
