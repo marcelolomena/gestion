@@ -2,37 +2,29 @@ package services;
 
 import java.util.Date
 
-import scala.Option.option2Iterable
-import org.apache.commons.lang3.StringUtils
-import anorm.SQL
 import anorm.SqlParser.scalar
-import anorm.sqlToSimple
+import anorm.{SQL, sqlToSimple}
 import models.Users
-import play.api.Logger
+
+import scala.Option.option2Iterable
 //import anorm.toParameterValue
-import models.CustomColumns
-import models.GenericProjectType
-import models.GenericProjectTypes
-import models.GernericProject
-import models.PredefinedTasks
-import models.ProjectType
+import models.{CustomColumns, GenericProjectType, GenericProjectTypes, GernericProject, PredefinedTasks, ProjectType}
 import play.api.Play.current
 import play.api.db.DB
-import play.i18n.Lang
-import play.i18n.Messages
+import play.i18n.{Lang, Messages}
 object GenericProjectService extends CustomColumns {
 
   val langObj = new Lang(Lang.forCode("es-ES"))
 
   /**
-   * method to get the project-type details by id
-   */
+    * method to get the project-type details by id
+    */
   def findProjectTypeDetails(id: String): Option[ProjectType] = {
     DB.withConnection { implicit connection =>
       val result = SQL(
         "select * from art_project_type_master where id = {id} ").on(
-          'id -> id).as(
-            ProjectType.projectDisplay.singleOpt)
+        'id -> id).as(
+        ProjectType.projectDisplay.singleOpt)
       result
     }
   }
@@ -41,27 +33,27 @@ object GenericProjectService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val result = SQL(
         "select * from art_project_type_master where project_type = {id} and states=0 ").on(
-          'id -> id).as(
-            ProjectType.projectDisplay.singleOpt)
+        'id -> id).as(
+        ProjectType.projectDisplay.singleOpt)
       result
     }
   }
-  
+
   def findProjectTypeDetailsByDescription(state: Integer): Option[ProjectType] = {
     DB.withConnection { implicit connection =>
       val result = SQL(
         "select * from art_project_type_master where states={state} and description like 'Risk Management'").on(
-          'state -> state.toInt).as(
-            ProjectType.projectDisplay.singleOpt)
+        'state -> state.toInt).as(
+        ProjectType.projectDisplay.singleOpt)
       result
     }
-  }  
+  }
 
   def findActiveProjectTypeDetailsByType(): Seq[ProjectType] = {
     DB.withConnection { implicit connection =>
       val result = SQL(
         "SELECT * FROM art_project_type_master WHERE states=0 ORDER BY description").as(
-          ProjectType.projectDisplay*)
+        ProjectType.projectDisplay*)
       result
     }
   }
@@ -69,7 +61,7 @@ object GenericProjectService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val result = SQL(
         "select * from art_generic_project_master where pId = {pId} ").on(
-          'pId -> pId).as(GernericProject.genericProject.singleOpt)
+        'pId -> pId).as(GernericProject.genericProject.singleOpt)
       result.get
     }
   }
@@ -81,17 +73,17 @@ object GenericProjectService extends CustomColumns {
     }
   }
 
-  def findAllProjectTypesFiltered(pagNo: Int, recordOnPage: Int, desc: String, id: Int ): Seq[ProjectType] = {
-    var sqlString = "SELECT * FROM art_project_type_master WHERE states=0 ORDER BY creation_date DESC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
+  def findAllProjectTypesFiltered(type_id: Int, id: Int ): Seq[ProjectType] = {
+    var sqlString = "SELECT * FROM art_project_type_master WHERE states=0 ORDER BY creation_date DESC"
 
-    if (!desc.isEmpty)
-      sqlString = "SELECT * FROM art_project_type_master WHERE states=0 AND desc LIKE '%" + desc+ "%' ORDER BY creation_date DESC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
+    if (type_id>0)
+      sqlString = "SELECT * FROM art_project_type_master WHERE states=0 AND project_type =" + type_id+ " ORDER BY creation_date DESC"
 
     if (id>0)
-      sqlString = "SELECT * FROM art_project_type_master WHERE states=0 AND responsible = " + id + " ORDER BY creation_date DESC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
+      sqlString = "SELECT * FROM art_project_type_master WHERE states=0 AND responsible = " + id + " ORDER BY creation_date DESC"
 
-    if (!desc.isEmpty && id>0)
-      sqlString = "SELECT * FROM art_project_type_master WHERE states=0 AND responsible = " + id + " AND desc LIKE '%" + desc + "%' ORDER BY creation_date DESC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
+    if (type_id>0 && id>0)
+      sqlString = "SELECT * FROM art_project_type_master WHERE states=0 AND responsible = " + id + " AND project_type =" + type_id + " ORDER BY creation_date DESC"
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(ProjectType.projectDisplay *)
@@ -102,13 +94,13 @@ object GenericProjectService extends CustomColumns {
     var sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0"
 
     if (!desc.isEmpty)
-      sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0 AND desc LIKE '%" + desc+ "%'"
+      sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0 AND description LIKE '%" + desc+ "%'"
 
     if (id>0)
       sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0 AND responsible = " + id
 
     if (!desc.isEmpty && id>0)
-      sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0 AND responsible = " + id + " AND desc LIKE '%" + desc + "%'"
+      sqlString = "SELECT count(*) FROM art_project_type_master WHERE states=0 AND responsible = " + id + " AND description LIKE '%" + desc + "%'"
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(scalar[Int].single)
@@ -139,22 +131,22 @@ object GenericProjectService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val result = SQL(
         "Update art_project_type_master set states=2 where id='" + id + "'").on(
-          'id -> id).executeUpdate()
+        'id -> id).executeUpdate()
     }
   }
 
   def insertProjectType(project: GenericProjectType): Long = {
     DB.withConnection { implicit connection =>
       val lastSave = SQL(
-        """ insert into art_project_type_master (project_type,description,creation_date, responsible, states) 
+        """ insert into art_project_type_master (project_type,description,creation_date, responsible, states)
             values({project_type},{description},{creation_date},{responsible},{states})
           """).on(
 
-          'description -> project.description,
-          'project_type -> project.project_type,
-          'creation_date -> new Date(),
-          'responsible -> project.responsible,
-          'states -> project.states).executeInsert(scalar[Long].singleOpt)
+        'description -> project.description,
+        'project_type -> project.project_type,
+        'creation_date -> new Date(),
+        'responsible -> project.responsible,
+        'states -> project.states).executeInsert(scalar[Long].singleOpt)
 
       lastSave.last
     }
@@ -164,7 +156,7 @@ object GenericProjectService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val result = SQL(
         "select * from art_project_type_master where project_type='" + project_type + "' and states='0'").on(
-          'project_type -> project_type).as(ProjectType.projectDisplay *)
+        'project_type -> project_type).as(ProjectType.projectDisplay *)
       if (result.size > 0) {
         isNotPresent = false
       }
@@ -177,7 +169,7 @@ object GenericProjectService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val result = SQL(
         "select * from art_generic_project_master where project_mode='" + project_mode + "'").on(
-          'project_mode -> project_mode).as(GernericProject.genericProject *)
+        'project_mode -> project_mode).as(GernericProject.genericProject *)
       if (result.size > 0) {
         isNotPresent = false
       }
@@ -197,11 +189,11 @@ object GenericProjectService extends CustomColumns {
 					states = {states}
 					where id = {id}
           """).on(
-          'id -> project.id,
-          'description -> project.description,
-          'responsible -> project.responsible,
-          'updation_date -> new Date(),
-          'states -> project.states).executeUpdate()
+        'id -> project.id,
+        'description -> project.description,
+        'responsible -> project.responsible,
+        'updation_date -> new Date(),
+        'states -> project.states).executeUpdate()
     }
   }
 
@@ -216,23 +208,23 @@ object GenericProjectService extends CustomColumns {
           {total_sap}, {budget_approved_staff}, {budget_approved_contractor}, {budget_approved_hardware}, {budget_approved_software}, {ppm_number},
           {work_flow_status},{baseline})
           """).on(
-          'project_mode -> project.project_mode,
-          'project_id -> project.project_id,
-          'project_name -> project.project_name,
-          'description -> project.description,
-          'project_manager -> project.project_manager,
-          'start_date -> project.start_date,
-          'final_release_date -> project.final_release_date,
-          'budget_approved -> project.budget_approved,
-          'sap_code -> project.sap_code,
-          'total_sap -> project.total_sap.bigDecimal,
-          'budget_approved_staff -> project.budget_approved_staff.bigDecimal,
-          'budget_approved_contractor -> project.budget_approved_contractor.bigDecimal,
-          'budget_approved_hardware -> project.budget_approved_hardware.bigDecimal,
-          'budget_approved_software -> project.budget_approved_software.bigDecimal,
-          'ppm_number -> project.ppm_number,
-          'work_flow_status -> project.work_flow_status,
-          'baseline -> project.baseline).executeInsert(scalar[Long].singleOpt)
+        'project_mode -> project.project_mode,
+        'project_id -> project.project_id,
+        'project_name -> project.project_name,
+        'description -> project.description,
+        'project_manager -> project.project_manager,
+        'start_date -> project.start_date,
+        'final_release_date -> project.final_release_date,
+        'budget_approved -> project.budget_approved,
+        'sap_code -> project.sap_code,
+        'total_sap -> project.total_sap.bigDecimal,
+        'budget_approved_staff -> project.budget_approved_staff.bigDecimal,
+        'budget_approved_contractor -> project.budget_approved_contractor.bigDecimal,
+        'budget_approved_hardware -> project.budget_approved_hardware.bigDecimal,
+        'budget_approved_software -> project.budget_approved_software.bigDecimal,
+        'ppm_number -> project.ppm_number,
+        'work_flow_status -> project.work_flow_status,
+        'baseline -> project.baseline).executeInsert(scalar[Long].singleOpt)
 
       lastSave.last
     }
@@ -389,8 +381,8 @@ object GenericProjectService extends CustomColumns {
   }
 
   /**
-   *   Predefined tasks
-   */
+    *   Predefined tasks
+    */
   def findAllPredefinedTasks(pagNo: Int, recordOnPage: Int): Seq[PredefinedTasks] = {
     val sqlSting = "SELECT * FROM art_predefined_task WHERE is_active=1 ORDER BY task_title ASC OFFSET " + recordOnPage * (pagNo - 1) + " ROWS FETCH NEXT " + recordOnPage + " ROWS ONLY"
     DB.withConnection { implicit connection =>

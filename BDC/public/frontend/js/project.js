@@ -867,7 +867,7 @@ function showSearchGenericProject() {
 
 	$('.loader').css('display', 'block');
 	if (!$("#overview-tab2").hasClass("current")) {
-		var url = "/generic-project-search";
+		var url = "/form-project-search";
 		$.get(url, function(data) {
 			$(".content-box-content").html(data);
 			$('.loader').css('display', 'none');

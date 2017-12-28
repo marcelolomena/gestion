@@ -1046,7 +1046,7 @@ object ARTForms {
 
   val genericProjectSearchForm: Form[ProjectTypeSearch] = Form(
     mapping(
-      "description" -> optional(text),
+      "type_id" -> optional(number),
       "responsible_id" -> optional(number))(ProjectTypeSearch.apply)(ProjectTypeSearch.unapply))
 }
 

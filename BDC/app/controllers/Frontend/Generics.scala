@@ -1049,9 +1049,16 @@ object Generics extends Controller {
         usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
       }
 
+      val types = GenericProjectTypeService.findAllActiveGenericProjectType
+
+      val typesMap = new java.util.LinkedHashMap[String, String]()
+      for (t <- types) {
+        typesMap.put(t.id.get.toString, t.generic_project_type)
+      }
+
       Ok(views.html.frontend.generics.searchProjectForm(
         ARTForms.genericProjectSearchForm,
-        usersMap)).withSession("username" -> request.session.get("username").get,
+        usersMap,typesMap)).withSession("username" -> request.session.get("username").get,
         "utype" -> request.session.get("utype").get,
         "uId" -> request.session.get("uId").get,
         "user_profile" -> request.session.get("user_profile").get)
@@ -1073,21 +1080,26 @@ object Generics extends Controller {
             usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
           }
 
-          BadRequest(views.html.frontend.generics.searchProjectForm(hasErrors, usersMap))
+          val types = GenericProjectTypeService.findAllActiveGenericProjectType
+
+          val typesMap = new java.util.LinkedHashMap[String, String]()
+          for (t <- types) {
+            typesMap.put(t.id.get.toString, t.generic_project_type)
+          }
+
+          BadRequest(views.html.frontend.generics.searchProjectForm(hasErrors, usersMap, typesMap))
         },
         success => {
-          val pageNumber = 1
-          val recordOnPage = 10
-
           val pageNumberTwo = 1
           val recordOnPageTwo = 25
 
           val res_id = success.responsible_id.getOrElse(0)
-          val desc = success.description.getOrElse("")
+          val type_id = success.type_id.getOrElse(0)
 
-          val projectTypes = GenericProjectService.findAllProjectTypesFiltered(pageNumber, recordOnPage,desc,res_id)
-          val countProjectTypes = GenericProjectService.projectTypesCountFiltered(desc,res_id)
-          val paginationProjectTypes = controllers.Application.PaginationProject(countProjectTypes, pageNumber, recordOnPage)
+          val projectTypes = GenericProjectService.findAllProjectTypesFiltered(type_id,res_id)
+          //val countProjectTypes = GenericProjectService.projectTypesCountFiltered(desc,res_id)
+          //val paginationProjectTypes = controllers.Application.PaginationProject(countProjectTypes, pageNumber, recordOnPage)
+          val paginationProjectTypes = ""
 
           val predefinedTasks = GenericProjectService.findAllPredefinedTasks(pageNumberTwo, recordOnPageTwo)
           val countPredefinedTasks = GenericProjectService.predefinedTasksCount

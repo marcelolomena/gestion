@@ -1,4 +1,4 @@
-@(searchForm : Form[ProjectTypeSearch], userMap: java.util.HashMap[String,String])(implicit session: play.api.mvc.Session,lang: Lang)
+@(searchForm : Form[ProjectTypeSearch], userMap: java.util.HashMap[String,String],typeMap: java.util.HashMap[String,String])(implicit session: play.api.mvc.Session,lang: Lang)
 @import play.api.i18n._
 @import play.api._
 @import services._
@@ -12,20 +12,21 @@
         <div class="left width_full">
             <div class="left width-pr50 padding-top-3px">
                 @select(
+                searchForm("type_id"),
+                options(typeMap),
+                'class -> "input-xlarge ",
+                '_label -> Messages("Tipo de Proyecto"),
+                '_default -> Messages("Escoja un Tipo de Proyecto")
+                )
+            </div>
+
+            <div class="right width-pr50 padding-top-3px" >
+                @select(
                 searchForm("responsible_id"),
                 options(userMap),
                 'class -> "input-xlarge ",
                 '_label -> Messages("Responsable"),
                 '_default -> Messages("Escoja un responsable")
-                )
-            </div>
-
-            <div class="right width-pr50 padding-top-3px" >
-                @inputText(
-                searchForm("description"),
-                'class -> "span4",
-                '_label -> Messages("Tipo Proyecto"),
-                'placeholder -> Messages("Ingrese el tipo de proyecto")
                 )
             </div>
 

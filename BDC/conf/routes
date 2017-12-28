@@ -576,7 +576,8 @@ GET    /delete-predefined-task/:task_id                                         
 GET    /add-generic-tasks                                                                             controllers.Frontend.Generics.addGenericTask(task_mode : String)
 GET    /edit-tasks-dependency                                                                         controllers.Frontend.Generics.editTaskDependency(task_id:String,task_mode : String)
 POST   /update-tasks-dependency                                                                       controllers.Frontend.Generics.updateTaskDependency(task_id:String,selected_task : String)
-GET    /generic-project-search                                                                        controllers.Frontend.Generics.searchProjectType
+GET    /form-project-search                                                                           controllers.Frontend.Generics.searchProjectType
+GET    /generic-project-search                                                                        controllers.Frontend.Generics.overview
 POST   /generic-project-search                                                                        controllers.Frontend.Generics.searchProjectResult
 #User Role
 
