@@ -229,9 +229,29 @@ function tiposInstalacion(req, res) {
     });
 }
 
+function getplantillatipo (req, res){
+    var idtipoinsta = req.params.idtipo;
+    sequelize.query("SELECT * " +
+        "FROM lic.tipoinstalacion WHERE id = " + idtipoinsta,
+        { type: sequelize.QueryTypes.SELECT }
+    ).then(function (valores) {
+        res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}
+
+
+exports.getplantillatipo = function (req, res) {
+    
+};
+
+
 module.exports = {
     list: list,
     action: action,
     upload: upload,
-    tiposInstalacion: tiposInstalacion
+    tiposInstalacion: tiposInstalacion,
+    getplantillatipo: getplantillatipo
 };

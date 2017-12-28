@@ -73,9 +73,30 @@
                 search: false
             },
             {
-                label: 'Fecha de Uso', name: 'fechaUso', width: 150, align: 'center', search: false,
-                formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-                editable: true, editrules: { required: true },
+                label: 'Fecha de Uso',
+                name: 'fechaUso',
+                width: 150,
+                align: 'center',
+                search: false,
+                formatter: function (cellvalue, options, rowObject) {
+                    //2017-12-31T00:00:00.000Z
+                    var val = rowObject.fechaUso;
+                    if (val != null) {
+                        val = val.substring(0, 10);
+                        var fechaok = val.substring(8) + '-' + val.substring(5, 7) + '-' + val.substring(0, 4);
+                        return fechaok;
+                    } else {
+                        return '';
+                    }
+                },
+                formatoptions: {
+                    srcformat: 'ISO8601Long',
+                    newformat: 'd-m-Y'
+                },
+                editable: true,
+                editrules: {
+                    required: true
+                },
                 searchoptions: {
                     dataInit: function (el) {
                         $(el).datepicker({
@@ -92,14 +113,20 @@
                     sopt: ["eq", "le", "ge"]
                 },
                 editoptions: {
-                    size: 10, maxlengh: 10,
+                    size: 10,
+                    maxlengh: 10,
                     dataInit: function (element) {
-                        $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                        $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                        $(element).mask("00-00-0000", {
+                            placeholder: "__-__-____"
+                        });
+                        $(element).datepicker({
+                            language: 'es',
+                            format: 'dd-mm-yyyy',
+                            autoclose: true
+                        })
                     }
                 },
-            }
-            , {
+            }, {
                 label: 'CUI',
                 name: 'cui',
                 align: 'center',

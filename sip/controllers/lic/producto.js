@@ -217,7 +217,7 @@ function getProducto(req, res) {
 
 function getProductoCompra(req, res) {
     var idFabricante = req.params.idFabricante;
-    var sql = 'select a.id, a.nombre from lic.producto a ' +
+    var sql = 'select distinct a.id, a.nombre from lic.producto a ' +
                 'join lic.compra b on a.id = b.idproducto';
     sequelize.query(sql)
         .spread(function (rows) {

@@ -67,7 +67,7 @@ function list(req, res) {
 }
 
 function misAutorizaciones(req, res) {
-    models.sequelize.query("select a.idproducto, b.nombre, a.numlicencia " +
+    models.sequelize.query("select b.id, a.idproducto, b.nombre, a.numlicencia, b.idtipoinstalacion, a.codautoriza " +
         "from lic.reserva a " +
         "join lic.producto b on a.idproducto = b.id " +
         "where a.idusuario = " + req.session.passport.user + " and a.estado = 'Autorizado' and licReserva is not null").spread(function (rows) {
@@ -76,11 +76,11 @@ function misAutorizaciones(req, res) {
 }
 
 function miscodigos(req, res) {
-    var idproduct = req.params.idProducto;
+    var id = req.params.idProducto;
     models.sequelize.query("select a.codautoriza, b.idtipoinstalacion " +
         "from lic.reserva a " +
         "join lic.producto b on a.idproducto = b.id " +
-        "where idproducto = " + idproduct + " and a.codautoriza is not null").spread(function (rows) {
+        "where a.id = " + id + " and a.codautoriza is not null").spread(function (rows) {
         return res.json(rows);
     });
 }
@@ -193,18 +193,17 @@ function action(req, res) {
     var action = req.body.oper;
     switch (action) {
         case "add":
+            var numero = req.body.idTipoInstalacion;
+            var codauto = req.body.codAutorizacion;
             var hoy = "" + new Date().toISOString();
-
-
-
             models.instalacion.create({
                 idUsuario: req.session.passport.user,
                 fechaSolicitud: hoy,
                 idProducto: req.body.idProducto,
-                codAutorizacion: req.body.codautorizacion,
-                informacion: req.body.comentario,
+                codAutorizacion: codauto,
+                informacion: req.body.informacion,
                 estado: 'Pendiente',
-                idTipoInstalacion: req.body.idTipoInstalacion
+                idTipoInstalacion: numero
             }).then(function (instal) {
                 return res.json({
                     id: instal.id,
@@ -222,7 +221,7 @@ function action(req, res) {
             break;
         case "edit":
             models.instalacion.update({
-                nombre: req.body.nombre
+                informacion: req.body.informacion
             }, {
                 where: {
                     id: req.body.id
@@ -242,7 +241,7 @@ function action(req, res) {
             });
             break;
         case "del":
-            models.tipoInstalacion.destroy({
+            models.instalacion.destroy({
                 where: {
                     id: req.body.id
                 }
