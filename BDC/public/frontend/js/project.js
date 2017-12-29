@@ -869,12 +869,12 @@ function showSearchGenericProject() {
 	if (!$("#overview-tab2").hasClass("current")) {
 		var url = "/form-project-search";
 		$.get(url, function(data) {
-			$(".content-box-content").html(data);
+			$(".content-box-content2").html(data);
 			$('.loader').css('display', 'none');
 			$(".focus_on").css("display", "block");
 			$("#overview-tab2").addClass("current");
-			$("#program-tab1").removeClass("current");
-			$("#cancel-program-search-report").on("click", function() {
+			$("#search-tab2").removeClass("current");
+			$("#cancel-project-search").on("click", function() {
 				window.location.reload();
 			});
 		});
@@ -889,12 +889,12 @@ function showSearchGenericTask() {
 	if (!$("#overview-tab3").hasClass("current")) {
 		var url = "/form-task-search";
 		$.get(url, function(data) {
-			$(".content-box-content").html(data);
+			$(".content-box-content3").html(data);
 			$('.loader').css('display', 'none');
 			$(".focus_on").css("display", "block");
 			$("#overview-tab3").addClass("current");
-			$("#program-tab1").removeClass("current");
-			$("#cancel-program-search-report").on("click", function() {
+			$("#search-tab3").removeClass("current");
+			$("#cancel-task-search").on("click", function() {
 				window.location.reload();
 			});
 		});
