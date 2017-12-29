@@ -50,5 +50,5 @@ window.socketActions =
   newBoard: (data) ->
     console.log("new board!")
     console.log(data)
-    $.snackbar({content: "#{data.userAdding.username} added you to #{data.board.board.name}"})
-    $(boardTemplateHtml(data.board)).appendTo($('#accordionBoard')).fadeIn('slow')
+    $.snackbar({content: "#{data.userAdding.username} added you to #{data.board.name}"})
+    $(boardUniqueTemplateHtml(data)).appendTo($('#accordionBoard')).fadeIn('slow')

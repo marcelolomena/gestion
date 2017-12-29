@@ -4,7 +4,6 @@ import akka.actor.{Actor, ActorRef}
 import controllers.Frontend.KanbanSocketController
 import play.Logger
 import play.api.libs.json.JsValue
-
 import scala.collection.mutable.ListBuffer
 
 /**

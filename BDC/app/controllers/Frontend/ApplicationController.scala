@@ -1,7 +1,6 @@
 package controllers.Frontend
 
 import model._
-import model.UserBase
 import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc._
@@ -46,22 +45,17 @@ object ApplicationController extends Controller {
           Redirect(routes.Login.loginUser())
       }
     }.getOrElse {
-      val person = scala.util.parsing.json.JSON.parseFull(request.session.get("user").get)
-      person match {
-        case Some(m: Map[String, Any]) => m("username") match {
-          case s: String =>
-            val response = PersonnelService.bypass(s)
-            response.statusCode match {
-              case StatusCode.OK =>
-                implicit val user = response.data
-                Ok(views.html.dashboard()).withSession("user" -> Json.stringify(Json.toJson(user)))
-              case _ =>
-                Logger.info("failure get user")
-                Redirect(routes.Login.loginUser())
-            }
-        }
+      val person=Json.parse(request.session.get("user").get)
+      val username=(person \ "username").as[String]
+      val response = PersonnelService.bypass(username)
+      response.statusCode match {
+        case StatusCode.OK =>
+          implicit val user = response.data
+          Ok(views.html.dashboard()).withSession("user" -> Json.stringify(Json.toJson(user)))
+        case _ =>
+          Logger.info("failure get user")
+          Redirect(routes.Login.loginUser())
       }
-
     }
   }
 

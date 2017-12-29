@@ -250,3 +250,25 @@ window.boardTemplateHtml = (board) ->
                 affixBoardSocket($(\"#collapseBoard#{board.board.id}\"),\"socket?userId=#{currentUser.id}&boardId=#{board.board.id}\", #{board.board.id});
               });
             </script>"
+
+window.boardUniqueTemplateHtml = (board) ->
+  return "<div class='panel panel-default'>
+            <div class='panel-heading' role='tab' id=\"headingBoard#{board.board.id}\">
+              <h4 class=\"panel-title\">
+              <a data-toggle=\"collapse\" data-parent=\"#accordionBoard\" href=\"#collapseBoard#{board.board.id}\" aria-expanded=\"false\" aria-controls=\"collapseBoard#{board.board.id}\">
+                #{board.board.name}
+              </a>
+              #{"<button class=\"btn avatar\" style=\"float:right;background:url(#{user.avatarUrl});\"></button>" for user in board.userAdding}
+             </h4>
+            </div>
+            <div id=\"collapseBoard#{board.board.id}\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingBoard#{board.board.id}\" data-options=\"{'id':#{board.board.id}}\">
+              <div class=\"panel-body\">
+                #{boardContentTemplateHtml(board)}
+              </div>
+            </div>
+            </div>
+            <script>
+              $(document).ready(function() {
+                affixBoardSocket($(\"#collapseBoard#{board.board.id}\"),\"socket?userId=#{currentUser.id}&boardId=#{board.board.id}\", #{board.board.id});
+              });
+            </script>"

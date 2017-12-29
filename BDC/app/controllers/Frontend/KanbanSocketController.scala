@@ -75,14 +75,15 @@ object KanbanSocketController {
       "board" -> Json.toJson(board),
       "userAdding" -> Json.toJson(userAdding)
     ).toString())
-    //connected.get(boardId).get.foreach { actor =>
-    connected.getOrElse(board.id.get, Seq[KanbanActor]()).foreach { actor =>
+    floatingActors.seq.foreach { actor =>
+      Logger.debug("Todo pasando pal wea : " + actor.user.firstName)
       actor ! Json.stringify(
         Json.obj(
           "action" -> JsString(SocketActions.newBoard),
           "data" -> Json.obj(
             "board" -> Json.toJson(board),
-            "userAdding" -> Json.toJson(userAdding)
+            "userAdding" -> Json.toJson(userAdding),
+            "projects" -> Option.empty[Project]
           )
         )
       )
