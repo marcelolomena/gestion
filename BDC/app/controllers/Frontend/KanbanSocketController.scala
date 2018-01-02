@@ -3,7 +3,7 @@ package controllers.Frontend
 import akka.actor.{ActorRef, Props}
 import model._
 import play.Logger
-import play.api.libs.json.{JsNumber, JsString, Json}
+import play.api.libs.json.{JsArray, JsNumber, JsString, Json}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -77,13 +77,14 @@ object KanbanSocketController {
     ).toString())
     floatingActors.seq.foreach { actor =>
       Logger.debug("Todo pasando pal wea : " + actor.user.firstName)
+      val nil=Json.parse("[]")
       actor ! Json.stringify(
         Json.obj(
           "action" -> JsString(SocketActions.newBoard),
           "data" -> Json.obj(
             "board" -> Json.toJson(board),
             "userAdding" -> Json.toJson(userAdding),
-            "projects" -> Option.empty[Project]
+            "projects" -> nil
           )
         )
       )

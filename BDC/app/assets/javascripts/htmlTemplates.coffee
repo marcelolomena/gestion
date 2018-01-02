@@ -236,7 +236,7 @@ window.boardTemplateHtml = (board) ->
               <a data-toggle=\"collapse\" data-parent=\"#accordionBoard\" href=\"#collapseBoard#{board.board.id}\" aria-expanded=\"false\" aria-controls=\"collapseBoard#{board.board.id}\">
                 #{board.board.name}
               </a>
-              #{"<button class=\"btn avatar\" style=\"float:right;background:url(#{user.avatarUrl});\"></button>" for user in board.users}
+              #{"<button class=\"btn avatar\" style=\"float:right;background:url(#{'/documents/' + item.avatarUrl});\"></button>" for item in user for user in board.users}
              </h4>
             </div>
             <div id=\"collapseBoard#{board.board.id}\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingBoard#{board.board.id}\" data-options=\"{'id':#{board.board.id}}\">
@@ -258,7 +258,7 @@ window.boardUniqueTemplateHtml = (board) ->
               <a data-toggle=\"collapse\" data-parent=\"#accordionBoard\" href=\"#collapseBoard#{board.board.id}\" aria-expanded=\"false\" aria-controls=\"collapseBoard#{board.board.id}\">
                 #{board.board.name}
               </a>
-              #{"<button class=\"btn avatar\" style=\"float:right;background:url(#{user.avatarUrl});\"></button>" for user in board.userAdding}
+              <button class=\"btn avatar\" style=\"float:right;background:url(#{'/documents/' + board.userAdding.avatarUrl});\"></button>
              </h4>
             </div>
             <div id=\"collapseBoard#{board.board.id}\" class=\"panel-collapse collapse\" role=\"tabpanel\" aria-labelledby=\"headingBoard#{board.board.id}\" data-options=\"{'id':#{board.board.id}}\">
