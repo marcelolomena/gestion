@@ -605,17 +605,17 @@ object Generics extends Controller {
           stagesMap.put(stage.id.get.toString, stage.stage)
         }
 
-        var deliverablesMap = new java.util.HashMap[String, String]()
+        var deliverablesMap = new java.util.LinkedHashMap[String, String]()
         val deliverables = DeliverableService.findAllDeliverables()
         for (deliverable <- deliverables) {
           deliverablesMap.put(deliverable.id.get.toString, deliverable.deliverable)
         }
-        var userRolesMap = new java.util.HashMap[String, String]()
+        var userRolesMap = new java.util.LinkedHashMap[String, String]()
         val useRoles = UserRoleService.findAllUserRoles()
         for (uroles <- useRoles) {
           userRolesMap.put(uroles.rId.get.toString, uroles.role)
         }
-        val serviceCatalogueMap = new java.util.HashMap[String, String]()
+        val serviceCatalogueMap = new java.util.LinkedHashMap[String, String]()
         val serviceCatalogues = ServiceCatalogueService.getServiceCatalogue()
         for (serviceCatalogue <- serviceCatalogues) {
           serviceCatalogueMap.put(serviceCatalogue.id.get.toString, serviceCatalogue.service_name)
