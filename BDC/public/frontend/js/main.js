@@ -73,40 +73,23 @@ $(document).ready(
 					});
 
 			$(".program-sap").live("click", renderSAPUpdate);
-
 			$(".active-project-sap").live("click", renderProjectSAPUpdate);
-
 			$(".delete_tasks_details").live("click", renderTasksUpdate);
-
 			$(".delete-predefined").on("click", renderDeletePredefinedTask);
-
 			$(".delete-sub-task-id").on("click", renderDeleteSubTask);
-
 			$(".dashboard-tab2").on("click", showSearchDashboard);
-			
 			$("#dashboard-risk-tab").on("click", renderShowRiskReport);
-			
 			$("#dashboard-issue-tab").on("click", renderShowIssueReport);
-
 			$(".program-tab2").on("click", showSearchProgram);
-
 			$(".alert-tab2").on("click", showSearchAlert);
-
 			$(".overview-tab2").on("click", showSearchGenericProject);
-
 			$(".overview-tab3").on("click", showSearchGenericTask);
-
+    		$(".overview-tab4").on("click", showSearchDigestGenericTask);
 			$(".edit-hours").off("click").on("click", renderEditProgramHours);
-			
 			$(".edit-status").off("click").live("click", renderEditProgramStatus);
-
-			$(".edit-estimated-cost").off("click").on("click",
-					renderEditProgramEstimatedCost);
-
+			$(".edit-estimated-cost").off("click").on("click", renderEditProgramEstimatedCost);
 			$(".edit-project-hours").on("click", renderEditprojectHours);
-
 			$("#role_id").on("change", renderMembersFromRole);
-
 			$(".delete-risk").on("click", renderDeleteRisk);
 			$(".delete-alert").on("click", renderDeleteAlert);
 			$("#risk-filter-tab li").on("click", toggleTabRisk);

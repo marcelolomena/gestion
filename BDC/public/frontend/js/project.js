@@ -864,7 +864,6 @@ function showSearchAlert() {
 }
 
 function showSearchGenericProject() {
-
 	$('.loader').css('display', 'block');
 	if (!$("#overview-tab2").hasClass("current")) {
 		var url = "/form-project-search";
@@ -880,7 +879,6 @@ function showSearchGenericProject() {
 		});
 	}
 	$('.loader').css('display', 'none');
-
 }
 
 function showSearchGenericTask() {
@@ -901,6 +899,24 @@ function showSearchGenericTask() {
 	}
 	$('.loader').css('display', 'none');
 
+}
+
+function showSearchDigestGenericTask() {
+	$('.loader').css('display', 'block');
+	if (!$("#overview-tab4").hasClass("current")) {
+		var url = "/form-digest-task-search";
+		$.get(url, function(data) {
+			$(".content-box-content4").html(data);
+			$('.loader').css('display', 'none');
+			$(".focus_on").css("display", "block");
+			$("#overview-tab4").addClass("current");
+			$("#search-tab4").removeClass("current");
+			$("#cancel-project-search").on("click", function() {
+				window.location.reload();
+			});
+		});
+	}
+	$('.loader').css('display', 'none');
 }
 
 function renderCancelSearchDashboard() {

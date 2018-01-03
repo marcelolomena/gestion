@@ -1,7 +1,8 @@
-@(tasks: Seq[PredefinedTasks],gTasks:Seq[GenericTasks], project_mode : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(tasks: Seq[DigestiblePredefinedTasks],gTasks:Seq[GenericTasks], project_mode : String)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import services._
 @import java.text.SimpleDateFormat
+<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/generics.css")">
 <style>
 .multiselect {
     width:20em;
@@ -25,7 +26,7 @@
 <div class="main" >
 	@frontend.header()
 	<section class="slider" id="generic-tasks">
-	<h3 id="productNm" class="parent-new-h3" style="border-bottom: none;">
+		<h3 id="productNm" class="parent-new-h3" style="border-bottom: none;">
 	    	<span class="parent-icon padding-0px"> &#60; </span>
 		  	<a href="@controllers.Frontend.routes.Generics.overview()" style="font-weight: bold">
 		  		<span class="left  padding-0px">@Messages("maintenance.overview")</span>
@@ -34,11 +35,19 @@
 	  	  	<a href="@controllers.Frontend.routes.Generics.projectTypeDetailTempalte(project_mode)" style="font-weight: bold">
 		  		<span class="left  padding-0px">Template</span>
 	  	  	</a>
-	  	  	    
-	  	  	
-			
 	   </h3>
 	<div class="width_full" >
+		<div class="content-box">
+			<div class="content-box-header">
+				<ul class="content-box-tabs dashboard-overview-tab" style="width:100%;">
+					<li><a href="javascript:void(0)" id="search-tab4" class="search-tab4 current">Tareas Genéricas</a></li>
+					<li style="float:right;margin:0px;"><a href="javascript:void(0)" id="overview-tab4" class="overview-tab4">@Messages("dashboard.searchdashboard")</a></li>
+				</ul>
+			</div>
+			<div class="content-box-content4">
+
+			</div>
+		</div>
 	<div class="generic-tasks-list">
 	<input type="hidden" value="@project_mode" name="project_mode" id="project_mode" />
 	@if(tasks.size > 0){
@@ -54,74 +63,32 @@
 		 </li>
 		 @for((t, index )<- tasks.zipWithIndex){
 		 	<li id="t_@t.tId.get" class="task-listing @if(index%2==0){generic-odd-row}else{generic-even-row}" > 
-		 		 <span class="pre_title" title="@t.task_title">@t.task_title </span>
-		 		 
-				@if(!t.task_discipline.isEmpty && !TaskDesciplineService.findTaskDesciplineById(t.task_discipline.get.toString).isEmpty){
-		    			<span class="pre_discipline" > @TaskDesciplineService.findTaskDesciplineById(t.task_discipline.get.toString).get.task_discipline</span> 
-		  		}else {
-		  			<span class="pre_discipline" title="">&nbsp</span>
-		  		} 
-			 
-				 
-				  @if(!t.user_role.isEmpty){
-				 	<span class="pre_role" title="@t.user_role.get">
-				 }else{
-				 	<span class="pre_role" title="">&nbsp</span>
-				 }
-	    			@if(!t.user_role.isEmpty && !UserRoleService.findUserRoleById(t.user_role.get.toString()).isEmpty){
-	    				  @UserRoleService.findUserRoleById(t.user_role.get.toString()).get.role
-	    			}else{
-	    			&nbsp;
-	    			}
-						
-				 </span>
-				 
-				 	
-				 	@if(!DeliverableService.findDeliverableById(t.deliverable.toString).isEmpty){
-				 		<span class="pre_deliverable">@DeliverableService.findDeliverableById(t.deliverable.toString).get.deliverable </span>
-				 	}else{
-				 		<span class="pre_deliverable"> &nbsp; </span>
-				 	}
-				 	
-				 	<span class="pre_plan_time"> <input type="text" id="plan_time_@t.tId" name="plan_time_@t.tId" value="" style="
+				<span class="pre_title" title="@t.task_title">@t.task_title </span>
+				<span class="pre_discipline" title="">@t.task_discipline</span>
+				<span class="pre_role" title="">@t.user_role.</span>
+				<span class="pre_deliverable">@t.deliverable </span>
+			 	<span class="pre_plan_time"> <input type="text" id="plan_time_@t.tId" name="plan_time_@t.tId" value="" style="
     width: 40px; margin: 0px; min-height: 0px;"></span>
 				 <span class="pre_depend" id="pre_depend_@t.tId.get">
 					@if(gTasks.size>0){
-				 		<input type="hidden" value="" id="selected_task_dependency_@t.tId" />	
+				 		<input type="hidden" value="" id="selected_task_dependency_@t.tId" />
 				 		@for(ts <- gTasks){
 							@if(ts.tId.get != t.tId.get){
-								<span class="multiselect" id="multiselect_@t.tId.get" >
+								<span class="multiselect" id="multiselect_@t.tId.get">
 				 			<label><input type="checkbox" name="task_depend[]" value="@ts.tId.get" />@if(ts.task_title.length()>20){@ts.task_title.substring(0,20)...}else{@ts.task_title}</label>
 				 		</span>
-			 		  @*<select name="task_depend" id="task_depend_@t.tId" multiple="multiple" class="input-xlarge ">
-			 		  @for(ts <- gTasks){
-							@if(ts.tId.get != t.tId.get){
-								<option value="@ts.tId.get" >@if(ts.task_title.length()>20){@ts.task_title.substring(0,20)...}else{@ts.task_title} </option>	
-							}
-							
-						}				     					         
-			       	</select>*@	
 			       			}
 			       		}
 				 	}else{
 				 		<span value="" > No Task </span>
 	    			}
-				 	
-				 	
-				 </span>	
+				 </span>
 				 
 				 <span class="pre_action select_task" id="s_@t.tId.get">Add @* @Messages("generics.managepredefinedtask.selecttask")*@</span>
-				 <span class="pre_description display-none" title="@if(!t.task_description.isEmpty()){@t.task_description.trim() }else{"NA"}">
-				 	
-				 </span>
-				 <span class="pre_stage display-none" title="@t.stage"> </span>
-				 <span class="pre_remark display-none" title="@t.remark"> </span>
-				
-				 
+
 			</li>	
 		 }
-		 
-		 
+
 		 </ul>
 	}else{
 		<span>No Task available for selection</span>
@@ -150,8 +117,8 @@
 	 
 	<div class="tooltip"></div>	
 </div>
-@frontend.headerScripts()	
+@frontend.headerScripts()
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/generics.js")"></script>
-<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/generics.css")">
-</body>	
+<script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+</body>
 </html>

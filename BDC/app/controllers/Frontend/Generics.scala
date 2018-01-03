@@ -9,7 +9,7 @@ import models._
 import services._
 import play.api.mvc.Action
 import play.api.mvc.Controller
-
+import play.Logger
 import org.json.JSONObject
 
 object Generics extends Controller {
@@ -1025,12 +1025,8 @@ object Generics extends Controller {
 
   def addGenericTask(task_mode: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-      val tasks = GenericService.findAllPredefinedTasksDetails(task_mode)
-      /*for (t <- tasks) {
-        if (!t.task_discipline.isEmpty && !TaskDesciplineService.findTaskDesciplineById(t.task_discipline.get.toString).isEmpty) {
-          println(TaskDesciplineService.findTaskDesciplineById(t.task_discipline.get.toString).get.task_discipline);
-        }
-      }*/
+      //val tasks = GenericService.findAllPredefinedTasksDetails(task_mode)
+      val tasks = GenericService.findAllDigestiblePredefinedTasksDetails(task_mode)
       val predefined_tasks = GenericService.findGenericProjectTypeTasks(task_mode)
       Ok(views.html.frontend.generics.addGenericTask(tasks, predefined_tasks, task_mode))
 
@@ -1145,6 +1141,20 @@ object Generics extends Controller {
     }
   }
 
+  def searchDigestGenericTask() = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      Ok(views.html.frontend.generics.searchDigestTaskForm(
+        ARTForms.genericDigestTaskSearchForm)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
   def searchTaskResult() = Action { implicit request =>
     request.session.get("username").map { user =>
       ARTForms.genericTaskSearchForm.bindFromRequest.fold(
@@ -1185,6 +1195,28 @@ object Generics extends Controller {
             projectTypes,
             paginationPredefinedTasks,
             predefinedTasks))
+        })
+    }.getOrElse {
+      Redirect(routes.Login.loginUser());
+    }
+  }
+
+  def searchDigestTaskResult() = Action { implicit request =>
+    request.session.get("username").map { user =>
+      ARTForms.genericDigestTaskSearchForm.bindFromRequest.fold(
+        hasErrors => {
+
+          BadRequest(views.html.frontend.generics.searchDigestTaskForm(hasErrors))
+        },
+        success => {
+
+          val task_title = success.task_title.get
+          val criterion = "%" + task_title + "%"
+          val task_mode = "3"
+
+          val tasks = GenericService.findAllDigestiblePredefinedTasksFiltered(task_mode, criterion)
+          val predefined_tasks = GenericService.findGenericProjectTypeTasks(task_mode)
+          Ok(views.html.frontend.generics.addGenericTask(tasks, predefined_tasks, task_mode))
         })
     }.getOrElse {
       Redirect(routes.Login.loginUser());

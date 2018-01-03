@@ -1,0 +1,33 @@
+@(searchForm : Form[DigestGenericTaskSearch])(implicit session: play.api.mvc.Session,lang: Lang)
+@import play.api.i18n._
+@import play.api._
+@import services._
+@import helper._
+<div class="focus_on width_full" style="padding:10px 0px; margin:20px 0px;" id = "search_program_id">
+    <div class="focus_on_title"><img width="94" height="13" alt="" src="@routes.Assets.at("frontend/images/modify_search.png")"></div>
+    <div class="search-form-wrapper" style="padding: 10px 40px;">
+        @form(action = controllers.Frontend.routes.Generics.searchDigestTaskResult, 'id->"search-program-form") {
+        <input type="hidden" value="1" name="page"/>
+        <input type="hidden" value="10" name="record"/>
+        <div class="left width_full">
+            <div class="left width-pr50 padding-top-3px">
+                @inputText(
+                searchForm("task_title"),
+                'class -> "span4",
+                '_label -> Messages("Tarea"),
+                'placeholder -> Messages("Ingrese un nombre de tarea")
+                )
+            </div>
+
+        </div>
+
+        <div class="" style="margin: 10px auto;text-align: center;width: 300px;">
+            <span class="left" style="margin-top: 15px;"><input class="btn form-button" id="program-search-form" value='@Messages("button.search")' type="submit"/></span>
+            <span class="left" style="margin-left: 29px; margin-top: 15px;"> <input id="cancel-project-search" class="btn form-button" value='@Messages("button.cancel")' type="button"/></span>
+        </div>
+        }
+    </div>
+</div>
+<script>
+
+</script>

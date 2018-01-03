@@ -146,6 +146,29 @@ object PredefinedTasks {
 
 }
 
+case class DigestiblePredefinedTasks(
+                                      tId: Option[Int],
+                                      task_title: String,
+                                      task_description: String,
+                                      task_discipline: String,
+                                      user_role: String,
+                                      deliverable: String)
+
+object DigestiblePredefinedTasks {
+
+  val digestible_predefined_tasks = {
+    get[Option[Int]]("tId") ~
+      get[String]("task_title") ~
+      get[String]("task_description") ~
+      get[String]("task_discipline") ~
+      get[String]("user_role") ~
+      get[String]("deliverable") map {
+      case tId ~ task_title ~ task_description ~ task_discipline ~ user_role ~ deliverable =>
+        DigestiblePredefinedTasks(tId, task_title, task_description, task_discipline, user_role, deliverable)
+    }
+  }
+
+}
 
 case class GenericTask(tId: Option[Int], task_mode: Int, task_title: String,
   plan_start_date: Date, plan_end_date: Date, task_description: String, plan_time: BigDecimal, task_status: Int,
@@ -193,6 +216,19 @@ object GenericTaskSearch extends CustomColumns {
         GenericTaskSearch(
           discipline_id,
           deliverable_id)
+    }
+  }
+}
+
+case class DigestGenericTaskSearch(task_title: Option[String])
+
+object DigestGenericTaskSearch extends CustomColumns {
+  val search = {
+    get[Option[String]]("task_title") map {
+      case
+        task_title =>
+        DigestGenericTaskSearch(
+          task_title)
     }
   }
 }
