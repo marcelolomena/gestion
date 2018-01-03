@@ -49,6 +49,8 @@
                 return tabAddmGrid;
             case '#reserva':
                 return tabReservaGrid;
+            case '#instalacion':
+                return tabInstalacionGrid;
         }
     };
 
@@ -142,7 +144,7 @@
                 name: 'lictramite',
                 width: 110,
                 align: 'center',
-                formatter: 'integer',
+                // formatter: 'integer',
                 editable: false,
                 search: false
             }, {
@@ -150,7 +152,7 @@
                 name: 'licocupadas',
                 width: 75,
                 align: 'center',
-                formatter: 'integer',
+                // formatter: 'integer',
                 editable: false,
                 search: false
             }, {
@@ -317,6 +319,9 @@
         }, {
             id: 'tramite',
             nom: 'Compra Trámite'
+        }, {
+            id: 'instalacion',
+            nom: 'Instalaciones'
         }, {
             id: 'snow',
             nom: 'SNOW'

@@ -264,10 +264,92 @@ function action(req, res) {
     }
 }
 
+// function listInstalacion(req, res) {
+//     var ntt = models.instalacion;
+//     base.listChilds(req, res, ntt, 'idproducto', [{
+//         // model: models.producto
+//         // model: models.fabricante,
+//         // model: models.moneda
+//     }], function (data) {
+//         var result = [];
+//         _.each(data, function (item) {
+
+//             var row = {
+//                 id: item.id,
+//                 idUsuario: item.idUsuario,
+//                 idProducto: item.idProducto
+//             };
+//             result.push(row);
+//         });
+//         return result;
+//     })
+// }
+
+function listInstalacion(req, res) {
+    var id = req.params.id;
+    var usuario = req.session.passport.user;
+    var idproduc = req.params.pId;
+    var page = 1
+    var rows = 10
+    var filters = req.params.filters
+    utilSeq.buildCondition(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            entity.belongsTo(models.producto, {
+                foreignKey: 'idProducto'
+            });
+            entity.belongsTo(models.user, {
+                foreignKey: 'idUsuario'
+            });
+            entity.belongsTo(models.tipoInstalacion, {
+                foreignKey: 'idTipoInstalacion'
+            });
+            entity.count({
+                where: {
+                    idProducto: idproduc,
+                    estado: 'Instalado'
+                },
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                entity.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    // order: ['id'],
+                    where: {
+                        idProducto: idproduc,
+                        estado: 'Instalado'
+                    },
+                    include: [{
+                        model: models.producto
+                    }, {
+                        model: models.user
+                    }]
+                }).then(function (instal) {
+                    return res.json({
+                        records: records,
+                        total: total,
+                        page: page,
+                        rows: instal
+                    });
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({
+                        error_code: 1
+                    });
+                });
+            })
+        }
+    });
+}
+
+
+
 module.exports = {
     list: list,
     misAutorizaciones: misAutorizaciones,
     miscodigos: miscodigos,
     upload: upload,
     action: action,
+    listInstalacion: listInstalacion
 };

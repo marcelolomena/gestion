@@ -263,10 +263,13 @@ module.exports = function (passport) {
         .get(isAuthenticated, visacionController.getTorres);
 
     router.route('/lic/downfile/:id')
-        .get(isAuthenticated, visacionController.downFile); 
+        .get(isAuthenticated, visacionController.downFile);
 
     router.route('/lic/derivar/:id')
-        .get(isAuthenticated, visacionController.derivar); 
-		
+        .get(isAuthenticated, visacionController.derivar);
+
+    router.route('/lic/instalacion/:pId')
+        .get(isAuthenticated, instalacionSolicitudController.listInstalacion);
+
     return router;
 };
