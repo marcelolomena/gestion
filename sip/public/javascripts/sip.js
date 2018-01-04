@@ -354,4 +354,19 @@ var sipLibrary = {
         }
         return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
     },
+    radioElemInstalacion: function (value, options) {
+        console.log('aloha');
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="estado" value="Instalado"',
+            breakline = '/>Instalado</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="estado" value="NoInstalado"',
+            endnaradio = '/>No Instalado</label>';
+
+        if (value === 'Instalado') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === 'NoInstalado') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+    },	
 }

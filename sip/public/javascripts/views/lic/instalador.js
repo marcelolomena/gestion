@@ -11,24 +11,25 @@ $(document).ready(function () {
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Fecha {fechasolicitud}</div>";
+    tmpl += "<div class='column-half'>Torre {torre}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'>Comentario Solicitud {informacion}</div>";
     tmpl += "</div>";
     
+    tmpl += "<div class='form-half'>";
+    tmpl += "<div class='column-full'>Comentario Visación {comentariovisacion}</div>";
+    tmpl += "</div>";  
+	
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Estado {estado}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-half'>";
-    tmpl += "<div class='column-half'>Comentario Visación {comentariovisacion}</div>";
+    tmpl += "<div class='column-half'>Comentario Instalación {comentarioinstalacion}</div>";
     tmpl += "</div>"; 
-
-    tmpl += "<div class='form-half'>";
-    tmpl += "<div class='column-full'>Torre {torre}</div>";
-    tmpl += "</div>";     
-
+	
     tmpl += "<div class='form-row' style='display: none;'>";
     tmpl += "<div class='column-full'>Archivo {nombrearchivo2}</div>";
     tmpl += "</div>";         
@@ -53,7 +54,7 @@ $(document).ready(function () {
         edittype: "custom",
         editoptions: {
             custom_value: sipLibrary.getRadioElementValue,
-            custom_element: sipLibrary.radioElemReserva
+            custom_element: sipLibrary.radioElemInstalacion
         },
         search: false
     },
@@ -171,6 +172,10 @@ $(document).ready(function () {
         editrules: {
             required: true
         },
+        editoptions: {
+            fullRow: true,
+            readonly: 'readonly'
+        },		
         search: false
     },
     {
@@ -185,8 +190,9 @@ $(document).ready(function () {
         editrules: {
             required: true
         },
-        search: false,
+        search: false,   
         editoptions: {
+            readonly: 'readonly',
             dataUrl: '/lic/torres',
             buildSelect: function (response) {
                 var grid = $("#grid");
@@ -208,9 +214,21 @@ $(document).ready(function () {
             }
         }, dataInit: function (elem) { $(elem).width(200); }        
     }, 
+    {
+        label: 'Comentario de Instalación',
+        name: 'comentarioinstalacion',
+        width: 200,
+        hidden: false,
+        editable: true,
+        edittype: 'textarea',
+        editrules: {
+            required: true
+        },
+        search: false
+    },	
 ];
     $("#grid").jqGrid({
-        url: '/lic/instalacion-visacion',
+        url: '/lic/instalador',
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -221,12 +239,12 @@ $(document).ready(function () {
         sortable: "true",
         width: null,
         shrinkToFit: false,
-        caption: 'Visación Instalación',
+        caption: 'Instalación Software',
         pager: "#pager",
         viewrecords: true,
         rowList: [10, 20, 30, 40, 50],
         styleUI: "Bootstrap",
-        editurl: '/lic/instalacion-visacion',
+        editurl: '/lic/instalador',
         subGrid: false // set the subGrid property to true to show expand buttons for each row
     });
 
@@ -242,7 +260,7 @@ $(document).ready(function () {
     },
 
         {
-            editCaption: "Modifica Visación",
+            editCaption: "Modifica Instalación",
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -251,24 +269,13 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return [true,'Error: ' + data.responseText, ""];
             },
-            beforeShowForm: function (postdata, formid) {
-                var grid = $('#grid');
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                if (rowData.idtipoinstalacion == 13 || rowData.idtipoinstalacion == 15) { //Deshabilita torre en caso de tipo PC
-                    window.setTimeout(function () {
-                        $("#torre").attr('disabled', true);
-                    }, 1000); 
-                    $("#torre",formid).hide();                                           
-                }             
-            },
             beforeSubmit: function (postdata, formid) {
                 console.log("beforeSubmit");
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
-                if (rowData.estado == 'Autorizado') {
-                    return [false, "No puede editar asignación en estado Autorizado", ""];
+                if (rowData.estado == 'Instalado') {
+                    return [false, "No puede editar asignación en estado Instalado", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -278,43 +285,6 @@ $(document).ready(function () {
         },   
         {}
     );
-
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
-        caption: "",
-        buttonicon: "glyphicon glyphicon glyphicon-check",
-        title: "Derivar",
-        position: "last",
-        onClickButton: function () {
-            var grid = $('#grid');
-            var rowKey = grid.getGridParam("selrow");
-            var rowData = grid.getRowData(rowKey);
-
-            if (rowKey != null) {
-                if (rowData.estado == 'Pendiente') {
-                    if (confirm("¿Esta seguro de 'Derivar' la instalación?")) {
-                        $.ajax({
-                            url: "/lic/derivar/" + rowData.id,
-                            dataType: 'json',
-                            async: false,
-                            success: function (j) {
-                                console.log("j:" + j);
-                                $("#grid").trigger("reloadGrid");
-                                if (j.error_code == 0) {
-                                    $("#grid").trigger("reloadGrid");
-                                } else if (j.error_code == 10) {
-                                    alert("No se pudo derivar solicitud");
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    alert("La solicitud debe estar en estado Pendiente");
-                }
-            } else {
-                alert("Debe seleccionar una fila");
-            }
-        }
-    });
 
     $("#pager_left").css("width", "");
 });

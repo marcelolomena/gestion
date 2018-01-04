@@ -19,7 +19,10 @@ define("JEFELIC", "JEFELIC");
 define("ADMINLIC", "ADMINLIC");
 define("JEFESERVIDOR", "JEFESERVIDOR");
 define("JEFEPC", "JEFEPC");
-define("INSTALADOR", "INSTALADOR");
+define("INSTALADORPC", "INSTALADORPC");
+define("INSTALADORSERV", "INSTALADORSERV");
+define("PREPRODUCTIVO", "PREPRODUCTIVO");
+
 //define estados sistema licencias
 define("RECHAZADO", "Rechazado");
 define("ALAESPERA", "A la Espera");
@@ -28,7 +31,8 @@ define("PENDIENTE", "Pendiente");
 define("APROBADO", "Aprobado");
 define("RECHAZADO", "Rechazado");
 define("DERIVADO", "Derivado");
-
+define("INSTALADO", "Instalado");
+define("NOINSTALADO", "NoInstalado");
 
 //Define constantes para log de transacciones, contiene id de tabla sip.transaccion
 //*contratos
@@ -80,7 +84,21 @@ define("FinExitoCargaDTE", 39);
 define("FinErrorCargaDTE", 40);
 
 //Tipos de instalación
-//define("Servidor", 16);
-//define("PC", 15);
-define("Servidor", 14);
-define("PC", 13);
+console.log("Ambiente:"+process.env.NODE_ENV);
+if (process.env.NODE_ENV == 'development'){
+    define("Servidor", 14);
+    define("PC", 13); 
+    define("CORREOFROM","pnsilva@labchile.cl");
+    define("CORREOTO","pnsilva@labchile.cl");
+    define("CORREOIP","200.14.165.153");
+    define("CORREOUSR","pnsilva");
+    define("CORREOPWD","Banco01");
+} else {
+    define("Servidor", 16);
+    define("PC", 15);
+    define("CORREOFROM","ntorresg@bancochile.cl");
+    define("CORREOTO","ntorresg@bancochile.cl");
+    define("CORREOIP","mail.bancochile.cl");
+    define("CORREOUSR","proyecto_art");
+    define("CORREOPWD","Banco01");        
+}
