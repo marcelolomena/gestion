@@ -101,6 +101,10 @@ module.exports = function (sequelize, DataTypes) {
         model: 'art_user',
         key: 'id'
       }
+    },
+    numlicencia: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     schema: 'lic',

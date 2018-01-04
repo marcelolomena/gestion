@@ -156,9 +156,15 @@ $(document).ready(function () {
                     required: true
                 },
                 search: false
+            },
+            {
+                label: 'Cantidad Lic.',
+                name: 'numlicencia',
+                align: 'center',
+                width: 100,
+                editable: false,
+                search: false
             }
-
-
         ];
 
     $grid.jqGrid({
