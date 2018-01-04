@@ -13,17 +13,23 @@ entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
 entity.belongsTo(models.user, {
-    foreignKey: 'idUsuario'
+    foreignKey: 'idUsuario',
+    as: 'solicitante'
 });
 entity.belongsTo(models.user, {
-    foreignKey: 'idUsuarioJefe'
+    foreignKey: 'idUsuarioJefe',
+    as: 'aprobador'
 });
 
 var includes = [{
         model: models.producto
     },
     {
-        model: models.user
+        model: models.user,
+        as: 'solicitante'
+    },{
+        model: models.user,
+        as: 'aprobador'
     }
 ];
 
@@ -61,7 +67,14 @@ function mapper(data) {
             sap: item.sap,
             comentarioSolicitud: item.comentarioSolicitud,
             estado: item.estado,
-            idUsuarioJefe: item.idUsuarioJefe
+            idUsuarioJefe: item.idUsuarioJefe,
+            idUsuario: item.idUsuario,
+            solicitante: {
+                nombre: item.solicitante ? item.solicitante.first_name + item.solicitante.last_name : ''
+            }, 
+            aprobador: {
+                nombre: item.aprobador ? item.aprobador.first_name + item.aprobador.last_name: ''
+            }
         }
     });
 }

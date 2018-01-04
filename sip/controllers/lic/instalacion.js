@@ -203,7 +203,8 @@ function action(req, res) {
                 codAutorizacion: codauto,
                 informacion: req.body.informacion,
                 estado: 'Pendiente',
-                idTipoInstalacion: numero
+                idTipoInstalacion: numero,
+                numlicencia: '1'
             }).then(function (instal) {
                 return res.json({
                     id: instal.id,
@@ -264,31 +265,12 @@ function action(req, res) {
     }
 }
 
-// function listInstalacion(req, res) {
-//     var ntt = models.instalacion;
-//     base.listChilds(req, res, ntt, 'idproducto', [{
-//         // model: models.producto
-//         // model: models.fabricante,
-//         // model: models.moneda
-//     }], function (data) {
-//         var result = [];
-//         _.each(data, function (item) {
-
-//             var row = {
-//                 id: item.id,
-//                 idUsuario: item.idUsuario,
-//                 idProducto: item.idProducto
-//             };
-//             result.push(row);
-//         });
-//         return result;
-//     })
-// }
-
 function listInstalacion(req, res) {
     var id = req.params.id;
     var usuario = req.session.passport.user;
     var idproduc = req.params.pId;
+    var instal = 'Instalado'
+    var histor = 'Historico'
     var page = 1
     var rows = 10
     var filters = req.params.filters
@@ -308,7 +290,7 @@ function listInstalacion(req, res) {
             entity.count({
                 where: {
                     idProducto: idproduc,
-                    estado: 'Instalado'
+                    estado: [instal, histor]
                 },
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
@@ -318,7 +300,7 @@ function listInstalacion(req, res) {
                     // order: ['id'],
                     where: {
                         idProducto: idproduc,
-                        estado: 'Instalado'
+                        estado: [instal, histor]
                     },
                     include: [{
                         model: models.producto
