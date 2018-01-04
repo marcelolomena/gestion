@@ -312,7 +312,17 @@ function renderSelectTask() {
 	 */
 	var task = $("#project_mode").val();
 	var plan_time = $("#plan_time_"+id).val();
-	var tds = $("#selected_task_dependency_" + id).val();
+	if(plan_time.length===0)
+	    plan_time=0
+    var task_selected = new Array();
+    $.each($("input[name='task_depend[]']:checked"), function() {
+      task_selected.push($(this).val());
+    });
+
+    var tds = task_selected.join();
+	console.log("tds : " + tds)
+
+	//var tds = $("#selected_task_dependency_" + id).val();
 	if (typeof (tds) == 'undefined') {
 		tds = ""
 	}

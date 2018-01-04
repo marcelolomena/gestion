@@ -2268,7 +2268,7 @@ function renderGanttChart() {
 				scale : "days",
 				maxScale : "months",
 				minScale : "days",
-				itemsPerPage : 5,
+				itemsPerPage : 20,
 				waitText : "Please Wait...",
 				'scrollToToday' : true,
 				onItemClick : function(data) {
@@ -2419,7 +2419,7 @@ function renderProjectGanttChart() {
 				scale : "days",
 				maxScale : "months",
 				minScale : "days",
-				itemsPerPage : 10,
+				itemsPerPage : 20,
 				waitText : "Please Wait...",
 				'scrollToToday' : true,
 				onItemClick : function(data) {
@@ -3587,7 +3587,7 @@ function renderCriticalPathGantt() {
 				scale : "days",
 				maxScale : "months",
 				minScale : "days",
-				itemsPerPage : 10,
+				itemsPerPage : 20,
 				waitText : "Please Wait...",
 				'scrollToToday' : true,
 				onItemClick : function(data) {
@@ -3741,7 +3741,7 @@ function renderSubTaskGanttChart() {
 						scale : "days",
 						maxScale : "months",
 						minScale : "days",
-						itemsPerPage : 10,
+						itemsPerPage : 20,
 						waitText : "Please Wait...",
 						'scrollToToday' : true,
 						onItemClick : function(data) {
@@ -3825,7 +3825,7 @@ function renderSubTaskCriticalPathGantt() {
 				scale : "days",
 				maxScale : "months",
 				minScale : "days",
-				itemsPerPage : 10,
+				itemsPerPage : 20,
 				waitText : "Por favor espere...",
 				'scrollToToday' : true,
 				onItemClick : function(data) {

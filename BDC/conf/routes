@@ -578,7 +578,7 @@ GET    /edit-tasks-dependency                                                   
 POST   /update-tasks-dependency                                                                       controllers.Frontend.Generics.updateTaskDependency(task_id:String,selected_task : String)
 GET    /form-project-search                                                                           controllers.Frontend.Generics.searchProjectType
 GET    /form-task-search                                                                              controllers.Frontend.Generics.searchGenericTask
-GET    /form-digest-task-search                                                                       controllers.Frontend.Generics.searchDigestGenericTask
+GET    /form-digest-task-search/:task_mode                                                            controllers.Frontend.Generics.searchDigestGenericTask(task_mode : String)
 GET    /generic-project-search                                                                        controllers.Frontend.Generics.overview
 POST   /generic-project-search                                                                        controllers.Frontend.Generics.searchProjectResult
 POST   /generic-task-search                                                                           controllers.Frontend.Generics.searchTaskResult

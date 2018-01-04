@@ -1025,7 +1025,6 @@ object Generics extends Controller {
 
   def addGenericTask(task_mode: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-      //val tasks = GenericService.findAllPredefinedTasksDetails(task_mode)
       val tasks = GenericService.findAllDigestiblePredefinedTasksDetails(task_mode)
       val predefined_tasks = GenericService.findGenericProjectTypeTasks(task_mode)
       Ok(views.html.frontend.generics.addGenericTask(tasks, predefined_tasks, task_mode))
@@ -1141,11 +1140,18 @@ object Generics extends Controller {
     }
   }
 
-  def searchDigestGenericTask() = Action { implicit request =>
+  def searchDigestGenericTask(task_mode: String) = Action { implicit request =>
     request.session.get("username").map { user =>
 
+      val discipline = TaskDesciplineService.findAllTaskDescipline()
+
+      val disciplineMap = new java.util.LinkedHashMap[String, String]()
+      for (u <- discipline) {
+        disciplineMap.put(u.id.get.toString(), u.task_discipline)
+      }
+
       Ok(views.html.frontend.generics.searchDigestTaskForm(
-        ARTForms.genericDigestTaskSearchForm)).withSession("username" -> request.session.get("username").get,
+        ARTForms.genericDigestTaskSearchForm,task_mode,disciplineMap)).withSession("username" -> request.session.get("username").get,
         "utype" -> request.session.get("utype").get,
         "uId" -> request.session.get("uId").get,
         "user_profile" -> request.session.get("user_profile").get)
@@ -1205,16 +1211,23 @@ object Generics extends Controller {
     request.session.get("username").map { user =>
       ARTForms.genericDigestTaskSearchForm.bindFromRequest.fold(
         hasErrors => {
+          val tm = ""
+          val discipline = TaskDesciplineService.findAllTaskDescipline()
 
-          BadRequest(views.html.frontend.generics.searchDigestTaskForm(hasErrors))
+          val disciplineMap = new java.util.LinkedHashMap[String, String]()
+          for (u <- discipline) {
+            disciplineMap.put(u.id.get.toString(), u.task_discipline)
+          }
+          BadRequest(views.html.frontend.generics.searchDigestTaskForm(hasErrors,tm,disciplineMap))
         },
         success => {
 
-          val task_title = success.task_title.get
+          val task_title = success.task_title.getOrElse("")
           val criterion = "%" + task_title + "%"
-          val task_mode = "3"
+          val task_mode = success.task_mode.get
+          val discipline_id = success.discipline_id.getOrElse(0)
 
-          val tasks = GenericService.findAllDigestiblePredefinedTasksFiltered(task_mode, criterion)
+          val tasks = GenericService.findAllDigestiblePredefinedTasksFiltered(task_mode, criterion, discipline_id)
           val predefined_tasks = GenericService.findGenericProjectTypeTasks(task_mode)
           Ok(views.html.frontend.generics.addGenericTask(tasks, predefined_tasks, task_mode))
         })

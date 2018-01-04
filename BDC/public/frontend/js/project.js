@@ -904,7 +904,9 @@ function showSearchGenericTask() {
 function showSearchDigestGenericTask() {
 	$('.loader').css('display', 'block');
 	if (!$("#overview-tab4").hasClass("current")) {
-		var url = "/form-digest-task-search";
+		var task_mode = $('#project_mode').val();
+		var url = "/form-digest-task-search/"+task_mode;
+
 		$.get(url, function(data) {
 			$(".content-box-content4").html(data);
 			$('.loader').css('display', 'none');

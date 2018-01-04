@@ -1,4 +1,4 @@
-@(searchForm : Form[DigestGenericTaskSearch])(implicit session: play.api.mvc.Session,lang: Lang)
+@(searchForm : Form[DigestGenericTaskSearch],task_mode: String, disciplineMap: java.util.HashMap[String,String])(implicit session: play.api.mvc.Session,lang: Lang)
 @import play.api.i18n._
 @import play.api._
 @import services._
@@ -7,15 +7,25 @@
     <div class="focus_on_title"><img width="94" height="13" alt="" src="@routes.Assets.at("frontend/images/modify_search.png")"></div>
     <div class="search-form-wrapper" style="padding: 10px 40px;">
         @form(action = controllers.Frontend.routes.Generics.searchDigestTaskResult, 'id->"search-program-form") {
-        <input type="hidden" value="1" name="page"/>
-        <input type="hidden" value="10" name="record"/>
+        <input type="hidden" value="@task_mode" name="task_mode" id="task_mode" />
         <div class="left width_full">
+
             <div class="left width-pr50 padding-top-3px">
                 @inputText(
                 searchForm("task_title"),
                 'class -> "span4",
                 '_label -> Messages("Tarea"),
                 'placeholder -> Messages("Ingrese un nombre de tarea")
+                )
+            </div>
+
+            <div class="right width-pr50 padding-top-3px">
+                @select(
+                searchForm("discipline_id"),
+                options(disciplineMap),
+                'class -> "input-xlarge ",
+                '_label -> Messages("Disciplina"),
+                '_default -> Messages("Escoja una Disciplina")
                 )
             </div>
 

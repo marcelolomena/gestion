@@ -1056,7 +1056,10 @@ object ARTForms {
 
   val genericDigestTaskSearchForm: Form[DigestGenericTaskSearch] = Form(
     mapping(
-      "task_title" -> optional(text))(DigestGenericTaskSearch.apply)(DigestGenericTaskSearch.unapply))
+      "task_title" -> optional(text),
+      "task_mode" -> optional(text),
+      "discipline_id" -> optional(number)
+    )(DigestGenericTaskSearch.apply)(DigestGenericTaskSearch.unapply))
 }
 
 

@@ -333,7 +333,7 @@ object GenericService extends CustomColumns {
     }
   }
 
-  def findAllDigestiblePredefinedTasksFiltered(task_mode: String, task_title: String) = {
+  def findAllDigestiblePredefinedTasksFiltered(task_mode: String, task_title: String, discipline_id: Int) = {
     DB.withConnection { implicit connection =>
       Logger.debug("task_title : " + task_title)
       val sqlString =
@@ -350,6 +350,7 @@ object GenericService extends CustomColumns {
           |	) Y
           |	ON X.tId = Y.predefined_task_id
           |	WHERE Y.predefined_task_id IS NULL
+          | AND X.task_discipline = {discipline_id}
           |	AND X.is_active = 1
           |) A
           |JOIN
@@ -373,7 +374,7 @@ object GenericService extends CustomColumns {
           |AND task_title like {title}
           |ORDER BY A.task_title
         """.stripMargin
-      val result = SQL(sqlString).on('task_mode->task_mode,'title->task_title).as(DigestiblePredefinedTasks.digestible_predefined_tasks *)
+      val result = SQL(sqlString).on('task_mode->task_mode,'title->task_title,'discipline_id -> discipline_id).as(DigestiblePredefinedTasks.digestible_predefined_tasks *)
       result
     }
   }

@@ -220,15 +220,15 @@ object GenericTaskSearch extends CustomColumns {
   }
 }
 
-case class DigestGenericTaskSearch(task_title: Option[String])
+case class DigestGenericTaskSearch(task_title: Option[String],task_mode: Option[String],discipline_id: Option[Int])
 
 object DigestGenericTaskSearch extends CustomColumns {
   val search = {
-    get[Option[String]]("task_title") map {
+    get[Option[String]]("task_title") ~ get[Option[String]]("task_mode") ~ get[Option[Int]]("discipline_id") map {
       case
-        task_title =>
+        task_title ~ task_mode ~ discipline_id=>
         DigestGenericTaskSearch(
-          task_title)
+          task_title,task_mode,discipline_id)
     }
   }
 }
