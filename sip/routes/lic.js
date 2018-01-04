@@ -38,6 +38,7 @@ var aprobacionController = require('../controllers/lic/reserva-aprobacion');
 var noaprobadasController = require('../controllers/lic/reserva-noaprobadas');
 var graficoController = require('../controllers/lic/graficoprodprov');
 var visacionController = require('../controllers/lic/instalacion-visacion');
+var torreController = require('../controllers/lic/torre');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -270,6 +271,10 @@ module.exports = function (passport) {
 
     router.route('/lic/instalacion/:pId')
         .get(isAuthenticated, instalacionSolicitudController.listInstalacion);
+
+    router.route('/lic/torre')
+        .get(isAuthenticated, torreController.list)
+        .post(isAuthenticated, torreController.action);
 
     return router;
 };

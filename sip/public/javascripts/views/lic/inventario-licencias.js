@@ -177,6 +177,20 @@
                 formatter: 'integer',
                 editable: false,
                 search: false
+            }, {
+                label: 'Disponible',
+                name: 'disponible',
+                width: 75,
+                align: 'center',
+                formatter: function(cellvalue, options, rowObject){
+                    var compradas = rowObject.licstock;
+                    var instaladas = rowObject.licocupadas;
+                    var reservadas = rowObject.licReserva;
+                    var disponible = compradas - instaladas - reservadas
+                    return disponible;
+                },
+                editable: false,
+                search: false
             },
             {
                 label: 'Alerta Renovación',
