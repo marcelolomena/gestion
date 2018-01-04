@@ -83,6 +83,24 @@ module.exports = function (sequelize, DataTypes) {
       field: 'comentarioInstalacion',
       type: DataTypes.STRING,
       allowNull: true
+    },
+    idTorre: {
+      field: 'idtorre',
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'torre',
+        key: 'id'
+      }
+    },
+    idUsuarioVisacion: {
+      field: 'idusuariovisacion',
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'art_user',
+        key: 'id'
+      }
     }
   }, {
     schema: 'lic',

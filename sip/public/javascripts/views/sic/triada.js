@@ -143,7 +143,7 @@ function gridServicioProveedor(parentRowID, parentRowKey, suffix) {
             editable: true, hidden: true,
             edittype: "select",
             editoptions: {
-                dataUrl: '/sic/cuiservicios/' + parentRowKey,
+                dataUrl: '/sic/cuiservicios/' + parentSolicitudC,
                 buildSelect: function (response) {
                     var grid = $("#grid");
                     var rowKey = grid.getGridParam("selrow");

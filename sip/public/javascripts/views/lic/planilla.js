@@ -482,7 +482,7 @@
             },            
             search: false
         }, {
-            label: 'N° Lic. Instaladas',
+            label: 'Instalada por Producto',
             name: 'licocupadas',
             width: 125,
             align: 'center',

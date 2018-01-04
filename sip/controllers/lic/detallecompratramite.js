@@ -177,19 +177,25 @@ function action(req, res) {
                                         });
                                     });
                             } else {
-                                return base.findById(models.producto, detalle.idProducto)
-                                    .then(function (item) {
-                                        return base.update(models.producto, {
-                                            id: detalle.idProducto,
-                                            licTramite: item.licTramite + data.numero
-                                        }, res);
-                                    }).catch(function (err) {
-                                        logger.error('producto.LicTramite Upd, ' + err);
-                                        return res.json({
-                                            error: 1,
-                                            glosa: err.message
-                                        });
-                                    });
+
+                                return res.json({
+                                    error: 1,
+                                    glosa: err.message
+                                });
+
+                                // return base.findById(models.producto, detalle.idProducto)
+                                //     .then(function (item) {
+                                //         return base.update(models.producto, {
+                                //             id: detalle.idProducto,
+                                //             licTramite: item.licTramite + data.numero
+                                //         }, res);
+                                //     }).catch(function (err) {
+                                //         logger.error('producto.LicTramite Upd, ' + err);
+                                //         return res.json({
+                                //             error: 1,
+                                //             glosa: err.message
+                                //         });
+                                //     });
                             }
                         }).catch(function (err) {
                             logger.error(entity.name + ':destroy, ' + err);

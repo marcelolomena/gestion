@@ -38,7 +38,11 @@ var aprobacionController = require('../controllers/lic/reserva-aprobacion');
 var noaprobadasController = require('../controllers/lic/reserva-noaprobadas');
 var graficoController = require('../controllers/lic/graficoprodprov');
 var visacionController = require('../controllers/lic/instalacion-visacion');
+<<<<<<< HEAD
 var instaladorController = require('../controllers/lic/instalador');
+=======
+var torreController = require('../controllers/lic/torre');
+>>>>>>> 48a0ef2e1c399f118bf3c63771264efcb1e40d32
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -264,7 +268,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, visacionController.getTorres);
 
     router.route('/lic/downfile/:id')
-        .get(isAuthenticated, visacionController.downFile); 
+        .get(isAuthenticated, visacionController.downFile);
 
     router.route('/lic/derivar/:id')
         .get(isAuthenticated, visacionController.derivar); 
@@ -273,5 +277,12 @@ module.exports = function (passport) {
         .get(isAuthenticated, instaladorController.list)
         .post(isAuthenticated, instaladorController.action);		
 		
+    router.route('/lic/instalacion/:pId')
+        .get(isAuthenticated, instalacionSolicitudController.listInstalacion);
+
+    router.route('/lic/torre')
+        .get(isAuthenticated, torreController.list)
+        .post(isAuthenticated, torreController.action);
+
     return router;
 };

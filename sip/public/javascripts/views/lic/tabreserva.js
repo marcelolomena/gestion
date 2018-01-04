@@ -20,14 +20,14 @@ var tabReservaGrid = {
             label: 'Estado',
             name: 'estado',
             align: 'center',
-            width: 300,
+            width: 100,
             editable: false,
             search: false
         },
         {
             label: 'Cantidad',
             name: 'numlicencia',
-            width: 300,
+            width: 75,
             editable: true,
             align: 'center',
             search: false

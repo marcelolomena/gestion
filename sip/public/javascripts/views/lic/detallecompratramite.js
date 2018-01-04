@@ -388,9 +388,14 @@ function renderGrid(loadurl, tableId) {
         if (!(postdata.idProducto || postdata.otroProducto)) {
             return [false, 'Debe seleccionar Producto o ingresar Otro Producto', ''];
         }
+        var rowData = $table.getRowData($table.getGridParam('selrow'));
+        var thissid = rowData.estado;
+
+
         var f1 = postdata.fechaInicio;
         var f2 = postdata.fechaTermino;
         var f3 = postdata.fechaControl;
+        var recep = postdata.estado;
         var f1compare = f1.substr(6) + f1.substr(3, 2) + f1.substr(0, 2);
         var f2compare = f2.substr(6) + f2.substr(3, 2) + f2.substr(0, 2);
         var f3compare = f3.substr(6) + f3.substr(3, 2) + f3.substr(0, 2);
@@ -400,6 +405,8 @@ function renderGrid(loadurl, tableId) {
             return [false, 'La fecha de Control debe ser menor a la fecha de Termino'];
         } else if (f3compare < f1compare) {
             return [false, 'La fecha de Control debe ser mayor a la fecha de Inicio'];
+        } else if (thissid == 'Recepcionado') {
+            return [false, 'Esta compra ya está recepcionado!'];
         } else {
             return [true, '', ''];
         }
