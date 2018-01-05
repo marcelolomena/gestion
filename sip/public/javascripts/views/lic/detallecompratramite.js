@@ -207,7 +207,12 @@ function renderGrid(loadurl, tableId) {
                 dataEvents: [{
                     type: 'change',
                     fn: function (e) {
-
+                            var rowKey = $table.getGridParam("selrow");
+                            var rowData = $table.getRowData(rowKey);
+                            var thissid = $(this).val();
+                            var fechacontr = editar_fecha(thissid, -3, "m", "-");
+                            $("input#fechaControl").val(fechacontr);
+                            
                     }
                 }],
             },
@@ -333,6 +338,7 @@ function renderGrid(loadurl, tableId) {
     ];
     var grid = new zs.StackGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC'], showChildGrid);
 
+
     function editar_fecha(fecha, intervalo, dma, simbolo) {
 
         var simbolo = simbolo || "-";
@@ -362,9 +368,6 @@ function renderGrid(loadurl, tableId) {
         return dia + "-" + mes + "-" + anio;
     }
 
-
-
-
     function beforeSubmitDel(postdata, formid) {
         var rowData = $table.getRowData($table.getGridParam('selrow'));
         var thissid = rowData.estado;
@@ -377,10 +380,6 @@ function renderGrid(loadurl, tableId) {
         }
     }
 
-
-
-
-
     function beforeSubmit(postdata, formid) {
         if (!(postdata.idFabricante || postdata.otroFabricante)) {
             return [false, 'Debe seleccionar Fabricante o ingresar Otro Fabricante', ''];
@@ -390,7 +389,6 @@ function renderGrid(loadurl, tableId) {
         }
         var rowData = $table.getRowData($table.getGridParam('selrow'));
         var thissid = rowData.estado;
-
 
         var f1 = postdata.fechaInicio;
         var f2 = postdata.fechaTermino;
@@ -412,14 +410,9 @@ function renderGrid(loadurl, tableId) {
         }
     }
 
-
-
-
     function beforeShowForm(form) {
         var rowData = $table.getRowData($table.getGridParam('selrow'));
         var thissid = rowData.estado;
-        
-        
         if (thissid == 'Recepcionado') {
             bootbox.alert({
                 message: "el producto fue recepcionado, por lo tanto no se va a eliminar.",
@@ -432,7 +425,6 @@ function renderGrid(loadurl, tableId) {
     }
 
     grid.prmDel.beforeSubmit = beforeSubmitDel;
-    
     grid.prmAdd.beforeSubmit = beforeSubmit;
     grid.prmEdit.beforeSubmit = beforeSubmit;
     grid.prmEdit.onInitializeForm = function (formid, action) {
@@ -445,7 +437,6 @@ function renderGrid(loadurl, tableId) {
             }, 500);
         }
     };
-    // grid.prmDel.afterSubmit = afterSubmit;
     grid.build();
 }
 

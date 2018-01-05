@@ -38,11 +38,8 @@ var aprobacionController = require('../controllers/lic/reserva-aprobacion');
 var noaprobadasController = require('../controllers/lic/reserva-noaprobadas');
 var graficoController = require('../controllers/lic/graficoprodprov');
 var visacionController = require('../controllers/lic/instalacion-visacion');
-<<<<<<< HEAD
 var instaladorController = require('../controllers/lic/instalador');
-=======
 var torreController = require('../controllers/lic/torre');
->>>>>>> 48a0ef2e1c399f118bf3c63771264efcb1e40d32
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
