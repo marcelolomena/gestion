@@ -15,10 +15,14 @@ exports.action = function (req, res) {
       //Codigo de update
       if (req.body.torre == '0') {
         var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentarioinstalacion='" + req.body.comentarioinstalacion + "' " +
-          " WHERE id =" + req.body.id;
+          " WHERE id =" + req.body.id+";";
       } else {
         var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentarioinstalacion='" + req.body.comentarioinstalacion + "', " +
-          " idtorre = " + req.body.torre + " WHERE id =" + req.body.id;
+          " idtorre = " + req.body.torre + " WHERE id =" + req.body.id+";";
+      }
+
+      if (req.body.estado == constants.INSTALADO) {
+          sql = sql + " UPDATE lic.producto SET licReserva=licReserva-1, licocupadas=licocupadas+1 WHERE id="+req.body.producto;
       }
 
       console.log("query:" + sql);
@@ -27,7 +31,7 @@ exports.action = function (req, res) {
       var filePath = "docs\\lic";
       var fullpath = filePath + '\\' + archivo;
       sequelize.query(sql).then(function (ok) {
-        if (req.body.estado == 'Aprobado') {
+        if (req.body.estado == constants.INSTALADO) {
           fs.readFile(fullpath, function (err, data) {
             let transporter = nodemailer.createTransport({
               host: '200.14.165.153',
