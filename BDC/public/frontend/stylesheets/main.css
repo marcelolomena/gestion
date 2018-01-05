@@ -3360,7 +3360,7 @@ form button {
 	padding: 3px;
 }
 
-#generic_task_list  .task_plan_time {
+#generic_task_list .task_plan_time {
 	float: left;
 	width: 12%;
 	min-height: 20px;
@@ -3369,6 +3369,20 @@ form button {
 	line-height: 20px;
 	padding: 3px;
 	text-align: left;
+}
+
+#generic_task_list .right_task_plan_time {
+	float: left;
+	width: 12%;
+	min-height: 20px;
+	display: inline-block;
+	position: relative;
+	line-height: 20px;
+    padding-top: 3px;
+    padding-right: 25px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+	text-align: right;
 }
 
 #generic_task_list .task_discipline {

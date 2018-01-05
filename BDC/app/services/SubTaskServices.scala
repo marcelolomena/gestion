@@ -5,16 +5,14 @@ import play.api.db.DB
 import anorm.SqlParser._
 import models._
 import anorm._
-import com.typesafe.plugin._
 import java.util.Date
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
 import org.json.JSONArray
 import org.apache.commons.lang3.time.DateUtils
 import java.text.DecimalFormat
-import views.html.frontend.subTask.subTaskDetails
+import play.Logger
 
 object SubTaskServices extends CustomColumns {
 
@@ -78,6 +76,11 @@ object SubTaskServices extends CustomColumns {
     title: String,
     id_tarea: String,
     extended_description: String) = {
+
+    Logger.debug("fecha_inicio : " + fecha_inicio)
+    Logger.debug("id_platilla : " + id_platilla)
+    Logger.debug("title : " + title)
+    Logger.debug("id_tarea : " + id_tarea)
 
     var sqlString: String = null
 

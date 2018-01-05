@@ -60,13 +60,14 @@ $(document).ready(function() {
 
 	function renderSubmitTaskPlanTime(key) {
 		var bool = true;
-		var plan_time = $("#ptd_"+key).val().replace(/\./g, '');
+		//var plan_time = $("#ptd_"+key).val().replace(/\./g, '');
+		var plan_time = $("#ptd_"+key).val();
 
 		if (plan_time == "") {
 			plan_time = "0"
 		} else {
 			var _value = plan_time;
-			var _message = "Por favor ingrese un número válido";
+			var _message = "Por favor ingrese un número entero válido";
 			bool = validateNumeric(_value, _message, "est_cost");
 		}
 		if (bool) {

@@ -144,7 +144,37 @@ object GenericService extends CustomColumns {
 
   def findGenericProjectTypeTasks(id: String) = {
     DB.withConnection { implicit connection =>
-      val sqlString = "select * from art_generic_task where task_mode = {id} AND is_active=1 AND predefined_task_id <> 0"
+      val sqlString =
+        """
+          |SELECT tId
+          |,task_title
+          |,task_code
+          |,plan_start_date
+          |,plan_end_date
+          |,task_description
+          |,CAST(plan_time AS INTEGER) plan_time
+          |,creation_date
+          |,task_status
+          |,status
+          |,owner
+          |,task_discipline
+          |,completion_percentage
+          |,remark
+          |,task_depend
+          |,stage
+          |,user_role
+          |,deliverable
+          |,task_type
+          |,task_mode
+          |,predefined_task_id
+          |,is_active
+          |,catalogue_service
+          |FROM art_generic_task
+          |WHERE task_mode = {id}
+          |AND is_active=1
+          |AND predefined_task_id <> 0
+        """.stripMargin
+      //val sqlString = "select * from art_generic_task where task_mode = {id} AND is_active=1 AND predefined_task_id <> 0"
       val result = SQL(sqlString).on('id->id)as(
         GenericTasks.tasks *)
       result

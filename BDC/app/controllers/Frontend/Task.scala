@@ -289,9 +289,10 @@ object Task extends Controller {
             var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
             
             if(success.pert==0){ //con plantilla pero sin pert
-
+              /*
               SubTaskServices.insertSubTaskFromTemplate(formattedDate.format(success.plan_start_date),
                   formattedDate.format(success.plan_end_date),latest_task.toString(),success.project_mode.toString())
+              */
 
             }else if(success.pert==1){//pert dias corridos
               try {

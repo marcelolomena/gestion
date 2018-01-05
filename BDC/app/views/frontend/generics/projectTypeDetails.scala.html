@@ -73,10 +73,10 @@
 			    <ul class="width_full" id="t_data_list">
 			    	<li class="header_task">
 			    		<div class="task_title">@Messages("maintenance.task")</div>
-			    		<div class="task_owner_name">@Messages("maintenance.tasktype")</div>
 			    		<div class="task_discipline">@Messages("maintenance.discipline")</div>
 			    		<div class="task_user_role">@Messages("maintenance.userrole")</div>
 			    		<div class="task_staus">@Messages("maintenance.deliverable")</div>
+						<div class="right_task_plan_time">@Messages("maintenance.plan_time")</div>
 			    		<div class="task_plan_time">Dependencias</div>
 			    		<div class="task_action">@Messages("maintenance.action")</div>
 			    	</li>
@@ -88,17 +88,6 @@
 				    				<span class="left status_@m.task_status"></span>
 					    			<span class="left width88per">@if(m.task_title.length>30){@m.task_title.substring(0,30)...}else{ @m.task_title }</span> 
 				    			</div>
-				    			
-					    		<div class="task_owner_name" >
-								@{
-									m.task_type match{
-										case 1 =>"Generic Task"
-										case 2 =>"Key Task"
-										case 3 => "Milestone"
-										
-									}	
-								}					    		
-					    		</div>
 					    		<div class="task_discipline"  style="">
 					    			@if(!m.task_discipline.isEmpty && !TaskDesciplineService.findTaskDesciplineById(m.task_discipline.get.toString).isEmpty){
 					    				@TaskDesciplineService.findTaskDesciplineById(m.task_discipline.get.toString).get.task_discipline
@@ -115,6 +104,10 @@
 			    						@DeliverableService.findDeliverableById(m.deliverable.toString).get.deliverable.toString()
 			    					}
 					    		</div>
+								<div class="right_task_plan_time" >
+									@m.plan_time
+								</div>
+
 					    		<div class="task_plan_time" style="">
 			    				@if(!m.task_depend.isEmpty){
 			    					@for( s <- m.task_depend.get.split(",")){
@@ -128,18 +121,10 @@
 			    						</span>
 			    					}
 			    				}
-					    			
 					    		</div>
 
 					    		<div  class="task_action">
-				    				@*<a href="@controllers.Frontend.routes.Generics.editGenericTask(m.tId.get.toString)" class="edit-icon display-none" style="margin-left:17px;">	<span id="st_@m.tId" class="show_tasks_details"></span>	</a>
-				    				
-				    				<a href="@controllers.Frontend.routes.Generics.deleteGenericTaskFromProjectType(m.tId.get.toString)" class="delete-allocation" style="margin-left:20px;">	
-				    					
-				    					</a>
-				    				*@
-				    			
-				    				
+
 				    				<span class="show_tasks_details delete-icon delete-generic-task"  id="st_@m.tId">
 				    					<input type="hidden" value="@GenericService.validateGenericProjectTypeTasksDependency(m.task_mode.toString(), m.tId.get.toString())">
 				    				</span>

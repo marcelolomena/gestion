@@ -977,7 +977,7 @@ maintenance.responsible=Responsable
 maintenance.generictasks=Tareas Genéricas
 maintenance.newtask=Nueva Tarea
 maintenance.tasktype=Tipo de Tarea
-
+maintenance.plan_time=Días
 maintenance.selecttasks=Seleccione Tareas
 maintenance.selecteddependencytasks=Tareas de Dependencia seleccionados
 maintenance.nodependencies=No hay Dependencias
