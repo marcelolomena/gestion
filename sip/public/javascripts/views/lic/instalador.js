@@ -32,7 +32,11 @@ $(document).ready(function () {
 	
     tmpl += "<div class='form-row' style='display: none;'>";
     tmpl += "<div class='column-full'>Archivo {nombrearchivo2}</div>";
-    tmpl += "</div>";         
+    tmpl += "</div>";   
+    
+    tmpl += "<div class='form-row' style='display: none;'>";
+    tmpl += "<div class='column-full'>Producto {producto}</div>";
+    tmpl += "</div>";     
 
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
@@ -75,6 +79,15 @@ $(document).ready(function () {
         },
         search: false
     },
+    {
+        label: 'IDProducto',
+        name: 'producto',
+        jsonmap: 'idProducto',
+        width: 200,
+        hidden: true,
+        editable: true,
+        search: false
+    },    
     {
         label: 'Usuario',
         name: 'usuario',
