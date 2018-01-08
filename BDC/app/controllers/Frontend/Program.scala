@@ -1,9 +1,6 @@
 package controllers.Frontend
 
 import java.util.Date
-import java.text.SimpleDateFormat
-//import org.joda.time.DateTime
-//import org.joda.time.DateTimeConstants
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
 import org.json.JSONArray
@@ -14,7 +11,6 @@ import models.ProgramDate
 import models.ProgramDetail
 import models.ProgramMaster
 import models.Programs
-import play.api.data.Form
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import services.DepartmentService
@@ -27,23 +23,11 @@ import services.UserService
 import services.DocumentService
 import services.DistributionTimeSheetService
 import models.VersionDetails
-import java.io._
-import services.TaskService
-import services.SubTaskServices
-import models.Project
-import models.SubTaskMaster
-import scala.util.Random
 import services.GenericProjectService
 import services.GenericService
-import models.Tasks
-import services.TaskService
 import models.UserSetting
-import java.text.SimpleDateFormat
-import java.io.FileOutputStream
 import services.TaskService
 import services.SubTaskServices
-import java.util.Calendar
-import utils.ExportToExcel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import utils.ExportToExcel
@@ -52,37 +36,25 @@ import services.ProgramTypeService
 import services.UserRoleService
 import models.Baseline
 import play.libs.Json
-import models.ProgramMembers
 import services.ProgramMemberService
 import models.ProgramMembers
-import models.SAPMaster
 import services.SAPServices
 import services.BudgetTypeService
-import models.SAPMaster
 import models.Expenditure
 import models.Investment
 import models.SAPMaster
 import models.SAP
 import play.api._
-import play.api.mvc._
-//import play.api.libs.json
-import play.api.libs.json._
 import scala.math.BigDecimal.RoundingMode
-import models.ProgramStatus
 import services.EarnValueService
-import models.SpiCpiCalculations
 import services.SpiCpiCalculationsService
-import models.RiskManagement
 import models.RiskManagementMaster
 import models.RiskManagementIssue
-import java.util.TreeMap
-import models.riskParentType
 import services.RiskService
-import models.ProgramDates
 import models.ProgramMembersExternal
 import services.ProgramMemberExternalService
 import services.ImpactTypeService
-
+import scala.collection.mutable
 /**
  * This will have program and project details..
  */
@@ -704,9 +676,9 @@ object Program extends Controller {
           val user_id = Integer.parseInt(request.session.get("uId").get)
           val ret = createInitialRisk(user_id, last_program, 0)
           if (ret == 1)
-            println("FRACASO AL CREAR RIESGOS!!!")
+            Logger.debug("FRACASO AL CREAR RIESGOS!!!")
            else
-            println("EXITO AL CREAR RIESGOS!!!")
+            Logger.debug("EXITO AL CREAR RIESGOS!!!")
           ///FIN RIESGO
           /**
            * Default project of type Initiative and its tasks...
@@ -874,12 +846,170 @@ object Program extends Controller {
       })
   }
 
+  def createDefaultListRisks(user_id: Integer, parent_id: Long, parent_type: Integer): Long = {
+      try {
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : user_id" + user_id)
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_id" + parent_id)
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_type" + parent_type)
+        implicit val fullRisks = new mutable.MutableList[RiskManagementMaster]()
+        val risk_master_1 = RiskManagementMaster(Option(0),
+          Option(parent_id.toInt),
+          Option(parent_type),
+          "Planificación poco precisa", //name
+          "Estimaciones con errores superiores a un umbral predefinido para el tipo de proyecto", //risk.cause
+          "Cifras de esfuerzo por entregables han mostrado desviaciones superiores a ese umbral", //risk.event
+          "Cifras de Valor planificado no coinciden con valor ganado real y un análisis causa efecto muestra errores de planificación. Impacto principal es en atrasos", //risk.imapct
+          11, //risk.risk_category
+          "0", //risk.variable_imapact
+          0, //risk.probablity_of_occurence
+          0, //risk.quantification
+          0, //risk.strategic_reply
+          user_id, //risk.responsible
+          Option(""), //risk.reply_action
+          Option(""), //risk.configuration_plan
+          Option(""),
+          new Date(), //risk.risk_clouser_date
+          Option(user_id),
+          Option(new Date()),
+          Option(new Date()),
+          1, //risk.risk_state
+          82 //risk.sub_category
+        )
+
+        fullRisks+=risk_master_1
+
+        val risk_master_2 = RiskManagementMaster(Option(0),
+          Option(parent_id.toInt),
+          Option(parent_type),
+          "Cambio imprevisto de Alcance", //name
+          "La unidad Usuaria informa de necesidad de hacer cambios al alcance, indicando motivaciones", //risk.cause
+          "El riesgo se evidencia al iniciar pruebas unitarias", //risk.event
+          "Impacto en alcance y en calidad del producto. Significa hacer un nuevo proceso de planificación", //risk.imapct
+          1, //risk.risk_category
+          "0", //risk.variable_imapact
+          0, //risk.probablity_of_occurence
+          0, //risk.quantification
+          0, //risk.strategic_reply
+          user_id, //risk.responsible
+          Option(""), //risk.reply_action
+          Option(""), //risk.configuration_plan
+          Option(""),
+          new Date(), //risk.risk_clouser_date
+          Option(user_id),
+          Option(new Date()),
+          Option(new Date()),
+          1, //risk.risk_state
+          22 //risk.sub_category
+        )
+
+        fullRisks+=risk_master_2
+
+        val risk_master_3 = RiskManagementMaster(Option(0),
+          Option(parent_id.toInt),
+          Option(parent_type),
+          "Avance muy lento", //name
+          "Baja productividad del equipo y/o malas estimaciones iniciales de plazos", //risk.cause
+          "Índice de valor ganado menor que 1 en 4 o más controles consecutivos y sin proyecciones de recuperación", //risk.event
+          "Atrasos del proyecto causa problemas en unidad cliente del producto", //risk.imapct
+          11, //risk.risk_category
+          "0", //risk.variable_imapact
+          0, //risk.probablity_of_occurence
+          0, //risk.quantification
+          0, //risk.strategic_reply
+          user_id, //risk.responsible
+          Option(""), //risk.reply_action
+          Option(""), //risk.configuration_plan
+          Option(""),
+          new Date(), //risk.risk_clouser_date
+          Option(user_id),
+          Option(new Date()),
+          Option(new Date()),
+          1, //risk.risk_state
+          82 //risk.sub_category
+        )
+
+        fullRisks+=risk_master_3
+
+        val risk_master_4 = RiskManagementMaster(Option(0),
+          Option(parent_id.toInt),
+          Option(parent_type),
+          "Capacidad Insuficiente de Fábricas", //name
+          "Alguna de las fábricas involucradas no tienen disponibilidad para las fechas indicadas en el plan", //risk.cause
+          "Fábrica involucrada en el plan indica la no posibilidad de producción para las fechas indicadas", //risk.event
+          "Impacto directo en los plazos", //risk.imapct
+          12, //risk.risk_category
+          "0", //risk.variable_imapact
+          0, //risk.probablity_of_occurence
+          0, //risk.quantification
+          0, //risk.strategic_reply
+          user_id, //risk.responsible
+          Option(""), //risk.reply_action
+          Option(""), //risk.configuration_plan
+          Option(""),
+          new Date(), //risk.risk_clouser_date
+          Option(user_id),
+          Option(new Date()),
+          Option(new Date()),
+          1, //risk.risk_state
+          106 //risk.sub_category
+        )
+
+        fullRisks+=risk_master_4
+
+        val risk_master_5 = RiskManagementMaster(Option(0),
+          Option(parent_id.toInt),
+          Option(parent_type),
+          "Requerimientos Incompletos", //name
+          "Gestión de requerimientos", //risk.cause
+          "El riesgo se evidencia al gestionar el alcance y evidenciar funcionalidades faltantes", //risk.event
+          "Impacto en alcance y en calidad del producto", //risk.imapct
+          1, //risk.risk_category
+          "0", //risk.variable_imapact
+          0, //risk.probablity_of_occurence
+          0, //risk.quantification
+          0, //risk.strategic_reply
+          user_id, //risk.responsible
+          Option(""), //risk.reply_action
+          Option(""), //risk.configuration_plan
+          Option(""),
+          new Date(), //risk.risk_clouser_date
+          Option(user_id),
+          Option(new Date()),
+          Option(new Date()),
+          1, //risk.risk_state
+          22 //risk.sub_category
+        )
+
+        fullRisks+=risk_master_5
+
+        for (i <- 0 to fullRisks.length-1)
+          Logger.debug("el monito : " + fullRisks.lift(i).toString)
+
+
+
+          /*
+                  val last = RiskService.insertRisk(risk_master)
+
+                  if (last.isWhole()) {
+                    val risk_project_id = RiskService.createRiskManagementProject(parent_id.toString(), parent_type, last.toString())
+                  }
+          */
+
+    } catch {
+      case e: Exception => return 1
+    }
+    return 0
+
+  }
+
   def createInitialRisk(user_id: Integer, parent_id: Long, parent_type: Integer): Long = {
     try {
       val projectTypes = GenericProjectService.findProjectTypeDetailsByDescription(0);
-      println(projectTypes)
+
       if (!projectTypes.isEmpty) {
-        println("ENTRO!!")
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : user_id" + user_id)
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_id" + parent_id)
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_type" + parent_type)
         var tasksDependents = new java.util.HashMap[Integer, Long]()
         val genericTasks = GenericService.findGenericProjectTypeTasks(projectTypes.get.id.get.toString)
         var isBaselined = false
