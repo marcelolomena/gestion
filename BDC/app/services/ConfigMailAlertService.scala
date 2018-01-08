@@ -29,6 +29,14 @@ object ConfigMailAlertService extends CustomColumns {
     }
   }
 
+  def listMailList(): Seq[ConfigMailAlert] = {
+
+    val sqlString = "select * from art_risk_alert_conf where is_active = 1 order by description"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ConfigMailAlert.config *)
+    }
+  }
+
   def count(): Long = {
     DB.withConnection { implicit connection =>
       SQL("SELECT count(*) from art_risk_alert_conf").as(scalar[Long].single)

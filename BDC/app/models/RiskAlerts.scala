@@ -84,7 +84,8 @@ case class RiskAlerts(id: Option[Int],
                       status_id: Option[Int],
                       task_id: Option[Int],
                       change_state: Option[Date],
-                      responsible_answer: Option[String])
+                      responsible_answer: Option[String],
+                      template_id: Option[Int])
 
 object RiskAlerts extends CustomColumns {
   val alerts = {
@@ -104,7 +105,8 @@ object RiskAlerts extends CustomColumns {
       get[Option[Int]]("status_id") ~
       get[Option[Int]]("task_id") ~
       get[Option[Date]]("change_state") ~
-      get[Option[String]]("responsible_answer") map {
+      get[Option[String]]("responsible_answer") ~
+      get[Option[Int]]("template_id") map {
         case id ~
           risk_id ~
           event_code ~
@@ -121,7 +123,8 @@ object RiskAlerts extends CustomColumns {
           status_id ~
           task_id ~
           change_state ~
-          responsible_answer =>
+          responsible_answer ~
+          template_id=>
           RiskAlerts(id,
             risk_id,
             event_code,
@@ -138,7 +141,8 @@ object RiskAlerts extends CustomColumns {
             status_id,
             task_id,
             change_state,
-            responsible_answer)
+            responsible_answer,
+            template_id)
       }
   }
 }

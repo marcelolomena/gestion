@@ -1033,7 +1033,9 @@ object ARTForms {
       "status_id" -> optional(number),
       "task_id" -> optional(number),
       "change_state" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "responsible_answer" -> optional(text))(RiskAlerts.apply)(RiskAlerts.unapply))
+      "responsible_answer" -> optional(text),
+      "template_id" -> optional(number)
+    )(RiskAlerts.apply)(RiskAlerts.unapply))
 
 
 

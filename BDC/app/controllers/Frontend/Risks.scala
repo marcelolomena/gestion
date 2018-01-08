@@ -7,10 +7,6 @@ import services._
 import java.util.Date
 
 import models._
-import play.libs.Json
-import org.json.JSONObject
-import play.api.libs.json
-import play.api.libs.json._
 import art_forms.ARTForms
 import models.ProgramDates
 import models.ProgramMaster
@@ -19,9 +15,8 @@ import models.UserSetting
 import models.Activity
 import models.ActivityTypes
 import play.Play
-import play.api.Play.current
-import play.api.data._
-import java.io.{File, FileInputStream, FileOutputStream}
+import play.Logger
+import java.io.{File, FileOutputStream}
 import java.util.UUID
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
@@ -345,7 +340,7 @@ object Risks extends Controller {
   def editRiskAlert(risk_id: Integer, alert_id: Integer) = Action { implicit request =>
 
     request.session.get("username").map { user =>
-      var alert = RiskService.findAlertsForRisk(risk_id.toString, alert_id.toString)
+      val alert = RiskService.findAlertsForRisk(risk_id.toString, alert_id.toString)
       val risk = RiskService.findRiskDetails(risk_id.toString)
       var program: Option[ProgramMaster] = null
       var program_id = ""
@@ -365,6 +360,12 @@ object Risks extends Controller {
       val tasks = TaskService.findTaskListByParentTypeId(risk.get)
       for (d <- tasks) {
         alert_task.put(d.tId.get.toString, d.task_title)
+      }
+
+      val mail_tmpl= new java.util.LinkedHashMap[String, String]()
+      val tmpls = ConfigMailAlertService.listMailList
+      for (d <- tmpls) {
+        mail_tmpl.put(d.id.get.toString, d.description)
       }
 
       risk match {
@@ -406,7 +407,8 @@ object Risks extends Controller {
                 rr.status_id,
                 rr.task_id,
                 rr.change_state,
-                rr.responsible_answer)
+                rr.responsible_answer,
+                rr.template_id)
 
               val users = ProgramMemberService.findAllProgramMembers(program_id);
 
@@ -428,7 +430,8 @@ object Risks extends Controller {
                   users,
                   alert_states,
                   alert_category,
-                  alert_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+                  alert_task,
+                  mail_tmpl)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
 
               }
 
@@ -507,7 +510,8 @@ object Risks extends Controller {
             rr.status_id,
             rr.task_id,
             rr.change_state,
-            rr.responsible_answer)
+            rr.responsible_answer,
+            rr.template_id)
 
           ARTForms.alertsForm.bindFromRequest.fold(
             errors => {
@@ -529,12 +533,12 @@ object Risks extends Controller {
                   program_id = program.get.program_id.get.toString()
               }
               val users = ProgramMemberService.findAllProgramMembers(program_id);
-              var alert_states = new java.util.LinkedHashMap[String, String]()
+              val alert_states = new java.util.LinkedHashMap[String, String]()
               val status = RiskService.findAllAlertStatus()
               for (d <- status) {
                 alert_states.put(d.id.get.toString, d.description)
               }
-              var alert_category = new java.util.LinkedHashMap[String, String]()
+              val alert_category = new java.util.LinkedHashMap[String, String]()
               val category = RiskService.findAllAlertCategory()
               for (d <- category) {
                 alert_category.put(d.id.get.toString, d.description)
@@ -545,7 +549,11 @@ object Risks extends Controller {
               for (d <- tasks) {
                 alert_task.put(d.tId.get.toString, d.task_title)
               }
-              println(alert_task)
+              val mail_tmpl= new java.util.LinkedHashMap[String, String]()
+              val tmpls = ConfigMailAlertService.listMailList
+              for (d <- tmpls) {
+                mail_tmpl.put(d.id.get.toString, d.description)
+              }
 
               BadRequest(views.html.frontend.risks.editAlert(ra.risk_id.toString,
                 id,
@@ -554,7 +562,8 @@ object Risks extends Controller {
                 users,
                 alert_states,
                 alert_category,
-                alert_task))
+                alert_task,
+                mail_tmpl))
             },
             success => {
 
@@ -576,7 +585,8 @@ object Risks extends Controller {
                 success.status_id,
                 success.task_id,
                 success.change_state,
-                success.responsible_answer)
+                success.responsible_answer,
+                success.template_id)
 
               val last = RiskService.updateAlertDetails(theAlert)
 
@@ -624,7 +634,8 @@ object Risks extends Controller {
             rr.status_id,
             rr.task_id,
             rr.change_state,
-            rr.responsible_answer)
+            rr.responsible_answer,
+            rr.template_id)
 
           ARTForms.alertsForm.bindFromRequest.fold(
             errors => {
@@ -646,12 +657,12 @@ object Risks extends Controller {
                   program_id = program.get.program_id.get.toString()
               }
               val users = ProgramMemberService.findAllProgramMembers(program_id);
-              var alert_states = new java.util.LinkedHashMap[String, String]()
+              val alert_states = new java.util.LinkedHashMap[String, String]()
               val status = RiskService.findAllAlertStatus()
               for (d <- status) {
                 alert_states.put(d.id.get.toString, d.description)
               }
-              var alert_category = new java.util.LinkedHashMap[String, String]()
+              val alert_category = new java.util.LinkedHashMap[String, String]()
               val category = RiskService.findAllAlertCategory()
               for (d <- category) {
                 alert_category.put(d.id.get.toString, d.description)
@@ -662,7 +673,11 @@ object Risks extends Controller {
               for (d <- tasks) {
                 alert_task.put(d.tId.get.toString, d.task_title)
               }
-              println(alert_task)
+              val mail_tmpl= new java.util.LinkedHashMap[String, String]()
+              val tmpls = ConfigMailAlertService.listMailList
+              for (d <- tmpls) {
+                mail_tmpl.put(d.id.get.toString, d.description)
+              }
 
               BadRequest(views.html.frontend.risks.editAlert(ra.risk_id.toString,
                 id,
@@ -671,7 +686,8 @@ object Risks extends Controller {
                 users,
                 alert_states,
                 alert_category,
-                alert_task))
+                alert_task,
+                mail_tmpl))
             },
             success => {
 
@@ -693,7 +709,8 @@ object Risks extends Controller {
                 success.status_id,
                 success.task_id,
                 success.change_state,
-                success.responsible_answer)
+                success.responsible_answer,
+                success.template_id)
 
               val last = RiskService.updateAlertDetailsMail(theAlert)
 
@@ -905,21 +922,22 @@ object Risks extends Controller {
    * Manual Alerts generations
    * Author - Balkrishna
    * Date - 25-02-2015
+   * Review  18-12-2017
    */
   def newAlerts(risk_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var program: Option[ProgramMaster] = null
-      var start_date: Date = new Date()
-      var end_date: Date = new Date()
+      val start_date: Date = new Date()
+      val end_date: Date = new Date()
       var program_id = ""
       val risk = RiskService.findRiskDetails(risk_id)
 
-      var alert_states = new java.util.LinkedHashMap[String, String]()
+      val alert_states = new java.util.LinkedHashMap[String, String]()
       val status = RiskService.findAllAlertStatus()
       for (d <- status) {
         alert_states.put(d.id.get.toString, d.description)
       }
-      var alert_category = new java.util.LinkedHashMap[String, String]()
+      val alert_category = new java.util.LinkedHashMap[String, String]()
       val category = RiskService.findAllAlertCategory()
       for (d <- category) {
         alert_category.put(d.id.get.toString, d.description)
@@ -929,6 +947,12 @@ object Risks extends Controller {
       val tasks = TaskService.findTaskListByParentTypeId(risk.get)
       for (d <- tasks) {
         alert_task.put(d.tId.get.toString, d.task_title)
+      }
+
+      val mail_tmpl= new java.util.LinkedHashMap[String, String]()
+      val tmpls = ConfigMailAlertService.listMailList
+      for (d <- tmpls) {
+        mail_tmpl.put(d.id.get.toString, d.description)
       }
 
       risk match {
@@ -950,11 +974,7 @@ object Risks extends Controller {
               program_id = program.get.program_id.get.toString()
           }
           val users = ProgramMemberService.findAllProgramMembers(program_id);
-          /*
-          for (u <- users) {
 
-          }
-          */
           Ok(views.html.frontend.risks.newAlerts(
             risk_id,
             ARTForms.alertsForm,
@@ -963,7 +983,12 @@ object Risks extends Controller {
             end_date,
             alert_states,
             alert_category,
-            alert_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
+            alert_task,
+            mail_tmpl)).withSession(
+            "username" -> request.session.get("username").get,
+            "utype" -> request.session.get("utype").get,
+            "uId" -> request.session.get("uId").get,
+            "user_profile" -> request.session.get("user_profile").get)
       }
 
     }.getOrElse {
@@ -1161,17 +1186,17 @@ def alertSearch() = Action { implicit request =>
   def saveRiskAlert(risk_id: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var program: Option[ProgramMaster] = null
-      var start_date: Date = new Date()
-      var end_date: Date = new Date()
+      val start_date: Date = new Date()
+      val end_date: Date = new Date()
       var program_id = ""
 
       val risk = RiskService.findRiskDetails(risk_id)
-      var alert_states = new java.util.LinkedHashMap[String, String]()
+      val alert_states = new java.util.LinkedHashMap[String, String]()
       val status = RiskService.findAllAlertStatus()
       for (d <- status) {
         alert_states.put(d.id.get.toString, d.description)
       }
-      var alert_category = new java.util.LinkedHashMap[String, String]()
+      val alert_category = new java.util.LinkedHashMap[String, String]()
       val category = RiskService.findAllAlertCategory()
       for (d <- category) {
         alert_category.put(d.id.get.toString, d.description)
@@ -1180,6 +1205,11 @@ def alertSearch() = Action { implicit request =>
       val tasks = TaskService.findTaskListByParentTypeId(risk.get)
       for (d <- tasks) {
         alert_task.put(d.tId.get.toString, d.task_title)
+      }
+      val mail_tmpl= new java.util.LinkedHashMap[String, String]()
+      val tmpls = ConfigMailAlertService.listMailList
+      for (d <- tmpls) {
+        mail_tmpl.put(d.id.get.toString, d.description)
       }
       //println(alert_task)
       risk match {
@@ -1220,15 +1250,16 @@ def alertSearch() = Action { implicit request =>
                     end_date,
                     alert_states,
                     alert_category,
-                    alert_task))
+                    alert_task,
+                    mail_tmpl))
                 },
                 risks => {
 
                   val user_id = Integer.parseInt(request.session.get("uId").get)
+                  Logger.debug("TOA LA WEA " + risks)
                   val alert = RiskAlerts(
                     Option(1),
                     risk_id.toInt,
-                    //Option(2),
                     risks.event_code,
                     Option(new Date()),
                     risks.event_title,
@@ -1243,9 +1274,12 @@ def alertSearch() = Action { implicit request =>
                     risks.status_id,
                     risks.task_id,
                     risks.change_state,
-                    risks.responsible_answer)
+                    risks.responsible_answer,
+                    risks.template_id)
 
                   val last_index = RiskService.insertRiskAlert(alert)
+                  //Logger.debug("EL VALOR DEVUELTO ES " + last_index)
+                  //RiskService.insertAlertSend(last_index.toInt, risks.template_id.get)
 
                   /**
                    * Activity log

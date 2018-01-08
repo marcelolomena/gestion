@@ -1081,6 +1081,23 @@ object RiskService extends CustomColumns {
       SQL(sqlString).as(Tasks.tasks *)
     }
   }
+
+  def insertAlertSend(id_alert: Int,id_template: Int): Long = {
+
+    val sqlString =
+      """
+        |insert art_risk_alert_send
+        |(id_alert,id_template,send_time) values
+        |({id_alert},{id_template},GETDATE())
+      """.stripMargin
+
+    DB.withConnection { implicit connection =>
+      val lastsaved = SQL(sqlString).
+        on('id_alert->id_alert,'id_template->id_template).executeInsert(scalar[Long].singleOpt)
+      lastsaved.last
+    }
+  }
+
   def insertRiskAlert(risk: models.RiskAlerts): Long = {
     DB.withConnection { implicit connection =>
 
@@ -1111,10 +1128,10 @@ object RiskService extends CustomColumns {
         'change_state -> risk.change_state,
         'responsible_answer -> risk.responsible_answer).executeInsert(scalar[Long].singleOpt)
 
-      var last_index = risk_issue.last
-
-      println("last_index : " + last_index)
-      println("reiteration : " + risk.reiteration.get.toInt)
+      val last_index = risk_issue.last
+      Logger.debug("EL VALOR DEVUELTO ES " + last_index)
+      Logger.debug("EL VALOR DEL TEMPLATE ES " + risk.template_id.get)
+      RiskService.insertAlertSend(last_index.toInt, risk.template_id.get)
 
       sendEmailAlerts(last_index.toString,risk.reiteration.get)
 
@@ -1148,7 +1165,31 @@ object RiskService extends CustomColumns {
   }
 
   def findAllOpenAlerts(): Seq[RiskAlerts] = {
-    val sqlString = "SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'"
+    val sqlString =
+      """
+        |
+        |SELECT a.id
+        |,a.risk_id
+        |,a.event_code
+        |,a.event_date
+        |,a.event_title
+        |,a.event_details
+        |,a.responsible
+        |,a.person_invloved
+        |,a.criticality
+        |,a.is_active
+        |,a.category_id
+        |,a.impacted_variable
+        |,a.reiteration
+        |,a.status_id
+        |,a.task_id
+        |,a.change_state
+        |,a.responsible_answer
+        |,null template_id
+        |FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'
+      """.stripMargin
+
+    //val sqlString = "SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'"
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(RiskAlerts.alerts *)
       result
@@ -1182,9 +1223,32 @@ object RiskService extends CustomColumns {
   }
 
   def findAllActiveAlertsByRiskId(id: String): Seq[RiskAlerts] = {
-    val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND risk_id = " + id
+    val sqlString =
+      """
+        |SELECT id
+        |      ,risk_id
+        |      ,event_code
+        |      ,event_date
+        |      ,event_title
+        |      ,event_details
+        |      ,responsible
+        |      ,person_invloved
+        |      ,criticality
+        |      ,is_active
+        |      ,category_id
+        |      ,impacted_variable
+        |      ,reiteration
+        |      ,status_id
+        |      ,task_id
+        |      ,change_state
+        |      ,responsible_answer
+        |	  ,null template_id
+        |  FROM art_risk_alert
+        |  WHERE risk_id = {id}
+      """.stripMargin
+    //val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND risk_id = " + id
     DB.withConnection { implicit connection =>
-      val result = SQL(sqlString).as(RiskAlerts.alerts *)
+      val result = SQL(sqlString).on('id->id.toInt).as(RiskAlerts.alerts *)
       result
     }
   }
@@ -1322,10 +1386,33 @@ object RiskService extends CustomColumns {
 
   def findRiskAlertsById(id: String): Option[RiskAlerts] = {
     if (!StringUtils.isEmpty(id)) {
-      val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + id
+      val sqlString =
+        """
+          |SELECT id
+          |      ,risk_id
+          |      ,event_code
+          |      ,event_date
+          |      ,event_title
+          |      ,event_details
+          |      ,responsible
+          |      ,person_invloved
+          |      ,criticality
+          |      ,is_active
+          |      ,category_id
+          |      ,impacted_variable
+          |      ,reiteration
+          |      ,status_id
+          |      ,task_id
+          |      ,change_state
+          |      ,responsible_answer
+          |	  ,null template_id
+          |  FROM art_risk_alert
+          |  WHERE id = {id}
+        """.stripMargin
+      //val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + id
 
       DB.withConnection { implicit connection =>
-        val result = SQL(sqlString).as(RiskAlerts.alerts.singleOpt)
+        val result = SQL(sqlString).on('id->id).as(RiskAlerts.alerts.singleOpt)
         result
       }
     } else {
@@ -1337,11 +1424,34 @@ object RiskService extends CustomColumns {
 
   def findAlertsForRisk(risk_id: String, alert_id: String): Option[RiskAlerts] = {
 
-    val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + alert_id + " AND risk_id =" + risk_id
-    println(sqlString)
+    //val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + alert_id + " AND risk_id =" + risk_id
+    val sqlString = """
+      |SELECT id
+      |      ,risk_id
+      |      ,event_code
+      |      ,event_date
+      |      ,event_title
+      |      ,event_details
+      |      ,responsible
+      |      ,person_invloved
+      |      ,criticality
+      |      ,is_active
+      |      ,category_id
+      |      ,impacted_variable
+      |      ,reiteration
+      |      ,status_id
+      |      ,task_id
+      |      ,change_state
+      |      ,responsible_answer
+      |	  ,null template_id
+      |  FROM art_risk_alert
+      |  WHERE id = {alert_id}
+      |  AND risk_id = {risk_id}
+    """.stripMargin
+    //println(sqlString)
 
     DB.withConnection { implicit connection =>
-      val result = SQL(sqlString).as(RiskAlerts.alerts.singleOpt)
+      val result = SQL(sqlString).on('alert_id->alert_id.toInt,'risk_id->risk_id.toInt).as(RiskAlerts.alerts.singleOpt)
       result
     }
 
@@ -1680,11 +1790,17 @@ object RiskService extends CustomColumns {
     }
   }
 
-  def findTmplMail() : String = {
-    var sqlString = ""
-    sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf WHERE is_active = 1 ORDER BY id DESC"
+  def findTmplMail(id_alert: String) : String = {
+
+
+    val id_template=DB.withConnection { implicit connection =>
+      SQL("select id_template from art_risk_alert_send where id_alert={id_alert}").on('id_alert->id_alert.toInt).as(scalar[Int].single)
+    }
+
+    //val sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf WHERE is_active = 1 ORDER BY id DESC"
+    val sqlString = "SELECT tpl FROM art_risk_alert_conf WHERE is_active = 1 AND id={id_template}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).as(scalar[String].single)
+      SQL(sqlString).on('id_template->id_template).as(scalar[String].single)
     }
   }
 
@@ -2063,7 +2179,7 @@ object RiskService extends CustomColumns {
             persons = alert.get.person_invloved.get
           }
 
-          val template = findTmplMail()
+          val template = findTmplMail(alert_id)
           var cc = findAllCCEmail().get.toString
 
           val lastchar = cc.charAt(cc.length-1).toString
