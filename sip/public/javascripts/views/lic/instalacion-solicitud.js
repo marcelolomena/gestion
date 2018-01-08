@@ -163,6 +163,7 @@ $(document).ready(function () {
                 align: 'center',
                 width: 100,
                 editable: false,
+                hidden: true,
                 search: false
             }
         ];
@@ -188,8 +189,6 @@ $(document).ready(function () {
         pager: "#pager",
     });
 
-    //$grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
-
     $grid.jqGrid('navGrid', '#pager', {
         edit: true,
         add: true,
@@ -202,19 +201,6 @@ $(document).ready(function () {
         ajaxEditOptions: sipLibrary.jsonOptions,
         serializeEditData: sipLibrary.createJSON,
         template: t1,
-        // beforeShowForm: function (form) {
-        //     $('input#nombrearchivo', form).attr('readonly', 'readonly');
-        // },
-        // errorTextFormat: function (data) {
-        //     return 'Error: ' + data.responseText
-        // },
-        // beforeSubmit: function (postdata, formid) {
-        //     if (postdata.nombrecorto.trim().length == 0) {
-        //         return [false, "Nombre: El documento debe tener nombre", ""];
-        //     } else {
-        //         return [true, "", ""]
-        //     }
-        // },
         beforeShowForm: function (form) {
             var rowKey = $grid.getGridParam("selrow");
             var rowData = $grid.getRowData(rowKey);
@@ -240,10 +226,6 @@ $(document).ready(function () {
         serializeEditData: sipLibrary.createJSON,
         template: t1,
         onclickSubmit: function (rowid) {
-
-
-
-
             return {
                 idTipoInstalacion: idTipoInstalacion,
                 codAutorizacion: codAutorizacion
@@ -294,14 +276,14 @@ function UploadDoc(response, postdata) {
     //console.log(data)
     if (data.success) {
         if ($("#fileToUpload").val() != "") {
-            ajaxDocUpload(data.id);
+            ajaxDocUpload(data.id, data.parent);
         }
     }
 
     return [data.success, data.message, data.id];
 }
 
-function ajaxDocUpload(id) {
+function ajaxDocUpload(id, parent) {
     //console.log(id)
     var dialog = bootbox.dialog({
         title: 'Se inicia la transferencia',
@@ -314,7 +296,8 @@ function ajaxDocUpload(id) {
             fileElementId: 'fileToUpload',
             dataType: 'json',
             data: {
-                id: id
+                id: id,
+                parent: parent
             },
             success: function (data, status) {
                 if (typeof (data.success) != 'undefined') {
