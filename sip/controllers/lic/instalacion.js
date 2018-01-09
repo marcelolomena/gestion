@@ -144,15 +144,16 @@ function upload(req, res) {
         }
 
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-            var saveTo = path.join(__dirname, '../../docs/', 'lic', filename);
+            var numero = Math.floor((Math.random() * 10000) + 1);
+            var saveTo = path.join(__dirname, '../../docs/', 'lic', numero + filename);
             file.pipe(fs.createWriteStream(saveTo));
             var dir = path.join(__dirname, '../../', 'public/docs/lic');
             checkDirectorySync(dir);
-            var dest = path.join(__dirname, '../../', 'public/docs/lic', filename);
+            var dest = path.join(__dirname, '../../', 'public/docs/lic', numero + filename);
             copyFile(saveTo, dest)
             awaitId.then(function (idDetail) {
                 models.instalacion.update({
-                    nombrearchivo: filename
+                    nombrearchivo: numero + filename
                 }, {
                     where: {
                         id: idDetail

@@ -181,7 +181,7 @@ function mapCompra(data) {
 }
 
 function saveProducto(data, res) {
-    if (data.idProducto == null) {
+    if (!data.idProducto) {
         return base.createP(models.producto, mapProducto(data))
             .then(function (created) {
                 data.idProducto = created.id;
@@ -199,7 +199,7 @@ function saveProducto(data, res) {
 }
 
 function addDetalle(data, res) {
-    if (data.idCompra == null) {
+    if (!data.idCompra) {
         data.fechaInicio = base.strToDateDB(data.fechaInicio);
         data.fechaTermino = base.strToDateDB(data.fechaTermino);
         data.fechaControl = base.strToDateDB(data.fechaControl);
@@ -224,7 +224,6 @@ function addDetalle(data, res) {
                         var prdData = {
                             id: data.idProducto,
                             ilimitado: data.ilimitado,
-                            alertaRenovacion: null,
                             idClasificacion: data.idClasificacion,
                             idTipoInstalacion: data.idTipoInstalacion,
                             idTipoLicenciamiento: data.idTipoLicenciamiento
@@ -232,15 +231,6 @@ function addDetalle(data, res) {
                         if (!prdData.ilimitado) {
                             prdData.licStock = parseInt(item.licStock) + parseInt(data.cantidad);
                         }
-                        // if (!item.idClasificacion) {
-                        //     prdData.idClasificacion = data.idClasificacion;
-                        // }
-                        // if (!item.idTipoInstalacion) {
-                        //     prdData.idTipoInstalacion = data.idTipoInstalacion;
-                        // }
-                        // if (!item.idTipoLicenciamiento) {
-                        //     prdData.idTipoLicenciamiento = data.idTipoLicenciamiento;
-                        // }
                         return base.update(models.producto, prdData, res);
                     }).catch(function (err) {
                         logger.error('producto.Stock Upd, ' + err);
@@ -345,7 +335,7 @@ function action(req, res) {
                         glosa: err.message
                     });
                 });
-                break;
+            break;
         case 'del':
             return base.findById(entity, req.body.id)
                 .then(function (detalle) {
@@ -397,7 +387,7 @@ function action(req, res) {
                         glosa: err.message
                     });
                 });
-                break;
+            break;
     }
 }
 
