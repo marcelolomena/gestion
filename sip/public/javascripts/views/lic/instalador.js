@@ -82,7 +82,7 @@ $(document).ready(function () {
     {
         label: 'IDProducto',
         name: 'producto',
-        jsonmap: 'idProducto',
+        jsonmap: 'idproducto',
         width: 200,
         hidden: true,
         editable: true,
@@ -136,7 +136,6 @@ $(document).ready(function () {
             readonly: 'readonly'
         },
         editrules: {
-            required: false,
             edithidden: false
         },
         search: false
@@ -182,9 +181,6 @@ $(document).ready(function () {
         hidden: false,
         editable: true,
         edittype: 'textarea',
-        editrules: {
-            required: true
-        },
         editoptions: {
             fullRow: true,
             readonly: 'readonly'

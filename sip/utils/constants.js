@@ -85,7 +85,7 @@ define("FinErrorCargaDTE", 40);
 
 //Tipos de instalación
 console.log("Ambiente:"+process.env.NODE_ENV);
-if (process.env.NODE_ENV == 'development'){
+if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'qadesarrollo'){
     define("Servidor", 14);
     define("PC", 13); 
     define("CORREOFROM","pnsilva@labchile.cl");

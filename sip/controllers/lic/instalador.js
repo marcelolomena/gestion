@@ -31,6 +31,7 @@ exports.action = function (req, res) {
       var filePath = "docs\\lic";
       var fullpath = filePath + '\\' + archivo;
       sequelize.query(sql).then(function (ok) {
+        /*
         if (req.body.estado == constants.INSTALADO) {
           fs.readFile(fullpath, function (err, data) {
             let transporter = nodemailer.createTransport({
@@ -62,7 +63,7 @@ exports.action = function (req, res) {
               console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
             });
           });
-        }
+        }*/
         res.json({ error_code: 0 });
       }).catch(function (err) {
         logger.error(err);
@@ -116,7 +117,7 @@ exports.list = function (req, res) {
   }
 
   var sql;
-  if (rol == constants.JEFESERVIDOR) {
+  if (rol == constants.INSTALADORSERV) {
     sql = "DECLARE @PageSize INT; " +
       "SELECT @PageSize=" + rowspp + "; " +
       "DECLARE @PageNumber INT; " +
@@ -125,7 +126,7 @@ exports.list = function (req, res) {
       "JOIN art_user c ON c.uid = a.idusuario " +
       "LEFT JOIN lic.torre d ON a.idtorre = d.id " +
       "WHERE a.idtipoinstalacion = " + constants.Servidor + " and a.estado IN ('"+constants.APROBADO +"','"+ constants.NOINSTALADO+"','"+ constants.INSTALADO+"')";
-  } else if (rol == constants.JEFEPC) {
+  } else if (rol == constants.INSTALADORPC) {
     sql = "DECLARE @PageSize INT; " +
       "SELECT @PageSize=" + rowspp + "; " +
       "DECLARE @PageNumber INT; " +
