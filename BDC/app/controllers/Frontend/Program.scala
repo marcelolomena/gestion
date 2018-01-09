@@ -568,39 +568,39 @@ object Program extends Controller {
     today.setTime(new Date())
     val program_code = "20150101"
 
-    var workflowStatusValues = new java.util.HashMap[String, String]()
+    val workflowStatusValues = new java.util.LinkedHashMap[String, String]()
     for (d <- ProgramTypeService.findAllWorkflowStatus) {
       workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
     }
 
-    var programSubType = new java.util.HashMap[String, String]()
-    var subtype = SubTypeService.findAllSubTypeList();
+    val programSubType = new java.util.LinkedHashMap[String, String]()
+    val subtype = SubTypeService.findAllSubTypeList();
     for (s <- subtype) {
       programSubType.put(s.id.get.toString, s.sub_type)
     }
 
-    var programType = new java.util.HashMap[String, String]()
+    val programType = new java.util.LinkedHashMap[String, String]()
 
-    var programtype = ProgramTypeService.findAllProgramTypeList();
+    val programtype = ProgramTypeService.findAllProgramTypeList();
     for (s <- programtype) {
       programType.put(s.id.get.toString, s.program_type)
     }
 
-    var impacttype = ImpactTypeService.findAllImpactTypeList();
-    var impacttypeMap = new java.util.HashMap[String, String]()
+    val impacttype = ImpactTypeService.findAllImpactTypeList();
+    val impacttypeMap = new java.util.LinkedHashMap[String, String]()
     for (s <- impacttype) {
       impacttypeMap.put(s.id.get.toString, s.impact_type)
     }
 
     val divisions = DivisionService.findAllDivisions
-    var divisionMap = new java.util.HashMap[String, String]()
+    val divisionMap = new java.util.LinkedHashMap[String, String]()
     for (d <- divisions) {
       divisionMap.put(d.dId.get.toString(), d.division)
     }
 
-    var users = UserService.findAllDemandManager();
+    val users = UserService.findAllDemandManager();
 
-    var usersMap = new java.util.HashMap[String, String]()
+    val usersMap = new java.util.LinkedHashMap[String, String]()
     for (u <- users) {
       usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
     }
@@ -618,7 +618,7 @@ object Program extends Controller {
     if (!divisionObj.isEmpty) {
       division_Id = divisionObj.apply(0).dId.get
     }
-    var gerenciasMap = new java.util.HashMap[String, String]()
+    var gerenciasMap = new java.util.LinkedHashMap[String, String]()
     if (division_Id == 0) {
       val gerencias = GenrenciaService.findAllGenrencias
 
@@ -638,7 +638,7 @@ object Program extends Controller {
       errors => {
         val theForm = ProgramService.validateForm(old_form, "")
 
-        var departmentsMap = new java.util.HashMap[String, String]()
+        var departmentsMap = new java.util.LinkedHashMap[String, String]()
         if (!old_form.data.get("program_details.management").isEmpty && !old_form.data.get("program_details.management").get.isEmpty()) {
           var gerencia_id = old_form.data.get("program_details.management").get
           val departments = DepartmentService.findAllDepartmentListByGenrencia(gerencia_id)
@@ -653,7 +653,7 @@ object Program extends Controller {
       program => {
         val theForm = ProgramService.validateForm(ARTForms.programForm.fill(program), "")
         if (theForm.hasErrors) {
-          var departmentsMap = new java.util.HashMap[String, String]()
+          var departmentsMap = new java.util.LinkedHashMap[String, String]()
           if (!program.program_details.management.isEmpty) {
             var gerencia_id = program.program_details.management.get.toString()
             val departments = DepartmentService.findAllDepartmentListByGenrencia(gerencia_id)
@@ -674,6 +674,7 @@ object Program extends Controller {
 
           ///NUEVO PARA RIESGO
           val user_id = Integer.parseInt(request.session.get("uId").get)
+          val kaka=createDefaultListRisks(user_id, last_program, 0)
           val ret = createInitialRisk(user_id, last_program, 0)
           if (ret == 1)
             Logger.debug("FRACASO AL CREAR RIESGOS!!!")
@@ -852,6 +853,7 @@ object Program extends Controller {
         Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_id" + parent_id)
         Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_type" + parent_type)
         implicit val fullRisks = new mutable.MutableList[RiskManagementMaster]()
+
         val risk_master_1 = RiskManagementMaster(Option(0),
           Option(parent_id.toInt),
           Option(parent_type),
@@ -982,9 +984,11 @@ object Program extends Controller {
 
         fullRisks+=risk_master_5
 
-        for (i <- 0 to fullRisks.length-1)
+
+        for (i <- 0 to fullRisks.length-1) {
           Logger.debug("el monito : " + fullRisks.lift(i).toString)
 
+        }
 
 
           /*
