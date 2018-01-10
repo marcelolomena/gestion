@@ -59,50 +59,6 @@ var tabInstalacionGrid = {
                 editable: false,
                 search: false
             }
-            // , {
-            //     label: 'Nombre de Archivo',
-            //     name: 'nombrearchivo',
-            //     index: 'nombrearchivo',
-            //     hidden: false,
-            //     width: 250,
-            //     align: "left",
-            //     editable: false,
-            //     editoptions: {
-            //         custom_element: labelEditFunc,
-            //         custom_value: getLabelValue
-            //     },
-            //     formatter: function (cellvalue, options, rowObject) {
-            //         return returnDocLinkDoc(cellvalue, options, rowObject);
-            //     },
-            //     unformat: function (cellvalue, options, rowObject) {
-            //         return returnDocLinkDoc2(cellvalue, options, rowObject);
-            //     },
-            //     search: false
-            // },
-            // {
-            //     name: 'fileToUpload',
-            //     label: 'Subir Archivo',
-            //     hidden: true,
-            //     editable: true,
-            //     edittype: 'file',
-            //     editrules: {
-            //         edithidden: true,
-            //         required: true
-            //     },
-            //     editoptions: {
-            //         enctype: "multipart/form-data"
-            //     },
-            //     search: false
-            // },
-            // {
-            //     label: 'Comentario',
-            //     name: 'informacion',
-            //     width: 400,
-            //     hidden: false,
-            //     editable: false,
-            //     edittype: 'textarea',
-            //     search: false
-            // }
         ];
 
         function returnDocLinkDoc(cellValue, options, rowdata) {

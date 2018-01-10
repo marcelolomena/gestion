@@ -35,8 +35,6 @@
                 return tabdetalleCompraTramiteGrid;
             case '#recepcion':
                 return recepcionGrid;
-                // case '#instalacion':
-                //     return instalacionGrid;
             case '#ajuste':
                 return ajusteGrid;
             case '#traduccion':
@@ -182,7 +180,7 @@
                 name: 'disponible',
                 width: 75,
                 align: 'center',
-                formatter: function(cellvalue, options, rowObject){
+                formatter: function (cellvalue, options, rowObject) {
                     var compradas = rowObject.licstock;
                     var instaladas = rowObject.licocupadas;
                     var reservadas = rowObject.licReserva;

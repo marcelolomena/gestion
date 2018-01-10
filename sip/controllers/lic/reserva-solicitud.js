@@ -70,10 +70,10 @@ function mapper(data) {
             idUsuarioJefe: item.idUsuarioJefe,
             idUsuario: item.idUsuario,
             solicitante: {
-                nombre: item.solicitante ? item.solicitante.first_name + item.solicitante.last_name : ''
+                nombre: item.solicitante ? item.solicitante.first_name + ' ' + item.solicitante.last_name : ''
             }, 
             aprobador: {
-                nombre: item.aprobador ? item.aprobador.first_name + item.aprobador.last_name: ''
+                nombre: item.aprobador ? item.aprobador.first_name + ' ' + item.aprobador.last_name: ''
             }
         }
     });
