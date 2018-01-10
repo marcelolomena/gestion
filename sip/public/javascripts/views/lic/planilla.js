@@ -405,7 +405,7 @@
             formatter: 'integer',
             search: false
         }, {
-            label: 'Valor Soportes',
+            label: 'Valor Soporte',
             name: 'valorsoporte',
             width: 110,
             align: 'center',

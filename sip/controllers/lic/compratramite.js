@@ -8,7 +8,8 @@ entity.belongsTo(models.proveedor, {
     foreignKey: 'idProveedor'
 });
 entity.belongsTo(models.estructuracuibch, {
-    foreignKey: 'cui', targetKey: 'cui'
+    foreignKey: 'cui',
+    targetKey: 'cui'
 });
 var includes = [{
         model: models.proveedor
@@ -19,6 +20,9 @@ var includes = [{
 ];
 
 function map(req) {
+
+
+
     return {
         id: req.body.id,
         nombre: req.body.nombre,
@@ -31,7 +35,8 @@ function map(req) {
         cui: req.body.idCui ? parseInt(req.body.idCui) : null,
         sap: req.body.sap ? parseInt(req.body.sap) : null,
         estado: req.body.estado,
-        comentario: req.body.comentario
+        comentario: req.body.comentario,
+        fechaRecepcion: req.body.fechaRecepcion
     }
 }
 
@@ -52,7 +57,8 @@ function mapper(data) {
                 nombre: item.proveedor.razonsocial
             },
             estado: item.estado,
-            comentario: item.comentario
+            comentario: item.comentario,
+            fechaRecepcion: base.fromDate(item.fechaRecepcion)
         };
         return result;
 
@@ -62,7 +68,7 @@ function mapper(data) {
 
 function list(req, res) {
     req.query.sord = 'desc',
-    base.list(req, res, entity, includes, mapper);
+        base.list(req, res, entity, includes, mapper);
 }
 
 function listChilds(req, res) {
@@ -72,6 +78,8 @@ function listChilds(req, res) {
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
+            var hoy = "" + new Date().toISOString();
+            req.body.fechaRecepcion = hoy;
             return base.create(entity, map(req), res);
         case 'edit':
             return base.update(entity, map(req), res);
