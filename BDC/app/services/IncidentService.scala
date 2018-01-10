@@ -26,7 +26,7 @@ import play.api.libs.json.JsObject
 object IncidentService {
 
   def list(pageSize: String, pageNumber: String, Json: String, user_id: Int): Seq[Incident] = {
-    var sqlString = "EXEC art.list_incident {PageSize},{PageNumber},{Json},{User_Id}"
+    var sqlString = "EXEC art.list_incident_test {PageSize},{PageNumber},{Json},{User_Id}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json, 'User_Id -> user_id).executeQuery() as (Incident.incident *)
     }

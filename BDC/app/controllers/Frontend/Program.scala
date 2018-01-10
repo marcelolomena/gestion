@@ -674,7 +674,7 @@ object Program extends Controller {
 
           ///NUEVO PARA RIESGO
           val user_id = Integer.parseInt(request.session.get("uId").get)
-          val kaka=createDefaultListRisks(user_id, last_program, 0)
+          //val kaka=createDefaultListRisks(user_id, last_program, 0)
           val ret = createInitialRisk(user_id, last_program, 0)
           if (ret == 1)
             Logger.debug("FRACASO AL CREAR RIESGOS!!!")

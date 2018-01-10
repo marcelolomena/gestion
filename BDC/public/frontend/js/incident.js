@@ -10,7 +10,7 @@ $(document).ready(function(){
         	break;
         }
     }
-	
+	var pie_click=0
 	var optionsPieIncident ={
 			chart: {
 				renderTo: 'containerIncident',
@@ -19,7 +19,7 @@ $(document).ready(function(){
 	            plotShadow: false,
 	            type: 'pie'
 	        },title: {
-	            text: 'Incidentes por Departamento'
+	            text: 'Incidentes por Tipo'
 	        },tooltip: {
 	        	formatter: function() {
 	        	    return '<b>'+ this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
@@ -31,6 +31,7 @@ $(document).ready(function(){
 	                point: {
 	                    events: {
 	                       click: function(event) {
+	                           pie_click = this.options.dId
 	                    	   grillaProgramaDepa(this.options.dId,this.options.name);
 	                       }
 	                    }
@@ -51,15 +52,13 @@ $(document).ready(function(){
 		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"department\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
 		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	}
-		
-	
+
 	$.ajax({
 		  url: '/incidentPie',
 		  type: 'GET',
 		  success: function(data) {
 			  optionsPieIncident.series.push(JSON.parse(data));
 				var charPieDepa = new Highcharts.Chart(optionsPieIncident);
-			
 		  },
 		  error: function(e) {
 
@@ -647,7 +646,8 @@ $(document).ready(function(){
 		editable: true,
 		hidden: true, 
 		editrules: {edithidden: true}, 
-		edittype: "select", 
+		edittype: "select",
+		search:false,
 		editoptions: {
 			dataUrl: '/incident_configuration',
 			dataEvents: [{ type: 'change', fn: function(e) {
@@ -748,18 +748,6 @@ $(document).ready(function(){
 			},
 		formoptions: {rowpos:1,colpos:2,label: "<span class='x_program_id'>Sistema</span>"}
 	    },
-	    /*
-	    { 
-		label: 'Usuario', 
-		width: 150, 
-		name: 'sponsor_name',
-	    editable: true, 
-		hidden: false, 
-		editrules: {edithidden: true},
-	    editoptions: {dataInit: function(elem) {$(elem).width(165);$(elem).addClass("ui-state-highlight y_sponsor_name");}},
-	    formoptions: {rowpos:2,colpos:1,label: "<span class='x_sponsor_name'>Usuario</span>"},
-	    },
-	    */
 	    {
 	    label: 'Usuario', 
 		width: 150, 
@@ -907,30 +895,7 @@ $(document).ready(function(){
 	        }
 	    },formoptions: {rowpos:2,colpos:2,label : "<span class='x_task_owner_id'>Responsable</span>"}
 	    },
-	    /*
-		{ 
-		label: 'Prioridad', 
-		name: 'severity_description', 
-		width: 150,
-	    editable: false, 
-		hidden: false, 
-		editrules: {edithidden: true},
-	    stype: 'select',
-		searchoptions: {
-			dataUrl: '/incidentSeverityList',
-			buildSelect: function (response) {
-				var data = JSON.parse(response);
-				var s = "<select>";
-				s += '<option value="0">--Escoger Severidad--</option>';
-				$.each(data, function(i, item) {
-					s += '<option value="' + data[i].severity_id + '">' + data[i].severity_description + '</option>';
-				});
-				return s + "</select>";
-			}	            		  
-	    }
-	    },      
-	    */  
-	    { 
+	    {
 			label: 'Prioridad', 
 			name: 'severity_description', 
 			width: 150,
@@ -1179,7 +1144,7 @@ $(document).ready(function(){
 	    editoptions: { rows: "3", cols: "25"},
 		formoptions: {rowpos:7,colpos:2}
 	    },
-	    { 
+	    /*{
 		label: 'Departamento', 
 		name: 'department', 
 		width: 150,
@@ -1188,7 +1153,7 @@ $(document).ready(function(){
 		editrules: {edithidden: true},
 	    stype: 'select',
 		searchoptions: {dataUrl: '/incidentDepartamentList'},
-	    },	
+	    },*/
 	    { label: 'project_manager_id', name: 'project_manager_id', hidden:true },
 	    { label: 'program_manager_id', name: 'program_manager_id', hidden:true },
 	    { label: 'uname', name: 'uname', editable: true, /*editrules: {edithidden: true}, */hidden: true },	    
@@ -1428,5 +1393,24 @@ $(document).ready(function(){
 	
 	$("#edit_" + incidentGridId).addClass('ui-state-disabled');
     $("#del_" + incidentGridId).addClass('ui-state-disabled');
+
+    $("#tabs").tabs({
+      beforeLoad: function( event, ui ) {
+      var anchor = ui.tab.find(".ui-tabs-anchor");
+      var url = anchor.attr('href');
+        console.log(url)
+        alert('You clicked: ' + $(ui.tab).attr('href'));
+        ui.jqXHR.fail(function() {
+          ui.panel.html(
+            "Couldn't load this tab. We'll try to fix this as soon as possible. " +
+            "If this wouldn't be a demo." );
+        });
+      },
+      load: function( event, ui ) {
+            var anchor = ui.tab.find(".ui-tabs-anchor");
+            var url = anchor.attr('href');
+              console.log(url)
+      }
+    });
 
 });

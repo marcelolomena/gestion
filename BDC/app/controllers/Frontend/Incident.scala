@@ -553,7 +553,7 @@ object Incident extends Controller {
                       qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("status_id", m.data) + " AND "
                   } else if (m.field.equals("department")) {
                     if (m.data.toInt != 0)
-                      qrystr += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
                   } else if (m.field.equals("task_title")) {
                     if (m.data!=null){
                       qrystr += "brief_description" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
@@ -609,7 +609,7 @@ object Incident extends Controller {
           campo.put("owner_name", p.owner_name)
           campo.put("severity_description", p.severity_description)
           campo.put("status_name", p.status_name)
-          campo.put("department", p.department)
+          //campo.put("department", p.department)
           campo.put("uname", p.uname)
           
 
