@@ -191,8 +191,6 @@
                     } else {
                         return disponible
                     }
-
-                    return disponible;
                 },
                 editable: false,
                 search: false

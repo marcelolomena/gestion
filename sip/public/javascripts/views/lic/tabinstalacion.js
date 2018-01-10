@@ -55,8 +55,49 @@ var tabInstalacionGrid = {
                 label: 'Código de Autorización',
                 name: 'codAutorizacion',
                 align: 'center',
-                width: 400,
+                width: 200,
                 editable: false,
+                formatter: function (cellvalue, options, rowObject) {
+                    var estado = rowObject.estado;
+                    if (estado == 'Historico') {
+                        return codauto = 'Historico'
+                    }else{
+                        return cellvalue
+                    }
+                },
+                search: false,
+                
+            }, 
+            {
+                label: 'Instalador',
+                name: 'instalador',
+                align: 'center',
+                width: 120,
+                editable: false,
+                search: false
+            },
+            {
+                label: 'Fecha de Instalación',
+                name: 'fechaInstalacion',
+                width: 200,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                editoptions: {
+                    fullRow: true,
+                    readonly: 'readonly'
+                },        
+                formatter: function (cellvalue, options, rowObject) {
+                    //2017-12-31T00:00:00.000Z
+                    var val = rowObject.fechaInstalacion;
+                    if (val != null) {
+                        val = val.substring(0,10);
+                        var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                        return fechaok;
+                    } else {
+                        return '';
+                    }
+                },
                 search: false
             }
         ];
