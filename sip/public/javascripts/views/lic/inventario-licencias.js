@@ -150,7 +150,15 @@
                 name: 'licocupadas',
                 width: 75,
                 align: 'center',
-                // formatter: 'integer',
+                editable: false,
+                search: false
+            },
+            {
+                label: 'Reserva',
+                name: 'licReserva',
+                width: 75,
+                align: 'center',
+                formatter: 'integer',
                 editable: false,
                 search: false
             }, {
@@ -168,23 +176,22 @@
                 hidden: false,
                 search: false
             }, {
-                label: 'Reserva',
-                name: 'licReserva',
-                width: 75,
-                align: 'center',
-                formatter: 'integer',
-                editable: false,
-                search: false
-            }, {
                 label: 'Disponible',
                 name: 'disponible',
                 width: 75,
                 align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
                     var compradas = rowObject.licstock;
+                    var ilimitado = rowObject.ilimitado;
                     var instaladas = rowObject.licocupadas;
                     var reservadas = rowObject.licReserva;
                     var disponible = compradas - instaladas - reservadas
+                    if (ilimitado == '1') {
+                        return disponible = 'Ilimitado'
+                    } else {
+                        return disponible
+                    }
+
                     return disponible;
                 },
                 editable: false,
@@ -335,14 +342,14 @@
             id: 'instalacion',
             nom: 'Instalaciones'
         }, {
+            id: 'reserva',
+            nom: 'Reserva'
+        }, {
             id: 'snow',
             nom: 'SNOW'
         }, {
             id: 'addm',
             nom: 'ADDM'
-        }, {
-            id: 'reserva',
-            nom: 'Reserva'
         }, {
             id: 'traduccion',
             nom: 'Traducciones'
