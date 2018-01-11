@@ -10,7 +10,7 @@ $(document).ready(function(){
         	break;
         }
     }
-	var pie_click=0
+
 	var optionsPieIncident ={
 			chart: {
 				renderTo: 'containerIncident',
@@ -31,7 +31,6 @@ $(document).ready(function(){
 	                point: {
 	                    events: {
 	                       click: function(event) {
-	                           pie_click = this.options.dId
 	                    	   grillaProgramaDepa(this.options.dId,this.options.name);
 	                       }
 	                    }
@@ -49,19 +48,30 @@ $(document).ready(function(){
 	};
 	
 	function grillaProgramaDepa(did,name){
+	    console.log("wena")
 		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"department\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
 		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	}
 
+	function grillaProgramaDepaT(did,name){
+	    console.log("mala")
+		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"state\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
+		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	}
+
+
+    var charPie
 	$.ajax({
-		  url: '/incidentPie',
+		  url: '/incidentPie/1',
 		  type: 'GET',
 		  success: function(data) {
+    	        optionsPieIncident.title.text=JSON.parse(data).titulo
 			  optionsPieIncident.series.push(JSON.parse(data));
-				var charPieDepa = new Highcharts.Chart(optionsPieIncident);
+				charPie = new Highcharts.Chart(optionsPieIncident);
+				//new Highcharts.Chart(optionsPieIncident);
 		  },
 		  error: function(e) {
-
+            console.log(e)
 		  }
 	});	
 
@@ -1396,20 +1406,58 @@ $(document).ready(function(){
 
     $("#tabs").tabs({
       beforeLoad: function( event, ui ) {
-      var anchor = ui.tab.find(".ui-tabs-anchor");
-      var url = anchor.attr('href');
-        console.log(url)
-        alert('You clicked: ' + $(ui.tab).attr('href'));
+        var url = ui.ajaxSettings.url;
+        var serv = url.split('/')[2]
+
+        $.getJSON(url, function (data) {
+             //console.log(data.titulo)
+             //console.dir(charPie)
+             if(serv==1){
+                 charPie.update({
+                     title: {
+                         text:  data.titulo
+                     },
+                     plotOptions: {
+                        pie: {
+                            point: {
+                                events: {
+                                    click: function(event) {
+                                        grillaProgramaDepa(this.options.dId,this.options.name);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    series:data
+                 });
+
+             } else if(serv==2){
+                 charPie.update({
+                     title: {
+                         text:  data.titulo
+                     },
+                     plotOptions: {
+                        pie: {
+                            point: {
+                                events: {
+                                    click: function(event) {
+                                        grillaProgramaDepaT(this.options.dId,this.options.name);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    series:data
+                 });
+             }
+        });
+
+        return false;
+
         ui.jqXHR.fail(function() {
           ui.panel.html(
-            "Couldn't load this tab. We'll try to fix this as soon as possible. " +
-            "If this wouldn't be a demo." );
+            "Couldn't load this tab. We'll try to fix this as soon as possible." );
         });
-      },
-      load: function( event, ui ) {
-            var anchor = ui.tab.find(".ui-tabs-anchor");
-            var url = anchor.attr('href');
-              console.log(url)
       }
     });
 

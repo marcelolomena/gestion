@@ -554,10 +554,13 @@ object Incident extends Controller {
                   } else if (m.field.equals("department")) {
                     if (m.data.toInt != 0)
                       qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("state")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
                   } else if (m.field.equals("task_title")) {
                     if (m.data!=null){
                       qrystr += "brief_description" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
-                    }
+                  }
                   }else {
                     qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
                   }
@@ -925,32 +928,44 @@ object Incident extends Controller {
   }
   
   
-  def pieIncident = Action { implicit request =>
+  def pieIncident(id: Int) = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val pie = IncidentService.pieChart
+      val pie = IncidentService.pieChart(id)
 
-      var node = new JSONObject()
+      val node = new JSONObject()
 
       node.put("showInLegend", false)
-      node.put("titulo", "Incidencias por Departamento")
-      var puntos = new JSONArray()
+      //node.put("titulo", "Incidentes por Tipo")
+
+      id match {
+        case 1 =>
+          node.put("titulo", "Incidentes por Tipo")
+        case 2 =>
+          node.put("titulo", "Incidentes por Estado")
+      }
+
+
+      val puntos = new JSONArray()
       for (p <- pie) {
-        var punto = new JSONObject()
+        val punto = new JSONObject()
         punto.put("dId", p.dId)
         punto.put("name", p.division + " (" + p.cantidad + ")")
         punto.put("y", p.cantidad)
-        //punto.put("porcentaje", p.porcentaje)
 
         puntos.put(punto)
       }
 
       node.put("data", puntos)
 
-      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
-  }    
+  }
+
 }
