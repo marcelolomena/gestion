@@ -85,14 +85,22 @@ define("FinErrorCargaDTE", 40);
 
 //Tipos de instalación
 console.log("Ambiente:"+process.env.NODE_ENV);
-if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'qadesarrollo'){
-    define("Servidor", 14);
-    define("PC", 13); 
+if (process.env.NODE_ENV == 'qadesarrollo' ){
+    define("Servidor", 16);
+    define("PC", 15); 
     define("CORREOFROM","pnsilva@labchile.cl");
     define("CORREOTO","pnsilva@labchile.cl");
     define("CORREOIP","200.14.165.153");
     define("CORREOUSR","pnsilva");
     define("CORREOPWD","Banco01");
+} else if (process.env.NODE_ENV == 'development') {
+    define("Servidor", 14);
+    define("PC", 13);
+    define("CORREOFROM","ntorresg@bancochile.cl");
+    define("CORREOTO","ntorresg@bancochile.cl");
+    define("CORREOIP","mail.bancochile.cl");
+    define("CORREOUSR","proyecto_art");
+    define("CORREOPWD","Banco01");        
 } else {
     define("Servidor", 16);
     define("PC", 15);
@@ -100,5 +108,5 @@ if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'qadesarrol
     define("CORREOTO","ntorresg@bancochile.cl");
     define("CORREOIP","mail.bancochile.cl");
     define("CORREOUSR","proyecto_art");
-    define("CORREOPWD","Banco01");        
+    define("CORREOPWD","Banco01"); 
 }

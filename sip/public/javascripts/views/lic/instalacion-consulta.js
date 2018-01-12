@@ -11,32 +11,27 @@ $(document).ready(function () {
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Fecha {fechasolicitud}</div>";
-    tmpl += "<div class='column-half'>Torre {torre}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'>Comentario Solicitud {informacion}</div>";
     tmpl += "</div>";
     
-    tmpl += "<div class='form-half'>";
-    tmpl += "<div class='column-full'>Comentario Visación {comentariovisacion}</div>";
-    tmpl += "</div>";  
-	
     tmpl += "<div class='form-row' >";
     tmpl += "<div class='column-half'>Estado {estado}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-half'>";
-    tmpl += "<div class='column-half'>Comentario Instalación {comentarioinstalacion}</div>";
+    tmpl += "<div class='column-half'>Comentario Visación {comentariovisacion}</div>";
     tmpl += "</div>"; 
-	
+
+    tmpl += "<div class='form-half'>";
+    tmpl += "<div class='column-full'>Torre {torre}</div>";
+    tmpl += "</div>";     
+
     tmpl += "<div class='form-row' style='display: none;'>";
     tmpl += "<div class='column-full'>Archivo {nombrearchivo2}</div>";
-    tmpl += "</div>";   
-    
-    tmpl += "<div class='form-row' style='display: none;'>";
-    tmpl += "<div class='column-full'>Producto {producto}</div>";
-    tmpl += "</div>";     
+    tmpl += "</div>";         
 
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
@@ -56,12 +51,12 @@ $(document).ready(function () {
         align: 'center',
         editable: true,
         edittype: "custom",
-        sortable: false,
         editoptions: {
             custom_value: sipLibrary.getRadioElementValue,
-            custom_element: sipLibrary.radioElemInstalacion
+            custom_element: sipLibrary.radioElemReserva
         },
-        search: false
+        search: false,
+        sortable: false
     },
     {
         label: 'Producto',
@@ -92,18 +87,8 @@ $(document).ready(function () {
                 });
                 return s + "</select>";
             }
-        }          
+        }       
     },
-    {
-        label: 'IDProducto',
-        name: 'producto',
-        jsonmap: 'idproducto',
-        width: 200,
-        hidden: true,
-        sortable: false,
-        editable: true,
-        search: false
-    },    
     {
         label: 'Usuario',
         name: 'idusuario',
@@ -112,11 +97,11 @@ $(document).ready(function () {
         width: 100,
         editable: true,
         search: true,
-        sortable: false,
         editoptions: {
             fullRow: true,
             readonly: 'readonly'
         },
+        sortable: false,
         stype: 'select',
         searchoptions: {
             dataUrl: '/lic/getUsuariosInst',
@@ -129,7 +114,7 @@ $(document).ready(function () {
                 });
                 return s + "</select>";
             }
-        }                     
+        }          
     },    
     {
         label: 'Fecha',
@@ -138,7 +123,6 @@ $(document).ready(function () {
         align: 'center',
         sortable: false,
         editable: true,
-        sortable: false,
         editoptions: {
             fullRow: true,
             readonly: 'readonly'
@@ -168,19 +152,20 @@ $(document).ready(function () {
             readonly: 'readonly'
         },
         editrules: {
+            required: false,
             edithidden: false
         },
-        sortable: false,
-        search: false
+        search: false,
+        sortable: false
     },
     {
         label: 'Tipo Instalación',
         name: 'idtipoinstalacion',
         width: 200,
         hidden: true,
-        sortable: false,
         editable: false,
-        search: false
+        search: false,
+        sortable: false
     },    
     {
         label: 'Adjunto',
@@ -188,17 +173,17 @@ $(document).ready(function () {
         width: 200,
         hidden: false,
         editable: true,
-        sortable: false,
         search: false,
         formatter: function (cellvalue, options, rowObject) {
             var nombre = rowObject.nombrearchivo;
             var id = rowObject.id;
             if (nombre != null) {
-                return "<a href='/lic/downfile/"+id+"'>"+nombre+"</a>" ;
+                return "<a href='/lic/downfileconsulta/"+id+"'>"+nombre+"</a>" ;
             } else {
                 return "Sin Adjunto";
             }
-        },        
+        }, 
+        sortable: false       
     },   
     {
         label: 'Nombre2',
@@ -206,9 +191,9 @@ $(document).ready(function () {
         jsonmap: 'nombrearchivo',
         width: 200,
         hidden: true,
-        sortable: false,
         editable: true,
-        search: false
+        search: false,
+        sortable: false
     },       
     {
         label: 'Comentario de Visación',
@@ -216,13 +201,12 @@ $(document).ready(function () {
         width: 200,
         hidden: false,
         editable: true,
-        sortable: false,
         edittype: 'textarea',
-        editoptions: {
-            fullRow: true,
-            readonly: 'readonly'
-        },		
-        search: false
+        editrules: {
+            required: true
+        },
+        search: false,
+        sortable: false
     },
     {
         label: 'Torre',
@@ -236,9 +220,8 @@ $(document).ready(function () {
         editrules: {
             required: true
         },
-        search: false,   
+        search: false,
         editoptions: {
-            readonly: 'readonly',
             dataUrl: '/lic/torres',
             buildSelect: function (response) {
                 var grid = $("#grid");
@@ -260,22 +243,9 @@ $(document).ready(function () {
             }
         }, dataInit: function (elem) { $(elem).width(200); }        
     }, 
-    {
-        label: 'Comentario de Instalación',
-        name: 'comentarioinstalacion',
-        width: 200,
-        hidden: false,
-        editable: true,
-        sortable: false,
-        edittype: 'textarea',
-        editrules: {
-            required: true
-        },
-        search: false
-    },	
 ];
     $("#grid").jqGrid({
-        url: '/lic/instalador',
+        url: '/lic/instalacion-consulta',
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -286,19 +256,19 @@ $(document).ready(function () {
         sortable: "true",
         width: null,
         shrinkToFit: false,
-        caption: 'Instalación Software',
+        caption: 'Consulta Instalaciones',
         pager: "#pager",
         viewrecords: true,
         rowList: [10, 20, 30, 40, 50],
         styleUI: "Bootstrap",
-        editurl: '/lic/instalador',
+        editurl: '/lic/instalacion-consulta',
         subGrid: false // set the subGrid property to true to show expand buttons for each row
     });
 
     $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $('#grid').jqGrid('navGrid', "#pager", {
-        edit: true,
+        edit: false,
         add: false,
         del: false,    
         refresh: true,
@@ -307,7 +277,7 @@ $(document).ready(function () {
     },
 
         {
-            editCaption: "Modifica Instalación",
+            editCaption: "Modifica Visación",
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -316,13 +286,24 @@ $(document).ready(function () {
             errorTextFormat: function (data) {
                 return [true,'Error: ' + data.responseText, ""];
             },
+            beforeShowForm: function (postdata, formid) {
+                var grid = $('#grid');
+                var rowKey = grid.getGridParam("selrow");
+                var rowData = grid.getRowData(rowKey);
+                if (rowData.idtipoinstalacion == 13 || rowData.idtipoinstalacion == 15) { //Deshabilita torre en caso de tipo PC
+                    window.setTimeout(function () {
+                        $("#torre").attr('disabled', true);
+                    }, 1000); 
+                    $("#torre",formid).hide();                                           
+                }             
+            },
             beforeSubmit: function (postdata, formid) {
                 console.log("beforeSubmit");
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
-                if (rowData.estado == 'Instalado') {
-                    return [false, "No puede editar asignación en estado Instalado", ""];
+                if (rowData.estado == 'Autorizado') {
+                    return [false, "No puede editar asignación en estado Autorizado", ""];
                 } else {
                     return [true, "", ""]
                 }

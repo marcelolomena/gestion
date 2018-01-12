@@ -41,6 +41,8 @@ var visacionController = require('../controllers/lic/instalacion-visacion');
 var instaladorController = require('../controllers/lic/instalador');
 var torreController = require('../controllers/lic/torre');
 var reportecompController = require('../controllers/lic/reportecomparativo');
+var graficoVencimController = require('../controllers/lic/graficovencimientos');
+var instConsultaController = require('../controllers/lic/instalacion-consulta');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -289,7 +291,25 @@ module.exports = function (passport) {
         .get(isAuthenticated, reportecompController.list);	
 		
     router.route('/lic/excelcomprativo')
-        .get(isAuthenticated, reportecompController.getExcel); 		
-        
+        .get(isAuthenticated, reportecompController.getExcel); 	
+
+    router.route('/lic/vencimientos')
+        .get(isAuthenticated, graficoVencimController.getVencimientos);		
+
+    router.route('/lic/tablavencimiento/:id/:id2')
+        .get(isAuthenticated, graficoVencimController.list); 		
+		
+    router.route('/lic/instalacion-consulta')
+        .get(isAuthenticated, instConsultaController.list);	
+		
+    router.route('/lic/downfileconsulta/:id')
+        .get(isAuthenticated, instConsultaController.downFile);		
+
+    router.route('/lic/getProductoInst')
+        .get(isAuthenticated, instConsultaController.getProductoInstalacion);		
+
+    router.route('/lic/getUsuariosInst')
+        .get(isAuthenticated, instConsultaController.getUsuariosInstalacion);			
+
     return router;
 };

@@ -6,6 +6,7 @@ var sequelize = require('../../models/index').sequelize;
 var constants = require("../../utils/constants");
 var fs = require('fs');
 var nodemailer = require('nodemailer');
+var path = require('path');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
@@ -17,14 +18,14 @@ exports.action = function (req, res) {
         var rol = req.session.passport.sidebar[0].rid
         if (rol == constants.JEFEPC) {
           var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "' " +
-            " idtorre = 1 WHERE id =" + req.body.id;
+            ", idtorre = 1 WHERE id =" + req.body.id;
         } else {
           var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "' " +
             " WHERE id =" + req.body.id;
         }
       } else {
         var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "', " +
-          " idtorre = " + req.body.torre + " WHERE id =" + req.body.id;
+          ", idtorre = " + req.body.torre + " WHERE id =" + req.body.id;
       }
 
       console.log("UPDATE:" + sql);
@@ -204,26 +205,23 @@ exports.derivar = function (req, res) {
 exports.downFile = function (req, res) {
 
   var file = "Documento1.docx";
-  var filePath = "docs\\lic";
+  var filePath = "docs"+path.sep+"lic";
   var sql = "SELECT nombrearchivo FROM lic.instalacion WHERE id=" + req.params.id;
   sequelize.query(sql)
     .spread(function (rows) {
       file = rows[0].nombrearchivo;
-      console.log("Archivo:" + file);
-      fs.exists(filePath, function (exists) {
+      console.log("Archivo:" + filePath+ path.sep +file);
+      fs.exists(filePath+ path.sep + file, function (exists) {
         if (exists) {
           res.writeHead(200, {
             "Content-Type": "application/octet-stream",
             "Content-Disposition": "attachment; filename=" + file
           });
-          fs.createReadStream(filePath + '\\' + file).pipe(res);
+          fs.createReadStream(filePath + path.sep + file).pipe(res);
         } else {
           res.writeHead(400, { "Content-Type": "text/plain" });
           res.end("ERROR Archivo no Existe");
         }
-      }).catch(function (err) {
-        res.writeHead(400, { "Content-Type": "text/plain" });
-        res.end("ERROR Archivo no Existe");
       });
     });
 
