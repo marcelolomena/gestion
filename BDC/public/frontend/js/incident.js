@@ -31,7 +31,7 @@ $(document).ready(function(){
 	                point: {
 	                    events: {
 	                       click: function(event) {
-	                    	   grillaProgramaDepa(this.options.dId,this.options.name);
+	                    	   gridIncident("department",this.options.dId,this.options.name);
 	                       }
 	                    }
 	                 },
@@ -47,18 +47,10 @@ $(document).ready(function(){
 	        },series: []			
 	};
 	
-	function grillaProgramaDepa(did,name){
-	    console.log("wena")
-		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"department\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
+	function gridIncident(filter,did,name){
+		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"" + filter + "\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
 		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	}
-
-	function grillaProgramaDepaT(did,name){
-	    console.log("mala")
-		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"state\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
-		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
-	}
-
 
     var charPie
 	$.ajax({
@@ -1422,7 +1414,7 @@ $(document).ready(function(){
                             point: {
                                 events: {
                                     click: function(event) {
-                                        grillaProgramaDepa(this.options.dId,this.options.name);
+                                        gridIncident("department",this.options.dId,this.options.name);
                                     }
                                 }
                             }
@@ -1441,7 +1433,7 @@ $(document).ready(function(){
                             point: {
                                 events: {
                                     click: function(event) {
-                                        grillaProgramaDepaT(this.options.dId,this.options.name);
+                                        gridIncident("state",this.options.dId,this.options.name);
                                     }
                                 }
                             }
@@ -1449,6 +1441,24 @@ $(document).ready(function(){
                     },
                     series:data
                  });
+             } else if(serv==3){
+                               charPie.update({
+                                   title: {
+                                       text:  data.titulo
+                                   },
+                                   plotOptions: {
+                                      pie: {
+                                          point: {
+                                              events: {
+                                                  click: function(event) {
+                                                      gridIncident("delay",this.options.dId,this.options.name);
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  },
+                                  series:data
+                               });
              }
         });
 

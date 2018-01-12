@@ -399,12 +399,12 @@ object Incident extends Controller {
         val pageSize = rows
         val startRow = (pageIndex * pageSize) + 1;
         
-        var node = new JSONObject()
+        val node = new JSONObject()
         val subtask = IncidentService.selectSubtask(id, sidx, sord, rows, startRow)
 
-        var registro = new JSONArray()
+        val registro = new JSONArray()
         for (p <- subtask) {
-          var campo = new JSONObject()
+          val campo = new JSONObject()
           records = p.cantidad
           campo.put("sub_task_id", p.sub_task_id)
           campo.put("task_id", p.task_id)
@@ -518,7 +518,7 @@ object Incident extends Controller {
         var panel: Seq[models.Incident] = null
         var records: Int = 0
 
-        var node = new JSONObject()
+        val node = new JSONObject()
         var tieneJson = true
         var qrystr = ""
 
@@ -557,6 +557,9 @@ object Incident extends Controller {
                   } else if (m.field.equals("state")) {
                     if (m.data.toInt != 0)
                       qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("delay")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "delay" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
                   } else if (m.field.equals("task_title")) {
                     if (m.data!=null){
                       qrystr += "brief_description" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
@@ -943,17 +946,38 @@ object Incident extends Controller {
           node.put("titulo", "Incidentes por Tipo")
         case 2 =>
           node.put("titulo", "Incidentes por Estado")
+        case 3 =>
+          node.put("titulo", "Incidentes por Atraso")
       }
 
 
       val puntos = new JSONArray()
-      for (p <- pie) {
-        val punto = new JSONObject()
-        punto.put("dId", p.dId)
-        punto.put("name", p.division + " (" + p.cantidad + ")")
-        punto.put("y", p.cantidad)
+      if(id==3) {
+        for (p <- pie) {
+          val punto = new JSONObject()
+          punto.put("dId", p.dId)
+          punto.put("name", p.division + " (" + p.cantidad + ")")
+          punto.put("y", p.cantidad)
+          if(p.dId == 1) {
+            punto.put("color", "green")
+          }else if(p.dId == 2) {
+            punto.put("color", "yellow")
+          }else if(p.dId == 3) {
+            punto.put("color", "red")
+          }
 
-        puntos.put(punto)
+          puntos.put(punto)
+        }
+      }else{
+        for (p <- pie) {
+          val punto = new JSONObject()
+          punto.put("dId", p.dId)
+          punto.put("name", p.division + " (" + p.cantidad + ")")
+          punto.put("y", p.cantidad)
+
+          puntos.put(punto)
+        }
+
       }
 
       node.put("data", puntos)

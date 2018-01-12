@@ -226,7 +226,7 @@ println(uname)
 
   def delSubTask(sub_task_id: String): Int = {
 
-    var sqlString = """
+    val sqlString = """
       EXEC art.del_incident_subtask {sub_task_id}
       """
     DB.withConnection { implicit connection =>
@@ -237,7 +237,7 @@ println(uname)
 
   def count(Json: String, user_id: Int): Int = {
 
-    var sqlString = "EXEC art.count_incident {Json}, {User_Id}"
+    val sqlString = "EXEC art.count_incident {Json}, {User_Id}"
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('Json -> Json, 'User_Id -> user_id).executeQuery() as (scalar[Int].single)
@@ -499,6 +499,34 @@ println(uname)
             |JOIN art_incident_status s ON x.max_status_id=s.status_id
             |WHERE i.is_deleted = 1
             |GROUP BY s.status_id,status_name
+          """.stripMargin
+      case 3 =>
+        sqlString =
+          """
+            |SELECT
+            |COUNT(*) cantidad,
+            |X.dId,X.division,
+            |0 porcentaje FROM
+            |(
+            |SELECT
+            | CASE
+            |	WHEN s.status_name = 'Resuelto' OR DATEDIFF (day, getdate(), i.date_end) > 0 THEN 1
+            |	WHEN s.status_name != 'Resuelto' AND DATEDIFF (day, getdate(), i.date_end) = 0 THEN 2
+            |	ELSE 3
+            | END dId,
+            | CASE
+            |	WHEN s.status_name = 'Resuelto' OR DATEDIFF (day, getdate(), i.date_end) > 0 THEN 'Resuelto'
+            |	WHEN s.status_name != 'Resuelto' AND DATEDIFF (day, getdate(), i.date_end) = 0 THEN 'Normal'
+            |	ELSE 'Atrasado'
+            | END division
+            |  FROM art_incident i
+            |JOIN (
+            |	SELECT incident_id, MAX(status_id) max_status_id FROM art_incident_log GROUP BY incident_id
+            |) x ON i.incident_id=x.incident_id
+            |JOIN art_incident_status s ON x.max_status_id=s.status_id
+            |WHERE i.is_deleted = 1
+            |) X
+            |GROUP BY X.dId,X.division
           """.stripMargin
     }
 
