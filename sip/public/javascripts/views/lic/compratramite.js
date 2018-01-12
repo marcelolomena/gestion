@@ -21,7 +21,7 @@
     }
 
     var initGrid = function (viewModel) {
-        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'estado', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'fechaRecepcion', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.prmEdit.beforeSubmit = beforeSubmit;
 
@@ -223,13 +223,12 @@
             },
             search: false
         }, {
-            label: 'Fecha Recepcion',
+            label: 'Fecha de Compra',
             name: 'fechaRecepcion',
-            width: 140,
-            hidden: true,
+            width: 120,
             align: 'center',
             sortable: false,
-            editable: false,
+            editable: true,
             search: false
         }, {
             label: 'Comentario',
@@ -237,6 +236,7 @@
             width: 400,
             hidden: false,
             editable: true,
+            hidden: true,
             edittype: 'textarea',
             editoptions: {
                 fullRow: true

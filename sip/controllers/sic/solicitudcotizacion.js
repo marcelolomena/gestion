@@ -114,7 +114,7 @@ exports.list = function (req, res) {
 
         jsonObj.rules.forEach(function (item) {
             if (item.field === "codigosolicitud") {
-                filter_one.push({ [item.field]: parseInt(item.data) });
+                filter_one.push({ [item.field]: { $like: '%' + item.data + '%' } });
             } else if (item.field === "numerorfp") {
                 filter_one.push({ [item.field]: item.data });
             } else if (item.field === "cui") {

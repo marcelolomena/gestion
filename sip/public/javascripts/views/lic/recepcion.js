@@ -23,7 +23,7 @@
     }
 
     function initGrid(viewModel) {
-        grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Recepción de licencias', 'Editar Recepción', 'Recepcionar Licencias', '/lic/recepcion', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+        grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Recepción de licencias', 'Editar Recepción', 'Recepcionar Licencias', '/lic/recepcion', viewModel, 'fecha', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.prmEdit.beforeSubmit = beforeSubmit;
         grid.build();
@@ -264,6 +264,15 @@
 
                 },
                 search: true
+            },
+            {
+                label: 'Fecha de Recepcion',
+                name: 'fecha',
+                width: 120,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                search: false
             }
         ];
         initGrid(viewModel);

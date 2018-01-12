@@ -47,7 +47,7 @@ function mapper(data) {
             proveedor: { nombre: item.proveedor.razonsocial },
             comprador: item.comprador,
             comentario: item.comentario,
-            fecha: item.fecha,
+            fecha:  base.fromDate(item.fecha),
             idCompraTramite: item.idCompraTramite
         };
     });

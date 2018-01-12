@@ -55,54 +55,51 @@ var tabInstalacionGrid = {
                 label: 'Código de Autorización',
                 name: 'codAutorizacion',
                 align: 'center',
-                width: 400,
+                width: 200,
+                editable: false,
+                formatter: function (cellvalue, options, rowObject) {
+                    var estado = rowObject.estado;
+                    if (estado == 'Historico') {
+                        return codauto = 'Historico'
+                    }else{
+                        return cellvalue
+                    }
+                },
+                search: false,
+                
+            }, 
+            {
+                label: 'Instalador',
+                name: 'instalador',
+                align: 'center',
+                width: 120,
                 editable: false,
                 search: false
+            },
+            {
+                label: 'Fecha de Instalación',
+                name: 'fechaInstalacion',
+                width: 200,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                editoptions: {
+                    fullRow: true,
+                    readonly: 'readonly'
+                },        
+                formatter: function (cellvalue, options, rowObject) {
+                    //2017-12-31T00:00:00.000Z
+                    var val = rowObject.fechaInstalacion;
+                    if (val != null) {
+                        val = val.substring(0,10);
+                        var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                        return fechaok;
+                    } else {
+                        return '';
+                    }
+                },
+                search: false
             }
-            // , {
-            //     label: 'Nombre de Archivo',
-            //     name: 'nombrearchivo',
-            //     index: 'nombrearchivo',
-            //     hidden: false,
-            //     width: 250,
-            //     align: "left",
-            //     editable: false,
-            //     editoptions: {
-            //         custom_element: labelEditFunc,
-            //         custom_value: getLabelValue
-            //     },
-            //     formatter: function (cellvalue, options, rowObject) {
-            //         return returnDocLinkDoc(cellvalue, options, rowObject);
-            //     },
-            //     unformat: function (cellvalue, options, rowObject) {
-            //         return returnDocLinkDoc2(cellvalue, options, rowObject);
-            //     },
-            //     search: false
-            // },
-            // {
-            //     name: 'fileToUpload',
-            //     label: 'Subir Archivo',
-            //     hidden: true,
-            //     editable: true,
-            //     edittype: 'file',
-            //     editrules: {
-            //         edithidden: true,
-            //         required: true
-            //     },
-            //     editoptions: {
-            //         enctype: "multipart/form-data"
-            //     },
-            //     search: false
-            // },
-            // {
-            //     label: 'Comentario',
-            //     name: 'informacion',
-            //     width: 400,
-            //     hidden: false,
-            //     editable: false,
-            //     edittype: 'textarea',
-            //     search: false
-            // }
         ];
 
         function returnDocLinkDoc(cellValue, options, rowdata) {
