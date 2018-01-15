@@ -65,7 +65,52 @@ $(document).ready(function(){
 		  error: function(e) {
             console.log(e)
 		  }
-	});	
+	});
+
+	$.ajax({
+        type: "GET",
+        url: '/incident_type_list',
+        dataType: "json",
+        success: function(data){
+          $.each(data,function(key, registro) {
+            $("#sel_type").append('<option value='+registro.configuration_id+'>'+registro.configuration_name+'</option>');
+          });
+        },
+        error: function(data) {
+          alert('error');
+        }
+      });
+
+      $("#sel_type").change(function() {
+        //alert( "ID : " + $(this).val());
+        	$.ajax({
+                type: "GET",
+                url: '/incidentPieCompose/' + $(this).val(),
+                dataType: "json",
+                success: function(data){
+                         charPie.update({
+                             title: {
+                                 text:  data.titulo
+                             },
+                             plotOptions: {
+                                pie: {
+                                    point: {
+                                        events: {
+                                            click: function(event) {
+                                                gridIncident("state",this.options.dId,this.options.name);
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            series:data
+                         });
+                },
+                error: function(data) {
+                  alert('error');
+                }
+              });
+      });
 
 	$("#subtaskListDialog").dialog({
 		//bgiframe: true,
@@ -1400,6 +1445,11 @@ $(document).ready(function(){
       beforeLoad: function( event, ui ) {
         var url = ui.ajaxSettings.url;
         var serv = url.split('/')[2]
+        if(serv==2)
+            $("#div_sel_type").show();
+        else
+            $("#div_sel_type").hide();
+
 
         $.getJSON(url, function (data) {
              //console.log(data.titulo)

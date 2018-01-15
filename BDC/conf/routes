@@ -628,6 +628,7 @@ GET    /incidentHome                                                            
 GET    /incidentList                                                                                  controllers.Frontend.Incident.list
 POST   /incidentSave                                                                                  controllers.Frontend.Incident.save
 GET    /incident_configuration                                                                        controllers.Frontend.Incident.configurationList
+GET    /incident_type_list                                                                            controllers.Frontend.Incident.typeList
 GET    /incident_program/$id<[A-Za-z0-9_-]+>                                                          controllers.Frontend.Incident.programList(id:String)
 GET    /incident_program_default                                                                      controllers.Frontend.Incident.programDefaultList
 GET    /incidentBusinessMember/$id<[A-Za-z0-9_-]+>                                                    controllers.Frontend.Incident.businessMemberList(id:String)
@@ -658,7 +659,7 @@ GET    /incidentAddUser                                                         
 GET    /incidentDelMember                                                                             controllers.Frontend.Incident.delMember
 GET    /incidentDelSubTask                                                                            controllers.Frontend.Incident.delSubTask
 GET    /incidentPie/$id<[A-Za-z0-9_-]+>                                                               controllers.Frontend.Incident.pieIncident(id:Int)
-
+GET    /incidentPieCompose/$id<[A-Za-z0-9_-]+>                                                        controllers.Frontend.Incident.pieIncidentCompose(id:Int)
 #Migracion Programa
 GET    /programa                                                                                      controllers.Frontend.Programa.home
 GET    /listadoPrograma                                                                               controllers.Frontend.Programa.listado

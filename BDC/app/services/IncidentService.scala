@@ -23,10 +23,12 @@ import play.api.libs.json.JsObject
 /**
  * @author marcelo
  */
+
+
 object IncidentService {
 
   def list(pageSize: String, pageNumber: String, Json: String, user_id: Int): Seq[Incident] = {
-    val sqlString = "EXEC art.list_incident_chart {PageSize},{PageNumber},{Json},{User_Id}"
+    val sqlString = "EXEC art.list_incident {PageSize},{PageNumber},{Json},{User_Id}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('PageSize -> pageSize.toInt,
         'PageNumber -> pageNumber.toInt,
@@ -534,6 +536,38 @@ println(uname)
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Pie.pie *)
     }
-  }  
+  }
+
+
+  def pieChartCompose(id: Int): Seq[Pie] = {
+
+    var sqlString =
+      """
+        |SELECT
+        |COUNT(*) cantidad,
+        |s.status_id dId,
+        |s.status_name division,
+        |0 porcentaje
+        |FROM art_incident i
+        |JOIN (
+        |	SELECT incident_id, MAX(status_id) max_status_id FROM art_incident_log GROUP BY incident_id
+        |) x ON i.incident_id=x.incident_id
+        |JOIN art_incident_status s ON x.max_status_id=s.status_id
+        |WHERE i.is_deleted = 1 AND i.configuration_id = {id}
+        |GROUP BY s.status_id,status_name
+      """.stripMargin
+
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id->id).executeQuery() as (Pie.pie *)
+    }
+  }
+
+  def getConfigurationById(id: Int): String = {
+    val sqlString = "SELECT configuration_name FROM art_incident_configuration WHERE configuration_id = {id}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id).as(scalar[String].single)
+    }
+  }
 
 }
