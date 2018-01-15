@@ -52,6 +52,12 @@ $(document).ready(function(){
 		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	}
 
+	function gridIncidentCompose(filter1,id1,filter2,id2,name){
+		//var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"" + filter + "\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
+		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"" + filter1 + "\",\"op\":\"eq\",\"data\":\"" + id1 + "\"},{\"field\":\"" + filter2 + "\",\"op\":\"eq\",\"data\":\"" + id2 + "\"}]}";
+		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	}
+
     var charPie
 	$.ajax({
 		  url: '/incidentPie/1',
@@ -82,12 +88,15 @@ $(document).ready(function(){
       });
 
       $("#sel_type").change(function() {
-        //alert( "ID : " + $(this).val());
+        //console.log( "ID : " + $(this).val());
+        //console.log( "TEXT : " + $(this).find("option:selected").text().trim());
+        gridIncident("configuration_id",$("#sel_type").val(),$(this).find("option:selected").text().trim());
         	$.ajax({
                 type: "GET",
                 url: '/incidentPieCompose/' + $(this).val(),
                 dataType: "json",
                 success: function(data){
+                        //gridIncident("configuration_id",$("#sel_type").val(),this.options.name);
                          charPie.update({
                              title: {
                                  text:  data.titulo
@@ -97,7 +106,8 @@ $(document).ready(function(){
                                     point: {
                                         events: {
                                             click: function(event) {
-                                                gridIncident("state",this.options.dId,this.options.name);
+                                                //console.log("que onda 1 : " + $("#sel_type").val())
+                                                gridIncidentCompose("state",this.options.dId,"configuration_id",$("#sel_type").val(),this.options.name);
                                             }
                                         }
                                     }
@@ -1445,10 +1455,12 @@ $(document).ready(function(){
       beforeLoad: function( event, ui ) {
         var url = ui.ajaxSettings.url;
         var serv = url.split('/')[2]
-        if(serv==2)
+        if(serv==2){
+            //console.log("tre : " + $("#sel_type").val())
             $("#div_sel_type").show();
-        else
+        }else{
             $("#div_sel_type").hide();
+        }
 
 
         $.getJSON(url, function (data) {
@@ -1483,6 +1495,7 @@ $(document).ready(function(){
                             point: {
                                 events: {
                                     click: function(event) {
+                                        //console.log("que onda 2 : " + $("#sel_type").val())
                                         gridIncident("state",this.options.dId,this.options.name);
                                     }
                                 }

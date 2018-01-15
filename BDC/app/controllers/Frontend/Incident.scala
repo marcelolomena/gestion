@@ -557,6 +557,9 @@ object Incident extends Controller {
                   } else if (m.field.equals("state")) {
                     if (m.data.toInt != 0)
                       qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("configuration_id")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
                   } else if (m.field.equals("delay")) {
                     if (m.data.toInt != 0)
                       qrystr += "delay" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
