@@ -26,7 +26,7 @@ import play.api.libs.json.JsObject
 object IncidentService {
 
   def list(pageSize: String, pageNumber: String, Json: String, user_id: Int): Seq[Incident] = {
-    val sqlString = "EXEC art.list_incident_test {PageSize},{PageNumber},{Json},{User_Id}"
+    val sqlString = "EXEC art.list_incident_chart {PageSize},{PageNumber},{Json},{User_Id}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('PageSize -> pageSize.toInt,
         'PageNumber -> pageNumber.toInt,
