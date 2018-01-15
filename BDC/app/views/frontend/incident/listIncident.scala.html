@@ -52,10 +52,18 @@
 							<ul>
 								<li><a href="/incidentPie/1">Tipo</a></li>
 								<li><a href="/incidentPie/2">Estado</a></li>
-								<li><a href="/incidentPie/3">Atraso</a></li>
+								<!--<li><a href="/incidentPie/3">Atraso</a></li>-->
 							</ul>
 							<div id="tabs-1">
-									<div id="containerIncident"></div>
+                                <div class="left width-pr50 padding-top-3px" id="div_sel_type" >
+
+                                    <select class="input-xlarge" id="sel_type">
+										<option value="0">--Seleccione un Tipo--</option>
+                                    </select>
+
+                                </div>
+
+                                <div id="containerIncident"></div>
 									<table id="jqGridIncident"></table>
 									<div id="jqGridIncidentPager"></div>
 							</div>

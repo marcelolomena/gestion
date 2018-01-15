@@ -557,6 +557,9 @@ object Incident extends Controller {
                   } else if (m.field.equals("state")) {
                     if (m.data.toInt != 0)
                       qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("configuration_id")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
                   } else if (m.field.equals("delay")) {
                     if (m.data.toInt != 0)
                       qrystr += "delay" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
@@ -679,7 +682,14 @@ object Incident extends Controller {
     val incidents = IncidentService.selectSeverity
     Ok(play.api.libs.json.Json.toJson(incidents))
   }
-  
+
+  def typeList = Action { implicit request =>
+
+    val incidents = IncidentService.selectTypeIncident
+    Ok(play.api.libs.json.Json.toJson(incidents))
+  }
+
+
   def serviceCatalogList = Action { implicit request =>
 
     val disciplines = ServiceCatalogueService.getIncidentServiceCatalogue
@@ -979,6 +989,42 @@ object Incident extends Controller {
         }
 
       }
+
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def pieIncidentCompose(id: Int) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val pie = IncidentService.pieChartCompose(id)
+      val title = IncidentService.getConfigurationById(id)
+
+      val node = new JSONObject()
+
+      node.put("showInLegend", false)
+
+      node.put("titulo", "Incidentes por Estado para " + title)
+
+
+      val puntos = new JSONArray()
+        for (p <- pie) {
+          val punto = new JSONObject()
+          punto.put("dId", p.dId)
+          punto.put("name", p.division + " (" + p.cantidad + ")")
+          punto.put("y", p.cantidad)
+
+          puntos.put(punto)
+        }
+
 
       node.put("data", puntos)
 
