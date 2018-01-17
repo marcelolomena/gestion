@@ -230,7 +230,7 @@ module.exports = function (passport) {
     router.route('/lic/tiposInstalacion')
         .get(isAuthenticated, tipoInstalacionController.tiposInstalacion);
 
-    router.route('/lic/getplantillatipo/:idtipo')
+    router.route('/lic/getplantillatipo/:idReserv')
         .get(isAuthenticated, tipoInstalacionController.getplantillatipo);
 
     // router.route('/lic/reservaAutorizado')

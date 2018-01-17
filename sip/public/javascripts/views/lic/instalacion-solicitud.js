@@ -17,6 +17,7 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
+    t1 += "<div class='column-half'>Número de Licencia<span style='color:red'>*</span>{numlicencia}</div>";
     t1 += "<div class='column-full'>Subir Archivo<span style='color:red'>*</span>{fileToUpload}</div>";
     t1 += "</div>";
 
@@ -31,6 +32,7 @@ $(document).ready(function () {
 
     var idTipoInstalacion;
     var codAutorizacion;
+    var numLicencia;
     var $grid = $("#grid"),
 
         instalacionModel = [{
@@ -46,7 +48,16 @@ $(document).ready(function () {
                     edithidden: false
                 }
 
-            }, {
+            },
+            {
+                label: 'Estado',
+                name: 'estado',
+                align: 'center',
+                width: 70,
+                editable: false,
+                search: false
+            },
+            {
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'producto.nombre',
@@ -68,12 +79,14 @@ $(document).ready(function () {
                         $.each(data, function (i, item) {
                             if (data[i].nombre == thissid) {
                                 s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + ' - ' + data[i].codautoriza + '</option>';
-                                codAutorizacion = data[i].codautoriza;
-                                idTipoInstalacion = data[i].idtipoinstalacion;
+                                // codAutorizacion = data[i].codautoriza;
+                                // idTipoInstalacion = data[i].idtipoinstalacion;
+                                // numLicencia = data[i].numlicencia;
                             } else {
                                 s += '<option value="' + data[i].id + '">' + data[i].nombre + ' - ' + data[i].codautoriza + '</option>';
-                                idTipoInstalacion = data[i].idtipoinstalacion;
-                                codAutorizacion = data[i].codautoriza;
+                                // idTipoInstalacion = data[i].idtipoinstalacion;
+                                // codAutorizacion = data[i].codautoriza;
+                                // numLicencia = data[i].numlicencia
                             }
                         });
                         return s + "</select>";
@@ -81,16 +94,22 @@ $(document).ready(function () {
                     dataEvents: [{
                         type: 'change',
                         fn: function (e) {
+                            var idReserv = $('option:selected', this).val();
+                            // $("input#numlicencia").val(numLicencia);
+
                             $.ajax({
                                 type: "GET",
-                                url: '/lic/getplantillatipo/' + idTipoInstalacion,
+                                url: '/lic/getplantillatipo/' + idReserv,
                                 async: false,
                                 success: function (data) {
                                     if (data.length > 0 && data[0].nombrearchivo != null) {
                                         $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipoinstalacion/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
-                                        //$("input#program_id").val(data[0].nombrearchivo);
+                                        // $("input#program_id").val(data[0].nombrearchivo);
                                     } else {
                                         $("#laplantilla").empty().html("");
+                                    }
+                                    if(data.length > 0){
+                                        $("input#numlicencia").val(data[0].numlicencia); 
                                     }
                                 }
                             });
@@ -98,11 +117,21 @@ $(document).ready(function () {
                     }],
                 },
                 search: false
-            }, {
+            },
+            {
+                label: 'Cantidad Lic.',
+                name: 'numlicencia',
+                align: 'center',
+                width: 70,
+                editable: true,
+                hidden: false,
+                search: false
+            },
+            {
                 label: 'Código de Autorización',
                 name: 'codAutorizacion',
                 align: 'center',
-                width: 100,
+                width: 120,
                 editable: false,
                 editrules: {
                     required: true
@@ -157,15 +186,6 @@ $(document).ready(function () {
                 },
                 search: false
             },
-            {
-                label: 'Cantidad Lic.',
-                name: 'numlicencia',
-                align: 'center',
-                width: 100,
-                editable: false,
-                hidden: true,
-                search: false
-            }
         ];
 
     $grid.jqGrid({

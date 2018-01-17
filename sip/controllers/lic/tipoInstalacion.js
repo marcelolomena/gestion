@@ -229,22 +229,27 @@ function tiposInstalacion(req, res) {
     });
 }
 
-function getplantillatipo (req, res){
-    var idtipoinsta = req.params.idtipo;
-    sequelize.query("SELECT * " +
-        "FROM lic.tipoinstalacion WHERE id = " + idtipoinsta,
-        { type: sequelize.QueryTypes.SELECT }
+function getplantillatipo(req, res) {
+    var idReserv = req.params.idReserv;
+    sequelize.query("select a.nombrearchivo, c.numlicencia from lic.tipoinstalacion a " +
+        "join lic.producto b on b.idtipoinstalacion = a.id " +
+        "join lic.reserva c on c.idproducto = b.id " +
+        "WHERE c.id = " + idReserv, {
+            type: sequelize.QueryTypes.SELECT
+        }
     ).then(function (valores) {
         res.json(valores);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        res.json({
+            error: 1
+        });
     });
 }
 
 
 exports.getplantillatipo = function (req, res) {
-    
+
 };
 
 
