@@ -44,96 +44,7 @@ $(document).ready(function () {
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: 'Contrato', name: 'nombre', width: 250, align: 'left', search: true, editable: true },
         {
-            label: 'Proveedor', name: 'idproveedor', search: false, editable: true, hidden: true, 
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/proveedores/combobox',
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idproveedor;
-                    
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Proveedor--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].razonsocial + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].razonsocial + '</option>';
-                        }
-                    });
-                        if (isNaN(thissid)) {
-                           idproveedor = 0;
-                        }  
-                        else                      
-                        {
-                           idproveedor = thissid;
-                        };
-
-                        if (idproveedor != "0") {
-                            $.ajax({
-                                type: "GET",
-                                url: '/contactos/' + idproveedor,
-                                async: false,
-                                success: function (data) {
-                                    var grid = $("#grid");
-                                    var rowKey = grid.getGridParam("selrow");
-                                    var rowData = grid.getRowData(rowKey);
-                                    var thissid = rowData.idcontactofacturacion;
-                                    var s = "<select>";//el default
-                                    s += '<option value="0">--Escoger Contacto Facturación--</option>';
-                                     $.each(data, function (i, item) {
-                                    if (data[i].id == thissid) {
-                                      s += '<option value="' + data[i].id + '" selected>' + data[i].contacto + '</option>';
-                                  } else {
-                                      s += '<option value="' + data[i].id + '">' + data[i].contacto + '</option>';
-                                     }
-                                    });
-                                    s += "</select>";
-                                    $("select#idcontactofacturacion").html(s);
-                                }
-                            });
-                        } 
-                    return s + "</select>";
-                },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        
-                        if ($('option:selected', this).val() != 0) {
-                            $("input#razonsocial").val($('option:selected', this).text());
-                        } else {
-                            $("input#razonsocial").val("");
-                        }
-                        var idproveedor = $('option:selected', this).val()
-                        if (idproveedor != "0") {
-                            $.ajax({
-                                type: "GET",
-                                url: '/contactos/' + idproveedor,
-                                async: false,
-                                success: function (data) {
-                                    var grid = $("#grid");
-                                    var rowKey = grid.getGridParam("selrow");
-                                    var rowData = grid.getRowData(rowKey);
-                                    var thissid = rowData.idcontactofacturacion;
-                                    var s = "<select>";//el default
-                                    s += '<option value="0">--Escoger Contacto Facturación--</option>';
-                                     $.each(data, function (i, item) {
-                                    if (data[i].id == thissid) {
-                                      s += '<option value="' + data[i].id + '" selected>' + data[i].contacto + '</option>';
-                                  } else {
-                                      s += '<option value="' + data[i].id + '">' + data[i].contacto + '</option>';
-                                     }
-                                    });
-                                    s += "</select>";
-                                    $("select#idcontactofacturacion").html(s);
-                                }
-                            });
-                        } 
-                    }
-                }],
-            }
+            label: 'Proveedor', name: 'idproveedor', search: false, editable: true, hidden: true
         },
         {
             label: 'Origen', name: 'tipocontrato', search: false, editable: true, hidden: false,
@@ -383,26 +294,6 @@ $(document).ready(function () {
             plusicon: "glyphicon-hand-right",
             minusicon: "glyphicon-hand-down"
         },
-    }).jqGrid('filterToolbar', {
-        stringResult: true,
-        searchOnEnter: true,
-        defaultSearch: "cn",
-        searchOperators: true,
-        beforeSearch: function () {
-            var postData = $("#grid").jqGrid('getGridParam', 'postData');
-            var searchData = jQuery.parseJSON(postData.filters);
-            for (var iRule = 0; iRule < searchData.rules.length; iRule++) {
-                if (searchData.rules[iRule].field === "razonsocial") {
-                    var valueToSearch = searchData.rules[iRule].data;
-                    searchData.rules[iRule].field = 'idproveedor'
-                }
-            }
-            //return false;
-            postData.filters = JSON.stringify(searchData);
-        },
-        afterSearch: function () {
-
-        }
     });
 
     $("#grid").jqGrid('navGrid', "#pager", {
