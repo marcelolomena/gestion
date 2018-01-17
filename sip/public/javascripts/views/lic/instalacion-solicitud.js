@@ -17,7 +17,10 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half'>Número de Licencia<span style='color:red'>*</span>{numlicencia}</div>";
+    t1 += "<div class='column-half'>Número de Licencia{numlicencia}</div>";
+    t1 += "</div>";
+
+    t1 += "<div class='form-row'>";
     t1 += "<div class='column-full'>Subir Archivo<span style='color:red'>*</span>{fileToUpload}</div>";
     t1 += "</div>";
 
@@ -103,13 +106,13 @@ $(document).ready(function () {
                                 async: false,
                                 success: function (data) {
                                     if (data.length > 0 && data[0].nombrearchivo != null) {
-                                        $("#laplantilla").empty().html("<div class='column-full'>Plantilla: <a href='/docs/tipoinstalacion/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
+                                        $("#laplantilla").empty().html("<div class='column-full'>Por favor descargar y completar la Plantilla: <a href='/docs/tipoinstalacion/" + data[0].nombrearchivo + "'>" + data[0].nombrearchivo + "</a></div>");
                                         // $("input#program_id").val(data[0].nombrearchivo);
                                     } else {
-                                        $("#laplantilla").empty().html("");
+                                        $("#laplantilla").empty().html("<div class='column-full'>Por favor adjuntar las pantallas de '¡Quien Soy!' de sus computadores.</div>");
                                     }
-                                    if(data.length > 0){
-                                        $("input#numlicencia").val(data[0].numlicencia); 
+                                    if (data.length > 0) {
+                                        $("input#numlicencia").val(data[0].numlicencia);
                                     }
                                 }
                             });
