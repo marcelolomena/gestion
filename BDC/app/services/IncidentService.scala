@@ -28,6 +28,7 @@ import play.api.libs.json.JsObject
 object IncidentService {
 
   def list(pageSize: String, pageNumber: String, Json: String, user_id: Int): Seq[Incident] = {
+	println("***Query:"+Json);
     val sqlString = "EXEC art.list_incident {PageSize},{PageNumber},{Json},{User_Id}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('PageSize -> pageSize.toInt,
@@ -481,8 +482,15 @@ println(uname)
             |	SUBSTRING(c.configuration_name, CHARINDEX(' ', c.configuration_name) + 1, LEN(c.configuration_name) - CHARINDEX(' ', c.configuration_name)) division,
             |	0 porcentaje
             |	 FROM art_incident i
+			|	JOIN art_task b ON b.tId = i.task_id
+			|	JOIN art_project_master j ON j.pId = b.pId
+			|	JOIN art_program d ON d.program_id = j.program 			
             |	 JOIN art_incident_configuration c ON i.configuration_id = c.configuration_id
             |	  WHERE i.is_deleted = 1
+			|	 AND b.is_active = 1
+			|	 AND j.is_active = 1
+			|	 AND d.is_active = 1
+			|	 AND i.program_id=d.program_id 			
             |	  GROUP BY c.configuration_id,c.configuration_name
           """.stripMargin
 
@@ -499,7 +507,14 @@ println(uname)
             |	SELECT incident_id, MAX(status_id) max_status_id FROM art_incident_log GROUP BY incident_id
             |) x ON i.incident_id=x.incident_id
             |JOIN art_incident_status s ON x.max_status_id=s.status_id
+			|JOIN art_task b ON b.tId = i.task_id
+			|JOIN art_project_master j ON j.pId = b.pId
+			|JOIN art_program d ON d.program_id = j.program 			
             |WHERE i.is_deleted = 1
+			| AND b.is_active = 1
+			| AND j.is_active = 1
+			| AND d.is_active = 1
+			| AND i.program_id=d.program_id  			
             |GROUP BY s.status_id,status_name
           """.stripMargin
       case 3 =>
@@ -553,7 +568,14 @@ println(uname)
         |	SELECT incident_id, MAX(status_id) max_status_id FROM art_incident_log GROUP BY incident_id
         |) x ON i.incident_id=x.incident_id
         |JOIN art_incident_status s ON x.max_status_id=s.status_id
+		|JOIN art_task b ON b.tId = i.task_id
+		|JOIN art_project_master j ON j.pId = b.pId
+		|JOIN art_program d ON d.program_id = j.program 			
         |WHERE i.is_deleted = 1 AND i.configuration_id = {id}
+		|	 AND b.is_active = 1
+		|	 AND j.is_active = 1
+		|	 AND d.is_active = 1
+		|	 AND i.program_id=d.program_id 			
         |GROUP BY s.status_id,status_name
       """.stripMargin
 

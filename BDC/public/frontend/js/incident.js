@@ -48,13 +48,13 @@ $(document).ready(function(){
 	};
 	
 	function gridIncident(filter,did,name){
-		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"" + filter + "\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
+		var chuurl="/incidentList?filtersPie={\"rules\":[{\"field\":\"" + filter + "\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
 		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	}
 
 	function gridIncidentCompose(filter1,id1,filter2,id2,name){
-		//var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"" + filter + "\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
-		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"" + filter1 + "\",\"op\":\"eq\",\"data\":\"" + id1 + "\"},{\"field\":\"" + filter2 + "\",\"op\":\"eq\",\"data\":\"" + id2 + "\"}]}";
+		//var chuurl="/incidentList?filtersPie={\"rules\":[{\"field\":\"" + filter + "\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
+		var chuurl="/incidentList?filtersPie={\"rules\":[{\"field\":\"" + filter1 + "\",\"op\":\"eq\",\"data\":\"" + id1 + "\"},{\"field\":\"" + filter2 + "\",\"op\":\"eq\",\"data\":\"" + id2 + "\"}]}";
 		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	}
 
@@ -120,6 +120,7 @@ $(document).ready(function(){
                   alert('error');
                 }
               });
+
       });
 
 	$("#subtaskListDialog").dialog({
@@ -1484,6 +1485,9 @@ $(document).ready(function(){
                     },
                     series:data
                  });
+				 //Limpia grilla
+			     var chuurl="/incidentList";
+				 $("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 
              } else if(serv==2){
                  charPie.update({
@@ -1504,6 +1508,10 @@ $(document).ready(function(){
                     },
                     series:data
                  });
+				 //Limpia grilla
+			     var chuurl="/incidentList";
+				 $("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+				 
              } else if(serv==3){
                                charPie.update({
                                    title: {
