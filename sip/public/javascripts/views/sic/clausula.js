@@ -44,16 +44,45 @@ var gridClausula = {
             datatype: "json",
             mtype: "GET",
             colNames: ['Id', 'Clase', 'codclase', 'idcuerpoclausula', 'idclase', 'idplantilla', 'Código', 'idclausulaplantilla', 'Nombre', 'Texto', 'Tipo Adjunto', 'Tipo Adjunto', 'Nombre Adjunto'],
-            colModel: [
-                {
-                    name: 'id', index: 'id', key: true, hidden: true,
-                    editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false }
+            colModel: [{
+                    name: 'id',
+                    index: 'id',
+                    key: true,
+                    hidden: true,
+                    editable: true,
+                    hidedlg: true,
+                    sortable: false,
+                    editrules: {
+                        edithidden: false
+                    }
                 },
-                { name: 'clase', index: 'clase', width: 300, align: "left", editable: false, jsonmap: "plantillaclausula.clase.titulo", },
-                { name: 'codclase', index: 'codclase', editable: false, hidden: true, jsonmap: "plantillaclausula.clase.id", },
-                { name: 'idcuerpoclausula', index: 'idcuerpoclausula', editable: true, hidden: true, jsonmap: "cuerpoclausula.id", },
                 {
-                    name: 'idclase', search: false, editable: true, hidden: true,
+                    name: 'clase',
+                    index: 'clase',
+                    width: 300,
+                    align: "left",
+                    editable: false,
+                    jsonmap: "plantillaclausula.clase.titulo",
+                },
+                {
+                    name: 'codclase',
+                    index: 'codclase',
+                    editable: false,
+                    hidden: true,
+                    jsonmap: "plantillaclausula.clase.id",
+                },
+                {
+                    name: 'idcuerpoclausula',
+                    index: 'idcuerpoclausula',
+                    editable: true,
+                    hidden: true,
+                    jsonmap: "cuerpoclausula.id",
+                },
+                {
+                    name: 'idclase',
+                    search: false,
+                    editable: true,
+                    hidden: true,
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/clases',
@@ -62,7 +91,7 @@ var gridClausula = {
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.codclase;
                             var data = JSON.parse(response);
-                            var s = "<select>";//el default
+                            var s = "<select>"; //el default
                             s += '<option value="0">--Escoger Clase--</option>';
                             $.each(data, function (i, item) {
 
@@ -75,7 +104,8 @@ var gridClausula = {
                             return s + "</select>";
                         },
                         dataEvents: [{
-                            type: 'change', fn: function (e) {
+                            type: 'change',
+                            fn: function (e) {
                                 //$("input#tarea").val($('option:selected', this).val());
                                 var idClausulaPlantilla = $('option:selected', this).val()
                                 if (idClausulaPlantilla != "0") {
@@ -87,7 +117,7 @@ var gridClausula = {
                                             var rowKey = $gridTab.getGridParam("selrow");
                                             var rowData = $gridTab.getRowData(rowKey);
                                             var thissid = rowData.idclausulaplantilla;
-                                            var s = "<select>";//el default
+                                            var s = "<select>"; //el default
                                             s += '<option value="0">--Escoger Código--</option>';
                                             $.each(data, function (i, item) {
                                                 if (data[i].id == thissid) {
@@ -106,16 +136,32 @@ var gridClausula = {
                         }],
                     }
                 },
-                { name: 'codplantilla', index: 'codplantilla', hidden: true, editable: false, jsonmap: "plantillaclausula.id", },
                 {
-                    name: 'Código', index: 'Código', width: 200, align: "left", editable: false, jsonmap: "plantillaclausula.codigo",
+                    name: 'codplantilla',
+                    index: 'codplantilla',
+                    hidden: true,
+                    editable: false,
+                    jsonmap: "plantillaclausula.id",
                 },
                 {
-                    name: 'idclausulaplantilla', search: false, editable: true, hidden: true, edittype: "select",
+                    name: 'Código',
+                    index: 'Código',
+                    width: 200,
+                    align: "left",
+                    editable: false,
+                    jsonmap: "plantillaclausula.codigo",
+                },
+                {
+                    name: 'idclausulaplantilla',
+                    search: false,
+                    editable: true,
+                    hidden: true,
+                    edittype: "select",
                     editoptions: {
                         value: "0:--Escoger Código--",
                         dataEvents: [{
-                            type: 'change', fn: function (e) {
+                            type: 'change',
+                            fn: function (e) {
                                 var thisval = $(this).val();
                                 if (thisval) {
                                     var parentRowData = $("#gridMaster").getRowData(parentRowKey);
@@ -173,10 +219,19 @@ var gridClausula = {
                         }]
                     },
                 },
-                { name: 'titulo', index: 'titulo', width: 300, align: "left", editable: true },
                 {
-                    name: 'glosa', index: 'glosa', editable: true,
-                    width: 1280, hidden: false,
+                    name: 'titulo',
+                    index: 'titulo',
+                    width: 300,
+                    align: "left",
+                    editable: true
+                },
+                {
+                    name: 'glosa',
+                    index: 'glosa',
+                    editable: true,
+                    width: 1280,
+                    hidden: false,
                     edittype: 'custom',
                     editoptions: {
                         custom_element: function (value, options) {
@@ -190,7 +245,7 @@ var gridClausula = {
                                 //}
                                 try {
                                     tinymce.remove("#" + options.id);
-                                } catch (ex) { }
+                                } catch (ex) {}
                                 tinymce.init({
                                     menubar: false,
                                     statusbar: false,
@@ -221,7 +276,9 @@ var gridClausula = {
                                 }
                             }
                             if (oper === "get") {
-                                return tinymce.get(id).getContent({ format: "row" });
+                                return tinymce.get(id).getContent({
+                                    format: "row"
+                                });
                             } else if (oper === "set") {
                                 if (tinymce.get(id)) {
                                     tinymce.get(id).setContent(gridval);
@@ -231,18 +288,35 @@ var gridClausula = {
                     },
                 },
                 {
-                    name: 'valore.nombre', index: 'valore.nombre', hidden: false, width: 100, align: "left", editable: true
+                    name: 'valore.nombre',
+                    index: 'valore.nombre',
+                    hidden: false,
+                    width: 100,
+                    align: "left",
+                    editable: true
                 },
                 {
-                    name: 'tipoadjunto', index: 'tipoadjunto', hidden: true, width: 100, align: "left", editable: true,
+                    name: 'tipoadjunto',
+                    index: 'tipoadjunto',
+                    hidden: true,
+                    width: 100,
+                    align: "left",
+                    editable: true,
                     editoptions: {
                         custom_element: labelEditFunc,
                         custom_value: getLabelValue
                     }
                 },
                 {
-                    name: 'nombreadjunto', index: 'nombreadjunto', hidden: false, width: 100, align: "left", editable: true,
-                    formatter: function (cellvalue, options, rowObject) { return returnDocLink(cellvalue, options, rowObject); },
+                    name: 'nombreadjunto',
+                    index: 'nombreadjunto',
+                    hidden: false,
+                    width: 100,
+                    align: "left",
+                    editable: true,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return returnDocLink(cellvalue, options, rowObject);
+                    },
                     editoptions: {
                         custom_element: labelEditFunc,
                         custom_value: getLabelValue
@@ -307,17 +381,19 @@ var gridClausula = {
                             });
                             */
 
-                            bootbox.prompt({
-                                title: "¿Que tipo de claúsulas quiere?",
-                                inputType: 'select',
-                                inputOptions: [
-                                    {
-                                        text: 'Documento General RFP',
-                                        value: '1',
-                                    }
-                                ],
-                                callback: function (result) {
-                                    if (result == 1) {
+                            // bootbox.confirm({
+                            //     title: "Carga de Tipos de Clausulas",
+                            //     message: 'Documento General',
+                            //     buttons: {
+                            //         cancel: {
+                            //             label: '<i class="fa fa-times"></i> Cancelar'
+                            //         },
+                            //         confirm: {
+                            //             label: '<i class="fa fa-check"></i> Confirmar'
+                            //         }
+                            //     },
+                                // callback: function (result) {
+                                    // if (result) {
                                         var dialog = bootbox.dialog({
                                             title: 'Generando Cláusulas Predefinidas...',
                                             message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
@@ -328,15 +404,9 @@ var gridClausula = {
                                                 dialog.find('.bootbox-body').html(res.message);
                                             });
                                         });
-                                    } else {
-                                        if (result == 2) {
-
-                                        } else {
-
-                                        }
-                                    }
-                                }
-                            })
+                                    // }
+                                // }
+                            // })
 
 
 
@@ -376,128 +446,144 @@ var gridClausula = {
             }
         });
 
-        $gridTab.jqGrid('navGrid', '#navGridClau', { edit: true, add: true, del: true, view: false, search: false },
-            {
-                editCaption: "Modifica Cláusula",
-                closeAfterEdit: true,
-                recreateForm: true,
-                checkOnUpdate: true,
-                saveData: "¿Desea guardar los cambios antes de salir?",
-                bYes: "Sí",
-                bNo: "",
-                bExit: "No",
-                template: tmpl,
-                mtype: 'POST',
-                width: 800,
-                url: '/sic/clausulas/action',
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
-                }, beforeSubmit: function (postdata, formid) {
-                    /*if (parseInt(postdata.codclase) == 0) {
-                        return [false, "Clase: Debe escoger un valor", ""];
-                    } else if (parseInt(postdata.idclausulaplantilla) == 0) {
-                        return [false, "Código: Debe escoger un valor", ""];
-                    } */
-                    if (postdata.titulo.trim().length == 0) {
-                        return [false, "Nombre: Debe ingresar un nombre", ""];
-                    } if (postdata.glosa.trim().length == 0) {
-                        return [false, "Texto: Debe ingresar un texto", ""];
-                    } else {
-                        return [true, "", ""]
-                    }
-                },
-                beforeShowForm: function (form) {
-                    /*
-                    setTimeout(function () {
-                        $.ajax({
-                            type: "GET",
-                            url: '/sic/plantillas/' + $gridTab.getRowData($gridTab.getGridParam("selrow")).codclase,
-                            success: function (data) {
-                                var s = "<select>";
-                                s += '<option value="0">--Escoger Código--</option>';
-                                $.each(data, function (i, item) {
-                                    if (data[i].id == $gridTab.getRowData($gridTab.getGridParam("selrow")).codplantilla) {
-                                        s += '<option value="' + data[i].id + '" selected>' + data[i].codigo + '</option>';
-                                    } else {
-                                        s += '<option value="' + data[i].id + '">' + data[i].codigo + '</option>';
-                                    }
-                                });
-                                s += "</select>";
-                                $("#idclausulaplantilla").html(s);
-                            }
-                        });
-                    }, 100);*/
-                    sipLibrary.centerDialog($gridTab.attr('id'));
-                    $("#laclase").hide();
-                    $("#laplantilla").hide();
-                    $("#eltipo").hide();
-                    $("#tipooculto").hide();
-                    $("#modificar").hide();
-                    sipLibrary.centerDialog($gridTab.attr('id'));
-
-
-                }, afterShowForm: function (form) {
-
+        $gridTab.jqGrid('navGrid', '#navGridClau', {
+            edit: true,
+            add: true,
+            del: true,
+            view: false,
+            search: false
+        }, {
+            editCaption: "Modifica Cláusula",
+            closeAfterEdit: true,
+            recreateForm: true,
+            checkOnUpdate: true,
+            saveData: "¿Desea guardar los cambios antes de salir?",
+            bYes: "Sí",
+            bNo: "",
+            bExit: "No",
+            template: tmpl,
+            mtype: 'POST',
+            width: 800,
+            url: '/sic/clausulas/action',
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            onclickSubmit: function (rowid) {
+                return {
+                    idsolicitudcotizacion: parentRowKey
+                };
+            },
+            beforeSubmit: function (postdata, formid) {
+                /*if (parseInt(postdata.codclase) == 0) {
+                    return [false, "Clase: Debe escoger un valor", ""];
+                } else if (parseInt(postdata.idclausulaplantilla) == 0) {
+                    return [false, "Código: Debe escoger un valor", ""];
+                } */
+                if (postdata.titulo.trim().length == 0) {
+                    return [false, "Nombre: Debe ingresar un nombre", ""];
                 }
-            }, {
-                addCaption: "Agrega Cláusula",
-                closeAfterAdd: true,
-                recreateForm: true,
-                checkOnUpdate: true,
-                saveData: "¿Desea guardar los cambios antes de salir?",
-                bYes: "Sí",
-                bNo: "",
-                bExit: "No",
-                template: tmpl,
-                width: 800,
-                mtype: 'POST',
-                url: '/sic/clausulas/action',
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
-                }, beforeSubmit: function (postdata, formid) {
-                    if (parseInt(postdata.codclase) == 0) {
-                        return [false, "Clase: Debe escoger un valor", ""];
-                    } else if (parseInt(postdata.idclausulaplantilla) == 0) {
-                        return [false, "Código: Debe escoger un valor", ""];
-                    } if (postdata.titulo.trim().length == 0) {
-                        return [false, "Nombre: Debe ingresar un nombre", ""];
-                    } if (postdata.glosa.trim().length == 0) {
-                        return [false, "Texto: Debe ingresar un texto", ""];
-                    } else {
-                        return [true, "", ""]
-                    }
-                }, beforeShowForm: function (form) {
-                    $("#eltipo").hide();
-                    $("#tipooculto").hide();
-                    $("#modificar").hide();
-                    sipLibrary.centerDialog($gridTab.attr('id'));
-
+                if (postdata.glosa.trim().length == 0) {
+                    return [false, "Texto: Debe ingresar un texto", ""];
+                } else {
+                    return [true, "", ""]
                 }
-            }, {
-                mtype: 'POST',
-                url: '/sic/clausulas/action',
-                ajaxEditOptions: sipLibrary.jsonOptions,
-                serializeEditData: sipLibrary.createJSON,
-                beforeShowForm: function (form) {
-                    ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
-                    $("td.delmsg", form).html("<b>Usted borrará la Cláusula:</b><br>" + ret.titulo);
-                },
-                afterSubmit: function (response, postdata) {
-                    var json = response.responseText;
-                    var result = JSON.parse(json);
-                    if (!result.success)
-                        return [false, result.message, ""];
-                    else
-                        return [true, "", ""]
+            },
+            beforeShowForm: function (form) {
+                /*
+                setTimeout(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: '/sic/plantillas/' + $gridTab.getRowData($gridTab.getGridParam("selrow")).codclase,
+                        success: function (data) {
+                            var s = "<select>";
+                            s += '<option value="0">--Escoger Código--</option>';
+                            $.each(data, function (i, item) {
+                                if (data[i].id == $gridTab.getRowData($gridTab.getGridParam("selrow")).codplantilla) {
+                                    s += '<option value="' + data[i].id + '" selected>' + data[i].codigo + '</option>';
+                                } else {
+                                    s += '<option value="' + data[i].id + '">' + data[i].codigo + '</option>';
+                                }
+                            });
+                            s += "</select>";
+                            $("#idclausulaplantilla").html(s);
+                        }
+                    });
+                }, 100);*/
+                sipLibrary.centerDialog($gridTab.attr('id'));
+                $("#laclase").hide();
+                $("#laplantilla").hide();
+                $("#eltipo").hide();
+                $("#tipooculto").hide();
+                $("#modificar").hide();
+                sipLibrary.centerDialog($gridTab.attr('id'));
+
+
+            },
+            afterShowForm: function (form) {
+
+            }
+        }, {
+            addCaption: "Agrega Cláusula",
+            closeAfterAdd: true,
+            recreateForm: true,
+            checkOnUpdate: true,
+            saveData: "¿Desea guardar los cambios antes de salir?",
+            bYes: "Sí",
+            bNo: "",
+            bExit: "No",
+            template: tmpl,
+            width: 800,
+            mtype: 'POST',
+            url: '/sic/clausulas/action',
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            onclickSubmit: function (rowid) {
+                return {
+                    idsolicitudcotizacion: parentRowKey
+                };
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (parseInt(postdata.codclase) == 0) {
+                    return [false, "Clase: Debe escoger un valor", ""];
+                } else if (parseInt(postdata.idclausulaplantilla) == 0) {
+                    return [false, "Código: Debe escoger un valor", ""];
                 }
+                if (postdata.titulo.trim().length == 0) {
+                    return [false, "Nombre: Debe ingresar un nombre", ""];
+                }
+                if (postdata.glosa.trim().length == 0) {
+                    return [false, "Texto: Debe ingresar un texto", ""];
+                } else {
+                    return [true, "", ""]
+                }
+            },
+            beforeShowForm: function (form) {
+                $("#eltipo").hide();
+                $("#tipooculto").hide();
+                $("#modificar").hide();
+                sipLibrary.centerDialog($gridTab.attr('id'));
 
-            }, {
+            }
+        }, {
+            mtype: 'POST',
+            url: '/sic/clausulas/action',
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            beforeShowForm: function (form) {
+                ret = $gridTab.getRowData($gridTab.jqGrid('getGridParam', 'selrow'));
+                $("td.delmsg", form).html("<b>Usted borrará la Cláusula:</b><br>" + ret.titulo);
+            },
+            afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (!result.success)
+                    return [false, result.message, ""];
+                else
+                    return [true, "", ""]
+            }
 
-            });
+        }, {
+
+        });
 
         $gridTab.jqGrid('navButtonAdd', '#navGridClau', {
             caption: "",
@@ -512,7 +598,9 @@ var gridClausula = {
                 //console.log(parentRowData.idgrupo)
                 try {
                     var url = '/sic/documentoword/' + parentRowKey + '/' + parentRowData.idgrupo;
-                    $gridTab.jqGrid('excelExport', { "url": url });
+                    $gridTab.jqGrid('excelExport', {
+                        "url": url
+                    });
                 } catch (e) {
                     console.log("error: " + e)
 
@@ -547,7 +635,7 @@ var gridClausula = {
                         if (result) {
                             console.log('ESTO ES UN NUMERO DE ANEXO: ' + numeroanexos)
                             var parentRowData = $("#gridMaster").getRowData(parentRowKey);
-                            $.getJSON('/sic/BorrarClausulas/' + parentRowKey + '/' + numeroanexos, function (res) { },
+                            $.getJSON('/sic/BorrarClausulas/' + parentRowKey + '/' + numeroanexos, function (res) {},
                                 $gridTab.trigger("reloadGrid"));
                         } else {
                             console.log('ESTO ES UN LOG')
@@ -565,6 +653,7 @@ var gridClausula = {
 
     }
 }
+
 function returnDocLink(cellValue, options, rowdata) {
     if (rowdata.tipoadjunto == 47) {
         if (rowdata.nombreadjunto != "" && rowdata.nombreadjunto != null) {

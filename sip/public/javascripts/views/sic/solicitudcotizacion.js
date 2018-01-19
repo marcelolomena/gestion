@@ -32,8 +32,8 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
-    t1 += "<div class='column-half' id='d_fechaenviorfp'>Fecha RFP<span style='color:red'>*</span>{fechaenviorfp}</div>";
+    // t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
+    t1 += "<div class='column-full' id='d_fechaenviorfp'>Fecha RFP<span style='color:red'>*</span>{fechaenviorfp}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
@@ -95,7 +95,7 @@ $(document).ready(function () {
                 align: 'center',
                 hidden: false,
                 search: false,
-                editable: true,
+                editable: false,
                 // formatter: 'integer',
                 editrules: {
                     required: true
@@ -522,7 +522,7 @@ $(document).ready(function () {
             {
                 label: 'Fecha RFP',
                 name: 'fechaenviorfp',
-                width: 150,
+                width: 100,
                 align: 'left',
                 search: false,
                 formatter: 'date',
