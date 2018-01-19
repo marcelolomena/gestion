@@ -7,58 +7,17 @@ var tareaenvueloController = require('../controllers/tareaenvuelo');
 var fechaenvueloController = require('../controllers/fechaenvuelo');
 var conversionenvueloController = require('../controllers/conversionenvuelo');
 var flujopagoenvueloController = require('../controllers/flujopagoenvuelo');
-var models = require('../models');
-var sequelize = require('../models/index').sequelize;
-var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-/*
+
     router.get('/presupuestoenvuelo', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'presupuestoenvuelo' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'presupuestoenvuelo',
-                title: 'COMPROMISOS POR SAP',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });            
-        
+        res.render('presupuestoenvuelo', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
-/*
+
     router.get('/inscripcionsap', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'inscripcionsap' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'inscripcionsap',
-                title: 'INSCRIPCIÓN SAP',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });          
+        res.render('inscripcionsap', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/presupuestoenvuelo/list')
         .post(isAuthenticated, presupuestoenvueloController.list);
 
@@ -100,13 +59,12 @@ module.exports = function (passport) {
 
     router.route('/contratosporpresupuesto/:idpresupuesto/:idproveedor')
         .get(isAuthenticated, tareaenvueloController.getcontratosporpresupuesto);
-
+        
     router.route('/tareasporpresupuesto/:idcontrato')
         .get(isAuthenticated, tareaenvueloController.gettareasporpresupuesto);
 
-
-    router.route('/presupuestoenvuelo/comboboxpmo')
-        .get(isAuthenticated, presupuestoenvueloController.comboboxpmo);
+    router.route('/presupuestoenvuelo/exportar')
+        .get(isAuthenticated, presupuestoenvueloController.getExcel); 
 
     return router;
 
