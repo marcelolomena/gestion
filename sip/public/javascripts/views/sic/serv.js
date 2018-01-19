@@ -36,11 +36,18 @@ var gridServ = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'idServicio', 'Servicio', 'Glosa Servicio', 'Id Documento', 'Documento', 'Glosa Referencia', 'ID Clase Criticidad', 'Clase Criticidad', 'Nota Criticidad', 'Color Nota'],
-            colModel: [
-                { name: 'id', index: 'id', key: true, hidden: true },
+            colNames: ['id', 'idServicio', 'Servicio', 'Glosa Servicio', 'Técnico', 'Id Documento', 'Documento', 'Glosa Referencia', 'ID Clase Criticidad', 'Clase Criticidad', 'Nota Criticidad', 'Color Nota'],
+            colModel: [{
+                    name: 'id',
+                    index: 'id',
+                    key: true,
+                    hidden: true
+                },
                 {
-                    name: 'idservicio', search: false, editable: true, hidden: true,
+                    name: 'idservicio',
+                    search: false,
+                    editable: true,
+                    hidden: true,
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/servicios/' + parentRowKey + '/list',
@@ -49,7 +56,7 @@ var gridServ = {
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.idservicio;
                             var data = JSON.parse(response);
-                            var s = "<select>";//el default
+                            var s = "<select>"; //el default
                             s += '<option value="0">--Seleccione un Servicio--</option>';
                             $.each(data, function (i, item) {
 
@@ -63,11 +70,104 @@ var gridServ = {
                         }
                     }
                 },
-                { name: 'servicio.nombre', index: 'servicio', width: 150, editable: true, editoptions: { size: 10 } },
-                { name: 'glosaservicio', index: 'glosaservicio', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
-                //{ name: 'iddoctotecnico', index: 'iddoctotecnico', width: 100, hidden: true,  editable: true, editoptions: { size: 10 } },
                 {
-                    name: 'iddoctotecnico', search: false, editable: true, hidden: true,
+                    name: 'servicio.nombre',
+                    index: 'servicio',
+                    width: 150,
+                    editable: true,
+                    editoptions: {
+                        size: 10
+                    }
+                },
+                // {
+                //     name: 'glosaservicio',
+                //     index: 'glosaservicio',
+                //     editable: true,
+                //     width: 200,
+                //     hidden: false,
+                //     edittype: 'custom',
+                //     editoptions: {
+                //         custom_element: function (value, options) {
+                //             var elm = $("<textarea></textarea>");
+                //             elm.val(value);
+                //             setTimeout(function () {
+                //                 //tinymce.remove();
+                //                 //var ctr = $("#" + options.id).tinymce();
+                //                 //if (ctr !== null) {
+                //                 //    ctr.remove();
+                //                 //}
+                //                 try {
+                //                     tinymce.remove("#" + options.id);
+                //                 } catch (ex) {}
+                //                 tinymce.init({
+                //                     menubar: false,
+                //                     statusbar: false,
+                //                     selector: "#" + options.id,
+                //                     //plugins: "link",
+                //                     plugins: [
+                //                         'link print'
+                //                     ],
+                //                     toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+                //                     toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
+                //                     image_advtab: true,
+                //                     height: 300,
+                //                 });
+                //             }, 50);
+                //             return elm;
+                //         },
+                //         custom_value: function (element, oper, gridval) {
+                //             var id;
+                //             if (element.length > 0) {
+                //                 id = element.attr("id");
+                //             } else if (typeof element.selector === "string") {
+                //                 var sels = element.selector.split(" "),
+                //                     idSel = sels[sels.length - 1];
+                //                 if (idSel.charAt(0) === "#") {
+                //                     id = idSel.substring(1);
+                //                 } else {
+                //                     return "";
+                //                 }
+                //             }
+                //             if (oper === "get") {
+                //                 return tinymce.get(id).getContent({
+                //                     format: "row"
+                //                 });
+                //             } else if (oper === "set") {
+                //                 if (tinymce.get(id)) {
+                //                     tinymce.get(id).setContent(gridval);
+                //                 }
+                //             }
+                //         }
+                //     },
+                // },
+                {
+                    name: 'glosaservicio',
+                    index: 'glosaservicio',
+                    width: 200,
+                    editable: true,
+                    edittype: 'textarea',
+                    editoptions: {
+                        size: 100
+                    },
+                    editrules: {
+                        required: true
+                    }
+                },
+                {
+                    name: 'iddoctotecnico',
+                    index: 'iddoctotecnico',
+                    width: 100,
+                    hidden: true,
+                    editable: true,
+                    editoptions: {
+                        size: 10
+                    }
+                },
+                {
+                    name: 'iddoctotecnico',
+                    search: false,
+                    editable: true,
+                    hidden: true,
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/servicios/' + parentRowKey + '/doctoasociado',
@@ -76,7 +176,7 @@ var gridServ = {
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.iddoctotecnico;
                             var data = JSON.parse(response);
-                            var s = "<select>";//el default
+                            var s = "<select>"; //el default
                             s += '<option value="0">--Seleccione un Documento--</option>';
                             $.each(data, function (i, item) {
 
@@ -90,10 +190,30 @@ var gridServ = {
                         }
                     }
                 },
-                { name: 'documentoscotizacion.nombrecorto', index: 'documento', width: 150, editable: true, editoptions: { size: 10 } },
-                { name: 'glosareferencia', index: 'glosareferencia', width: 200, align: "left", editable: true, editoptions: { size: 10 } },
                 {
-                    name: 'idclasecriticidad', search: false, editable: true, hidden: true,
+                    name: 'documentoscotizacion.nombrecorto',
+                    index: 'documento',
+                    width: 150,
+                    editable: true,
+                    editoptions: {
+                        size: 10
+                    }
+                },
+                {
+                    name: 'glosareferencia',
+                    index: 'glosareferencia',
+                    width: 200,
+                    align: "left",
+                    editable: true,
+                    editoptions: {
+                        size: 10
+                    }
+                },
+                {
+                    name: 'idclasecriticidad',
+                    search: false,
+                    editable: true,
+                    hidden: true,
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/clasecriticidadserv',
@@ -102,7 +222,7 @@ var gridServ = {
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.idclasecriticidad;
                             var data = JSON.parse(response);
-                            var s = "<select>";//el default
+                            var s = "<select>"; //el default
                             s += '<option value="0">--Seleccione Clase Criticidad--</option>';
                             $.each(data, function (i, item) {
 
@@ -115,7 +235,8 @@ var gridServ = {
                             return s + "</select>";
                         },
                         dataEvents: [{
-                            type: 'change', fn: function (e) {
+                            type: 'change',
+                            fn: function (e) {
 
                                 var idclasecriticidad = $('option:selected', this).val()
 
@@ -138,11 +259,39 @@ var gridServ = {
 
                     }
                 },
-                { name: 'clasecriticidad.glosaclase', index: 'clasecriticidad', width: 150, align: "left", editable: true, editoptions: { size: 10 } },
-                { name: 'notacriticidad', index: 'notacriticidad', width: 100, align: "right", editable: true, editoptions: { size: 10 }, formatter: 'number', formatoptions: { decimalPlaces: 2 } },
+                {
+                    name: 'clasecriticidad.glosaclase',
+                    index: 'clasecriticidad',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    editoptions: {
+                        size: 10
+                    }
+                },
+                {
+                    name: 'notacriticidad',
+                    index: 'notacriticidad',
+                    width: 100,
+                    align: "right",
+                    editable: true,
+                    editoptions: {
+                        size: 10
+                    },
+                    formatter: 'number',
+                    formatoptions: {
+                        decimalPlaces: 2
+                    }
+                },
                 {
                     name: 'colornota',
-                    index: 'colornota', width: 50, align: "left", editable: true, editoptions: { size: 10 },
+                    index: 'colornota',
+                    width: 50,
+                    align: "left",
+                    editable: true,
+                    editoptions: {
+                        size: 10
+                    },
                     formatter: function (cellvalue, options, rowObject) {
                         var color = rowObject.colornota;
 
@@ -199,8 +348,12 @@ var gridServ = {
                 });
             }
         });
-        $gridTab.jqGrid('navGrid', '#navGridServ', { edit: true, add: true, del: true, search: false },
-            {
+        $gridTab.jqGrid('navGrid', '#navGridServ', {
+                edit: true,
+                add: true,
+                del: true,
+                search: false
+            }, {
                 editCaption: "Modifica Servicio",
                 mtype: 'POST',
                 url: '/sic/servicios/action',
@@ -214,21 +367,22 @@ var gridServ = {
                     setTimeout(function () {
                         $("#idclasecriticidad", form).attr('disabled', 'disabled');
                         $("#idservicio", form).attr('disabled', 'disabled');
-                        
+
                     }, 450);
-                    
-                    
-                
-                //$('input#porcentaje', form).attr('readonly', 'readonly');
-                //$('input#valor', form).attr('readonly', 'readonly');
+
+
+
+                    //$('input#porcentaje', form).attr('readonly', 'readonly');
+                    //$('input#valor', form).attr('readonly', 'readonly');
 
 
                 },
-                
+
                 beforeSubmit: function (postdata, formid) {
                     if (postdata.idservicio == 0) {
                         return [false, "Servicio: Campo obligatorio", ""];
-                    } if (postdata.idclasecriticidad == 0) {
+                    }
+                    if (postdata.idclasecriticidad == 0) {
                         return [false, "Clase Criticidad : Campo obligatorio", ""];
                     } else {
                         return [true, "", ""]
@@ -250,20 +404,23 @@ var gridServ = {
                 beforeSubmit: function (postdata, formid) {
                     if (postdata.idservicio == 0) {
                         return [false, "Servicio: Campo obligatorio", ""];
-                    } if (postdata.idclasecriticidad == 0) {
+                    }
+                    if (postdata.idclasecriticidad == 0) {
                         return [false, "Clase Criticidad : Campo obligatorio", ""];
-                    } if (postdata.idsegmento == 0) {
+                    }
+                    if (postdata.idsegmento == 0) {
                         return [false, "Segmento Proveedor : Campo obligatorio", ""];
                     } else {
                         return [true, "", ""]
                     }
                 },
                 onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
+                    return {
+                        idsolicitudcotizacion: parentRowKey
+                    };
                 }
 
-            },
-            {
+            }, {
                 closeAfterDelete: true,
                 recreateForm: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
@@ -347,20 +504,47 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
     console.log("la parentSolicitud : " + parentSolicitud)
     var childGridURL = "/sic/desglosefactoresserv/" + parentRowKey + "/list";
 
-    var modelIniciativaFecha = [
-        { label: 'id', name: 'id', key: true, hidden: true },
+    var modelIniciativaFecha = [{
+            label: 'id',
+            name: 'id',
+            key: true,
+            hidden: true
+        },
 
         {
-            label: 'Nombre Factor', name: 'nombrefactor', jsonmap: 'desglosefactore.nombrefactor', width: 200, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false, required: true }, hidedlg: true
+            label: 'Nombre Factor',
+            name: 'nombrefactor',
+            jsonmap: 'desglosefactore.nombrefactor',
+            width: 200,
+            align: 'left',
+            search: true,
+            editable: true,
+            editrules: {
+                edithidden: false,
+                required: true
+            },
+            hidedlg: true
         },
         {
-            label: 'Porcentaje', name: 'porcentaje', width: 50, align: 'right',
-            search: true, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            label: 'Porcentaje',
+            name: 'porcentaje',
+            width: 50,
+            align: 'right',
+            search: true,
+            editable: true,
+            hidden: false,
+            formatter: 'number',
+            formatoptions: {
+                decimalPlaces: 2
+            }
         },
         {
-            label: 'Nota', name: 'nota', search: false, editable: true, hidden: false, width: 50,
+            label: 'Nota',
+            name: 'nota',
+            search: false,
+            editable: true,
+            hidden: false,
+            width: 50,
             edittype: "select",
             editoptions: {
                 dataUrl: '/sic/notas/' + 1,
@@ -370,7 +554,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
                     var rowData = $("#" + childGridID).getRowData(rowKey);
                     var thissid = rowData.nota;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>"; //el default
                     s += '<option value="0">--Seleccione Nota--</option>';
                     $.each(data, function (i, item) {
 
@@ -383,7 +567,8 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
                     return s + "</select>";
                 },
                 dataEvents: [{
-                    type: 'change', fn: function (e) {
+                    type: 'change',
+                    fn: function (e) {
 
                         var lanota = $('option:selected', this).val();
                         var rowKey = $("#" + childGridID).getGridParam("selrow");
@@ -417,14 +602,26 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Valor', name: 'valor', width: 50, align: 'right',
-            search: true, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            label: 'Valor',
+            name: 'valor',
+            width: 50,
+            align: 'right',
+            search: true,
+            editable: true,
+            hidden: false,
+            formatter: 'number',
+            formatoptions: {
+                decimalPlaces: 2
+            }
         },
         {
-            label: 'Justificación', name: 'observacion', width: 200,
+            label: 'Justificación',
+            name: 'observacion',
+            width: 200,
             align: 'left', //edittype: "textarea",
-            search: true, editable: true, hidden: false,
+            search: true,
+            editable: true,
+            hidden: false,
         },
     ];
 
@@ -438,7 +635,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
         caption: 'Desglose Factores Criticidad',
         //width: null,
         //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
+        autowidth: true, // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelIniciativaFecha,
@@ -456,14 +653,22 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
                 var grid = $("#" + childGridID);
                 var rowData = grid.getRowData(rowid);
                 var idnecesario = rowData.id;
-                jQuery("#" + childGridID).setColProp('nota', { editoptions: { dataUrl: '/sic/notas/' + idnecesario } });
+                jQuery("#" + childGridID).setColProp('nota', {
+                    editoptions: {
+                        dataUrl: '/sic/notas/' + idnecesario
+                    }
+                });
             }
         },
         gridComplete: function () {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#" + childGridID).addRowData("blankRow", { "id": 0, "tipofecha": "No hay datos", "fecha": "" });
+                $("#" + childGridID).addRowData("blankRow", {
+                    "id": 0,
+                    "tipofecha": "No hay datos",
+                    "fecha": ""
+                });
             }
         },
         loadComplete: function (data) {
@@ -485,105 +690,111 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
-    },
-        {
-            closeAfterEdit: false,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Nota Factor",
-            //template: tmplPF,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
+        edit: true,
+        add: false,
+        del: false,
+        search: false,
+        refresh: true,
+        view: false,
+        position: "left",
+        cloneToTop: false
+    }, {
+        closeAfterEdit: false,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        editCaption: "Modificar Nota Factor",
+        //template: tmplPF,
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
+        },
 
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.success != true)
-                    return [false, result.message, ""];
-                else
-                    $.ajax({
-                        type: "GET",
-                        url: '/sic/actualizanotafactor/' + parentRowKey,
-                        async: false,
-                        success: function (data) {
-                            return [true, "", ""]
-                        }
-                    });
+        afterSubmit: function (response, postdata) {
+            var json = response.responseText;
+            var result = JSON.parse(json);
+            if (result.success != true)
+                return [false, result.message, ""];
+            else
                 $.ajax({
                     type: "GET",
-                    url: '/sic/actualizacolorfactor/' + parentRowKey,
+                    url: '/sic/actualizanotafactor/' + parentRowKey,
                     async: false,
                     success: function (data) {
                         return [true, "", ""]
                     }
                 });
-
-
-
-                return [true, "", ""]
-            },
-
-            beforeShowForm: function (form) {
-                $('input#nombrefactor', form).attr('readonly', 'readonly');
-                $('input#porcentaje', form).attr('readonly', 'readonly');
-                $('input#valor', form).attr('readonly', 'readonly');
-                //$(".EditTable td textarea").css("width", "360");
-
-                var grid = $("#" + childGridID);
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                var thissid = rowData.id;
-                if (thissid == 0) {
-                    alert("Debe seleccionar una fila");
-                    return [false, result.error_text, ""];
-                }
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-
-
-                //$('input#codigoart', form).attr('readonly', 'readonly');
-            }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#" + childGridID).attr('id'));
-            }
-        },
-        {
-            closeAfterAdd: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Factor",
-            template: tmplPF,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey };
-            },
-
-        },
-        {
-            closeAfterDelete: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Factor",
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (result.error_code != 0)
-                    return [false, result.error_text, ""];
-                else
+            $.ajax({
+                type: "GET",
+                url: '/sic/actualizacolorfactor/' + parentRowKey,
+                async: false,
+                success: function (data) {
                     return [true, "", ""]
-            }
+                }
+            });
+
+
+
+            return [true, "", ""]
         },
-        {
-            recreateFilter: true
+
+        beforeShowForm: function (form) {
+            $('input#nombrefactor', form).attr('readonly', 'readonly');
+            $('input#porcentaje', form).attr('readonly', 'readonly');
+            $('input#valor', form).attr('readonly', 'readonly');
+            //$(".EditTable td textarea").css("width", "360");
+
+            var grid = $("#" + childGridID);
+            var rowKey = grid.getGridParam("selrow");
+            var rowData = grid.getRowData(rowKey);
+            var thissid = rowData.id;
+            if (thissid == 0) {
+                alert("Debe seleccionar una fila");
+                return [false, result.error_text, ""];
+            }
+            sipLibrary.centerDialog($("#" + childGridID).attr('id'));
+
+
+            //$('input#codigoart', form).attr('readonly', 'readonly');
+        },
+        afterShowForm: function (form) {
+            sipLibrary.centerDialog($("#" + childGridID).attr('id'));
         }
-    );
+    }, {
+        closeAfterAdd: true,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        addCaption: "Agregar Factor",
+        template: tmplPF,
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
+        },
+        onclickSubmit: function (rowid) {
+            return {
+                parent_id: parentRowKey
+            };
+        },
+
+    }, {
+        closeAfterDelete: true,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        addCaption: "Eliminar Factor",
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
+        },
+        afterSubmit: function (response, postdata) {
+            var json = response.responseText;
+            var result = JSON.parse(json);
+            if (result.error_code != 0)
+                return [false, result.error_text, ""];
+            else
+                return [true, "", ""]
+        }
+    }, {
+        recreateFilter: true
+    });
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "",
         buttonicon: "glyphicon glyphicon-retweet",
@@ -595,6 +806,7 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
         }
     });
 }
+
 function gridProveedores(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
@@ -636,11 +848,18 @@ console.log("la parentSolicitud : " + parentSolicitud)
 
     var childGridURL = "/sic/proveedoressugeridoslist/" + parentRowKey + "/list";
 
-    var modelIniciativaFecha = [
-        { label: 'id', name: 'id', key: true, hidden: true },
+    var modelIniciativaFecha = [{
+            label: 'id',
+            name: 'id',
+            key: true,
+            hidden: true
+        },
 
         {
-            name: 'idproveedor', search: false, editable: true, hidden: true,
+            name: 'idproveedor',
+            search: false,
+            editable: true,
+            hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/sic/proveedoressugeridostriada/' + parentRowKey,
@@ -649,7 +868,7 @@ console.log("la parentSolicitud : " + parentSolicitud)
                     var rowData = $("#" + childGridID).getRowData(rowKey);
                     var thissid = rowData.idproveedor;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>"; //el default
                     s += '<option value="0">--Seleccione Proveedor--</option>';
                     $.each(data, function (i, item) {
 
@@ -665,8 +884,17 @@ console.log("la parentSolicitud : " + parentSolicitud)
         },
 
         {
-            label: 'Nombre Proveedor', name: 'proveedor.razonsocial', width: 600, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false, required: true }, hidedlg: true
+            label: 'Nombre Proveedor',
+            name: 'proveedor.razonsocial',
+            width: 600,
+            align: 'left',
+            search: true,
+            editable: true,
+            editrules: {
+                edithidden: false,
+                required: true
+            },
+            hidedlg: true
         }
     ];
 
@@ -680,7 +908,7 @@ console.log("la parentSolicitud : " + parentSolicitud)
         caption: 'Proveedores Sugeridos',
         //width: null,
         //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
+        autowidth: true, // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelIniciativaFecha,
@@ -695,69 +923,78 @@ console.log("la parentSolicitud : " + parentSolicitud)
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#" + childGridID).addRowData("blankRow", { "id": 0, "tipofecha": "No hay datos", "fecha": "" });
+                $("#" + childGridID).addRowData("blankRow", {
+                    "id": 0,
+                    "tipofecha": "No hay datos",
+                    "fecha": ""
+                });
             }
         }
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: false, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
-    },
-        {
-            closeAfterEdit: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar ",
-            template: tmplPF,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }
-        },
-        {
-            closeAfterAdd: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Proveedor",
-            template: tmplPF,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey };
-            },
-            beforeSubmit: function (postdata, formid) {
-                if (parseInt(postdata.idproveedor) == 0) {
-                    return [false, "Proveedor: Seleccionar un proveedor", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            },
-        },
-        {
-            closeAfterDelete: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Proveedor",
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                console.dir(result);
-                if (result.sucess) {
-                    return [true, "", ""];
-                } else {
-                    return [false, result.error_text, ""];
-
-                }
-
-            }
-        },
-        {
-            recreateFilter: true
+        edit: false,
+        add: true,
+        del: true,
+        search: false,
+        refresh: true,
+        view: false,
+        position: "left",
+        cloneToTop: false
+    }, {
+        closeAfterEdit: true,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        editCaption: "Modificar ",
+        template: tmplPF,
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
         }
-    );
+    }, {
+        closeAfterAdd: true,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        addCaption: "Agregar Proveedor",
+        template: tmplPF,
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
+        },
+        onclickSubmit: function (rowid) {
+            return {
+                parent_id: parentRowKey
+            };
+        },
+        beforeSubmit: function (postdata, formid) {
+            if (parseInt(postdata.idproveedor) == 0) {
+                return [false, "Proveedor: Seleccionar un proveedor", ""];
+            } else {
+                return [true, "", ""]
+            }
+        },
+    }, {
+        closeAfterDelete: true,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        addCaption: "Eliminar Proveedor",
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
+        },
+        afterSubmit: function (response, postdata) {
+            var json = response.responseText;
+            var result = JSON.parse(json);
+            console.dir(result);
+            if (result.sucess) {
+                return [true, "", ""];
+            } else {
+                return [false, result.error_text, ""];
+
+            }
+
+        }
+    }, {
+        recreateFilter: true
+    });
 }
