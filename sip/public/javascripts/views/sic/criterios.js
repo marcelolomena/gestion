@@ -37,10 +37,17 @@ var gridCriterios = {
             datatype: "json",
             mtype: "GET",
             colNames: ['id', 'idServicio', 'Servicio', 'Porcentaje Servicio', 'Glosa Servicio', 'Porcentaje Económico', 'Porcentaje Técnico', 'Clase Evaluación Técnica', 'Clase Evaluación Técnica'],
-            colModel: [
-                { name: 'id', index: 'id', key: true, hidden: true },
+            colModel: [{
+                    name: 'id',
+                    index: 'id',
+                    key: true,
+                    hidden: true
+                },
                 {
-                    name: 'idservicio', search: false, editable: true, hidden: true,
+                    name: 'idservicio',
+                    search: false,
+                    editable: true,
+                    hidden: true,
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/servicios/' + parentRowKey + '/list',
@@ -49,7 +56,7 @@ var gridCriterios = {
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.idservicio;
                             var data = JSON.parse(response);
-                            var s = "<select>";//el default
+                            var s = "<select>"; //el default
                             s += '<option value="0">--Seleccione un Servicio--</option>';
                             $.each(data, function (i, item) {
 
@@ -63,13 +70,29 @@ var gridCriterios = {
                         }
                     }
                 },
-                { name: 'servicio.nombre', index: 'servicio', width: 250, editable: true, editoptions: { size: 10 } },
                 {
-                    name: 'porcentajeservicio', index: 'porcentajeservicio', width: 100, align: 'left',
-                    formatoptions: { decimalPlaces: 0 },
+                    name: 'servicio.nombre',
+                    index: 'servicio',
+                    width: 250,
+                    editable: true,
+                    editoptions: {
+                        size: 10
+                    }
+                },
+                {
+                    name: 'porcentajeservicio',
+                    index: 'porcentajeservicio',
+                    width: 100,
+                    align: 'left',
+                    formatoptions: {
+                        decimalPlaces: 0
+                    },
                     editoptions: {
                         dataInit: function (el) {
-                            $(el).mask('000', { reverse: true, placeholder: "___" });
+                            $(el).mask('000', {
+                                reverse: true,
+                                placeholder: "___"
+                            });
                         }
                     },
                     formatter: function (cellvalue, options, rowObject) {
@@ -78,19 +101,45 @@ var gridCriterios = {
                         dato = val * 100;
                         return dato;
                     },
-                    search: false, editable: true, hidden: false,
-                    editrules: { edithidden: false, required: true },
+                    search: false,
+                    editable: true,
+                    hidden: false,
+                    editrules: {
+                        edithidden: false,
+                        required: true
+                    },
                 },
-                { name: 'glosaservicio', index: 'glosaservicio', width: 300, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
-                    name: 'porcentajeeconomico', index: 'porcentajeeconomico', width: 100, align: 'left',
-                    formatoptions: { decimalPlaces: 0 },
+                    name: 'glosaservicio',
+                    index: 'glosaservicio',
+                    width: 300,
+                    editable: true,
+                    edittype: 'textarea',
+                    editoptions: {
+                        height: 30
+                    },
+                    editrules: {
+                        required: true
+                    }
+                },
+                {
+                    name: 'porcentajeeconomico',
+                    index: 'porcentajeeconomico',
+                    width: 150,
+                    align: 'left',
+                    formatoptions: {
+                        decimalPlaces: 0
+                    },
                     editoptions: {
                         dataInit: function (el) {
-                            $(el).mask('000', { reverse: true, placeholder: "___" });
+                            $(el).mask('000', {
+                                reverse: true,
+                                placeholder: "___"
+                            });
                         },
                         dataEvents: [{
-                            type: 'change', fn: function (e) {
+                            type: 'change',
+                            fn: function (e) {
                                 var porcentajeeconomico = $(this).val();
                                 console.log("el % eco: " + porcentajeeconomico)
                                 var porcentajetecnico = 100 - parseInt(porcentajeeconomico)
@@ -106,30 +155,51 @@ var gridCriterios = {
                         dato = val * 100;
                         return dato;
                     },
-                    search: false, editable: true, hidden: false,
-                    editrules: { edithidden: false, required: true },
+                    search: false,
+                    editable: true,
+                    hidden: false,
+                    editrules: {
+                        edithidden: false,
+                        required: true
+                    },
 
 
                 },
                 {
-                    name: 'porcentajetecnico', index: 'porcentajetecnico', width: 100, align: 'left',
-                    formatoptions: { decimalPlaces: 0 },
+                    name: 'porcentajetecnico',
+                    index: 'porcentajetecnico',
+                    width: 140,
+                    align: 'left',
+                    formatoptions: {
+                        decimalPlaces: 0
+                    },
                     editoptions: {
                         dataInit: function (el) {
-                            $(el).mask('000', { reverse: true, placeholder: "___" });
+                            $(el).mask('000', {
+                                reverse: true,
+                                placeholder: "___"
+                            });
                         }
                     },
                     formatter: function (cellvalue, options, rowObject) {
                         var dato = '';
-                        var val = rowObject.porcentajeeconomico;
+                        var val = 1 - rowObject.porcentajeeconomico;
                         dato = val * 100;
                         return dato;
                     },
-                    search: false, editable: true, hidden: false,
-                    editrules: { edithidden: false, required: true },
+                    search: false,
+                    editable: true,
+                    hidden: false,
+                    editrules: {
+                        edithidden: false,
+                        required: true
+                    },
                 },
                 {
-                    name: 'claseevaluaciontecnica', search: false, editable: true, hidden: true,
+                    name: 'claseevaluaciontecnica',
+                    search: false,
+                    editable: true,
+                    hidden: true,
                     edittype: "select",
                     editoptions: {
                         dataUrl: '/sic/clasesevaluacion',
@@ -138,7 +208,7 @@ var gridCriterios = {
                             var rowData = $gridTab.getRowData(rowKey);
                             var thissid = rowData.claseevaluaciontecnica;
                             var data = JSON.parse(response);
-                            var s = "<select>";//el default
+                            var s = "<select>"; //el default
                             s += '<option value="0">--Seleccione una Clase--</option>';
                             $.each(data, function (i, item) {
 
@@ -152,7 +222,15 @@ var gridCriterios = {
                         }
                     }
                 },
-                { name: 'claseevaluacion.nombre', index: 'claseevaluacion.nombre', width: 200, editable: false, editoptions: { size: 10 } },
+                {
+                    name: 'claseevaluacion.nombre',
+                    index: 'claseevaluacion.nombre',
+                    width: 200,
+                    editable: false,
+                    editoptions: {
+                        size: 10
+                    }
+                },
 
             ],
             rowNum: 10,
@@ -191,8 +269,12 @@ var gridCriterios = {
                 });
             }
         });
-        $gridTab.jqGrid('navGrid', '#navGridCrit', { edit: true, add: false, del: false, search: false },
-            {
+        $gridTab.jqGrid('navGrid', '#navGridCrit', {
+                edit: true,
+                add: false,
+                del: false,
+                search: false
+            }, {
                 editCaption: "Modifica Servicio",
                 mtype: 'POST',
                 url: '/sic/criterios/action',
@@ -211,6 +293,7 @@ var gridCriterios = {
                         console.log("el % tec: " + porcentajetecnico)
                         $("input#porcentajetecnico").val(porcentajetecnico);
                         $("#idservicio", form).attr('disabled', 'disabled');
+                        $("#glosaservicio", form).attr('disabled', 'disabled');
                     }, 450);
 
 
@@ -219,11 +302,14 @@ var gridCriterios = {
                 beforeSubmit: function (postdata, formid) {
                     if (postdata.idservicio == 0) {
                         return [false, "Servicio: Campo obligatorio", ""];
-                    } if (postdata.claseevaluaciontecnica == 0) {
+                    }
+                    if (postdata.claseevaluaciontecnica == 0) {
                         return [false, "Clase Evaluación Técnica : Campo obligatorio", ""];
-                    } if (postdata.porcentajeeconomico > 100) {
+                    }
+                    if (postdata.porcentajeeconomico > 100) {
                         return [false, "Porcentaje Económico no puede ser mayor a 100", ""];
-                    } if (postdata.porcentajeservicio > 100) {
+                    }
+                    if (postdata.porcentajeservicio > 100) {
                         return [false, "Porcentaje Servicio no puede ser mayor a 100", ""];
                     } else {
 
@@ -232,7 +318,9 @@ var gridCriterios = {
                     }
                 },
                 onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
+                    return {
+                        idsolicitudcotizacion: parentRowKey
+                    };
                 }
             }, {
                 addCaption: "Agrega Servicio",
@@ -250,20 +338,23 @@ var gridCriterios = {
                 beforeSubmit: function (postdata, formid) {
                     if (postdata.idservicio == 0) {
                         return [false, "Servicio: Campo obligatorio", ""];
-                    } if (postdata.idclasecriticidad == 0) {
+                    }
+                    if (postdata.idclasecriticidad == 0) {
                         return [false, "Clase Criticidad : Campo obligatorio", ""];
-                    } if (postdata.idsegmento == 0) {
+                    }
+                    if (postdata.idsegmento == 0) {
                         return [false, "Segmento Proveedor : Campo obligatorio", ""];
                     } else {
                         return [true, "", ""]
                     }
                 },
                 onclickSubmit: function (rowid) {
-                    return { idsolicitudcotizacion: parentRowKey };
+                    return {
+                        idsolicitudcotizacion: parentRowKey
+                    };
                 }
 
-            },
-            {
+            }, {
                 closeAfterDelete: true,
                 recreateForm: true,
                 ajaxEditOptions: sipLibrary.jsonOptions,
@@ -288,5 +379,3 @@ function showSubGridsCrit(subgrid_id, row_id) {
 
 
 }*/
-
-

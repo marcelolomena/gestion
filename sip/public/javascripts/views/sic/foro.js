@@ -248,7 +248,7 @@ function gridRespuestaForo(parentRowID, parentRowKey, suffix) {
     tmpresforo += "</div>";
 
     tmpresforo += "<div class='form-row'>";
-    tmpresforo += "<div class='column-full'>Documento Asociado<span style='color:red'>*</span>{iddocumento}</div>";
+    tmpresforo += "<div class='column-full'>Documento Asociado{iddocumento}</div>";
     tmpresforo += "</div>";
 
     tmpresforo += "<div class='form-row' style='display: none;'>";
