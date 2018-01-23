@@ -250,7 +250,9 @@ exports.list = function (req, res) {
 };
 exports.download = function (req, res) {
 
-	var idsolicitud = req.params.id
+	var idsolicitud = req.params.id;
+	var idtipo = req.params.tid;
+	// var idgrup = req.params.gid;
 	return models.solicitudcotizacion.findOne({
 		attributes: ['id', 'descripcion', 'numerorfp'],
 		where: { id: idsolicitud }
@@ -341,7 +343,7 @@ exports.download = function (req, res) {
 			  </p>
 		`
 
-		sequelize.query('EXECUTE sic.laviejaconfiable ' + idsolicitud).then(function (imprimir) {
+		sequelize.query('EXECUTE sic.laviejaconfiable ' + idsolicitud + ', ' + idtipo).then(function (imprimir) {
 			//console.log(imprimir[0][0].resultado)
 			result += imprimir[0][0].resultado
 			//logger.debug("ESTE ES EL RESULT " + result)
