@@ -81,11 +81,19 @@
                 editrules: {
                     required: false
                 }
-            }, {
+            },{
+                label: 'Fecha de Recepcion',
+                name: 'fecha',
+                width: 140,
+                align: 'center',
+                sortable: false,
+                editable: false,
+                search: false
+            },{
                 label: 'Descripción',
                 name: 'nombre',
                 width: 250,
-                align: 'center',
+                align: 'left',
                 hidden: false,
                 editable: true,
                 editrules: {
@@ -212,7 +220,7 @@
                 name: 'idProveedor',
                 jsonmap: 'proveedor.nombre',
                 width: 500,
-                align: 'center',
+                align: 'left',
                 sortable: true,
                 editable: true,
                 edittype: 'select',
@@ -243,7 +251,7 @@
                 label: 'Comprador',
                 name: 'comprador',
                 width: 150,
-                align: 'center',
+                align: 'left',
                 hidden: false,
                 editable: true,
                 editrules: {
@@ -264,16 +272,7 @@
 
                 },
                 search: true
-            },
-            {
-                label: 'Fecha de Recepcion',
-                name: 'fecha',
-                width: 120,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                search: false
-            }
+            }            
         ];
         initGrid(viewModel);
     });

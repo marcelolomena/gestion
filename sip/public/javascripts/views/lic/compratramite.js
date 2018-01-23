@@ -228,7 +228,7 @@
             width: 120,
             align: 'center',
             sortable: false,
-            editable: true,
+            editable: false,
             search: false
         }, {
             label: 'Comentario',
