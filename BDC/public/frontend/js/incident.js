@@ -821,8 +821,8 @@ $(document).ready(function(){
 						$(element).autocomplete({
 							appendTo:"body",
 							disabled:false,
-							delay:300,
-							minLength:1,
+							delay:500,
+							minLength:5,
                             source: function(request, response){
 								this.xhr = $.ajax({
 									type: "GET",
@@ -867,8 +867,8 @@ $(document).ready(function(){
 						$(element).autocomplete({
 							appendTo:"body",
 							disabled:false,
-							delay:300,
-							minLength:1,
+							delay:500,
+							minLength:5,
                             source: function(request, response){
 								this.xhr = $.ajax({
 									type: "GET",
@@ -927,7 +927,7 @@ $(document).ready(function(){
 				if (idProgram!=undefined){
 					return {id:idProgram};
 				}else{
-					return {id:2496};
+					return {id:0};
 				}
 			},
 			buildSelect: function (response) {
