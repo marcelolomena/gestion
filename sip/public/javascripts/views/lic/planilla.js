@@ -468,12 +468,13 @@
             search: false
         },
         {
-            label: 'Cant. Compradas',
+            label: 'Cant. Compradas por Producto',
             name: 'licstock',
             width: 125,
             align: 'center',
             sortable: false,
             editable: true,
+            hidden: true,
             editoptions: {
                 defaultValue: '0'
             },
