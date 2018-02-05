@@ -106,7 +106,7 @@
 		</li>
 		
 		<li>
-			<span class="header">@Messages("addNewProgram.programSubType")</span>
+			<span class="header">@Messages("programDetails.programSubType")</span>
 			<span class="program-data">
 				
 				@if(!program.get.program_sub_type.isEmpty){
@@ -141,18 +141,6 @@
 	  		</span>
 		</li>
 
-		<li>
-			<span class="header">@Messages("programDetails.department") </span>
-			<span class="program-data">
-				@if(!programDetail.get.department.isEmpty){
-					@{departmentDetails= DepartmentService.findDepartmentById(programDetail.get.department.get) }
-  					@if(!departmentDetails.isEmpty){
-  						@departmentDetails.get.department
- 					}
- 				}
-			</span>
-		</li>
-		
          <li>
 			<span class="header">Estado </span>
 			<span class="program-data">
@@ -237,14 +225,6 @@
 			<span class="program-data ">
 				@if(program.get.program_code.isWhole() ){
 					@program.get.program_code
-				}
-			</span>
-		</li>
-		<li>
-			<span class="header">@Messages("addNewProgram.ppmnumber")</span>
-			<span class="program-data ">
-				@if(!programDetail.get.sap_code.isEmpty ){
-					@programDetail.get.sap_code.get
 				}
 			</span>
 		</li>

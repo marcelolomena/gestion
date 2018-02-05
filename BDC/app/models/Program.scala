@@ -25,10 +25,24 @@ case class ProgramSearch(
     sort_type: Option[String],
     impact_type: Option[String])
 
-case class ProgramMaster(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int],
+case class ProgramMaster(
+program_id: Option[Int], 
+program_type: Int, 
+program_sub_type: Option[Int],
   //program_name: String, program_code: Long, program_description: Option[String],
-  program_name: String, program_code: Long, sap_code: Option [Long], program_description: Option[String], //Cambio  
-  work_flow_status: Integer, demand_manager: Integer, program_manager: Integer, completion_percentage: Option[Double], is_active: Option[Int], planned_hours: Option[Long],internal_state: String, estimated_cost: Option[Long])
+  program_name: String, 
+  program_code: Long, 
+  sap_code: Option [Long], 
+  program_description: Option[String], //Cambio  
+  work_flow_status: Integer, 
+  demand_manager: Integer, 
+  //clasificacion: String, 
+  program_manager: Integer, 
+  completion_percentage: Option[Double], 
+  is_active: Option[Int], 
+  planned_hours: Option[Long],
+  internal_state: String, 
+  estimated_cost: Option[Long])
 
 object ProgramSearch {
   val programSearch = {
@@ -285,7 +299,7 @@ object ProgramStatus {
 }
 
 case class Programs(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int], program_name: String,
-  program_code: Long, program_description: Option[String], work_flow_status: Integer, demand_manager: Integer,
+  program_code: Long, program_description: Option[String], work_flow_status: Integer, demand_manager: Integer, clasificacion: String,
   program_manager: Integer, program_details: ProgramDetail, program_dates: ProgramDate, is_active: Option[Int], planned_hours: Option[Long], internal_state:String,estimated_cost: Option[Long])
 
 object Programs {

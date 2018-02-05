@@ -202,6 +202,7 @@ object ARTForms {
       "program_description" -> optional(text.verifying(Messages.get(langObj, "error.program.program_description.MinMax"), program_description => program_description.trim().length() > 3 && program_description.trim().length() <= 500)),
       "work_flow_status" -> number,
       "demand_manager" -> number,
+	  "clasificacion" -> text,
       "program_manager" -> number,
       "program_details" -> mapping(
         "devison" -> number,
@@ -219,11 +220,19 @@ object ARTForms {
       "planned_hours" -> optional(of[Long]),
       "internal_state" -> text,
       "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, program_code,
-        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
+        program_description, work_flow_status, demand_manager,clasificacion,program_manager,
+		program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
         Programs(None, program_type, program_sub_type, program_name, program_code,
           program_description, work_flow_status, demand_manager,
-          program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
-        program.program_description, program.work_flow_status, program.demand_manager, program.program_manager,
+          clasificacion, 
+		  program_manager, 
+		  program_details, 
+		  program_dates, 
+		  is_active, 
+		  planned_hours, 
+		  internal_state, 
+		  estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
+        program.program_description, program.work_flow_status, program.demand_manager, program.clasificacion, program.program_manager,
         program.program_details, program.program_dates, program.is_active, program.planned_hours, program.internal_state, program.estimated_cost))))
 
   /**
@@ -238,6 +247,7 @@ object ARTForms {
       "program_description" -> optional(text.verifying(Messages.get(langObj, "error.program.program_description.MinMax"), program_description => program_description.trim().length() > 3 && program_description.trim().length() <= 500)),
       "work_flow_status" -> number,
       "demand_manager" -> number,
+	  "clasificacion" -> text,
       "program_manager" -> number,
       "program_details" -> mapping(
         "devison" -> number,
@@ -255,11 +265,16 @@ object ARTForms {
       "planned_hours" -> optional(of[Long]),
       "internal_state" -> text,
       "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, program_code,
-        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
+        program_description, work_flow_status, demand_manager, clasificacion, program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
         Programs(None, program_type, program_sub_type, program_name, program_code,
-          program_description, work_flow_status, demand_manager,
-          program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
-        program.program_description, program.work_flow_status, program.demand_manager, program.program_manager,
+          program_description, work_flow_status, demand_manager, clasificacion,
+          program_manager, program_details, 
+		  program_dates, is_active,
+		  planned_hours, internal_state, 
+		  estimated_cost))((program: Programs) => 
+		  Some((program.program_type, program.program_sub_type, 
+		  program.program_name, program.program_code,
+        program.program_description, program.work_flow_status, program.demand_manager, program.clasificacion, program.program_manager,
         program.program_details, program.program_dates, program.is_active, program.planned_hours, program.internal_state, program.estimated_cost))))
 
   /**

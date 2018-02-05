@@ -539,7 +539,7 @@ object Program extends Controller {
         division_Id = divisionObj.apply(0).dId.get
       }
       var gerenciasMap = new java.util.LinkedHashMap[String, String]()
-      if (division_Id == 0) {
+      /*if (division_Id == 0) {
         val gerencias = GenrenciaService.findAllGenrencias
 
         for (g <- gerencias) {
@@ -550,8 +550,11 @@ object Program extends Controller {
         for (g <- gerencias) {
           gerenciasMap.put(g.dId.get.toString(), g.genrencia)
         }
-      }
-
+      }*/
+	  val gerencias = GenrenciaService.findAllGenrencias
+		for (g <- gerencias) {
+		  gerenciasMap.put(g.dId.get.toString(), g.genrencia)
+		}	  
       Ok(views.html.frontend.program.addNewProgram(ARTForms.programForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues, impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
@@ -563,6 +566,7 @@ object Program extends Controller {
    * save program details...
    */
   def saveNewProgram = Action { implicit request =>
+    println("*****saveNewProgram")
     val count = ProgramService.findAllProgramList.size
     val today = Calendar.getInstance()
     today.setTime(new Date())
@@ -636,6 +640,7 @@ object Program extends Controller {
     old_form.fold(
       // Form has errors, redisplay it
       errors => {
+	    println("***** VALIDA Form:"+old_form)
         val theForm = ProgramService.validateForm(old_form, "")
 
         var departmentsMap = new java.util.LinkedHashMap[String, String]()
@@ -651,7 +656,9 @@ object Program extends Controller {
 
       },
       program => {
+	    println("*****ANTES theForm:")
         val theForm = ProgramService.validateForm(ARTForms.programForm.fill(program), "")
+		println("*****theForm:"+theForm)
         if (theForm.hasErrors) {
           var departmentsMap = new java.util.LinkedHashMap[String, String]()
           if (!program.program_details.management.isEmpty) {
@@ -1121,7 +1128,7 @@ object Program extends Controller {
         division_Id = divisionObj.apply(0).dId.get
       }
       var gerenciasMap = new java.util.LinkedHashMap[String, String]()
-      if (division_Id == 0) {
+      /*if (division_Id == 0) {
         val gerencias = GenrenciaService.findAllGenrencias
 
         for (g <- gerencias) {
@@ -1132,7 +1139,12 @@ object Program extends Controller {
         for (g <- gerencias) {
           gerenciasMap.put(g.dId.get.toString(), g.genrencia)
         }
-      }
+      }*/
+        val gerencias = GenrenciaService.findAllGenrencias
+
+        for (g <- gerencias) {
+          gerenciasMap.put(g.dId.get.toString(), g.genrencia)
+        }	  
 
       if (!programDetails.get.management.isEmpty) {
         val dep = programDetails.get.management
@@ -1145,7 +1157,7 @@ object Program extends Controller {
       val pDetail = ProgramDetail(programDetails.get.devison, programDetails.get.management, programDetails.get.department, programDetails.get.impact_type, programDetails.get.business_line, programDetails.get.sap_code)
       val pDate = ProgramDate(programDates.get.initiation_planned_date, programDates.get.creation_date, programDates.get.closure_date.getOrElse(new Date), programDates.get.release_date)
 
-      val progrm = Programs(program.get.program_id, program.get.program_type, program.get.program_sub_type, program.get.program_name, program.get.program_code, program.get.program_description, program.get.work_flow_status, program.get.demand_manager: Integer, program.get.program_manager, pDetail, pDate, program.get.is_active, program.get.planned_hours, program.get.internal_state, program.get.estimated_cost)
+      val progrm = Programs(program.get.program_id, program.get.program_type, program.get.program_sub_type, program.get.program_name, program.get.program_code, program.get.program_description, program.get.work_flow_status, program.get.demand_manager: Integer, "", program.get.program_manager, pDetail, pDate, program.get.is_active, program.get.planned_hours, program.get.internal_state, program.get.estimated_cost)
 
       var users = UserService.findAllDemandManager();
 
