@@ -219,7 +219,7 @@
                 label: 'Proveedor',
                 name: 'idProveedor',
                 jsonmap: 'proveedor.nombre',
-                width: 500,
+                width: 400,
                 align: 'left',
                 sortable: true,
                 editable: true,
@@ -248,7 +248,7 @@
                     }
                 }
             }, {
-                label: 'Comprador',
+                label: 'Responsable Servicio',
                 name: 'comprador',
                 width: 150,
                 align: 'left',

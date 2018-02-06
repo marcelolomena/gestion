@@ -211,7 +211,7 @@
             },
             search: false
         }, {
-            label: 'Comprador',
+            label: 'Responsable Servicio',
             name: 'comprador',
             width: 150,
             align: 'center',
