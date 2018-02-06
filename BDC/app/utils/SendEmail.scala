@@ -62,7 +62,7 @@ object SendEmail {
       val program_release_date = ProgramService.findClouseDateBaslineChange(program.get.program_id.get.toString)
       val alert_count_current = RiskService.countCurrentAlerts(alert.get.id.get.toString).toString
 
-      println("subject : " + subject )
+      Logger.debug("subject : " + subject )
       //println("program_impact_type : " + program_impact_type )
       //println("program_internal_state : " + program_internal_state )
       //println("program_program_manager : " + program_program_manager )

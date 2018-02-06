@@ -585,7 +585,11 @@ object ARTForms {
       "user_id" -> of[Long],
       "updated_by" -> optional(number),
       "updation_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "is_deleted" -> number)(Divisions.apply)(Divisions.unapply))
+      "is_deleted" -> number,
+      "idRRHH" -> optional(number),
+      "codDivision" -> optional(number),
+      "glosaDivision" -> optional(text)
+    )(Divisions.apply)(Divisions.unapply))
 
   val categoryForm: Form[Categories] = Form(
     mapping(

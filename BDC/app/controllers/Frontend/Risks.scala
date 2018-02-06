@@ -1256,7 +1256,7 @@ def alertSearch() = Action { implicit request =>
                 risks => {
 
                   val user_id = Integer.parseInt(request.session.get("uId").get)
-                  Logger.debug("TOA LA WEA " + risks)
+                  //Logger.debug("TOA LA WEA " + risks)
                   val alert = RiskAlerts(
                     Option(1),
                     risk_id.toInt,

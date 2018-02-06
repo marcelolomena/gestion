@@ -498,6 +498,7 @@ addDivison.editdivision=Editar detalles División
 addDivison.departmenthead=Gerente de División
 addDivison.divisionlist=Lista División
 addDivison.adddivision=Agregar División
+addDivison.divisionRRHH=División RRHH
 divison.divisionexist=División ya existe.
 
 gerencia.gerenciaexist=Gerencia ya existe.

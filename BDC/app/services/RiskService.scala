@@ -1133,7 +1133,13 @@ object RiskService extends CustomColumns {
       Logger.debug("EL VALOR DEL TEMPLATE ES " + risk.template_id.get)
       RiskService.insertAlertSend(last_index.toInt, risk.template_id.get)
 
-      sendEmailAlerts(last_index.toString,risk.reiteration.get)
+      val state_ret=sendEmailAlerts(last_index.toString,risk.reiteration.get)
+      state_ret match {
+        case "OK" =>
+          Logger.debug("Send Email OK")
+        case _   => Logger.debug(state_ret)
+      }
+
 
       last_index
     }
@@ -2194,26 +2200,26 @@ object RiskService extends CustomColumns {
               if (!user.isEmpty) {
                 val email = user.get.email.toString()
 
-                //println(email)
+                Logger.debug(email)
 
                 if (!StringUtils.isEmpty(email)) {
 
                   if(increment == 2) {
                     val boss = findBossMail(email)
                     if(!boss.isEmpty) {
-                      println("el jefe es : " + boss.get.toString)
+                      Logger.debug("el jefe es : " + boss.get.toString)
                       cc = cc + "," + boss.get.toString
                     }else{
-                      println("no tiene jefe")
+                      Logger.debug("no tiene jefe")
                     }
 
                   } else if (increment == 3) {
                     val bigboss = findBigBossMail(email)
                     if(!bigboss.isEmpty) {
-                      println("el gran jefe : " + bigboss.get.toString)
+                      Logger.debug("el gran jefe : " + bigboss.get.toString)
                       cc = cc + "," + bigboss.get.toString
                     }else{
-                      println("no tiene gran jefe")
+                      Logger.debug("no tiene gran jefe")
                     }
                   }
 
@@ -2227,7 +2233,7 @@ object RiskService extends CustomColumns {
                     template,
                     cc)
 
-                  println("RESPUESTA : " + response)
+                  Logger.debug("RESPUESTA : " + response)
 
 
                 }
