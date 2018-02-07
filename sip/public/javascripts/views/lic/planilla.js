@@ -31,6 +31,7 @@
         grid.prmEdit.beforeSubmit = beforeSubmit;
         grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.navParameters.add = false;
+        grid.navParameters.del = false;
         grid.build();
         grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
     }
@@ -52,15 +53,15 @@
         }, {
             label: 'Contrato',
             name: 'contrato',
-            width: 80,
+            width: 100,
             align: 'center',
             sortable: false,
             editable: true,
-            search: false
+            search: true
         }, {
             label: 'O.C.',
             name: 'ordencompra',
-            width: 80,
+            width: 100,
             align: 'center',
             sortable: false,
             editable: true,
@@ -71,7 +72,7 @@
                     });
                 }
             },
-            search: false
+            search: true
         }, {
             label: 'CUI',
             name: 'idcui',

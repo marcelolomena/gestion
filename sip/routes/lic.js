@@ -256,10 +256,10 @@ module.exports = function (passport) {
 
     router.route('/graficogetcompras/:id')
         .get(isAuthenticated, graficoController.getCompras);
-		
+
     router.route('/lic/reportecomparativo')
-        .get(isAuthenticated, reportecompController.list);		
-		
+        .get(isAuthenticated, reportecompController.list);
+
     router.route('/graficogetcomprassop/:id')
         .get(isAuthenticated, graficoController.getComprasSoporte);
 
@@ -274,7 +274,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, visacionController.downFile);
 
     router.route('/lic/derivar/:id')
-        .get(isAuthenticated, visacionController.derivar); 
+        .get(isAuthenticated, visacionController.derivar);
 
     router.route('/lic/instalador')
         .get(isAuthenticated, instaladorController.list)
@@ -288,28 +288,34 @@ module.exports = function (passport) {
         .post(isAuthenticated, torreController.action);
 
     router.route('/lic/reportecomparativo')
-        .get(isAuthenticated, reportecompController.list);	
-		
+        .get(isAuthenticated, reportecompController.list);
+
     router.route('/lic/excelcomprativo')
-        .get(isAuthenticated, reportecompController.getExcel); 	
+        .get(isAuthenticated, reportecompController.getExcel);
 
     router.route('/lic/vencimientos')
-        .get(isAuthenticated, graficoVencimController.getVencimientos);		
+        .get(isAuthenticated, graficoVencimController.getVencimientos);
 
     router.route('/lic/tablavencimiento/:id/:id2')
-        .get(isAuthenticated, graficoVencimController.list); 		
-		
+        .get(isAuthenticated, graficoVencimController.list);
+
     router.route('/lic/instalacion-consulta')
-        .get(isAuthenticated, instConsultaController.list);	
-		
+        .get(isAuthenticated, instConsultaController.list);
+
     router.route('/lic/downfileconsulta/:id')
-        .get(isAuthenticated, instConsultaController.downFile);		
+        .get(isAuthenticated, instConsultaController.downFile);
 
     router.route('/lic/getProductoInst')
-        .get(isAuthenticated, instConsultaController.getProductoInstalacion);		
+        .get(isAuthenticated, instConsultaController.getProductoInstalacion);
 
     router.route('/lic/getUsuariosInst')
-        .get(isAuthenticated, instConsultaController.getUsuariosInstalacion);			
+        .get(isAuthenticated, instConsultaController.getUsuariosInstalacion);
+
+    router.route('/lic/actualizarSnow')
+        .get(isAuthenticated, traduccionController.actualizarSnow);
+
+    router.route('/lic/actualizarAddm')
+        .get(isAuthenticated, traduccionController.actualizarAddm);
 
     return router;
 };

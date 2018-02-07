@@ -1,6 +1,6 @@
-module.exports = function(sequelize, DataTypes) {
-    return sequelize.define(
-        'addm$', {
+module.exports = function (sequelize, DataTypes) {
+  return sequelize.define(
+    'addm', {
       id:{
         field:"id",
         type:DataTypes.INTEGER,
@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
         primaryKey: true,
         autoIncrement: true
       },
-      type: {
+      Type: {
         type: DataTypes.STRING(255),
         allowNull: true
       },
@@ -49,7 +49,8 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: true
       }
     }, {
-      schema: 'lic',timestamps: false,tableName: 'addm$'
+      schema: 'lic',
+      timestamps: false,
+      tableName: 'addm'
     });
-  };
-  
+};

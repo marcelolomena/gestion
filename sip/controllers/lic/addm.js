@@ -1,5 +1,6 @@
 'use strict';
 var models = require('../../models');
+var utilSeq = require('../../utils/seq');
 var base = require('./lic-controller');
 var _ = require('lodash');
 var pug = require('pug');
@@ -8,31 +9,31 @@ var path = require('path');
 var fs = require('fs');
 var logger = require('../../utils/logger');
 
-var entity = models.addm$;
+var entity = models.addm;
 
 var includes = [];
 
 function map(req) {
     return {
-        id:req.query.id || 0,
-        type: req.query.type,
+        id: req.query.id,
+        Type: req.query.Type,
         hostname: req.query.hostname,
-        hostOS:req.query.hostOS,
-        publishers:req.query.publisher,
+        hostOS: req.query.hostOS,
+        publishers: req.query.publisher,
         vendor: req.query.vendor
     }
 }
 
 function mapper(data) {
     return _.map(data, function (item) {
-        var result={
+        var result = {
             id: item.id,
-            type : item.type,
+            Type: item.Type,
             hostname: item.hostname,
             hostOS: item.hostOS,
-            vendor : item.vendor,
+            vendor: item.vendor,
             publishers: item.publishers,
-            aplicacion: item.type + ((item.version!= null)?' ' + item.version:"")
+            aplicacion: item.type + ((item.version != null) ? ' ' + item.version : "")
         };
         return result;
     });
@@ -41,6 +42,86 @@ function mapper(data) {
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
 }
+
+
+// function list(req, res) {
+//     var page = req.query.page;
+//     var rows = req.query.rows;
+//     var filters = req.query.filters;
+//     var sidx = req.query.sidx || 'Type';
+//     var sord = req.query.sord || 'desc';
+
+//     var filter_one = []
+
+//     if (filters != undefined) {
+//         var item = {}
+//         var jsonObj = JSON.parse(filters);
+
+//         jsonObj.rules.forEach(function (item) {
+//             if (item.field === "Type") {
+//                 filter_one.push({
+//                     [item.field]: {
+//                         $like: '%' + item.data + '%'
+//                     }
+//                 });
+//             } else if (item.field === "hostname") {
+//                 filter_one.push({
+//                     [item.field]: {
+//                         $like: '%' + item.data + '%'
+//                     }
+//                 });
+//             } else if (item.field === "hostOS") {
+//                 filter_one.push({
+//                     [item.field]: {
+//                         $like: '%' + item.data + '%'
+//                     }
+//                 });
+//             } else if (item.field === "publishers") {
+//                 filter_one.push({
+//                     [item.field]: {
+//                         $like: '%' + item.data + '%'
+//                     }
+//                 });
+//             } else if (item.field === "vendor") {
+//                 filter_one.push({
+//                     [item.field]: {
+//                         $like: '%' + item.data + '%'
+//                     }
+//                 });
+//             }
+//         })
+//     }
+
+//     utilSeq.buildConditionFilter(filters, function (err, data) {
+//         if (err) {
+//             logger.debug("->>> " + err)
+//         } else {
+//             entity.count({
+//                 where: filter_one
+//             }).then(function (records) {
+//                 var total = Math.ceil(records / rows);
+//                 entity.findAll({
+//                     offset: parseInt(rows * (page - 1)),
+//                     limit: parseInt(rows),
+//                     // order: orden,
+//                     where: filter_one
+//                 }).then(function (add) {
+//                     return res.json({
+//                         records: records,
+//                         total: total,
+//                         page: page,
+//                         rows: add
+//                     });
+//                 }).catch(function (err) {
+//                     logger.error(err.message);
+//                     res.json({
+//                         error_code: 1
+//                     });
+//                 });
+//             })
+//         }
+//     });
+// }
 
 /*
 function get(req, res) {
@@ -261,7 +342,7 @@ function list(req,res){
 
 
 module.exports = {
-   // get: get,
-   // upload: upload,
-    list:list
+    // get: get,
+    // upload: upload,
+    list: list
 }
