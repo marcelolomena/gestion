@@ -495,8 +495,8 @@ object Program extends Controller {
       val today = Calendar.getInstance()
       today.setTime(new Date())
       val program_code = today.get(Calendar.YEAR) + "" + (today.get(Calendar.MONTH) + 1) + "" + (Integer.parseInt(ProgramService.findProgramCount.toString) + 1).toString
-      var programSubType = new java.util.LinkedHashMap[String, String]()
-      var subtype = SubTypeService.findAllSubTypeList();
+      val programSubType = new java.util.LinkedHashMap[String, String]()
+      val subtype = SubTypeService.findAllSubTypeList();
       for (s <- subtype) {
         programSubType.put(s.id.get.toString, s.sub_type)
       }
@@ -508,36 +508,45 @@ object Program extends Controller {
         programType.put(s.id.get.toString, s.program_type)
       }
 
+/*
       val divisions = DivisionService.findAllDivisions
-      var divisionMap = new java.util.LinkedHashMap[String, String]()
+      val divisionMap = new java.util.LinkedHashMap[String, String]()
       for (d <- divisions) {
         divisionMap.put(d.dId.get.toString(), d.division)
       }
+*/
 
-      var impacttype = ImpactTypeService.findAllImpactTypeList();
-      var impacttypeMap = new java.util.LinkedHashMap[String, String]()
+      val divisions = DivisionService.findDivisionByTable
+      val divisionMap = new java.util.LinkedHashMap[String, String]()
+      for (d <- divisions) {
+        divisionMap.put(d.codDivision.get.toString(), d.glosaDivision.get.toString)
+      }
+
+
+      val impacttype = ImpactTypeService.findAllImpactTypeList();
+      val impacttypeMap = new java.util.LinkedHashMap[String, String]()
       for (s <- impacttype) {
         impacttypeMap.put(s.id.get.toString, s.impact_type)
       }
 
       // val departments = DepartmentService.findAllDepartmentS
-      var departmentsMap = new java.util.LinkedHashMap[String, String]()
+      val departmentsMap = new java.util.LinkedHashMap[String, String]()
       /*for (d <- departments) {
         departmentsMap.put(d.dId.get.toString(), d.department)
       }*/
 
-      var users = UserService.findAllDemandManager();
+      val users = UserService.findAllDemandManager();
 
-      var usersMap = new java.util.LinkedHashMap[String, String]()
+      val usersMap = new java.util.LinkedHashMap[String, String]()
       for (u <- users) {
         usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
       }
-      val divisionObj = DivisionService.findDivisionByNameActiveAndInactive("Division Operaciones y Tecnologia")
+      //val divisionObj = DivisionService.findDivisionByNameActiveAndInactive("Division Operaciones y Tecnologia")
 
-      var division_Id = 0
-      if (!divisionObj.isEmpty) {
-        division_Id = divisionObj.apply(0).dId.get
-      }
+      //var division_Id = 0
+      //if (!divisionObj.isEmpty) {
+        //division_Id = divisionObj.apply(0).dId.get
+      //}
       var gerenciasMap = new java.util.LinkedHashMap[String, String]()
       /*if (division_Id == 0) {
         val gerencias = GenrenciaService.findAllGenrencias

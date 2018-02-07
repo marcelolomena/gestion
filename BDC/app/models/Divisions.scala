@@ -1,6 +1,5 @@
 package models
 import anorm.SqlParser._
-import play.api.Play.current
 import java.util.Date
 import anorm._
 import play.api.libs.json._
@@ -52,5 +51,29 @@ object Divisions extends CustomColumns {
       }
   }
   implicit val divisionWrites = Json.writes[Divisions]
+
+}
+
+
+case class DivisionsList(
+                      codDivision: Option[Int],
+                      glosaDivision: Option[String]
+                    )
+
+object DivisionsList extends CustomColumns {
+
+  val divisionList = {
+      get[Option[Int]]("codDivision") ~
+      get[Option[String]]("glosaDivision") map {
+      case
+        codDivision ~
+        glosaDivision
+      => DivisionsList(
+        codDivision,
+        glosaDivision
+      )
+    }
+  }
+  implicit val divisionListWrites = Json.writes[DivisionsList]
 
 }

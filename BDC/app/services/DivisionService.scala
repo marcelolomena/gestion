@@ -81,7 +81,8 @@ object DivisionService extends CustomColumns {
           user_id={user_id} ,
 			    is_deleted={is_deleted},
           updated_by={updated_by},
-          updation_date={updation_date}
+          updation_date={updation_date},
+          idRRHH={idRRHH}
           where dId={dId}
           """).on(
           'dId -> division.dId,
@@ -89,17 +90,49 @@ object DivisionService extends CustomColumns {
           'user_id -> division.user_id,
           'updated_by -> division.updated_by,
           'updation_date -> new Date(),
-          'is_deleted -> division.is_deleted).executeUpdate()
+          'is_deleted -> division.is_deleted,
+           'idRRHH -> division.codDivision).executeUpdate()
     }
   }
 
   def findDivisionById(dId: Integer) = {
     DB.withConnection { implicit connection =>
-      val result = SQL(
-        "select * from art_division_master  where   dId = {dId}").on(
-          'dId -> dId).as(
-            Divisions.division.singleOpt)
-      result
+
+      val sqlString =
+        """
+          |SELECT a.dId,a.division,a.user_id,a.is_deleted,a.updated_by,a.updation_date,a.idRRHH,b.codDivision,b.glosaDivision FROM art_division_master a
+          |LEFT OUTER JOIN
+          |(
+          |SELECT codDivision,glosaDivision FROM RecursosHumanos
+          |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND rutJefe=(SELECT numRut FROM RecursosHumanos WHERE cui=852 AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND glosaCargoAct NOT LIKE '%Secretaria%' AND glosaCargoAct NOT LIKE '%auxiliar%')
+          |AND glosaCargoAct NOT LIKE '%Secretaria%'
+          |AND glosaCargoAct NOT LIKE '%auxiliar%'
+          |) b
+          |ON a.idRRHH = b.codDivision
+          |WHERE dId = {dId}
+        """.stripMargin
+
+      SQL(sqlString).on('dId -> dId).as(Divisions.division.singleOpt)
+
+    }
+  }
+
+  def findDivisionByTable(): Seq[DivisionsList] = {
+    DB.withConnection { implicit connection =>
+
+      val sqlString =
+        """
+          |SELECT codDivision,glosaDivision FROM RecursosHumanos
+          |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND rutJefe=(SELECT numRut FROM RecursosHumanos WHERE cui=852 AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND glosaCargoAct NOT LIKE '%Secretaria%' AND glosaCargoAct NOT LIKE '%auxiliar%')
+          |AND glosaCargoAct NOT LIKE '%Secretaria%'
+          |AND glosaCargoAct NOT LIKE '%auxiliar%'
+          |ORDER BY glosaDivision
+        """.stripMargin
+
+      SQL(sqlString).as(DivisionsList.divisionList *)
+
     }
   }
 
