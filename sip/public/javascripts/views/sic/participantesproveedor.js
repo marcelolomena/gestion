@@ -8,7 +8,7 @@ var gridParticipantesPro = {
         var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
         tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'><span style='color: red'>*</span>Provedor {idproveedor}</div>";
+        tmplServ += "<div class='column-full'><span style='color: red'>*</span>Proveedor {idproveedor}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
