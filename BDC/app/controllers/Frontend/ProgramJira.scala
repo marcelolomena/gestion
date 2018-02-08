@@ -648,7 +648,17 @@ object ProgramJira extends Controller {
           }
         }
 
-        BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        BadRequest(views.html.frontend.program.addNewProgram(
+          theForm,
+          program_code,
+          usersMap,
+          divisionMap,
+          //gerenciasMap,
+          //departmentsMap,
+          programSubType,
+          programType,
+          workflowStatusValues,
+          impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
       },
       program => {
@@ -662,7 +672,17 @@ object ProgramJira extends Controller {
               departmentsMap.put(d.dId.get.toString(), d.department)
             }
           }
-          BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.program.addNewProgram(theForm,
+            program_code,
+            usersMap,
+            divisionMap,
+            //gerenciasMap,
+            //departmentsMap,
+            programSubType,
+            programType,
+            workflowStatusValues,
+            impacttypeMap
+          )).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
         } else {
 

@@ -36,7 +36,7 @@ object ProgramService extends CustomColumns {
     val program_code = getUniqueProgramCode()
 
     DB.withConnection { implicit connection =>
-	  println("En insertProgramDetails:"+pm);
+	  //println("En insertProgramDetails:"+pm);
       val result = SQL(
         """
           insert into art_program (
