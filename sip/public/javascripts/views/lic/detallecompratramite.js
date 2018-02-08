@@ -47,6 +47,8 @@ function renderGrid(loadurl, tableId) {
                         var thissid = $(this).val();
                         $("input#idProducto").val($('option:selected', this).text());
                         var idProducto = $('option:selected', this).val();
+
+
                         if (idProducto) {
                             var s = "<select>";
                             s += '<option value="0">--Seleccionar Producto--</option>'
@@ -67,6 +69,7 @@ function renderGrid(loadurl, tableId) {
                                         $('select#idProducto').empty().html(s);
                                         // $("#idProducto").attr('disabled', true);
                                         // $("#otroProducto").attr('disabled', true);
+                                        $("#otroFabricante").attr('disabled', true);
                                     } else {
                                         alert("No existe Fabricante para este Producto");
                                         $("select#idProducto").val("");
@@ -76,6 +79,35 @@ function renderGrid(loadurl, tableId) {
                         } else {
                             $("#idProducto").attr('disabled', false);
                             $("#otroProducto").attr('disabled', false);
+                            $("#otroFabricante").attr('disabled', false);
+                            var s = "<select>";
+                            s += '<option value="0">--Seleccionar Producto--</option>'
+                            $.ajax({
+                                type: "GET",
+                                url: '/lic/producto',
+                                async: false,
+                                success: function (data) {
+                                    if (data) {
+                                        $.each(data, function (i, item) {
+                                            if (data[i].idProducto == thissid) {
+                                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                            } else {
+                                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                            }
+                                        });
+                                        s += '</select>';
+                                        $('select#idProducto').empty().html(s);
+                                    } else {
+                                        alert("No existe Fabricante para este Producto");
+                                        $("select#idProducto").val("");
+                                    }
+                                }
+                            });
+
+
+
+
+
 
                         }
                     }
@@ -119,17 +151,28 @@ function renderGrid(loadurl, tableId) {
                         var thissid = $(this).val();
                         $("input#idFabricante").val($('option:selected', this).text());
                         var idFabricante = $('option:selected', this).val();
-                        if (idFabricante) {
 
+
+                        if (idFabricante != 0) {
+                            // $("#idFabricante").attr('disabled', false);
+                            // $("#otroFabricante").attr('disabled', false);
+                            // $("#otroProducto").attr('disabled', false);
                             $.ajax({
                                 type: "GET",
                                 url: '/lic/getFabricante/' + thissid,
                                 async: false,
                                 success: function (data) {
                                     if (data) {
+
+
+
                                         $("select#idFabricante").val(data.idFabric);
                                         $("#idFabricante").attr('disabled', true);
                                         $("#otroFabricante").attr('disabled', true);
+                                        $("#otroProducto").attr('disabled', true);
+                                        // $("#idFabricante").attr('disabled', false);
+                                        // $("#otroFabricante").attr('disabled', false);
+                                        // $("#otroProducto").attr('disabled', false);
                                     } else {
                                         alert("No existe Fabricante para este Producto");
                                         $("select#idFabricante").val("");
@@ -138,8 +181,32 @@ function renderGrid(loadurl, tableId) {
 
                             });
                         } else {
-                            $("#idFabricante").attr('disabled', false);
-                            $("#otroFabricante").attr('disabled', false);
+                            // $("#idFabricante").attr('disabled', false);
+                            // $("#otroFabricante").attr('disabled', false);
+                            // $("#otroProducto").attr('disabled', false);
+                            $.ajax({
+                                type: "GET",
+                                url: '/lic/fabricantes',
+                                async: false,
+                                success: function (data) {
+                                    if (data) {
+                                        $("select#idFabricante").val(data.id);
+                                        $("#idFabricante").attr('disabled', false);
+                                        $("#otroFabricante").attr('disabled', false);
+                                        $("#otroProducto").attr('disabled', false);
+                                    } else {
+                                        // $("#idFabricante").attr('disabled', false);
+                                        // $("#otroFabricante").attr('disabled', false);
+                                        // $("#otroProducto").attr('disabled', false);
+
+
+                                        alert("No existe Fabricante para este Producto");
+                                        $("select#idFabricante").val("");
+                                    }
+                                }
+
+                            });
+
 
                         }
                     }
@@ -157,6 +224,16 @@ function renderGrid(loadurl, tableId) {
             hidden: true,
             editable: true,
             search: false
+
+            // editoptions: {
+            //     dataEvents: [{
+            //         type: 'click',
+            //         fn: function (e) {
+            //                 $("#idProducto").attr('disabled', true);
+            //         }
+            //     }]
+            // }
+            
         },
         {
             label: 'Fecha Inicio',
@@ -207,12 +284,12 @@ function renderGrid(loadurl, tableId) {
                 dataEvents: [{
                     type: 'change',
                     fn: function (e) {
-                            var rowKey = $table.getGridParam("selrow");
-                            var rowData = $table.getRowData(rowKey);
-                            var thissid = $(this).val();
-                            var fechacontr = editar_fecha(thissid, -3, "m", "-");
-                            $("input#fechaControl").val(fechacontr);
-                            
+                        var rowKey = $table.getGridParam("selrow");
+                        var rowData = $table.getRowData(rowKey);
+                        var thissid = $(this).val();
+                        var fechacontr = editar_fecha(thissid, -3, "m", "-");
+                        $("input#fechaControl").val(fechacontr);
+
                     }
                 }],
             },
@@ -371,8 +448,8 @@ function renderGrid(loadurl, tableId) {
     function beforeSubmitDel(postdata, formid) {
         var rowData = $table.getRowData($table.getGridParam('selrow'));
         var thissid = rowData.estado;
-        
-        
+
+
         if (thissid == 'Recepcionado') {
             return [false, 'el producto esta recepcionado, por lo tanto no se va a eliminar.', ''];
         } else {
@@ -417,7 +494,7 @@ function renderGrid(loadurl, tableId) {
             bootbox.alert({
                 message: "el producto fue recepcionado, por lo tanto no se va a eliminar.",
                 size: 'small'
-                
+
             });
             return [true, "listo", ""];
         }
