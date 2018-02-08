@@ -61,6 +61,14 @@
             },
             search: false
         }, {
+            label: 'Fecha de Compra',
+            name: 'fechaRecepcion',
+            width: 120,
+            align: 'center',
+            sortable: false,
+            editable: false,
+            search: false
+        }, {
             label: 'Descripción',
             name: 'nombre',
             width: 250,
@@ -221,14 +229,6 @@
             editrules: {
                 required: true
             },
-            search: false
-        }, {
-            label: 'Fecha de Compra',
-            name: 'fechaRecepcion',
-            width: 120,
-            align: 'center',
-            sortable: false,
-            editable: false,
             search: false
         }, {
             label: 'Comentario',

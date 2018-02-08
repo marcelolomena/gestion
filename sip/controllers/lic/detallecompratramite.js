@@ -94,7 +94,7 @@ function mapFabricante(data) {
 }
 
 function saveProducto(data, res) {
-    if (data.idProducto == 0) {
+    if (!data.idProducto) {
         base.createP(models.producto, mapProducto(data))
             .then(function (created) {
                 data.idProducto = created.id;
@@ -141,7 +141,7 @@ function action(req, res) {
     var data = map(req);
     switch (req.body.oper) {
         case 'add':
-            if (data.idFabricante == 0) {
+            if (!data.idFabricante) {
                 base.createP(models.fabricante, mapFabricante(data))
                     .then(function (created) {
                         data.idFabricante = created.id;
