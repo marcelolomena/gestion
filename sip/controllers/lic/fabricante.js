@@ -46,8 +46,30 @@ function action(req, res) {
     }
 }
 
+function existeOtroFabricante(req, res) {
+    var nombre = parseInt(req.params.otroFabricante);
+    entity.findOne({
+            where: {
+                nombre: nombre
+            },
+        })
+        .then(function (result) {
+            return res.json({
+                error: 0,
+                nombre: result.nombre
+            });
+        })
+        .catch(function (err) {
+            return res.json({
+                error_code: 1
+            });
+        });
+}
+
+
 module.exports = {
     list: list,
     action: action,
-    listAll: listAll
+    listAll: listAll,
+    existeOtroFabricante: existeOtroFabricante
 };

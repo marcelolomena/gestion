@@ -317,5 +317,11 @@ module.exports = function (passport) {
     router.route('/lic/actualizarAddm')
         .get(isAuthenticated, traduccionController.actualizarAddm);
 
+    router.route('/lic/existeOtroProducto/:otroProducto')
+        .get(isAuthenticated, productoController.existeOtroProducto);
+
+    router.route('/lic/existeOtroFabricante/:otroFabricante')
+        .get(isAuthenticated, fabricanteController.existeOtroFabricante);
+
     return router;
 };

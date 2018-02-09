@@ -124,7 +124,33 @@ function renderGrid(loadurl, tableId) {
             width: 250,
             hidden: true,
             editable: true,
-            search: false
+            search: false,
+            editoptions: {
+                dataEvents: [{
+                    type: 'change',
+                    fn: function (e) {
+                        var rowKey = $table.getGridParam("selrow");
+                        var rowData = $table.getRowData(rowKey);
+                        var otroFabric = $(this).val();
+                        $.ajax({
+                            type: "GET",
+                            url: '/lic/existeOtroFabricante/' + otroFabric,
+                            async: false,
+                            success: function (data) {
+                                if (data) {
+                                    bootbox.alert({
+                                        message: "Este Fabricante ya existe!",
+                                        size: 'small',
+                                        
+
+                                    });
+                                    $("input#otroFabricante").val("");
+                                }
+                            }
+                        });  
+                    }
+                }]
+            }
         },
         {
             label: 'Producto',
@@ -206,8 +232,6 @@ function renderGrid(loadurl, tableId) {
                                 }
 
                             });
-
-
                         }
                     }
                 }],
@@ -223,17 +247,31 @@ function renderGrid(loadurl, tableId) {
             width: 250,
             hidden: true,
             editable: true,
-            search: false
-
-            // editoptions: {
-            //     dataEvents: [{
-            //         type: 'click',
-            //         fn: function (e) {
-            //                 $("#idProducto").attr('disabled', true);
-            //         }
-            //     }]
-            // }
-            
+            search: false,
+            editoptions: {
+                dataEvents: [{
+                    type: 'change',
+                    fn: function (e) {
+                        var rowKey = $table.getGridParam("selrow");
+                        var rowData = $table.getRowData(rowKey);
+                        var otroProd = $(this).val();
+                        $.ajax({
+                            type: "GET",
+                            url: '/lic/existeOtroProducto/' + otroProd,
+                            async: false,
+                            success: function (data) {
+                                if (data) {
+                                    bootbox.alert({
+                                        message: "Este Producto ya existe!",
+                                        size: 'small',
+                                    });
+                                    $("input#otroProducto").val("");
+                                }
+                            }
+                        });  
+                    }
+                }]
+            }          
         },
         {
             label: 'Fecha Inicio',
