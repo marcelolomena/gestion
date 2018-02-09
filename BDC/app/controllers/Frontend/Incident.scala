@@ -772,7 +772,7 @@ object Incident extends Controller {
 
               }
             }
-            println("qrystr:" + qrystr)
+            //println("qrystr:" + qrystr)
             if (tieneJson) {
               records = IncidentService.count(qrystr, user_id)
               panel = IncidentService.list(rows, page, qrystr, user_id)

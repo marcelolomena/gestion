@@ -129,11 +129,19 @@ impactTypeMap: java.util.HashMap[String,String]
 				                '_label -> Messages("addNewProgram.programInitiation"),
 				                'placeholder -> Messages("addNewProgram.placeholder.initiation_planned_date")
 				            )
-				           	
 	           			</div>
            			</div>
            		
            			<div class="left width_full">
+						<div class="left width-pr50 padding-top-3px" >
+							@inputText(
+							programForm("coco"),
+							'class -> "span4",
+							'_label -> "Responsable",
+							'placeholder -> "Responsable"
+							)
+						</div>
+
 	           			<div class="right width-pr50 padding-top-3px" >
 	           				@inputText(
 				                programForm("program_dates.release_date"),
@@ -229,6 +237,8 @@ impactTypeMap: java.util.HashMap[String,String]
 <div class="tooltip"></div>
 @frontend.headerScripts()
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.min.css")">
+<script type="text/javascript" src="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.js")"></script>
 <script type="text/javascript">
 	$(document).ready(
 			function() {
