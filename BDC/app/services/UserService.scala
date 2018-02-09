@@ -38,11 +38,22 @@ object UserService extends CustomColumns {
 
   def findAllDemandManager(): Seq[Users] = {
     DB.withConnection { implicit connection =>
-      //SQL("select * from art_user where user_profile LIKE 'dm' OR user_profile LIKE 'prm' order by first_name asc").as(Users.user *)
       SQL("select * from art_user where CAST(user_profile AS VARCHAR) != 'bu' order by first_name asc").as(Users.user *)
     }
-
   }
+
+  def findAllHumanResources(pattern: String): Seq[Users] = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          |SELECT periodo,numRut,nombre,apellido
+          |FROM RecursosHumanos WHERE
+          |periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND nombre like '%{pattern}%' OR apellido like '%{pattern}%'
+        """.stripMargin).on('pattern -> pattern).as(Users.user *)
+    }
+  }
+
 
   def findAllUserList(): Seq[Users] = {
 		DB.withConnection { implicit connection =>

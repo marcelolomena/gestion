@@ -544,13 +544,9 @@ object Program extends Controller {
    * save program details...
    */
   def saveNewProgram = Action { implicit request =>
-    //println("*****saveNewProgram")
-    //val count = ProgramService.findAllProgramList.size
     val today = Calendar.getInstance()
     today.setTime(new Date())
     val program_code = "20150101"
-
-
 
     val workflowStatusValues = new java.util.LinkedHashMap[String, String]()
     for (d <- ProgramTypeService.findAllWorkflowStatus) {
@@ -558,75 +554,35 @@ object Program extends Controller {
     }
 
     val programSubTypeMap = new java.util.LinkedHashMap[String, String]()
-    val subtype = SubTypeService.findAllSubTypeList();
-    for (s <- subtype) {
+    for (s <- SubTypeService.findAllSubTypeList) {
       programSubTypeMap.put(s.id.get.toString, s.sub_type)
     }
 
     val programTypeMap = new java.util.LinkedHashMap[String, String]()
-
-    val programtype = ProgramTypeService.findAllProgramTypeList();
-    for (s <- programtype) {
+    for (s <- ProgramTypeService.findAllProgramTypeList) {
       programTypeMap.put(s.id.get.toString, s.program_type)
     }
 
-    val impacttype = ImpactTypeService.findAllImpactTypeList();
-    val impacttypeMap = new java.util.LinkedHashMap[String, String]()
-    for (s <- impacttype) {
-      impacttypeMap.put(s.id.get.toString, s.impact_type)
+    val impacTypeMap = new java.util.LinkedHashMap[String, String]()
+    for (s <- ImpactTypeService.findAllImpactTypeList) {
+      impacTypeMap.put(s.id.get.toString, s.impact_type)
     }
 
-    val divisions = DivisionService.findDivisionByTable
     val divisionMap = new java.util.LinkedHashMap[String, String]()
-    for (d <- divisions) {
+    for (d <- DivisionService.findDivisionByTable) {
       divisionMap.put(d.codDivision.get.toString(), d.glosaDivision.get.toString)
     }
 
-    val users = UserService.findAllDemandManager();
-
     val usersMap = new java.util.LinkedHashMap[String, String]()
-    for (u <- users) {
+    for (u <- UserService.findAllDemandManager) {
       usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
     }
 
-    /*
-    val divisionObj = DivisionService.findDivisionByNameActiveAndInactive("Division Operaciones y Tecnologia")
-
-    var division_Id = 0
-    if (!divisionObj.isEmpty) {
-      division_Id = divisionObj.apply(0).dId.get
-    }
-    var gerenciasMap = new java.util.LinkedHashMap[String, String]()
-    if (division_Id == 0) {
-      val gerencias = GenrenciaService.findAllGenrencias
-
-      for (g <- gerencias) {
-        gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-      }
-    } else {
-      val gerencias = GenrenciaService.findAllGenrenciaListByDivision(division_Id.toString())
-      for (g <- gerencias) {
-        gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-      }
-    }
-    */
 
     val old_form = ARTForms.programForm.bindFromRequest
     old_form.fold(
-
       errors => {
-
         val theForm = ProgramService.validateForm(old_form, "")
-
-        var departmentsMap = new java.util.LinkedHashMap[String, String]()
-        if (!old_form.data.get("program_details.management").isEmpty && !old_form.data.get("program_details.management").get.isEmpty()) {
-          var gerencia_id = old_form.data.get("program_details.management").get
-          val departments = DepartmentService.findAllDepartmentListByGenrencia(gerencia_id)
-          for (d <- departments) {
-            departmentsMap.put(d.dId.get.toString(), d.department)
-          }
-        }
-
         BadRequest(views.html.frontend.program.addNewProgram(
           theForm,
           program_code,
@@ -635,7 +591,7 @@ object Program extends Controller {
           programSubTypeMap,
           programTypeMap,
           workflowStatusValues,
-          impacttypeMap
+          impacTypeMap
         )).withSession(
           "username" -> request.session.get("username").get,
           "utype" -> request.session.get("utype").get,
@@ -649,14 +605,7 @@ object Program extends Controller {
         val theForm = ProgramService.validateForm(ARTForms.programForm.fill(program), "")
 
         if (theForm.hasErrors) {
-          var departmentsMap = new java.util.LinkedHashMap[String, String]()
-          if (!program.program_details.management.isEmpty) {
-            var gerencia_id = program.program_details.management.get.toString()
-            val departments = DepartmentService.findAllDepartmentListByGenrencia(gerencia_id)
-            for (d <- departments) {
-              departmentsMap.put(d.dId.get.toString(), d.department)
-            }
-          }
+
           BadRequest(views.html.frontend.program.addNewProgram(
             theForm,
             program_code,
@@ -665,7 +614,7 @@ object Program extends Controller {
             programSubTypeMap,
             programTypeMap,
             workflowStatusValues,
-            impacttypeMap
+            impacTypeMap
           )).withSession(
             "username" -> request.session.get("username").get,
             "utype" -> request.session.get("utype").get,
@@ -679,12 +628,12 @@ object Program extends Controller {
 
           val dm = program.demand_manager
           val pms = ProgramMembers(None, last_program.toInt, dm, 7, 0, "")
-          //println("program member -------" + pms)
-          val lastsaved = ProgramMemberService.insertProgramMemberDetails(pms)
+
+          //val lastSaved = ProgramMemberService.insertProgramMemberDetails(pms)
 
           ///NUEVO PARA RIESGO
           val user_id = Integer.parseInt(request.session.get("uId").get)
-          //val kaka=createDefaultListRisks(user_id, last_program, 0)
+
           val ret = createInitialRisk(user_id, last_program, 0)
           if (ret == 1)
             Logger.debug("FRACASO AL CREAR RIESGOS!!!")
@@ -1111,15 +1060,6 @@ object Program extends Controller {
       val programDetails = ProgramService.findProgramOtherDetailsById(id)
       val programDates = ProgramService.findProgramDateDetailsById(id)
 
-      /*    val div_id = programDetails.get.devison
-      val div = DivisionService.findDivisionById(div_id)
-
-      if (!div.isEmpty) {
-        if (div.get.is_deleted != 1) {
-          divisionMap.put(div.get.dId.toString(), div.get.division)
-        }
-      }*/
-
       //println(div.get.is_deleted + " - - - - - - - - - - ")
 
       var departmentsMap = new java.util.LinkedHashMap[String, String]()
@@ -1131,18 +1071,7 @@ object Program extends Controller {
         division_Id = divisionObj.apply(0).dId.get
       }
       var gerenciasMap = new java.util.LinkedHashMap[String, String]()
-      /*if (division_Id == 0) {
-        val gerencias = GenrenciaService.findAllGenrencias
 
-        for (g <- gerencias) {
-          gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-        }
-      } else {
-        val gerencias = GenrenciaService.findAllGenrenciaListByDivision(division_Id.toString())
-        for (g <- gerencias) {
-          gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-        }
-      }*/
         val gerencias = GenrenciaService.findAllGenrencias
 
         for (g <- gerencias) {

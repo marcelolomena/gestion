@@ -5,7 +5,7 @@ divisionMap: java.util.HashMap[String,String],
 programSubType: java.util.HashMap[String,String],
 programType: java.util.HashMap[String,String],
 workflowStatus: java.util.HashMap[String,String],
-impacttypeMap: java.util.HashMap[String,String]
+impactTypeMap: java.util.HashMap[String,String]
 )(implicit session: play.api.mvc.Session,lang: Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import helper._
@@ -31,20 +31,19 @@ impacttypeMap: java.util.HashMap[String,String]
 			<input id="p_code" type="hidden" value="@program_code"/>
     		<div>
     			@form(action = controllers.Frontend.routes.Program.saveNewProgram,  'id->"add-new-program-form") {
-    				<input type="hidden" id="system_code" name="system_code" value="00" >
-    				<input type="hidden" id="internal_number" name="internal_number" value="00" >
-    				<input type="hidden" id="projects_numbers" name="projects_numbers" value="0" >
-    				<input type="hidden" id="pLevel" name="pLevel" value="00" >
-    				<input type="hidden" id="demand_management_status" name="demand_management_status" value="Initiativa OK" >
-    				<input type="hidden" id="program_details.state_gantt" name="program_details.state_gantt" value="NA" >
-    				<input type="hidden" id="program_dates.baseline_date" name="program_dates.baseline_date" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
-    				<input type="hidden" id="program_dates.closing_date_gantt" name="program_dates.closing_date_gantt" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
-    				<input type="hidden" id="program_code" name="program_code"  value="" >
-           			<input type="hidden" name="program_details.business_line" value="Not Needed"/>
-           			<input type="hidden" name="program_details.total_sap" value="100"/>
-           			<input type="hidden" name="program_details.completion_percentage" id="program_details.completion_percentage" value="0"/>
-           			<input type="hidden" name="program_manager" value="1"/>
-					<input type="hidden" name="program_details.management" value="0"/>
+    				<input type="hidden" name="system_code" id="system_code" value="00" />
+    				<input type="hidden" name="internal_number" id="internal_number" value="00" />
+    				<input type="hidden" name="projects_numbers" id="projects_numbers" value="0" />
+    				<input type="hidden" name="pLevel" id="pLevel" value="00" />
+    				<input type="hidden" name="demand_management_status" id="demand_management_status" value="Initiativa OK" />
+    				<input type="hidden" name="program_details.state_gantt" id="program_details.state_gantt" value="NA" />
+    				<input type="hidden" name="program_dates.baseline_date" id="program_dates.baseline_date" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
+    				<input type="hidden" name="program_dates.closing_date_gantt" id="program_dates.closing_date_gantt" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
+    				<input type="hidden" name="program_code" id="program_code" value="" />
+           			<input type="hidden" name="program_details.business_line" value="Not Needed" />
+           			<input type="hidden" name="program_details.total_sap" value="100" />
+           			<input type="hidden" name="program_details.completion_percentage" id="program_details.completion_percentage" value="0" />
+           			<input type="hidden" name="program_manager" value="1" />
 
     				<div class="left width_full">
 	    				<div class="left width-pr50 padding-top-3px" >
@@ -67,6 +66,7 @@ impacttypeMap: java.util.HashMap[String,String]
 				            )
 	           			</div>
            			</div>
+
            			<div class="left width_full">
 	           			<div class="left width-pr50 padding-top-3px" >
 	           			<span class="left width_full">
@@ -76,10 +76,9 @@ impacttypeMap: java.util.HashMap[String,String]
 						         'class -> "input-xlarge ",
 						         '_label -> Messages("addNewProgram.programSubType"),
 						          '_default -> Messages("addNewProgram.placeholder.program_sub_type")
-						     
 						      )
-					      </span>
-					      <span class="left width_full padding-top-3px">
+					    </span>
+					    <span class="left width_full padding-top-3px">
 						      	@select(
 								         programForm("demand_manager"),
 								         options(userMap),
@@ -87,7 +86,7 @@ impacttypeMap: java.util.HashMap[String,String]
 								         '_label -> Messages("addNewProgram.DemandManager"),
 								         '_default -> Messages("addNewProgram.placeholder.demand_manager")
 						      	)
-					      </span>
+					    </span>
 						<span class="left width_full padding-top-3px">
 							@select(
 							 programForm("clasificacion"),
@@ -177,7 +176,7 @@ impacttypeMap: java.util.HashMap[String,String]
 	          			<div class="left width-pr50 padding-top-3px" >
 	    					 @select(
 						         programForm("program_details.impact_type"),
-						         options(impacttypeMap),
+						         options(impactTypeMap),
 						         'class -> "input-xlarge ",
 						         '_label -> Messages("addNewProgram.impactType"),
 						          '_default -> Messages("addNewProgram.placeholder.impact_type")
@@ -230,7 +229,6 @@ impacttypeMap: java.util.HashMap[String,String]
 <div class="tooltip"></div>
 @frontend.headerScripts()
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
-<script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
 <script type="text/javascript">
 	$(document).ready(
 			function() {
@@ -262,19 +260,6 @@ impacttypeMap: java.util.HashMap[String,String]
 			 	              e.preventDefault();
 			 	          }
 			 	    });
-			 	      
-			@* 	      	  $("#estimated_cost").keydown(function (e) {
-			 		  if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
-			 	                (e.keyCode >= 96 && e.keyCode <= 105))) {
-			 	          }
-			 	          else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 &&
-			 	                       e.keyCode != 9) {
-			 	              e.preventDefault();
-			 	          }
-			 	    }); 
-			 	    	
-			 	    
-			 	    *@
 
 				$("#program_dates_initiation_planned_date").datepicker({
 					buttonImageOnly : true,
@@ -290,6 +275,7 @@ impacttypeMap: java.util.HashMap[String,String]
 					changeMonth : true,
 					changeYear : true
 				});
+
 				if ($("#program_dates_creation_date").val() == null
 						|| $("#program_dates_creation_date").val() == "") {
 					$("#program_dates_creation_date").datepicker("setDate",
