@@ -61,7 +61,7 @@
             },
             search: false
         }, {
-            label: 'Fecha de Compra',
+            label: 'Fecha de Trámite',
             name: 'fechaRecepcion',
             width: 120,
             align: 'center',
