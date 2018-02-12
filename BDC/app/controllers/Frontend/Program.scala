@@ -5,55 +5,16 @@ import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
 import org.json.JSONArray
 import art_forms.ARTForms
-import models.Activity
-import models.ActivityTypes
-import models.ProgramDate
-import models.ProgramDetail
-import models.ProgramMaster
-import models.Programs
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import services.DepartmentService
-import services.DivisionService
-import services.GenrenciaService
-import services.ProgramService
-import services.ProjectService
-import services.TimesheetService
-import services.UserService
-import services.DocumentService
-import services.DistributionTimeSheetService
-import models.VersionDetails
-import services.GenericProjectService
-import services.GenericService
-import models.UserSetting
-import services.TaskService
-import services.SubTaskServices
+import models._
+import services._
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import utils.ExportToExcel
-import services.SubTypeService
-import services.ProgramTypeService
-import services.UserRoleService
-import models.Baseline
 import play.libs.Json
-import services.ProgramMemberService
-import models.ProgramMembers
-import services.SAPServices
-import services.BudgetTypeService
-import models.Expenditure
-import models.Investment
-import models.SAPMaster
-import models.SAP
 import play.api._
 import scala.math.BigDecimal.RoundingMode
-import services.EarnValueService
-import services.SpiCpiCalculationsService
-import models.RiskManagementMaster
-import models.RiskManagementIssue
-import services.RiskService
-import models.ProgramMembersExternal
-import services.ProgramMemberExternalService
-import services.ImpactTypeService
 import scala.collection.mutable
 /**
  * This will have program and project details..
@@ -3293,5 +3254,25 @@ object Program extends Controller {
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
+  }
+
+  def addResponsible = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        val term = request.getQueryString("term").getOrElse("").toString()
+
+        val users = UserService.findAllHumanResources(term)
+
+        //Logger.debug(users.toString())
+        Ok(play.api.libs.json.Json.toJson(users)).withSession(
+          "username" -> request.session.get("username").get,
+          "utype" -> request.session.get("utype").get,
+          "uId" -> request.session.get("uId").get,
+          "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
   }
 }

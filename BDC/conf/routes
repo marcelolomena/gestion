@@ -253,6 +253,7 @@ GET    /new-member/$id<[A-Za-z0-9_-]+>                                          
 POST   /new-member/$id<[A-Za-z0-9_-]+>                                                                controllers.Frontend.Program.saveMembers(id:String)
 POST   /update-member                                                                                 controllers.Frontend.Program.updateMember(id:String)
 POST   /update-external-member                                                                        controllers.Frontend.Program.updateMemberExternal(id:String)
+GET    /addResponsible                                                                                controllers.Frontend.Program.addResponsible
 
 POST   /add-software-factory                                                                          controllers.Frontend.Program.addSoftwareFactory()
 POST   /add-external-contractor                                                                       controllers.Frontend.Program.addExternalContractor()

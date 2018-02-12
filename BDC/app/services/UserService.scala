@@ -42,15 +42,14 @@ object UserService extends CustomColumns {
     }
   }
 
-  def findAllHumanResources(pattern: String): Seq[Users] = {
+  def findAllHumanResources(pattern: String): Seq[NameUsr] = {
     DB.withConnection { implicit connection =>
-      SQL(
-        """
-          |SELECT periodo,numRut,nombre,apellido
-          |FROM RecursosHumanos WHERE
-          |periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
-          |AND nombre like '%{pattern}%' OR apellido like '%{pattern}%'
-        """.stripMargin).on('pattern -> pattern).as(Users.user *)
+      val sqlString =
+        """SELECT CAST(periodo AS VARCHAR) + '|' + CAST(numRut AS VARCHAR) value,RTRIM(nombre) + ' ' + apellido label FROM RecursosHumanos WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND (nombre like '%""" + pattern + """%' OR apellido like '%""" + pattern + """%') ORDER BY nombre,apellido"""
+
+      //play.Logger.debug(pattern)
+
+      SQL(sqlString).as(NameUsr.name *)
     }
   }
 
