@@ -137,12 +137,10 @@ function renderGrid(loadurl, tableId) {
                             url: '/lic/existeOtroFabricante/' + otroFabric,
                             async: false,
                             success: function (data) {
-                                if (data) {
+                                if (data.error_code == 0) {
                                     bootbox.alert({
                                         message: "Este Fabricante ya existe!",
-                                        size: 'small',
-                                        
-
+                                        size: 'small'
                                     });
                                     $("input#otroFabricante").val("");
                                 }
@@ -260,10 +258,10 @@ function renderGrid(loadurl, tableId) {
                             url: '/lic/existeOtroProducto/' + otroProd,
                             async: false,
                             success: function (data) {
-                                if (data) {
+                                if (data.error_code == 0) {
                                     bootbox.alert({
                                         message: "Este Producto ya existe!",
-                                        size: 'small',
+                                        size: 'small'
                                     });
                                     $("input#otroProducto").val("");
                                 }

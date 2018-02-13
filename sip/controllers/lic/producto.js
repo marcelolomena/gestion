@@ -301,15 +301,16 @@ function listcompratramite(req, res) {
 }
 
 function existeOtroProducto(req, res) {
-    var nombre = parseInt(req.params.otroProducto);
+    var nombre = req.params.otroProducto;
     entity.findOne({
             where: {
                 nombre: nombre
             },
+            attributes: ['nombre']
         })
         .then(function (result) {
             return res.json({
-                error: 0,
+                error_code: 0,
                 nombre: result.nombre
             });
         })
