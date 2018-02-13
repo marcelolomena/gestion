@@ -7,7 +7,7 @@ programType: java.util.HashMap[String,String],
 workflowStatus: java.util.HashMap[String,String],
 impactTypeMap: java.util.HashMap[String,String]
 )(implicit session: play.api.mvc.Session,lang: Lang, req : play.api.mvc.RequestHeader)
-@frontend.layout()
+@frontend.chanlayout()
 @import helper._
 @import services._
 @import java.util.Date._
@@ -16,18 +16,58 @@ impactTypeMap: java.util.HashMap[String,String]
 .main{margin: 0px 0 0 200px;}
 }
 #flot-placeholder{width:650px;height:auto;}
+.ui-autocomplete-loading {
+    background: white url("assets/images/ui-anim_basic_16x16.gif") right center no-repeat;
+  }
 .ui-autocomplete {
-    max-height: 100px;
-    overflow-y: auto;
-    /* prevent horizontal scrollbar */
-    overflow-x: hidden;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  float: left;
+  display: none;
+  min-width: 160px;
+  _width: 160px;
+  padding: 4px 0;
+  margin: 2px 0 0 0;
+  list-style: none;
+  background-color: #ffffff;
+  border-color: #ccc;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: 1px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+
+  .ui-menu-item > a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
+
+    &.ui-state-hover, &.ui-state-active {
+      color: #ffffff;
+      text-decoration: none;
+      background-color: #0088cc;
+      border-radius: 0px;
+      -webkit-border-radius: 0px;
+      -moz-border-radius: 0px;
+      background-image: none;
+    }
   }
-  /* IE 6 doesn't support max-height
-   * we use height instead, but this forces the menu to always be this tall
-   */
-  * html .ui-autocomplete {
-    height: 100px;
-  }
+}
 </style>
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
 </head>
@@ -143,9 +183,9 @@ impactTypeMap: java.util.HashMap[String,String]
 				            )
 	           			</div>
            			</div>
-           		
+
            			<div class="left width_full">
-						<div class="left width-pr50 padding-top-3px" >
+						<div class="left width-pr50 padding-top-3px">
 							@inputText(
 							programForm("coco"),
 							'class -> "span4",
@@ -248,11 +288,12 @@ impactTypeMap: java.util.HashMap[String,String]
 </div> 
 <div class="tooltip"></div>
 @frontend.headerScripts()
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.min.css")">
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
-<script type="text/javascript" src="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.js")"></script>
 <script type="text/javascript">
 	$(document).ready(
 			function() {
+
 				var currentDate = $("#current-date").val();
 
                 $("#estimated_cost_field").addClass("display-none");
@@ -338,6 +379,7 @@ impactTypeMap: java.util.HashMap[String,String]
 				});
 
 				$('#ui-datepicker-div').addClass('display-none');
+
 
 				$( "#coco" )
 					  .autocomplete(

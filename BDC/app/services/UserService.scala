@@ -44,11 +44,16 @@ object UserService extends CustomColumns {
 
   def findAllHumanResources(pattern: String): Seq[NameUsr] = {
     DB.withConnection { implicit connection =>
-      val sqlString =
-        """SELECT CAST(periodo AS VARCHAR) + '|' + CAST(numRut AS VARCHAR) value,RTRIM(nombre) + ' ' + apellido label FROM RecursosHumanos WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND (nombre like '%""" + pattern + """%' OR apellido like '%""" + pattern + """%') ORDER BY nombre,apellido"""
+      //val sqlString = """SELECT CAST(periodo AS VARCHAR) + '|' + CAST(numRut AS VARCHAR) value,RTRIM(nombre) + ' ' + apellido label FROM RecursosHumanos WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND (nombre like '%""" + pattern + """%' OR apellido like '%""" + pattern + """%') ORDER BY nombre,apellido"""
+      val spat = pattern.replace(" ","%")
+      play.Logger.debug("trompa : " + spat)
 
-      //play.Logger.debug(pattern)
-
+      val sqlString = "SELECT CAST(periodo AS VARCHAR) + '|' + CAST(numRut AS VARCHAR) value, " +
+      "RTRIM(nombre) + ' ' + apellido label,glosaDivision categorias FROM RecursosHumanos " +
+      "WHERE " +
+      "periodo=(SELECT MAX(periodo) FROM RecursosHumanos) " +
+      "AND (CONCAT(nombre , ' ' , apellido) LIKE '" + spat + "%' OR nombre LIKE '%" + spat + "%' OR apellido LIKE '%" + spat + "%') " +
+      "ORDER BY nombre,apellido"
       SQL(sqlString).as(NameUsr.name *)
     }
   }

@@ -301,19 +301,37 @@ object ErrorIncident {
 }
 
 case class NameUsr(
-  value: String,
-  label: String)
+                     value: String,
+                     label: String)
 
 object NameUsr {
   val name = {
     get[String]("value") ~
       get[String]("label") map {
-        case value ~ label => NameUsr(
-          value, label)
-      }
+      case value ~ label => NameUsr(
+        value, label)
+    }
 
   }
   implicit val nameUsr = Json.writes[NameUsr]
+}
+
+case class NameEmployee(
+                    value: String,
+                    label: String,
+                    category: String)
+
+object NameEmployee {
+  val employee = {
+    get[String]("value") ~
+      get[String]("label") ~
+      get[String]("category") map {
+      case value ~ label ~ category  => NameEmployee(
+        value, label, category)
+    }
+
+  }
+  implicit val nameEmployee = Json.writes[NameEmployee]
 }
 
 case class ComboStatus(

@@ -3264,7 +3264,6 @@ object Program extends Controller {
 
         val users = UserService.findAllHumanResources(term)
 
-        //Logger.debug(users.toString())
         Ok(play.api.libs.json.Json.toJson(users)).withSession(
           "username" -> request.session.get("username").get,
           "utype" -> request.session.get("utype").get,
