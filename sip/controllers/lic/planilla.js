@@ -331,7 +331,7 @@ function excel(req, res) {
   var sql = "SELECT b.contrato, b.ordencompra, convert(VARCHAR(10), b.idcui) as idcui, convert(VARCHAR(10), b.sap) as sap, c.nombre as nombreFab, h.razonsocial, a.nombre, f.nombre as nombreTipoInst, d.nombre as nombreClas,  " +
     "e.nombre as nombreTipoLic, convert(VARCHAR(10), b.fechacompra,105) as fechacompra, convert(VARCHAR(10), b.fechaexpiracion,105) as fechaexpiracion,  b.perpetua,  " +
     "convert(VARCHAR(10), b.liccompradas) as liccompradas, g.moneda, Format( valorlicencia ,'N','en-US' ) as valorlicencia, Format( valorsoporte ,'N','en-US' ) as valorsoporte,  " +
-    "convert(VARCHAR(10), b.fecharenovasoporte,105) as fecharenovasoporte, b.factura, a.licstock, b.comprador, b.correocomprador, b.comentario  " +
+    "convert(VARCHAR(10), b.fecharenovasoporte,105) as fecharenovasoporte, b.factura, convert(VARCHAR(10), a.licstock) as licstock, b.comprador, b.correocomprador, b.comentario  " +
     "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto  " +
     "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id  " +
     "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id  " +
