@@ -2,7 +2,8 @@ package models
 import anorm.SqlParser._
 import play.api.Play.current
 import java.util.Date
-import anorm._
+
+import anorm.{~, _}
 import play.api.db.DB
 import play.api.data.format.Formats._
 import play.api.data.Form
@@ -29,15 +30,15 @@ case class ProgramMaster(
 program_id: Option[Int], 
 program_type: Int, 
 program_sub_type: Option[Int],
-  //program_name: String, program_code: Long, program_description: Option[String],
-  program_name: String, 
-  program_code: Long, 
+  program_name: String,
+  program_code: Long,
+  internal_number:Option[Int],
+  pLevel: Option[String],
   sap_code: Option [Long], 
-  program_description: Option[String], //Cambio  
+  program_description: Option[String],
   work_flow_status: Integer, 
   demand_manager: Integer, 
-  //clasificacion: String, 
-  program_manager: Integer, 
+  program_manager: Integer,
   completion_percentage: Option[Double], 
   is_active: Option[Int], 
   planned_hours: Option[Long],
@@ -68,18 +69,58 @@ object ProgramSearch {
 object ProgramMaster extends CustomColumns {
 
   val pMaster = {
-    get[Option[Int]]("program_id") ~ get[Int]("program_type") ~ get[Option[Int]]("program_sub_type") ~ get[String]("program_name") ~
-          get[Long]("program_code") ~ get[Option[Long]]("sap_code") ~ get[Option[String]]("program_description") ~ //cambio
-      //get[Long]("program_code") ~ get[Option[String]]("program_description") ~
-      get[Int]("work_flow_status") ~ get[Int]("demand_manager") ~ get[Int]("program_manager") ~ get[Option[Double]]("completion_percentage") ~ get[Option[Int]]("is_active") ~ get[Option[Long]]("planned_hours") ~ get[String]("internal_state") ~ get[Option[Long]]("estimated_cost") map {
-        //case program_id ~ program_type ~ program_sub_type ~ program_name ~ program_code ~
-              case program_id ~ program_type ~ program_sub_type ~ program_name ~ program_code ~ sap_code ~ //cambio
-          program_description ~ work_flow_status ~
-          demand_manager ~ program_manager ~ completion_percentage ~ is_active ~ planned_hours ~ internal_state ~ estimated_cost =>
-        //  ProgramMaster(program_id, program_type, program_sub_type, program_name, program_code,
-            ProgramMaster(program_id, program_type, program_sub_type, program_name, program_code, sap_code, //cambio
-            program_description, work_flow_status,
-            demand_manager, program_manager, completion_percentage, is_active, planned_hours, internal_state,estimated_cost)
+    get[Option[Int]]("program_id") ~
+      get[Int]("program_type") ~
+      get[Option[Int]]("program_sub_type") ~
+      get[String]("program_name") ~
+      get[Long]("program_code") ~
+      get[Option[Int]]("internal_number") ~
+      get[Option[String]]("pLevel") ~
+      get[Option[Long]]("sap_code") ~
+      get[Option[String]]("program_description") ~
+      get[Int]("work_flow_status") ~
+      get[Int]("demand_manager") ~
+      get[Int]("program_manager") ~
+      get[Option[Double]]("completion_percentage") ~
+      get[Option[Int]]("is_active") ~
+      get[Option[Long]]("planned_hours") ~
+      get[String]("internal_state") ~
+      get[Option[Long]]("estimated_cost") map {
+              case program_id ~
+                program_type ~
+                program_sub_type ~
+                program_name ~
+                program_code ~
+                internal_number ~
+                pLevel ~
+                sap_code ~
+                program_description ~
+                work_flow_status ~
+                demand_manager ~
+                program_manager ~
+                completion_percentage ~
+                is_active ~
+                planned_hours ~
+                internal_state ~
+                estimated_cost =>
+            ProgramMaster(
+              program_id,
+              program_type,
+              program_sub_type,
+              program_name,
+              program_code,
+              internal_number,
+              pLevel,
+              sap_code,
+              program_description,
+              work_flow_status,
+              demand_manager,
+              program_manager,
+              completion_percentage,
+              is_active,
+              planned_hours,
+              internal_state,
+              estimated_cost)
       }
   }
 }
@@ -299,7 +340,7 @@ object ProgramStatus {
 }
 
 case class Programs(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int], program_name: String,
-  program_code: Long, program_description: Option[String], work_flow_status: Integer, demand_manager: Integer, clasificacion: String,
+  program_code: Long, internal_number: Option[Int], pLevel: Option[String],program_description: Option[String], work_flow_status: Integer, demand_manager: Integer, clasificacion: String,
   program_manager: Integer, program_details: ProgramDetail, program_dates: ProgramDate, is_active: Option[Int], planned_hours: Option[Long], internal_state:String,estimated_cost: Option[Long])
 
 object Programs {

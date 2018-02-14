@@ -941,7 +941,13 @@ object ProgramJira extends Controller {
       val pDetail = ProgramDetail(programDetails.get.devison, programDetails.get.management, programDetails.get.department, programDetails.get.impact_type, programDetails.get.business_line, programDetails.get.sap_code)
       val pDate = ProgramDate(programDates.get.initiation_planned_date, programDates.get.creation_date, programDates.get.closure_date.getOrElse(new Date), programDates.get.release_date)
 
-      val progrm = Programs(program.get.program_id, program.get.program_type, program.get.program_sub_type, program.get.program_name, program.get.program_code, program.get.program_description, program.get.work_flow_status, program.get.demand_manager: Integer, "", program.get.program_manager, pDetail, pDate, program.get.is_active, program.get.planned_hours, program.get.internal_state,program.get.estimated_cost)
+      val progrm = Programs(program.get.program_id, program.get.program_type, program.get.program_sub_type,
+        program.get.program_name, program.get.program_code,program.get.internal_number,program.get.pLevel,
+        program.get.program_description, program.get.work_flow_status,
+        program.get.demand_manager: Integer, "",
+        program.get.program_manager, pDetail, pDate,
+        program.get.is_active, program.get.planned_hours,
+        program.get.internal_state,program.get.estimated_cost)
 
       var users = UserService.findAllDemandManager();
 

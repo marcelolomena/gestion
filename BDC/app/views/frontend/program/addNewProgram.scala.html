@@ -84,9 +84,9 @@ impactTypeMap: java.util.HashMap[String,String]
     		<div>
     			@form(action = controllers.Frontend.routes.Program.saveNewProgram,  'id->"add-new-program-form") {
     				<input type="hidden" name="system_code" id="system_code" value="00" />
-    				<input type="hidden" name="internal_number" id="internal_number" value="00" />
+    				<input type="hidden" name="internal_number" id="internal_number"  />
     				<input type="hidden" name="projects_numbers" id="projects_numbers" value="0" />
-    				<input type="hidden" name="pLevel" id="pLevel" value="00" />
+    				<input type="hidden" name="pLevel" id="pLevel"  />
     				<input type="hidden" name="demand_management_status" id="demand_management_status" value="Initiativa OK" />
     				<input type="hidden" name="program_details.state_gantt" id="program_details.state_gantt" value="NA" />
     				<input type="hidden" name="program_dates.baseline_date" id="program_dates.baseline_date" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
@@ -187,7 +187,7 @@ impactTypeMap: java.util.HashMap[String,String]
            			<div class="left width_full">
 						<div class="left width-pr50 padding-top-3px">
 							@inputText(
-							programForm("coco"),
+							programForm("user_responsible"),
 							'class -> "span4",
 							'_label -> "Responsable",
 							'placeholder -> "Responsable"
@@ -381,7 +381,7 @@ impactTypeMap: java.util.HashMap[String,String]
 				$('#ui-datepicker-div').addClass('display-none');
 
 
-				$( "#coco" )
+				$( "#user_responsible" )
 					  .autocomplete(
 					  {
 							source: function(request, response){
@@ -400,8 +400,15 @@ impactTypeMap: java.util.HashMap[String,String]
 								},
 								  select: function(event, ui) {
 									event.preventDefault();
-									$("#coco").val(ui.item.label);
+									$("#user_responsible").val(ui.item.label);
 									console.log(ui.item.value)
+									var usrkey=ui.item.value.split("|")
+									var periodo=usrkey[0]
+									var rut=usrkey[1]
+									$("#internal_number").val(rut);
+									$("#pLevel").val(periodo);
+									console.log("RUT : " + $("#internal_number").val())
+									console.log("PERIODO : " + $("#pLevel").val())
 								  },
 					  }
 					  );

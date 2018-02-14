@@ -36,18 +36,21 @@ object ProgramService extends CustomColumns {
     val program_code = getUniqueProgramCode()
 
     DB.withConnection { implicit connection =>
-	  //println("En insertProgramDetails:"+pm);
+
+      val art_division: Int = SQL("SELECT TOP 1 dId FROM art_division_master WHERE idRRHH=1645").on('idRRHH -> pm.program_details.devison )as(scalar[Int].single)
+
       val result = SQL(
         """
           insert into art_program (
-          program_type, program_sub_type, program_name,program_code, 
+          program_type, program_sub_type, program_name,program_code,
+          internal_number,pLevel,
           program_description, work_flow_status, 
           demand_manager, program_manager, devison, management, department, sap_code,
           impact_type, business_line, creation_date, initiation_planned_date, closure_date,release_date,
           planned_hours,internal_state, estimated_cost, clasificacion
           ) 
           values(
-          {program_type},{program_sub_type},{program_name},{program_code},
+          {program_type},{program_sub_type},{program_name},{program_code},{internal_number},{pLevel},
           {program_description},{work_flow_status}, {demand_manager},{program_manager},{devison},
 					{management},{department},{sap_code}, {impact_type},{business_line}, {creation_date},{initiation_planned_date},{closure_date},{release_date},{planned_hours},{internal_state}, {estimated_cost}, {clasificacion} 
           )
@@ -56,11 +59,13 @@ object ProgramService extends CustomColumns {
           'program_sub_type -> pm.program_sub_type,
           'program_name -> pm.program_name.trim(),
           'program_code -> program_code,
+          'internal_number -> pm.internal_number,
+          'pLevel -> pm.pLevel,
           'program_description -> pm.program_description,
           'work_flow_status -> pm.work_flow_status,
           'demand_manager -> pm.demand_manager,
           'program_manager -> pm.demand_manager, //pm.program_manager,
-          'devison -> pm.program_details.devison,
+          'devison -> art_division,//pm.program_details.devison
           'management -> pm.program_details.management,
           'department -> pm.program_details.department,
           'sap_code -> pm.program_details.sap_code,
