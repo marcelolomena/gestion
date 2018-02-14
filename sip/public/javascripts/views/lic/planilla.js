@@ -33,8 +33,10 @@
         grid.navParameters.add = false;
         grid.navParameters.del = false;
         grid.build();
-        grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
+        // grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
     }
+
+    
 
     $(function () {
         var $table = $('#gridMaster');
@@ -553,6 +555,19 @@
             },            
         },
         ];
+        
         initGrid(viewModel);
+        $('#gridMaster').jqGrid('navButtonAdd', 'pagerMaster', {
+            caption: "",
+            buttonicon: "glyphicon glyphicon-download-alt",
+            title: "Excel",
+            position: "last",
+            onClickButton: function () {
+                var grid = $('#gridMaster');
+                var rowKey = grid.getGridParam("selrow");
+                var url = '/lic/exportplanilla';
+                $('#gridMaster').jqGrid('excelExport', { "url": url });
+            }
+        });
     });
 })(jQuery, _);
