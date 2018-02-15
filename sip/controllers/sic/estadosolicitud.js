@@ -303,7 +303,7 @@ exports.download = function (req, res) {
 		  			<td width="100%" style='width:100.0%;border:none;padding:0cm 5.4pt 0cm 5.4pt; height:36.0pt'>
 		  			  <div style='border:none;border-bottom:solid #4F81BD 1.0pt;padding:0cm 0cm 4.0pt 0cm; margin-left:19.85pt;margin-right:0cm'>
 		  				<p class=MsoTitle align=center style='margin-left:0cm;text-align:center'>
-						  <span lang=ES-CL><b>RFP N°
+						  <span lang=ES-CL><b>Solicitud de Cotización N°
 						  `
 		result += solicitudcotizacion.numerorfp
 		result += `

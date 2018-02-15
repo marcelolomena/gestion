@@ -7,6 +7,10 @@ var gridServ = {
 
         var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
+        tmplServ += "<div class='form-row', id='elcodigo'>";
+        tmplServ += "<div class='column-full'>Código SIC{codigosic}</div>";
+        tmplServ += "</div>";
+
         tmplServ += "<div class='form-row'>";
         tmplServ += "<div class='column-full'>Servicio<span style='color:red'>*</span>{idservicio}</div>";
         tmplServ += "</div>";
@@ -36,7 +40,7 @@ var gridServ = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'idServicio', 'Servicio', 'Glosa Servicio', 'Técnico', 'Id Documento', 'Documento', 'Glosa Referencia', 'ID Clase Criticidad', 'Clase Criticidad', 'Nota Criticidad', 'Color Nota'],
+            colNames: ['id', 'idServicio', 'Servicio', 'Glosa Servicio', 'Código SIC', 'Técnico', 'Id Documento', 'Documento', 'Glosa Referencia', 'ID Clase Criticidad', 'Clase Criticidad', 'Nota Criticidad', 'Color Nota'],
             colModel: [{
                     name: 'id',
                     index: 'id',
@@ -153,6 +157,13 @@ var gridServ = {
                         required: true
                     }
                 },
+                {
+                    name: 'codigosic',
+                    index: 'codigosic',
+                    width: 100,
+                    editable: false
+                },
+
                 {
                     name: 'iddoctotecnico',
                     index: 'iddoctotecnico',
@@ -374,7 +385,18 @@ var gridServ = {
 
                     //$('input#porcentaje', form).attr('readonly', 'readonly');
                     //$('input#valor', form).attr('readonly', 'readonly');
-
+                    var rowKey = $gridTab.getGridParam("selrow");
+                    var rowData = $gridTab.getRowData(rowKey);
+                    var thissid = rowData.codigosic;
+                    if (thissid != "") {
+                        // var lol = jQuery(thissid).attr('href');
+                        // var numero = jQuery(thissid).attr('href').split("/", 3).join("/").length;
+                        $('#elcodigo').html("<div class='column-full'>Código SIC: " + thissid + "</div>");
+                        $('input#codigosic', form).attr('readonly', 'readonly');
+                    } else {
+                        $('#elcodigo').html("<div class='column-full'>Código SIC: </div>");
+                        $('input#codigosic', form).attr('readonly', 'readonly');
+                    }
 
                 },
 
@@ -400,6 +422,7 @@ var gridServ = {
                 serializeEditData: sipLibrary.createJSON,
                 beforeShowForm: function (form) {
                     $('input#notacriticidad', form).attr('readonly', 'readonly');
+                    $("#elcodigo").empty().html('');
                 },
                 beforeSubmit: function (postdata, formid) {
                     if (postdata.idservicio == 0) {

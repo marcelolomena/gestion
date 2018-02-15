@@ -9,8 +9,8 @@ var secuencia = require("../../utils/secuenciaSIC");
 exports.action = function (req, res) {
     var action = req.body.oper;
     if (action != "del") {
-        if (req.body.fechaenviorfp != "")
-            fechaenviorfp = req.body.fechaenviorfp.split("-").reverse().join("-")
+        // if (req.body.fechaenviorfp != "")
+        //     fechaenviorfp = req.body.fechaenviorfp.split("-").reverse().join("-")
     }
     secuencia.getSecuencia(0, function (err, sec) {
         switch (action) {
@@ -18,8 +18,8 @@ exports.action = function (req, res) {
 
             case "add":
                 req.body.numerorfp = parseInt(sec);
-                // var hoy = "" + new Date().toISOString();
-                // req.body.fechaenviorfp = hoy;
+                var hoy = "" + new Date().toISOString();
+                req.body.fechaenviorfp = hoy;
                 models.solicitudcotizacion.create({
                     idcui: req.body.idcui,
                     idtecnico: req.body.idtecnico,
@@ -34,7 +34,7 @@ exports.action = function (req, res) {
                     correonegociador: req.body.correonegociador,
                     fononegociador: req.body.fononegociador,
                     numerorfp: req.body.numerorfp,
-                    fechaenviorfp: fechaenviorfp,
+                    fechaenviorfp: req.body.fechaenviorfp,
                     direccionnegociador: req.body.direccionnegociador,
                     colorestado: 'Rojo',
                     borrado: 1,
@@ -69,8 +69,8 @@ exports.action = function (req, res) {
                     correonegociador: req.body.correonegociador,
                     fononegociador: req.body.fononegociador,
                     direccionnegociador: req.body.direccionnegociador,
-                    numerorfp: req.body.numerorfp,
-                    fechaenviorfp: fechaenviorfp,
+                    numerorfp: req.body.numerorfp
+                    // fechaenviorfp: fechaenviorfp,
                 }, {
                     where: {
                         id: req.body.id
@@ -122,8 +122,8 @@ exports.list = function (req, res) {
     var page = req.query.page;
     var rows = req.query.rows;
     var filters = req.query.filters;
-    var sidx = req.query.sidx || 'numerorfp';
-    var sord = req.query.sord || 'desc';
+    var sidx = req.query.sidx || 'colorestado';
+    var sord = req.query.sord || 'asc';
 
     var orden = "[solicitudcotizacion]." + sidx + " " + sord;
 
