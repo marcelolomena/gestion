@@ -125,16 +125,40 @@ object ProgramMaster extends CustomColumns {
   }
 }
 
-case class ProgramDetails(program_id: Int, devison: Int, management: Option[Int], department: Option[Int],
-  impact_type: Int, business_line: Option[String], sap_code: Option[Int])
+case class ProgramDetails(
+       program_id: Int,
+       devison: Int,
+       management: Option[Int],
+       department: Option[Int],
+       impact_type: Int,
+       business_line: Option[String],
+       sap_code: Option[Int])
 
 object ProgramDetails {
 
   val pDetails = {
-    get[Int]("program_id") ~ get[Int]("devison") ~ get[Option[Int]]("management") ~ get[Option[Int]]("department") ~
-      get[Int]("impact_type") ~ get[Option[String]]("business_line") ~ get[Option[Int]]("sap_code") map {
-        case program_id ~ devison ~ management ~ department ~ impact_type ~ business_line ~ sap_code =>
-          ProgramDetails(program_id, devison, management, department, impact_type, business_line, sap_code)
+    get[Int]("program_id") ~
+      get[Int]("devison") ~
+      get[Option[Int]]("management") ~
+      get[Option[Int]]("department") ~
+      get[Int]("impact_type") ~
+      get[Option[String]]("business_line") ~
+      get[Option[Int]]("sap_code") map {
+        case program_id ~
+          devison ~
+          management ~
+          department ~
+          impact_type ~
+          business_line ~
+          sap_code =>
+          ProgramDetails(
+            program_id,
+            devison,
+            management,
+            department,
+            impact_type,
+            business_line,
+            sap_code)
 
       }
   }
@@ -339,9 +363,26 @@ object ProgramStatus {
   implicit val statusWrites = Json.writes[ProgramStatus]
 }
 
-case class Programs(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int], program_name: String,
-  program_code: Long, internal_number: Option[Int], pLevel: Option[String],program_description: Option[String], work_flow_status: Integer, demand_manager: Integer, clasificacion: String,
-  program_manager: Integer, program_details: ProgramDetail, program_dates: ProgramDate, is_active: Option[Int], planned_hours: Option[Long], internal_state:String,estimated_cost: Option[Long])
+case class Programs(
+                     program_id: Option[Int],
+                     program_type: Int,
+                     program_sub_type: Option[Int],
+                     program_name: String,
+                     program_code: Long,
+                     internal_number: Option[Int],
+                     pLevel: Option[String],
+                     program_description: Option[String],
+                     work_flow_status: Integer,
+                     demand_manager: Integer,
+                     clasificacion: String,
+                     program_manager: Integer,
+                     program_details: ProgramDetail,
+                     program_dates: ProgramDate,
+                     is_active: Option[Int],
+                     planned_hours: Option[Long],
+                     internal_state:String,
+                     estimated_cost: Option[Long]
+                   )
 
 object Programs {
 

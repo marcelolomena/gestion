@@ -956,7 +956,19 @@ object ProgramJira extends Controller {
         usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
       }
 
-      Ok(views.html.frontend.program.editProgram(ARTForms.programFormEdit.fill(progrm), id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.program.editProgram(
+        ARTForms.programFormEdit.fill(progrm),
+        id,
+        usersMap,
+        divisionMap,
+        programSubType,
+        programType,
+        workflowStatusValues,
+        impacttypeMap)).withSession(
+        "username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
@@ -1061,7 +1073,19 @@ object ProgramJira extends Controller {
             departmentsMap.put(d.dId.get.toString(), d.department)
           }
         }
-        BadRequest(views.html.frontend.program.editProgram(errors, id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        BadRequest(views.html.frontend.program.editProgram(
+          errors,
+          id,
+          usersMap,
+          divisionMap,
+          programSubType,
+          programType,
+          workflowStatusValues,
+          impacttypeMap)).withSession(
+          "username" -> request.session.get("username").get,
+          "utype" -> request.session.get("utype").get,
+          "uId" -> request.session.get("uId").get,
+          "user_profile" -> request.session.get("user_profile").get)
       },
       program => {
         val theForm = ProgramService.validateForm(ARTForms.programFormEdit.fill(program), id)
@@ -1092,7 +1116,19 @@ object ProgramJira extends Controller {
               departmentsMap.put(d.dId.get.toString(), d.department)
             }
           }
-          BadRequest(views.html.frontend.program.editProgram(theForm, id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.program.editProgram(
+            theForm,
+            id,
+            usersMap,
+            divisionMap,
+            programSubType,
+            programType,
+            workflowStatusValues,
+            impacttypeMap)).withSession(
+            "username" -> request.session.get("username").get,
+            "utype" -> request.session.get("utype").get,
+            "uId" -> request.session.get("uId").get,
+            "user_profile" -> request.session.get("user_profile").get)
         } else {
 
           val dm = program.demand_manager

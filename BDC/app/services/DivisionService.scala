@@ -211,4 +211,10 @@ object DivisionService extends CustomColumns {
     }
   }
 
+  def findIdDivisionRRHH(dId:Int): Option[Int] = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT idRRHH FROM art_division_master WHERE dId={dId}").on('dId->dId).as(scalar[Int].singleOpt)
+    }
+  }
+
 }

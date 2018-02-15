@@ -37,7 +37,7 @@ object ProgramService extends CustomColumns {
 
     DB.withConnection { implicit connection =>
 
-      val art_division: Int = SQL("SELECT TOP 1 dId FROM art_division_master WHERE idRRHH=1645").on('idRRHH -> pm.program_details.devison )as(scalar[Int].single)
+      val art_division: Int = SQL("SELECT TOP 1 dId FROM art_division_master WHERE idRRHH={idRRHH}").on('idRRHH -> pm.program_details.devison )as(scalar[Int].single)
 
       val result = SQL(
         """
@@ -88,6 +88,7 @@ object ProgramService extends CustomColumns {
 
   def updateProgram(id: String, pm: Programs): Int = {
     DB.withConnection { implicit connection =>
+      val art_division: Int = SQL("SELECT TOP 1 dId FROM art_division_master WHERE idRRHH={idRRHH}").on('idRRHH -> pm.program_details.devison )as(scalar[Int].single)
       SQL(
         """
           update art_program
@@ -124,7 +125,7 @@ object ProgramService extends CustomColumns {
           'work_flow_status -> pm.work_flow_status,
           'demand_manager -> pm.demand_manager,
           'program_manager -> pm.program_manager,
-          'devison -> pm.program_details.devison,
+          'devison -> art_division,//pm.program_details.devison,
           'management -> pm.program_details.management,
           'department -> pm.program_details.department,
           'impact_type -> pm.program_details.impact_type,
