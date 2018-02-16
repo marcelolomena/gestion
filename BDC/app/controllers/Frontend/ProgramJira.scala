@@ -944,7 +944,7 @@ object ProgramJira extends Controller {
       val progrm = Programs(program.get.program_id, program.get.program_type, program.get.program_sub_type,
         program.get.program_name, program.get.program_code,program.get.internal_number,program.get.pLevel,
         program.get.program_description, program.get.work_flow_status,
-        program.get.demand_manager: Integer, "",
+        program.get.demand_manager: Integer,program.get.clasificacion,
         program.get.program_manager, pDetail, pDate,
         program.get.is_active, program.get.planned_hours,
         program.get.internal_state,program.get.estimated_cost)

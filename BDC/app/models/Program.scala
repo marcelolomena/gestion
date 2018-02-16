@@ -43,7 +43,9 @@ program_sub_type: Option[Int],
   is_active: Option[Int], 
   planned_hours: Option[Long],
   internal_state: String, 
-  estimated_cost: Option[Long])
+  estimated_cost: Option[Long],
+  clasificacion: Option[String]
+                        )
 
 object ProgramSearch {
   val programSearch = {
@@ -85,7 +87,8 @@ object ProgramMaster extends CustomColumns {
       get[Option[Int]]("is_active") ~
       get[Option[Long]]("planned_hours") ~
       get[String]("internal_state") ~
-      get[Option[Long]]("estimated_cost") map {
+      get[Option[Long]]("estimated_cost")  ~
+      get[Option[String]]("clasificacion") map {
               case program_id ~
                 program_type ~
                 program_sub_type ~
@@ -102,7 +105,8 @@ object ProgramMaster extends CustomColumns {
                 is_active ~
                 planned_hours ~
                 internal_state ~
-                estimated_cost =>
+                estimated_cost ~
+                clasificacion =>
             ProgramMaster(
               program_id,
               program_type,
@@ -120,7 +124,8 @@ object ProgramMaster extends CustomColumns {
               is_active,
               planned_hours,
               internal_state,
-              estimated_cost)
+              estimated_cost,
+              clasificacion)
       }
   }
 }
@@ -374,7 +379,7 @@ case class Programs(
                      program_description: Option[String],
                      work_flow_status: Integer,
                      demand_manager: Integer,
-                     clasificacion: String,
+                     clasificacion:Option[String],
                      program_manager: Integer,
                      program_details: ProgramDetail,
                      program_dates: ProgramDate,

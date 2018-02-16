@@ -204,7 +204,7 @@ object ARTForms {
       "program_description" -> optional(text.verifying(Messages.get(langObj, "error.program.program_description.MinMax"), program_description => program_description.trim().length() > 3 && program_description.trim().length() <= 500)),
       "work_flow_status" -> number,
       "demand_manager" -> number,
-	  "clasificacion" -> text,
+	  "clasificacion" -> optional(text),
       "program_manager" -> number,
       "program_details" -> mapping(
         "devison" -> number,
@@ -252,7 +252,7 @@ object ARTForms {
       "program_description" -> optional(text.verifying(Messages.get(langObj, "error.program.program_description.MinMax"), program_description => program_description.trim().length() > 3 && program_description.trim().length() <= 500)),
       "work_flow_status" -> number,
       "demand_manager" -> number,
-	  "clasificacion" -> text,
+	  "clasificacion" -> optional(text),
       "program_manager" -> number,
       "program_details" -> mapping(
         "devison" -> number,

@@ -393,8 +393,10 @@ object ProgramService extends CustomColumns {
       new_form = form.withError("program_dates.closure_date", "Fecha de cierre no debe ser menor que la fecha de lanzamiento.")
     }
     if (new_form != null) {
+      play.Logger.debug("salio como el loly")
       new_form
     } else {
+      play.Logger.debug("salio bien")
       form
     }
   }

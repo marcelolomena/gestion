@@ -49,6 +49,7 @@ impacttypeMap: java.util.HashMap[String,String]
     				<input type="hidden" name="program_dates.baseline_date" id="program_dates.baseline_date" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
     				<input type="hidden" name="program_dates.closing_date_gantt" id="program_dates.closing_date_gantt" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
     				<input type="hidden" name="program_dates.actual_release_date" id="program_dates.actual_release_date" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
+					<input type="hidden" name="program_dates.creation_date" id="program_dates.creation_date" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
            			<input type="hidden" name="program_details.business_line" value="Not Needed" />
            			<input type="hidden" name="program_details.total_sap" value="100" />
            			<input type="hidden" name="program_code" id="program_code" value="@programForm.data.get("program_code")" />
@@ -96,6 +97,15 @@ impacttypeMap: java.util.HashMap[String,String]
 								         '_default -> Messages("addNewProgram.placeholder.demand_manager")
 						      	)
 					      </span>
+						<span class="left width_full padding-top-3px">
+							@select(
+							 programForm("clasificacion"),
+							 options("Evolutivo"->"Evolutivo", "Corrección"->"Corrección","Normativo"->"Normativo", "Obsolecencia Tecnologica"->"Obsolecencia Tecnologica", "Infraestructura"->"Infraestructura"),
+							 'class -> "input-xlarge ",
+							 '_label -> Messages("addNewProgram.clasificacion"),
+							  '_default -> Messages("addNewProgram.placeholder.clasificacion")
+						  )
+						</span>
 					       <span class="left width_full padding-top-3px">
 					       		@select(
 							         programForm("program_details.devison"),

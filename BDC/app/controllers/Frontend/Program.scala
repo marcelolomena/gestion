@@ -1009,12 +1009,12 @@ object Program extends Controller {
       }
 
       val program = ProgramService.findProgramMasterDetailsById(id)
-      Logger.debug("--->>> " + program.toString)
+
       val programDetails = ProgramService.findProgramOtherDetailsById(id)
       val programDates = ProgramService.findProgramDateDetailsById(id)
 
-      //Logger.debug("old dId : " + programDetails.get.devison)
-      //Logger.debug("new dId : " + DivisionService.findIdDivisionRRHH(programDetails.get.devison).get)
+      Logger.debug("old dId : " + programDetails.get.devison)
+      Logger.debug("new dId : " + DivisionService.findIdDivisionRRHH(programDetails.get.devison).get)
 
       val newdId = DivisionService.findIdDivisionRRHH(programDetails.get.devison).get
 
@@ -1043,14 +1043,15 @@ object Program extends Controller {
         program.get.program_description,
         program.get.work_flow_status,
         program.get.demand_manager: Integer,
-        "",
+        program.get.clasificacion,
         program.get.program_manager,
         pDetail,
         pDate,
         program.get.is_active,
         program.get.planned_hours,
         program.get.internal_state,
-        program.get.estimated_cost)
+        program.get.estimated_cost
+        )
 
       Ok(views.html.frontend.program.editProgram(
         ARTForms.programFormEdit.fill(progrm),
@@ -1134,6 +1135,8 @@ object Program extends Controller {
 
     oldForm.fold(
       errors => {
+        Logger.debug("KAGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+        Logger.debug(errors.toString)
         /*
         val divisionObj = DivisionService.findDivisionByNameActiveAndInactive("Division Operaciones y Tecnologia")
 
