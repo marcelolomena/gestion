@@ -313,6 +313,11 @@ function excel(req, res) {
       width: 10
     },
     {
+      caption: 'Alerta Renovación',
+      type: 'string',
+      width: 30
+    },
+    {
       caption: 'Comprador',
       type: 'string',
       width: 30
@@ -331,7 +336,7 @@ function excel(req, res) {
   var sql = "SELECT b.contrato, b.ordencompra, convert(VARCHAR(10), b.idcui) as idcui, convert(VARCHAR(10), b.sap) as sap, c.nombre as nombreFab, h.razonsocial, a.nombre, f.nombre as nombreTipoInst, d.nombre as nombreClas,  " +
     "e.nombre as nombreTipoLic, convert(VARCHAR(10), b.fechacompra,105) as fechacompra, convert(VARCHAR(10), b.fechaexpiracion,105) as fechaexpiracion,  b.perpetua,  " +
     "convert(VARCHAR(10), b.liccompradas) as liccompradas, g.moneda, Format( valorlicencia ,'N','en-US' ) as valorlicencia, Format( valorsoporte ,'N','en-US' ) as valorsoporte,  " +
-    "convert(VARCHAR(10), b.fecharenovasoporte,105) as fecharenovasoporte, b.factura, convert(VARCHAR(10), a.licstock) as licstock, b.comprador, b.correocomprador, b.comentario  " +
+    "convert(VARCHAR(10), b.fecharenovasoporte,105) as fecharenovasoporte, b.factura, convert(VARCHAR(10), a.licstock) as licstock, b.alertarenovacion, b.comprador, b.correocomprador, b.comentario  " +
     "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto  " +
     "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id  " +
     "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id  " +
@@ -342,7 +347,18 @@ function excel(req, res) {
   sequelize.query(sql)
     .spread(function (planilla) {
       var arr = []
+
       for (var i = 0; i < planilla.length; i++) {
+        var alerta = ''
+        if (planilla[i].alertarenovacion == 'aGris') {
+          alerta = 'HISTORICO'
+        } else if (planilla[i].alertarenovacion == 'Vencida') {
+          alerta = 'VENCIDA'
+        } else if (planilla[i].alertarenovacion == 'Renovar') {
+          alerta = 'RENOVAR'
+        } else if (planilla[i].alertarenovacion == 'bAl Dia') {
+          var alerta = 'AL DIA'
+        }
         var a = [i + 1,
           (planilla[i].contrato == null) ? '' : planilla[i].contrato,
           (planilla[i].ordencompra == null) ? '' : planilla[i].ordencompra,
@@ -364,13 +380,14 @@ function excel(req, res) {
           (planilla[i].fecharenovasoporte == null) ? '' : planilla[i].fecharenovasoporte,
           (planilla[i].factura == null) ? '' : planilla[i].factura,
           (planilla[i].licstock == null) ? '' : planilla[i].licstock,
+          alerta,
           (planilla[i].comprador == null) ? '' : planilla[i].comprador,
           (planilla[i].correocomprador == null) ? '' : planilla[i].correocomprador,
           (planilla[i].comentario == null) ? '' : planilla[i].comentario
         ];
         arr.push(a);
-        console.log(a);
-        console.log("JSON:" + JSON.stringify(a));
+        // console.log(a);
+        // console.log("JSON:" + JSON.stringify(a));
       }
       conf.rows = arr;
 
