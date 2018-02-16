@@ -1316,7 +1316,15 @@ object Dashboard extends Controller {
                     if (m.data.toInt != 0) {
                       qrystr += "work_flow_status" + fromPredicate(m.op) + filtroNombrePrograma("estado", m.data) + " AND "
                     }
-               }else{
+               } else if (m.field.equals("pfecini")) {
+                    qrystr += "plan_start_date" + fromPredicate(m.op) + filtroNombrePrograma("pfecini", m.data) + " AND "
+               } else if (m.field.equals("pfecter")) {
+                 qrystr += "plan_end_date" + fromPredicate(m.op) + filtroNombrePrograma("pfecter", m.data) + " AND "
+               } else if (m.field.equals("rfecini")) {
+                 qrystr += "real_start_date" + fromPredicate(m.op) + filtroNombrePrograma("rfecini", m.data) + " AND "
+               } else if (m.field.equals("rfecter")) {
+                 qrystr += "real_end_date" + fromPredicate(m.op) + filtroNombrePrograma("rfecter", m.data) + " AND "
+               } else {
                     qrystr += m.field + fromPredicate(m.op) + filtroNombrePrograma(m.field, m.data) + " AND "
                }
               }

@@ -299,9 +299,6 @@ object ProgramService extends CustomColumns {
       invalid_release_date = false
     }
 
-    //println(clouser_date + " " + end_planned_date + " " + initiation_planned_date + creationDate + "");
-    //println(date1.toLong + " " + date2.toLong + " " + date3.toLong + " " + (date1.toLong < date2.toLong) + " " + (date1.toLong < date3.toLong));
-
     if (date1 != 0 && date2 != 0) {
 
       if (date1.toLong < date2.toLong) {
@@ -314,22 +311,12 @@ object ProgramService extends CustomColumns {
       }
     }
 
-    /*if (!clouserDate || !clouserDate2) {
-      //form.withError("program_dates.closure_date", Messages.get(langObj, "error.addnewprogram.closuredatecreationdatecompare"))
-    } 
-      else if (date4.toLong > date1.toLong) {
-      form.withError("program_dates.closure_date", Messages.get(langObj, "error.addnewprogram.closuredatereleasedatecompare"))
-    }    */
-
     if (!form("program_name").value.isEmpty && !StringUtils.isEmpty(form("program_name").value.get)) {
       val program = form("program_name").value.get.trim
       val existData = findProgramMasterDetailsByProgramName(program, old_id)
 
       if (existData.size > 0) {
-        /*if (!StringUtils.equals(existData.get.program_id.toString(), old_id)) {*/
         new_form = form.withError("program_name", "This program name already in use, please insert unique program name.")
-        /* }*/
-
       }
     }
 
@@ -339,64 +326,13 @@ object ProgramService extends CustomColumns {
     if (!creationDate) {
       new_form = form.withError("program_dates.end_planned_date", Messages.get(langObj, "error.addnewprogram.creationdatetodaycompare"))
     }
-    /*
-    if (!StringUtils.isEmpty(old_id)) {
 
-      if (!invalid_release_date && release_date != null) {
-
-        val maxProjectEndDate = ProjectService.findMaxProjectEndDate(old_id);
-        if (maxProjectEndDate != null) {
-          if (date4.toLong < maxProjectEndDate.get.getTime) {
-            new_form = form.withError("program_dates.release_date", "Program end date can not be before project end date");
-          }
-        }
-
-        val minProjectEndDat = ProjectService.findMinProjectStartDate(old_id)
-        if (minProjectEndDat != null) {
-          if (date3.toLong > minProjectEndDat.get.getTime) {
-            new_form = form.withError("program_dates.initiation_planned_date", "Program start date can not be after project start date");
-          }
-        }
-
-      }
-
-      val planned_value = ProgramService.getPlannedHoursForProgram(old_id)
-      if (!form("planned_hours").value.isEmpty && !StringUtils.isEmpty(form("planned_hours").value.get)) {
-        val actual_planned_hours = form("planned_hours").value.get.toDouble
-        var project_planned_hours: Double = 0
-        val projects = ProjectService.findProjectListForProgram(old_id)
-        for (p <- projects) {
-          if (!p.planned_hours.isEmpty) {
-            project_planned_hours += p.planned_hours.get
-          }
-        }
-        if (actual_planned_hours < project_planned_hours) {
-          new_form = form.withError("planned_hours", "Total hours associated with program are less than planned hours for a project, please enter valid hours.")
-        }
-      } else {
-        val actual_planned_hours: Double = 0
-        var project_planned_hours: Double = 0
-        val projects = ProjectService.findProjectListForProgram(old_id)
-        for (p <- projects) {
-          if (!p.planned_hours.isEmpty) {
-            project_planned_hours += p.planned_hours.get
-          }
-        }
-        if (actual_planned_hours < project_planned_hours) {
-          new_form = form.withError("planned_hours", "Total hours associated with program are less than planned hours for a project, please enter valid hours.")
-        }
-      }
-
-    }
- */
     if (date1 < date4 && date1 != 0) {
       new_form = form.withError("program_dates.closure_date", "Fecha de cierre no debe ser menor que la fecha de lanzamiento.")
     }
     if (new_form != null) {
-      play.Logger.debug("salio como el loly")
       new_form
     } else {
-      play.Logger.debug("salio bien")
       form
     }
   }
@@ -909,16 +845,25 @@ object ProgramService extends CustomColumns {
     }
   }
 
-  def searchDashboardReport(impact_type: String, work_flow_status: String, program_name: String, program_code: String, sap_code: String, program_type: String, program_sub_type: String, division: String, program_role: String, item_budget: String, sort_type: String): Seq[ProgramMaster] = {
-    //var sqlString = ""
-    //var stment1 = ""
-    //var stment2 = ""
-    //var stment3 = ""
-    //var stment4 = ""
-    //var stment5 = ""
-    //var stment6 = ""
-    //var stment7 = ""
-    //var tstx = "OR"
+  def searchDashboardReport(
+                             impact_type: String,
+                             work_flow_status: String,
+                             program_name: String,
+                             program_code: String,
+                             sap_code: String,
+                             program_type: String,
+                             program_sub_type: String,
+                             division: String,
+                             program_role: String,
+                             item_budget: String,
+                             sort_type: String): Seq[ProgramMaster] = {
+    DB.withConnection { implicit connection =>
+
+    var art_division: Int =0
+
+    if(!division.isEmpty)
+      art_division = SQL("SELECT TOP 1 dId FROM art_division_master WHERE idRRHH={idRRHH}").on('idRRHH -> division.toInt ).as(scalar[Int].single)
+
     var sqlString = "SELECT * from art_program where "
 
     if (!StringUtils.isEmpty(impact_type)) {
@@ -949,7 +894,7 @@ object ProgramService extends CustomColumns {
     }
 
     if (!StringUtils.isEmpty(division)) {
-      sqlString = sqlString + " devison=" + division + " AND"
+      sqlString = sqlString + " devison=" + art_division + " AND"
     }
 
     if (!StringUtils.isEmpty(program_role)) {
@@ -961,128 +906,6 @@ object ProgramService extends CustomColumns {
       sqlString = sqlString + " program_id IN (select DISTINCT(program_id) from art_program_sap_master where budget_type=" + item_budget + " and is_active=1) AND"
     }
 
-    /*
-    if (!StringUtils.isEmpty(delay_level)) {
-      var minVal: Double = 0
-      var maxVal: Double = 0
-      var programIds = ""
-      var nonProgramIds = ""
-
-      Integer.parseInt(delay_level) match {
-        case 0 =>
-          minVal = 0
-          maxVal = 0.7
-        case 1 =>
-          minVal = 0.7
-          maxVal = 0.9
-        case 2 =>
-          minVal = 0.9
-          maxVal = 1
-        case 3 =>
-          minVal = 1
-          maxVal = 1000000
-      }
-      */
-    /*
-      val programs = ProgramService.findActivePrograms()
-      for (p <- programs) {
-        val earn = SpiCpiCalculationsService.findCalculationsForDashboard(p.program_id.get.toString())
-
-        if (!earn.isEmpty) {
-          if (!earn.get.spi.isEmpty) {
-            var spi = earn.get.spi.get
-            if (spi >= minVal && spi < maxVal) {
-
-              if (StringUtils.isEmpty(programIds)) {
-                programIds = p.program_id.get.toString()
-              } else {
-                programIds += "," + p.program_id.get.toString()
-              }
-            }
-
-          }
-        }
-        if (StringUtils.isEmpty(nonProgramIds)) {
-          nonProgramIds = p.program_id.get.toString()
-        } else {
-          nonProgramIds += "," + p.program_id.get.toString()
-        }
-      }
-
-      if (!StringUtils.isEmpty(programIds)) {
-        sqlString = sqlString + " program_id IN (" + programIds + ") AND"
-      } else {
-        sqlString = sqlString + " program_id NOT IN (" + nonProgramIds + ") AND"
-      }
-    }
-*/
-    //println("---------------------"+sqlString)
-    /*
-    if (!StringUtils.isEmpty(project_classification)) {
-      var minVal: Double = 0
-      var maxVal: Double = 0
-      var programIds = ""
-      var nonProgramIds = ""
-
-      Integer.parseInt(project_classification) match {
-        case 0 =>
-          minVal = 0
-          maxVal = 1350
-        case 1 =>
-          maxVal = 12500
-          minVal = 1350
-        case 2 =>
-          minVal = 12500
-          maxVal = -1
-      }
-
-      val programs = ProgramService.findActivePrograms()
-      var isValid = false
-      for (p <- programs) {
-        isValid = false
-        val total_investment = SAPServices.calculateTotalSAPInvestment(p.program_id.get.toString())
-        val total_expenditure = SAPServices.calculateTotalSAPExpenditure(p.program_id.get.toString())
-        val total_sum = total_investment + total_expenditure
-
-        if (maxVal == -1) {
-          if (total_sum >= minVal) {
-            isValid = true
-          }
-        } else {
-
-          if (total_sum >= minVal && total_sum < maxVal) {
-            isValid = true
-          }
-        }
-
-        if (isValid) {
-          if (StringUtils.isEmpty(programIds)) {
-            programIds = p.program_id.get.toString()
-
-          } else {
-            programIds += "," + p.program_id.get.toString()
-
-          }
-        }
-
-        if (StringUtils.isEmpty(nonProgramIds)) {
-          nonProgramIds = p.program_id.get.toString()
-        } else {
-          nonProgramIds = nonProgramIds + "," + p.program_id.get.toString()
-        }
-
-        isValid = false
-
-      }
-
-      if (!StringUtils.isEmpty(programIds)) {
-        sqlString = sqlString + " program_id IN (" + programIds + ") AND"
-      } else {
-        sqlString = sqlString + " program_id NOT IN (" + nonProgramIds + ") AND"
-      }
-
-    }
-*/
     if (sqlString.contains("AND")) {
       sqlString = rtrim(sqlString).toString()
 
@@ -1100,8 +923,7 @@ object ProgramService extends CustomColumns {
       }
     }
 
-    //println("la super query:" + sqlString)
-    DB.withConnection { implicit connection =>
+
       SQL(sqlString).as(ProgramMaster.pMaster *)
     }
   }

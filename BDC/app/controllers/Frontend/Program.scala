@@ -21,19 +21,6 @@ import scala.collection.mutable
  */
 object Program extends Controller {
 
-  /*val users = UserService.findAllUsers
-  val gerencias = GenrenciaService.findAllGenrencias
-  var userMap = new java.util.HashMap[String, String]()
-
-  var gerenciasMap = new java.util.HashMap[String, String]()
-  for (u <- users) {
-    userMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
-  }
-  for (g <- gerencias) {
-
-    gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-  }
-*/
   def programsListing(programnumber: Integer) = Action { implicit request =>
     request.session.get("username").map { user =>
       val user_id = Integer.parseInt(request.session.get("uId").get)
@@ -107,17 +94,7 @@ object Program extends Controller {
     for (b <- budgetTypes) {
       budgetTypeValues.put(b.id.get.toString(), b.budget_type.toString())
     }
-    /*
-    val prgramMembers = ProgramMemberService.findProgramManagers("8")
-    var userIds = ""
-    for (p <- prgramMembers) {
-      if (StringUtils.isEmpty(userIds)) {
-        userIds = p.member_id.toString()
-      } else {
-        userIds += ", " + p.member_id.toString()
-      }
-    }
-*/
+
     var programManagerValues = new java.util.LinkedHashMap[String, String]()
     //if (!StringUtils.isEmpty(userIds)) {
     //val users = UserService.findProgramManagersDetails(userIds)
@@ -139,24 +116,13 @@ object Program extends Controller {
   def searchResult() = Action { implicit request =>
 
     request.session.get("username").map { user =>
-      /*
-      var delayLevelValues = new java.util.HashMap[String, String]()
-      for (d <- models.delayLevelValues.values) {
-        delayLevelValues.put(d.id.toString, d.toString())
-      }
 
-      var projectClassificationValues = new java.util.HashMap[String, String]()
-      for (d <- models.projectClassificationValues.values) {
-        projectClassificationValues.put(d.id.toString, d.toString())
-      }
-
-*/
-      var workflowStatusValues = new java.util.HashMap[String, String]()
+      val workflowStatusValues = new java.util.HashMap[String, String]()
       for (d <- ProgramTypeService.findAllWorkflowStatus) {
         workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
       }
 
-      var modelManagementValues = new java.util.HashMap[String, String]()
+      val modelManagementValues = new java.util.HashMap[String, String]()
       for (d <- ProgramTypeService.findAllProgramType) {
         modelManagementValues.put(d.id.get.toString, d.program_type.toString())
       }
@@ -166,55 +132,48 @@ object Program extends Controller {
         divisionValues.put(d.codDivision.get.toString(), d.glosaDivision.get.toString)
       }
 
-      var impacttype = ImpactTypeService.findAllImpactTypeList();
-      var impacttypeMap = new java.util.HashMap[String, String]()
-      for (s <- impacttype) {
+      val impacttypeMap = new java.util.HashMap[String, String]()
+      for (s <- ImpactTypeService.findAllImpactTypeList) {
         impacttypeMap.put(s.id.get.toString, s.impact_type)
       }
 
-      var programSubTypeValues = new java.util.HashMap[String, String]()
+      val programSubTypeValues = new java.util.HashMap[String, String]()
       for (d <- SubTypeService.findAllSubTypeList) {
         programSubTypeValues.put(d.id.get.toString, d.sub_type.toString())
       }
 
-      var budgetTypeValues = new java.util.LinkedHashMap[String, String]()
-      val budgetTypes = BudgetTypeService.findActiveBudgetTypes()
-      for (b <- budgetTypes) {
+      val budgetTypeValues = new java.util.LinkedHashMap[String, String]()
+      for (b <- BudgetTypeService.findActiveBudgetTypes) {
         budgetTypeValues.put(b.id.get.toString(), b.budget_type.toString())
       }
 
-      /*
-      val prgramMembers = ProgramMemberService.findProgramManagers("8")
-      var userIds = ""
-      for (p <- prgramMembers) {
-        if (StringUtils.isEmpty(userIds)) {
-          userIds = p.member_id.toString()
-        } else {
-          userIds += ", " + p.member_id.toString()
-        }
-      }
-      */
-
-      var programManagerValues = new java.util.LinkedHashMap[String, String]()
-      //if (!StringUtils.isEmpty(userIds)) {
-      //val users = UserService.findProgramManagersDetails(userIds)
-      val users = UserService.findAllProgramMember
-      if (users.size > 0) {
-        for (u <- users) {
+      val programManagerValues = new java.util.LinkedHashMap[String, String]()
+      for (u <- UserService.findAllProgramMember) {
           programManagerValues.put(u.uid.get.toString(), u.first_name.substring(0, 1) + " " + u.last_name)
-        }
       }
-      //}
-      var sortValues = new java.util.HashMap[String, String]()
+
+      val sortValues = new java.util.HashMap[String, String]()
       sortValues.put("1", "Alphabetically");
       sortValues.put("2", "Release Date");
       ARTForms.searchProgram.bindFromRequest.fold(
         errors => {
-          Ok(views.html.frontend.program.programForm( /*delayLevelValues, projectClassificationValues,*/ impacttypeMap, workflowStatusValues, modelManagementValues, divisionValues, programSubTypeValues, budgetTypeValues, programManagerValues, sortValues, ARTForms.searchProgram)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          Ok(views.html.frontend.program.programForm(
+            impacttypeMap,
+            workflowStatusValues,
+            modelManagementValues,
+            divisionValues,
+            programSubTypeValues,
+            budgetTypeValues,
+            programManagerValues,
+            sortValues,
+            ARTForms.searchProgram
+          )).withSession(
+            "username" -> request.session.get("username").get,
+            "utype" -> request.session.get("utype").get,
+            "uId" -> request.session.get("uId").get,
+            "user_profile" -> request.session.get("user_profile").get)
         },
         searchForm => {
-          //var delay_level = ""
-          //var project_classification = ""
           var work_flow_status = ""
           var program_name = ""
           var program_code = "" //agregado
@@ -251,11 +210,6 @@ object Program extends Controller {
           if (!searchForm.division.isEmpty) {
             division = searchForm.division.get.trim()
           }
-          /*
-          if (!searchForm.project_classification.isEmpty) {
-            project_classification = searchForm.project_classification.get.trim()
-          }
-          */
 
           if (!searchForm.program_role.isEmpty) {
             program_role = searchForm.program_role.get.trim()
@@ -272,26 +226,41 @@ object Program extends Controller {
             impact_type = searchForm.impact_type.get.trim()
           }
 
-          //println(" program_type=" + program_type + " division=" + division + " item_budget" + item_budget + " program_role=" + program_role + " item_budget=" + item_budget)
-
           val user_id = Integer.parseInt(request.session.get("uId").get)
           val username = request.session.get("username").get
+          val userSession = request.session +
+            ("uId" -> user_id.toString()) +
+            ("username" -> username) +
+            ("utype" -> request.session.get("utype").get) +
+            ("user_profile" -> request.session.get("user_profile").get)
 
-          //var tasksDependents = new java.util.HashMap[Integer, Long]()
-          val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
-
-          if (StringUtils.isEmpty(work_flow_status) && StringUtils.isEmpty(program_name) && StringUtils.isEmpty(program_code) && StringUtils.isEmpty(sap_code) && StringUtils.isEmpty(program_type) && //agregado
-            StringUtils.isEmpty(program_sub_type) && StringUtils.isEmpty(division) &&
-            StringUtils.isEmpty(impact_type) && StringUtils.isEmpty(program_role) &&
+          if (StringUtils.isEmpty(work_flow_status) &&
+            StringUtils.isEmpty(program_name) &&
+            StringUtils.isEmpty(program_code) &&
+            StringUtils.isEmpty(sap_code) &&
+            StringUtils.isEmpty(program_type) && //agregado
+            StringUtils.isEmpty(program_sub_type) &&
+            StringUtils.isEmpty(division) &&
+            StringUtils.isEmpty(impact_type) &&
+            StringUtils.isEmpty(program_role) &&
             StringUtils.isEmpty(item_budget)) {
             val programs = ProgramService.findAllProgramList()
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
           } else {
-            val programs = ProgramService.searchDashboardReport(impact_type, work_flow_status, program_name, program_code, sap_code, program_type, program_sub_type, division, program_role, item_budget, "") //agregado
+            val programs = ProgramService.searchDashboardReport(
+              impact_type,
+              work_flow_status,
+              program_name,
+              program_code,
+              sap_code,
+              program_type,
+              program_sub_type,
+              division,
+              program_role,
+              item_budget,
+              "") //agregado
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
-
-            //Ok("SUCCESS");
           }
         })
     }.getOrElse {
@@ -528,7 +497,6 @@ object Program extends Controller {
     for (u <- UserService.findAllDemandManager) {
       usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
     }
-
 
     val old_form = ARTForms.programForm.bindFromRequest
     old_form.fold(

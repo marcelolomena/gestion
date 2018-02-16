@@ -84,9 +84,9 @@ impactTypeMap: java.util.HashMap[String,String]
     		<div>
     			@form(action = controllers.Frontend.routes.Program.saveNewProgram,  'id->"add-new-program-form") {
     				<input type="hidden" name="system_code" id="system_code" value="00" />
-    				<input type="hidden" name="internal_number" id="internal_number"  />
+    				<input type="hidden" name="internal_number" id="internal_number" value="@programForm.data.get("internal_number")"  />
     				<input type="hidden" name="projects_numbers" id="projects_numbers" value="0" />
-    				<input type="hidden" name="pLevel" id="pLevel"  />
+    				<input type="hidden" name="pLevel" id="pLevel" value="@programForm.data.get("pLevel")" />
     				<input type="hidden" name="demand_management_status" id="demand_management_status" value="Initiativa OK" />
     				<input type="hidden" name="program_details.state_gantt" id="program_details.state_gantt" value="NA" />
     				<input type="hidden" name="program_dates.baseline_date" id="program_dates.baseline_date" value="@(new java.util.Date().format("dd-MM-yyyy"))" />
@@ -121,34 +121,35 @@ impactTypeMap: java.util.HashMap[String,String]
 
            			<div class="left width_full">
 	           			<div class="left width-pr50 padding-top-3px" >
-	           			<span class="left width_full">
-	           				 @select(
-						         programForm("program_sub_type"),
-						         options(programSubType),
-						         'class -> "input-xlarge ",
-						         '_label -> Messages("addNewProgram.programSubType"),
-						          '_default -> Messages("addNewProgram.placeholder.program_sub_type")
-						      )
-					    </span>
-					    <span class="left width_full padding-top-3px">
-						      	@select(
-								         programForm("demand_manager"),
-								         options(userMap),
-								         'class -> "input-xlarge ",
-								         '_label -> Messages("addNewProgram.DemandManager"),
-								         '_default -> Messages("addNewProgram.placeholder.demand_manager")
-						      	)
-					    </span>
-						<span class="left width_full padding-top-3px">
-							@select(
-							 programForm("clasificacion"),
-							 options("Evolutivo"->"Evolutivo", "Corrección"->"Corrección","Normativo"->"Normativo", "Obsolecencia Tecnologica"->"Obsolecencia Tecnologica", "Infraestructura"->"Infraestructura"),
-							 'class -> "input-xlarge ",
-							 '_label -> Messages("addNewProgram.clasificacion"),
-							  '_default -> Messages("addNewProgram.placeholder.clasificacion")
-						  )
-						</span>
+							<span class="left width_full">
+								 @select(
+									 programForm("program_sub_type"),
+									 options(programSubType),
+									 'class -> "input-xlarge ",
+									 '_label -> Messages("addNewProgram.programSubType"),
+								     '_default -> Messages("addNewProgram.placeholder.program_sub_type")
+								  )
+							</span>
+							<span class="left width_full padding-top-3px">
+									@select(
+										 programForm("demand_manager"),
+										 options(userMap),
+										 'class -> "input-xlarge ",
+										 '_label -> Messages("addNewProgram.DemandManager"),
+										 '_default -> Messages("addNewProgram.placeholder.demand_manager")
+									)
+							</span>
+							<span class="left width_full padding-top-3px">
+								@select(
+								 programForm("clasificacion"),
+								 options("Evolutivo"->"Evolutivo", "Corrección"->"Corrección","Normativo"->"Normativo", "Obsolecencia Tecnologica"->"Obsolecencia Tecnologica", "Infraestructura"->"Infraestructura"),
+								 'class -> "input-xlarge ",
+								 '_label -> Messages("addNewProgram.clasificacion"),
+								  '_default -> Messages("addNewProgram.placeholder.clasificacion")
+							  )
+							</span>
 	           			</div>
+
 	           			<div class="right width-pr50 padding-top-3px" >
 	           				<span class="left width_full ">
 	           				@textarea(
@@ -161,6 +162,7 @@ impactTypeMap: java.util.HashMap[String,String]
 				            )
 				            </span>
 	           			</div>
+
            			</div>
            			
            			<div class="left width_full">

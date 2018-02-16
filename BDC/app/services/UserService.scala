@@ -1448,4 +1448,10 @@ object UserService extends CustomColumns {
       SQL(sqlString).on('id -> id.toInt).executeQuery() as (DataRRHH.datarrhh *)
     }
   }
+
+  def findUserHumanResourceById(period: String, rut: String): Option[String] = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT RTRIM(nombre) + ' ' + apellido FROM RecursosHumanos WHERE periodo={period} AND numRut={rut}").on('period->period.toInt,'rut->rut.toInt).as(scalar[Option[String]].single)
+    }
+  }
 }

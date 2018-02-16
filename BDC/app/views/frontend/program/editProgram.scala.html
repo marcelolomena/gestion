@@ -7,7 +7,7 @@ programType: java.util.HashMap[String,String],
 workflowStatus: java.util.HashMap[String,String],
 impacttypeMap: java.util.HashMap[String,String]
 )(implicit session: play.api.mvc.Session,lang: Lang, req : play.api.mvc.RequestHeader)
-@frontend.layout()
+@frontend.chanlayout()
 @import helper._
 @import services._
 @import java.util.Date._
@@ -19,10 +19,62 @@ impacttypeMap: java.util.HashMap[String,String]
 		margin: 0px 0 0 200px;
 		}
 }
- #flot-placeholder{width:650px;height:auto;}       
+#flot-placeholder{width:650px;height:auto;}
+
+.ui-autocomplete-loading {
+    background: white url("assets/images/ui-anim_basic_16x16.gif") right center no-repeat;
+  }
+.ui-autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  float: left;
+  display: none;
+  min-width: 160px;
+  _width: 160px;
+  padding: 4px 0;
+  margin: 2px 0 0 0;
+  list-style: none;
+  background-color: #ffffff;
+  border-color: #ccc;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: 1px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+
+  .ui-menu-item > a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
+
+    &.ui-state-hover, &.ui-state-active {
+      color: #ffffff;
+      text-decoration: none;
+      background-color: #0088cc;
+      border-radius: 0px;
+      -webkit-border-radius: 0px;
+      -moz-border-radius: 0px;
+      background-image: none;
+    }
+  }
+}
 </style>
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
-
 
 </head>
 <body>
@@ -76,150 +128,158 @@ impacttypeMap: java.util.HashMap[String,String]
 				            )
 	           			</div>
            			</div>
+
            			<div class="left width_full">
 	           			<div class="left width-pr50 padding-top-3px" >
-	           			<span class="left width_full">
-	           				 @select(
-						         programForm("program_sub_type"),
-						         options(programSubType),
-						         'class -> "input-xlarge ",
-						         '_label -> Messages("addNewProgram.programSubType"),
-						          '_default -> Messages("addNewProgram.placeholder.program_sub_type")
-						     
-						      )
-					      </span>
-					      <span class="left width_full padding-top-3px">
-						      	@select(
-								         programForm("demand_manager"),
-								         options(userMap),
-								         'class -> "input-xlarge ",
-								         '_label -> Messages("addNewProgram.DemandManager"),
-								         '_default -> Messages("addNewProgram.placeholder.demand_manager")
-						      	)
-					      </span>
-						<span class="left width_full padding-top-3px">
-							@select(
-							 programForm("clasificacion"),
-							 options("Evolutivo"->"Evolutivo", "Corrección"->"Corrección","Normativo"->"Normativo", "Obsolecencia Tecnologica"->"Obsolecencia Tecnologica", "Infraestructura"->"Infraestructura"),
-							 'class -> "input-xlarge ",
-							 '_label -> Messages("addNewProgram.clasificacion"),
-							  '_default -> Messages("addNewProgram.placeholder.clasificacion")
-						  )
-						</span>
-					       <span class="left width_full padding-top-3px">
-					       		@select(
-							         programForm("program_details.devison"),
-							         options(divisionMap),
-							         'class -> "input-xlarge ",
-							         '_label -> Messages("addNewProgram.requestingDivision"),
-							         '_default -> Messages("addNewProgram.placeholder.devison")  
-							      )
-					       </span>
+							<span class="left width_full">
+								 @select(
+									 programForm("program_sub_type"),
+									 options(programSubType),
+									 'class -> "input-xlarge ",
+									 '_label -> Messages("addNewProgram.programSubType"),
+									 '_default -> Messages("addNewProgram.placeholder.program_sub_type")
+
+								  )
+							</span>
+							<span class="left width_full padding-top-3px">
+									@select(
+										 programForm("demand_manager"),
+										 options(userMap),
+										 'class -> "input-xlarge ",
+										 '_label -> Messages("addNewProgram.DemandManager"),
+										 '_default -> Messages("addNewProgram.placeholder.demand_manager")
+									)
+							</span>
+							<span class="left width_full padding-top-3px">
+								@select(
+								 programForm("clasificacion"),
+								 options("Evolutivo"->"Evolutivo", "Corrección"->"Corrección","Normativo"->"Normativo", "Obsolecencia Tecnologica"->"Obsolecencia Tecnologica", "Infraestructura"->"Infraestructura"),
+								 'class -> "input-xlarge ",
+								 '_label -> Messages("addNewProgram.clasificacion"),
+								  '_default -> Messages("addNewProgram.placeholder.clasificacion")
+							  )
+							</span>
 	           			</div>
-	           			<div class="right width-pr50 padding-top-3px" >
-	           				<span class="left width_full ">
-	           				@textarea(
-				                programForm("program_description"),
-				                'class -> "span4", 
-				                '_label -> Messages("addNewProgram.description"),
-				                'placeholder -> Messages("addNewProgram.placeholder.program_description"),
-							    'rows -> 7,
-							    'cols -> 60
-				            )
-				            </span>
-	           			</div>
+						<div class="right width-pr50 padding-top-3px" >
+							<span class="left width_full ">
+								@textarea(
+									programForm("program_description"),
+									'class -> "span4",
+									'_label -> Messages("addNewProgram.description"),
+									'placeholder -> Messages("addNewProgram.placeholder.program_description"),
+									'rows -> 7,
+									'cols -> 60
+								)
+							</span>
+						</div>
            			</div>
+
+				<div class="left width_full">
+					<div class="left width-pr50 padding-top-3px" >
+						@select(
+							programForm("program_details.devison"),
+							options(divisionMap),
+							'class -> "input-xlarge ",
+							'_label -> Messages("addNewProgram.requestingDivision"),
+							'_default -> Messages("addNewProgram.placeholder.devison")
+						)
+					</div>
+
+					<div class="right width-pr50 padding-top-3px" >
+						@inputText(
+							programForm("program_dates.initiation_planned_date"),
+							'class -> "span4",
+							'_label -> Messages("addNewProgram.programInitiation"),
+							'placeholder -> Messages("addNewProgram.placeholder.initiation_planned_date")
+						)
+					</div>
+				</div>
            			
-           			<div class="left width_full">
-						@*
-	           			<div class="left width-pr50 padding-top-3px" >
-							 
-						      <span class="left width_full padding-top-3px">
-							      @select(
-							         programForm("program_details.management"),
-							         options(gerenciasMap),
-							         'class -> "input-xlarge ",
-							         '_label -> Messages("addNewProgram.requestingGerencia"),
-							         '_default -> Messages("addNewProgram.placeholder.management")
-							      )
-						      </span>
-	           			</div>
-						*@
-	           			
-	           			<div class="right width-pr50 padding-top-3px" >
-	           					@inputText(
-				                programForm("program_dates.initiation_planned_date"),
-				                'class -> "span4", 
-				                '_label -> Messages("addNewProgram.programInitiation"),
-				                'placeholder -> Messages("addNewProgram.placeholder.initiation_planned_date")
-				            )
-				           	
-	           			</div>
-           			</div>
+       			<div class="left width_full">
+						<div class="left width-pr50 padding-top-3px">
+							<dl class=" " id="user_responsible_field">
+
+								<dt><label for="user_responsible">Usuario Responsable</label></dt>
+
+								<dd>
+									@if(!programForm.data.get("internal_number").isEmpty && !programForm.data.get("pLevel").isEmpty){
+										<input type="text" id="user_responsible" name="user_responsible" value="@UserService.findUserHumanResourceById(programForm.data.get("pLevel").get,programForm.data.get("internal_number").get).getOrElse(" ")" class="span4 ui-autocomplete-input" placeholder="Usuario Responsable" autocomplete="off">
+									}else{
+										<input type="text" id="user_responsible" name="user_responsible" value="" class="span4 ui-autocomplete-input" placeholder="Usuario Responsable" autocomplete="off">
+									}
+
+								</dd>
+
+							</dl>
+						</div>
+
+						<div class="right width-pr50 padding-top-3px >
+							@inputText(
+								programForm("program_dates.release_date"),
+								'class -> "span4",
+								'_label -> Messages("addNewProgram.expectedreleasedate"),
+								'placeholder ->Messages("addNewProgram.placeholder.release_date")
+							)
+						</div>
+       			</div>
            		
-           			<div class="left width_full">
+       			<div class="left width_full">
            				<div class="left width-pr50 padding-top-3px">
-	           			@inputText(
+	           				@inputText(
 				                programForm("planned_hours"),
 				                '_label -> Messages("addNewProgram.plannedhours"),
 				                'class -> "span4", 
 				                'maxlength ->"9",
 				                'placeholder ->Messages("addNewProgram.Enterplannedhours")
 				            )
-	           			</div>					
-	           				<div class="right width-pr50 padding-top-3px >
-	           			@inputText(
-				                programForm("program_dates.release_date"),
-				                'class -> "span4", 
-				                 '_label -> Messages("addNewProgram.expectedreleasedate"),
-				                'placeholder ->Messages("addNewProgram.placeholder.release_date")
-				            )
 	           			</div>
-	           			
-	           			
-           			</div>
-           			<div class="left width_full">        
+						<div class="right width-pr50 padding-top-3px" >
+							@inputText(
+								programForm("program_dates.closure_date"),
+								'class -> "span4",
+								'_label -> Messages("addNewProgram.estimatedClosureDate"),
+								'placeholder -> Messages("addNewProgram.placeholder.closure_date"),
+								'style->"width: 380px;"
+							)
+						</div>
+       			</div>
+
+       			<div class="left width_full">
 	           			<div class="left width-pr50 padding-top-3px" >
 	    					 @select(
 						         programForm("program_details.impact_type"),
 						         options(impacttypeMap),
 						         'class -> "input-xlarge ",
 						         '_label -> Messages("addNewProgram.impactType"),
-						          '_default -> Messages("addNewProgram.placeholder.impact_type")
+						         '_default -> Messages("addNewProgram.placeholder.impact_type")
 						      )
-	           			</div>		           			
-	           			<div class="right width-pr50 padding-top-3px" >
-	           				@inputText(
-				                programForm("program_dates.closure_date"),
-				                'class -> "span4", 
-				                '_label -> Messages("addNewProgram.estimatedClosureDate"),
-				                'placeholder -> Messages("addNewProgram.placeholder.closure_date"),
-				                'style->"width: 380px;"
-				            )
 	           			</div>
-                    </div>
-           			<div class="left width_full ">				
+
+						<div class="left width-pr50 padding-top-3px" >
+							@select(
+								programForm("internal_state"),
+								options("Menor"->"Menor", "SAP"->"SAP","CIG"->"CIG", "Directorio"->"Directorio"),
+								'class -> "input-xlarge ",
+								'_label -> Messages("addNewProgram.internal_state"),
+								'_default -> Messages("addNewProgram.placeholder.internal_state")
+							)
+						</div>
+
+				</div>
+
+       			<div class="left width_full ">
 	           			<div class="left width-pr50 padding-top-3px >
-	           			 @select(
-						        programForm("work_flow_status"),
-						         options(workflowStatus),
-						         'class -> "input-xlarge ",
-						         '_label -> Messages("addNewProgram.workFlowStatus"),
-						          '_default -> Messages("addNewProgram.placeholder.work_flow_status")
-					      )
+							 @select(
+								programForm("work_flow_status"),
+								options(workflowStatus),
+								'class -> "input-xlarge ",
+								'_label -> Messages("addNewProgram.workFlowStatus"),
+								'_default -> Messages("addNewProgram.placeholder.work_flow_status")
+							  )
 	           			</div>
-	           			           			
-					<div class="left width-pr50 padding-top-3px" >
-			      		@select(
-				         programForm("internal_state"),
-				         options("Menor"->"Menor", "SAP"->"SAP","CIG"->"CIG", "Directorio"->"Directorio"),
-				         'class -> "input-xlarge ",
-				         '_label -> Messages("addNewProgram.internal_state"),
-				          '_default -> Messages("addNewProgram.placeholder.internal_state")
-				      )
-		            </div>	 
-		            	           			
-           			</div>
+       			</div>
+
+
 					
            			<div class="left width_full padding-top-3px">
            				<label style="width:100%; text-align:center;">@Messages("artform.mandatorynote")</label>
@@ -242,22 +302,21 @@ impacttypeMap: java.util.HashMap[String,String]
 </div> 
 <div class="tooltip"></div>
 @frontend.headerScripts()
-@*<script type="text/javascript" src="http://www.pureexample.com/js/flot/jquery.flot.min.js"></script>
-<script type="text/javascript" src="@routes.Assets.at("frontend/js/flot/jquery.flot.symbol.js")"></script>*@
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.min.css")">
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
-<script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	      	  $("#estimated_cost").keydown(function (e) {
+		$("#estimated_cost").keydown(function (e) {
 		  if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
 	                (e.keyCode >= 96 && e.keyCode <= 105))) {
 	          }
 	          else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 &&
 	                       e.keyCode != 9) {
 	              e.preventDefault();
-	          }
-	    });
- 		$("#program_details_sap_code").keydown(function (e) {
+	      }
+		});
+
+		$("#program_details_sap_code").keydown(function (e) {
  		  if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
  	                (e.keyCode >= 96 && e.keyCode <= 105))) {
  	          }
@@ -265,29 +324,56 @@ $(document).ready(function(){
  	                       e.keyCode != 9) {
  	              e.preventDefault();
  	          }
-	 	    });
+	 	});
 			 	    
 			 	    
-	       $("#planned_hours").keydown(function (e) {
+	    $("#planned_hours").keydown(function (e) {
 		  if ((!e.shiftKey && !e.ctrlKey && !e.altKey) && ((e.keyCode >= 48 && e.keyCode <= 57) ||
 	                (e.keyCode >= 96 && e.keyCode <= 105))) {
 	          }
 	          else if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 39 &&
 	                       e.keyCode != 9) {
 	              e.preventDefault();
-	          }
+	      }
 	    });
-	      
 
-	   $('#cancel-program').on('click',function() {
+		$('#cancel-program').on('click',function() {
 		   window.location.href='/program-details/@id';
-	   });
+		});
 
+		$( "#user_responsible" )
+					  .autocomplete(
+					  {
+							source: function(request, response){
+									$.ajax({
+										type: "GET",
+										url: "/addResponsible",
+										data: request,
+										dataType: "json",
+										success: function( data ) {
+											response( data );
+										},
+										error: function(model, response, options) {
+											response([]);
+										}
+									});
+								},
+								  select: function(event, ui) {
+									event.preventDefault();
+									$("#user_responsible").val(ui.item.label);
+									console.log(ui.item.value)
+									var usrkey=ui.item.value.split("|")
+									var periodo=usrkey[0]
+									var rut=usrkey[1]
+									$("#internal_number").val(rut);
+									$("#pLevel").val(periodo);
+									console.log("RUT : " + $("#internal_number").val())
+									console.log("PERIODO : " + $("#pLevel").val())
+								  },
+					  }
+		);
 
 	});
-	
-
- 
 
 	var currentDate = $("#current-date").val();
 	$("#program_dates_initiation_planned_date").datepicker({
@@ -333,13 +419,6 @@ $(document).ready(function(){
 		changeMonth: true,
 		  changeYear: true
 	});
-
-	@*var url="/get-genrencia-list?devision="+$("#program_details_devison").val();
-	   $.get(url,  function(data) {
-		   $("#program_details_management").html(data);
-	});*@
-		
-	@*$("#program_details_devison").live("change", renderGerenciaList);*@
 
 	$("#program_details_management").live("change", renderDepartmentList);
 	
