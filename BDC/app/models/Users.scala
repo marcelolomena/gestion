@@ -6,8 +6,15 @@ import anorm.SqlParser._
 import play.i18n._
 import play.api.libs.json._
 
-case class EmployeeSearchMaster(search_filter: Option[String], division: Option[String], gerencia: Option[String], department: Option[String],
-                                parent_type: Option[String], parent_id: Option[String],start:Option[Int],end:Option[Int])
+case class EmployeeSearchMaster(
+                                 search_filter: Option[String],
+                                 division: Option[String],
+                                 gerencia: Option[String],
+                                 department: Option[String],
+                                 parent_type: Option[String],
+                                 parent_id: Option[String],
+                                 start:Option[Int],
+                                 end:Option[Int])
 
 object EmployeeSearchMaster {
 
@@ -24,7 +31,37 @@ object EmployeeSearchMaster {
           EmployeeSearchMaster(search_filter, division, gerencia, department, parent_type, parent_id,start,end)
       }
   }
+}
+case class BankEmployee(
+  position: Option[String],
+  division: Option[String],
+  gerencia: Option[String],
+  department: Option[String],
+  boss: Option[String]
+)
 
+object BankEmployee {
+
+  val bankEmployee = {
+      get[Option[String]]("position") ~
+      get[Option[String]]("division") ~
+      get[Option[String]]("gerencia") ~
+      get[Option[String]]("department") ~
+      get[Option[String]]("boss") map {
+      case
+        position ~
+        division ~
+        gerencia ~
+        department ~
+        boss =>
+        BankEmployee(
+          position,
+          division,
+          gerencia,
+          department,
+          boss)
+    }
+  }
 }
 
 case class ProfileImage(uid: Option[Int], x: Option[Int], y: Option[Int], h: Option[Int], w: Option[Int], profile_image: Option[String])
@@ -44,19 +81,55 @@ object ProfileImage {
   }
 }
 
-case class Office(uid: Int, division: Int, gerencia: Option[Int], department: Option[Int], joining_date: Date, office_number: String, isadmin: Int, rate_hour: Int, user_type: Int, work_hours: BigDecimal, bonus_app: Int, user_profile: String)
+case class Office(uid: Int,
+                  division: Int,
+                  gerencia: Option[Int],
+                  department: Option[Int],
+                  joining_date: Date,
+                  office_number: String,
+                  isadmin: Int,
+                  rate_hour: Int,
+                  user_type: Int,
+                  work_hours: BigDecimal,
+                  bonus_app: Int,
+                  user_profile: String)
 
 object Office {
 
 }
 
-case class UserMaster(uid: Option[Int], uname: String, profile_image: Option[String], first_name: String, last_name: String, email: String, password: String, birth_date: Date, rut_number: String, contact_number: String, isverify: Option[Int], verify_code: Option[String], verify_date: Option[Date], status: Int, added_date: Date, office: OfficeMaster)
+case class UserMaster(uid: Option[Int],
+                      uname: String,
+                      profile_image: Option[String],
+                      first_name: String,
+                      last_name: String,
+                      email: String,
+                      password: String,
+                      birth_date: Date,
+                      rut_number: String,
+                      contact_number: String,
+                      isverify: Option[Int],
+                      verify_code: Option[String],
+                      verify_date: Option[Date],
+                      status: Int,
+                      added_date: Date,
+                      office: OfficeMaster)
 
 object UserMaster {
 
 }
 
-case class OfficeMaster(division: Int, gerencia: Option[Int], department: Option[Int], joining_date: Date, office_number: String, isadmin: Int, rate_hour: Int, user_type: Int, work_hours: BigDecimal, bonus_app: Int, user_profile: String)
+case class OfficeMaster(division: Int,
+                        gerencia: Option[Int],
+                        department: Option[Int],
+                        joining_date: Date,
+                        office_number: String,
+                        isadmin: Int,
+                        rate_hour: Int,
+                        user_type: Int,
+                        work_hours: BigDecimal,
+                        bonus_app: Int,
+                        user_profile: String)
 
 object OfficeMaster {
 

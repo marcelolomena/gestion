@@ -999,6 +999,26 @@ object UserService extends CustomColumns {
       result
     }
   }
+
+  def findBankEmployeeDetails(email: String)  = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT
+          | glosaCargoAct position,
+          | glosaDivision division,
+          | glosaArea gerencia,
+          | glosaDepartamento department,
+          | RTRIM(nombreJefe) + ' ' + apellidoJefe boss
+          |FROM RecursosHumanos
+          |WHERE emailTrab = {email}
+          |AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+        """.stripMargin
+
+      SQL(sqlstr).on('email -> email.trim).as(BankEmployee.bankEmployee.singleOpt)
+    }
+  }
+
   def insertSkills(skills: Skills): Int = {
     DB.withConnection { implicit connection =>
       SQL(

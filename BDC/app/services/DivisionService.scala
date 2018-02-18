@@ -217,4 +217,19 @@ object DivisionService extends CustomColumns {
     }
   }
 
+  def findNewDivisionRRHH(dId:Int): Option[String] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT TOP 1 b.glosaDivision FROM art_division_master a
+          |JOIN RecursosHumanos b
+          |ON a.idRRHH = b.codDivision
+          |WHERE a.dId = {dId}
+          |AND b.periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+        """.stripMargin
+
+      SQL(sqlstr).on('dId->dId).as(scalar[String].singleOpt)
+    }
+  }
+
 }

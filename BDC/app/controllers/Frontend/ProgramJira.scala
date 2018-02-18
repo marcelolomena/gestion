@@ -361,11 +361,11 @@ object ProgramJira extends Controller {
             StringUtils.isEmpty(program_sub_type) && StringUtils.isEmpty(division) &&
             StringUtils.isEmpty(impact_type) && StringUtils.isEmpty(program_role) &&
             StringUtils.isEmpty(item_budget)) {
-            val programs = ProgramService.findAllProgramList()
+            val programs = ProgramService.findAllProgramList2()
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
           } else {
-            val programs = ProgramService.searchDashboardReport(impact_type,work_flow_status, program_name, program_code, sap_code, program_type, program_sub_type, division, program_role, item_budget, "") //agregado
+            val programs = ProgramService.searchProgramResult(impact_type,work_flow_status, program_name, program_code, sap_code, program_type, program_sub_type, division, program_role, item_budget, "") //agregado
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
             //Ok("SUCCESS");
@@ -381,7 +381,7 @@ object ProgramJira extends Controller {
       val user_id = Integer.parseInt(request.session.get("uId").get)
       val username = request.session.get("username").get
 
-      val programs = ProgramService.findAllProgramList()
+      val programs = ProgramService.findAllProgramList2()
       var tasksDependents = new java.util.HashMap[Integer, Long]()
       val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
       Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)

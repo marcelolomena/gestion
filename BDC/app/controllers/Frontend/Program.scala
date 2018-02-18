@@ -244,11 +244,11 @@ object Program extends Controller {
             StringUtils.isEmpty(impact_type) &&
             StringUtils.isEmpty(program_role) &&
             StringUtils.isEmpty(item_budget)) {
-            val programs = ProgramService.findAllProgramList()
+            val programs = ProgramService.findAllProgramList2()
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
           } else {
-            val programs = ProgramService.searchDashboardReport(
+            val programs = ProgramService.searchProgramResult(
               impact_type,
               work_flow_status,
               program_name,
@@ -273,7 +273,7 @@ object Program extends Controller {
       val user_id = Integer.parseInt(request.session.get("uId").get)
       val username = request.session.get("username").get
 
-      val programs = ProgramService.findAllProgramList()
+      val programs = ProgramService.findAllProgramList2()
       var tasksDependents = new java.util.HashMap[Integer, Long]()
       val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
       Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)

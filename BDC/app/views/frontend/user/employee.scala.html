@@ -1,6 +1,14 @@
 @import org.json.JSONArray
 @import org.json.JSONObject 
-@(employee :Option[Users],employeeOffice:Option[Office] ,projects:Seq[Project],profileImgForm :Form[ProfileImage], programs:Seq[ProgramMaster],alerts:String,consumos:JSONArray, programTask:Seq[ProgramMaster])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@(employee :Option[Users],
+employeeOffice:Option[BankEmployee],
+projects:Seq[Project],
+profileImgForm :Form[ProfileImage],
+programs:Seq[ProgramMaster],
+alerts:String,
+consumos:JSONArray,
+programTask:Seq[ProgramMaster]
+)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import services._
 @import helper._
@@ -158,24 +166,46 @@
 						<div class="emp_img_container">@Messages("employee.email")</div>
 						<span class="emp_email" style="width: 225px;margin-top: 5px;">@employee.get.email</span>
 					</div>
+				@if(employeeOffice.getOrElse("").toString.length>0){
+				<div class="emp_div_rut">
+					<div class="emp_img_container">@Messages("employee.position") </div>
+					<span class="emp_rut" style="width: 225px;margin-top: 5px;">
+							<span id="ladivision">@employeeOffice.get.position</span>
+						</span>
+				</div>
+				}
+				@if(employeeOffice.getOrElse("").toString.length>0){
+				<div class="emp_div_rut">
+					<div class="emp_img_container">@Messages("employee.boss") </div>
+					<span class="emp_rut" style="width: 225px;margin-top: 5px;">
+							<span id="ladivision">@employeeOffice.get.boss</span>
+						</span>
+				</div>
+				}
+				@if(employeeOffice.getOrElse("").toString.length>0){
 					<div class="emp_div_rut">
                         <div class="emp_img_container">@Messages("employee.division") </div>
 						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
-							<span id="ladivision"></span>
+							<span id="ladivision">@employeeOffice.get.division</span>
 						</span>
 					</div>
+				}
+				@if(employeeOffice.getOrElse("").toString.length>0){
 					<div class="emp_div_rut">
                         <div class="emp_img_container">@Messages("employee.gerencia") </div>
 						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
-							<span id="lagerencia"></span>
+							<span id="lagerencia">@employeeOffice.get.gerencia</span>
 						</span>
 					</div>
+				}
+				@if(employeeOffice.getOrElse("").toString.length>0){
 					<div class="emp_div_rut">
                         <div class="emp_img_container">@Messages("employee.department") </div>
 						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
-							<span id="eldepto"></span>
+							<span id="eldepto">@employeeOffice.get.department</span>
 						</span>
 					</div>
+				}
 				</div>
 				<div class="skill-list">
 						 @if(UserService.findAllSkillsByUserId(employee.get.uid.get).size > 0){

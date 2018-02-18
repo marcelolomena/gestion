@@ -60,33 +60,37 @@ object User extends Controller {
   def employeeDetails(employeeid: Long) = Action { implicit request =>
     request.session.get("username").map { user =>
       val employee = UserService.findUserDetails(employeeid.intValue())
-      val employeeOffice = UserService.findUserOfficeDetails(employeeid.intValue())
+      //val employeeOffice = UserService.findUserOfficeDetails(employeeid.intValue())
+      val employeeOffice = UserService.findBankEmployeeDetails(employee.get.email)
       val programs = UserService.findProgramListForUser(employeeid.toString())
-      val pUserProjectList = null // UserService.findProjectsByUser(Integer.parseInt(employee.get.uid.get.toString()))
+      val pUserProjectList = null
       val alerts = RiskService.findNewUserAlertsIds(employeeid.toString())
       val availability = UserProfileServices.findAvailability(employeeid.intValue())
       
-      var consumos = new JSONArray();
+      val consumos = new JSONArray();
       for(a <- availability)
       {
-         var consumo = new JSONObject();
+         val consumo = new JSONObject();
          consumo.put(a.fecha.toString(),a.horas)
          consumos.put(consumo)
       }
-      //println(consumos)
-      
-      /*
-      var consumos = new JSONObject();
-      for(a <- availability)
-      {
-         consumos.put(a.fecha.toString(),a.horas)
-      }
-      */
       val program_task = ProgramService.programas_sin_avance_en_tareas(employeeid.toString())
-      
-      // EarnValueService.calculateSubTaskEarnValue()
 
-      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, consumos, program_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.user.employee(
+        employee,
+        employeeOffice,
+        pUserProjectList,
+        ARTForms.imgCropForm,
+        programs,
+        alerts,
+        consumos,
+        program_task
+      )).withSession(
+        "username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get
+      )
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())

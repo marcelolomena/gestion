@@ -595,6 +595,15 @@ object ProgramService extends CustomColumns {
 
   }
 
+  def findAllProgramList2(): Seq[ProgramResult] = {
+    var sqlString = ""
+    sqlString = "SELECT program_id, program_type,program_name, devison from art_program where is_active = 1"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ProgramResult.programResult *)
+    }
+
+  }
+
   def findProgramListCount(): Long = {
     var sqlString = ""
     sqlString = "SELECT COUNT(*) from art_program where is_active = 1"
@@ -925,6 +934,89 @@ object ProgramService extends CustomColumns {
 
 
       SQL(sqlString).as(ProgramMaster.pMaster *)
+    }
+  }
+
+  def searchProgramResult(
+                             impact_type: String,
+                             work_flow_status: String,
+                             program_name: String,
+                             program_code: String,
+                             sap_code: String,
+                             program_type: String,
+                             program_sub_type: String,
+                             division: String,
+                             program_role: String,
+                             item_budget: String,
+                             sort_type: String): Seq[ProgramResult] = {
+    DB.withConnection { implicit connection =>
+
+      var art_division: Int =0
+
+      if(!division.isEmpty)
+        art_division = SQL("SELECT TOP 1 dId FROM art_division_master WHERE idRRHH={idRRHH}").on('idRRHH -> division.toInt ).as(scalar[Int].single)
+
+      var sqlString = "SELECT program_id, program_type, program_name, devison from art_program where "
+
+      if (!StringUtils.isEmpty(impact_type)) {
+        sqlString = sqlString + " impact_type = " + impact_type + " AND"
+      }
+
+      if (!StringUtils.isEmpty(work_flow_status)) {
+        sqlString = sqlString + " work_flow_status = " + work_flow_status + " AND"
+      }
+
+      if (!StringUtils.isEmpty(program_name)) {
+        sqlString = sqlString + " program_name like '%" + program_name + "%' AND"
+      }
+
+      if (!StringUtils.isEmpty(program_code)) { //query para program_code
+        sqlString = sqlString + " program_code = " + program_code + " AND"
+      }
+      if (!StringUtils.isEmpty(sap_code)) { //query para sap_code
+        sqlString = sqlString + " program_id IN ( select DISTINCT(program_id) from art_program_sap_master where sap_number=" + sap_code + " AND is_active='1') AND"
+      }
+
+      if (!StringUtils.isEmpty(program_type)) {
+        sqlString = sqlString + " program_type=" + program_type + " AND"
+      }
+
+      if (!StringUtils.isEmpty(program_sub_type)) {
+        sqlString = sqlString + " program_sub_type=" + program_sub_type + " AND"
+      }
+
+      if (!StringUtils.isEmpty(division)) {
+        sqlString = sqlString + " devison=" + art_division + " AND"
+      }
+
+      if (!StringUtils.isEmpty(program_role)) {
+        sqlString = sqlString + " program_id IN ( select DISTINCT(program_id) from art_program_members where member_id=" + program_role + " ) AND"
+        //sqlString = sqlString + " program_id IN ( select DISTINCT(program_id) from art_program_members where role_id=6 AND member_id=" + program_role + " ) AND"
+      }
+
+      if (!StringUtils.isEmpty(item_budget)) {
+        sqlString = sqlString + " program_id IN (select DISTINCT(program_id) from art_program_sap_master where budget_type=" + item_budget + " and is_active=1) AND"
+      }
+
+      if (sqlString.contains("AND")) {
+        sqlString = rtrim(sqlString).toString()
+
+        sqlString = sqlString + " AND is_active=1"
+
+      } else {
+        sqlString = sqlString + " is_active=1"
+      }
+
+      if (StringUtils.isNotEmpty(sort_type)) {
+        if (sort_type.equals("1")) {
+          sqlString = sqlString + " ORDER BY program_name asc";
+        } else if (sort_type.equals("2")) {
+          sqlString = sqlString + " ORDER BY release_date asc";
+        }
+      }
+
+
+      SQL(sqlString).as(ProgramResult.programResult *)
     }
   }
 

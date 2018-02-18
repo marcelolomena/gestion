@@ -1170,10 +1170,9 @@ object RiskService extends CustomColumns {
     }
   }
 
-  def findAllOpenAlerts(): Seq[RiskAlerts] = {
+  def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
     val sqlString =
       """
-        |
         |SELECT a.id
         |,a.risk_id
         |,a.event_code
@@ -1192,13 +1191,11 @@ object RiskService extends CustomColumns {
         |,a.change_state
         |,a.responsible_answer
         |,null template_id
-        |FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'
+        |FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada' AND a.responsible={employeeid}
       """.stripMargin
 
-    //val sqlString = "SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'"
     DB.withConnection { implicit connection =>
-      val result = SQL(sqlString).as(RiskAlerts.alerts *)
-      result
+      SQL(sqlString).on('employeeid->employeeid)as(RiskAlerts.alerts *)
     }
   }
 
@@ -1903,7 +1900,7 @@ object RiskService extends CustomColumns {
 
   def findNewUserAlertsIds(employeeid: String): String = {
     var risk_ids = ""
-    val risksAlerts = RiskService.findAllOpenAlerts()
+    val risksAlerts = RiskService.findAllOpenAlerts(employeeid.toInt)
     for (r <- risksAlerts) {
 
       if (!r.person_invloved.isEmpty) {//obtiene los id de alerta en que figura el usuario

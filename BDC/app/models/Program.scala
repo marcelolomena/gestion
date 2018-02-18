@@ -47,12 +47,18 @@ program_sub_type: Option[Int],
   clasificacion: Option[String]
                         )
 
+case class ProgramResult(
+      program_id:Option[Int],
+      program_type:Option[Int],
+      program_name:String,
+      devison:Option[Int])
+
 object ProgramSearch {
   val programSearch = {
     //get[Option[String]]("delay_level") ~
       //get[Option[String]]("project_classification") ~
       get[Option[String]]("work_flow_status") ~
-      get[Option[String]]("program_name") ~
+      get[Option[String]]("program_name") ~ //agregado
       get[Option[String]]("program_code") ~ //agregado
       get[Option[String]]("sap_code") ~ //agregado     
       get[Option[String]]("program_type") ~
@@ -68,6 +74,22 @@ object ProgramSearch {
       }
   }
 }
+
+object ProgramResult extends CustomColumns  {
+  val programResult = {
+      get[Option[Int]]("program_id") ~
+      get[Option[Int]]("program_type") ~
+      get[String]("program_name") ~
+      get[Option[Int]]("devison")  map {
+      case program_id ~
+        program_type ~
+        program_name ~
+        devison =>
+        ProgramResult(program_id, program_type,program_name, devison)
+    }
+  }
+}
+
 object ProgramMaster extends CustomColumns {
 
   val pMaster = {

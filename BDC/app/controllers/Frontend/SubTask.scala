@@ -192,7 +192,8 @@ object SubTask extends Controller {
       
       
       val employee = UserService.findUserDetails(Integer.parseInt(employeeid.toString()))
-      val employeeOffice = UserService.findUserOfficeDetails(Integer.parseInt(employeeid.toString()))
+      //val employeeOffice = UserService.findUserOfficeDetails(Integer.parseInt(employeeid.toString()))
+      val employeeOffice = UserService.findBankEmployeeDetails(employee.get.email)
       val programs = UserService.findProgramListForUser(employeeid.toString())
       val pUserProjectList = null // UserService.findProjectsByUser(Integer.parseInt(employee.get.uid.get.toString()))
       val alerts = RiskService.findUserAlertsIds(employeeid.toString())
