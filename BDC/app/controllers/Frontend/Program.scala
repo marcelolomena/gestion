@@ -296,11 +296,11 @@ object Program extends Controller {
       val statusWorkflow = ProgramTypeService.findWorkflowByProgramId(programId)
       //val listStatus = ProgramService.findAllStatus(programId)
 
-      var statusWF = statusWorkflow.get.workflow_status.toString()
+      val statusWF = statusWorkflow.get.workflow_status.toString()
       val programDetail = ProgramService.findProgramOtherDetailsById(programId)
 
       val impact_type = ImpactTypeService.findImpactTypeById(programDetail.get.impact_type.toString())
-      var impactType = impact_type.get.impact_type.toString()
+      val impactType = impact_type.get.impact_type.toString()
       val programDates = ProgramService.findProgramDateDetailsById(programId)
       val projectList = UserService.findProjectListForUserAndProgram(uId, programId)
       val projects = ProjectService.findProjectListForProgram(programId)
@@ -353,11 +353,7 @@ object Program extends Controller {
       val externalEmployees = ProgramMemberExternalService.findProgramMemberExternalByProgramId(programId);
       val saps = SAPServices.findAllSAPMasterDetails(programId)
 
-      val subTasks = SubTaskServices.findAllSubTasksForProgram(programId)
-
-      for (s <- subTasks) {
-
-      }
+      //val subTasks = SubTaskServices.findAllSubTasksForProgram(programId)
 
       var plan_time_for_program: scala.math.BigDecimal = 0.0
       plan_time_for_program = program.get.planned_hours.getOrElse(0).toString().toDouble // new definition for completion percentage
@@ -1075,65 +1071,13 @@ object Program extends Controller {
       impacttypeMap.put(s.id.get.toString, s.impact_type)
     }
 
-    /*    val divisionObj = DivisionService.findDivisionByName("Division Operaciones y Tecnologia")
-
-    var division_Id = 0
-    if (!divisionObj.isEmpty) {
-      division_Id = divisionObj.apply(0).dId.get
-    }
-    var gerenciasMap = new java.util.HashMap[String, String]()
-    if (division_Id == 0) {
-      val gerencias = GenrenciaService.findAllGenrencias
-
-      for (g <- gerencias) {
-        gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-      }
-    } else {
-      val gerencias = GenrenciaService.findAllGenrenciaListByDivision(division_Id.toString())
-      for (g <- gerencias) {
-        gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-      }
-    }
-    val departments = DepartmentService.findAllDepartmentS
-    var departmentsMap = new java.util.HashMap[String, String]()
-    for (d <- departments) {
-      departmentsMap.put(d.dId.get.toString(), d.department)
-    }*/
     val oldForm = ARTForms.programFormEdit.bindFromRequest
 
     oldForm.fold(
       errors => {
-        Logger.debug("KAGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+
         Logger.debug(errors.toString)
-        /*
-        val divisionObj = DivisionService.findDivisionByNameActiveAndInactive("Division Operaciones y Tecnologia")
 
-        var division_Id = 0
-        if (!divisionObj.isEmpty) {
-          division_Id = divisionObj.apply(0).dId.get
-        }
-        var gerenciasMap = new java.util.HashMap[String, String]()
-        if (division_Id == 0) {
-          val gerencias = GenrenciaService.findAllGenrencias
-
-          for (g <- gerencias) {
-            gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-          }
-        } else {
-          val gerencias = GenrenciaService.findAllGenrenciaListByDivision(division_Id.toString())
-          for (g <- gerencias) {
-            gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-          }
-        }
-        var departmentsMap = new java.util.HashMap[String, String]()
-        if (!oldForm.data.get("program_details.management").isEmpty && !oldForm.data.get("program_details.management").get.isEmpty()) {
-          var gerencia_id = oldForm.data.get("program_details.management").get
-          val departments = DepartmentService.findAllDepartmentListByGenrencia(gerencia_id)
-          for (d <- departments) {
-            departmentsMap.put(d.dId.get.toString(), d.department)
-          }
-        }
-        */
         BadRequest(views.html.frontend.program.editProgram(
           errors,
           id,
@@ -1153,34 +1097,7 @@ object Program extends Controller {
       program => {
         val theForm = ProgramService.validateForm(ARTForms.programFormEdit.fill(program), id)
         if (theForm.hasErrors) {
-          /*
-          val divisionObj = DivisionService.findDivisionByNameActiveAndInactive("Division Operaciones y Tecnologia")
 
-          var division_Id = 0
-          if (!divisionObj.isEmpty) {
-            division_Id = divisionObj.apply(0).dId.get
-          }
-          var gerenciasMap = new java.util.HashMap[String, String]()
-          if (division_Id == 0) {
-            val gerencias = GenrenciaService.findAllGenrencias
-            for (g <- gerencias) {
-              gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-            }
-          } else {
-            val gerencias = GenrenciaService.findAllGenrenciaListByDivision(division_Id.toString())
-            for (g <- gerencias) {
-              gerenciasMap.put(g.dId.get.toString(), g.genrencia)
-            }
-          }
-          var departmentsMap = new java.util.HashMap[String, String]()
-          if (!oldForm.data.get("program_details.management").isEmpty && !oldForm.data.get("program_details.management").get.isEmpty()) {
-            var gerencia_id = oldForm.data.get("program_details.management").get
-            val departments = DepartmentService.findAllDepartmentListByGenrencia(gerencia_id)
-            for (d <- departments) {
-              departmentsMap.put(d.dId.get.toString(), d.department)
-            }
-          }
-          */
           BadRequest(views.html.frontend.program.editProgram(
             theForm,
             id,

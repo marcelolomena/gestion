@@ -46,7 +46,9 @@ object SendEmail {
                           template: String,
                           cc: String
                         ): String = {
+    var retState : String = "OK"
     try {
+
       val programName = program.get.program_description.get.toString
       val program_code = program.get.program_code.toString
 
@@ -54,7 +56,6 @@ object SendEmail {
       val fromEmail = Play.application().configuration().getString("smtp.user")
       val mail = use[MailerPlugin].email
 
-      /////
       val programDetail = ProgramService.findProgramOtherDetailsById(program.get.program_id.get.toString)
       val program_impact_type = ImpactTypeService.findImpactTypeById(programDetail.get.impact_type.toString()).get.impact_type
       val program_internal_state = program.get.internal_state
@@ -154,11 +155,13 @@ object SendEmail {
 
       mail.sendHtml(html)
 
-
     } catch {
-      case ex: Exception => return ex.getMessage
+      case ex: Exception => {
+        play.Logger.debug(ex.getMessage)
+        retState = "NOK"
+      }
     }
 
-    "OK"
+    retState
   }
 }

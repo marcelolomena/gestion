@@ -1000,11 +1000,23 @@ object UserService extends CustomColumns {
     }
   }
 
+  def findUserOfficeDetailsExtend(uId: Integer) = {
+    DB.withConnection { implicit connection =>
+      val result = SQL(
+        "select * from art_user where uId = {uId}").on(
+        'uId -> uId).as(
+        Users.user.singleOpt)
+      result
+    }
+  }
+
   def findBankEmployeeDetails(email: String)  = {
     DB.withConnection { implicit connection =>
       val sqlstr =
         """
           |SELECT
+          | periodo,
+          | numRut,
           | glosaCargoAct position,
           | glosaDivision division,
           | glosaArea gerencia,
@@ -1018,6 +1030,8 @@ object UserService extends CustomColumns {
       SQL(sqlstr).on('email -> email.trim).as(BankEmployee.bankEmployee.singleOpt)
     }
   }
+
+
 
   def insertSkills(skills: Skills): Int = {
     DB.withConnection { implicit connection =>

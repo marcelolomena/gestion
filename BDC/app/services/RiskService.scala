@@ -2197,7 +2197,7 @@ object RiskService extends CustomColumns {
               if (!user.isEmpty) {
                 val email = user.get.email.toString()
 
-                Logger.debug(email)
+                Logger.debug("EMAIL : " + email)
 
                 if (!StringUtils.isEmpty(email)) {
 
@@ -2219,6 +2219,15 @@ object RiskService extends CustomColumns {
                       Logger.debug("no tiene gran jefe")
                     }
                   }
+
+                  Logger.debug("USER : " + user.toString)
+                  Logger.debug("PROGRAM : " + program.toString)
+                  Logger.debug("ALERT : " + alert.toString)
+                  Logger.debug("RISK : " + risks.toString)
+                  Logger.debug("RISK DETAIL : " + risk_details.toString)
+                  Logger.debug("INCREMENT : " + increment.toString)
+                  Logger.debug("TEMPLATE : " + template.toString)
+                  Logger.debug("CC : " + cc.toString)
 
                   response=utils.SendEmail.sendEmailRiskAlert(
                     user,

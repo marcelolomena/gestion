@@ -33,6 +33,8 @@ object EmployeeSearchMaster {
   }
 }
 case class BankEmployee(
+  periodo:Int,
+  numRut:Int,
   position: Option[String],
   division: Option[String],
   gerencia: Option[String],
@@ -43,18 +45,24 @@ case class BankEmployee(
 object BankEmployee {
 
   val bankEmployee = {
+    get[Int]("periodo") ~
+      get[Int]("numRut") ~
       get[Option[String]]("position") ~
       get[Option[String]]("division") ~
       get[Option[String]]("gerencia") ~
       get[Option[String]]("department") ~
       get[Option[String]]("boss") map {
       case
+        periodo ~
+        numRut ~
         position ~
         division ~
         gerencia ~
         department ~
         boss =>
         BankEmployee(
+          periodo,
+          numRut,
           position,
           division,
           gerencia,
@@ -217,7 +225,22 @@ object UserSkills {
   }
 }
 
-case class Users(uid: Option[Int], uname: String, profile_image: Option[String], first_name: String, last_name: String, email: String, password: String, birth_date: Date, rut_number: String, contact_number: String, isverify: Option[Int], verify_code: Option[String], verify_date: Option[Date], status: Int, added_date: Date, user_profile: String)
+case class Users(uid: Option[Int],
+                 uname: String,
+                 profile_image: Option[String],
+                 first_name: String,
+                 last_name: String,
+                 email: String,
+                 password: String,
+                 birth_date: Date,
+                 rut_number: String,
+                 contact_number: String,
+                 isverify: Option[Int],
+                 verify_code: Option[String],
+                 verify_date: Option[Date],
+                 status: Int,
+                 added_date: Date,
+                 user_profile: String)
 
 object Users {
 
