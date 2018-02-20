@@ -12,12 +12,15 @@ import services._
 object SendEmail {
 
   def sendEmailVerification(message: String, recipientEmail: String, url: String, fromEmail: String): String = {
-    println("message :" + message)
-    println("recipientEmail :" + recipientEmail)
-    println("fromEmail :" + fromEmail)
-    println("user smtp :" + Play.application().configuration().getString("smtp.user"))
-    println("user pwd :" + Play.application().configuration().getString("smtp.password"))
-    println("url :" + url)
+    Logger.debug("message :" + message)
+    Logger.debug("recipientEmail :" + recipientEmail)
+    Logger.debug("fromEmail :" + fromEmail)
+    Logger.debug("message :" + message)
+    Logger.debug("recipientEmail :" + recipientEmail)
+    Logger.debug("fromEmail :" + fromEmail)
+    Logger.debug("user smtp :" + Play.application().configuration().getString("smtp.user"))
+    Logger.debug("user pwd :" + Play.application().configuration().getString("smtp.password"))
+    Logger.debug("url :" + url)
     
     var mail = use[MailerPlugin].email
     mail.setSubject("Reset Your Password")
@@ -53,7 +56,7 @@ object SendEmail {
       val program_code = program.get.program_code.toString
 
       var subject = s"ALERTA PMO - ART ${program_code} – ${programName}"
-      val fromEmail = Play.application().configuration().getString("smtp.user")
+      val fromEmail = Play.application().configuration().getString("mail.pmo")
       val mail = use[MailerPlugin].email
 
       val programDetail = ProgramService.findProgramOtherDetailsById(program.get.program_id.get.toString)
@@ -121,9 +124,11 @@ object SendEmail {
 
       mail.setSubject(subject)
       mail.setFrom(fromEmail.toString())
+      Logger.debug("A ESTE MAIL SE ENVIO EL CORREO : " + user.get.email.toString())
       mail.setRecipient(user.get.email.toString())
 
       val mylist  = cc.split(",").toList
+      Logger.debug("A ESTE MAIL SE ENVIO UNA COPIA : " + mylist.toString())
       mail.setCc(mylist:_*)
 
       val builderRisk = StringBuilder.newBuilder
@@ -157,7 +162,7 @@ object SendEmail {
 
     } catch {
       case ex: Exception => {
-        play.Logger.debug(ex.getMessage)
+        play.Logger.error(ex.getMessage)
         retState = "NOK"
       }
     }

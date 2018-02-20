@@ -132,7 +132,7 @@
 			<span class="header">@Messages("programDetails.gerencia") </span>
 			<span class="program-data">
 				@if(!programDetail.get.management.isEmpty){
-					@{genrenciaDetails = GenrenciaService.findGenrenciaById(programDetail.get.management.get) }
+					@{genrenciaDetails = GenrenciaService.findGenrenciaByIdHumanResources(programDetail.get.numrut.get,programDetail.get.periodo.get) }
 					@if(!genrenciaDetails.isEmpty){
 						@genrenciaDetails.get.genrencia
 					}

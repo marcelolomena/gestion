@@ -159,7 +159,9 @@ case class ProgramDetails(
        department: Option[Int],
        impact_type: Int,
        business_line: Option[String],
-       sap_code: Option[Int])
+       sap_code: Option[Int],
+       numrut: Option[Int],
+       periodo: Option[Int])
 
 object ProgramDetails {
 
@@ -170,14 +172,18 @@ object ProgramDetails {
       get[Option[Int]]("department") ~
       get[Int]("impact_type") ~
       get[Option[String]]("business_line") ~
-      get[Option[Int]]("sap_code") map {
+      get[Option[Int]]("sap_code") ~
+      get[Option[Int]]("numrut") ~
+      get[Option[Int]]("periodo") map {
         case program_id ~
           devison ~
           management ~
           department ~
           impact_type ~
           business_line ~
-          sap_code =>
+          sap_code ~
+          numrut ~
+          periodo =>
           ProgramDetails(
             program_id,
             devison,
@@ -185,7 +191,9 @@ object ProgramDetails {
             department,
             impact_type,
             business_line,
-            sap_code)
+            sap_code,
+            numrut,
+            periodo)
 
       }
   }

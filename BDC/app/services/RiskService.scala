@@ -1800,10 +1800,16 @@ object RiskService extends CustomColumns {
       SQL("select id_template from art_risk_alert_send where id_alert={id_alert}").on('id_alert->id_alert.toInt).as(scalar[Int].single)
     }
 
-    //val sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf WHERE is_active = 1 ORDER BY id DESC"
     val sqlString = "SELECT tpl FROM art_risk_alert_conf WHERE is_active = 1 AND id={id_template}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id_template->id_template).as(scalar[String].single)
+    }
+  }
+
+  def findTmplId(id_alert: String) : Int = {
+
+    DB.withConnection { implicit connection =>
+      SQL("select id_template from art_risk_alert_send where id_alert={id_alert}").on('id_alert->id_alert.toInt).as(scalar[Int].single)
     }
   }
 
@@ -1925,14 +1931,15 @@ object RiskService extends CustomColumns {
     }
   }
 
-  def findAllCCEmail(): Option[String] = {
+  def findAllCCEmail(id_template:String): Option[String] = {
+    Logger.debug("LALA LALALALALALALALALALALALALALA " + id_template)
     val sqlString =
       """
-        SELECT TOP 1 ISNULL(RTRIM(em1),'') + ',' + ISNULL(RTRIM(em2),'') + ',' + ISNULL(RTRIM(em3),'')
-        emails FROM art_risk_alert_conf ORDER BY id DESC
+        SELECT ISNULL(RTRIM(em1),'') + ',' + ISNULL(RTRIM(em2),'') + ',' + ISNULL(RTRIM(em3),'')
+        emails FROM art_risk_alert_conf WHERE is_active = 1 AND id={id_template}
       """
     DB.withConnection { implicit connection =>
-      SQL(sqlString).as(scalar[String].singleOpt)
+      SQL(sqlString).on('id_template->id_template.toInt).as(scalar[String].singleOpt)
     }
   }
   
@@ -2183,7 +2190,8 @@ object RiskService extends CustomColumns {
           }
 
           val template = findTmplMail(alert_id)
-          var cc = findAllCCEmail().get.toString
+          val tId = findTmplId(alert_id)
+          var cc = findAllCCEmail(tId.toString).get.toString
 
           val lastchar = cc.charAt(cc.length-1).toString
 

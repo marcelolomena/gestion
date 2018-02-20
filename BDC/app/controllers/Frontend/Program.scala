@@ -294,17 +294,13 @@ object Program extends Controller {
       val utype = Integer.parseInt(request.session.get("utype").get)
       val program = ProgramService.findProgramMasterDetailsById(programId)
       val statusWorkflow = ProgramTypeService.findWorkflowByProgramId(programId)
-      //val listStatus = ProgramService.findAllStatus(programId)
-
       val statusWF = statusWorkflow.get.workflow_status.toString()
       val programDetail = ProgramService.findProgramOtherDetailsById(programId)
-
       val impact_type = ImpactTypeService.findImpactTypeById(programDetail.get.impact_type.toString())
       val impactType = impact_type.get.impact_type.toString()
       val programDates = ProgramService.findProgramDateDetailsById(programId)
       val projectList = UserService.findProjectListForUserAndProgram(uId, programId)
       val projects = ProjectService.findProjectListForProgram(programId)
-      // val programs = ProgramService.findAllPrograms("", "")
       val documents = DocumentService.findAllDocuments(programId, "PROGRAM", "", "", "")
       var currentDocuments = new java.util.HashMap[String, Seq[VersionDetails]]()
       var prevDocuments = new java.util.HashMap[String, Seq[VersionDetails]]()
