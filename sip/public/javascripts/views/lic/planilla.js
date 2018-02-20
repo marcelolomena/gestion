@@ -162,7 +162,7 @@
             editrules: {
                 required: true
             },
-            search: false
+            search: true
         }, {
             label: 'Software',
             name: 'nombre',
@@ -335,10 +335,10 @@
             },
             search: false
         }, {
-            label: 'Perpetua',
+            label: 'Tipo de Contrato',
             name: 'perpetua',
             align: 'center',
-            width: 70,
+            width: 120,
             sortable: false,
             editable: true,
             search: false,
@@ -488,7 +488,7 @@
         }, {
             label: 'Instalada por Producto',
             name: 'licocupadas',
-            width: 125,
+            width: 150,
             align: 'center',
             sortable: false,
             editable: true,

@@ -127,7 +127,9 @@ function list(req, res) {
           condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
         } else if (item.field == "ordencompra") {
           condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
-        } else {
+        } else if (item.field == "idproveedor") {
+          condition += 'h.' + 'razonsocial' + " like '%" + item.data + "%' AND ";
+        } else{
           condition += 'a.' + item.field + "=" + item.data + " AND ";
         }
       });
@@ -135,7 +137,7 @@ function list(req, res) {
       logger.debug("***CONDICION:" + condition);
     }
   }
-  var sqlcount = "SELECT count(*) AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto ";
+  var sqlcount = "SELECT count(*) AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto LEFT JOIN sip.proveedor h ON b.idproveedor=h.id ";
   if (filters && condition != "") {
     sqlcount += " WHERE " + condition + " ";
   }
@@ -155,11 +157,11 @@ function list(req, res) {
     "LEFT JOIN sip.proveedor h ON b.idproveedor=h.id ";
   if (filters && condition != "") {
     sql += "WHERE " + condition + " ";
-    logger.debug("**" + sql + "**");
+    // logger.debug("**" + sql + "**");
   }
   var sql2 = sql + "ORDER BY b.id desc OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
   var records;
-  logger.debug("query:" + sql2);
+  // logger.debug("query:" + sql2);
   sequelize.query(sqlcount).spread(function (recs) {
     var records = recs[0].count;
     var total = Math.ceil(parseInt(recs[0].count) / rowspp);
@@ -273,7 +275,7 @@ function excel(req, res) {
       width: 10
     },
     {
-      caption: 'Perpetua',
+      caption: 'Tipo de Contrato',
       type: 'string',
       width: 10
     },

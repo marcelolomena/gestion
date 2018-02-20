@@ -22,7 +22,7 @@ $(document).ready(function () {
             required: false,
             edithidden: false
         },
-        search: true
+        search: false
     },	
     {
         label: 'Estado',
