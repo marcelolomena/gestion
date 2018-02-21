@@ -57,6 +57,7 @@ object SendEmail {
 
       var subject = s"ALERTA PMO - ART ${program_code} – ${programName}"
       val fromEmail = Play.application().configuration().getString("mail.pmo")
+      Logger.debug("fromEmail : " + fromEmail )
       val mail = use[MailerPlugin].email
 
       val programDetail = ProgramService.findProgramOtherDetailsById(program.get.program_id.get.toString)

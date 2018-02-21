@@ -1205,7 +1205,7 @@ object RiskService extends CustomColumns {
   def findAllFirstExpiredAlerts(): Seq[RiskAlerts] = {
     val sqlString =
       """
-        SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
+        SELECT a.*,null template_id FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
         WHERE dbo.BusinessDays(a.event_date, CAST(a.change_state AS DATE)) > 2
         AND b.description = 'Vigente' AND a.reiteration = 1
       """
@@ -1262,9 +1262,13 @@ object RiskService extends CustomColumns {
   def findAllResponsibleIds(id: String): Seq[RiskAlerts] = {
     val sqlString =
       """
-        |SELECT * ,null template_id
-        |  FROM art_risk_alert
-        |  WHERE responsible = {id}
+        |SELECT a.* ,null template_id
+        |  FROM art_risk_alert a join art_risk_alert_status b on a.status_id=b.id
+        |  WHERE
+        |  a.responsible = {id}
+        |  and a.is_active = 1
+        |  and b.is_active = 1
+        |  and b.description!='Cerrada'
       """.stripMargin
 
     DB.withConnection { implicit connection =>
@@ -1999,6 +2003,20 @@ object RiskService extends CustomColumns {
     }
   }
 
+  def updateAlertState(alert_id: String) = {
+    DB.withConnection { implicit connection =>
+
+      SQL(
+        """
+          update art_risk_alert SET
+          status_id=3
+          where id={alert_id}
+          """).on(
+        'alert_id -> alert_id).executeUpdate()
+
+    }
+  }
+
   def automaticAlert() {
     val FormattedDATE = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")
     val now = FormattedDATE.format(new Date().getTime).toString
@@ -2007,8 +2025,9 @@ object RiskService extends CustomColumns {
     if(!firstCandidates.isEmpty) {
       for (t <- firstCandidates) {
         Logger.info("First round : " + t.id.get.toString + " " + t.reiteration.get.toInt)
-        val round = t.reiteration.get.toInt + 1
-
+        //val round = t.reiteration.get.toInt + 1
+        updateAlertState(t.id.get.toString)//cambia estaddo alerta
+        /*
         sendEmailAlerts(t.id.get.toString, round) match {
           case "OK" =>
             // update Alert
@@ -2016,6 +2035,7 @@ object RiskService extends CustomColumns {
             updateFirstAlertCronMail(t.id.get.toString, round)
           case _   => Logger.info("I DO NOT SEND THE MAIL!!")
         }
+        */
 
       } //first iteration
     }else{
@@ -2023,6 +2043,7 @@ object RiskService extends CustomColumns {
     }
 
     //second iteration
+    /*
     val secondCandidates = RiskService.findAllSecondExpiredAlerts()
     if(!secondCandidates.isEmpty) {
       for (r <- secondCandidates) {
@@ -2041,6 +2062,7 @@ object RiskService extends CustomColumns {
     } else {
       Logger.info("["  + now + "] There are no valid alerts with more than eight days of delay.")
     }
+    */
   }
 
   def riskAutomaticAlert() {

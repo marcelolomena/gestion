@@ -337,6 +337,16 @@ object Risks extends Controller {
     }
   }
 
+  def closeAlert(alert_id: Integer) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      RiskService.updateAlertState(alert_id.toString)
+    Ok("Success")
+  }.getOrElse {
+    Redirect(routes.Login.loginUser())
+  }
+}
+
+
   def editRiskAlert(risk_id: Integer, alert_id: Integer) = Action { implicit request =>
 
     request.session.get("username").map { user =>

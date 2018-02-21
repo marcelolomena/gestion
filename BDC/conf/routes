@@ -277,7 +277,7 @@ POST   /edit-alert/:id                                                          
 POST   /edit-alert-mail/:id                                                                           controllers.Frontend.Risks.updateAlertAndSendMail(id:String)
 GET    /delete-risk-alert                                                                             controllers.Frontend.Risks.deleteRiskAlert(risk_alert_id:String)
 GET    /edit-generic-alert/:risk_id/:alert_id								                          controllers.Frontend.Risks.editRiskAlert(risk_id:Integer,alert_id:Integer)
-#GET    /edit-alert/:risk_id/:alert_id																  controllers.Frontend.Risks.editRiskAlert(risk_id:String,alert_id:String)
+GET    /close-alert/:alert_id																          controllers.Frontend.Risks.closeAlert(alert_id:Integer)
 GET    /risk-sub-category/$id<[A-Za-z0-9_-]+>                                                         controllers.Frontend.Risks.getRiskSubCategory(id: String)
 GET    /issue-sub-category                                                                            controllers.Frontend.Program.getIssueSubCategory(id: String)
 

@@ -50,6 +50,7 @@ mail_tmpl :java.util.HashMap[String, String]
 				<input type="hidden" value="@alert.get.task_id.get.toInt" name="task_id" id="task_id"/>
 				<input type="hidden" value="@alert.get.impacted_variable.get.toString" name="impacted_variable" id="impacted_variable"/>
 				<input type="hidden" value="@alert.get.event_title" name="event_title" id="event_title"/>
+				<input type="hidden" value="@alert.get.status_id" name="status_id" id="status_id"/>
 				}else{
 				<!--debe mandar correo-->
 				<form action="/edit-alert-mail/@alert_id" method="POST" id="risk-edit-alert-form">
@@ -115,16 +116,8 @@ mail_tmpl :java.util.HashMap[String, String]
 
 
 					<div class="left width_full">
+
 						<div class="left width-pr50 padding-top-3px" >
-							@select(
-							alertForm("status_id"),
-							options(alert_states),
-							'class -> "input-xlarge ",
-							'_label ->  Messages("newAlert.alertStatus"),
-							'_default -> Messages("newAlert.placeholder.alert_status")
-							)
-						</div>
-						<div class="right width-pr50 padding-top-3px" >
 							@textarea(
 							alertForm("responsible_answer"),
 							'class -> "span5",
@@ -358,6 +351,7 @@ $(document).ready(function(){
 
 	   $('#send-alert').on('click', renderSendAlert);
 
+/*
 		$('#status_id').on('change', function() {
 			var thisvalue= $("#status_id option:selected" ).text();
 		 if(thisvalue==='Cerrada'){
@@ -368,6 +362,8 @@ $(document).ready(function(){
 
 		});
 
+
 		$("#responsible_answer").attr("disabled", true);
+*/
 });
 </script>
