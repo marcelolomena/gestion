@@ -1191,11 +1191,14 @@ object RiskService extends CustomColumns {
         |,a.change_state
         |,a.responsible_answer
         |,null template_id
-        |FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada' AND a.responsible={employeeid}
+        |FROM art_risk_alert a JOIN art_risk_alert_status b
+        | ON a.status_id = b.id
+        | WHERE a.is_active=1 AND b.is_active = 1
+        | AND b.description != 'Cerrada'
       """.stripMargin
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('employeeid->employeeid)as(RiskAlerts.alerts *)
+      SQL(sqlString).as(RiskAlerts.alerts *)
     }
   }
 
@@ -1250,6 +1253,20 @@ object RiskService extends CustomColumns {
         |  WHERE risk_id = {id}
       """.stripMargin
     //val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND risk_id = " + id
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).on('id->id.toInt).as(RiskAlerts.alerts *)
+      result
+    }
+  }
+
+  def findAllResponsibleIds(id: String): Seq[RiskAlerts] = {
+    val sqlString =
+      """
+        |SELECT * ,null template_id
+        |  FROM art_risk_alert
+        |  WHERE responsible = {id}
+      """.stripMargin
+
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).on('id->id.toInt).as(RiskAlerts.alerts *)
       result
@@ -1932,7 +1949,6 @@ object RiskService extends CustomColumns {
   }
 
   def findAllCCEmail(id_template:String): Option[String] = {
-    Logger.debug("LALA LALALALALALALALALALALALALALA " + id_template)
     val sqlString =
       """
         SELECT ISNULL(RTRIM(em1),'') + ',' + ISNULL(RTRIM(em2),'') + ',' + ISNULL(RTRIM(em3),'')

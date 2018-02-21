@@ -64,6 +64,9 @@ object User extends Controller {
       val employeeOffice = UserService.findBankEmployeeDetails(employee.get.email)
       val programs = UserService.findProgramListForUser(employeeid.toString())
       val pUserProjectList = null
+      val uId = request.session.get("uId").get.toString()
+      val responsibleAlerts = RiskService.findAllResponsibleIds(uId)
+
       val alerts = RiskService.findNewUserAlertsIds(employeeid.toString())
       val availability = UserProfileServices.findAvailability(employeeid.intValue())
       
@@ -84,7 +87,8 @@ object User extends Controller {
         programs,
         alerts,
         consumos,
-        program_task
+        program_task,
+        responsibleAlerts
       )).withSession(
         "username" -> request.session.get("username").get,
         "utype" -> request.session.get("utype").get,
