@@ -2,15 +2,15 @@ $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
     
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'><span style='color:red'>*</span>Producto {idProducto}</div>";
+    tmpl += "<div class='column-full'>Producto {idProducto}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'><span style='color:red'>*</span>Usuario {usuario}</div>";
+    tmpl += "<div class='column-full'>Usuario {idusuario}</div>";
     tmpl += "</div>";    
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Fecha {fechasolicitud}</div>";
+    tmpl += "<div class='column-half'>Fecha {fechasolicitud}</div>";
     tmpl += "<div class='column-half'>Torre {torre}</div>";
     tmpl += "</div>";
 
@@ -23,11 +23,11 @@ $(document).ready(function () {
     tmpl += "</div>";  
 	
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Estado {estado}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Estado {estado}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-half'>";
-    tmpl += "<div class='column-half'>Comentario Instalación {comentarioinstalacion}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Comentario Instalación {comentarioinstalacion}</div>";
     tmpl += "</div>"; 
 	
     tmpl += "<div class='form-row' style='display: none;'>";

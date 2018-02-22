@@ -57,7 +57,12 @@ exports.list = function (req, res) {
     sql += "WHERE " + condition + " ";
     logger.debug("**" + sql + "**");
   }
-  var sql2 = sql + "ORDER BY a.alertarenovacion desc OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+  var sql2;
+  if (!sidx){
+    sql2 = sql + "ORDER BY a.nombre OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+  } else {
+    sql2 = sql + "ORDER BY "+sidx+" "+sord +" OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+  }
   var records;
   logger.debug("query:" + sql2);
 
@@ -126,7 +131,7 @@ exports.getExcel = function (req, res) {
     "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id " +
     "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id " +
     "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id "+
-    "ORDER BY a.alertarenovacion desc";
+    "ORDER BY a.nombre asc";
   console.log("query:"+sql);
   sequelize.query(sql)
     .spread(function (proyecto) {

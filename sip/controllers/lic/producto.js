@@ -129,10 +129,12 @@ function list(req, res) {
         logger.debug("***CONDICION:" + condition);
       }
     }
-    var sqlcount = "SELECT count(*) AS count FROM lic.producto a, lic.compra b WHERE a.id = b.idproducto ";
+    var sqlcount = "With Lista As   ( SELECT DISTINCT(a.id)  AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto ";
     if (filters && condition != "") {
-      sqlcount += " and "+condition + " ";
+      sqlcount += " where "+condition + " ";
     }
+
+    sqlcount += " ) SELECT count(*) AS count FROM lista  ";
   
     var sql = "DECLARE @PageSize INT; " +
       "SELECT @PageSize=" + rowspp + "; " +

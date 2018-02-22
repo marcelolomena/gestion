@@ -25,7 +25,7 @@ exports.action = function (req, res) {
         }
       } else {
         var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "', " +
-          ", idtorre = " + req.body.torre + " WHERE id =" + req.body.id;
+          " idtorre = " + req.body.torre + " WHERE id =" + req.body.id;
       }
 
       console.log("UPDATE:" + sql);

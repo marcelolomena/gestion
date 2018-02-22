@@ -109,9 +109,9 @@ exports.list = function (req, res) {
   }
   var sqlcount;
   if (rol == constants.INSTALADORSERV) {
-    sqlcount = "SELECT count(*) as count FROM lic.instalacion a WHERE a.idtipoinstalacion =" + constants.Servidor + " and a.estado IN ('" + constants.APROBADO + "','" + constants.NOINSTALADO + "','" + constants.INSTALADO + "')";
+    sqlcount = "SELECT count(*) as count FROM lic.instalacion a WHERE a.idtipoinstalacion =" + constants.Servidor + " and a.estado IN ('" + constants.APROBADO + "','" + constants.NOINSTALADO + "')";
   } else if (rol == constants.INSTALADORPC) {
-    sqlcount = "SELECT count(*) as count FROM lic.instalacion a WHERE a.idtipoinstalacion =" + constants.PC + " and a.estado IN ('" + constants.APROBADO + "','" + constants.NOINSTALADO + "','" + constants.INSTALADO + "')";
+    sqlcount = "SELECT count(*) as count FROM lic.instalacion a WHERE a.idtipoinstalacion =" + constants.PC + " and a.estado IN ('" + constants.APROBADO + "','" + constants.NOINSTALADO + "')";
   } else if (rol == constants.PREPRODUCTIVO) {
     sqlcount = "SELECT count(*) as count FROM lic.instalacion a WHERE a.estado='" + constants.DERIVADO + "'";
   }
@@ -129,7 +129,7 @@ exports.list = function (req, res) {
       "SELECT a.*, b.nombre, c.first_name+' '+ c.last_name AS usuario, d.nombre torre FROM lic.instalacion a JOIN lic.producto b ON a.idproducto=b.id " +
       "JOIN art_user c ON c.uid = a.idusuario " +
       "LEFT JOIN lic.torre d ON a.idtorre = d.id " +
-      "WHERE a.idtipoinstalacion = " + constants.Servidor + " and a.estado IN ('" + constants.APROBADO + "','" + constants.NOINSTALADO + "','" + constants.INSTALADO + "')";
+      "WHERE a.idtipoinstalacion = " + constants.Servidor + " and a.estado IN ('" + constants.APROBADO + "','" + constants.NOINSTALADO + "')";
   } else if (rol == constants.INSTALADORPC) {
     sql = "DECLARE @PageSize INT; " +
       "SELECT @PageSize=" + rowspp + "; " +
@@ -137,7 +137,7 @@ exports.list = function (req, res) {
       "SELECT @PageNumber=" + page + "; " +
       "SELECT a.*, b.nombre, c.first_name+' '+ c.last_name AS usuario FROM lic.instalacion a JOIN lic.producto b ON a.idproducto=b.id " +
       "JOIN art_user c ON c.uid = a.idusuario " +
-      "WHERE a.idtipoinstalacion = " + constants.PC + " and a.estado IN ('" + constants.APROBADO + "','" + constants.NOINSTALADO + "','" + constants.INSTALADO + "')";
+      "WHERE a.idtipoinstalacion = " + constants.PC + " and a.estado IN ('" + constants.APROBADO + "','" + constants.NOINSTALADO + "')";
   } else if (rol == constants.PREPRODUCTIVO) {
     sql = "DECLARE @PageSize INT; " +
       "SELECT @PageSize=" + rowspp + "; " +

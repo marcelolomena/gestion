@@ -102,8 +102,8 @@ if (process.env.NODE_ENV == 'qadesarrollo' ){
     define("CORREOUSR","proyecto_art");
     define("CORREOPWD","Banco01");        
 } else {
-    define("Servidor", 16);
-    define("PC", 15);
+    define("Servidor", 4);
+    define("PC", 3);
     define("CORREOFROM","ntorresg@bancochile.cl");
     define("CORREOTO","ntorresg@bancochile.cl");
     define("CORREOIP","mail.bancochile.cl");

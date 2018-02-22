@@ -12,7 +12,7 @@ $(document).ready(function () {
         name: 'nombre',
         jsonmap: 'nombre',
         align: 'left',
-        width: 300,
+        width: 400,
         editable: true,
         editoptions: {
             fullRow: true,
@@ -71,7 +71,6 @@ $(document).ready(function () {
         name: 'licocupadas',
         width: 110,
         align: 'center',
-        sortable: false,
         editable: true,
         editoptions: {
             fullRow: true,
@@ -82,7 +81,7 @@ $(document).ready(function () {
     {
         label: 'Snow',
         name: 'snow',
-        width: 200,
+        width: 110,
         hidden: false,
         editable: true,
         edittype: 'textarea',
@@ -99,7 +98,7 @@ $(document).ready(function () {
     {
         label: 'Addm',
         name: 'addm',
-        width: 200,
+        width: 110,
         hidden: false,
         editable: false,
         search: false
