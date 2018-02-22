@@ -47,7 +47,7 @@ exports.action = function (req, res) {
               let transporter = nodemailer.createTransport({
                 host: constants.CORREOIP,
                 port: 25,
-                secure: false, // true for 465, false for other ports
+                secure: true, // true for 465, false for other ports
                 auth: {
                   user: constants.CORREOUSR,
                   pass: constants.CORREPWD
