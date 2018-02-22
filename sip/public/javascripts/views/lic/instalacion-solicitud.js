@@ -98,7 +98,7 @@ $(document).ready(function () {
                         type: 'change',
                         fn: function (e) {
                             var idReserv = $('option:selected', this).val();
-                            // $("input#numlicencia").val(numLicencia);
+                            // $("input#idProducto").val(idReserv);
 
                             $.ajax({
                                 type: "GET",
@@ -113,6 +113,9 @@ $(document).ready(function () {
                                     }
                                     if (data.length > 0) {
                                         $("input#numlicencia").val(data[0].numlicencia);
+                                        idTipoInstalacion = data[0].idtipoinstalacion;
+                                        codAutorizacion = data[0].codautoriza;
+                                        idProducto = data[0].idproducto;
                                     }
                                 }
                             });
@@ -251,7 +254,8 @@ $(document).ready(function () {
         onclickSubmit: function (rowid) {
             return {
                 idTipoInstalacion: idTipoInstalacion,
-                codAutorizacion: codAutorizacion
+                codAutorizacion: codAutorizacion,
+                idProducto: idProducto
             }
         },
         beforeSubmit: function (postdata, formid) {

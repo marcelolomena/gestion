@@ -38,6 +38,7 @@ function renderGrid(loadurl, tableId) {
             width: 180,
             align: 'center',
             sortable: true,
+            hidden: true,
             editable: false,
             editrules: {
                 required: false

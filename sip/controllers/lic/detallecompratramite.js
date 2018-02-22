@@ -94,7 +94,7 @@ function mapFabricante(data) {
 }
 
 function saveProducto(data, res) {
-    if (data.idProducto == 0) {
+    if (!data.idProducto) {
         base.createP(models.producto, mapProducto(data))
             .then(function (created) {
                 data.idProducto = created.id;
@@ -113,9 +113,9 @@ function saveProducto(data, res) {
 
 function addDetalle(data, res) {
 
-    return base.createP(entity, data)
+    base.createP(entity, data)
         .then(function (created) {
-            return base.findById(models.producto, data.idProducto)
+            base.findById(models.producto, data.idProducto)
                 .then(function (item) {
                     return base.update(models.producto, {
                         id: data.idProducto,
@@ -141,7 +141,7 @@ function action(req, res) {
     var data = map(req);
     switch (req.body.oper) {
         case 'add':
-            if (data.idFabricante == 0) {
+            if (!data.idFabricante) {
                 base.createP(models.fabricante, mapFabricante(data))
                     .then(function (created) {
                         data.idFabricante = created.id;
@@ -158,12 +158,12 @@ function action(req, res) {
             }
             break;
         case 'edit':
-            return base.findById(entity, req.body.id)
+            base.findById(entity, req.body.id)
                 .then(function (detalle) {
-                    return base.updateP(entity, data)
+                    base.updateP(entity, data)
                         .then(function (updated) {
                             if (data.estado == 0) {
-                                return base.findById(models.producto, detalle.idProducto)
+                                base.findById(models.producto, detalle.idProducto)
                                     .then(function (item) {
                                         return base.update(models.producto, {
                                             id: detalle.idProducto,
@@ -211,7 +211,7 @@ function action(req, res) {
                         glosa: err.message
                     });
                 });
-                break;
+            break;
         case 'del':
             return base.findById(entity, req.body.id)
                 .then(function (detalle) {
@@ -272,7 +272,7 @@ function action(req, res) {
                         glosa: err.message
                     });
                 });
-                break;
+            break;
     }
 }
 

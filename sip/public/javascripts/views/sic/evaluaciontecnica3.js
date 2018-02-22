@@ -59,12 +59,27 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
     var parentSolicitud = subgrid_id.split("_")[2]
     console.log("la parentSolicitud : " + parentSolicitud)
 
-    var modelSubcriterios = [
-        { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'idserviciorequerido', name: 'idserviciorequerido', hidden: true },
-        { label: 'idnotaevaluaciontecnica', name: 'idnotaevaluaciontecnica', hidden: true },
+    var modelSubcriterios = [{
+            label: 'id',
+            name: 'id',
+            key: true,
+            hidden: true
+        },
         {
-            name: 'idcriterioevaluacion2', search: false, editable: true, hidden: true,
+            label: 'idserviciorequerido',
+            name: 'idserviciorequerido',
+            hidden: true
+        },
+        {
+            label: 'idnotaevaluaciontecnica',
+            name: 'idnotaevaluaciontecnica',
+            hidden: true
+        },
+        {
+            name: 'idcriterioevaluacion2',
+            search: false,
+            editable: true,
+            hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/sic/criterios2/' + parentRowKey,
@@ -73,7 +88,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                     var rowData = $('#' + childGridID).getRowData(rowKey);
                     var thissid = rowData.idcriterioevaluacion2;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>"; //el default
                     s += '<option value="0">--Seleccione criterio a evaluar--</option>';
                     $.each(data, function (i, item) {
 
@@ -88,7 +103,10 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            name: 'idproveedor', search: false, editable: true, hidden: true,
+            name: 'idproveedor',
+            search: false,
+            editable: true,
+            hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/sic/proveedoressugeridosservicio/' + parentCriterio,
@@ -97,7 +115,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                     var rowData = $('#' + childGridID).getRowData(rowKey);
                     var thissid = rowData.idproveedor;
                     var data = JSON.parse(response);
-                    var s = "<select>";//el default
+                    var s = "<select>"; //el default
                     s += '<option value="0">--Seleccione Proveedor--</option>';
                     $.each(data, function (i, item) {
 
@@ -112,31 +130,73 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Nombre Criterio', name: 'criterioevaluacion2.nombre', width: 120, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false, required: true }, hidedlg: true
+            label: 'Nombre Criterio',
+            name: 'criterioevaluacion2.nombre',
+            width: 120,
+            align: 'left',
+            search: true,
+            editable: true,
+            editrules: {
+                edithidden: false,
+                required: true
+            },
+            hidedlg: true
         },
         {
-            label: 'Porcentaje', name: 'criterioevaluacion2.porcentaje', width: 50, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false, required: true }, hidedlg: true
+            label: 'Porcentaje',
+            name: 'criterioevaluacion2.porcentaje',
+            width: 50,
+            align: 'left',
+            search: true,
+            editable: true,
+            editrules: {
+                edithidden: false,
+                required: true
+            },
+            hidedlg: true
         },
 
         {
-            label: 'Nombre Proveedor', name: 'proveedor.razonsocial', width: 300, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false, required: true }, hidedlg: true
+            label: 'Nombre Proveedor',
+            name: 'proveedor.razonsocial',
+            width: 300,
+            align: 'left',
+            search: true,
+            editable: true,
+            editrules: {
+                edithidden: false,
+                required: true
+            },
+            hidedlg: true
         },
 
 
 
         {
-            label: 'Nota', name: 'nota', width: 80, align: 'right',
-            search: false, editable: true, hidden: false,
-            formatter: 'number', formatoptions: { decimalPlaces: 0 },
-            editrules: { required: false },
+            label: 'Nota',
+            name: 'nota',
+            width: 80,
+            align: 'right',
+            search: false,
+            editable: true,
+            hidden: false,
+            formatter: 'number',
+            formatoptions: {
+                decimalPlaces: 0
+            },
+            editrules: {
+                required: false
+            },
 
         },
 
         {
-            label: 'Comentario', name: 'comentario', width: 300, align: 'left', search: false, editable: true,
+            label: 'Comentario',
+            name: 'comentario',
+            width: 300,
+            align: 'left',
+            search: false,
+            editable: true,
             edittype: 'custom',
             editoptions: {
                 custom_element: function (value, options) {
@@ -150,7 +210,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                         //}
                         try {
                             tinymce.remove("#" + options.id);
-                        } catch (ex) { }
+                        } catch (ex) {}
                         tinymce.init({
                             menubar: false,
                             statusbar: false,
@@ -175,7 +235,9 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
                         }
                     }
                     if (oper === "get") {
-                        return tinymce.get(id).getContent({ format: "row" });
+                        return tinymce.get(id).getContent({
+                            format: "row"
+                        });
                     } else if (oper === "set") {
                         if (tinymce.get(id)) {
                             tinymce.get(id).setContent(gridval);
@@ -198,7 +260,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
         caption: 'Nota Evaluación Técnica (Nivel 2)',
         //width: null,
         //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
+        autowidth: true, // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelSubcriterios,
@@ -219,125 +281,151 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
             var recs = $("#" + childGridID).getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#" + childGridID).addRowData("blankRow", { "id": 0, "proveedor.razonsocial": "No hay datos" });
+                $("#" + childGridID).addRowData("blankRow", {
+                    "id": 0,
+                    "proveedor.razonsocial": "No hay datos"
+                });
             }
         }
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
-        edit: true, add: false, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
-    },
-        {
-            closeAfterEdit: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            editCaption: "Modificar Cotización ",
-            template: tmplPF,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            beforeShowForm: function (form) {
-                var nivel = 0;
-                $.ajax({
-                    type: "GET",
-                    url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
-                    success: function (data) {
-                        console.log(data[0].niveles)
-                        nivel = (data[0].niveles);
-                        console.log("ESTAMOS EN NIVEL 2 DE: "+ data[0].niveles)
-                        if (parseInt(nivel) > 2) {
-                            $("input#nota").attr("readonly", true);
-                        } else {
-                            $("input#nota").attr("readonly", false);
-                        }
+        edit: true,
+        add: false,
+        del: true,
+        search: false,
+        refresh: true,
+        view: false,
+        position: "left",
+        cloneToTop: false
+    }, {
+        closeAfterEdit: true,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        editCaption: "Modificar Cotización ",
+        template: tmplPF,
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
+        },
+        beforeShowForm: function (form) {
+
+
+            var nivel = 0;
+            $.ajax({
+                type: "GET",
+                url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
+                success: function (data) {
+                    // console.log(data[0].niveles)
+                    nivel = (data[0].niveles);
+                    $("#idcriterioevaluacion2").attr('disabled', true);
+                    $("#idproveedor").attr('disabled', true);
+                    // $("select#idproveedor").attr("readonly", true);
+                    // console.log("ESTAMOS EN NIVEL 2 DE: "+ data[0].niveles)
+                    if (parseInt(nivel) > 2) {
+                        $("input#nota").attr("readonly", true);
+                    } else {
+                        $("input#nota").attr("readonly", false);
                     }
-                });
+                }
+            });
+
+            // console.log("niveles: " + nivel)
 
 
-                console.log("niveles: " + nivel)
 
-
-                
-            },
-            onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idnota1: parentRowKey/*, idsolicitudcotizacion: parentSolicitud*/ };
-            },
-            /*
-            onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
+        },
+        onclickSubmit: function (rowid) {
+            return {
+                parent_id: parentRowKey,
+                idnota1: parentRowKey /*, idsolicitudcotizacion: parentSolicitud*/
+            };
+        },
+        beforeSubmit: function (postdata, formid) {
+            if (parseInt(postdata.nota) > 100) {
+                return [false, "Nota: El valor máximo es de 100", ""];
+            } else {
+                return [true, "", ""]
             }
-            */
-        },
-        {
-            closeAfterAdd: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Agregar Cotización",
-            template: tmplPF,
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            },
-            onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idnota1: parentRowKey/*, idsolicitudcotizacion: parentSolicitud*/ };
-            },
-            beforeShowForm: function (form) {
-                var nivel = 0;
-                $.ajax({
-                    type: "GET",
-                    url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
-                    success: function (data) {
-                        console.log(data[0].niveles)
-                        nivel = (data[0].niveles);
-                        if (parseInt(nivel) > 2) {
-                            $("input#nota").attr("readonly", true);
-                        } else {
-                            $("input#nota").attr("readonly", false);
-                        }
-                    }
-                });
-
-                console.log("estamos en el nivel: " + nivel)
-            },
-            beforeSubmit: function (postdata, formid) {
-                if (parseInt(postdata.idproveedor) == 0) {
-                    return [false, "Proveedor: Seleccionar un proveedor", ""];
-                } else {
-                    return [true, "", ""]
-                }
-            },
-
-
-        },
-        {
-            closeAfterDelete: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            addCaption: "Eliminar Respuesta",
-            errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
-            }, afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                console.dir(result);
-                if (result.sucess) {
-                    return [true, "", ""];
-                } else {
-                    return [false, result.error_text, ""];
-
-                }
-
-            },
-            onclickSubmit: function (rowid) {
-                return { parent_id: parentRowKey, idnota1: parentRowKey/*, idsolicitudcotizacion: parentSolicitud*/ };
-            },
-        },
-        {
-            recreateFilter: true
         }
-    );
+        /*
+        onclickSubmit: function (rowid) {
+            return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
+        }
+        */
+    }, {
+        closeAfterAdd: true,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        addCaption: "Agregar Cotización",
+        template: tmplPF,
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
+        },
+        onclickSubmit: function (rowid) {
+            return {
+                parent_id: parentRowKey,
+                idnota1: parentRowKey /*, idsolicitudcotizacion: parentSolicitud*/
+            };
+        },
+        beforeShowForm: function (form) {
+            var nivel = 0;
+            $.ajax({
+                type: "GET",
+                url: '/sic/nivelclase/' + parentClaseEvaluacionTecnica,
+                success: function (data) {
+                    console.log(data[0].niveles)
+                    nivel = (data[0].niveles);
+                    if (parseInt(nivel) > 2) {
+                        $("input#nota").attr("readonly", true);
+                    } else {
+                        $("input#nota").attr("readonly", false);
+                    }
+                }
+            });
+
+            console.log("estamos en el nivel: " + nivel)
+        },
+        beforeSubmit: function (postdata, formid) {
+            if (parseInt(postdata.idproveedor) == 0) {
+                return [false, "Proveedor: Seleccionar un proveedor", ""];
+            } else {
+                return [true, "", ""]
+            }
+        },
+
+
+    }, {
+        closeAfterDelete: true,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        addCaption: "Eliminar Respuesta",
+        errorTextFormat: function (data) {
+            return 'Error: ' + data.responseText
+        },
+        afterSubmit: function (response, postdata) {
+            var json = response.responseText;
+            var result = JSON.parse(json);
+            console.dir(result);
+            if (result.sucess) {
+                return [true, "", ""];
+            } else {
+                return [false, result.error_text, ""];
+
+            }
+
+        },
+        onclickSubmit: function (rowid) {
+            return {
+                parent_id: parentRowKey,
+                idnota1: parentRowKey /*, idsolicitudcotizacion: parentSolicitud*/
+            };
+        },
+    }, {
+        recreateFilter: true
+    });
 
     function showSubGridsCot4(subgrid_id, row_id) {
         var nivel = 0;

@@ -310,7 +310,7 @@ var gridEstado = {
                 //console.log(parentRowData.idtipo)
                 //console.log(parentRowData.idgrupo)
                 try {
-                    var url = '/sic/documentowordfinal/' + parentRowKey + '/' + parentRowData.idgrupo;
+                    var url = '/sic/documentowordfinal/' + parentRowKey + '/' + parentRowData.idtipo;
                     $gridTab.jqGrid('excelExport', { "url": url });
                 } catch (e) {
                     console.log("error: " + e)

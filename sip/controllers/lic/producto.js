@@ -113,62 +113,77 @@ function list(req, res) {
     var proveedor = req.params.proveedor
     var filters = req.query.filters;
     var condition = "";
-  
+
     if (filters) {
-      var jsonObj = JSON.parse(filters);
-      if (JSON.stringify(jsonObj.rules) != '[]') {
-        jsonObj.rules.forEach(function (item) {
-          if (item.op === 'cn' || item.op === 'eq')
-            if (item.field == 'nombre') {
-              condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
-            } else {
-              condition += 'a.' + item.field + "=" + item.data + " AND ";
-            } 
-        });
-        condition = condition.substring(0, condition.length - 5);
-        logger.debug("***CONDICION:" + condition);
-      }
+        var jsonObj = JSON.parse(filters);
+        if (JSON.stringify(jsonObj.rules) != '[]') {
+            jsonObj.rules.forEach(function (item) {
+                if (item.op === 'cn' || item.op === 'eq')
+                    if (item.field == 'nombre') {
+                        condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
+                    } else {
+                        condition += 'a.' + item.field + "=" + item.data + " AND ";
+                    }
+            });
+            condition = condition.substring(0, condition.length - 5);
+            logger.debug("***CONDICION:" + condition);
+        }
     }
     var sqlcount = "With Lista As   ( SELECT DISTINCT(a.id)  AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto ";
     if (filters && condition != "") {
+<<<<<<< HEAD
       sqlcount += " where "+condition + " ";
     }
 
     sqlcount += " ) SELECT count(*) AS count FROM lista  ";
   
+=======
+        sqlcount += " and " + condition + " ";
+    }
+
+>>>>>>> 538b0fe06dfd3a6cf133ed210d5db2db204375a0
     var sql = "DECLARE @PageSize INT; " +
-      "SELECT @PageSize=" + rowspp + "; " +
-      "DECLARE @PageNumber INT; " +
-      "SELECT @PageNumber=" + page + "; " +
-      "SELECT DISTINCT(a.id) id1, a.*, c.id idFabricante, c.nombre nombreFab, d.id idClasificacion, d.nombre nombreClas, "+
-      "e.id idTipoLic, e.nombre nombreTipoLic, f.id idTipoInst, f.nombre nombreTipoInst "+     
-      "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto "+
-      "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id "+
-      "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id "+
-      "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id "+
-      "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id ";
+        "SELECT @PageSize=" + rowspp + "; " +
+        "DECLARE @PageNumber INT; " +
+        "SELECT @PageNumber=" + page + "; " +
+        "SELECT DISTINCT(a.id) id1, a.*, c.id idFabricante, c.nombre nombreFab, d.id idClasificacion, d.nombre nombreClas, " +
+        "e.id idTipoLic, e.nombre nombreTipoLic, f.id idTipoInst, f.nombre nombreTipoInst " +
+        "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto " +
+        "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id " +
+        "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id " +
+        "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id " +
+        "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id ";
     if (filters && condition != "") {
-      sql += "WHERE " + condition + " ";
-      logger.debug("**" + sql + "**");
+        sql += "WHERE " + condition + " ";
+        logger.debug("**" + sql + "**");
     }
     var sql2 = sql + "ORDER BY a.alertarenovacion desc OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
     var records;
     logger.debug("query:" + sql2);
     sequelize.query(sqlcount).spread(function (recs) {
-      var records = recs[0].count;
-      var total = Math.ceil(parseInt(recs[0].count) / rowspp);
-      sequelize.query(sql2).spread(function (rows) {
-        res.json({ records: records, total: total, page: page, rows: rows });
-      }).catch(function (err) {
-        logger.error(err)
-        res.json({ error_code: 1 });
-      });
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        sequelize.query(sql2).spread(function (rows) {
+            res.json({
+                records: records,
+                total: total,
+                page: page,
+                rows: rows
+            });
+        }).catch(function (err) {
+            logger.error(err)
+            res.json({
+                error_code: 1
+            });
+        });
     }).catch(function (err) {
-      logger.error(err)
-      res.json({ error_code: 1 });
+        logger.error(err)
+        res.json({
+            error_code: 1
+        });
     });
-  }
-  
+}
+
 
 
 function getFabricante(req, res) {
@@ -220,7 +235,7 @@ function getProducto(req, res) {
 function getProductoCompra(req, res) {
     var idFabricante = req.params.idFabricante;
     var sql = 'select distinct a.id, a.nombre from lic.producto a ' +
-                'join lic.compra b on a.id = b.idproducto';
+        'join lic.compra b on a.id = b.idproducto';
     sequelize.query(sql)
         .spread(function (rows) {
             return res.json(rows);
@@ -293,6 +308,27 @@ function listcompratramite(req, res) {
     })
 }
 
+function existeOtroProducto(req, res) {
+    var nombre = req.params.otroProducto;
+    entity.findOne({
+            where: {
+                nombre: nombre
+            },
+            attributes: ['nombre']
+        })
+        .then(function (result) {
+            return res.json({
+                error_code: 0,
+                nombre: result.nombre
+            });
+        })
+        .catch(function (err) {
+            return res.json({
+                error_code: 1
+            });
+        });
+}
+
 module.exports = {
     list: list,
     action: action,
@@ -301,5 +337,6 @@ module.exports = {
     getProducto: getProducto,
     getProductoLicTramite: getProductoLicTramite,
     listcompratramite: listcompratramite,
-    getProductoCompra: getProductoCompra
+    getProductoCompra: getProductoCompra,
+    existeOtroProducto: existeOtroProducto
 }

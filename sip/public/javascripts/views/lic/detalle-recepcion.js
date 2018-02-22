@@ -455,8 +455,9 @@ var detalleRecepcionGrid = {
                 hidden: false,
                 editable: true
             }, {
-                label: 'Comprador',
+                label: 'Responsable Negociador',
                 name: 'comprador',
+                width: 170, 
                 hidden: false,
                 editable: true
             }, {

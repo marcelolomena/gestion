@@ -250,7 +250,9 @@ exports.list = function (req, res) {
 };
 exports.download = function (req, res) {
 
-	var idsolicitud = req.params.id
+	var idsolicitud = req.params.id;
+	var idtipo = req.params.tid;
+	// var idgrup = req.params.gid;
 	return models.solicitudcotizacion.findOne({
 		attributes: ['id', 'descripcion', 'numerorfp'],
 		where: { id: idsolicitud }
@@ -301,7 +303,7 @@ exports.download = function (req, res) {
 		  			<td width="100%" style='width:100.0%;border:none;padding:0cm 5.4pt 0cm 5.4pt; height:36.0pt'>
 		  			  <div style='border:none;border-bottom:solid #4F81BD 1.0pt;padding:0cm 0cm 4.0pt 0cm; margin-left:19.85pt;margin-right:0cm'>
 		  				<p class=MsoTitle align=center style='margin-left:0cm;text-align:center'>
-						  <span lang=ES-CL><b>RFP N°
+						  <span lang=ES-CL><b>Solicitud de Cotización N°
 						  `
 		result += solicitudcotizacion.numerorfp
 		result += `
@@ -341,7 +343,7 @@ exports.download = function (req, res) {
 			  </p>
 		`
 
-		sequelize.query('EXECUTE sic.laviejaconfiable ' + idsolicitud).then(function (imprimir) {
+		sequelize.query('EXECUTE sic.laviejaconfiable ' + idsolicitud + ', ' + idtipo).then(function (imprimir) {
 			//console.log(imprimir[0][0].resultado)
 			result += imprimir[0][0].resultado
 			//logger.debug("ESTE ES EL RESULT " + result)

@@ -231,7 +231,7 @@ function tiposInstalacion(req, res) {
 
 function getplantillatipo(req, res) {
     var idReserv = req.params.idReserv;
-    sequelize.query("select a.nombrearchivo, c.numlicencia from lic.tipoinstalacion a " +
+    sequelize.query("select a.nombrearchivo, c.numlicencia, c.codautoriza, b.idtipoinstalacion, c.idproducto from lic.tipoinstalacion a " +
         "join lic.producto b on b.idtipoinstalacion = a.id " +
         "join lic.reserva c on c.idproducto = b.id " +
         "WHERE c.id = " + idReserv, {

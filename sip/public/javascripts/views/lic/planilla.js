@@ -31,9 +31,12 @@
         grid.prmEdit.beforeSubmit = beforeSubmit;
         grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.navParameters.add = false;
+        grid.navParameters.del = false;
         grid.build();
-        grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
+        // grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
     }
+
+    
 
     $(function () {
         var $table = $('#gridMaster');
@@ -52,15 +55,15 @@
         }, {
             label: 'Contrato',
             name: 'contrato',
-            width: 80,
+            width: 100,
             align: 'center',
             sortable: false,
             editable: true,
-            search: false
+            search: true
         }, {
             label: 'O.C.',
             name: 'ordencompra',
-            width: 80,
+            width: 100,
             align: 'center',
             sortable: false,
             editable: true,
@@ -71,7 +74,7 @@
                     });
                 }
             },
-            search: false
+            search: true
         }, {
             label: 'CUI',
             name: 'idcui',
@@ -159,7 +162,7 @@
             editrules: {
                 required: true
             },
-            search: false
+            search: true
         }, {
             label: 'Software',
             name: 'nombre',
@@ -332,10 +335,10 @@
             },
             search: false
         }, {
-            label: 'Perpetua',
+            label: 'Tipo de Contrato',
             name: 'perpetua',
             align: 'center',
-            width: 70,
+            width: 120,
             sortable: false,
             editable: true,
             search: false,
@@ -468,12 +471,13 @@
             search: false
         },
         {
-            label: 'Cant. Compradas',
+            label: 'Cant. Compradas por Producto',
             name: 'licstock',
             width: 125,
             align: 'center',
             sortable: false,
             editable: true,
+            hidden: true,
             editoptions: {
                 defaultValue: '0'
             },
@@ -484,7 +488,7 @@
         }, {
             label: 'Instalada por Producto',
             name: 'licocupadas',
-            width: 125,
+            width: 150,
             align: 'center',
             sortable: false,
             editable: true,
@@ -551,6 +555,19 @@
             },            
         },
         ];
+        
         initGrid(viewModel);
+        $('#gridMaster').jqGrid('navButtonAdd', 'pagerMaster', {
+            caption: "",
+            buttonicon: "glyphicon glyphicon-download-alt",
+            title: "Excel",
+            position: "last",
+            onClickButton: function () {
+                var grid = $('#gridMaster');
+                var rowKey = grid.getGridParam("selrow");
+                var url = '/lic/exportplanilla';
+                $('#gridMaster').jqGrid('excelExport', { "url": url });
+            }
+        });
     });
 })(jQuery, _);

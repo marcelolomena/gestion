@@ -504,7 +504,7 @@ module.exports = function (passport) {
     router.route('/sic/genrfc/:id')
         .get(isAuthenticated, calendarioController.list);
 
-    router.route('/sic/documentowordfinal/:id/:gid')
+    router.route('/sic/documentowordfinal/:id/:tid')
         .get(isAuthenticated, estadosolicitudController.download);
 
     router.route('/sic/criteriosevaluacion/:id/list')

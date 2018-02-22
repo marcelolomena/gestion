@@ -18,6 +18,7 @@ exports.list = function (req, res) {
   var proveedor = req.params.proveedor
   var filters = req.query.filters;
   var condition = "";
+  var gris = "WHERE a.alertarenovacion <> 'aGris'";
 
   if (filters) {
     var jsonObj = JSON.parse(filters);
@@ -34,9 +35,9 @@ exports.list = function (req, res) {
       logger.debug("***CONDICION:" + condition);
     }
   }
-  var sqlcount = "With Lista As   ( SELECT DISTINCT(a.id)  AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto ";
+  var sqlcount = "With Lista As   ( SELECT DISTINCT(a.id)  AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto " + gris;
   if (filters && condition != "") {
-    sqlcount += " Where "+condition + " ";
+    sqlcount += " AND "+condition + " ";
   }
   sqlcount += " ) SELECT count(*) AS count FROM lista  ";
 
@@ -52,9 +53,9 @@ exports.list = function (req, res) {
     "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id "+
     "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id "+
     "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id "+
-    "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id ";
+    "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id " + gris;
   if (filters && condition != "") {
-    sql += "WHERE " + condition + " ";
+    sql += "AND " + condition + " ";
     logger.debug("**" + sql + "**");
   }
   var sql2;
@@ -85,6 +86,7 @@ exports.getExcel = function (req, res) {
   var sidx = req.query.sidx;
   var sord = req.query.sord;
   var condition = "";
+  var gris = "WHERE a.alertarenovacion <> 'aGris'"
   logger.debug("En getExcel");
   var conf = {}
   conf.cols = [{
@@ -130,8 +132,13 @@ exports.getExcel = function (req, res) {
     "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id " +
     "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id " +
     "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id " +
+<<<<<<< HEAD
     "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id "+
     "ORDER BY a.nombre asc";
+=======
+    "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id " + gris +
+    "ORDER BY a.alertarenovacion desc"
+>>>>>>> 538b0fe06dfd3a6cf133ed210d5db2db204375a0
   console.log("query:"+sql);
   sequelize.query(sql)
     .spread(function (proyecto) {

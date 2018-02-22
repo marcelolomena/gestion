@@ -22,7 +22,7 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_codigosolicitud'>Código solicitud{codigosolicitud}</div>";
+    t1 += "<div class='column-half' id='d_codigosolicitud'>Código solicitud<span style='color:red'>*</span>{codigosolicitud}</div>";
     t1 += "<div class='column-half' id='d_correonegociador'>Correo Negociador<span style='color:red'>*</span>{correonegociador}</div>";
     t1 += "</div>";
 
@@ -31,14 +31,14 @@ $(document).ready(function () {
     t1 += "<div class='column-half' id='d_direccionnegociador'>Dirección Negociador<span style='color:red'>*</span>{direccionnegociador}</div>";
     t1 += "</div>";
 
-    t1 += "<div class='form-row'>";
-    t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
-    t1 += "<div class='column-half' id='d_fechaenviorfp'>Fecha RFP<span style='color:red'>*</span>{fechaenviorfp}</div>";
-    t1 += "</div>";
+    // t1 += "<div class='form-row'>";
+    // // t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
+    // t1 += "<div class='column-full' id='d_fechaenviorfp'>Fecha RFP<span style='color:red'>*</span>{fechaenviorfp}</div>";
+    // t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    t1 += "<div class='column-threequarter' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
-    t1 += "<div class='column-quarter' id='d_grupo'>Grupo{idgrupo}</div>";
+    t1 += "<div class='column-half' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
+    t1 += "<div class='column-half' id='d_grupo'>Grupo<span style='color:red'>*</span>{idgrupo}</div>";
     t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
@@ -57,7 +57,7 @@ $(document).ready(function () {
                 label: 'Estado',
                 name: 'colorestado',
                 index: 'colorestado',
-                width: 60,
+                width: 58,
                 align: "left",
                 editable: true,
                 search: false,
@@ -89,28 +89,123 @@ $(document).ready(function () {
                 }
             },
             {
-                label: 'N° RFP',
-                name: 'numerorfp',
-                width: 70,
+                label: 'Código',
+                name: 'codigosolicitud',
+                width: 100,
                 align: 'center',
-                hidden: false,
-                search: false,
+                search: true,
                 editable: true,
-                // formatter: 'integer',
                 editrules: {
                     required: true
-                }
+                },
+                editoptions: {
+                    size: 10,
+                    maxlengh: 10,
+                    dataInit: function (element) {
+                        $(element).mask("AAA-AA-000", {
+                            placeholder: "___-__-___"
+                        });
+                    }
+                },
+                hidden: false
             },
+            // {
+            //     label: 'N° RFP',
+            //     name: 'numerorfp',
+            //     width: 70,
+            //     align: 'center',
+            //     hidden: false,
+            //     search: false,
+            //     editable: false,
+            //     // formatter: 'integer',
+            //     editrules: {
+            //         required: true
+            //     }
+            // },
             {
                 label: 'Tipo',
                 name: 'tipo',
                 jsonmap: "tipoclausula.nombre",
-                width: 50,
+                width: 70,
                 align: 'center',
                 search: false,
                 editable: false,
                 hidden: false
             },
+            {
+                label: 'Grupo',
+                name: 'grupo',
+                jsonmap: "grupo.nombre",
+                width: 120,
+                align: 'center',
+                search: false,
+                editable: false,
+                hidden: false
+            },
+            {
+                label: 'Fecha Solicitud',
+                name: 'fechaenviorfp',
+                width: 105,
+                align: 'center',
+                sortable: false,
+                editable: true,
+                formatter: function (cellvalue, options, rowObject) {
+                    var val = rowObject.fechaenviorfp;
+                    if (val != null) {
+                        val = val.substring(0,10);
+                        var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                        return fechaok;
+                    } else {
+                        return '';
+                    }
+                },
+                search: false
+            },
+            // {
+            //     label: 'Fecha Solicitud',
+            //     name: 'fechaenviorfp',
+            //     width: 105,
+            //     align: 'center',
+            //     search: false,
+            //     formatter: 'date',
+            //     formatoptions: {
+            //         srcformat: 'ISO8601Long',
+            //         newformat: 'd-m-Y'
+            //     },
+            //     editable: false,
+            //     editrules: {
+            //         required: true
+            //     },
+            //     searchoptions: {
+            //         dataInit: function (el) {
+            //             $(el).datepicker({
+            //                 language: 'es',
+            //                 format: 'dd-mm-yyyy',
+            //                 autoclose: true,
+            //                 onSelect: function (dateText, inst) {
+            //                     setTimeout(function () {
+            //                         $gridTab[0].triggerToolbar();
+            //                     }, 100);
+            //                 }
+            //             });
+            //         },
+            //         sopt: ["eq", "le", "ge"]
+            //     },
+            //     editoptions: {
+            //         size: 10,
+            //         maxlengh: 10,
+            //         dataInit: function (element) {
+            //             $(element).mask("00-00-0000", {
+            //                 placeholder: "__-__-____"
+            //             });
+            //             $(element).datepicker({
+            //                 language: 'es',
+            //                 format: 'dd-mm-yyyy',
+            //                 autoclose: true
+            //             })
+            //         }
+            //     },
+            // },
             {
                 label: 'CUI',
                 name: 'idcui',
@@ -196,6 +291,60 @@ $(document).ready(function () {
                 hidden: false
             },
             {
+                label: 'SAP',
+                name: 'sap',
+                width: 80,
+                align: 'center',
+                search: false,
+                editable: true,
+                hidden: false,
+                editoptions: {
+                    dataInit: function (element) {
+                        $(element).mask("00000", {
+                            placeholder: "_____"
+                        });
+                    }
+                }
+            },
+            {
+                label: 'CódigoART',
+                name: 'codigoart',
+                width: 90,
+                align: 'center',
+                search: false,
+                editable: true,
+                hidden: false,
+                editrules: {
+                    edithidden: false
+                },
+                hidedlg: true,
+                editoptions: {
+                    size: 10,
+                    readonly: 'readonly',
+                    dataEvents: [{
+                        type: 'change',
+                        fn: function (e) {
+                            var rowKey = $grid.getGridParam("selrow");
+                            var rowData = $grid.getRowData(rowKey);
+                            var thissid = $(this).val();
+                            $.ajax({
+                                type: "GET",
+                                url: '/getcodigoart/' + thissid,
+                                async: false,
+                                success: function (data) {
+                                    if (data.length > 0) {
+                                        $("input#program_id").val(data[0].program_id);
+                                    } else {
+                                        alert("No existe el codigo art ingresado");
+                                        $("input#program_id").val("0");
+                                    }
+                                }
+                            });
+                        }
+                    }],
+                }
+            },
+            {
                 label: 'Técnico Responsable',
                 name: 'idtecnico',
                 search: false,
@@ -213,21 +362,22 @@ $(document).ready(function () {
                 }
             },
             {
-                label: 'Técnico',
+                label: 'Técnico Responsable',
                 name: 'first_name',
-                width: 150,
+                width: 170,
                 search: true,
                 editable: false,
                 formatter: returnTecnico,
                 hidden: false
             },
             {
-                label: 'T.Contrato',
+                label: 'Tipo de Contrato',
                 name: 'tipocontrato',
                 search: false,
                 editable: true,
                 hidden: false,
-                width: 100,
+                align: 'center',
+                width: 115,
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
@@ -269,64 +419,11 @@ $(document).ready(function () {
                     defaultValue: "0"
                 }
             },
-            {
-                label: 'CódigoART',
-                name: 'codigoart',
-                width: 90,
-                align: 'left',
-                search: false,
-                editable: true,
-                hidden: false,
-                editrules: {
-                    edithidden: false
-                },
-                hidedlg: true,
-                editoptions: {
-                    size: 10,
-                    readonly: 'readonly',
-                    dataEvents: [{
-                        type: 'change',
-                        fn: function (e) {
-                            var rowKey = $grid.getGridParam("selrow");
-                            var rowData = $grid.getRowData(rowKey);
-                            var thissid = $(this).val();
-                            $.ajax({
-                                type: "GET",
-                                url: '/getcodigoart/' + thissid,
-                                async: false,
-                                success: function (data) {
-                                    if (data.length > 0) {
-                                        $("input#program_id").val(data[0].program_id);
-                                    } else {
-                                        alert("No existe el codigo art ingresado");
-                                        $("input#program_id").val("0");
-                                    }
-                                }
-                            });
-                        }
-                    }],
-                }
-            },
-            {
-                label: 'SAP',
-                name: 'sap',
-                width: 50,
-                align: 'left',
-                search: false,
-                editable: true,
-                hidden: false,
-                editoptions: {
-                    dataInit: function (element) {
-                        $(element).mask("00000", {
-                            placeholder: "_____"
-                        });
-                    }
-                }
-            },
+
             {
                 label: 'Descripción',
                 name: 'descripcion',
-                width: 250,
+                width: 352,
                 align: 'left',
                 search: true,
                 editable: true,
@@ -340,19 +437,6 @@ $(document).ready(function () {
                 edittype: "textarea",
                 hidden: false
 
-            },
-
-            {
-                label: 'Código',
-                name: 'codigosolicitud',
-                width: 100,
-                align: 'center',
-                search: true,
-                editable: true,
-                editrules: {
-                    required: false
-                },
-                hidden: false
             },
             {
                 name: 'idclasificacionsolicitud',
@@ -385,8 +469,8 @@ $(document).ready(function () {
                 label: 'Clasificación',
                 name: 'clasificacion',
                 jsonmap: "clasificacion.nombre",
-                width: 120,
-                align: 'left',
+                width: 89,
+                align: 'center',
                 search: false,
                 editable: true,
                 hidden: false
@@ -518,53 +602,6 @@ $(document).ready(function () {
                 search: false,
                 editable: true
             },
-
-            {
-                label: 'Fecha RFP',
-                name: 'fechaenviorfp',
-                width: 150,
-                align: 'left',
-                search: false,
-                formatter: 'date',
-                formatoptions: {
-                    srcformat: 'ISO8601Long',
-                    newformat: 'd-m-Y'
-                },
-                editable: true,
-                editrules: {
-                    required: true
-                },
-                searchoptions: {
-                    dataInit: function (el) {
-                        $(el).datepicker({
-                            language: 'es',
-                            format: 'dd-mm-yyyy',
-                            autoclose: true,
-                            onSelect: function (dateText, inst) {
-                                setTimeout(function () {
-                                    $gridTab[0].triggerToolbar();
-                                }, 100);
-                            }
-                        });
-                    },
-                    sopt: ["eq", "le", "ge"]
-                },
-                editoptions: {
-                    size: 10,
-                    maxlengh: 10,
-                    dataInit: function (element) {
-                        $(element).mask("00-00-0000", {
-                            placeholder: "__-__-____"
-                        });
-                        $(element).datepicker({
-                            language: 'es',
-                            format: 'dd-mm-yyyy',
-                            autoclose: true
-                        })
-                    }
-                },
-            },
-
             {
                 name: 'idtipo',
                 search: false,
@@ -618,17 +655,7 @@ $(document).ready(function () {
                         return s + "</select>";
                     }
                 }
-            },
-            {
-                label: 'Grupo',
-                name: 'grupo',
-                jsonmap: "grupo.nombre",
-                width: 120,
-                align: 'left',
-                search: false,
-                editable: false,
-                hidden: false
-            },
+            }
         ];
     var previousRowId = 0;
     $grid.jqGrid({
@@ -642,8 +669,8 @@ $(document).ready(function () {
         height: 'auto',
         autowidth: true,
         //width: 1500,
-        sortname: 'numerorfp',
-        sortorder: "desc",
+        sortname: 'colorestado',
+        sortorder: "asc",
         shrinkToFit: false,
         forceFit: true,
         viewrecords: true,
@@ -707,6 +734,8 @@ $(document).ready(function () {
                 return [false, "CUI: Debe escoger un valor", ""];
             } else if (parseInt(postdata.idtecnico) == 0) {
                 return [false, "Técnico: Debe escoger un valor", ""];
+            } else if (postdata.codigosolicitud.trim().length == 0) {
+                return [false, "Código de Solicitud: Debe agregar un valor", ""];
             } else {
                 return [true, "", ""]
             }
@@ -809,16 +838,19 @@ $(document).ready(function () {
                 return [false, "CUI: Debe escoger un valor", ""];
             } else if (parseInt(postdata.idtecnico) == 0) {
                 return [false, "Técnico: Debe escoger un valor", ""];
-            } else if (parseInt(postdata.idnegociador) == 0) {
-                return [false, "Negociador: Debe escoger un valor", ""];
-            } else if (parseInt(postdata.idgrupo) == 0) {
-                return [false, "Grupo: Debe escoger un valor", ""];
-            } else if (parseInt(postdata.idclasificacionsolicitud) == 0) {
-                return [false, "Clasificación: Debe escoger un valor", ""];
             } else if (postdata.descripcion.trim().length == 0) {
                 return [false, "Descripción: Debe ingresar una descripción", ""];
-            } else {
-
+            } else if (parseInt(postdata.idnegociador) == 0) {
+                return [false, "Negociador: Debe escoger un valor", ""];
+            } else  if (parseInt(postdata.idclasificacionsolicitud) == 0) {
+                return [false, "Clasificación: Debe escoger un valor", ""];
+            } else if (postdata.codigosolicitud.trim().length == 0) {
+                return [false, "Código de Solicitud: Debe agregar un valor", ""];
+            } else if (parseInt(postdata.idtipo) == 0) {
+                return [false, "Tipo: Debe escoger un valor", ""];
+            } else if (parseInt(postdata.idgrupo) == 0) {
+                return [false, "Grupo: Debe escoger un valor", ""];
+            } else   {
                 return [true, "", ""]
             }
 
