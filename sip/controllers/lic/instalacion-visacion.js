@@ -17,15 +17,15 @@ exports.action = function (req, res) {
       if (req.body.torre == '0') {
         var rol = req.session.passport.sidebar[0].rid
         if (rol == constants.JEFEPC) {
-          var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "' " +
+          var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "', fechavisacion = getdate(), idusuariovisacion = '" + req.session.passport.user + "'  " +
             ", idtorre = 1 WHERE id =" + req.body.id;
         } else {
-          var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "' " +
+          var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "', fechavisacion = getdate(), idusuariovisacion = '" + req.session.passport.user + "' " +
             " WHERE id =" + req.body.id;
         }
       } else {
         var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "', " +
-          ", idtorre = " + req.body.torre + " WHERE id =" + req.body.id;
+          ", fechavisacion = getdate(), idusuariovisacion = '" + req.session.passport.user + "' , idtorre = " + req.body.torre + " WHERE id =" + req.body.id;
       }
 
       console.log("UPDATE:" + sql);
@@ -42,7 +42,7 @@ exports.action = function (req, res) {
       sequelize.query(sql).then(function (ok) {
         sequelize.query(sqltorre).then(function (torre) {
           var mailtorre = torre[0].correo;
-          if (req.body.estado == 'Instalado') {
+          if (req.body.estado == 'Aprobado') {
             fs.readFile(fullpath, function (err, data) {
               let transporter = nodemailer.createTransport({
                 host: constants.CORREOIP,
