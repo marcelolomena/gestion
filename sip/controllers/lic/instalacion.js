@@ -207,16 +207,17 @@ function action(req, res) {
         case "add":
             var numero = req.body.idTipoInstalacion;
             var codauto = req.body.codAutorizacion;
+            var idprod = req.body.idProducto;
             var hoy = "" + new Date().toISOString();
             models.instalacion.create({
                 idUsuario: req.session.passport.user,
                 fechaSolicitud: hoy,
-                idProducto: req.body.idProducto,
+                idProducto: idprod,
                 codAutorizacion: codauto,
                 informacion: req.body.informacion,
                 estado: 'Pendiente',
                 idTipoInstalacion: numero,
-                numlicencia: '1'
+                numlicencia: req.body.numlicencia
             }).then(function (instal) {
                 return res.json({
                     id: instal.id,
