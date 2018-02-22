@@ -450,6 +450,14 @@ exports.listnota = function (req, res) {
     var sidx = req.query.sidx;
     var sord = req.query.sord;
 
+    if (!sidx)
+    sidx = "idproveedor";
+
+  if (!sord)
+    sord = "asc";
+
+    var orden = "[notaevaluaciontecnica]." + sidx + " " + sord;
+
     var additional = [{
         "field": "idserviciorequerido",
         "op": "eq",
@@ -468,6 +476,7 @@ exports.listnota = function (req, res) {
                 models.notaevaluaciontecnica.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
+                    order: orden,
                     where: data,
                     include: [{
                         model: models.proveedor
