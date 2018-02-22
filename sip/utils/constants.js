@@ -107,6 +107,6 @@ if (process.env.NODE_ENV == 'qadesarrollo' ){
     define("CORREOFROM","ntorresg@bancochile.cl");
     define("CORREOTO","ntorresg@bancochile.cl");
     define("CORREOIP","mail.bancochile.cl");
-    define("CORREOUSR","proyecto_art");
+    define("CORREOUSR","proyecto_art@bancochile.cl");
     define("CORREOPWD","Banco01"); 
 }
