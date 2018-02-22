@@ -51,7 +51,8 @@ exports.action = function (req, res) {
                 auth: {
                   user: constants.CORREOUSR,
                   pass: constants.CORREPWD
-                }
+                },
+                tls: {rejectUnauthorized: false}
               });
               // setup email data with unicode symbols
               let mailOptions = {
