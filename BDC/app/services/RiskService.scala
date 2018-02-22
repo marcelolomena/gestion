@@ -2009,7 +2009,8 @@ object RiskService extends CustomColumns {
       SQL(
         """
           update art_risk_alert SET
-          status_id=3
+          status_id=3,
+          change_state=GETDATE()
           where id={alert_id}
           """).on(
         'alert_id -> alert_id).executeUpdate()

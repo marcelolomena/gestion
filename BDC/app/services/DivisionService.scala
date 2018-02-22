@@ -211,6 +211,67 @@ object DivisionService extends CustomColumns {
     }
   }
 
+  def findAllDivisionCompatibility(): Seq[Divisions] = {
+
+    var sqlString =
+      """
+        |SELECT a.dId,
+        |a.division,
+        |a.user_id,
+        |a.is_deleted,
+        |a.updated_by,
+        |a.updation_date,
+        |a.idRRHH,
+        |b.codDivision,
+        |b.glosaDivision FROM art_division_master a
+        |LEFT OUTER JOIN
+        |(
+        |SELECT codDivision,glosaDivision FROM RecursosHumanos
+        |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+        |AND rutJefe=(SELECT numRut FROM RecursosHumanos WHERE cui=852 AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND glosaCargoAct NOT LIKE '%Secretaria%' AND glosaCargoAct NOT LIKE '%auxiliar%')
+        |AND glosaCargoAct NOT LIKE '%Secretaria%'
+        |AND glosaCargoAct NOT LIKE '%auxiliar%'
+        |) b
+        |ON a.idRRHH = b.codDivision
+        |WHERE a.is_deleted = 0
+      """.stripMargin
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(Divisions.division *)
+    }
+  }
+
+  def findAllDivisionsCompatibility(): Seq[Divisions] = {
+
+    var sqlString =
+      """
+        |SELECT a.dId,
+        |a.division,
+        |a.user_id,
+        |a.is_deleted,
+        |a.updated_by,
+        |a.updation_date,
+        |a.idRRHH,
+        |b.codDivision,
+        |b.glosaDivision FROM art_division_master a
+        |LEFT OUTER JOIN
+        |(
+        |SELECT codDivision,glosaDivision FROM RecursosHumanos
+        |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+        |AND rutJefe=(SELECT numRut FROM RecursosHumanos WHERE cui=852 AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND glosaCargoAct NOT LIKE '%Secretaria%' AND glosaCargoAct NOT LIKE '%auxiliar%')
+        |AND glosaCargoAct NOT LIKE '%Secretaria%'
+        |AND glosaCargoAct NOT LIKE '%auxiliar%'
+        |) b
+        |ON a.idRRHH = b.codDivision
+        |WHERE a.is_deleted = 0
+        |ORDER BY a.division
+      """.stripMargin
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(Divisions.division *)
+    }
+  }
+
+
+
   def findIdDivisionRRHH(dId:Int): Option[Int] = {
     DB.withConnection { implicit connection =>
       SQL("SELECT idRRHH FROM art_division_master WHERE dId={dId}").on('dId->dId).as(scalar[Int].singleOpt)
