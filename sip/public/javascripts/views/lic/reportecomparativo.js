@@ -14,6 +14,7 @@ $(document).ready(function () {
         align: 'left',
         width: 300,
         editable: true,
+        sortable: false,
         editoptions: {
             fullRow: true,
             readonly: 'readonly'
@@ -30,6 +31,7 @@ $(document).ready(function () {
         width: 90,
         align: 'center',
         editable: true,
+        sortable: false,
         search: false,
         formatter: function (cellvalue, options, rowObject) {
             var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
@@ -61,6 +63,7 @@ $(document).ready(function () {
         width: 100,
         editable: true,
         search: false,
+        sortable: false,
         editoptions: {
             fullRow: true,
             readonly: 'readonly'
@@ -85,6 +88,7 @@ $(document).ready(function () {
         width: 200,
         hidden: false,
         editable: true,
+        sortable: false,
         edittype: 'textarea',
         editoptions: {
             fullRow: true,
@@ -101,6 +105,7 @@ $(document).ready(function () {
         name: 'addm',
         width: 200,
         hidden: false,
+        sortable: false,
         editable: false,
         search: false
     }
