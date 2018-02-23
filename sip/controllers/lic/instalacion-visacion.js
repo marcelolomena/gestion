@@ -43,7 +43,7 @@ exports.action = function (req, res) {
 
       sequelize.query(sql).then(function (ok) {
         sequelize.query(sqltorre).then(function (torre) {
-          var mailtorre = torre[0].correo;
+          var mailtorre = torre[0][0].correo;
           if (req.body.estado == 'Aprobado') {
             fs.readFile(fullpath, function (err, data) {
               let transporter = nodemailer.createTransport({
