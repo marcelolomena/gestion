@@ -118,16 +118,19 @@ mail_tmpl :java.util.HashMap[String, String]
 					<div class="left width_full">
 
 						<div class="left width-pr50 padding-top-3px" >
+
 							@textarea(
 							alertForm("responsible_answer"),
-							'class -> "span5",
 							'_label ->  Messages("newAlert.alertAnswer"),
 							'placeholder -> Messages("newAlert.placeholder.introAnswer"),
-							'rows -> 3,
-							'cols -> 60
+							'rows -> 10,
+							'cols -> 130
 							)
+
+
 						</div>
 					</div>
+
 					}else{
 
 					<div class="left width_full">
@@ -280,7 +283,6 @@ mail_tmpl :java.util.HashMap[String, String]
 </body>
 @frontend.headerScripts()
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
-
 <script type="text/javascript">
 function renderSendAlert() {
 
@@ -364,6 +366,11 @@ $(document).ready(function(){
 
 
 		$("#responsible_answer").attr("disabled", true);
+*/
+/*
+		tinymce.init({
+			selector: "textarea#responsible_answer"
+		});
 */
 });
 </script>
