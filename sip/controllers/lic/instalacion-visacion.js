@@ -10,13 +10,15 @@ var path = require('path');
 
 exports.action = function (req, res) {
   var action = req.body.oper;
-
+  var numtorre = req.body.torre;
   switch (action) {
     case "edit":
       //Codigo de update
-      if (req.body.torre == '0') {
+      if (numtorre == '0') {
         var rol = req.session.passport.sidebar[0].rid
+        numtorre = 1;
         if (rol == constants.JEFEPC) {
+        
           var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentariovisacion='" + req.body.comentariovisacion + "', fechavisacion = getdate(), idusuariovisacion = '" + req.session.passport.user + "'  " +
             ", idtorre = 1 WHERE id =" + req.body.id;
         } else {
@@ -37,7 +39,7 @@ exports.action = function (req, res) {
         req.body.idProducto + '" ha sido autorizada. <br>Por favor proceder con la instalación. <br> Se adjunta información requerida.</b>' +
         'Una vez realizada exitosamente la instalación debe registrar como instalado el producto en "http://152.139.49.217:8090/menu/instalador"';
 
-      var sqltorre = "select * from lic.torre where id=" + req.body.torre;
+      var sqltorre = "select * from lic.torre where id=" + numtorre;
 
       sequelize.query(sql).then(function (ok) {
         sequelize.query(sqltorre).then(function (torre) {
@@ -50,9 +52,8 @@ exports.action = function (req, res) {
                 secure: false, // true for 465, false for other ports
                 auth: {
                   user: constants.CORREOUSR,
-                  pass: constants.CORREPWD
-                },
-                tls: {rejectUnauthorized: false}
+                  pass: constants.CORREOPWD
+                }
               });
               // setup email data with unicode symbols
               let mailOptions = {
