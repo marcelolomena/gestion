@@ -132,13 +132,8 @@ exports.getExcel = function (req, res) {
     "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id " +
     "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id " +
     "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id " +
-<<<<<<< HEAD
     "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id "+
     "ORDER BY a.nombre asc";
-=======
-    "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id " + gris +
-    "ORDER BY a.alertarenovacion desc"
->>>>>>> 538b0fe06dfd3a6cf133ed210d5db2db204375a0
   console.log("query:"+sql);
   sequelize.query(sql)
     .spread(function (proyecto) {
