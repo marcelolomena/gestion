@@ -104,9 +104,9 @@ if (process.env.NODE_ENV == 'qadesarrollo' ){
 } else {
     define("Servidor", 4);
     define("PC", 3);
-    define("CORREOFROM","ntorresg@bancochile.cl");
-    define("CORREOTO","ntorresg@bancochile.cl");
+    define("CORREOFROM","proyecto_art@bancochile.cl");
+    define("CORREOTO","jareyesj.workmate@bancochile.cl");
     define("CORREOIP","mail.bancochile.cl");
-    define("CORREOUSR","proyecto_art@bancochile.cl");
+    define("CORREOUSR","proyecto_art");
     define("CORREOPWD","Banco01"); 
 }
