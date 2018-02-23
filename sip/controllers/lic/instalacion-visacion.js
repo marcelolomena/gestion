@@ -33,8 +33,8 @@ exports.action = function (req, res) {
       console.log("UPDATE:" + sql);
       console.log("archivo:" + req.body.nombrearchivo2);
       var archivo = req.body.nombrearchivo2;
-      var filePath = "docs\\lic";
-      var fullpath = filePath + '\\' + archivo;
+      var filePath = "docs"+path.sep+"lic";
+      var fullpath = filePath + path.sep + archivo;
       var htmltext = '<b>Estimados <br><br> La solicitud de instalación del producto "' +
         req.body.idProducto + '" ha sido autorizada. <br>Por favor proceder con la instalación. <br> Se adjunta información requerida.</b>' +
         'Una vez realizada exitosamente la instalación debe registrar como instalado el producto en "http://152.139.49.217:8090/menu/instalador"';
@@ -66,7 +66,8 @@ exports.action = function (req, res) {
                 attachments: [{ 'filename': archivo, 'content': data }]
               };
 
-              console.log('MailOPt'+JSON.stringify(mailOptions));
+              //console.log('MailOPt'+JSON.stringify(mailOptions));
+              console.log("TO:"+ constants.CORREOTO + ',' + mailtorre);
               // send mail with defined transport object
               transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
