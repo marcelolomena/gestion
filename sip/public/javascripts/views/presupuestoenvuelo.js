@@ -690,6 +690,20 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
+
+    $('#table_iniciativa').jqGrid('navButtonAdd', '#pager_iniciativa_left', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Exporta Excel",
+        //position: "last",
+        onClickButton: function () {
+            var grid = $('#table_iniciativa');
+            var rowKey = grid.getGridParam("selrow");
+            var url = '/presupuestoenvuelo/exportar';
+            $('#table_iniciativa').jqGrid('excelExport', { "url": url });
+        }
+    });
+
     $("#pager_iniciativa_left").css("width", "");
     function showSubGrids(subgrid_id, row_id) {
         gridTareaEnVuelo(subgrid_id, row_id, 'tareaenvuelo');

@@ -42,7 +42,7 @@ exports.list = function (req, res) {
         "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
     logger.debug(sql0);
-
+    var condition = '';
     if (filters) {
         var jsonObj = JSON.parse(filters);
 
@@ -50,9 +50,21 @@ exports.list = function (req, res) {
 
             jsonObj.rules.forEach(function (item) {
 
-                if (item.op === 'cn')
-                    condition += item.field + " like '%" + item.data + "%' AND"
+                if (item.op === 'cn' || item.op === 'eq')
+                    if (item.field == 'idproveedor') {
+                        condition += "proveedor.razonsocial like '%" + item.data + "%' AND";
+                    } else {
+                        condition += item.field + " = " + item.data + "%' AND";
+                    }
             });
+            condition = condition.substring(0, condition.length - 4);
+
+            var sqlcount;
+            sqlcount = "SELECT count(*) as count FROM [sip].[prefactura] a LEFT OUTER JOIN [sip].[proveedor] proveedor  ON a.[idproveedor] = proveedor.[id] ";
+                    "where a.[estado] != 'ANULADA' ";
+            if (filters && condition != "") {
+              sqlcount += " and " + condition + " ";
+            }            
 
             var sql = "declare @rowsPerPage as bigint; " +
                 "declare @pageNum as bigint;" +
@@ -66,13 +78,14 @@ exports.list = function (req, res) {
                 " LEFT OUTER JOIN  [sip].[estructuracui] estructuracui  ON a.[idcui] = estructuracui.[id] " +
                 " LEFT OUTER JOIN  [sip].[moneda] moneda  ON a.[idmoneda] = moneda.[id] " +
                 " LEFT OUTER JOIN  [sip].[contrato] contrato  ON a.[idcontrato] = contrato.[id] " +
-                "WHERE ( a.[borrado] = 1) AND a.[estado] != 'ANULADA' AND " + condition.substring(0, condition.length - 4) + ") " +
+                "WHERE ( a.[borrado] = 1) AND a.[estado] != 'ANULADA' AND " + condition+ ") " +
                 "select * from SQLPaging with (nolock) where resultNum > ((@pageNum - 1) * @rowsPerPage);";
 
             logger.debug(sql);
 
-            models.prefactura.count({ where: [condition.substring(0, condition.length - 4)] }).then(function (records) {
-                var total = Math.ceil(records / rows);
+            sequelize.query(sqlcount).spread(function (recs) {
+                var records = recs[0].count;
+                var total = Math.ceil(parseInt(recs[0].count) / rows);
                 sequelize.query(sql)
                     .spread(function (rows) {
                         res.json({ records: records, total: total, page: page, rows: rows });
@@ -688,3 +701,132 @@ exports.generarproy = function (req, res) {
 
 };
 
+exports.getProveedores = function (req, res) {
+    var sql = "SELECT DISTINCT (b.id), b.razonsocial as nombre FROM sip.prefactura a JOIN sip.proveedor b ON a.idproveedor=b.id";
+    sequelize.query(sql)
+        .spread(function (rows) {
+            res.json(rows);
+        });
+};
+
+
+exports.getExcel = function (req, res) {
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var condition = "";
+    logger.debug("En getExcel");
+    var conf = {}
+    conf.cols = [
+    {
+      caption: 'Servicio',
+      type: 'string',
+      width: 200
+    },
+    {
+      caption: 'Proveedor',
+      type: 'string',
+      width: 50
+    },
+    {
+      caption: 'Nombre',
+      type: 'number',
+      width: 40
+    },
+    {
+      caption: 'Apellido',
+      type: 'number',
+      width: 40
+    },
+    {
+      caption: 'Periodo',
+      type: 'number',
+      width: 40
+    },
+    {
+      caption: 'Evaluación',
+      type: 'number',
+      width: 40
+    },
+    {
+      caption: 'Monto Neto',
+      type: 'number',
+      width: 40
+    },
+    {
+      caption: 'Moneda',
+      type: 'number',
+      width: 40
+    },
+    {
+      caption: 'CUI',
+      type: 'number',
+      width: 40
+    },
+    {
+      caption: 'Estado',
+      type: 'number',
+      width: 40
+    },
+    {
+      caption: 'Prefactura',
+      type: 'number',
+      width: 40
+    },
+    {
+        caption: 'Fecha Aprobación',
+        type: 'number',
+        width: 40
+      }    
+    ];
+  
+    var sql = "SELECT a.glosaservicio Servicio, b.razonsocial Proveedor, c.first_name Nombre, c.last_name Apellido, a.periodo Periodo, d.nombre Evaluacion, "+
+    "a.montoneto MontoNeto, h.moneda Moneda, e.cui CUI, "+
+    "IIF(a.aprobado=0, 'Pendiente', IIF(a.aprobado=1,'Aprobado', IIF(a.aprobado=2,'Rechazado', IIF(a.aprobado=3,'Provisionado', 'Ya Facturado')))) Estado,  "+
+    "a.idprefactura Prefactura , convert(VARCHAR(10), a.fechaactualizacion,105) FechaAprobacion "+
+    "FROM sip.solicitudaprobacion a "+
+    "JOIN sip.proveedor b ON a.idproveedor=b.id "+
+    "JOIN art_user c ON c.uid = a.uid  "+
+    "JOIN sip.parametro d ON a.idcalificacion=d.id "+
+    "join sip.estructuracui e on a.idcui=e.id "+
+    "JOIN sip.detallecompromiso f ON f.id=a.iddetallecompromiso  "+
+    "JOIN sip.detalleserviciocto g ON f.iddetalleserviciocto=g.id "+
+    "JOIN sip.moneda h ON g.idmoneda=h.id";
+    console.log("query:"+sql);
+    sequelize.query(sql)
+      .spread(function (proyecto) {
+        var arr = []
+        for (var i = 0; i < proyecto.length; i++) {
+  
+          var a = [
+          proyecto[i].Servicio,
+          proyecto[i].Proveedor,
+          proyecto[i].Nombre,
+          proyecto[i].Apellido,
+          proyecto[i].Periodo,
+          proyecto[i].Evaluacion,
+          proyecto[i].MontoNeto,
+          proyecto[i].Moneda,
+          proyecto[i].CUI,
+          proyecto[i].Estado,
+          proyecto[i].Prefactura,
+          proyecto[i].FechaAprobacion
+          ];
+          arr.push(a);
+        }
+        //console.log("*******"+JSON.stringify(arr));
+        conf.rows = arr;
+  
+        var result = nodeExcel.execute(conf);
+        res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+        res.setHeader("Content-Disposition", "attachment;filename=" + "EvaluacionServicioProveedor.xlsx");
+        res.end(result, 'binary');
+  
+      }).catch(function (err) {
+        logger.debug(err);
+        res.json({ error_code: 100 });
+      });
+  
+  };

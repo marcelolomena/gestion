@@ -58,27 +58,6 @@ var cancelBtn = function (cellVal, options, rowObject) {
 };
 
 $(document).ready(function () {
-    var tmpl = "<div id='responsive-form' class='clearfix'>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'><span style='color: red'>*</span>Proyecto {nombre}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Importante: Los montos aprobados están en Pesos.</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Presupuesto Aprobado en Dolares {pptoaprobadodolares}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row' style='display: none;'>";
-    tmpl += "<div class='column-half'>estado {estado}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<hr style='width:100%;'/>";
-    tmpl += "<div> {sData} {cData}  </div>";
-    tmpl += "</div>";
 
     var modelPrefacturas = [
         {
@@ -91,29 +70,29 @@ $(document).ready(function () {
             sortable: false,
             formatter: cancelBtn
         },
-        { label: 'Número', name: 'id', key: true, width: 80, sortable: false, hidden: false, formatter: returnTaskLink },
+        { label: 'Número', name: 'id', key: true, width: 80, sortable: false, hidden: false, search: false,
+        formatter: returnTaskLink },
         {
             label: 'Estado', name: 'estado', width: 80, align: 'left',
-            search: true, editable: false, hidden: false
+            search: false, editable: false, hidden: false, sortable: false,
         },
         {
             label: 'Periodo', name: 'periodo', width: 70, sortable: false, align: 'left',
-            search: true, editable: true, hidden: false
-        },
+            search: false, editable: true, hidden: false
+        },     
         {
-            label: 'Proveedor', name: 'idproveedor',sortable: false, 
-            search: false, editable: true, hidden: true,
-            dataInit: function (elem) { $(elem).width(200); }
-        },
-        {
-            label: 'Proveedor', name: 'proveedor', sortable: false, width: 400, align: 'left',
-            search: true, editable: true, hidedlg: true,
-            editrules: { edithidden: false, required: true }
-        },
-
+            label: 'Proveedor',
+            name: 'idproveedor',
+            jsonmap: 'proveedor',
+            align: 'center',
+            width: 200,
+            editable: true,
+            sortable: false,            
+            search: true  
+        },        
         {
             label: 'Contrato', name: 'numero', width: 100, sortable: false, align: 'left',
-            search: true, editable: true, hidedlg: true,
+            search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
@@ -128,17 +107,17 @@ $(document).ready(function () {
         },
         {
             label: 'CUI', name: 'cui', width: 100, align: 'left',
-            search: true, editable: true, hidedlg: true,sortable: false, 
+            search: false, editable: true, hidedlg: true,sortable: false, 
             editrules: { edithidden: false, required: true }
         },
         {
             label: 'SAP', name: 'sap', width: 100, align: 'left',
-            search: true, editable: true, hidedlg: true,sortable: false, 
+            search: false, editable: true, hidedlg: true,sortable: false, 
             editrules: { edithidden: false, required: true }
         },
         {
             label: 'Tarea', name: 'tarea', width: 100, align: 'left',
-            search: true, editable: true, hidedlg: true,sortable: false, 
+            search: false, editable: true, hidedlg: true,sortable: false, 
             editrules: { edithidden: false, required: true }
         },        
         {
@@ -150,7 +129,7 @@ $(document).ready(function () {
         },
         {
             label: 'Moneda', name: 'moneda', width: 80, align: 'left',
-            search: true, editable: true, hidedlg: true,sortable: false, 
+            search: false, editable: true, hidedlg: true,sortable: false, 
             editrules: { edithidden: false, required: true }
         },
 
@@ -184,13 +163,13 @@ $(document).ready(function () {
 
         {
             label: 'Estado', name: 'estado', width: 150, align: 'left',sortable: false, 
-            search: true, editable: true, hidedlg: true, hidden: true,
+            search: false, editable: true, hidedlg: true, hidden: true,
             editrules: { edithidden: false, required: true }
         },
         {
             label: 'Factura', name: 'factura', width: 100, align: 'left',sortable: false, 
-            search: true, editable: false, hidden: true
-        },        
+            search: false, editable: false, hidden: true
+        }      
 
     ];
     $("#table_prefacturas").jqGrid({
@@ -203,10 +182,8 @@ $(document).ready(function () {
         regional: 'es',
         height: 'auto',
         caption: 'Lista de prefacturas',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        autowidth: null,  // set 'true' here
+        shrinkToFit: false, // well, it's 'true' by default
         pager: "#pager_prefacturas",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
@@ -227,7 +204,7 @@ $(document).ready(function () {
             var thisId = $.jgrid.jqID(this.id);
             $.get('/sic/getsession', function (data) {
                 $.each(data, function (i, item) {
-
+                    console.log("ROL:"+item.glosarol);
                     if (item.glosarol === "Administrador DIVOT") {
                         $("#table_prefacturas").jqGrid("showCol", "Anular")
                     }
@@ -237,22 +214,32 @@ $(document).ready(function () {
     });
     $("#table_prefacturas").jqGrid("setLabel", "Anular", "", { "text-align": "center" });
 
+    $("#table_prefacturas").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+
     $('#table_prefacturas').jqGrid('navGrid', "#pager_prefacturas", {
         edit: false, add: false, del: false, search: false, refresh: true,
-        view: false, position: "left", cloneToTop: false
+         cloneToTop: false
     },
         {
 
         },
         {
-
-        },
-        {
-        },
-        {
-            recreateFilter: true
+            //recreateFilter: true
         }
     );
 
-    $("#pager_prefacturas_left").css("width", "");
+    $('#table_prefacturas').jqGrid('navButtonAdd', '#pager_prefacturas', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Reporte Evaluacion Servicios",
+        position: "last",
+        onClickButton: function () {
+            var grid = $('#grid');
+            var rowKey = grid.getGridParam("selrow");
+            var url = '/prefacturas/excel';
+            $('#table_prefacturas').jqGrid('excelExport', { "url": url });
+        }
+    });
+
+    $("#pager_left").css("width", "");
 });

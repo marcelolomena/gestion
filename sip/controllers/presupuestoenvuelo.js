@@ -25,163 +25,6 @@ exports.getPersonal = function (req, res) {
 
 };
 
-exports.getExcel = function (req, res) {
-  var page = req.query.page;
-  var rows = req.query.rows;
-  var filters = req.query.filters;
-  var sidx = req.query.sidx;
-  var sord = req.query.sord;
-
-  var conf = {}
-  conf.cols = [{
-    caption: 'id',
-    type: 'number',
-    width: 3
-  },
-    {
-      caption: 'Nombre',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'División',
-      type: 'string',
-      width: 100
-    },
-    {
-      caption: 'Sponsor 1',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Sponsor 2',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'PMO',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Gerente',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Estado',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Categoría',
-      type: 'string',
-      width: 50
-    },
-    {
-      caption: 'Q1',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Q2',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Q3',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Q4',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Fecha Comite',
-      type: 'string',
-      width: 15
-    },
-    {
-      caption: 'Año',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Presupuesto Gasto (USD)',
-      type: 'number',
-      width: 15
-    },
-    {
-      caption: 'Presupuesto Inversión (USD)',
-      type: 'number',
-      width: 15
-    }
-
-  ];
-
-  if (!sidx)
-    sidx = "nombre";
-
-  if (!sord)
-    sord = "asc";
-
-  var order = sidx + " " + sord;
-
-  utilSeq.buildCondition(filters, function (err, data) {
-    if (err) {
-      log(err)
-    } else {
-      models.iniciativa.count({
-        where: data
-      }).then(function (records) {
-        var total = Math.ceil(records / rows);
-        models.iniciativa.findAll({
-          offset: parseInt(rows * (page - 1)),
-          limit: parseInt(rows),
-          order: order,
-          where: data
-        }).then(function (iniciativas) {
-          var arr = []
-          for (var i = 0; i < iniciativas.length; i++) {
-
-            a = [i + 1, iniciativas[i].nombre,
-              iniciativas[i].divisionsponsor,
-              iniciativas[i].sponsor1,
-              iniciativas[i].sponsor2,
-              iniciativas[i].pmoresponsable,
-              iniciativas[i].gerenteresponsable,
-              iniciativas[i].estado,
-              iniciativas[i].categoria,
-              iniciativas[i].q1,
-              iniciativas[i].q2,
-              iniciativas[i].q3,
-              iniciativas[i].q4,
-              iniciativas[i].fechacomite,
-              iniciativas[i].ano,
-              iniciativas[i].pptoestimadogasto,
-              iniciativas[i].pptoestimadoinversion
-            ];
-            arr.push(a);
-          }
-          conf.rows = arr;
-          var result = nodeExcel.execute(conf);
-          res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-          res.setHeader("Content-Disposition", "attachment;filename=" + "iniciativas.xlsx");
-          res.end(result, 'binary');
-
-        }).catch(function (err) {
-          logger.error(err);
-          res.json({ error_code: 1 });
-        });
-      })
-    }
-  });
-
-
-};
-
 exports.getDivisiones = function (req, res) {
 
   var sql = "select * from art_division_master " +
@@ -688,3 +531,332 @@ exports.comboboxpmo = function (req, res) {
     res.json({ error_code: 1 });
   });
 }
+
+exports.getExcel = function (req, res) {
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.query.filters;
+  var sidx = req.query.sidx;
+  var sord = req.query.sord;
+  var condition = "";
+  logger.debug("En getExcel");
+  //nombreproyecto, sap, program_id, cuifinanciamiento1, porcentaje1, cuifinanciamiento2, 
+  //porcentaje2, beneficioscuantitativos, beneficioscualitativos, lider, jp, responsable, 
+  //dolar, uf, fechaconversion, idpresupuestoenvuelo, cui, servicio, proveedor, tarea, glosa, 
+  //TipoPago, fechainicio, fechafin, reqcontrato, moneda, costounitario, cantidad, coniva, 
+  //numerocontrato, numerosolicitudcontrato, extension, idflujo,idtareaenvuelo, subtarea, periodo, 
+  //porcentaje, glosaitem, idtipopago, montoorigen, montopesos, costoorigen, costopesos
+  var conf = {}
+  conf.cols = [{
+    caption: 'Id SAP',
+    type: 'number',
+    width: 3
+  },
+    {
+      caption: 'Nombre Proyecto',
+      type: 'string',
+      width: 100
+    },
+    {
+      caption: 'SAP',
+      type: 'number',
+      width: 40
+    },
+    {
+      caption: 'Id Programa',
+      type: 'number',
+      width: 40
+    },
+    {
+      caption: 'CUI Financiamiento1',
+      type: 'number',
+      width: 20
+    },
+    {
+      caption: 'Porcentaje1',
+      type: 'number',
+      width: 10
+    },
+    {
+      caption: 'CUI Financiamiento2',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Porcentaje2',
+      type: 'number',
+      width: 15
+    },
+    {
+      caption: 'Beneficios Cuantitativos',
+      type: 'string',
+      width: 15
+    },
+    {
+      caption: 'Beneficios Cualitativos',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Lider',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'JP',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Responsable',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Dolar',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'UF',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Fecha Conversion',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'IdTarea',
+      type: 'number',
+      width: 30
+    },    
+    {
+      caption: 'Id Presupuesto En Vuelo',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'CUI',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Servicio',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Proveedor',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Tarea',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Glosa',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Tipo Pago',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Fecha Inicio',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Fecha Fin',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Req Contrato',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Moneda',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Costo Unitario',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Cantidad',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Con IVA',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Numero Contrato',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Numero Solicitud Contrato',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Extension',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Id Flujo',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Id Tareaenvuelo',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Subtarea',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Periodo',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Porcentaje',
+      type: 'number',
+      width: 30
+    },    
+    {
+      caption: 'Glosaitem',
+      type: 'string',
+      width: 30
+    },
+    {
+      caption: 'Id Tipopago',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Monto Origen',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Monto Pesos',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Costo Origen',
+      type: 'number',
+      width: 30
+    },
+    {
+      caption: 'Costo Pesos',
+      type: 'number',
+      width: 30
+    }
+  ];
+
+  var sql = `SELECT a.id IdSAP, nombreproyecto, a.sap, a.program_id, a.cuifinanciamiento1, a.porcentaje1, a.cuifinanciamiento2, 
+  a.porcentaje2, a.beneficioscuantitativos, a.beneficioscualitativos, d.first_name+' '+d.last_name lider,  
+  e.first_name+' '+e.last_name jp, f.first_name+' '+f.last_name responsable, a.dolar, a.uf, convert(VARCHAR(10), a.fechaconversion,105) fechaconversion,
+  b.id IdTarea, b.idpresupuestoenvuelo, g.cui, h.nombre servicio, i.razonsocial proveedor, b.tarea, b.glosa, 
+  j.nombre TipoPago,convert(VARCHAR(10), b.fechainicio,105) fechainicio , convert(VARCHAR(10), b.fechafin,105) fechafin , b.reqcontrato, k.moneda, 
+  b.costounitario, b.cantidad, b.coniva, b.numerocontrato, b.numerosolicitudcontrato, b.extension,
+  c.id IdFlujo, c.idtareaenvuelo, l.title subtarea, c.periodo, c.porcentaje, c.glosaitem, c.idtipopago, 
+  c.montoorigen, c.montopesos, c.costoorigen, c.costopesos
+  FROM sip.presupuestoenvuelo a
+  LEFT JOIN sip.tareaenvuelo b ON a.id=b.idpresupuestoenvuelo
+  LEFT JOIN sip.flujopagoenvuelo c ON b.id=c.idtareaenvuelo
+  LEFT JOIN art_user d ON a.uidlider=d.uid
+  LEFT JOIN art_user e ON a.uidpmoresponsable=e.uid
+  LEFT JOIN art_user f ON a.uidjefeproyecto=e.uid
+  LEFT JOIN sip.estructuracui g ON b.idcui=g.id
+  LEFT JOIN sip.servicio h ON b.idservicio=h.id
+  LEFT JOIN sip.proveedor i ON b.idproveedor=i.id
+  LEFT JOIN sip.parametro j ON b.idtipopago=j.id
+  LEFT JOIN sip.moneda k ON b.idmoneda=k.id
+  LEFT JOIN art_sub_task l ON l.sub_task_id=c.idsubtarea
+  `
+  sequelize.query(sql)
+    .spread(function (proyecto) {
+      var arr = []
+      for (var i = 0; i < proyecto.length; i++) {
+
+        a = [proyecto[i].IdSAP, proyecto[i].nombreproyecto,
+          proyecto[i].sap,
+          proyecto[i].program_id,
+          proyecto[i].cuifinanciamiento1,
+          proyecto[i].porcentaje1,
+          proyecto[i].cuifinanciamiento2,
+          proyecto[i].porcentaje2,
+          proyecto[i].beneficioscuantitativos,
+          proyecto[i].beneficioscualitativos,
+          proyecto[i].lider,
+          proyecto[i].jp,
+          proyecto[i].responsable,
+          proyecto[i].dolar,
+          proyecto[i].uf,
+          proyecto[i].fechaconversion,
+          proyecto[i].IdTarea,          
+          proyecto[i].idpresupuestoenvuelo,
+          proyecto[i].cui,
+          proyecto[i].servicio,
+          proyecto[i].proveedor,
+          proyecto[i].tarea,
+          proyecto[i].glosa,
+          proyecto[i].TipoPago,
+          proyecto[i].fechainicio,
+          proyecto[i].fechafin,
+          proyecto[i].reqcontrato,
+          proyecto[i].moneda,
+          proyecto[i].costounitario,
+          proyecto[i].cantidad,
+          proyecto[i].coniva,
+          proyecto[i].numerocontrato,
+          proyecto[i].numerosolicitudcontrato,
+          proyecto[i].extension,
+          proyecto[i].IdFlujo,
+          proyecto[i].idtareaenvuelo,
+          proyecto[i].subtarea,
+          proyecto[i].periodo,
+          proyecto[i].porcentaje,
+          proyecto[i].glosaitem,
+          proyecto[i].idtipopago,
+          proyecto[i].montoorigen,
+          proyecto[i].montopesos,
+          proyecto[i].costoorigen,
+          proyecto[i].costopesos
+        ];
+        arr.push(a);
+      }
+      conf.rows = arr;
+
+      var result = nodeExcel.execute(conf);
+      res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+      res.setHeader("Content-Disposition", "attachment;filename=" + "CompromisosPorSAP.xlsx");
+      res.end(result, 'binary');
+
+    }).catch(function (err) {
+      logger.err(err);
+      res.json({ error_code: 100 });
+    });
+
+};

@@ -2,15 +2,15 @@ $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
     
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'><span style='color:red'>*</span>Producto {idProducto}</div>";
+    tmpl += "<div class='column-full'>Producto {idProducto}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'><span style='color:red'>*</span>Usuario {usuario}</div>";
+    tmpl += "<div class='column-full'>Usuario {usuario}</div>";
     tmpl += "</div>";    
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Fecha {fechasolicitud}</div>";
+    tmpl += "<div class='column-half'>Fecha {fechasolicitud}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -18,15 +18,15 @@ $(document).ready(function () {
     tmpl += "</div>";
     
     tmpl += "<div class='form-row' >";
-    tmpl += "<div class='column-half'>Estado {estado}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Estado {estado}</div>";
     tmpl += "</div>";
     
     tmpl += "<div class='form-half'>";
-    tmpl += "<div class='column-half'>Comentario Visación {comentariovisacion}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Comentario Visación {comentariovisacion}</div>";
     tmpl += "</div>"; 
 
     tmpl += "<div class='form-half'>";
-    tmpl += "<div class='column-full'>Torre {torre}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>*</span>Torre {torre}</div>";
     tmpl += "</div>";     
 
     tmpl += "<div class='form-row' style='display: none;'>";
@@ -255,7 +255,7 @@ $(document).ready(function () {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
-                if (rowData.idtipoinstalacion == 13 || rowData.idtipoinstalacion == 15) { //Deshabilita torre en caso de tipo PC
+                if (rowData.idtipoinstalacion == 13 || rowData.idtipoinstalacion == 15 ||  rowData.idtipoinstalacion == 3) { //Deshabilita torre en caso de tipo PC
                     window.setTimeout(function () {
                         $("#torre").attr('disabled', true);
                     }, 1000); 
@@ -267,8 +267,13 @@ $(document).ready(function () {
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
-                if (rowData.estado == 'Autorizado') {
-                    return [false, "No puede editar asignación en estado Autorizado", ""];
+                //Si es servidor revisa torre
+                if (rowData.idtipoinstalacion == 14 || rowData.idtipoinstalacion == 16 ||  rowData.idtipoinstalacion == 4) {
+                    if (postdata.torre == 0){
+                        return [false, "Debe escoger una torre", ""];
+                    } else {
+                        return [true, "", ""]
+                    }
                 } else {
                     return [true, "", ""]
                 }
