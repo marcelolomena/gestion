@@ -42,7 +42,8 @@
                     //defaultValue: "Aprobar"
                     // fullRow: true
                 },
-                search: false
+                search: false,
+                sortable: false
             },
             {
                 label: 'Producto',
@@ -62,7 +63,8 @@
                         return new zs.SelectTemplate(data, 'Seleccione el Producto', thissid).template;
                     },
                 },
-                search: false
+                search: false,
+                sortable: false
             },
             {
                 label: 'Número Licencias',
@@ -70,7 +72,8 @@
                 align: 'center',
                 width: 120,
                 editable: true,
-                search: false
+                search: false,
+                sortable: false
             },
             {
                 label: 'Fecha de Uso',
@@ -126,20 +129,23 @@
                         })
                     }
                 },
+                sortable: false
             }, {
                 label: 'CUI',
                 name: 'cui',
                 align: 'center',
                 width: 50,
                 editable: true,
-                search: false
+                search: false,
+                sortable: false
             }, {
                 label: 'SAP',
                 name: 'sap',
                 align: 'center',
                 width: 50,
                 editable: true,
-                search: false
+                search: false,
+                sortable: false
             }, {
                 label: 'Solicitante',
                 name: 'idUsuario',
@@ -148,7 +154,8 @@
                 width: 100,
                 editable: false,
                 formatter: returnSolicitante,
-                search: false
+                search: false,
+                sortable: false
             },
             {
                 label: 'Comentario de Solicitud',
@@ -160,7 +167,8 @@
                 editoptions: {
                     fullRow: true
                 },
-                search: false
+                search: false,
+                sortable: false
             },
             {
                 label: 'Aprobador',
@@ -170,7 +178,8 @@
                 width: 100,
                 editable: false,
                 formatter: returnAprobador,
-                search: false
+                search: false,
+                sortable: false
             },
             {
                 label: 'Comentario de Aprobación',
@@ -182,7 +191,8 @@
                 editoptions: {
                     fullRow: true
                 },
-                search: false
+                search: false,
+                sortable: false
             },
             {
                 label: 'Estado Autorización',
@@ -198,7 +208,8 @@
                     //defaultValue: "Aprobar"
                     // fullRow: true
                 },
-                search: false
+                search: false,
+                sortable: false
             },
 
             // {
@@ -239,8 +250,18 @@
                 editrules: {
                     required: true
                 },
-                search: false
-            }
+                search: false,
+                sortable: false
+            },
+            {
+                label: 'Codigo Autorización',
+                name: 'codAutoriza',
+                width: 200,
+                hidden: false,
+                editable: false,
+                search: false,
+                sortable: false
+            }            
         ];
         var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Autorización de Reserva', 'Editar Autorización', 'Agregar Autorización', '/lic/reservaAutorizado', viewModel, 'estado', '/lic/getsession', ['Administrador LIC']);
         grid.navParameters.add = false;

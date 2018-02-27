@@ -79,7 +79,8 @@ $(document).ready(function () {
             fullRow: true,
             readonly: 'readonly'
         },        
-        search: false
+        search: false,
+        sortable: false
     },
     {
         label: 'Snow',

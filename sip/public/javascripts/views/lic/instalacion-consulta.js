@@ -243,6 +243,15 @@ $(document).ready(function () {
             }
         }, dataInit: function (elem) { $(elem).width(200); }        
     }, 
+    {
+        label: 'Codigo Autorización',
+        name: 'codautorizacion',
+        width: 200,
+        hidden: false,
+        editable: false,
+        search: false,
+        sortable: false
+    }      
 ];
     $("#grid").jqGrid({
         url: '/lic/instalacion-consulta',

@@ -130,18 +130,12 @@ function list(req, res) {
         }
     }
     var sqlcount = "With Lista As   ( SELECT DISTINCT(a.id)  AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto ";
+    
     if (filters && condition != "") {
-<<<<<<< HEAD
-      sqlcount += " where "+condition + " ";
+        sqlcount += " where "+condition + " ";
     }
+    sqlcount += " ) SELECT count(*) AS count FROM lista  "
 
-    sqlcount += " ) SELECT count(*) AS count FROM lista  ";
-  
-=======
-        sqlcount += " and " + condition + " ";
-    }
-
->>>>>>> 538b0fe06dfd3a6cf133ed210d5db2db204375a0
     var sql = "DECLARE @PageSize INT; " +
         "SELECT @PageSize=" + rowspp + "; " +
         "DECLARE @PageNumber INT; " +
