@@ -458,6 +458,19 @@ object Dashboard extends Controller {
       }
 
   }
+
+  def getPanel2 = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        Ok(views.html.frontend.dashboard.panelTabs()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
+
+
   def getATM = Action {
     implicit request =>
       request.session.get("username").map { user =>
