@@ -457,3 +457,9 @@ object ATMExcel {
   }
   implicit val atmWrites = Json.writes[ATMExcel]
 }
+
+case class ReportOnline(id: Int,tipo: String)
+
+object Formatters {
+  implicit val repoFormat = Json.format[ReportOnline]
+}

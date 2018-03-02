@@ -617,6 +617,7 @@ GET    /reportSubTarea/$pid<[A-Za-z0-9_-]+>                                     
 GET    /reportStateSubTask                                                                            controllers.Frontend.Dashboard.reportStateSubTask
 GET    /burbujas                                                                                      controllers.Frontend.Dashboard.burbujas
 GET    /pie                                                                                           controllers.Frontend.Dashboard.pie
+GET    /wea                                                                                           controllers.Frontend.Dashboard.report
 GET    /pieType                                                                                       controllers.Frontend.Dashboard.pieType
 GET    /pieSubType                                                                                    controllers.Frontend.Dashboard.pieSubType
 GET    /pieState                                                                                      controllers.Frontend.Dashboard.pieState

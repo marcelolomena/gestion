@@ -278,4 +278,14 @@ object DashboardService {
       count
     }
   }
+
+  def manager(): Seq[Report] = {
+    DB.withConnection { implicit connection =>
+      val sqlString = "SELECT top 10 id,tipo from art_program_management"
+      SQL(sqlString).as(Report.report * )
+    }
+  }
+
+
+
 }

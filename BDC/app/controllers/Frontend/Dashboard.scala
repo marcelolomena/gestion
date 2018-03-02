@@ -1,6 +1,7 @@
 package controllers.Frontend
 
 import java.util.List
+
 import scala.math.BigDecimal.double2bigDecimal
 import scala.math.BigDecimal.int2bigDecimal
 import org.apache.commons.lang3.StringUtils
@@ -17,40 +18,35 @@ import services.TimesheetService
 import services.UserService
 import java.util.Calendar
 import java.util.Date
-import models.Baseline
-import play.libs.Json
-import org.json.JSONObject
-import play.api.libs.json
+
+import models._
+//import play.libs.Json
 import play.api.libs.json._
+import org.json.JSONObject
 import services.ProgramMemberService
 import art_forms.ARTForms
 import services.ProgramTypeService
 import services.SubTypeService
-import models.SearchCriteria
-import models.VersionDetails
 import services.TaskService
 import services.DocumentService
 import services.DashboardService
 import services.BudgetTypeService
 import services.EarnValueService
+
 import scala.math.BigDecimal.RoundingMode
 import utils.DateTime
 import services.SpiCpiCalculationsService
-import models.ProgramDetails
-import models.EarnValue
-import models.ReportePrograma
 import services.RiskService
-import models.Panel;
-import models.PanelDepartamento
-import models.DBFilter;
 import java.io.File
 import java.io.FileOutputStream
+
 import org.apache.poi.xssf.usermodel._
 import utils.FormattedOutPuts
 import net.liftweb.json._
 import net.liftweb.json.JsonParser._
-import models.ATM
-import models.StateSubTarea
+import models.Formatters._
+import play.Logger
+
 object Dashboard extends Controller {
 
   def fromDashboardName(choice: String, value: String): String = choice match {
@@ -2425,6 +2421,26 @@ object Dashboard extends Controller {
       Ok(views.html.frontend.dashboard.issueReportForSubtasks(divisions));
     }.getOrElse {
       Redirect(routes.Login.loginUser())
+    }
+  }
+
+
+  def report = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val uid = request.session.get("uId").get
+      val info = DashboardService.manager()
+      //Logger.debug(info.toString())
+      Logger.debug(Json.toJson(info).toString)
+
+      val node = new JSONObject()
+      node.put("data", Json.toJson(info))
+
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
     }
   }
 
