@@ -23,12 +23,18 @@ import play.api.libs.json.JsObject
 /**
  * @author marcelo
  */
+
+
 object IncidentService {
 
   def list(pageSize: String, pageNumber: String, Json: String, user_id: Int): Seq[Incident] = {
-    var sqlString = "EXEC art.list_incident {PageSize},{PageNumber},{Json},{User_Id}"
+	println("***Query:"+Json);
+    val sqlString = "EXEC art.list_incident {PageSize},{PageNumber},{Json},{User_Id}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt, 'Json -> Json, 'User_Id -> user_id).executeQuery() as (Incident.incident *)
+      SQL(sqlString).on('PageSize -> pageSize.toInt,
+        'PageNumber -> pageNumber.toInt,
+        'Json -> Json,
+        'User_Id -> user_id).executeQuery() as (Incident.incident *)
     }
   }
 
@@ -223,7 +229,7 @@ println(uname)
 
   def delSubTask(sub_task_id: String): Int = {
 
-    var sqlString = """
+    val sqlString = """
       EXEC art.del_incident_subtask {sub_task_id}
       """
     DB.withConnection { implicit connection =>
@@ -234,7 +240,7 @@ println(uname)
 
   def count(Json: String, user_id: Int): Int = {
 
-    var sqlString = "EXEC art.count_incident {Json}, {User_Id}"
+    val sqlString = "EXEC art.count_incident {Json}, {User_Id}"
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('Json -> Json, 'User_Id -> user_id).executeQuery() as (scalar[Int].single)
@@ -461,12 +467,129 @@ println(uname)
     }
   }
   
-  def pieChart(): Seq[Pie] = {
+  def pieChart(id: Int): Seq[Pie] = {
 
-    var sqlString = "EXEC art.porcentaje_incident_for_department"
+    var sqlString: String = null
+
+    id match {
+
+      case 1 =>
+        sqlString =
+          """
+            |	SELECT
+            |	COUNT(*) cantidad,
+            |	c.configuration_id dId,
+            |	SUBSTRING(c.configuration_name, CHARINDEX(' ', c.configuration_name) + 1, LEN(c.configuration_name) - CHARINDEX(' ', c.configuration_name)) division,
+            |	0 porcentaje
+            |	 FROM art_incident i
+			|	JOIN art_task b ON b.tId = i.task_id
+			|	JOIN art_project_master j ON j.pId = b.pId
+			|	JOIN art_program d ON d.program_id = j.program 			
+            |	 JOIN art_incident_configuration c ON i.configuration_id = c.configuration_id
+            |	  WHERE i.is_deleted = 1
+			|	 AND b.is_active = 1
+			|	 AND j.is_active = 1
+			|	 AND d.is_active = 1
+			|	 AND i.program_id=d.program_id 			
+            |	  GROUP BY c.configuration_id,c.configuration_name
+          """.stripMargin
+
+      case 2 =>
+        sqlString =
+          """
+            |SELECT
+            |COUNT(*) cantidad,
+            |s.status_id dId,
+            |s.status_name division,
+            |0 porcentaje
+            |FROM art_incident i
+            |JOIN (
+            |	SELECT incident_id, MAX(status_id) max_status_id FROM art_incident_log GROUP BY incident_id
+            |) x ON i.incident_id=x.incident_id
+            |JOIN art_incident_status s ON x.max_status_id=s.status_id
+			|JOIN art_task b ON b.tId = i.task_id
+			|JOIN art_project_master j ON j.pId = b.pId
+			|JOIN art_program d ON d.program_id = j.program 			
+            |WHERE i.is_deleted = 1
+			| AND b.is_active = 1
+			| AND j.is_active = 1
+			| AND d.is_active = 1
+			| AND i.program_id=d.program_id  			
+            |GROUP BY s.status_id,status_name
+          """.stripMargin
+      case 3 =>
+        sqlString =
+          """
+            |SELECT
+            |COUNT(*) cantidad,
+            |X.dId,X.division,
+            |0 porcentaje FROM
+            |(
+            |SELECT
+            | CASE
+            |	WHEN s.status_name = 'Resuelto' OR DATEDIFF (day, getdate(), i.date_end) > 0 THEN 1
+            |	WHEN s.status_name != 'Resuelto' AND DATEDIFF (day, getdate(), i.date_end) = 0 THEN 2
+            |	ELSE 3
+            | END dId,
+            | CASE
+            |	WHEN s.status_name = 'Resuelto' OR DATEDIFF (day, getdate(), i.date_end) > 0 THEN 'Resuelto'
+            |	WHEN s.status_name != 'Resuelto' AND DATEDIFF (day, getdate(), i.date_end) = 0 THEN 'Normal'
+            |	ELSE 'Atrasado'
+            | END division
+            |  FROM art_incident i
+            |JOIN (
+            |	SELECT incident_id, MAX(status_id) max_status_id FROM art_incident_log GROUP BY incident_id
+            |) x ON i.incident_id=x.incident_id
+            |JOIN art_incident_status s ON x.max_status_id=s.status_id
+            |WHERE i.is_deleted = 1
+            |) X
+            |GROUP BY X.dId,X.division
+          """.stripMargin
+    }
+
+
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Pie.pie *)
     }
-  }  
+  }
+
+
+  def pieChartCompose(id: Int): Seq[Pie] = {
+
+    var sqlString =
+      """
+        |SELECT
+        |COUNT(*) cantidad,
+        |s.status_id dId,
+        |s.status_name division,
+        |0 porcentaje
+        |FROM art_incident i
+        |JOIN (
+        |	SELECT incident_id, MAX(status_id) max_status_id FROM art_incident_log GROUP BY incident_id
+        |) x ON i.incident_id=x.incident_id
+        |JOIN art_incident_status s ON x.max_status_id=s.status_id
+		|JOIN art_task b ON b.tId = i.task_id
+		|JOIN art_project_master j ON j.pId = b.pId
+		|JOIN art_program d ON d.program_id = j.program 			
+        |WHERE i.is_deleted = 1 AND i.configuration_id = {id}
+		|	 AND b.is_active = 1
+		|	 AND j.is_active = 1
+		|	 AND d.is_active = 1
+		|	 AND i.program_id=d.program_id 			
+        |GROUP BY s.status_id,status_name
+      """.stripMargin
+
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id->id).executeQuery() as (Pie.pie *)
+    }
+  }
+
+  def getConfigurationById(id: Int): String = {
+    val sqlString = "SELECT configuration_name FROM art_incident_configuration WHERE configuration_id = {id}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('id -> id).as(scalar[String].single)
+    }
+  }
 
 }

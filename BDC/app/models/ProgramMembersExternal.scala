@@ -1,6 +1,5 @@
 package models
 
-import anorm.Pk
 import java.util.Date
 import anorm.SqlParser._
 import play.api.Play.current

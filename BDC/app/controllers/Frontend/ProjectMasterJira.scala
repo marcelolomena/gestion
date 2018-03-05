@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
 import net.liftweb.json._
 import net.liftweb.json.JsonParser._
-import anorm.NotAssigned
 import art_forms.ARTForms
 import models.Activity
 import models.ActivityTypes

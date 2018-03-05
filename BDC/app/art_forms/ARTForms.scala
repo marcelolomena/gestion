@@ -1,64 +1,8 @@
-package art_forms;
+package art_forms
 
 import scala.math.BigDecimal.int2bigDecimal
-import anorm.NotAssigned
-import models.BudgetTypes
-import models.DashboardSearch
-import models.Deliverables
-import models.Departments
-import models.Divisions
-import models.DocumentTypes
-import models.Documents
-import models.EmployeeSearchMaster
-import models.Expenditure
-import models.ForgotPasswordMaster
-import models.ForgotPasswordUserNameMaster
-import models.GenericProjectTypes
-import models.GenericTask
-import models.GenericTaskDetails
-import models.Genrencias
-import models.GernericProject
-import models.ImpactTypes
-import models.Investment
-import models.LoginMaster
-import models.OfficeMaster
-import models.PasswordMaster
-import models.PasswordRecoverMaster
-import models.PredefinedTasks
-import models.ProfileImage
-import models.ProgramDate
-import models.ProgramDetail
-import models.ProgramMembers
-import models.ProgramStatus
-import models.ProgramTypeCase
-import models.Program_Master
-import models.Program_Members_Master
-import models.Programs
-import models.ProjectExpenditure
-import models.ProjectInvestment
-import models.ProjectMasters
-import models.ProjectSAP
-import models.ProjectStatus
-import models.ConfigMailAlert
-import models.ProjectWorkflow
-import models.SAPMaster
-import models.SearchCriteria
-import models.SearchMaster
-import models.ServiceCatalogue
-import models.SkillsMaster
-import models.Stages
-import models.SubTaskMaster
-import models.SubTaskStatus
-import models.SubTypeCase
-import models.TaskDesciplineChild
-import models.TaskDetails
-import models.TaskMaster
-import models.TaskStatus
-import models.TimesheetMaster
-import models.UserMaster
-import models.UserRoleChild
-import models.Workflows
-import models.InputPert
+import models._
+import services._
 import play.api.data.Form
 import play.api.data.Forms.email
 import play.api.data.Forms.mapping
@@ -73,28 +17,6 @@ import play.api.data.format.Formats.doubleFormat
 import play.api.data.format.Formats.longFormat
 import play.i18n.Lang
 import play.i18n.Messages
-import services.GenericProjectService
-import services.ProgramService
-import services.UserService
-import models.ServiceCatalogue
-import models.ServiceCatalogues
-import models.ProgramHours
-import models.ProgramSearch
-import models.RiskManagement
-import models.RiskState
-import models.RiskManagementIssue
-import models.UserProfiles
-import models.GenericProjectType
-import models.RiskAlerts
-import models.SAPMasterEdit
-import models.PaidInvestment
-import models.PaidExpenditure
-import models.CommittedInvestment
-import models.CommittedExpenditure
-import models.NonCommittedExpenditure
-import models.NonCommittedInvestment
-import models.AvailableInvestment
-import models.AvailableExpenditure
 
 object ARTForms {
 
@@ -280,6 +202,7 @@ object ARTForms {
       "program_description" -> optional(text.verifying(Messages.get(langObj, "error.program.program_description.MinMax"), program_description => program_description.trim().length() > 3 && program_description.trim().length() <= 500)),
       "work_flow_status" -> number,
       "demand_manager" -> number,
+	  "clasificacion" -> text.verifying(Messages.get(langObj, "error.project.clasificacion"), clasificacion => clasificacion.trim().length() > 1),
       "program_manager" -> number,
       "program_details" -> mapping(
         "devison" -> number,
@@ -297,11 +220,19 @@ object ARTForms {
       "planned_hours" -> optional(of[Long]),
       "internal_state" -> text,
       "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, program_code,
-        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
+        program_description, work_flow_status, demand_manager,clasificacion,program_manager,
+		program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
         Programs(None, program_type, program_sub_type, program_name, program_code,
           program_description, work_flow_status, demand_manager,
-          program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
-        program.program_description, program.work_flow_status, program.demand_manager, program.program_manager,
+          clasificacion, 
+		  program_manager, 
+		  program_details, 
+		  program_dates, 
+		  is_active, 
+		  planned_hours, 
+		  internal_state, 
+		  estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
+        program.program_description, program.work_flow_status, program.demand_manager, program.clasificacion, program.program_manager,
         program.program_details, program.program_dates, program.is_active, program.planned_hours, program.internal_state, program.estimated_cost))))
 
   /**
@@ -316,6 +247,7 @@ object ARTForms {
       "program_description" -> optional(text.verifying(Messages.get(langObj, "error.program.program_description.MinMax"), program_description => program_description.trim().length() > 3 && program_description.trim().length() <= 500)),
       "work_flow_status" -> number,
       "demand_manager" -> number,
+	  "clasificacion" -> text.verifying(Messages.get(langObj, "error.project.clasificacion"), clasificacion => clasificacion.trim().length() > 1),
       "program_manager" -> number,
       "program_details" -> mapping(
         "devison" -> number,
@@ -333,11 +265,16 @@ object ARTForms {
       "planned_hours" -> optional(of[Long]),
       "internal_state" -> text,
       "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, program_code,
-        program_description, work_flow_status, demand_manager, program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
+        program_description, work_flow_status, demand_manager, clasificacion, program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
         Programs(None, program_type, program_sub_type, program_name, program_code,
-          program_description, work_flow_status, demand_manager,
-          program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
-        program.program_description, program.work_flow_status, program.demand_manager, program.program_manager,
+          program_description, work_flow_status, demand_manager, clasificacion,
+          program_manager, program_details, 
+		  program_dates, is_active,
+		  planned_hours, internal_state, 
+		  estimated_cost))((program: Programs) => 
+		  Some((program.program_type, program.program_sub_type, 
+		  program.program_name, program.program_code,
+        program.program_description, program.work_flow_status, program.demand_manager, program.clasificacion, program.program_manager,
         program.program_details, program.program_dates, program.is_active, program.planned_hours, program.internal_state, program.estimated_cost))))
 
   /**
@@ -347,7 +284,7 @@ object ARTForms {
     mapping(
       "program_id" -> optional(number),
       "program_type" -> number,
-      "program_sub_type" -> optional(number),
+      "program_sub_type" -> optional(number.verifying("Enter positive number.", program_sub_type => (program_sub_type >= 0))),
       "program_name" -> text.verifying(Messages.get(langObj, "error.program.program_name.MinMax"), program_name => program_name.trim().length() >= 4 && program_name.trim().length() <= 140),
       "program_code" -> number.verifying(Messages.get(langObj, "error.program.program_code.MinMax"), program_code => (program_code >= 0 && program_code < 99999999)).verifying(Messages.get(langObj, "error.program.program_code.unique"), program_code => ProgramService.findPrgoramCode(program_code)), //
       "program_description" -> optional(text.verifying(Messages.get(langObj, "error.program.program_description.MinMax"), program_description => program_description.trim().length() > 3 && program_description.trim().length() <= 500)),
@@ -480,6 +417,7 @@ object ARTForms {
   /**
     * *
     * backend form to add/edit ConfigMailAlert
+    *
     */
   val configMailForm: play.api.data.Form[ConfigMailAlert] = play.api.data.Form(
     mapping(
@@ -489,7 +427,9 @@ object ARTForms {
       "em2" -> optional(email),
       "em3" -> optional(email),
       "tpl" -> text,
-      "fec" -> play.api.data.Forms.date("yyyy-MM-dd"))(ConfigMailAlert.apply)(ConfigMailAlert.unapply))
+      "fec" -> play.api.data.Forms.date("yyyy-MM-dd"),
+      "is_active" -> number,
+      "description" -> nonEmptyText)(ConfigMailAlert.apply)(ConfigMailAlert.unapply))
 
 
   /**
@@ -646,6 +586,13 @@ object ARTForms {
       "updated_by" -> optional(number),
       "updation_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
       "is_deleted" -> number)(Divisions.apply)(Divisions.unapply))
+
+  val categoryForm: Form[Categories] = Form(
+    mapping(
+      "id" -> optional(number),
+      "description" -> nonEmptyText,
+      "is_active" -> number)(Categories.apply)(Categories.unapply))
+
 
   val departmentForm: Form[Departments] = Form(
     mapping(
@@ -1067,22 +1014,7 @@ object ARTForms {
    * Author - Balkrishna
    * Date - 25-02-2015
    */
- /*
-  val alertsForm: Form[RiskAlerts] = Form(
-    mapping(
-      "id" -> optional(number),
-      "risk_id" -> number,
-      "event_type" -> optional(number),
-      "event_code" -> optional(number),
-      "event_date" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "event_title" -> text.verifying("Por favor, introduzca el título de alerta", event_title => (event_title.trim().length() > 0)),
-      "event_details" -> optional(text),
-      "responsible" -> optional(number),
-      "person_invloved" -> optional(text).verifying("Please select at least one member", person_invloved => (person_invloved.getOrElse("").trim().length() > 0)),
-      "alert_type" -> optional(number),
-      "criticality" -> optional(number),
-      "is_active" -> optional(number))(RiskAlerts.apply)(RiskAlerts.unapply))
-*/
+
   val pertForm: Form[InputPert] = Form(
     mapping(
       "programa" -> number,
@@ -1116,9 +1048,37 @@ object ARTForms {
       "status_id" -> optional(number),
       "task_id" -> optional(number),
       "change_state" -> optional(play.api.data.Forms.date("dd-MM-yyyy")),
-      "responsible_answer" -> optional(text))(RiskAlerts.apply)(RiskAlerts.unapply))
+      "responsible_answer" -> optional(text),
+      "template_id" -> optional(number)
+    )(RiskAlerts.apply)(RiskAlerts.unapply))
 
+
+
+  val alertsSearchForm: Form[AlertsSearch] = Form(
+    mapping(
+      "event_code" -> optional(number),
+      "criticality" -> optional(number),
+      "category_id" -> optional(number),
+      "status_id" -> optional(number))(AlertsSearch.apply)(AlertsSearch.unapply))
+
+  val genericProjectSearchForm: Form[ProjectTypeSearch] = Form(
+    mapping(
+      "type_id" -> optional(number),
+      "responsible_id" -> optional(number))(ProjectTypeSearch.apply)(ProjectTypeSearch.unapply))
+
+  val genericTaskSearchForm: Form[GenericTaskSearch] = Form(
+    mapping(
+      "discipline_id" -> optional(number),
+      "deliverable_id" -> optional(number))(GenericTaskSearch.apply)(GenericTaskSearch.unapply))
+
+  val genericDigestTaskSearchForm: Form[DigestGenericTaskSearch] = Form(
+    mapping(
+      "task_title" -> optional(text),
+      "task_mode" -> optional(text),
+      "discipline_id" -> optional(number)
+    )(DigestGenericTaskSearch.apply)(DigestGenericTaskSearch.unapply))
 }
+
 
 
 

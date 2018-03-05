@@ -842,6 +842,85 @@ function showSearchProgram() {
 
 }
 
+function showSearchAlert() {
+
+	$('.loader').css('display', 'block');
+	if (!$("#alert-tab2").hasClass("current")) {
+		var url = "/alert-search";
+		$.get(url, function(data) {
+			$(".content-box-content").html(data);
+			$('.loader').css('display', 'none');
+			$(".focus_on").css("display", "block");
+			$("#alert-tab2").addClass("current");
+			$("#program-tab1").removeClass("current");
+			//$("#program-search-form").on("click", renderSearchAlertSubmit);
+			$("#cancel-program-search-report").on("click", function() {
+				window.location.reload();
+			});
+		});
+	}
+	$('.loader').css('display', 'none');
+
+}
+
+function showSearchGenericProject() {
+	$('.loader').css('display', 'block');
+	if (!$("#overview-tab2").hasClass("current")) {
+		var url = "/form-project-search";
+		$.get(url, function(data) {
+			$(".content-box-content2").html(data);
+			$('.loader').css('display', 'none');
+			$(".focus_on").css("display", "block");
+			$("#overview-tab2").addClass("current");
+			$("#search-tab2").removeClass("current");
+			$("#cancel-project-search").on("click", function() {
+				window.location.reload();
+			});
+		});
+	}
+	$('.loader').css('display', 'none');
+}
+
+function showSearchGenericTask() {
+
+	$('.loader').css('display', 'block');
+	if (!$("#overview-tab3").hasClass("current")) {
+		var url = "/form-task-search";
+		$.get(url, function(data) {
+			$(".content-box-content3").html(data);
+			$('.loader').css('display', 'none');
+			$(".focus_on").css("display", "block");
+			$("#overview-tab3").addClass("current");
+			$("#search-tab3").removeClass("current");
+			$("#cancel-task-search").on("click", function() {
+				window.location.reload();
+			});
+		});
+	}
+	$('.loader').css('display', 'none');
+
+}
+
+function showSearchDigestGenericTask() {
+	$('.loader').css('display', 'block');
+	if (!$("#overview-tab4").hasClass("current")) {
+		var task_mode = $('#project_mode').val();
+		var url = "/form-digest-task-search/"+task_mode;
+
+		$.get(url, function(data) {
+			$(".content-box-content4").html(data);
+			$('.loader').css('display', 'none');
+			$(".focus_on").css("display", "block");
+			$("#overview-tab4").addClass("current");
+			$("#search-tab4").removeClass("current");
+			$("#cancel-project-search").on("click", function() {
+				window.location.reload();
+			});
+		});
+	}
+	$('.loader').css('display', 'none');
+}
+
 function renderCancelSearchDashboard() {
 	// renderTab5();
 	$('.loader').css('display', 'block');
@@ -1269,6 +1348,36 @@ function renderSearchReportSubmit() {
 
 }
 
+/*
+function renderSearchAlertSubmit() {
+
+	$('.loader').css('display', 'block');
+
+
+	var url = "/alert-search-result"
+	var params = $("#search-program-form").serialize()
+
+	$.ajax({
+		url : url,
+		type : "POST",
+		cache : false,
+		data : $("#search-program-form").serialize(),
+		dataType : "html",
+		success : function(data) {
+			//$("#search-result").html(data)
+			 var blob=new Blob([data]);
+			download(blob,'informe.xlsx','application/vnd.ms-excel')
+			$('#search_program_id').css("display", "none");
+			$('#alert-tab2').removeClass('current');
+			$('.loader').css('display', 'none');
+		},
+		error : function() {
+			alert("alertSomethingWentWrong");
+			$('.loader').css('display', 'none');
+		}
+	});
+}
+*/
 function renderSearchProgramSubmit() {
 
 	$('.loader').css('display', 'block');
@@ -1327,15 +1436,13 @@ function renderRemoveProfileRole(){
 function renderAlertDetails(){
 	var _this = $(this);
 	var id = _this.attr("id").split("_")[1];
-	if($("#ad_"+id).hasClass("display-none")){
+	if($("#ad_"+id).hasClass("oculto")){
 		$("#ad_"+id).slideDown(1000);
-		$("#ad_"+id).removeClass("display-none");
+		$("#ad_"+id).removeClass("oculto");
 	}else{
 		$("#ad_"+id).slideUp(1000);
-		$("#ad_"+id).addClass("display-none");
+		$("#ad_"+id).addClass("oculto");
 	}
-	
-	
 }
 
 function renderRemoveSkill(){

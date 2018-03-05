@@ -4,7 +4,6 @@
     
    <a href="#error-menu1" class="nav-header" data-toggle="collapse">ORG Structure Management<i class="icon-chevron-up"></i></a>
 	<ul id="error-menu1" class="nav nav-list collapsed">
-		<li id="conf" ><a href="@routes.ConfigMail.editConfig()"> @Messages("leftnav.divconfmail")</a></li>
 		<li id="dv" ><a href="@routes.Division.divisionList()"> @Messages("leftnav.divmanagement")</a></li>
    		<li id="ge" ><a href="@routes.Genrencia.genrenciaList()"> @Messages("leftnav.gerenciamanagement")</a></li>
    		<li id="dm" ><a href="@routes.Department.departmentList()"> @Messages("leftnav.departmentmanagement") </a></li>
@@ -22,8 +21,10 @@
    		 @*<li id="pTypeActive"><a href="@routes.GenericProjectType.genericProjectTypeList">   @Messages("leftnav.genericprojecttype")</a></li>*@
    		<li id="dTypeActive"><a href="@routes.DocumentType.documentTypeList"> @Messages("leftnav.documenttype")</a></li>
    		<li id="bTypeActive"><a href="@routes.BudgetType.budgetTypeList">@Messages("leftnav.budgettype")</a></li>
-		<li id="catservice"><a href="@routes.ServiceCatalogue.serviceCatalogueList">@Messages("leftnav.servciecatalogue")</a></li>   		
-		<li id="userProfileId" class="display-none"><a href="@routes.UserProfile.userProfileList">@Messages("leftnav.userprofile")</a></li>   		
+		<li id="catservice"><a href="@routes.ServiceCatalogue.serviceCatalogueList">@Messages("leftnav.servciecatalogue")</a></li>
+		<li id="conf" ><a href="@routes.ConfigMail.mailList()"> @Messages("leftnav.divconfmail")</a></li>
+		<li id="cat" ><a href="@routes.Category.categoryList()"> @Messages("leftnav.category")</a></li>
+		<li id="userProfileId" class="display-none"><a href="@routes.UserProfile.userProfileList">@Messages("leftnav.userprofile")</a></li>
 		
 	</ul>
          @*<a href="#error-menu" class="nav-header " data-toggle="collapse">Module<i class="icon-chevron-up"></i></a>

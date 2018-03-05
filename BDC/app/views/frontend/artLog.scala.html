@@ -17,7 +17,7 @@
 		 	<ul class="width_full" id="log-list">
 	 		<li class="header">
 	 					<span style="float:left;width: 150px;"> Tipo</span>
-	 					<span style="float:left;width: 300px;"> Mensage</span>
+	 					<span style="float:left;width: 300px;"> Mensaje</span>
 			 			<span style="float:left;width: 250px;"> Modificado por</span>
 			 			<span style="float:left;width: 150px;"> Fecha</span>
 			 		
@@ -68,7 +68,7 @@
 						</span>
 			 			<span style="float:left;width: 300px;">@a.message</span>
 			 			<span style="float:left;width: 250px;">@UserService.findUser(a.user_id.toString).get.first_name &nbsp; @UserService.findUser(a.user_id.toString).get.last_name </span>
-			 			<span style="float:left;width: 150px;">@{new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Users.convertDate(a.created_at))}</span>
+			 			<span style="float:left;width: 150px;">@{new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(a.created_at)}</span>
 						
 						
 		 			</li>

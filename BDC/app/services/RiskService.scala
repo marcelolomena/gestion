@@ -1,39 +1,19 @@
 package services
 
+import java.text.SimpleDateFormat
+
 import anorm.SQL
 import anorm.SqlParser.scalar
 import anorm.sqlToSimple
-//import anorm.toParameterValue
-import models.CustomColumns
-import models.RiskManagementMaster
-import models.RiskManagementIssue
 import play.api.Play.current
 import play.api.db.DB
 import play.i18n.Lang
 import java.util.Date
-import models.ProgramMaster
-import models.RiskStatus
-import anorm.NotAssigned
-import models.Project
 import scala.util.Random
-import models.Tasks
-import models.RiskManagement
-import models.Programs
-import models.ProgramDates
+import models._
 import org.apache.commons.lang3.StringUtils
-//import net.sf.mpxj.planner.schema.Calendar
-import java.util.Calendar
-//import org.joda.time.DateTime
-import models.RiskAlerts
-import models.RiskAlertsExtended
-import models.RiskCategory
-import models.Users
-import models.SpiCpiCalculations
-//import views.html.frontend.task.issueDetails
-import models.UserSetting
+import play.api.Logger
 import play.Play
-import models.RiskManagementIssueMain
-import models.RiskAlertsIncreased
 
 object RiskService extends CustomColumns {
 
@@ -185,7 +165,7 @@ object RiskService extends CustomColumns {
         'responsible_answer -> alert.responsible_answer).executeUpdate()
 
       if(tmp.toInt <= 3) {
-        sendAutomaticAlerts(alert.id.get.toString, increment)
+        sendEmailAlerts(alert.id.get.toString, increment)
       }
     }
   }
@@ -1101,6 +1081,23 @@ object RiskService extends CustomColumns {
       SQL(sqlString).as(Tasks.tasks *)
     }
   }
+
+  def insertAlertSend(id_alert: Int,id_template: Int): Long = {
+
+    val sqlString =
+      """
+        |insert art_risk_alert_send
+        |(id_alert,id_template,send_time) values
+        |({id_alert},{id_template},GETDATE())
+      """.stripMargin
+
+    DB.withConnection { implicit connection =>
+      val lastsaved = SQL(sqlString).
+        on('id_alert->id_alert,'id_template->id_template).executeInsert(scalar[Long].singleOpt)
+      lastsaved.last
+    }
+  }
+
   def insertRiskAlert(risk: models.RiskAlerts): Long = {
     DB.withConnection { implicit connection =>
 
@@ -1114,34 +1111,35 @@ object RiskService extends CustomColumns {
           {responsible},{person_invloved},{criticality},{is_active},
           {category_id},{impacted_variable},{reiteration},{status_id},{task_id},{change_state},{responsible_answer})
           """).on(
-          'risk_id -> risk.risk_id,
-          'event_code -> risk.event_code,
-          'event_date -> risk.event_date,
-          'event_title -> risk.event_title,
-          'event_details -> risk.event_details,
-          'responsible -> risk.responsible,
-          'person_invloved -> risk.person_invloved,
-          'criticality -> risk.criticality,
-          'is_active -> 1,
-          'category_id -> risk.category_id,
-          'impacted_variable -> risk.impacted_variable,
-          'reiteration -> risk.reiteration,
-          'status_id -> risk.status_id,
-          'task_id -> risk.task_id,
-          'change_state -> risk.change_state,
-          'responsible_answer -> risk.responsible_answer).executeInsert(scalar[Long].singleOpt)
+        'risk_id -> risk.risk_id,
+        'event_code -> risk.event_code,
+        'event_date -> risk.event_date,
+        'event_title -> risk.event_title,
+        'event_details -> risk.event_details,
+        'responsible -> risk.responsible,
+        'person_invloved -> risk.person_invloved,
+        'criticality -> risk.criticality,
+        'is_active -> 1,
+        'category_id -> risk.category_id,
+        'impacted_variable -> risk.impacted_variable,
+        'reiteration -> risk.reiteration,
+        'status_id -> risk.status_id,
+        'task_id -> risk.task_id,
+        'change_state -> risk.change_state,
+        'responsible_answer -> risk.responsible_answer).executeInsert(scalar[Long].singleOpt)
 
-      var last_index = risk_issue.last
+      val last_index = risk_issue.last
+      Logger.debug("EL VALOR DEVUELTO ES " + last_index)
+      Logger.debug("EL VALOR DEL TEMPLATE ES " + risk.template_id.get)
+      RiskService.insertAlertSend(last_index.toInt, risk.template_id.get)
 
-      println("last_index : " + last_index)
-      println("reiteration : " + risk.reiteration.get.toInt)
-
-      sendAutomaticAlerts(last_index.toString,risk.reiteration.get)
+      sendEmailAlerts(last_index.toString,risk.reiteration.get)
 
       last_index
     }
 
   }
+
 
   def findRiskIds(parent_id: String, parent_type: Integer) = {
     var sqlString = ""
@@ -1166,11 +1164,137 @@ object RiskService extends CustomColumns {
     }
   }
 
-  def findAllActiveAlertsByRiskId(id: String): Seq[RiskAlerts] = {
-    val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND risk_id = " + id
+  def findAllOpenAlerts(): Seq[RiskAlerts] = {
+    val sqlString =
+      """
+        |
+        |SELECT a.id
+        |,a.risk_id
+        |,a.event_code
+        |,a.event_date
+        |,a.event_title
+        |,a.event_details
+        |,a.responsible
+        |,a.person_invloved
+        |,a.criticality
+        |,a.is_active
+        |,a.category_id
+        |,a.impacted_variable
+        |,a.reiteration
+        |,a.status_id
+        |,a.task_id
+        |,a.change_state
+        |,a.responsible_answer
+        |,null template_id
+        |FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'
+      """.stripMargin
+
+    //val sqlString = "SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'"
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(RiskAlerts.alerts *)
       result
+    }
+  }
+
+  def findAllFirstExpiredAlerts(): Seq[RiskAlerts] = {
+    val sqlString =
+      """
+        SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
+        WHERE dbo.BusinessDays(a.event_date, CAST(a.change_state AS DATE)) > 2
+        AND b.description = 'Vigente' AND a.reiteration = 1
+      """
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).as(RiskAlerts.alerts *)
+      result
+    }
+  }
+
+  def findAllSecondExpiredAlerts(): Seq[RiskAlerts] = {
+    val sqlString =
+      """
+        SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
+        WHERE dbo.BusinessDays(a.event_date, CAST(a.change_state AS DATE)) > 8
+        AND b.description = 'Vencida' AND a.reiteration = 2
+      """
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).as(RiskAlerts.alerts *)
+      result
+    }
+  }
+
+  def findAllActiveAlertsByRiskId(id: String): Seq[RiskAlerts] = {
+    val sqlString =
+      """
+        |SELECT id
+        |      ,risk_id
+        |      ,event_code
+        |      ,event_date
+        |      ,event_title
+        |      ,event_details
+        |      ,responsible
+        |      ,person_invloved
+        |      ,criticality
+        |      ,is_active
+        |      ,category_id
+        |      ,impacted_variable
+        |      ,reiteration
+        |      ,status_id
+        |      ,task_id
+        |      ,change_state
+        |      ,responsible_answer
+        |	  ,null template_id
+        |  FROM art_risk_alert
+        |  WHERE risk_id = {id}
+      """.stripMargin
+    //val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND risk_id = " + id
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).on('id->id.toInt).as(RiskAlerts.alerts *)
+      result
+    }
+  }
+
+  def countCurrentAlerts(alert_id: String): Long = {
+    DB.withConnection { implicit connection =>
+      val count: Long = SQL("""
+         SELECT count(*) cant FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
+         WHERE b.description = 'Vigente' AND a.is_active = 1 AND b.is_active = 1 AND a.risk_id = (SELECT risk_id FROM art_risk_alert WHERE id = {alert_id})
+        """)
+        .on(
+          'alert_id -> alert_id).as(scalar[Long].single)
+
+      count;
+    }
+  }
+
+  def riskCategory(id: String): String = {
+    DB.withConnection { implicit connection =>
+     SQL("""
+           SELECT b.category_name FROM art_risk a JOIN art_risk_category b ON a.risk_category = b.id
+           WHERE a.id = (SELECT risk_id FROM art_risk_alert WHERE id = {id})
+        """)
+        .on(
+          'id -> id).as(scalar[String].single)
+    }
+  }
+
+  def riskState(id: String): String = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+            SELECT b.state_name FROM art_risk a JOIN art_risk_state b ON a.risk_state = b.id
+            WHERE a.id = (SELECT risk_id FROM art_risk_alert WHERE id = {id})
+        """)
+        .on(
+          'id -> id).as(scalar[String].single)
+    }
+  }
+/**/
+  def riskImapct(id: String): String = {
+    DB.withConnection { implicit connection =>
+      SQL("""
+            SELECT a.imapct FROM art_risk a WHERE a.id = (SELECT risk_id FROM art_risk_alert WHERE id = {id})
+        """)
+        .on(
+          'id -> id).as(scalar[String].single)
     }
   }
 
@@ -1262,10 +1386,33 @@ object RiskService extends CustomColumns {
 
   def findRiskAlertsById(id: String): Option[RiskAlerts] = {
     if (!StringUtils.isEmpty(id)) {
-      val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + id
+      val sqlString =
+        """
+          |SELECT id
+          |      ,risk_id
+          |      ,event_code
+          |      ,event_date
+          |      ,event_title
+          |      ,event_details
+          |      ,responsible
+          |      ,person_invloved
+          |      ,criticality
+          |      ,is_active
+          |      ,category_id
+          |      ,impacted_variable
+          |      ,reiteration
+          |      ,status_id
+          |      ,task_id
+          |      ,change_state
+          |      ,responsible_answer
+          |	  ,null template_id
+          |  FROM art_risk_alert
+          |  WHERE id = {id}
+        """.stripMargin
+      //val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + id
 
       DB.withConnection { implicit connection =>
-        val result = SQL(sqlString).as(RiskAlerts.alerts.singleOpt)
+        val result = SQL(sqlString).on('id->id).as(RiskAlerts.alerts.singleOpt)
         result
       }
     } else {
@@ -1277,23 +1424,336 @@ object RiskService extends CustomColumns {
 
   def findAlertsForRisk(risk_id: String, alert_id: String): Option[RiskAlerts] = {
 
-    val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + alert_id + " AND risk_id =" + risk_id
-    println(sqlString)
+    //val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + alert_id + " AND risk_id =" + risk_id
+    val sqlString = """
+      |SELECT id
+      |      ,risk_id
+      |      ,event_code
+      |      ,event_date
+      |      ,event_title
+      |      ,event_details
+      |      ,responsible
+      |      ,person_invloved
+      |      ,criticality
+      |      ,is_active
+      |      ,category_id
+      |      ,impacted_variable
+      |      ,reiteration
+      |      ,status_id
+      |      ,task_id
+      |      ,change_state
+      |      ,responsible_answer
+      |	  ,null template_id
+      |  FROM art_risk_alert
+      |  WHERE id = {alert_id}
+      |  AND risk_id = {risk_id}
+    """.stripMargin
+    //println(sqlString)
 
     DB.withConnection { implicit connection =>
-      val result = SQL(sqlString).as(RiskAlerts.alerts.singleOpt)
+      val result = SQL(sqlString).on('alert_id->alert_id.toInt,'risk_id->risk_id.toInt).as(RiskAlerts.alerts.singleOpt)
       result
     }
 
   }
 
+  def findDescriptionStatusAlert(status_id: String): Option[String] = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT description FROM art_risk_alert_status WHERE id={id}").on(
+        'id -> status_id).as(scalar[Option[String]].single)
+    }
+  }
+
+  def findDescriptionCategoryAlert(category_id: String): Option[String] = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT description FROM art_risk_alert_category WHERE is_active = 1 AND id={id}").on(
+        'id -> category_id).as(scalar[Option[String]].single)
+    }
+  }
+
+  def findReportAlerts(alert_criticality_id: Int, alert_status_id: Int, alert_event_code_id: Int, alert_category_id: Int): Seq[AlertReportFull] = {
+    var sql :String = ""
+    val sqlString =
+      """
+        SELECT * FROM
+        (
+                SELECT
+                CASE b.parent_type
+                WHEN 0 THEN (
+                				SELECT w.program_code program_code FROM art_program w
+                				WHERE w.program_id = b.parent_id
+                				AND w.is_active = 1
+                			)
+                WHEN 1 THEN (
+                				SELECT w.program_code program_code FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				WHERE x.pId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                			)
+                WHEN 2 THEN (
+                				SELECT w.program_code program_code FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				WHERE y.tId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                			)
+                WHEN 3 THEN (
+                				SELECT w.program_code program_code FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				JOIN art_sub_task z ON y.tId = z.task_id
+                				WHERE z.sub_task_id = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                				AND z.is_deleted = 1
+                			)
+                END program_program_code,
+                a.id alert_id,
+                CASE b.parent_type
+                WHEN 0 THEN (
+                				SELECT k.workflow_status workflow_status FROM art_program w
+                				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
+                				WHERE w.program_id = b.parent_id
+                				AND w.is_active = 1
+                			)
+                WHEN 1 THEN (
+                				SELECT k.workflow_status workflow_status FROM art_program w
+                				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
+                				JOIN art_project_master x ON w.program_id = x.program
+                				WHERE x.pId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                			)
+                WHEN 2 THEN (
+                				SELECT k.workflow_status workflow_status FROM art_program w
+                				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				WHERE y.tId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                			)
+                WHEN 3 THEN (
+                				SELECT k.workflow_status workflow_status FROM art_program w
+                				JOIN art_program_workflow_status k ON w.work_flow_status = k.id
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				JOIN art_sub_task z ON y.tId = z.task_id
+                				WHERE z.sub_task_id = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                				AND z.is_deleted = 1
+                			)
+                END program_workflow_status,
+                CASE b.parent_type
+                WHEN 0 THEN (
+                				SELECT w.program_name program_name FROM art_program w
+                				WHERE w.program_id = b.parent_id
+                				AND w.is_active = 1
+                			)
+                WHEN 1 THEN (
+                				SELECT w.program_name program_name FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				WHERE x.pId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                			)
+                WHEN 2 THEN (
+                				SELECT w.program_name program_name FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				WHERE y.tId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                			)
+                WHEN 3 THEN (
+                				SELECT w.program_name program_name FROM art_program w
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				JOIN art_sub_task z ON y.tId = z.task_id
+                				WHERE z.sub_task_id = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                				AND z.is_deleted = 1
+                			)
+                END program_program_name,
+                ISNULL(a.impacted_variable,'') alert_impacted_variable,
+                p.category_name risk_category,
+                q.description risk_sub_category,
+                c.description alert_category,
+                CASE a.criticality
+                WHEN 1 THEN 'Alto'
+                WHEN 2 THEN 'Medio'
+                WHEN 3 THEN 'Bajo'
+                END alert_criticality,
+                CASE b.parent_type
+                WHEN 0 THEN (
+                				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
+                				JOIN art_user u ON w.program_manager = u.uid
+                				WHERE w.program_id = b.parent_id
+                				AND w.is_active = 1
+                			)
+                WHEN 1 THEN (
+                				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
+                				JOIN art_user u ON w.program_manager = u.uid
+                				JOIN art_project_master x ON w.program_id = x.program
+                				WHERE x.pId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                			)
+                WHEN 2 THEN (
+                				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
+                				JOIN art_user u ON w.program_manager = u.uid
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				WHERE y.tId = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                			)
+                WHEN 3 THEN (
+                				SELECT u.first_name + ' '  + u.last_name program_manager FROM art_program w
+                				JOIN art_user u ON w.program_manager = u.uid
+                				JOIN art_project_master x ON w.program_id = x.program
+                				JOIN art_task y ON x.pId = y.pId
+                				JOIN art_sub_task z ON y.tId = z.task_id
+                				WHERE z.sub_task_id = b.parent_id
+                				AND w.is_active = 1
+                				AND x.is_active = 1
+                				AND y.is_active = 1
+                				AND z.is_deleted = 1
+                			)
+                END program_program_manager,
+                r.first_name + ' ' + r.last_name alert_responsible,
+                a.event_title alert_event_title,
+                s.description alert_status,
+                a.reiteration alert_reiteration,
+                ISNULL(a.responsible_answer,'') alert_responsible_answer,
+                b.name risk_name,
+                a.criticality alert_criticality_id,
+                a.status_id alert_status_id,
+                a.event_code alert_event_code_id,
+                a.category_id alert_category_id,
+        				FORMAT(a.event_date, 'yyyy-MM-dd') event_date,
+      	  			ISNULL(FORMAT(a.change_state, 'yyyy-MM-dd'),'') change_state,
+                dbo.BusinessDays(a.event_date,CAST(a.change_state AS DATE)) diff_in_days
+                FROM art_risk_alert a
+                JOIN art_risk b ON a.risk_id = b.id
+                JOIN art_risk_alert_category c ON c.id = a.category_id
+                JOIN art_risk_category p ON b.risk_category = p.id
+                JOIN art_risk_sub_category q ON b.sub_category = q.id
+                JOIN art_user r ON a.responsible = r.uid
+                JOIN art_risk_alert_status s ON s.id = a.status_id
+                WHERE
+                a.is_active = 1
+                AND b.is_active = 1
+                AND c.is_active = 1
+                AND p.is_deleted = 0
+                AND q.is_deleted = 0
+        ) K
+        WHERE K.program_program_code IS NOT NULL
+        ${sql}
+        ORDER BY K.alert_id
+      """
+
+    if(alert_criticality_id > 0) {
+      sql = " AND K.alert_criticality_id = " + alert_criticality_id
+    }
+
+    if(alert_status_id > 0) {
+      sql = sql + " AND K.alert_status_id = " + alert_status_id
+    }
+
+    if(alert_event_code_id > 0) {
+      sql = sql + " AND K.alert_event_code_id = " + alert_event_code_id
+    }
+
+    if(alert_category_id > 0) {
+      sql = sql + " AND K.alert_category_id = " + alert_category_id
+    }
+
+    val qrysql = sqlString.replaceAllLiterally("${sql}",sql)
+    //println(qrysql)
+
+    DB.withConnection { implicit connection =>
+      SQL(qrysql).as(AlertReportFull.alertFull *)
+
+    }
+
+  }
+
+
+
   def findRiskAlertsIncreasedById(id: String): Option[RiskAlertsIncreased] = {
+
     if (!StringUtils.isEmpty(id)) {
+      /*
       var sqlString = "EXEC art.risk_alert_details {id}"
 
       DB.withConnection { implicit connection =>
         SQL(sqlString).on('id -> id.toInt).executeQuery() as (RiskAlertsIncreased.alertsIncreased.singleOpt)
       }
+      */
+      val sqlString = """
+                        	SELECT
+                            X.id,
+                              X.risk_id,
+                              Z.pmo,
+                              X.event_code,
+                              X.event_date,
+                              X.event_title,
+                              X.impacted_variable,
+                              X.responsible,
+                              X.person_invloved,
+                              X.criticality,
+                              X.is_active,
+                        	Y.level,
+                        	Y.title,
+                        	Y.program_name FROM art_risk_alert X
+                        	JOIN
+                        	(SELECT
+                        	id,
+                        	CASE
+                        		WHEN a.parent_type = 0 THEN 'Programa'
+                        		WHEN a.parent_type = 1 THEN 'Proyecto'
+                        		WHEN a.parent_type = 2 THEN 'Tarea'
+                        		WHEN a.parent_type = 3 THEN 'Sub-Tarea'
+                        	END level,
+                        	CASE
+                        		WHEN a.parent_type = 0 THEN (SELECT b.program_name FROM art_program b WHERE b.program_id=a.parent_id)
+                        		WHEN a.parent_type = 1 THEN (SELECT c.project_name FROM art_project_master c WHERE c.pId=a.parent_id)
+                        		WHEN a.parent_type = 2 THEN (SELECT d.task_title FROM art_task d WHERE d.tId=a.parent_id)
+                        		WHEN a.parent_type = 3 THEN (SELECT e.title FROM art_sub_task e WHERE e.sub_task_id=a.parent_id)
+                        	END title,
+                        	CASE
+                        		WHEN a.parent_type = 0 THEN (SELECT program_name FROM art_program WHERE program_id=a.parent_id)
+                        		WHEN a.parent_type = 1 THEN (SELECT program_name FROM art_program WHERE program_id=(SELECT program FROM art_project_master WHERE pId=a.parent_id))
+                        		WHEN a.parent_type = 2 THEN (SELECT program_name FROM art_program WHERE program_id=(SELECT program FROM art_project_master WHERE pId=(SELECT pId FROM art_task WHERE tId=a.parent_id)))
+                        		WHEN a.parent_type = 3 THEN (SELECT program_name FROM art_program WHERE program_id=(SELECT program FROM art_project_master WHERE pId=(SELECT pId FROM art_task WHERE tId=(SELECT task_id FROM art_sub_task WHERE sub_task_id=a.parent_id))))
+                        	END program_name
+                        	  FROM art_risk a) Y
+                        	ON X.risk_id=Y.id
+                          JOIN
+                          (SELECT uid, u.first_name + ' '+ u.last_name pmo FROM art_user u) Z
+                          ON X.responsible = Z.uid
+                        	WHERE
+                        	X.is_active=1 AND
+                        	X.id={id}
+              """
+      DB.withConnection { implicit connection =>
+        val result = SQL(sqlString).on(
+          'id -> id.toInt).as(RiskAlertsIncreased.alertsIncreased.singleOpt)
+        result
+      }
+
     } else {
       val result: Option[RiskAlertsIncreased] = null
       result
@@ -1330,11 +1790,17 @@ object RiskService extends CustomColumns {
     }
   }
 
-  def findTmplMail() : String = {
-    var sqlString = ""
-    sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf ORDER BY id DESC"
+  def findTmplMail(id_alert: String) : String = {
+
+
+    val id_template=DB.withConnection { implicit connection =>
+      SQL("select id_template from art_risk_alert_send where id_alert={id_alert}").on('id_alert->id_alert.toInt).as(scalar[Int].single)
+    }
+
+    //val sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf WHERE is_active = 1 ORDER BY id DESC"
+    val sqlString = "SELECT tpl FROM art_risk_alert_conf WHERE is_active = 1 AND id={id_template}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).as(scalar[String].single)
+      SQL(sqlString).on('id_template->id_template).as(scalar[String].single)
     }
   }
 
@@ -1348,23 +1814,33 @@ object RiskService extends CustomColumns {
                           SELECT RecursosHumanos.emailJefe,RecursosHumanos.emailTrab
                               FROM RecursosHumanos  JOIN tblBoss  ON RecursosHumanos.emailTrab = tblBoss.emailJefe
                       )
-
                       SELECT STUFF((
                               SELECT top 2 ','+ emailTrab
                               FROM tblBoss WHERE  emailTrab <> {emailEmployee}
                               FOR XML PATH('')
                               )
                               ,1,1,'') AS emailTrab
-
                       OPTION(MAXRECURSION 32767)
-
       """
 
     DB.withConnection { implicit connection =>
+
       SQL(sqlString).on(
         'emailEmployee -> emailEmployee).as(scalar[Option[String]].single)
+
+      /*
+      val rowOption = SQL(sqlString)
+        .on('emailEmployee -> emailEmployee)
+        .apply
+        .headOption
+      rowOption match {
+        case Some(row) => Some(row[String]("emailTrab"))
+        case None => None
+      }
+      */
     }
   }
+
 
   def findBossMail(emailEmployee: String) : Option[String] = {
     val sqlString = """
@@ -1382,17 +1858,49 @@ object RiskService extends CustomColumns {
       """
 
     DB.withConnection { implicit connection =>
+
       SQL(sqlString).on(
-      'emailEmployee -> emailEmployee).as(scalar[Option[String]].single)
+        'emailEmployee -> emailEmployee).as(scalar[Option[String]].single)
+      /*
+      val rowOption = SQL(sqlString)
+        .on('emailEmployee -> emailEmployee)
+        .apply
+        .headOption
+      rowOption match {
+        case Some(row) => Some(row[String]("emailTrab"))
+        case None => None
+      }
+      */
     }
   }
+
 
   def findUserAlertsIds(employeeid: String): String = {
     var risk_ids = ""
     val risksAlerts = RiskService.findAllActiveAlerts()
     for (r <- risksAlerts) {
 
-      if (!r.person_invloved.isEmpty) {
+      if (!r.person_invloved.isEmpty) {//obtiene los id de alerta en que figura el usuario
+        if (r.person_invloved.get.contains(employeeid)) {
+          if (StringUtils.isEmpty(risk_ids)) {
+            risk_ids = r.id.get.toString()
+          } else {
+            risk_ids = risk_ids + "," + r.id.get.toString()
+          }
+        }
+      }
+
+    }
+
+    return risk_ids
+  }
+
+  def findNewUserAlertsIds(employeeid: String): String = {
+    var risk_ids = ""
+    val risksAlerts = RiskService.findAllOpenAlerts()
+    for (r <- risksAlerts) {
+
+      if (!r.person_invloved.isEmpty) {//obtiene los id de alerta en que figura el usuario
         if (r.person_invloved.get.contains(employeeid)) {
           if (StringUtils.isEmpty(risk_ids)) {
             risk_ids = r.id.get.toString()
@@ -1424,13 +1932,90 @@ object RiskService extends CustomColumns {
       SQL(sqlString).as(scalar[String].singleOpt)
     }
   }
-
+  
   def findAllAlertCategory(): Seq[RiskCategory] = {
     var sqlString = "select id,description,is_active from art_risk_alert_category where is_active = 1"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(RiskCategory.category *)
     }
-  }    
+  }
+
+  def updateFirstAlertCronMail(alert_id: String, reiteration: Int) = {
+    DB.withConnection { implicit connection =>
+
+      SQL(
+        """
+          update art_risk_alert SET
+          reiteration={reiteration},
+          status_id=(SELECT id FROM art_risk_alert_status WHERE description = 'Vencida'),
+          change_state=GETDATE()
+          where id={alert_id}
+          """).on(
+        'alert_id -> alert_id,
+        'reiteration -> reiteration).executeUpdate()
+
+    }
+  }
+
+  def updateSecondAlertCronMail(alert_id: String, reiteration: Int) = {
+    DB.withConnection { implicit connection =>
+
+      SQL(
+        """
+          update art_risk_alert SET
+          reiteration={reiteration},
+          change_state=GETDATE()
+          where id={alert_id}
+          """).on(
+        'alert_id -> alert_id,
+        'reiteration -> reiteration).executeUpdate()
+
+    }
+  }
+
+  def automaticAlert() {
+    val FormattedDATE = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")
+    val now = FormattedDATE.format(new Date().getTime).toString
+    //first iteration
+    val firstCandidates = RiskService.findAllFirstExpiredAlerts()
+    if(!firstCandidates.isEmpty) {
+      for (t <- firstCandidates) {
+        Logger.info("First round : " + t.id.get.toString + " " + t.reiteration.get.toInt)
+        val round = t.reiteration.get.toInt + 1
+
+        sendEmailAlerts(t.id.get.toString, round) match {
+          case "OK" =>
+            // update Alert
+            Logger.info("Update Alert [" + t.id.get.toString + "] reiteration [" + round + "]")
+            updateFirstAlertCronMail(t.id.get.toString, round)
+          case _   => Logger.info("I DO NOT SEND THE MAIL!!")
+        }
+
+      } //first iteration
+    }else{
+      Logger.info("["  + now + "] There are no valid alerts with more than two days of delay.")
+    }
+
+    //second iteration
+    val secondCandidates = RiskService.findAllSecondExpiredAlerts()
+    if(!secondCandidates.isEmpty) {
+      for (r <- secondCandidates) {
+        Logger.info("Second round : " + r.id.get.toString + " " + r.reiteration.get.toInt)
+        val round = r.reiteration.get.toInt + 1
+
+        sendEmailAlerts(r.id.get.toString, round) match {
+          case "OK" =>
+            // update Alert
+            Logger.info("Update Alert [" + r.id.get.toString + "] reiteration [" + round + "]")
+            updateFirstAlertCronMail(r.id.get.toString, round)
+          case _   => Logger.info("I DO NOT SEND THE MAIL!!")
+        }
+
+      } //second iteration
+    } else {
+      Logger.info("["  + now + "] There are no valid alerts with more than eight days of delay.")
+    }
+  }
 
   def riskAutomaticAlert() {
     val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
@@ -1571,7 +2156,9 @@ object RiskService extends CustomColumns {
   /*
   author: marcelol marcelol@loso.cl
    */
-  def sendAutomaticAlerts(alert_id: String, increment: Int) {
+  def sendEmailAlerts(alert_id: String, increment: Int) : String = {
+
+    var response: String = "NOK"
 
     if (!StringUtils.isEmpty(alert_id)) {
 
@@ -1592,7 +2179,7 @@ object RiskService extends CustomColumns {
             persons = alert.get.person_invloved.get
           }
 
-          val template = findTmplMail()
+          val template = findTmplMail(alert_id)
           var cc = findAllCCEmail().get.toString
 
           val lastchar = cc.charAt(cc.length-1).toString
@@ -1607,22 +2194,30 @@ object RiskService extends CustomColumns {
               if (!user.isEmpty) {
                 val email = user.get.email.toString()
 
+                //println(email)
+
                 if (!StringUtils.isEmpty(email)) {
 
                   if(increment == 2) {
                     val boss = findBossMail(email)
-                    if(!boss.isEmpty)
+                    if(!boss.isEmpty) {
+                      println("el jefe es : " + boss.get.toString)
                       cc = cc + "," + boss.get.toString
+                    }else{
+                      println("no tiene jefe")
+                    }
 
                   } else if (increment == 3) {
                     val bigboss = findBigBossMail(email)
-                    if(!bigboss.isEmpty)
+                    if(!bigboss.isEmpty) {
+                      println("el gran jefe : " + bigboss.get.toString)
                       cc = cc + "," + bigboss.get.toString
+                    }else{
+                      println("no tiene gran jefe")
+                    }
                   }
 
-                  println("increment "+ increment + ", enviando correo a : " + cc)
-
-                  val response=utils.SendEmail.sendEmailRiskAlert(
+                  response=utils.SendEmail.sendEmailRiskAlert(
                     user,
                     program,
                     alert,
@@ -1632,7 +2227,9 @@ object RiskService extends CustomColumns {
                     template,
                     cc)
 
-                  println(response)
+                  println("RESPUESTA : " + response)
+
+
                 }
 
               }
@@ -1644,6 +2241,8 @@ object RiskService extends CustomColumns {
       }
 
     }
+
+    response
 
   }
 

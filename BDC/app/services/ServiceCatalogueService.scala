@@ -114,7 +114,29 @@ object ServiceCatalogueService extends CustomColumns {
   }
 
   def getServiceCatalogue(): Seq[ServiceCatalogueMaster] = {
-    var sqlString = "select * from art_service_catalogue where is_deleted=0";
+    val sqlString =
+      """
+        |SELECT
+        |id       ,
+        |discipline       ,
+        |service_code       ,
+        |LTRIM(service_name) service_name,
+        |description       ,
+        |service_scope       ,
+        |service_requestor_role       ,
+        |executive_role_primary       ,
+        |executive_role_secondary       ,
+        |sla_value       ,
+        |sla_unit       ,
+        |updated_by       ,
+        |creation_date   ,
+        |updation_date       ,
+        |is_deleted
+        |  FROM art_service_catalogue
+        |  WHERE is_deleted=0
+        |  ORDER BY service_name
+      """.stripMargin
+    //var sqlString = "select * from art_service_catalogue where is_deleted=0";
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(
         ServiceCatalogueMaster.serviceCatalogueMaster *)
@@ -123,6 +145,7 @@ object ServiceCatalogueService extends CustomColumns {
   }
   
   def getIncidentServiceCatalogue(): Seq[ServiceCatalogueMaster] = {
+
     var sqlString = "SELECT * FROM art_service_catalogue WHERE is_deleted=0 AND discipline = 1057 ORDER BY CAST(service_name AS VARCHAR)";
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(
@@ -258,8 +281,32 @@ object ServiceCatalogueService extends CustomColumns {
 
   def findActiveServiceCatalogueByDescipline(descipline_id: String): Seq[ServiceCatalogueMaster] = {
     DB.withConnection { implicit connection =>
-      val sql = "select * from art_service_catalogue where is_deleted=0 AND discipline=" + descipline_id
-      val result = SQL(sql).as(ServiceCatalogueMaster.serviceCatalogueMaster *)
+      val sql =
+        """
+          |SELECT
+          |id,
+          |discipline,
+          |service_code,
+          |LTRIM(service_name) service_name,
+          |description,
+          |service_scope,
+          |service_requestor_role,
+          |executive_role_primary,
+          |executive_role_secondary,
+          |sla_value,
+          |sla_unit,
+          |updated_by,
+          |creation_date,
+          |updation_date,
+          |is_deleted
+          |FROM art_service_catalogue
+          |WHERE is_deleted=0
+          |AND discipline={id}
+          |ORDER BY service_name
+        """.stripMargin
+      //val sql = "select * from art_service_catalogue where is_deleted=0 AND discipline=" + descipline_id
+      val result = SQL(sql).on(
+        'id -> descipline_id).as(ServiceCatalogueMaster.serviceCatalogueMaster *)
       result
     }
   }

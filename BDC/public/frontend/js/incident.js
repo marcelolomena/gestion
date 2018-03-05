@@ -10,7 +10,7 @@ $(document).ready(function(){
         	break;
         }
     }
-	
+
 	var optionsPieIncident ={
 			chart: {
 				renderTo: 'containerIncident',
@@ -19,7 +19,7 @@ $(document).ready(function(){
 	            plotShadow: false,
 	            type: 'pie'
 	        },title: {
-	            text: 'Incidentes por Departamento'
+	            text: 'Incidentes por Tipo'
 	        },tooltip: {
 	        	formatter: function() {
 	        	    return '<b>'+ this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
@@ -31,7 +31,7 @@ $(document).ready(function(){
 	                point: {
 	                    events: {
 	                       click: function(event) {
-	                    	   grillaProgramaDepa(this.options.dId,this.options.name);
+	                    	   gridIncident("department",this.options.dId,this.options.name);
 	                       }
 	                    }
 	                 },
@@ -47,24 +47,81 @@ $(document).ready(function(){
 	        },series: []			
 	};
 	
-	function grillaProgramaDepa(did,name){
-		var chuurl="/incidentList?filters={\"rules\":[{\"field\":\"department\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
+	function gridIncident(filter,did,name){
+		var chuurl="/incidentList?filtersPie={\"rules\":[{\"field\":\"" + filter + "\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
 		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 	}
-		
-	
+
+	function gridIncidentCompose(filter1,id1,filter2,id2,name){
+		//var chuurl="/incidentList?filtersPie={\"rules\":[{\"field\":\"" + filter + "\",\"op\":\"eq\",\"data\":\"" + did + "\"}]}";
+		var chuurl="/incidentList?filtersPie={\"rules\":[{\"field\":\"" + filter1 + "\",\"op\":\"eq\",\"data\":\"" + id1 + "\"},{\"field\":\"" + filter2 + "\",\"op\":\"eq\",\"data\":\"" + id2 + "\"}]}";
+		$("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	}
+
+    var charPie
 	$.ajax({
-		  url: '/incidentPie',
+		  url: '/incidentPie/1',
 		  type: 'GET',
 		  success: function(data) {
+    	        optionsPieIncident.title.text=JSON.parse(data).titulo
 			  optionsPieIncident.series.push(JSON.parse(data));
-				var charPieDepa = new Highcharts.Chart(optionsPieIncident);
-			
+				charPie = new Highcharts.Chart(optionsPieIncident);
+				//new Highcharts.Chart(optionsPieIncident);
 		  },
 		  error: function(e) {
-
+            console.log(e)
 		  }
-	});	
+	});
+
+	$.ajax({
+        type: "GET",
+        url: '/incident_type_list',
+        dataType: "json",
+        success: function(data){
+          $.each(data,function(key, registro) {
+            $("#sel_type").append('<option value='+registro.configuration_id+'>'+registro.configuration_name+'</option>');
+          });
+        },
+        error: function(data) {
+          alert('error');
+        }
+      });
+
+      $("#sel_type").change(function() {
+        //console.log( "ID : " + $(this).val());
+        //console.log( "TEXT : " + $(this).find("option:selected").text().trim());
+        gridIncident("configuration_id",$("#sel_type").val(),$(this).find("option:selected").text().trim());
+        	$.ajax({
+                type: "GET",
+                url: '/incidentPieCompose/' + $(this).val(),
+                dataType: "json",
+                success: function(data){
+                        //gridIncident("configuration_id",$("#sel_type").val(),this.options.name);
+                         charPie.update({
+                             title: {
+                                 text:  data.titulo
+                             },
+                             plotOptions: {
+                                pie: {
+                                    point: {
+                                        events: {
+                                            click: function(event) {
+                                                //console.log("que onda 1 : " + $("#sel_type").val())
+                                                gridIncidentCompose("state",this.options.dId,"configuration_id",$("#sel_type").val(),this.options.name);
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            series:data
+                         });
+                },
+                error: function(data) {
+                  alert('error');
+                }
+              });
+
+      });
 
 	$("#subtaskListDialog").dialog({
 		//bgiframe: true,
@@ -647,7 +704,8 @@ $(document).ready(function(){
 		editable: true,
 		hidden: true, 
 		editrules: {edithidden: true}, 
-		edittype: "select", 
+		edittype: "select",
+		search:false,
 		editoptions: {
 			dataUrl: '/incident_configuration',
 			dataEvents: [{ type: 'change', fn: function(e) {
@@ -748,18 +806,6 @@ $(document).ready(function(){
 			},
 		formoptions: {rowpos:1,colpos:2,label: "<span class='x_program_id'>Sistema</span>"}
 	    },
-	    /*
-	    { 
-		label: 'Usuario', 
-		width: 150, 
-		name: 'sponsor_name',
-	    editable: true, 
-		hidden: false, 
-		editrules: {edithidden: true},
-	    editoptions: {dataInit: function(elem) {$(elem).width(165);$(elem).addClass("ui-state-highlight y_sponsor_name");}},
-	    formoptions: {rowpos:2,colpos:1,label: "<span class='x_sponsor_name'>Usuario</span>"},
-	    },
-	    */
 	    {
 	    label: 'Usuario', 
 		width: 150, 
@@ -775,8 +821,8 @@ $(document).ready(function(){
 						$(element).autocomplete({
 							appendTo:"body",
 							disabled:false,
-							delay:300,
-							minLength:1,
+							delay:500,
+							minLength:5,
                             source: function(request, response){
 								this.xhr = $.ajax({
 									type: "GET",
@@ -821,8 +867,8 @@ $(document).ready(function(){
 						$(element).autocomplete({
 							appendTo:"body",
 							disabled:false,
-							delay:300,
-							minLength:1,
+							delay:500,
+							minLength:5,
                             source: function(request, response){
 								this.xhr = $.ajax({
 									type: "GET",
@@ -881,7 +927,7 @@ $(document).ready(function(){
 				if (idProgram!=undefined){
 					return {id:idProgram};
 				}else{
-					return {id:2496};
+					return {id:0};
 				}
 			},
 			buildSelect: function (response) {
@@ -907,30 +953,7 @@ $(document).ready(function(){
 	        }
 	    },formoptions: {rowpos:2,colpos:2,label : "<span class='x_task_owner_id'>Responsable</span>"}
 	    },
-	    /*
-		{ 
-		label: 'Prioridad', 
-		name: 'severity_description', 
-		width: 150,
-	    editable: false, 
-		hidden: false, 
-		editrules: {edithidden: true},
-	    stype: 'select',
-		searchoptions: {
-			dataUrl: '/incidentSeverityList',
-			buildSelect: function (response) {
-				var data = JSON.parse(response);
-				var s = "<select>";
-				s += '<option value="0">--Escoger Severidad--</option>';
-				$.each(data, function(i, item) {
-					s += '<option value="' + data[i].severity_id + '">' + data[i].severity_description + '</option>';
-				});
-				return s + "</select>";
-			}	            		  
-	    }
-	    },      
-	    */  
-	    { 
+	    {
 			label: 'Prioridad', 
 			name: 'severity_description', 
 			width: 150,
@@ -1179,7 +1202,7 @@ $(document).ready(function(){
 	    editoptions: { rows: "3", cols: "25"},
 		formoptions: {rowpos:7,colpos:2}
 	    },
-	    { 
+	    /*{
 		label: 'Departamento', 
 		name: 'department', 
 		width: 150,
@@ -1188,7 +1211,7 @@ $(document).ready(function(){
 		editrules: {edithidden: true},
 	    stype: 'select',
 		searchoptions: {dataUrl: '/incidentDepartamentList'},
-	    },	
+	    },*/
 	    { label: 'project_manager_id', name: 'project_manager_id', hidden:true },
 	    { label: 'program_manager_id', name: 'program_manager_id', hidden:true },
 	    { label: 'uname', name: 'uname', editable: true, /*editrules: {edithidden: true}, */hidden: true },	    
@@ -1428,5 +1451,95 @@ $(document).ready(function(){
 	
 	$("#edit_" + incidentGridId).addClass('ui-state-disabled');
     $("#del_" + incidentGridId).addClass('ui-state-disabled');
+
+    $("#tabs").tabs({
+      beforeLoad: function( event, ui ) {
+        var url = ui.ajaxSettings.url;
+        var serv = url.split('/')[2]
+        if(serv==2){
+            //console.log("tre : " + $("#sel_type").val())
+            $("#div_sel_type").show();
+        }else{
+            $("#div_sel_type").hide();
+        }
+
+
+        $.getJSON(url, function (data) {
+             //console.log(data.titulo)
+             //console.dir(charPie)
+             if(serv==1){
+                 charPie.update({
+                     title: {
+                         text:  data.titulo
+                     },
+                     plotOptions: {
+                        pie: {
+                            point: {
+                                events: {
+                                    click: function(event) {
+                                        gridIncident("department",this.options.dId,this.options.name);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    series:data
+                 });
+				 //Limpia grilla
+			     var chuurl="/incidentList";
+				 $("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+
+             } else if(serv==2){
+                 charPie.update({
+                     title: {
+                         text:  data.titulo
+                     },
+                     plotOptions: {
+                        pie: {
+                            point: {
+                                events: {
+                                    click: function(event) {
+                                        //console.log("que onda 2 : " + $("#sel_type").val())
+                                        gridIncident("state",this.options.dId,this.options.name);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    series:data
+                 });
+				 //Limpia grilla
+			     var chuurl="/incidentList";
+				 $("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+				 
+             } else if(serv==3){
+                               charPie.update({
+                                   title: {
+                                       text:  data.titulo
+                                   },
+                                   plotOptions: {
+                                      pie: {
+                                          point: {
+                                              events: {
+                                                  click: function(event) {
+                                                      gridIncident("delay",this.options.dId,this.options.name);
+                                                  }
+                                              }
+                                          }
+                                      }
+                                  },
+                                  series:data
+                               });
+             }
+        });
+
+        return false;
+
+        ui.jqXHR.fail(function() {
+          ui.panel.html(
+            "Couldn't load this tab. We'll try to fix this as soon as possible." );
+        });
+      }
+    });
 
 });

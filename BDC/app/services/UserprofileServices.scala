@@ -8,8 +8,6 @@ import play.api.Play.current
 import play.api.db.DB
 import anorm.SqlParser._
 import anorm._
-//import com.typesafe.plugin._
-import com.sun.xml.internal.ws.wsdl.writer.document.Import
 import java.util._
 
 object UserProfileServices {

@@ -1687,7 +1687,7 @@ span.ui-state-default {
 
 #project_task_list  .task_plan_time {
 	float: left;
-	width: 11%;
+	width: 5%;
 	min-height: 20px;
 	display: inline-block;
 	position: relative;
@@ -3360,7 +3360,7 @@ form button {
 	padding: 3px;
 }
 
-#generic_task_list  .task_plan_time {
+#generic_task_list .task_plan_time {
 	float: left;
 	width: 12%;
 	min-height: 20px;
@@ -3369,6 +3369,20 @@ form button {
 	line-height: 20px;
 	padding: 3px;
 	text-align: left;
+}
+
+#generic_task_list .right_task_plan_time {
+	float: left;
+	width: 12%;
+	min-height: 20px;
+	display: inline-block;
+	position: relative;
+	line-height: 20px;
+    padding-top: 3px;
+    padding-right: 25px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+	text-align: right;
 }
 
 #generic_task_list .task_discipline {
@@ -5461,7 +5475,7 @@ form button {
 	padding: 0;
 }
 
-.program-data .planned_hours,.p_values .estimated_cost_program {
+.program-data .planned_hours,.p_values .estimated_cost_program .plan_time_task{
 	border: none;
 	color: #666;
 	margin: 0;
@@ -5470,7 +5484,7 @@ form button {
 	background: #CFD3D3;
 }
 
-.estimated_cost_program{
+.estimated_cost_program, .plan_time_task{
 		border: none;
 	color: #666;
 	margin: 0;
@@ -5479,8 +5493,7 @@ form button {
 	background: #CFD3D3;
 }
 
-
-.edit-hours,.edit-project-hours ,.edit-estimated-cost{
+.edit-hours,.edit-project-hours ,.edit-estimated-cost, .edit-plan-time{
 	background-image: url("../images/edit.png");
 	background-repeat: no-repeat;
 	float: left;
@@ -5511,7 +5524,7 @@ form button {
 	margin-top: 0;
 	width: 23px;
 }
-.update-cost {
+.update-cost, .update-plan-time {
 	background-image: url("../images/right_sign.png");
 	background-repeat: no-repeat;
 	height: 22px;
@@ -6265,4 +6278,47 @@ h3.header-background{
     word-wrap: break-word;
     font-weight: bold;
     padding-left: 5px;
+}
+
+div.oculto {
+    display: none;
+}
+
+#risk-edit-alert-form textarea,#risk-edit-alert-form input{
+	margin-top: 0px !important;
+}
+#risk-edit-alert-form{
+	background: none;
+    padding: 10px 20px 0px 0px;
+    width: 99.2%;
+     float: left;
+    margin-bottom: 18px;
+
+}
+#risk-edit-alert-form label{
+	color: #666;
+	font-weight: bold;
+}
+#risk-edit-alert-form dd.error{
+	float: left;
+	color: red;
+}
+#risk-edit-alert-form #user_list{
+	height: 100px
+}
+#risk-edit-alert-form select{
+	width: 92%;
+	color: #5bc3e6;
+	float: left;
+	font-size: 13px;
+	height: 33px;
+	padding: 4px 2px 6px;
+	margin: 0px 0 0px;
+	color: #315663 !important;
+}
+
+#risk-edit-alert-form .mutliSelect{
+	border: 1px solid #666;
+    float: left;
+    padding: 6px;
 }

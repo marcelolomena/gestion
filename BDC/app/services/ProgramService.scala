@@ -36,6 +36,7 @@ object ProgramService extends CustomColumns {
     val program_code = getUniqueProgramCode()
 
     DB.withConnection { implicit connection =>
+	  println("En insertProgramDetails:"+pm);
       val result = SQL(
         """
           insert into art_program (
@@ -43,12 +44,12 @@ object ProgramService extends CustomColumns {
           program_description, work_flow_status, 
           demand_manager, program_manager, devison, management, department, sap_code,
           impact_type, business_line, creation_date, initiation_planned_date, closure_date,release_date,
-          planned_hours,internal_state, estimated_cost 
+          planned_hours,internal_state, estimated_cost, clasificacion
           ) 
           values(
           {program_type},{program_sub_type},{program_name},{program_code},
           {program_description},{work_flow_status}, {demand_manager},{program_manager},{devison},
-					{management},{department},{sap_code}, {impact_type},{business_line}, {creation_date},{initiation_planned_date},{closure_date},{release_date},{planned_hours},{internal_state}, {estimated_cost} 
+					{management},{department},{sap_code}, {impact_type},{business_line}, {creation_date},{initiation_planned_date},{closure_date},{release_date},{planned_hours},{internal_state}, {estimated_cost}, {clasificacion} 
           )
           """).on(
           'program_type -> pm.program_type,
@@ -71,7 +72,8 @@ object ProgramService extends CustomColumns {
           'release_date -> pm.program_dates.release_date,
           'planned_hours -> pm.planned_hours,
           'internal_state -> pm.internal_state,
-          'estimated_cost -> pm.estimated_cost).executeInsert(scalar[Long].singleOpt)
+          'estimated_cost -> pm.estimated_cost,
+		  'clasificacion -> pm.clasificacion).executeInsert(scalar[Long].singleOpt)
 
       result.last
 
@@ -105,7 +107,8 @@ object ProgramService extends CustomColumns {
           is_active={is_active},
           planned_hours={planned_hours},
           internal_state={internal_state},          
-          estimated_cost={estimated_cost}
+          estimated_cost={estimated_cost},
+		  clasificacion={clasificacion}
           where program_id = {program_id}
           """).on(
           'program_id -> id,
@@ -129,7 +132,8 @@ object ProgramService extends CustomColumns {
           'is_active -> pm.is_active.getOrElse(1),
           'planned_hours -> pm.planned_hours,
           'internal_state -> pm.internal_state,          
-          'estimated_cost -> pm.estimated_cost).executeUpdate()
+          'estimated_cost -> pm.estimated_cost,
+		  'clasificacion -> pm.clasificacion).executeUpdate()
     }
   }
 

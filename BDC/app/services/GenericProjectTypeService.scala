@@ -115,7 +115,7 @@ object GenericProjectTypeService extends CustomColumns{
   }
 
   def findAllActiveGenericProjectType(): Seq[GenericProjectTypes] = {
-    var sqlString = "SELECT * from art_program_generic_project_type where  is_deleted = 0 "
+    var sqlString = "SELECT * from art_program_generic_project_type where  is_deleted = 0 ORDER BY generic_project_type"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(GenericProjectTypes.pTypes *)
     }

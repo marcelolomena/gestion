@@ -106,7 +106,7 @@
 		</li>
 		
 		<li>
-			<span class="header">@Messages("addNewProgram.programSubType")</span>
+			<span class="header">@Messages("programDetails.programSubType")</span>
 			<span class="program-data">
 				
 				@if(!program.get.program_sub_type.isEmpty){
@@ -117,6 +117,16 @@
 			  	}
 			 </span>
 		</li>
+
+         <li>
+			<span class="header">Clasificación </span>
+			<span class="program-data">
+				@if(!program.get.clasificacion.isEmpty){
+					@program.get.clasificacion.get
+			  	}
+			</span>
+
+		</li>		
 		
 		<li>
 			<span class="header">@Messages("programDetails.demandmanager")</span>
@@ -141,18 +151,6 @@
 	  		</span>
 		</li>
 
-		<li>
-			<span class="header">@Messages("programDetails.department") </span>
-			<span class="program-data">
-				@if(!programDetail.get.department.isEmpty){
-					@{departmentDetails= DepartmentService.findDepartmentById(programDetail.get.department.get) }
-  					@if(!departmentDetails.isEmpty){
-  						@departmentDetails.get.department
- 					}
- 				}
-			</span>
-		</li>
-		
          <li>
 			<span class="header">Estado </span>
 			<span class="program-data">
@@ -203,7 +201,7 @@
 
 		<li>
 			<span class="header">@Messages("programDetails.ha")</span>
-			<span class="program-data ">
+			<span class="program-data" id="planned_hours">
 				<span style="float: left;width:73px">
 				@if(!program.get.planned_hours.isEmpty){
 					<input type="text"  disabled="disabled" value="@program.get.planned_hours.get.toLong" min="0" maxlength="9" readonly="readonly" class="planned_hours" />
@@ -237,14 +235,6 @@
 			<span class="program-data ">
 				@if(program.get.program_code.isWhole() ){
 					@program.get.program_code
-				}
-			</span>
-		</li>
-		<li>
-			<span class="header">@Messages("addNewProgram.ppmnumber")</span>
-			<span class="program-data ">
-				@if(!programDetail.get.sap_code.isEmpty ){
-					@programDetail.get.sap_code.get
 				}
 			</span>
 		</li>
@@ -331,6 +321,15 @@
 							<td class="table_header">@Messages("programDetails.pae")</td>
 							<td class="p_values width160px"><span id="pae2"></span></td>
 						</tr>
+						<!--  RRM: Agrega dos filas nuevas -->
+						<tr>
+							<td class="table_header">@Messages("programDetails.agi")</td>
+							<td class="p_values width160px"><span id="agi"></span></td>
+						</tr>	
+						<tr>
+							<td class="table_header">@Messages("programDetails.age")</td>
+							<td class="p_values width160px"><span id="age"></span></td>
+						</tr>							
 						</tbody>
 					</table>
 	  			</div>
@@ -830,7 +829,7 @@
 <script src="@routes.Assets.at("frontend/highcharts/highcharts-more.js")"></script>
 <script src="@routes.Assets.at("frontend/highcharts/modules/exporting.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
-<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
 <script src="@routes.Assets.at("frontend/jqgrid/js/i18n/grid.locale-es.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/jqgrid/js/jquery.jqGrid.min.js")" type="text/javascript"></script>
@@ -1355,6 +1354,7 @@
 						renderProgramEarnValuepro($("#program").val());
 						var changeSet = $("#program_changeset").val();
 						var relelaseDateChanges = "";
+						var programHoursChanges = "";
 						var initialPlannedDateChanges = "";
 						var clouserDateChanges = "";
 						if (changeSet != '') {
@@ -1375,6 +1375,11 @@
 															+ "<span style='text-decoration: line-through;'>"
 															+ obj.org_value
 															+ "</span><br>";
+												} else if (obj.fieldName == "programs_hours") {
+													programHoursChanges = programHoursChanges
+															+ "<span style='text-decoration: line-through;'>"
+															+ obj.org_value
+															+ "</span><br>";
 												}
 											});
 						}
@@ -1388,6 +1393,8 @@
 												return initialPlannedDateChanges;
 											} else if ($(this).attr('id') == "release_date") {
 												return relelaseDateChanges;
+											} else if ($(this).attr('id') == "planned_hours") {
+												return programHoursChanges;
 											}
 
 										});

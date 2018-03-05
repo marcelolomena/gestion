@@ -185,14 +185,30 @@
 	    	
 	      </div> 
 
+			<!--
 		  	<h3 id="productNm">
 				<span class="left">Alertas</span>
 			</h3>
-			
-		 	<div class="program-div" id="new-risk">
-		 		<span><a href="/new-alert/@risk.get.id">Agregar Alerta</a></span>
+			-->
+			<h3 id="productNm">
+				<span class="left"></span>
+			</h3>
+			@if(utils.UserAccess.checkAccess(req,"alert_create")){
+			<div class="program-div" id="new-risk">
+				<span><a href="/new-alert/@risk.get.id">Agregar Alerta</a></span>
 			</div>
-	
+			}
+			<div class="content-box">
+				<div class="content-box-header">
+					<ul class="content-box-tabs dashboard-overview-tab" style="width:100%;">
+						<li><a href="javascript:void(0)" id="program-tab1" class="program-tab1 current">@Messages("newAlert.list")</a></li>
+						<li style="float:right;margin:0px;"><a href="javascript:void(0)" id="alert-tab2" class="alert-tab2">@Messages("newAlert.report") </a></li>
+					</ul>
+				</div>
+				<div class="content-box-content">
+
+				</div>
+			</div>
 			<div class="width_full">
 
 				<ul id="risk_list">
@@ -266,7 +282,7 @@
 </div>	 
 @frontend.headerScripts()	
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
-<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
 </body>	
 </html>

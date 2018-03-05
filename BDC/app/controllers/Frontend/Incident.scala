@@ -399,12 +399,12 @@ object Incident extends Controller {
         val pageSize = rows
         val startRow = (pageIndex * pageSize) + 1;
         
-        var node = new JSONObject()
+        val node = new JSONObject()
         val subtask = IncidentService.selectSubtask(id, sidx, sord, rows, startRow)
 
-        var registro = new JSONArray()
+        val registro = new JSONArray()
         for (p <- subtask) {
-          var campo = new JSONObject()
+          val campo = new JSONObject()
           records = p.cantidad
           campo.put("sub_task_id", p.sub_task_id)
           campo.put("task_id", p.task_id)
@@ -513,17 +513,26 @@ object Incident extends Controller {
         val rows = request.getQueryString("rows").getOrElse("20").toString()
         val page = request.getQueryString("page").getOrElse("1").toString()
         val filters = request.getQueryString("filters").getOrElse("").toString()
+		val filtersPie = request.getQueryString("filtersPie").getOrElse("").toString()
         val user_id = Integer.parseInt(request.session.get("uId").get)
 
         var panel: Seq[models.Incident] = null
         var records: Int = 0
 
-        var node = new JSONObject()
+        val node = new JSONObject()
         var tieneJson = true
         var qrystr = ""
+		println("****filter:"+filters+" Pie:"+filtersPie);
+		
 
-        if (!StringUtils.isEmpty(filters)) {
-
+        if (StringUtils.isEmpty(filters) && StringUtils.isEmpty(filtersPie)) {
+		  //Cuando inicia pagina, ambos filtros vacios
+		  println("****ambos filtros vacios:")
+          records = IncidentService.count("",user_id)
+          panel = IncidentService.list(rows, page, "",user_id)		
+		} else if (!StringUtils.isEmpty(filters) && StringUtils.isEmpty(filtersPie)) {
+		  //Filtra cuando usuario no hace click en Pie y usa filtros de grilla
+		  println("****NO click en Pie y usa filtros:")
           val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
 
           if (!jObject.\\("rules").isEmpty) {
@@ -553,11 +562,20 @@ object Incident extends Controller {
                       qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("status_id", m.data) + " AND "
                   } else if (m.field.equals("department")) {
                     if (m.data.toInt != 0)
-                      qrystr += "dId" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("state")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("configuration_id")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("delay")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "delay" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
                   } else if (m.field.equals("task_title")) {
                     if (m.data!=null){
                       qrystr += "brief_description" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
-                    }
+                  }
                   }else {
                     qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
                   }
@@ -565,7 +583,7 @@ object Incident extends Controller {
 
               }
             }
-            //println("qrystr:" + qrystr)
+            println("qrystr:" + qrystr)
             if (tieneJson) {
               records = IncidentService.count(qrystr, user_id)
               panel = IncidentService.list(rows, page, qrystr, user_id)
@@ -576,11 +594,196 @@ object Incident extends Controller {
 
             }
           }
-        } else {
-          records = IncidentService.count("",user_id)
-          panel = IncidentService.list(rows, page, "",user_id)
+        } else if (StringUtils.isEmpty(filters) && !StringUtils.isEmpty(filtersPie)){
+		  //Filtra cuando usuario hace click en Pie y NO usa filtros de grilla
+		  println("****hace click en Pie y NO usa filtros:")
+          val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filtersPie)
 
-        }
+          if (!jObject.\\("rules").isEmpty) {
+
+            val jList = jObject.\\("rules")
+            var jElement = ""
+            for (j <- jList) {
+              jElement = j.toString()
+              if (jElement.equals("[]")) {
+                tieneJson = false
+              } else {
+
+                implicit val formats = DefaultFormats
+                val json = net.liftweb.json.JsonParser.parse(filtersPie)
+                val elements = (json \\ "rules").children
+                for (acct <- elements) {
+                  val m = acct.extract[DBFilter]
+                  if (m.field.equals("owner_name")) {
+                    qrystr += "task_owner_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
+                  } else if (m.field.equals("sponsor_name")) {
+                    qrystr += "user_sponsor_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
+                  } else if (m.field.equals("severity_description")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "severity_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("severity_id", m.data) + " AND "
+                  } else if (m.field.equals("status_name")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("status_id", m.data) + " AND "
+                  } else if (m.field.equals("department")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("state")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("configuration_id")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("delay")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "delay" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("task_title")) {
+                    if (m.data!=null){
+                      qrystr += "brief_description" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  }
+                  }else {
+                    qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  }
+                }
+
+              }
+            }
+            println("qrystr:" + qrystr)
+            if (tieneJson) {
+              records = IncidentService.count(qrystr, user_id)
+              panel = IncidentService.list(rows, page, qrystr, user_id)
+
+            } else {
+              records = IncidentService.count("", user_id)
+              panel = IncidentService.list(rows, page, "", user_id)
+
+            }
+          }		
+        } else if (!StringUtils.isEmpty(filters) && !StringUtils.isEmpty(filtersPie)) {
+		  //Filtra cuando usuario hace click en Pie y usa filtros de grilla
+		  println("*****hace click en Pie y usa filtros")
+		  
+		  //Filtros grilla
+          val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+          if (!jObject.\\("rules").isEmpty) {
+            val jList = jObject.\\("rules")
+            var jElement = ""
+            for (j <- jList) {
+              jElement = j.toString()
+              if (jElement.equals("[]")) {
+                tieneJson = false
+              } else {
+
+                implicit val formats = DefaultFormats
+                val json = net.liftweb.json.JsonParser.parse(filters)
+                val elements = (json \\ "rules").children
+                for (acct <- elements) {
+                  val m = acct.extract[DBFilter]
+                  if (m.field.equals("owner_name")) {
+                    qrystr += "task_owner_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
+                  } else if (m.field.equals("sponsor_name")) {
+                    qrystr += "user_sponsor_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
+                  } else if (m.field.equals("severity_description")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "severity_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("severity_id", m.data) + " AND "
+                  } else if (m.field.equals("status_name")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("status_id", m.data) + " AND "
+                  } else if (m.field.equals("department")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("state")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("configuration_id")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("delay")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "delay" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("task_title")) {
+                    if (m.data!=null){
+                      qrystr += "brief_description" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  }
+                  }else {
+                    qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  }
+                }
+
+              }
+            }
+            println("qrystr:" + qrystr)
+            if (tieneJson) {
+              records = IncidentService.count(qrystr, user_id)
+              panel = IncidentService.list(rows, page, qrystr, user_id)
+
+            } else {
+              records = IncidentService.count("", user_id)
+              panel = IncidentService.list(rows, page, "", user_id)
+
+            }
+          }		
+
+		  //Filtros Pie
+          val jObject2: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filtersPie)
+          if (!jObject2.\\("rules").isEmpty) {
+            val jList = jObject2.\\("rules")
+            var jElement = ""
+            for (j <- jList) {
+              jElement = j.toString()
+              if (jElement.equals("[]")) {
+                tieneJson = false
+              } else {
+
+                implicit val formats = DefaultFormats
+                val json = net.liftweb.json.JsonParser.parse(filtersPie)
+                val elements = (json \\ "rules").children
+                for (acct <- elements) {
+                  val m = acct.extract[DBFilter]
+                  if (m.field.equals("owner_name")) {
+                    qrystr += "task_owner_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
+                  } else if (m.field.equals("sponsor_name")) {
+                    qrystr += "user_sponsor_id IN (SELECT uid from art_user where first_name like '%" + m.data + "%' OR last_name like '%" + m.data + "%')" + " AND "
+                  } else if (m.field.equals("severity_description")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "severity_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("severity_id", m.data) + " AND "
+                  } else if (m.field.equals("status_name")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("status_id", m.data) + " AND "
+                  } else if (m.field.equals("department")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("state")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "status_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("configuration_id")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "configuration_id" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("delay")) {
+                    if (m.data.toInt != 0)
+                      qrystr += "delay" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName("dId", m.data) + " AND "
+                  } else if (m.field.equals("task_title")) {
+                    if (m.data!=null){
+                      qrystr += "brief_description" + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  }
+                  }else {
+                    qrystr += m.field + FormattedOutPuts.fromPredicate(m.op) + fromIncidentName(m.field, m.data) + " AND "
+                  }
+                }
+
+              }
+            }
+            println("qrystr:" + qrystr)
+            if (tieneJson) {
+              records = IncidentService.count(qrystr, user_id)
+              panel = IncidentService.list(rows, page, qrystr, user_id)
+
+            } else {
+              records = IncidentService.count("", user_id)
+              panel = IncidentService.list(rows, page, "", user_id)
+
+            }
+          }			  
+		}
 
         var registro = new JSONArray()
         for (p <- panel) {
@@ -609,7 +812,7 @@ object Incident extends Controller {
           campo.put("owner_name", p.owner_name)
           campo.put("severity_description", p.severity_description)
           campo.put("status_name", p.status_name)
-          campo.put("department", p.department)
+          //campo.put("department", p.department)
           campo.put("uname", p.uname)
           
 
@@ -673,7 +876,14 @@ object Incident extends Controller {
     val incidents = IncidentService.selectSeverity
     Ok(play.api.libs.json.Json.toJson(incidents))
   }
-  
+
+  def typeList = Action { implicit request =>
+
+    val incidents = IncidentService.selectTypeIncident
+    Ok(play.api.libs.json.Json.toJson(incidents))
+  }
+
+
   def serviceCatalogList = Action { implicit request =>
 
     val disciplines = ServiceCatalogueService.getIncidentServiceCatalogue
@@ -925,32 +1135,101 @@ object Incident extends Controller {
   }
   
   
-  def pieIncident = Action { implicit request =>
+  def pieIncident(id: Int) = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val pie = IncidentService.pieChart
+      val pie = IncidentService.pieChart(id)
 
-      var node = new JSONObject()
+      val node = new JSONObject()
 
       node.put("showInLegend", false)
-      node.put("titulo", "Incidencias por Departamento")
-      var puntos = new JSONArray()
-      for (p <- pie) {
-        var punto = new JSONObject()
-        punto.put("dId", p.dId)
-        punto.put("name", p.division + " (" + p.cantidad + ")")
-        punto.put("y", p.cantidad)
-        //punto.put("porcentaje", p.porcentaje)
+      //node.put("titulo", "Incidentes por Tipo")
 
-        puntos.put(punto)
+      id match {
+        case 1 =>
+          node.put("titulo", "Incidentes por Tipo")
+        case 2 =>
+          node.put("titulo", "Incidentes por Estado")
+        case 3 =>
+          node.put("titulo", "Incidentes por Atraso")
+      }
+
+
+      val puntos = new JSONArray()
+      if(id==3) {
+        for (p <- pie) {
+          val punto = new JSONObject()
+          punto.put("dId", p.dId)
+          punto.put("name", p.division + " (" + p.cantidad + ")")
+          punto.put("y", p.cantidad)
+          if(p.dId == 1) {
+            punto.put("color", "green")
+          }else if(p.dId == 2) {
+            punto.put("color", "yellow")
+          }else if(p.dId == 3) {
+            punto.put("color", "red")
+          }
+
+          puntos.put(punto)
+        }
+      }else{
+        for (p <- pie) {
+          val punto = new JSONObject()
+          punto.put("dId", p.dId)
+          punto.put("name", p.division + " (" + p.cantidad + ")")
+          punto.put("y", p.cantidad)
+
+          puntos.put(punto)
+        }
+
       }
 
       node.put("data", puntos)
 
-      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
-  }    
+  }
+
+  def pieIncidentCompose(id: Int) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val pie = IncidentService.pieChartCompose(id)
+      val title = IncidentService.getConfigurationById(id)
+
+      val node = new JSONObject()
+
+      node.put("showInLegend", false)
+
+      node.put("titulo", "Incidentes por Estado para " + title)
+
+
+      val puntos = new JSONArray()
+        for (p <- pie) {
+          val punto = new JSONObject()
+          punto.put("dId", p.dId)
+          punto.put("name", p.division + " (" + p.cantidad + ")")
+          punto.put("y", p.cantidad)
+
+          puntos.put(punto)
+        }
+
+
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
 }
