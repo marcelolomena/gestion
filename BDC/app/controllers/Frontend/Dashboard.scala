@@ -2431,7 +2431,7 @@ object Dashboard extends Controller {
       val uid = request.session.get("uId").get
       val info = DashboardService.manager()
       //Logger.debug(info.toString())
-      Logger.debug(Json.toJson(info).toString)
+      //Logger.debug(Json.toJson(info).toString)
 
       val node = new JSONObject()
       node.put("data", Json.toJson(info))

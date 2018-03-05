@@ -10,58 +10,53 @@ import play.api.libs.json._
   */
 
 case class Report(
-                   id: Int,
-                   tipo: String
-                 /*
-                   program_id: Int,
-                   program_name: Option[String],
-                   period_art: Int,
-                   period_rrhh: Int,
-                   email: String,
-                   nombre_lider: Option[String],
-                   program_type: Option[String],
-                   work_flow_status: Option[String],
-                   cod_div: Option[Int],
-                   name_div: Option[String],
-                   cod_man: Option[Int],
-                   name_man: Option[String],
-                   cod_dep: Option[Int],
-                   name_dep: Option[String],
-                   project_id: Option[Int],
-                   project_name: Option[String],
-                   task_id: Option[Int],
-                   task_name: Option[String],
-                   subtask_id: Option[Int],
-                   subtask_name: Option[String],
-                   hours: Option[BigDecimal],
-                   plan_start_date:Option[Date],
-                  plan_end_date: Option[Date],
-                  estimated_time: Option[BigDecimal],
-                  completion_percentage: Option[BigDecimal],
-                  expected_percentage: Option[BigDecimal],
-                  real_start_date: Option[Date],
-                  real_end_date: Option[Date],
-                  valor_ganado_esperado: Option[BigDecimal],
-                  valor_ganado: Option[BigDecimal],
+                  program_id: Int,
+                  program_name: Option[String],
+                  nombre_lider: Option[String],
+                  program_type: Option[String],
+                  work_flow_status: Option[String],
+                  name_div: Option[String],
+                  name_man: Option[String],
+                  name_dep: Option[String],
                   spi: Option[BigDecimal],
-                  cpi: Option[BigDecimal],
-                  ha: Option[BigDecimal],
-                  ev: Option[BigDecimal],
-                  pv: Option[BigDecimal],
-                  pai: Option[BigDecimal],
-                  pae: Option[BigDecimal]
-                  */
-                 )
-
+                  cpi: Option[BigDecimal]
+ )
 
 object Report {
 
   val report = {
-    get[Int]("id") ~
-      get[String]("tipo") map {
-      case   id ~
-        tipo  => Report(id ,
-        tipo )
+      get[Int]("program_id") ~
+      get[Option[String]]("program_name") ~
+      get[Option[String]]("nombre_lider") ~
+      get[Option[String]]("program_type") ~
+      get[Option[String]]("work_flow_status") ~
+      get[Option[String]]("name_div") ~
+      get[Option[String]]("name_man") ~
+      get[Option[String]]("name_dep") ~
+      get[Option[BigDecimal]]("spi") ~
+      get[Option[BigDecimal]]("cpi")  map {
+      case
+        program_id ~
+        program_name ~
+        nombre_lider ~
+        program_type ~
+        work_flow_status ~
+        name_div ~
+        name_man ~
+        name_dep ~
+        spi ~
+        cpi => Report(
+        program_id ,
+        program_name ,
+        nombre_lider ,
+        program_type ,
+        work_flow_status ,
+        name_div ,
+        name_man,
+        name_dep ,
+        spi ,
+        cpi
+        )
     }
 
   }
@@ -69,47 +64,16 @@ object Report {
   implicit object ReportFormat extends Format[Report] {
     def writes(report: Report): JsValue = {
       val reportSeq = Seq(
-        "id" -> JsNumber(report.id),
-        "tipo" -> JsString(report.tipo)
-/*
         "program_id" -> JsNumber(report.program_id),
         "program_name" -> JsString(report.program_name.get),
-        "period_art" -> JsNumber(report.period_art),
-        "period_rrhh" -> JsNumber(report.period_rrhh),
-        "email" -> JsString(report.email),
         "nombre_lider" -> JsString(report.nombre_lider.get),
         "program_type" -> JsString(report.program_type.get),
         "work_flow_status" -> JsString(report.work_flow_status.get),
-        "cod_div" -> JsNumber(report.cod_div.get),
-        "name_div" -> JsString(report.name_div.get),
-        "cod_man" -> JsNumber(report.cod_man.get),
-        "name_man" -> JsString(report.name_man.get),
-        "cod_dep" -> JsNumber(report.cod_dep.get),
-        "name_dep" -> JsString(report.name_dep.get),
-        "project_id" -> JsNumber(report.project_id.get),
-        "project_name" -> JsString(report.project_name.get),
-        "task_id" -> JsNumber(report.task_id.get),
-        "task_name" -> JsString(report.task_name.get),
-        "subtask_id" -> JsString(report.task_name.get),
-        "subtask_name" -> JsString(report.subtask_name.get),
-        "hours" -> JsNumber(report.hours.get),
-        "plan_start_date" -> JsString(report.plan_start_date.get.toString),
-        "plan_end_date" -> JsString(report.plan_end_date.get.toString),
-        "estimated_time" -> JsNumber(report.estimated_time.get),
-        "completion_percentage" -> JsNumber(report.completion_percentage.get),
-        "expected_percentage" -> JsNumber(report.expected_percentage.get),
-        "real_start_date" -> JsString(report.real_start_date.get.toString),
-        "real_end_date" -> JsString(report.real_end_date.get.toString),
-        "valor_ganado_esperado" -> JsNumber(report.valor_ganado_esperado.get),
-        "valor_ganado" -> JsNumber(report.valor_ganado.get),
+        "name_div" -> JsString(report.name_div.getOrElse("")),
+        "name_man" -> JsString(report.name_man.getOrElse("")),
+        "name_dep" -> JsString(report.name_dep.getOrElse("")),
         "spi" -> JsNumber(report.spi.get),
-        "cpi" -> JsNumber(report.cpi.get),
-        "ha" -> JsNumber(report.ha.get),
-        "ev" -> JsNumber(report.ev.get),
-        "pv" -> JsNumber(report.pv.get),
-        "pai" -> JsNumber(report.pai.get),
-        "pae" -> JsNumber(report.pae.get)
-*/
+        "cpi" -> JsNumber(report.cpi.get)
       )
       JsObject(reportSeq)
     }
@@ -117,46 +81,15 @@ object Report {
     def reads(json: JsValue): JsResult[Report] = {
       JsSuccess(Report(
         0,
-        ""
-/*
-        0,
-        Option[String](""),
-        0,
-        0,
-        "",
         Option[String](""),
         Option[String](""),
         Option[String](""),
-        Option[Int](0),
         Option[String](""),
-        Option[Int](0),
         Option[String](""),
-        Option[Int](0),
         Option[String](""),
-        Option[Int](0),
         Option[String](""),
-        Option[Int](0),
-        Option[String](""),
-        Option[Int](0),
-        Option[String](""),
-        Option[BigDecimal](0),
-        Option[Date](new Date),
-        Option[Date](new Date),
-        Option[BigDecimal](0),
-        Option[BigDecimal](0),
-        Option[BigDecimal](0),
-        Option[Date](new Date),
-        Option[Date](new Date),
-        Option[BigDecimal](0),
-        Option[BigDecimal](0),
-        Option[BigDecimal](0),
-        Option[BigDecimal](0),
-        Option[BigDecimal](0),
-        Option[BigDecimal](0),
-        Option[BigDecimal](0),
         Option[BigDecimal](0),
         Option[BigDecimal](0)
-*/
       ))
     }
 

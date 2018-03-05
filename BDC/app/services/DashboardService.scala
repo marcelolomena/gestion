@@ -281,7 +281,22 @@ object DashboardService {
 
   def manager(): Seq[Report] = {
     DB.withConnection { implicit connection =>
-      val sqlString = "SELECT top 10 id,tipo from art_program_management"
+
+      val sqlString =
+        """
+          |SELECT TOP 10
+          |program_id,
+          |program_name,
+          |nombre_lider,
+          |program_type,
+          |work_flow_status,
+          |name_div,
+          |name_man,
+          |name_dep,
+          |spi,
+          |cpi
+          |FROM art_program_management
+        """.stripMargin
       SQL(sqlString).as(Report.report * )
     }
   }
