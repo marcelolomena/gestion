@@ -18,7 +18,7 @@ import services.TimesheetService
 import services.UserService
 import java.util.Calendar
 import java.util.Date
-
+import models.Report
 import models._
 //import play.libs.Json
 import play.api.libs.json._
@@ -455,16 +455,7 @@ object Dashboard extends Controller {
 
   }
 
-  def getPanel2 = Action {
-    implicit request =>
-      request.session.get("username").map { user =>
 
-        Ok(views.html.frontend.dashboard.panelTabs()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
-      }.getOrElse {
-        Redirect(routes.Login.loginUser()).withNewSession
-      }
-
-  }
 
 
   def getATM = Action {
@@ -2424,24 +2415,90 @@ object Dashboard extends Controller {
     }
   }
 
+  def getPanel2 = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+
+        Ok(views.html.frontend.dashboard.panelTabs()).withSession(
+          "username" -> request.session.get("username").get,
+          "utype" -> request.session.get("utype").get,
+          "uId" -> request.session.get("uId").get,
+          "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+
+  }
 
   def report = Action { implicit request =>
     request.session.get("username").map { user =>
 
       val uid = request.session.get("uId").get
-      val info = DashboardService.manager()
-      //Logger.debug(info.toString())
-      //Logger.debug(Json.toJson(info).toString)
+      val rows = request.getQueryString("rows").getOrElse("20").toInt
+      val page = request.getQueryString("page").getOrElse("1").toInt
 
-      val node = new JSONObject()
-      node.put("data", Json.toJson(info))
+      val filters = request.getQueryString("filters").getOrElse("").toString()
+      var qrystr = ""
 
+      if (!StringUtils.isEmpty(filters)) {
 
-      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
+
+        if (!jObject.\\("rules").isEmpty) {
+
+          val jList = jObject.\\("rules")
+          var jElement = ""
+          for (j <- jList) {
+            jElement = j.toString()
+            if (!jElement.equals("[]")) {
+
+              implicit val formats = DefaultFormats
+              val json = net.liftweb.json.JsonParser.parse(filters)
+              val elements = (json \\ "rules").children
+              for (acct <- elements) {
+                val m = acct.extract[DBFilter]
+                  if(m.data.toInt!=0)
+                    qrystr += m.field + "=" + m.data + " AND "
+              }
+
+            }
+          }
+        }
+      }
+      Logger.debug("qrystr ----------> " + qrystr)
+
+      val data = DashboardService.manager(page,rows,qrystr)
+      val records = DashboardService.countManager(qrystr)
+
+      val pagedisplay = Math.ceil(records.toInt / rows.toFloat).toInt
+
+      val grid = Grid(page, pagedisplay, records,Json.toJson(data))
+
+      Ok(Json.toJson(grid)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
+
+
+  def listAllDiv = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val div = DashboardService.findAllDivisionRRHH
+
+      Ok(Json.toJson(div)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
 
 }

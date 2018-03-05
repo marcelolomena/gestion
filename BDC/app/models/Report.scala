@@ -9,6 +9,21 @@ import play.api.libs.json._
   * @author marcelo
   */
 
+case class Grid(x: Int, y: Int, z: Int, v: JsValue)
+
+object Grid {
+  implicit val implicitGridWrites = new Writes[Grid] {
+    def writes(grid: Grid): JsValue = {
+      Json.obj(
+        "page" -> grid.x,
+        "total" -> grid.y,
+        "records" -> grid.z,
+        "rows" -> grid.v
+      )
+    }
+  }
+}
+
 case class Report(
                   program_id: Int,
                   program_name: Option[String],
@@ -18,6 +33,10 @@ case class Report(
                   name_div: Option[String],
                   name_man: Option[String],
                   name_dep: Option[String],
+                  plan_start_date: Option[Date],
+                  plan_end_date: Option[Date],
+                  pai: Option[BigDecimal],
+                  pae: Option[BigDecimal],
                   spi: Option[BigDecimal],
                   cpi: Option[BigDecimal]
  )
@@ -33,6 +52,10 @@ object Report {
       get[Option[String]]("name_div") ~
       get[Option[String]]("name_man") ~
       get[Option[String]]("name_dep") ~
+      get[Option[Date]]("plan_start_date") ~
+      get[Option[Date]]("plan_end_date") ~
+      get[Option[BigDecimal]]("pai") ~
+      get[Option[BigDecimal]]("pae")  ~
       get[Option[BigDecimal]]("spi") ~
       get[Option[BigDecimal]]("cpi")  map {
       case
@@ -44,6 +67,10 @@ object Report {
         name_div ~
         name_man ~
         name_dep ~
+          plan_start_date ~
+          plan_end_date ~
+          pai ~
+          pae ~
         spi ~
         cpi => Report(
         program_id ,
@@ -54,6 +81,10 @@ object Report {
         name_div ,
         name_man,
         name_dep ,
+        plan_start_date,
+        plan_end_date,
+        pai,
+        pae,
         spi ,
         cpi
         )
@@ -72,8 +103,12 @@ object Report {
         "name_div" -> JsString(report.name_div.getOrElse("")),
         "name_man" -> JsString(report.name_man.getOrElse("")),
         "name_dep" -> JsString(report.name_dep.getOrElse("")),
-        "spi" -> JsNumber(report.spi.get),
-        "cpi" -> JsNumber(report.cpi.get)
+        "plan_start_date" -> JsString(new java.text.SimpleDateFormat("yyyy-MM-dd").format(report.plan_start_date.getOrElse(""))),
+        "plan_end_date" -> JsString(new java.text.SimpleDateFormat("yyyy-MM-dd").format(report.plan_end_date.getOrElse(""))),
+        "pai" -> JsNumber(report.pai.getOrElse(0)),
+        "pae" -> JsNumber(report.pae.getOrElse(0)),
+        "spi" -> JsNumber(report.spi.getOrElse(0)),
+        "cpi" -> JsNumber(report.cpi.getOrElse(0))
       )
       JsObject(reportSeq)
     }
@@ -88,6 +123,10 @@ object Report {
         Option[String](""),
         Option[String](""),
         Option[String](""),
+        Option[Date](new Date),
+        Option[Date](new Date),
+        Option[BigDecimal](0),
+        Option[BigDecimal](0),
         Option[BigDecimal](0),
         Option[BigDecimal](0)
       ))

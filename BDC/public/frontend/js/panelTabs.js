@@ -28,19 +28,36 @@ $(document).ready(function(){
 	});
 	
 
-	var modelPie=[
+	var modelGrid=[
             { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
-            { label: 'Programa', name: 'programa', width: 250,formatter: returnProgramLink },
-            { label: 'Responsable', name: 'responsable', width: 200 },
-            { label: 'Fecha Inicio', name: 'fecini',width: 180,formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },
-            { label: 'Fecha Comprometida',   name: 'feccom', width: 180, formatter: 'date', formatoptions: { srcformat: 'Y-m-d',newformat: 'Y-m-d' } },
+            { label: 'Programa', name: 'program_name', width: 350,formatter: returnProgramLink },
+            { label: 'División', name: 'cod_div', jsonmap: 'name_div', width: 250,
+                		    stype: 'select',
+                			searchoptions: {
+                				dataUrl: '/list-all-divisions',
+                				buildSelect: function (response) {
+                					var data = JSON.parse(response);
+                					var s = "<select>";
+                					s += '<option value="0">--Escoger División--</option>';
+                					$.each(data, function(i, item) {
+                						s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
+                					});
+                					return s + "</select>";
+                				}
+                		    },
+            },
+            { label: 'Gerencia', name: 'name_man', width: 250 },
+            { label: 'Departamento', name: 'name_dep', width: 350 },
+            { label: 'Responsable', name: 'nombre_lider', width: 200 },
+            { label: 'Fecha Inicio', name: 'plan_start_date',width: 180 },
+            { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180 },
             { label: '% Avance', name: 'pai', width: 150 },
             { label: '% Plan', name: 'pae', width: 150 },
             { label: 'SPI', name: 'spi', width: 150 },
-            { label: 'CPI', name: 'cpi', width: 150 },
-            { label: 'Inversión', name: 'inversion', width: 150 },  
-            { label: 'Gasto', name: 'gasto', width: 150 }                      
+            { label: 'CPI', name: 'cpi', width: 150 }
         ];
+
+
 
 
 	var optionsPie ={
@@ -83,7 +100,8 @@ $(document).ready(function(){
 
     $("#tabs").tabs({
       beforeLoad: function( event, ui ) {
-        var url = ui.ajaxSettings.url;
+        var tourl = ui.ajaxSettings.url;
+        /*
         $.getJSON(url, function (data) {
                  charPie.update({
                      title: {
@@ -103,10 +121,27 @@ $(document).ready(function(){
                     series:data
                  });
 				 //Limpia grilla
-			     var chuurl="/incidentList";
-				 $("#jqGridIncident").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 
         });
+        */
+        console.log("tourl ---> : " + tourl)
+        var name = "lolo"
+		var grid =	$("#jqGrid").jqGrid({
+		        mtype: "GET",
+		        url: tourl,
+		        datatype: "json",
+		        page: 1,
+		        colModel: modelGrid,
+				viewrecords: true,
+				regional : "es",
+				height: 'auto',
+		        autowidth:true,
+		        rowNum: 20,
+		        pager: "#jqGridPager",
+		        ignoreCase: true
+		    }).jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
+
+        grid.jqGrid('setCaption', name).jqGrid('setGridParam', { url: tourl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 
         return false;
 

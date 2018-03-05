@@ -4,7 +4,7 @@ import play.api.db.DB;
 import anorm.SqlParser._;
 import models._;
 import anorm._
-
+import play.Logger
 object DashboardService {
 
   def reporteProgramaFiltrado(did: String, pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
@@ -279,28 +279,118 @@ object DashboardService {
     }
   }
 
-  def manager(): Seq[Report] = {
+  def manager(page: Int, end: Int, filter: String): Seq[Report] = {
     DB.withConnection { implicit connection =>
 
-      val sqlString =
-        """
-          |SELECT TOP 10
-          |program_id,
-          |program_name,
-          |nombre_lider,
-          |program_type,
-          |work_flow_status,
-          |name_div,
-          |name_man,
-          |name_dep,
-          |spi,
-          |cpi
-          |FROM art_program_management
-        """.stripMargin
-      SQL(sqlString).as(Report.report * )
+      val ini = end * (page - 1)
+
+      var sqlString = ""
+
+      var result: Seq[Report] = null
+
+      if(!filter.isEmpty) {
+
+        sqlString =
+          """
+            SELECT
+            program_id,
+            program_name,
+            nombre_lider,
+            program_type,
+            work_flow_status,
+            name_div,
+            name_man,
+            name_dep,
+            plan_start_date,
+            plan_end_date,
+            ROUND(pai,2) pai,
+            ROUND(pae,2) pae,
+            ROUND(spi,2) spi,
+            ROUND(cpi,2) cpi
+            FROM art_program_management
+            WHERE """ + filter + """
+            tipo ='PROGRAMA'
+            ORDER BY program_name OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
+          """.stripMargin
+
+        result =SQL(sqlString).on('ini -> ini,'end -> end,'filter->filter).as(Report.report * )
+
+      } else {
+
+        sqlString =
+          """
+            |SELECT
+            |program_id,
+            |program_name,
+            |nombre_lider,
+            |program_type,
+            |work_flow_status,
+            |name_div,
+            |name_man,
+            |name_dep,
+            |plan_start_date,
+            |plan_end_date,
+            |ROUND(pai,2) pai,
+            |ROUND(pae,2) pae,
+            |ROUND(spi,2) spi,
+            |ROUND(cpi,2) cpi
+            |FROM art_program_management
+            |WHERE
+            |tipo ='PROGRAMA'
+            |ORDER BY program_name OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
+          """.stripMargin
+
+        result = SQL(sqlString).on('ini -> ini,'end -> end,'filter->filter).as(Report.report * )
+
+      }
+
+      result
+
     }
   }
 
+  def countManager(filter: String): Int = {
+    DB.withConnection { implicit connection =>
+      var sqlString = ""
+      var ret: Int = 0
+      if(!filter.isEmpty) {
+        sqlString =
+          """
+            SELECT count(*)
+            FROM art_program_management
+            WHERE """ + filter + """
+            tipo ='PROGRAMA'
+          """.stripMargin
+        ret=SQL(sqlString).on('filter -> filter).as(scalar[Int].single)
+      }else{
+        sqlString =
+          """
+            |SELECT count(*)
+            |FROM art_program_management
+            |WHERE
+            |tipo ='PROGRAMA'
+          """.stripMargin
+        ret=SQL(sqlString).as(scalar[Int].single)
+
+      }
+
+      ret
+    }
+  }
+
+
+  def findAllDivisionRRHH(): Seq[DivisionsList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT DISTINCT codDivision,glosaDivision FROM RecursosHumanos
+          |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |ORDER BY glosaDivision
+        """.stripMargin
+
+      SQL(sqlstr).as(DivisionsList.divisionList *)
+    }
+  }
 
 
 }
