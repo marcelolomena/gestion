@@ -310,6 +310,11 @@ function excel(req, res) {
       width: 10
     },
     {
+      caption: 'Cantidad Compradas por Producto',
+      type: 'string',
+      width: 10
+    },
+    {
       caption: 'Instalada por Producto',
       type: 'string',
       width: 10
