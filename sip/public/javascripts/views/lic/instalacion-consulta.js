@@ -249,7 +249,7 @@ $(document).ready(function () {
         width: 200,
         hidden: false,
         editable: false,
-        search: false,
+        search: true,
         sortable: false
     }      
 ];

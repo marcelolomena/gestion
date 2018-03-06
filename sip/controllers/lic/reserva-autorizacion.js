@@ -44,71 +44,76 @@ function map(req) {
 }
 
 
-function listAuto(req, res) {
-    var id = req.params.id;
-    var aprob = 'Aprobado'
-    var autorizado = 'Autorizado'
-    var denegado = 'Denegado'
-    var page = 1
-    var rows = 10
-    var filters = req.params.filters
-    utilSeq.buildCondition(filters, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
-            //logger.debug(data)
-            models.reserva.belongsTo(models.producto, {
-                foreignKey: 'idProducto'
-            });
-            models.reserva.belongsTo(models.user, {
-                as: 'solicitante',
-                foreignKey: 'idUsuario'
-            });
-            models.reserva.belongsTo(models.user, {
-                as: 'aprobador',
-                foreignKey: 'idUsuarioJefe'
-            });
-
-            models.reserva.count({
-                where: {
-                    estado: [aprob, autorizado, denegado]
-                },
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.reserva.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    order: ['estado'],
-                    where: {
-                        estado: [aprob, autorizado, denegado]
-                    },
-                    include: [{
-                        model: models.producto
-                    }, {
-                        model: models.user,
-                        as: 'solicitante'
-                    }, {
-                        model: models.user,
-                        as: 'aprobador'
-                    }]
-                }).then(function (autorizados) {
-                    //logger.debug(solicitudcotizacion)
-                    return res.json({
-                        records: records,
-                        total: total,
-                        page: page,
-                        rows: autorizados
-                    });
-                }).catch(function (err) {
-                    logger.error(err);
-                    return res.json({
-                        error_code: 1
-                    });
-                });
-            })
-        }
-    });
-}
+function listAuto(req, res) {    
+    var page = req.query.page;
+    var rowspp = req.query.rows;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var cui = req.params.cui
+    var periodo = req.params.periodo
+    var proveedor = req.params.proveedor
+    var filters = req.query.filters;
+    var condition = "";
+  
+    if (filters) {
+      var jsonObj = JSON.parse(filters);
+      if (JSON.stringify(jsonObj.rules) != '[]') {
+        jsonObj.rules.forEach(function (item) {
+          if (item.data != '0') {
+            if (item.op === 'cn' || item.op === 'eq')
+              if (item.field == 'codautorizacion' ) {//Excepciones en filtros
+                condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
+              } else {
+                condition += 'a.' + item.field + "=" + item.data + " AND ";
+              }
+          }
+        });
+        condition = condition.substring(0, condition.length - 5);
+        logger.debug("***CONDICION:" + condition);
+      }
+    }
+    var sqlcount;
+    sqlcount = "SELECT count(*)  FROM lic.reserva a "+
+    "LEFT JOIN lic.producto b ON b.id = a.idproducto  "+
+    "LEFT JOIN art_user c ON c.uid=a.idusuario  "+
+    "LEFT JOIN art_user d ON d.uid=a.idusuariojefe "+
+    "WHERE a.estado IN ('Aprobado', 'Autorizado', 'Denegado') ";
+  
+    if (filters && condition != "") {
+      sqlcount += " and " + condition + " ";
+    }
+  
+    var sql;
+    sql = "DECLARE @PageSize INT; " +
+      "SELECT @PageSize=" + rowspp + "; " +
+      "DECLARE @PageNumber INT; " +
+      "SELECT @PageNumber=" + page + "; " +
+      "SELECT a.*, b.nombre, c.first_name+' '+c.last_name AS solicitante, d.first_name+' '+d.last_name AS aprobador  "+
+      "FROM lic.reserva a "+
+      "LEFT JOIN lic.producto b ON b.id = a.idproducto "+
+      "LEFT JOIN art_user c ON c.uid=a.idusuario "+
+      "LEFT JOIN art_user d ON d.uid=a.idusuariojefe "+
+      "WHERE a.estado IN ('Aprobado', 'Autorizado', 'Denegado') ";
+    if (filters && condition != "") {
+      sql += " AND " + condition + " ";
+      logger.debug("**" + sql + "**");
+    }
+    var sql2 = sql + " ORDER BY a.estado OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+    var records;
+    logger.debug("query:" + sql2);
+  
+    sequelize.query(sqlcount).spread(function (recs) {
+      var records = recs[0].count;
+      var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+      sequelize.query(sql2).spread(function (rows) {
+        return res.json({ records: records, total: total, page: page, rows: rows });
+      }).catch(function (err) {
+        logger.error(err)
+        return res.json({ error_code: 1 });
+      });
+    })
+  }
+  
 
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
@@ -164,5 +169,17 @@ module.exports = {
     list: list,
     action: action,
     usuariocui: usuariocui,
-    listAuto: listAuto
+    listAuto: listAuto,
+    getProductoReserva: getProductoReserva
 };
+
+function getProductoReserva(req, res) {
+    var idFabricante = req.params.idFabricante;
+    var sql = 'select distinct a.id, a.nombre from lic.producto a '+
+            'join lic.reserva b on a.id = b.idproducto';
+    sequelize.query(sql)
+      .spread(function (rows) {
+        return res.json(rows);
+      });
+  
+  };

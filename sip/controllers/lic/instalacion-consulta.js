@@ -23,7 +23,7 @@ exports.list = function (req, res) {
       jsonObj.rules.forEach(function (item) {
         if (item.data != '0') {
           if (item.op === 'cn' || item.op === 'eq')
-            if (item.field == 'nombre') {
+            if (item.field == 'codautorizacion' ) {
               condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
             } else {
               condition += 'a.' + item.field + "=" + item.data + " AND ";
