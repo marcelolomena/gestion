@@ -2500,5 +2500,34 @@ object Dashboard extends Controller {
     }
   }
 
+  def listAllMan = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val man = DashboardService.findAllManagerRRHH()
+
+      Ok(Json.toJson(man)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def listAllDep = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val dep = DashboardService.findAllDepartamentRRHH()
+
+      Ok(Json.toJson(dep)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
 
 }

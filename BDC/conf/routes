@@ -388,6 +388,8 @@ GET    /dashboard-issue-report                                                  
 GET    /issue-report-tasks                                                                            controllers.Frontend.Dashboard.issueReportForTasks
 GET    /issue-report-subtasks                                                                         controllers.Frontend.Dashboard.issueReportForSubtasks
 GET    /list-all-divisions                                                                            controllers.Frontend.Dashboard.listAllDiv
+GET    /list-all-manager                                                                              controllers.Frontend.Dashboard.listAllMan
+GET    /list-all-departament                                                                          controllers.Frontend.Dashboard.listAllDep
 GET    /search-projects                                                                               controllers.Frontend.Login.userSearchSetting
 
 

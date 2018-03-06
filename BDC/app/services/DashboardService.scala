@@ -385,6 +385,7 @@ object DashboardService {
         """
           |SELECT DISTINCT codDivision,glosaDivision FROM RecursosHumanos
           |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND codDivision in (SELECT DISTINCT cod_div FROM art_program_management)
           |ORDER BY glosaDivision
         """.stripMargin
 
@@ -392,5 +393,33 @@ object DashboardService {
     }
   }
 
+
+  def findAllManagerRRHH(): Seq[DivisionsList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT DISTINCT codArea AS codDivision,glosaArea AS glosaDivision FROM RecursosHumanos
+          |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND codArea in (SELECT DISTINCT cod_man FROM art_program_management)
+          |ORDER BY glosaArea
+        """.stripMargin
+
+      SQL(sqlstr).as(DivisionsList.divisionList *)
+    }
+  }
+
+  def findAllDepartamentRRHH(): Seq[DivisionsList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT DISTINCT codDepartamento AS codDivision,glosaDepartamento AS glosaDivision FROM RecursosHumanos
+          |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND codDepartamento in (SELECT DISTINCT cod_dep FROM art_program_management)
+          |ORDER BY glosaDepartamento
+        """.stripMargin
+
+      SQL(sqlstr).as(DivisionsList.divisionList *)
+    }
+  }
 
 }

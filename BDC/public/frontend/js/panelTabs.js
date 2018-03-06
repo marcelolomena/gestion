@@ -46,8 +46,36 @@ $(document).ready(function(){
                 				}
                 		    },
             },
-            { label: 'Gerencia', name: 'name_man', width: 250 },
-            { label: 'Departamento', name: 'name_dep', width: 350 },
+            { label: 'Gerencia', name: 'cod_man', jsonmap: 'name_man', width: 250,
+                         		    stype: 'select',
+                         			searchoptions: {
+                         				dataUrl: '/list-all-manager',
+                         				buildSelect: function (response) {
+                         					var data = JSON.parse(response);
+                         					var s = "<select>";
+                         					s += '<option value="0">--Escoger Gerencia--</option>';
+                         					$.each(data, function(i, item) {
+                         						s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
+                         					});
+                         					return s + "</select>";
+                         				}
+                         		    },
+            },
+            { label: 'Departamento', name: 'cod_dep', jsonmap: 'name_dep', width: 350,
+                         		    stype: 'select',
+                         			searchoptions: {
+                         				dataUrl: '/list-all-departament',
+                         				buildSelect: function (response) {
+                         					var data = JSON.parse(response);
+                         					var s = "<select>";
+                         					s += '<option value="0">--Escoger Departamento--</option>';
+                         					$.each(data, function(i, item) {
+                         						s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
+                         					});
+                         					return s + "</select>";
+                         				}
+                         		    },
+            },
             { label: 'Responsable', name: 'nombre_lider', width: 200 },
             { label: 'Fecha Inicio', name: 'plan_start_date',width: 180 },
             { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180 },
