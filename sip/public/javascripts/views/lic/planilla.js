@@ -473,11 +473,11 @@
         {
             label: 'Cant. Compradas por Producto',
             name: 'licstock',
-            width: 125,
+            width: 200,
             align: 'center',
             sortable: false,
             editable: true,
-            hidden: true,
+            hidden: false,
             editoptions: {
                 defaultValue: '0'
             },

@@ -310,6 +310,11 @@ function excel(req, res) {
       width: 10
     },
     {
+      caption: 'Cantidad Compradas por Producto',
+      type: 'string',
+      width: 10
+    },
+    {
       caption: 'Instalada por Producto',
       type: 'string',
       width: 10
@@ -338,7 +343,7 @@ function excel(req, res) {
   var sql = "SELECT b.contrato, b.ordencompra, convert(VARCHAR(10), b.idcui) as idcui, convert(VARCHAR(10), b.sap) as sap, c.nombre as nombreFab, h.razonsocial, a.nombre, f.nombre as nombreTipoInst, d.nombre as nombreClas,  " +
     "e.nombre as nombreTipoLic, convert(VARCHAR(10), b.fechacompra,105) as fechacompra, convert(VARCHAR(10), b.fechaexpiracion,105) as fechaexpiracion,  b.perpetua,  " +
     "convert(VARCHAR(10), b.liccompradas) as liccompradas, g.moneda, Format( valorlicencia ,'N','en-US' ) as valorlicencia, Format( valorsoporte ,'N','en-US' ) as valorsoporte,  " +
-    "convert(VARCHAR(10), b.fecharenovasoporte,105) as fecharenovasoporte, b.factura, convert(VARCHAR(10), a.licstock) as licstock, b.alertarenovacion, b.comprador, b.correocomprador, b.comentario  " +
+    "convert(VARCHAR(10), b.fecharenovasoporte,105) as fecharenovasoporte, b.factura, convert(VARCHAR(10), a.licstock) as licstock, convert(VARCHAR(10), a.licocupadas) as licocupadas, b.alertarenovacion, b.comprador, b.correocomprador, b.comentario  " +
     "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto  " +
     "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id  " +
     "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id  " +
@@ -382,6 +387,7 @@ function excel(req, res) {
           (planilla[i].fecharenovasoporte == null) ? '' : planilla[i].fecharenovasoporte,
           (planilla[i].factura == null) ? '' : planilla[i].factura,
           (planilla[i].licstock == null) ? '' : planilla[i].licstock,
+          (planilla[i].licocupadas == null) ? '' : planilla[i].licocupadas,
           alerta,
           (planilla[i].comprador == null) ? '' : planilla[i].comprador,
           (planilla[i].correocomprador == null) ? '' : planilla[i].correocomprador,
