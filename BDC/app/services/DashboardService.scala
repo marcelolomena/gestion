@@ -279,7 +279,7 @@ object DashboardService {
     }
   }
 
-  def manager(page: Int, end: Int, filter: String): Seq[Report] = {
+  def manager(page: Int, end: Int, filter: String, order: String): Seq[Report] = {
     DB.withConnection { implicit connection =>
 
       val ini = end * (page - 1)
@@ -309,8 +309,8 @@ object DashboardService {
             ROUND(cpi,2) cpi
             FROM art_program_management
             WHERE """ + filter + """
-            tipo ='PROGRAMA'
-            ORDER BY program_name OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
+            tipo ='PROGRAMA' """ + order  + """
+            OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
           """.stripMargin
 
         result =SQL(sqlString).on('ini -> ini,'end -> end,'filter->filter).as(Report.report * )
@@ -319,25 +319,25 @@ object DashboardService {
 
         sqlString =
           """
-            |SELECT
-            |program_id,
-            |program_name,
-            |nombre_lider,
-            |program_type,
-            |work_flow_status,
-            |name_div,
-            |name_man,
-            |name_dep,
-            |plan_start_date,
-            |plan_end_date,
-            |ROUND(pai,2) pai,
-            |ROUND(pae,2) pae,
-            |ROUND(spi,2) spi,
-            |ROUND(cpi,2) cpi
-            |FROM art_program_management
-            |WHERE
-            |tipo ='PROGRAMA'
-            |ORDER BY program_name OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
+            SELECT
+            program_id,
+            program_name,
+            nombre_lider,
+            program_type,
+            work_flow_status,
+            name_div,
+            name_man,
+            name_dep,
+            plan_start_date,
+            plan_end_date,
+            ROUND(pai,2) pai,
+            ROUND(pae,2) pae,
+            ROUND(spi,2) spi,
+            ROUND(cpi,2) cpi
+            FROM art_program_management
+            WHERE
+            tipo ='PROGRAMA' """ + order  + """
+            OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
           """.stripMargin
 
         result = SQL(sqlString).on('ini -> ini,'end -> end,'filter->filter).as(Report.report * )
@@ -419,6 +419,39 @@ object DashboardService {
         """.stripMargin
 
       SQL(sqlstr).as(DivisionsList.divisionList *)
+    }
+  }
+
+  def findAllUserActiveProgram(): Seq[DivisionsList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |select DISTINCT uid AS codDivision,nombre_lider AS glosaDivision from art_program_management where tipo='PROGRAMA' ORDER BY nombre_lider
+        """.stripMargin
+
+      SQL(sqlstr).as(DivisionsList.divisionList *)
+    }
+  }
+
+  def findAllStatusProgram(): Seq[DummyList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT  DISTINCT work_flow_status name,work_flow_status value FROM art_program_management WHERE work_flow_status IS NOT NULL AND tipo='PROGRAMA'
+        """.stripMargin
+
+      SQL(sqlstr).as(DummyList.dummyList *)
+    }
+  }
+
+  def findAllTypeProgram(): Seq[DummyList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT  DISTINCT program_type name, program_type value FROM art_program_management WHERE program_type IS NOT NULL AND tipo='PROGRAMA'
+        """.stripMargin
+
+      SQL(sqlstr).as(DummyList.dummyList *)
     }
   }
 

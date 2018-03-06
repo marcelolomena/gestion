@@ -77,3 +77,25 @@ object DivisionsList extends CustomColumns {
   implicit val divisionListWrites = Json.writes[DivisionsList]
 
 }
+case class DummyList(
+                          name: String,
+                          value: String
+                        )
+
+object DummyList extends CustomColumns {
+
+  val dummyList = {
+    get[String]("name") ~
+      get[String]("value") map {
+      case
+        name ~
+          value
+      => DummyList(
+        name,
+        value
+      )
+    }
+  }
+  implicit val dummyListWrites = Json.writes[DummyList]
+
+}

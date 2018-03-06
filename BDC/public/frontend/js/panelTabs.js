@@ -29,8 +29,38 @@ $(document).ready(function(){
 	
 
 	var modelGrid=[
-            { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
+            { label: 'id', name: 'program_id', width: 50, key: true, hidden:true },
             { label: 'Programa', name: 'program_name', width: 350,formatter: returnProgramLink },
+            { label: 'Estado', name: 'work_flow_status', jsonmap: 'work_flow_status', width: 250,
+                		    stype: 'select',
+                			searchoptions: {
+                				dataUrl: '/list-all-workflowstatus',
+                				buildSelect: function (response) {
+                					var data = JSON.parse(response);
+                					var s = "<select>";
+                					s += '<option value="0">--Escoger Estado--</option>';
+                					$.each(data, function(i, item) {
+                						s += '<option value="' + data[i].value + '">' + data[i].name + '</option>';
+                					});
+                					return s + "</select>";
+                				}
+                		    },
+            },
+            { label: 'Tipo', name: 'program_type', jsonmap: 'program_type', width: 250,
+                		    stype: 'select',
+                			searchoptions: {
+                				dataUrl: '/list-all-programtype',
+                				buildSelect: function (response) {
+                					var data = JSON.parse(response);
+                					var s = "<select>";
+                					s += '<option value="0">--Escoger Tipo--</option>';
+                					$.each(data, function(i, item) {
+                						s += '<option value="' + data[i].value + '">' + data[i].name + '</option>';
+                					});
+                					return s + "</select>";
+                				}
+                		    },
+            },
             { label: 'División', name: 'cod_div', jsonmap: 'name_div', width: 250,
                 		    stype: 'select',
                 			searchoptions: {
@@ -76,16 +106,154 @@ $(document).ready(function(){
                          				}
                          		    },
             },
-            { label: 'Responsable', name: 'nombre_lider', width: 200 },
-            { label: 'Fecha Inicio', name: 'plan_start_date',width: 180 },
-            { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180 },
-            { label: '% Avance', name: 'pai', width: 150 },
-            { label: '% Plan', name: 'pae', width: 150 },
-            { label: 'SPI', name: 'spi', width: 150 },
-            { label: 'CPI', name: 'cpi', width: 150 }
+            { label: 'Responsable', name: 'uid', jsonmap: 'nombre_lider', width: 200,
+                                 		    stype: 'select',
+                                 			searchoptions: {
+                                 				dataUrl: '/list-all-user-active',
+                                 				buildSelect: function (response) {
+                                 					var data = JSON.parse(response);
+                                 					var s = "<select>";
+                                 					s += '<option value="0">--Escoger Responsable--</option>';
+                                 					$.each(data, function(i, item) {
+                                 						s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
+                                 					});
+                                 					return s + "</select>";
+                                 				}
+                                 		    },
+            },
+            { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
+                searchoptions:{
+                    dataInit:function(el){
+                        $(el).datepicker({
+                            dateFormat:'yy-mm-dd',
+                            changeYear: true,
+                            changeMonth: true,
+                            onSelect: function (dateText, inst) {
+                                setTimeout(function () {
+                                    $('#jqGrid')[0].triggerToolbar();
+                                }, 100);
+                            }
+                        });
+                    },
+                    sopt: ["le","ge"]
+                },
+            },
+            { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180,
+                searchoptions:{
+                    dataInit:function(el){
+                        $(el).datepicker({
+                            dateFormat:'yy-mm-dd',
+                            changeYear: true,
+                            changeMonth: true,
+                            onSelect: function (dateText, inst) {
+                                setTimeout(function () {
+                                    $('#jqGrid')[0].triggerToolbar();
+                                }, 100);
+                            }
+                        });
+                    },
+                    sopt: ["le","ge"]
+                },
+            },
+            { label: '% Avance', name: 'pai', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                }
+            },
+            { label: '% Plan', name: 'pae', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                }
+
+            },
+            { label: 'SPI', name: 'spi', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+
+            },
+            { label: 'CPI', name: 'cpi', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            }
         ];
 
+	var modelSubGrid=[
+            { label: 'id', name: 'project_id', key: true, hidden:true },
+            { label: 'Programa', name: 'project_name', width: 350,formatter: returnProgramLink },
+            { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
+                searchoptions:{
+                    dataInit:function(el){
+                        $(el).datepicker({
+                            dateFormat:'yy-mm-dd',
+                            changeYear: true,
+                            changeMonth: true
+                        });
+                    },
+                    sopt: ["le","ge"]
+                },
+            },
+            { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180,
+                searchoptions:{
+                    dataInit:function(el){
+                        $(el).datepicker({
+                            dateFormat:'yy-mm-dd',
+                            changeYear: true,
+                            changeMonth: true
+                        });
+                    },
+                    sopt: ["le","ge"]
+                },
+            },
+            { label: '% Avance', name: 'pai', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                }
+            },
+            { label: '% Plan', name: 'pae', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                }
 
+            },
+            { label: 'SPI', name: 'spi', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                }
+
+            },
+            { label: 'CPI', name: 'cpi', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                }
+
+            }
+        ];
+
+	function showSubGrid(parentRowID, parentRowKey) {
+	    var childGridID = parentRowID + "_table";
+	    var childGridPagerID = parentRowID + "_pager";
+	    var childGridURL = "/listStatus/" + parentRowKey;
+
+	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+	    $("#" + childGridID).jqGrid({
+	        url: childGridURL,
+	        mtype: "GET",
+	        datatype: "json",
+	        colModel: modelSubGrid,
+			height: 'auto',
+	        //autowidth:true,
+	        regional : "es",
+			viewrecords: true,
+	        pager: "#" + childGridPagerID
+	    });
+
+	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
+	}
 
 
 	var optionsPie ={
@@ -152,8 +320,8 @@ $(document).ready(function(){
 
         });
         */
-        console.log("tourl ---> : " + tourl)
-        var name = "lolo"
+        //console.log("tourl ---> : " + tourl)
+        var name = "Programas"
 		var grid =	$("#jqGrid").jqGrid({
 		        mtype: "GET",
 		        url: tourl,
@@ -164,8 +332,13 @@ $(document).ready(function(){
 				regional : "es",
 				height: 'auto',
 		        autowidth:true,
-		        rowNum: 20,
+		        //width: 950,
+		        rowNum: 25,
+		        shrinkToFit:false,
+                forceFit:true,
 		        pager: "#jqGridPager",
+		        subGrid: true,
+                subGridRowExpanded: showSubGrid,
 		        ignoreCase: true
 		    }).jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 

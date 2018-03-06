@@ -2430,15 +2430,20 @@ object Dashboard extends Controller {
 
   }
 
-  def report = Action { implicit request =>
+  def report(level: Int,parent: Int) = Action { implicit request =>
     request.session.get("username").map { user =>
 
       val uid = request.session.get("uId").get
       val rows = request.getQueryString("rows").getOrElse("20").toInt
       val page = request.getQueryString("page").getOrElse("1").toInt
+      val sidx = request.getQueryString("sidx").getOrElse("")
+      val sord = request.getQueryString("sord").getOrElse("asc")
+
+      Logger.debug("level : " + level)
+      Logger.debug("parent : " + parent)
 
       val filters = request.getQueryString("filters").getOrElse("").toString()
-      var qrystr = ""
+      var qrystr,order = ""
 
       if (!StringUtils.isEmpty(filters)) {
 
@@ -2457,21 +2462,38 @@ object Dashboard extends Controller {
               val elements = (json \\ "rules").children
               for (acct <- elements) {
                 val m = acct.extract[DBFilter]
-                  if(m.data.toInt!=0)
-                    qrystr += m.field + "=" + m.data + " AND "
+                  if(!m.data.equals("0")) {
+                    if (m.op.equals("cn"))
+                      qrystr += m.field + " like '%" + m.data + "%' AND "
+                    if (m.op.equals("eq"))
+                      qrystr += m.field + "='" + m.data + "' AND "
+                    else if (m.op.equals("ne"))
+                      qrystr += m.field + "!" + m.data + " AND "
+                    else if (m.op.equals("lt"))
+                      qrystr += m.field + "<" + m.data + " AND "
+                    else if (m.op.equals("le"))
+                      qrystr += m.field + "<='" + m.data + "' AND "
+                    else if (m.op.equals("gt"))
+                      qrystr += m.field + ">" + m.data + " AND "
+                    else if (m.op.equals("ge"))
+                      qrystr += m.field + ">='" + m.data + "' AND "
+                  }
               }
 
             }
           }
         }
       }
-      Logger.debug("qrystr ----------> " + qrystr)
 
-      val data = DashboardService.manager(page,rows,qrystr)
+      if(sidx.isEmpty)
+        order = "ORDER BY program_name " + sord
+      else
+        order = "ORDER BY " + sidx + " " +  sord
+
+      val data = DashboardService.manager(page,rows,qrystr,order)
       val records = DashboardService.countManager(qrystr)
 
       val pagedisplay = Math.ceil(records.toInt / rows.toFloat).toInt
-
       val grid = Grid(page, pagedisplay, records,Json.toJson(data))
 
       Ok(Json.toJson(grid)).withSession("username" -> request.session.get("username").get,
@@ -2521,6 +2543,51 @@ object Dashboard extends Controller {
       val dep = DashboardService.findAllDepartamentRRHH()
 
       Ok(Json.toJson(dep)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def listAllUserActiveProgram = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val users = DashboardService.findAllUserActiveProgram()
+
+      Ok(Json.toJson(users)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def listAllProgramWorkflowStatus = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val types = DashboardService.findAllStatusProgram
+
+      Ok(Json.toJson(types)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def listAllProgramType = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val types = DashboardService.findAllTypeProgram()
+
+      Ok(Json.toJson(types)).withSession("username" -> request.session.get("username").get,
         "utype" -> request.session.get("utype").get,
         "uId" -> request.session.get("uId").get,
         "user_profile" -> request.session.get("user_profile").get)

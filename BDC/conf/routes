@@ -388,6 +388,9 @@ GET    /dashboard-issue-report                                                  
 GET    /issue-report-tasks                                                                            controllers.Frontend.Dashboard.issueReportForTasks
 GET    /issue-report-subtasks                                                                         controllers.Frontend.Dashboard.issueReportForSubtasks
 GET    /list-all-divisions                                                                            controllers.Frontend.Dashboard.listAllDiv
+GET    /list-all-user-active                                                                          controllers.Frontend.Dashboard.listAllUserActiveProgram
+GET    /list-all-workflowstatus                                                                       controllers.Frontend.Dashboard.listAllProgramWorkflowStatus
+GET    /list-all-programtype                                                                          controllers.Frontend.Dashboard.listAllProgramType
 GET    /list-all-manager                                                                              controllers.Frontend.Dashboard.listAllMan
 GET    /list-all-departament                                                                          controllers.Frontend.Dashboard.listAllDep
 GET    /search-projects                                                                               controllers.Frontend.Login.userSearchSetting
@@ -619,7 +622,7 @@ GET    /reportSubTarea/$pid<[A-Za-z0-9_-]+>                                     
 GET    /reportStateSubTask                                                                            controllers.Frontend.Dashboard.reportStateSubTask
 GET    /burbujas                                                                                      controllers.Frontend.Dashboard.burbujas
 GET    /pie                                                                                           controllers.Frontend.Dashboard.pie
-GET    /report                                                                                           controllers.Frontend.Dashboard.report
+GET    /report/$level<[A-Za-z0-9_-]+>/$parent<[A-Za-z0-9_-]+>                                         controllers.Frontend.Dashboard.report(level: Int,parent: Int)
 GET    /pieType                                                                                       controllers.Frontend.Dashboard.pieType
 GET    /pieSubType                                                                                    controllers.Frontend.Dashboard.pieSubType
 GET    /pieState                                                                                      controllers.Frontend.Dashboard.pieState

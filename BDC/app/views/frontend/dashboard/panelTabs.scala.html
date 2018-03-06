@@ -18,26 +18,14 @@
 </head>
 <body>
 @frontend.topLayout()
-<div class="report">
+<div class="reporttabs">
 
 				<div id="tabs">
 					<ul>
-						<li><a href="/report">Reporte</a></li>
+						<li><a href="/report/0/0">Reporte</a></li>
 						<!--<li><a href="/incidentPie/3">Atraso</a></li>-->
 					</ul>
-					<div id="tabs-1">
-
-						<div class="left width-pr50 padding-top-3px" id="div_sel_type" >
-							@*
-							<select class="input-xlarge" id="sel_type">
-								<option value="0">--Seleccione un Tipo--</option>
-								<option value="1">--División--</option>
-								<option value="2">--Gerencia--</option>
-							</select>
-							*@
-						</div>
-
-						<div id="containerChart"></div>
+					<div id="tabs-1" style="overflow:auto;">
 						<table id="jqGrid"></table>
 						<div id="jqGridPager"></div>
 					</div>
