@@ -2439,11 +2439,10 @@ object Dashboard extends Controller {
       val sidx = request.getQueryString("sidx").getOrElse("")
       val sord = request.getQueryString("sord").getOrElse("asc")
 
-      Logger.debug("level : " + level)
-      Logger.debug("parent : " + parent)
-
       val filters = request.getQueryString("filters").getOrElse("").toString()
       var qrystr,order = ""
+      var data : Seq[Report] = null
+      var records : Int = 0
 
       if (!StringUtils.isEmpty(filters)) {
 
@@ -2485,21 +2484,26 @@ object Dashboard extends Controller {
         }
       }
 
-      if(sidx.isEmpty)
-        order = "ORDER BY program_name " + sord
-      else
+      if(level == 0) {
+        if (sidx.isEmpty)
+          order = "ORDER BY program_name " + sord
+      }
+
+      if(!sidx.isEmpty)
         order = "ORDER BY " + sidx + " " +  sord
 
-      val data = DashboardService.manager(page,rows,qrystr,order)
-      val records = DashboardService.countManager(qrystr)
+      data = DashboardService.manager(page,rows,qrystr,order)
+      records = DashboardService.countManager(qrystr)
 
       val pagedisplay = Math.ceil(records.toInt / rows.toFloat).toInt
       val grid = Grid(page, pagedisplay, records,Json.toJson(data))
 
-      Ok(Json.toJson(grid)).withSession("username" -> request.session.get("username").get,
+      Ok(Json.toJson(grid)).withSession(
+        "username" -> request.session.get("username").get,
         "utype" -> request.session.get("utype").get,
         "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
+        "user_profile" -> request.session.get("user_profile").get
+      )
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
