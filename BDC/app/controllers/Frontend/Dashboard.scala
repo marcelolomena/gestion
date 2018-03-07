@@ -2445,7 +2445,6 @@ object Dashboard extends Controller {
       var records : Int = 0
 
       if (!StringUtils.isEmpty(filters)) {
-
         val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
 
         if (!jObject.\\("rules").isEmpty) {
@@ -2484,16 +2483,26 @@ object Dashboard extends Controller {
         }
       }
 
-      if(level == 0) {
-        if (sidx.isEmpty)
-          order = "ORDER BY program_name " + sord
-      }
-
-      if(!sidx.isEmpty)
+      if (sidx.isEmpty)
+        order = "ORDER BY program_name " + sord
+      else
         order = "ORDER BY " + sidx + " " +  sord
 
-      data = DashboardService.manager(page,rows,qrystr,order)
-      records = DashboardService.countManager(qrystr)
+      if(level == 0) {
+        qrystr += "tipo ='PROGRAMA' "
+        data = DashboardService.manager(page, rows, qrystr, order)
+        records = DashboardService.countManager(qrystr)
+      } else if(level == 1) {
+        qrystr += "tipo ='PROYECTO' AND "
+        qrystr += "program_id = " + parent + " "
+        data = DashboardService.manager(page, rows, qrystr, order)
+        records = DashboardService.countManager(qrystr)
+      } else if(level == 2) {
+        qrystr += "tipo ='TAREA' AND "
+        qrystr += "project_id = " + parent + " "
+        data = DashboardService.manager(page, rows, qrystr, order)
+        records = DashboardService.countManager(qrystr)
+      }
 
       val pagedisplay = Math.ceil(records.toInt / rows.toFloat).toInt
       val grid = Grid(page, pagedisplay, records,Json.toJson(data))

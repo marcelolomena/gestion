@@ -26,6 +26,7 @@ object Grid {
 
 case class Report(
                   program_id: Int,
+                  project_id: Option[BigDecimal],
                   program_name: Option[String],
                   nombre_lider: Option[String],
                   program_type: Option[String],
@@ -45,6 +46,7 @@ object Report {
 
   val report = {
       get[Int]("program_id") ~
+      get[Option[BigDecimal]]("project_id") ~
       get[Option[String]]("program_name") ~
       get[Option[String]]("nombre_lider") ~
       get[Option[String]]("program_type") ~
@@ -60,6 +62,7 @@ object Report {
       get[Option[BigDecimal]]("cpi")  map {
       case
         program_id ~
+        project_id  ~
         program_name ~
         nombre_lider ~
         program_type ~
@@ -74,6 +77,7 @@ object Report {
         spi ~
         cpi => Report(
         program_id ,
+        project_id,
         program_name ,
         nombre_lider ,
         program_type ,
@@ -96,15 +100,16 @@ object Report {
     def writes(report: Report): JsValue = {
       val reportSeq = Seq(
         "program_id" -> JsNumber(report.program_id),
-        "program_name" -> JsString(report.program_name.get),
-        "nombre_lider" -> JsString(report.nombre_lider.get),
-        "program_type" -> JsString(report.program_type.get),
-        "work_flow_status" -> JsString(report.work_flow_status.get),
+        "project_id" -> JsNumber(report.project_id.getOrElse(0)),
+        "program_name" -> JsString(report.program_name.getOrElse("")),
+        "nombre_lider" -> JsString(report.nombre_lider.getOrElse("")),
+        "program_type" -> JsString(report.program_type.getOrElse("")),
+        "work_flow_status" -> JsString(report.work_flow_status.getOrElse("")),
         "name_div" -> JsString(report.name_div.getOrElse("")),
         "name_man" -> JsString(report.name_man.getOrElse("")),
         "name_dep" -> JsString(report.name_dep.getOrElse("")),
-        "plan_start_date" -> JsString(new java.text.SimpleDateFormat("yyyy-MM-dd").format(report.plan_start_date.getOrElse(""))),
-        "plan_end_date" -> JsString(new java.text.SimpleDateFormat("yyyy-MM-dd").format(report.plan_end_date.getOrElse(""))),
+        "plan_start_date" -> JsString(new java.text.SimpleDateFormat("dd/MM/yyyy").format(report.plan_start_date.getOrElse(new Date(0)))),
+        "plan_end_date" -> JsString(new java.text.SimpleDateFormat("dd/MM/yyyy").format(report.plan_end_date.getOrElse(new Date(0)))),
         "pai" -> JsNumber(report.pai.getOrElse(0)),
         "pae" -> JsNumber(report.pae.getOrElse(0)),
         "spi" -> JsNumber(report.spi.getOrElse(0)),
@@ -116,6 +121,7 @@ object Report {
     def reads(json: JsValue): JsResult[Report] = {
       JsSuccess(Report(
         0,
+        Option[BigDecimal](0),
         Option[String](""),
         Option[String](""),
         Option[String](""),

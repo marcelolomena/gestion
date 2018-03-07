@@ -3,6 +3,24 @@ function returnProgramLink(cellValue, options, rowdata, action)
     return "<a href='/program-details/" + options.rowId + "' >" + cellValue +"</a>";
 }
 
+function returnProjectLink(cellValue, options, rowdata, action)
+{
+    console.dir(rowdata)
+    return "<a href='/project-details/" + rowdata.project_id + "' >" + cellValue +"</a>";
+}
+function returnTaskLink(cellValue, options, rowdata, action)
+{
+    return "<a href='/project-task-details/" + rowdata.task_id + "' >" + cellValue +"</a>";
+}
+function returnSubTaskLink(cellValue, options, rowdata, action)
+{
+    return "<a href='/sub-task-details/" + options.rowId + "' >" + cellValue +"</a>";
+}
+function returnUserLink(cellValue, options, rowdata, action)
+{
+    return "<a href='/employee/" + options.rowId + "' >" + cellValue +"</a>";
+}
+
 $(document).ready(function(){
 	$.datepicker.setDefaults($.datepicker.regional['es']);
 
@@ -29,7 +47,7 @@ $(document).ready(function(){
 	
 
 	var modelGrid=[
-            { label: 'id', name: 'program_id', width: 50, key: true, hidden:true },
+            { label: 'id', name: 'program_id', key: true, hidden:true },
             { label: 'Programa', name: 'program_name', width: 350,formatter: returnProgramLink },
             { label: 'Estado', name: 'work_flow_status', jsonmap: 'work_flow_status', width: 250,
                 		    stype: 'select',
@@ -106,7 +124,7 @@ $(document).ready(function(){
                          				}
                          		    },
             },
-            { label: 'Responsable', name: 'uid', jsonmap: 'nombre_lider', width: 200,
+            { label: 'Lider', name: 'uid', jsonmap: 'nombre_lider', width: 200,
                                  		    stype: 'select',
                                  			searchoptions: {
                                  				dataUrl: '/list-all-user-active',
@@ -183,7 +201,22 @@ $(document).ready(function(){
 
 	var modelSubGrid=[
             { label: 'id', name: 'project_id', key: true, hidden:true },
-            { label: 'Programa', name: 'project_name', width: 350,formatter: returnProgramLink },
+            { label: 'Proyectos', name: 'program_name', width: 350,formatter: returnProjectLink },
+            { label: 'Gerente', name: 'uid', jsonmap: 'nombre_lider', width: 200,
+                                 		    stype: 'select',
+                                 			searchoptions: {
+                                 				dataUrl: '/list-all-user-active',
+                                 				buildSelect: function (response) {
+                                 					var data = JSON.parse(response);
+                                 					var s = "<select>";
+                                 					s += '<option value="0">--Escoger Responsable--</option>';
+                                 					$.each(data, function(i, item) {
+                                 						s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
+                                 					});
+                                 					return s + "</select>";
+                                 				}
+                                 		    },
+            },
             { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
                 searchoptions:{
                     dataInit:function(el){
@@ -222,38 +255,62 @@ $(document).ready(function(){
             { label: 'SPI', name: 'spi', width: 150,
                 searchoptions:{
                     sopt: ["ge","le","eq"]
-                }
-
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
             { label: 'CPI', name: 'cpi', width: 150,
                 searchoptions:{
                     sopt: ["ge","le","eq"]
-                }
-
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
             }
         ];
 
-	function showSubGrid(parentRowID, parentRowKey) {
-	    var childGridID = parentRowID + "_table";
-	    var childGridPagerID = parentRowID + "_pager";
-	    var childGridURL = "/listStatus/" + parentRowKey;
+	function showProjectSubGrid(parentRowID, parentRowKey) {
+              	    var childGridID = parentRowID + "_table";
+              	    var childGridPagerID = parentRowID + "_pager";
+              	    var childGridURL = "/report/1/" + parentRowKey;
 
-	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+              	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
-	    $("#" + childGridID).jqGrid({
-	        url: childGridURL,
-	        mtype: "GET",
-	        datatype: "json",
-	        colModel: modelSubGrid,
-			height: 'auto',
-	        //autowidth:true,
-	        regional : "es",
-			viewrecords: true,
-	        pager: "#" + childGridPagerID
-	    });
+              	    $("#" + childGridID).jqGrid({
+              	        url: childGridURL,
+              	        mtype: "GET",
+              	        datatype: "json",
+              	        colModel: modelSubGrid,
+              			height: 'auto',
+              	        //autowidth:true,
+        		        subGrid: true,
+                        subGridRowExpanded: showTaskSubGrid,
+              	        regional : "es",
+              			viewrecords: true,
+              	        pager: "#" + childGridPagerID
+              	    });
 
-	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
-	}
+              	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
+              	}
+
+	function showTaskSubGrid(parentRowID, parentRowKey) {
+     	    var childGridID = parentRowID + "_table";
+     	    var childGridPagerID = parentRowID + "_pager";
+     	    var childGridURL = "/report/2/" + parentRowKey;
+
+     	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+     	    $("#" + childGridID).jqGrid({
+     	        url: childGridURL,
+     	        mtype: "GET",
+     	        datatype: "json",
+     	        colModel: modelSubGrid,
+     			height: 'auto',
+     	        //autowidth:true,
+     	        regional : "es",
+     			viewrecords: true,
+     	        pager: "#" + childGridPagerID
+     	    });
+
+     	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
+     	}
 
 
 	var optionsPie ={
@@ -338,7 +395,7 @@ $(document).ready(function(){
                 forceFit:true,
 		        pager: "#jqGridPager",
 		        subGrid: true,
-                subGridRowExpanded: showSubGrid,
+                subGridRowExpanded: showProjectSubGrid,
 		        ignoreCase: true
 		    }).jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 

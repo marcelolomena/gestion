@@ -284,16 +284,11 @@ object DashboardService {
 
       val ini = end * (page - 1)
 
-      var sqlString = ""
-
-      var result: Seq[Report] = null
-
-      if(!filter.isEmpty) {
-
-        sqlString =
+      val sqlString =
           """
             SELECT
             program_id,
+            ISNULL(project_id,0) project_id,
             program_name,
             nombre_lider,
             program_type,
@@ -308,73 +303,24 @@ object DashboardService {
             ROUND(spi,2) spi,
             ROUND(cpi,2) cpi
             FROM art_program_management
-            WHERE """ + filter + """
-            tipo ='PROGRAMA' """ + order  + """
+            WHERE """ + filter + order  + """
             OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
           """.stripMargin
 
-        result =SQL(sqlString).on('ini -> ini,'end -> end,'filter->filter).as(Report.report * )
-
-      } else {
-
-        sqlString =
-          """
-            SELECT
-            program_id,
-            program_name,
-            nombre_lider,
-            program_type,
-            work_flow_status,
-            name_div,
-            name_man,
-            name_dep,
-            plan_start_date,
-            plan_end_date,
-            ROUND(pai,2) pai,
-            ROUND(pae,2) pae,
-            ROUND(spi,2) spi,
-            ROUND(cpi,2) cpi
-            FROM art_program_management
-            WHERE
-            tipo ='PROGRAMA' """ + order  + """
-            OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
-          """.stripMargin
-
-        result = SQL(sqlString).on('ini -> ini,'end -> end,'filter->filter).as(Report.report * )
-
-      }
-
-      result
-
+        SQL(sqlString).on('ini -> ini,'end -> end).as(Report.report * )
     }
   }
 
   def countManager(filter: String): Int = {
     DB.withConnection { implicit connection =>
       var sqlString = ""
-      var ret: Int = 0
-      if(!filter.isEmpty) {
-        sqlString =
-          """
+      sqlString =
+        """
             SELECT count(*)
             FROM art_program_management
-            WHERE """ + filter + """
-            tipo ='PROGRAMA'
-          """.stripMargin
-        ret=SQL(sqlString).on('filter -> filter).as(scalar[Int].single)
-      }else{
-        sqlString =
-          """
-            |SELECT count(*)
-            |FROM art_program_management
-            |WHERE
-            |tipo ='PROGRAMA'
-          """.stripMargin
-        ret=SQL(sqlString).as(scalar[Int].single)
+            WHERE """ + filter
+      SQL(sqlString).as(scalar[Int].single)
 
-      }
-
-      ret
     }
   }
 
