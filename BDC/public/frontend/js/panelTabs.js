@@ -155,7 +155,7 @@ $(document).ready(function(){
                     sopt: ["le","ge"]
                 },
             },
-            { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180,
+            { label: 'Fecha Cierre',   name: 'plan_end_date', width: 180,
                 searchoptions:{
                     dataInit:function(el){
                         $(el).datepicker({
@@ -172,12 +172,12 @@ $(document).ready(function(){
                     sopt: ["le","ge"]
                 },
             },
-            { label: '% Avance', name: 'pai', width: 150,
+            { label: '% Informado', name: 'pai', width: 150,
                 searchoptions:{
                     sopt: ["ge","le","eq"]
                 }
             },
-            { label: '% Plan', name: 'pae', width: 150,
+            { label: '% Esperado', name: 'pae', width: 150,
                 searchoptions:{
                     sopt: ["ge","le","eq"]
                 }
@@ -203,7 +203,7 @@ $(document).ready(function(){
             { label: 'Proyectos', name: 'program_name', width: 350,formatter: returnProjectLink },
             { label: 'Gerente', name: 'uid', jsonmap: 'nombre_lider', width: 200,
             },
-            { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
+            { label: 'Fecha inicio', name: 'plan_start_date',width: 180,
                 searchoptions:{
                     dataInit:function(el){
                         $(el).datepicker({
@@ -215,7 +215,7 @@ $(document).ready(function(){
                     sopt: ["le","ge"]
                 },
             },
-            { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180,
+            { label: 'Fecha lanzamiento',   name: 'plan_end_date', width: 180,
                 searchoptions:{
                     dataInit:function(el){
                         $(el).datepicker({
@@ -255,7 +255,7 @@ $(document).ready(function(){
 	var modelTaskSubGrid=[
             { label: 'id', name: 'task_id', key: true, hidden:true },
             { label: 'Tareas', name: 'program_name', width: 350,formatter: returnTaskLink },
-            { label: 'Gerente', name: 'uid', jsonmap: 'nombre_lider', width: 200,
+            { label: 'Propietario', name: 'uid', jsonmap: 'nombre_lider', width: 200,
             },
             { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
                 searchoptions:{
@@ -269,7 +269,7 @@ $(document).ready(function(){
                     sopt: ["le","ge"]
                 },
             },
-            { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180,
+            { label: 'Fecha Término',   name: 'plan_end_date', width: 180,
                 searchoptions:{
                     dataInit:function(el){
                         $(el).datepicker({
@@ -309,50 +309,27 @@ $(document).ready(function(){
 	var modelSubTaskSubGrid=[
             { label: 'id', name: 'task_id', key: true, hidden:true },
             { label: 'Sub-Tareas', name: 'program_name', width: 350,formatter: returnSubTaskLink },
-            { label: 'Gerente', name: 'uid', jsonmap: 'nombre_lider', width: 200,
+            { label: 'Gerente', name: 'uid', jsonmap: 'nombre_lider', width: 200,hidden:true,
             },
-            { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
-                searchoptions:{
-                    dataInit:function(el){
-                        $(el).datepicker({
-                            dateFormat:'yy-mm-dd',
-                            changeYear: true,
-                            changeMonth: true
-                        });
-                    },
-                    sopt: ["le","ge"]
-                },
+            { label: 'Inicio Planificado', name: 'plan_start_date',width: 180,
             },
-            { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180,
-                searchoptions:{
-                    dataInit:function(el){
-                        $(el).datepicker({
-                            dateFormat:'yy-mm-dd',
-                            changeYear: true,
-                            changeMonth: true
-                        });
-                    },
-                    sopt: ["le","ge"]
-                },
+            { label: 'Término Planificado',   name: 'plan_end_date', width: 180,
             },
-            { label: '% Avance', name: 'pai', width: 150,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                }
+            { label: 'Inicio Real', name: 'real_start_date',width: 180,
+            },
+            { label: 'Término Real',   name: 'real_end_date', width: 180,
+            },
+            { label: '% Avance Informado', name: 'pai', width: 150,
             },
             { label: '% Plan', name: 'pae', width: 150,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                }
-
             },
-            { label: 'SPI', name: 'spi', width: 150,
+            { label: 'SPI', name: 'spi', width: 150,hidden:true,
                 searchoptions:{
                     sopt: ["ge","le","eq"]
                 },
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
-            { label: 'CPI', name: 'cpi', width: 150,
+            { label: 'CPI', name: 'cpi', width: 150,hidden:true,
                 searchoptions:{
                     sopt: ["ge","le","eq"]
                 },

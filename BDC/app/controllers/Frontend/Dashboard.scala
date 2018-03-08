@@ -2504,10 +2504,6 @@ object Dashboard extends Controller {
       data = DashboardService.manager(page, rows, qrystr, order)
       records = DashboardService.countManager(qrystr)
 
-      Logger.debug(" level ----------------> " + level)
-      Logger.debug(" parent ----------------> " + parent)
-      Logger.debug(" ----------------> " + qrystr)
-
       val pagedisplay = Math.ceil(records.toInt / rows.toFloat).toInt
       val grid = Grid(page, pagedisplay, records,Json.toJson(data))
 

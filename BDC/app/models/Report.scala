@@ -38,6 +38,8 @@ case class Report(
                   name_dep: Option[String],
                   plan_start_date: Option[Date],
                   plan_end_date: Option[Date],
+                  real_start_date: Option[Date],
+                  real_end_date: Option[Date],
                   pai: Option[BigDecimal],
                   pae: Option[BigDecimal],
                   spi: Option[BigDecimal],
@@ -60,6 +62,8 @@ object Report {
       get[Option[String]]("name_dep") ~
       get[Option[Date]]("plan_start_date") ~
       get[Option[Date]]("plan_end_date") ~
+      get[Option[Date]]("real_start_date") ~
+      get[Option[Date]]("real_end_date") ~
       get[Option[BigDecimal]]("pai") ~
       get[Option[BigDecimal]]("pae")  ~
       get[Option[BigDecimal]]("spi") ~
@@ -78,6 +82,8 @@ object Report {
         name_dep ~
           plan_start_date ~
           plan_end_date ~
+          real_start_date ~
+          real_end_date ~
           pai ~
           pae ~
         spi ~
@@ -95,6 +101,8 @@ object Report {
         name_dep ,
         plan_start_date,
         plan_end_date,
+        real_start_date,
+        real_end_date,
         pai,
         pae,
         spi ,
@@ -120,6 +128,8 @@ object Report {
         "name_dep" -> JsString(report.name_dep.getOrElse("")),
         "plan_start_date" -> JsString(new java.text.SimpleDateFormat("dd/MM/yyyy").format(report.plan_start_date.getOrElse(new Date(0)))),
         "plan_end_date" -> JsString(new java.text.SimpleDateFormat("dd/MM/yyyy").format(report.plan_end_date.getOrElse(new Date(0)))),
+        "real_start_date" -> JsString(new java.text.SimpleDateFormat("dd/MM/yyyy").format(report.real_start_date.getOrElse(new Date(0)))),
+        "real_end_date" -> JsString(new java.text.SimpleDateFormat("dd/MM/yyyy").format(report.real_end_date.getOrElse(new Date(0)))),
         "pai" -> JsNumber(report.pai.getOrElse(0)),
         "pae" -> JsNumber(report.pae.getOrElse(0)),
         "spi" -> JsNumber(report.spi.getOrElse(0)),
@@ -141,6 +151,8 @@ object Report {
         Option[String](""),
         Option[String](""),
         Option[String](""),
+        Option[Date](new Date),
+        Option[Date](new Date),
         Option[Date](new Date),
         Option[Date](new Date),
         Option[BigDecimal](0),

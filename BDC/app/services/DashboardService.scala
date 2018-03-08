@@ -300,6 +300,8 @@ object DashboardService {
             name_dep,
             plan_start_date,
             plan_end_date,
+            real_start_date,
+            real_end_date,
             ROUND(pai,2) pai,
             ROUND(pae,2) pae,
             ROUND(spi,2) spi,
