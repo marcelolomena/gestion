@@ -27,6 +27,8 @@ object Grid {
 case class Report(
                   program_id: Int,
                   project_id: Option[BigDecimal],
+                  task_id: Option[BigDecimal],
+                  subtask_id: Option[BigDecimal],
                   program_name: Option[String],
                   nombre_lider: Option[String],
                   program_type: Option[String],
@@ -47,6 +49,8 @@ object Report {
   val report = {
       get[Int]("program_id") ~
       get[Option[BigDecimal]]("project_id") ~
+      get[Option[BigDecimal]]("task_id") ~
+      get[Option[BigDecimal]]("subtask_id") ~
       get[Option[String]]("program_name") ~
       get[Option[String]]("nombre_lider") ~
       get[Option[String]]("program_type") ~
@@ -63,6 +67,8 @@ object Report {
       case
         program_id ~
         project_id  ~
+        task_id  ~
+        subtask_id  ~
         program_name ~
         nombre_lider ~
         program_type ~
@@ -78,6 +84,8 @@ object Report {
         cpi => Report(
         program_id ,
         project_id,
+        task_id,
+        subtask_id,
         program_name ,
         nombre_lider ,
         program_type ,
@@ -101,6 +109,8 @@ object Report {
       val reportSeq = Seq(
         "program_id" -> JsNumber(report.program_id),
         "project_id" -> JsNumber(report.project_id.getOrElse(0)),
+        "task_id" -> JsNumber(report.task_id.getOrElse(0)),
+        "subtask_id" -> JsNumber(report.subtask_id.getOrElse(0)),
         "program_name" -> JsString(report.program_name.getOrElse("")),
         "nombre_lider" -> JsString(report.nombre_lider.getOrElse("")),
         "program_type" -> JsString(report.program_type.getOrElse("")),
@@ -121,6 +131,8 @@ object Report {
     def reads(json: JsValue): JsResult[Report] = {
       JsSuccess(Report(
         0,
+        Option[BigDecimal](0),
+        Option[BigDecimal](0),
         Option[BigDecimal](0),
         Option[String](""),
         Option[String](""),

@@ -5,7 +5,6 @@ function returnProgramLink(cellValue, options, rowdata, action)
 
 function returnProjectLink(cellValue, options, rowdata, action)
 {
-    console.dir(rowdata)
     return "<a href='/project-details/" + rowdata.project_id + "' >" + cellValue +"</a>";
 }
 function returnTaskLink(cellValue, options, rowdata, action)
@@ -46,7 +45,7 @@ $(document).ready(function(){
 	});
 	
 
-	var modelGrid=[
+	var modelProgramGrid=[
             { label: 'id', name: 'program_id', key: true, hidden:true },
             { label: 'Programa', name: 'program_name', width: 350,formatter: returnProgramLink },
             { label: 'Estado', name: 'work_flow_status', jsonmap: 'work_flow_status', width: 250,
@@ -199,23 +198,118 @@ $(document).ready(function(){
             }
         ];
 
-	var modelSubGrid=[
+	var modelProjectSubGrid=[
             { label: 'id', name: 'project_id', key: true, hidden:true },
             { label: 'Proyectos', name: 'program_name', width: 350,formatter: returnProjectLink },
             { label: 'Gerente', name: 'uid', jsonmap: 'nombre_lider', width: 200,
-                                 		    stype: 'select',
-                                 			searchoptions: {
-                                 				dataUrl: '/list-all-user-active',
-                                 				buildSelect: function (response) {
-                                 					var data = JSON.parse(response);
-                                 					var s = "<select>";
-                                 					s += '<option value="0">--Escoger Responsable--</option>';
-                                 					$.each(data, function(i, item) {
-                                 						s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
-                                 					});
-                                 					return s + "</select>";
-                                 				}
-                                 		    },
+            },
+            { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
+                searchoptions:{
+                    dataInit:function(el){
+                        $(el).datepicker({
+                            dateFormat:'yy-mm-dd',
+                            changeYear: true,
+                            changeMonth: true
+                        });
+                    },
+                    sopt: ["le","ge"]
+                },
+            },
+            { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180,
+                searchoptions:{
+                    dataInit:function(el){
+                        $(el).datepicker({
+                            dateFormat:'yy-mm-dd',
+                            changeYear: true,
+                            changeMonth: true
+                        });
+                    },
+                    sopt: ["le","ge"]
+                },
+            },
+            { label: '% Avance', name: 'pai', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                }
+            },
+            { label: '% Plan', name: 'pae', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                }
+
+            },
+            { label: 'SPI', name: 'spi', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            },
+            { label: 'CPI', name: 'cpi', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            }
+        ];
+
+	var modelTaskSubGrid=[
+            { label: 'id', name: 'task_id', key: true, hidden:true },
+            { label: 'Tareas', name: 'program_name', width: 350,formatter: returnTaskLink },
+            { label: 'Gerente', name: 'uid', jsonmap: 'nombre_lider', width: 200,
+            },
+            { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
+                searchoptions:{
+                    dataInit:function(el){
+                        $(el).datepicker({
+                            dateFormat:'yy-mm-dd',
+                            changeYear: true,
+                            changeMonth: true
+                        });
+                    },
+                    sopt: ["le","ge"]
+                },
+            },
+            { label: 'Fecha Comprometida',   name: 'plan_end_date', width: 180,
+                searchoptions:{
+                    dataInit:function(el){
+                        $(el).datepicker({
+                            dateFormat:'yy-mm-dd',
+                            changeYear: true,
+                            changeMonth: true
+                        });
+                    },
+                    sopt: ["le","ge"]
+                },
+            },
+            { label: '% Avance', name: 'pai', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                }
+            },
+            { label: '% Plan', name: 'pae', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                }
+
+            },
+            { label: 'SPI', name: 'spi', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            },
+            { label: 'CPI', name: 'cpi', width: 150,
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            }
+        ];
+
+	var modelSubTaskSubGrid=[
+            { label: 'id', name: 'task_id', key: true, hidden:true },
+            { label: 'Sub-Tareas', name: 'program_name', width: 350,formatter: returnSubTaskLink },
+            { label: 'Gerente', name: 'uid', jsonmap: 'nombre_lider', width: 200,
             },
             { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
                 searchoptions:{
@@ -277,7 +371,7 @@ $(document).ready(function(){
               	        url: childGridURL,
               	        mtype: "GET",
               	        datatype: "json",
-              	        colModel: modelSubGrid,
+              	        colModel: modelProjectSubGrid,
               			height: 'auto',
               	        //autowidth:true,
         		        subGrid: true,
@@ -301,9 +395,11 @@ $(document).ready(function(){
      	        url: childGridURL,
      	        mtype: "GET",
      	        datatype: "json",
-     	        colModel: modelSubGrid,
+     	        colModel: modelTaskSubGrid,
      			height: 'auto',
      	        //autowidth:true,
+                subGrid: true,
+                subGridRowExpanded: showSubTaskSubGrid,
      	        regional : "es",
      			viewrecords: true,
      	        pager: "#" + childGridPagerID
@@ -311,6 +407,31 @@ $(document).ready(function(){
 
      	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
      	}
+
+	function showSubTaskSubGrid(parentRowID, parentRowKey) {
+     	    var childGridID = parentRowID + "_table";
+     	    var childGridPagerID = parentRowID + "_pager";
+     	    var childGridURL = "/report/3/" + parentRowKey;
+
+     	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+     	    $("#" + childGridID).jqGrid({
+     	        url: childGridURL,
+     	        mtype: "GET",
+     	        datatype: "json",
+     	        colModel: modelSubTaskSubGrid,
+     			height: 'auto',
+     	        //autowidth:true,
+                //subGrid: true,
+                //subGridRowExpanded: showSubTaskSubGrid,
+     	        regional : "es",
+     			viewrecords: true,
+     	        pager: "#" + childGridPagerID
+     	    });
+
+     	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
+     	}
+
 
 
 	var optionsPie ={
@@ -384,7 +505,7 @@ $(document).ready(function(){
 		        url: tourl,
 		        datatype: "json",
 		        page: 1,
-		        colModel: modelGrid,
+		        colModel: modelProgramGrid,
 				viewrecords: true,
 				regional : "es",
 				height: 'auto',

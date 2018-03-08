@@ -2490,19 +2490,23 @@ object Dashboard extends Controller {
 
       if(level == 0) {
         qrystr += "tipo ='PROGRAMA' "
-        data = DashboardService.manager(page, rows, qrystr, order)
-        records = DashboardService.countManager(qrystr)
       } else if(level == 1) {
         qrystr += "tipo ='PROYECTO' AND "
         qrystr += "program_id = " + parent + " "
-        data = DashboardService.manager(page, rows, qrystr, order)
-        records = DashboardService.countManager(qrystr)
       } else if(level == 2) {
         qrystr += "tipo ='TAREA' AND "
         qrystr += "project_id = " + parent + " "
-        data = DashboardService.manager(page, rows, qrystr, order)
-        records = DashboardService.countManager(qrystr)
+      } else if(level == 3) {
+        qrystr += "tipo ='SUBTAREA' AND "
+        qrystr += "task_id = " + parent + " "
       }
+
+      data = DashboardService.manager(page, rows, qrystr, order)
+      records = DashboardService.countManager(qrystr)
+
+      Logger.debug(" level ----------------> " + level)
+      Logger.debug(" parent ----------------> " + parent)
+      Logger.debug(" ----------------> " + qrystr)
 
       val pagedisplay = Math.ceil(records.toInt / rows.toFloat).toInt
       val grid = Grid(page, pagedisplay, records,Json.toJson(data))

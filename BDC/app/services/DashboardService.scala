@@ -289,6 +289,8 @@ object DashboardService {
             SELECT
             program_id,
             ISNULL(project_id,0) project_id,
+            ISNULL(task_id,0) task_id,
+            ISNULL(subtask_id,0) subtask_id,
             program_name,
             nombre_lider,
             program_type,
