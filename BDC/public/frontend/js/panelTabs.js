@@ -183,19 +183,20 @@ $(document).ready(function(){
                 }
 
             },
-            { label: 'SPI', name: 'spi', width: 150,
+            { label: 'SPI', name: 'spi', width: 100,
                 searchoptions:{
                     sopt: ["ge","le","eq"]
                 },
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
 
             },
-            { label: 'CPI', name: 'cpi', width: 150,
+            { label: 'CPI', name: 'cpi', width: 100,
                 searchoptions:{
                     sopt: ["ge","le","eq"]
                 },
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
             }
+
         ];
 
 	var modelProjectSubGrid=[
@@ -204,51 +205,16 @@ $(document).ready(function(){
             { label: 'Gerente', name: 'uid', jsonmap: 'nombre_lider', width: 200,
             },
             { label: 'Fecha inicio', name: 'plan_start_date',width: 180,
-                searchoptions:{
-                    dataInit:function(el){
-                        $(el).datepicker({
-                            dateFormat:'yy-mm-dd',
-                            changeYear: true,
-                            changeMonth: true
-                        });
-                    },
-                    sopt: ["le","ge"]
-                },
             },
             { label: 'Fecha lanzamiento',   name: 'plan_end_date', width: 180,
-                searchoptions:{
-                    dataInit:function(el){
-                        $(el).datepicker({
-                            dateFormat:'yy-mm-dd',
-                            changeYear: true,
-                            changeMonth: true
-                        });
-                    },
-                    sopt: ["le","ge"]
-                },
             },
             { label: '% Avance', name: 'pai', width: 150,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                }
             },
             { label: '% Plan', name: 'pae', width: 150,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                }
-
             },
-            { label: 'SPI', name: 'spi', width: 150,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                },
-                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            { label: 'SPI', name: 'spi', width: 50,
             },
-            { label: 'CPI', name: 'cpi', width: 150,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                },
-                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            { label: 'CPI', name: 'cpi', width: 50,
             }
         ];
 
@@ -258,51 +224,18 @@ $(document).ready(function(){
             { label: 'Propietario', name: 'uid', jsonmap: 'nombre_lider', width: 200,
             },
             { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
-                searchoptions:{
-                    dataInit:function(el){
-                        $(el).datepicker({
-                            dateFormat:'yy-mm-dd',
-                            changeYear: true,
-                            changeMonth: true
-                        });
-                    },
-                    sopt: ["le","ge"]
-                },
             },
             { label: 'Fecha Término',   name: 'plan_end_date', width: 180,
-                searchoptions:{
-                    dataInit:function(el){
-                        $(el).datepicker({
-                            dateFormat:'yy-mm-dd',
-                            changeYear: true,
-                            changeMonth: true
-                        });
-                    },
-                    sopt: ["le","ge"]
-                },
             },
             { label: '% Avance', name: 'pai', width: 150,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                }
             },
             { label: '% Plan', name: 'pae', width: 150,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                }
-
             },
-            { label: 'SPI', name: 'spi', width: 150,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                },
-                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            { label: 'SPI', name: 'spi', width: 50,
             },
-            { label: 'CPI', name: 'cpi', width: 150,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                },
-                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            { label: 'CPI', name: 'cpi', width: 50,
+            },
+            { label: 'Horas Consumidas', name: 'hours', width: 150,
             }
         ];
 
@@ -323,17 +256,9 @@ $(document).ready(function(){
             },
             { label: '% Plan', name: 'pae', width: 150,
             },
-            { label: 'SPI', name: 'spi', width: 150,hidden:true,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                },
-                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            { label: 'Consumidas', name: 'hours', width: 150,
             },
-            { label: 'CPI', name: 'cpi', width: 150,hidden:true,
-                searchoptions:{
-                    sopt: ["ge","le","eq"]
-                },
-                formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            { label: 'Asignadas', name: 'allocation', width: 150,
             }
         ];
 
@@ -350,7 +275,9 @@ $(document).ready(function(){
               	        datatype: "json",
               	        colModel: modelProjectSubGrid,
               			height: 'auto',
-              	        //autowidth:true,
+              	        autowidth:true,
+                        shrinkToFit:false,
+                        forceFit:true,
         		        subGrid: true,
                         subGridRowExpanded: showTaskSubGrid,
               	        regional : "es",
@@ -374,7 +301,9 @@ $(document).ready(function(){
      	        datatype: "json",
      	        colModel: modelTaskSubGrid,
      			height: 'auto',
-     	        //autowidth:true,
+     	        autowidth:true,
+                shrinkToFit:false,
+                forceFit:true,
                 subGrid: true,
                 subGridRowExpanded: showSubTaskSubGrid,
      	        regional : "es",
@@ -398,7 +327,9 @@ $(document).ready(function(){
      	        datatype: "json",
      	        colModel: modelSubTaskSubGrid,
      			height: 'auto',
-     	        //autowidth:true,
+     	        autowidth:true,
+                shrinkToFit:false,
+                forceFit:true,
                 //subGrid: true,
                 //subGridRowExpanded: showSubTaskSubGrid,
      	        regional : "es",

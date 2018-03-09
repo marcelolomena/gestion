@@ -43,7 +43,9 @@ case class Report(
                   pai: Option[BigDecimal],
                   pae: Option[BigDecimal],
                   spi: Option[BigDecimal],
-                  cpi: Option[BigDecimal]
+                  cpi: Option[BigDecimal],
+                  hours: Option[BigDecimal],
+                  allocation: Option[BigDecimal]
  )
 
 object Report {
@@ -67,7 +69,9 @@ object Report {
       get[Option[BigDecimal]]("pai") ~
       get[Option[BigDecimal]]("pae")  ~
       get[Option[BigDecimal]]("spi") ~
-      get[Option[BigDecimal]]("cpi")  map {
+      get[Option[BigDecimal]]("cpi") ~
+      get[Option[BigDecimal]]("hours") ~
+      get[Option[BigDecimal]]("allocation")  map {
       case
         program_id ~
         project_id  ~
@@ -87,7 +91,9 @@ object Report {
           pai ~
           pae ~
         spi ~
-        cpi => Report(
+        cpi ~
+          hours ~
+          allocation => Report(
         program_id ,
         project_id,
         task_id,
@@ -106,7 +112,9 @@ object Report {
         pai,
         pae,
         spi ,
-        cpi
+        cpi,
+        hours,
+        allocation
         )
     }
 
@@ -133,7 +141,9 @@ object Report {
         "pai" -> JsNumber(report.pai.getOrElse(0)),
         "pae" -> JsNumber(report.pae.getOrElse(0)),
         "spi" -> JsNumber(report.spi.getOrElse(0)),
-        "cpi" -> JsNumber(report.cpi.getOrElse(0))
+        "cpi" -> JsNumber(report.cpi.getOrElse(0)),
+        "hours" -> JsNumber(report.hours.getOrElse(0)),
+        "allocation" -> JsNumber(report.allocation.getOrElse(0))
       )
       JsObject(reportSeq)
     }
@@ -155,6 +165,8 @@ object Report {
         Option[Date](new Date),
         Option[Date](new Date),
         Option[Date](new Date),
+        Option[BigDecimal](0),
+        Option[BigDecimal](0),
         Option[BigDecimal](0),
         Option[BigDecimal](0),
         Option[BigDecimal](0),

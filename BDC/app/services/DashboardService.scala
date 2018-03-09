@@ -305,7 +305,9 @@ object DashboardService {
             ROUND(pai,2) pai,
             ROUND(pae,2) pae,
             ROUND(spi,2) spi,
-            ROUND(cpi,2) cpi
+            ROUND(cpi,2) cpi,
+            hours,
+            allocation
             FROM art_program_management
             WHERE """ + filter + order  + """
             OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
