@@ -195,6 +195,10 @@ $(document).ready(function(){
                     sopt: ["ge","le","eq"]
                 },
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            },
+            { label: 'Consumidas', name: 'hours', width: 150,
+            },
+            { label: 'Asignadas', name: 'allocation', width: 150,
             }
 
         ];
@@ -215,6 +219,10 @@ $(document).ready(function(){
             { label: 'SPI', name: 'spi', width: 50,
             },
             { label: 'CPI', name: 'cpi', width: 50,
+            },
+            { label: 'Consumidas', name: 'hours', width: 150,
+            },
+            { label: 'Asignadas', name: 'allocation', width: 150,
             }
         ];
 
@@ -235,7 +243,9 @@ $(document).ready(function(){
             },
             { label: 'CPI', name: 'cpi', width: 50,
             },
-            { label: 'Horas Consumidas', name: 'hours', width: 150,
+            { label: 'Consumidas', name: 'hours', width: 150,
+            },
+            { label: 'Asignadas', name: 'allocation', width: 150,
             }
         ];
 
