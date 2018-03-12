@@ -23,7 +23,7 @@ function returnUserLink(cellValue, options, rowdata, action)
 $(document).ready(function(){
 	$.datepicker.setDefaults($.datepicker.regional['es']);
 
-	Highcharts.setOptions({  
+	Highcharts.setOptions({
         lang: {  
         loading: 'Cargando...',  
         months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],  
@@ -43,12 +43,11 @@ $(document).ready(function(){
         decimalPoint: '.'  
     }   
 	});
-	
 
 	var modelProgramGrid=[
             { label: 'id', name: 'program_id', key: true, hidden:true },
             { label: 'Programa', name: 'program_name', width: 350,formatter: returnProgramLink },
-            { label: 'Estado', name: 'work_flow_status', jsonmap: 'work_flow_status', width: 250,
+            { label: 'Estado', name: 'work_flow_status', jsonmap: 'work_flow_status', width: 200,
                 		    stype: 'select',
                 			searchoptions: {
                 				dataUrl: '/list-all-workflowstatus',
@@ -63,7 +62,7 @@ $(document).ready(function(){
                 				}
                 		    },
             },
-            { label: 'Tipo', name: 'program_type', jsonmap: 'program_type', width: 250,
+            { label: 'Tipo', name: 'program_type', jsonmap: 'program_type', width: 150,
                 		    stype: 'select',
                 			searchoptions: {
                 				dataUrl: '/list-all-programtype',
@@ -108,7 +107,7 @@ $(document).ready(function(){
                          				}
                          		    },
             },
-            { label: 'Departamento', name: 'cod_dep', jsonmap: 'name_dep', width: 350,
+            { label: 'Departamento', name: 'cod_dep', jsonmap: 'name_dep', width: 250,
                          		    stype: 'select',
                          			searchoptions: {
                          				dataUrl: '/list-all-departament',
@@ -138,7 +137,7 @@ $(document).ready(function(){
                                  				}
                                  		    },
             },
-            { label: 'Fecha Inicio', name: 'plan_start_date',width: 180,
+            { label: 'Fecha Inicio', name: 'plan_start_date',width: 150, align: 'center',
                 searchoptions:{
                     dataInit:function(el){
                         $(el).datepicker({
@@ -155,7 +154,7 @@ $(document).ready(function(){
                     sopt: ["le","ge"]
                 },
             },
-            { label: 'Fecha Cierre',   name: 'plan_end_date', width: 180,
+            { label: 'Fecha Cierre',   name: 'plan_end_date', width: 150, align: 'center',
                 searchoptions:{
                     dataInit:function(el){
                         $(el).datepicker({
@@ -172,33 +171,41 @@ $(document).ready(function(){
                     sopt: ["le","ge"]
                 },
             },
-            { label: '% Informado', name: 'pai', width: 150,
+            { label: '% Informado', name: 'pai', width: 100, align: 'right',
                 searchoptions:{
                     sopt: ["ge","le","eq"]
                 }
             },
-            { label: '% Esperado', name: 'pae', width: 150,
+            { label: '% Esperado', name: 'pae', width: 100, align: 'right',
                 searchoptions:{
                     sopt: ["ge","le","eq"]
                 }
 
             },
-            { label: 'SPI', name: 'spi', width: 100,
+            { label: 'SPI', name: 'spi', width: 100, align: 'right',
                 searchoptions:{
                     sopt: ["ge","le","eq"]
                 },
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
 
             },
-            { label: 'CPI', name: 'cpi', width: 100,
+            { label: 'CPI', name: 'cpi', width: 100, align: 'right',
                 searchoptions:{
                     sopt: ["ge","le","eq"]
                 },
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
-            { label: 'Consumidas', name: 'hours', width: 150,
+            { label: 'Consumidas', name: 'hours', width: 100, align: 'right',
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
-            { label: 'Asignadas', name: 'allocation', width: 150,
+            { label: 'Asignadas', name: 'allocation', width: 100, align: 'right',
+                searchoptions:{
+                    sopt: ["ge","le","eq"]
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
             }
 
         ];
@@ -250,7 +257,7 @@ $(document).ready(function(){
         ];
 
 	var modelSubTaskSubGrid=[
-            { label: 'id', name: 'task_id', key: true, hidden:true },
+            { label: 'id', name: 'subtask_id', key: true, hidden:true },
             { label: 'Sub-Tareas', name: 'program_name', width: 350,formatter: returnSubTaskLink },
             { label: 'Gerente', name: 'uid', jsonmap: 'nombre_lider', width: 200,hidden:true,
             },
@@ -275,7 +282,7 @@ $(document).ready(function(){
 	function showProjectSubGrid(parentRowID, parentRowKey) {
               	    var childGridID = parentRowID + "_table";
               	    var childGridPagerID = parentRowID + "_pager";
-              	    var childGridURL = "/report/1/" + parentRowKey;
+              	    var childGridURL = "/report/H/1/" + parentRowKey;
 
               	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -291,7 +298,10 @@ $(document).ready(function(){
         		        subGrid: true,
                         subGridRowExpanded: showTaskSubGrid,
               	        regional : "es",
-              			viewrecords: true,
+                        rowList: [],
+			            pgbuttons: false,
+			            pgtext: null,
+			            viewrecords: false,
               	        pager: "#" + childGridPagerID
               	    });
 
@@ -301,7 +311,7 @@ $(document).ready(function(){
 	function showTaskSubGrid(parentRowID, parentRowKey) {
      	    var childGridID = parentRowID + "_table";
      	    var childGridPagerID = parentRowID + "_pager";
-     	    var childGridURL = "/report/2/" + parentRowKey;
+     	    var childGridURL = "/report/H/2/" + parentRowKey;
 
      	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -317,7 +327,10 @@ $(document).ready(function(){
                 subGrid: true,
                 subGridRowExpanded: showSubTaskSubGrid,
      	        regional : "es",
-     			viewrecords: true,
+                rowList: [],
+		        pgbuttons: false,
+		        pgtext: null,
+		        viewrecords: false,
      	        pager: "#" + childGridPagerID
      	    });
 
@@ -327,7 +340,7 @@ $(document).ready(function(){
 	function showSubTaskSubGrid(parentRowID, parentRowKey) {
      	    var childGridID = parentRowID + "_table";
      	    var childGridPagerID = parentRowID + "_pager";
-     	    var childGridURL = "/report/3/" + parentRowKey;
+     	    var childGridURL = "/report/H/3/" + parentRowKey;
 
      	    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -343,14 +356,15 @@ $(document).ready(function(){
                 //subGrid: true,
                 //subGridRowExpanded: showSubTaskSubGrid,
      	        regional : "es",
-     			viewrecords: true,
+                rowList: [],
+                pgbuttons: false,
+	            pgtext: null,
+	            viewrecords: false,
      	        pager: "#" + childGridPagerID
      	    });
 
      	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
      	}
-
-
 
 	var optionsPie ={
 			chart: {
@@ -387,8 +401,6 @@ $(document).ready(function(){
 	            }
 	        },series: []			
 	};	
-	
-
 
     $("#tabs").tabs({
       beforeLoad: function( event, ui ) {
@@ -429,6 +441,7 @@ $(document).ready(function(){
 				height: 'auto',
 		        autowidth:true,
 		        //width: 950,
+       	        loadonce: true,
 		        rowNum: 25,
 		        shrinkToFit:false,
                 forceFit:true,
@@ -439,6 +452,39 @@ $(document).ready(function(){
 		    }).jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
 
         grid.jqGrid('setCaption', name).jqGrid('setGridParam', { url: tourl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+
+        grid.jqGrid('navGrid','#jqGridPager',{edit: false, add: false, del: false,refresh:true,search: false, position: "left", cloneToTop: false }
+        );
+
+        grid.navButtonAdd('#jqGridPager', {
+            buttonicon: "ui-icon-circle-triangle-e",
+            title: "Excel",
+            caption: "Excel",
+            position: "last",
+            onClickButton: function() {
+                grid.jqGrid("exportToExcel", {
+                    includeLabels: true,
+                    includeGroupHeader: true,
+                    includeFooter: true,
+                    fileName: "prueba.xlsx"
+                })
+            }
+        });
+
+/*
+        grid.jqGrid('navButtonAdd','#jqGridPager',{
+            caption:"",
+            buttonicon : "silk-icon-page-excel",
+            title: "Exportar a Excel",
+            onClickButton : function () {
+                var grid = $("#jqGrid");
+                var rowKey = grid.getGridParam("selrow");
+                var url = '/report/X/0/0';
+                $("#jqGrid").jqGrid('excelExport',{"url":url});
+           }
+        });
+*/
+
 
         return false;
 

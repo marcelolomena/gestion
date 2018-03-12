@@ -2430,7 +2430,7 @@ object Dashboard extends Controller {
 
   }
 
-  def report(level: Int,parent: Int) = Action { implicit request =>
+  def report(view: String, level: Int,parent: Int) = Action { implicit request =>
     request.session.get("username").map { user =>
 
       val uid = request.session.get("uId").get
@@ -2500,6 +2500,8 @@ object Dashboard extends Controller {
         qrystr += "tipo ='SUBTAREA' AND "
         qrystr += "task_id = " + parent + " "
       }
+
+      Logger.debug("view: -------> " + view)
 
       data = DashboardService.manager(page, rows, qrystr, order)
       records = DashboardService.countManager(qrystr)

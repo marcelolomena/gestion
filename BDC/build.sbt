@@ -24,7 +24,8 @@ libraryDependencies ++= Seq(
   "com.google.guava" % "guava" % "16.0.1",
   "org.julienrf" %% "play-jsmessages" % "1.6.2",
   //"org.webjars" % "tinymce-jquery" % "4.0.16"
-  "org.webjars.bower" % "tinymce" % "4.6.5"
+  //"org.webjars.bower" % "tinymce" % "4.6.5",
+  "org.webjars" % "jszip" % "3.1.0"
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)

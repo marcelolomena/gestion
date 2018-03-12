@@ -1042,7 +1042,7 @@ object Incident extends Controller {
             }
 
           }
-          println(qrystr)
+          //println(qrystr)
           if (tieneJson) {
             panel = IncidentService.list("0", "0", qrystr,user_id)
           } else {
