@@ -307,7 +307,10 @@ object DashboardService {
             ROUND(spi,2) spi,
             ROUND(cpi,2) cpi,
             hours,
-            allocation
+            allocation,
+            pcod,
+            foco,
+            tamano
             FROM art_program_management
             WHERE """ + filter + order  + """
             OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
@@ -316,6 +319,46 @@ object DashboardService {
         SQL(sqlString).on('ini -> ini,'end -> end).as(Report.report * )
     }
   }
+
+  def managerWwithoutPage(filter: String, order: String): Seq[Report] = {
+    DB.withConnection { implicit connection =>
+
+      val sqlString =
+        """
+            SELECT
+            program_id,
+            ISNULL(project_id,0) project_id,
+            ISNULL(task_id,0) task_id,
+            ISNULL(subtask_id,0) subtask_id,
+            program_name,
+            nombre_lider,
+            program_type,
+            work_flow_status,
+            name_div,
+            name_man,
+            name_dep,
+            plan_start_date,
+            plan_end_date,
+            real_start_date,
+            real_end_date,
+            ROUND(pai,2) pai,
+            ROUND(pae,2) pae,
+            ROUND(spi,2) spi,
+            ROUND(cpi,2) cpi,
+            ROUND(hours,2) hours,
+            ROUND(allocation,2) allocation,
+            pcod,
+            foco,
+            tamano
+            FROM art_program_management
+            WHERE """ + filter + order  + """
+          """.stripMargin
+
+      SQL(sqlString).as(Report.report * )
+    }
+  }
+
+
 
   def countManager(filter: String): Int = {
     DB.withConnection { implicit connection =>
@@ -382,6 +425,28 @@ object DashboardService {
         """.stripMargin
 
       SQL(sqlstr).as(DivisionsList.divisionList *)
+    }
+  }
+
+  def findAllSubType(): Seq[DummyList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |select DISTINCT foco AS value,foco AS name from art_program_management where tipo='PROGRAMA' ORDER BY foco
+        """.stripMargin
+
+      SQL(sqlstr).as(DummyList.dummyList *)
+    }
+  }
+
+  def findAllInternalState(): Seq[DummyList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |select DISTINCT tamano AS value,tamano AS name from art_program_management where tipo='PROGRAMA' and tamano != '' ORDER BY tamano
+        """.stripMargin
+
+      SQL(sqlstr).as(DummyList.dummyList *)
     }
   }
 

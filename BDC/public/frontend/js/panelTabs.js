@@ -77,6 +77,41 @@ $(document).ready(function(){
                 				}
                 		    },
             },
+            { label: 'Numero', name: 'pcod', width: 100,
+                  searchoptions:{
+                      sopt: ["ge","le","eq"]
+                  }
+            },
+            { label: 'Foco', name: 'foco', width: 150,
+                            		    stype: 'select',
+                            			searchoptions: {
+                            				dataUrl: '/list-all-sub-type',
+                            				buildSelect: function (response) {
+                            					var data = JSON.parse(response);
+                            					var s = "<select>";
+                            					s += '<option value="0">--Escoger Foco--</option>';
+                            					$.each(data, function(i, item) {
+                            						s += '<option value="' + data[i].value + '">' + data[i].name + '</option>';
+                            					});
+                            					return s + "</select>";
+                            				}
+                            		    },
+            },
+            { label: 'Tamaño', name: 'tamano', width: 150,
+                       		    stype: 'select',
+                    			searchoptions: {
+                     				dataUrl: '/list-all-internal-state',
+                                    buildSelect: function (response) {
+                                        var data = JSON.parse(response);
+                                        var s = "<select>";
+                                        s += '<option value="0">--Escoger Tamaño--</option>';
+                                        $.each(data, function(i, item) {
+                                            s += '<option value="' + data[i].value + '">' + data[i].name + '</option>';
+                                        });
+                                        return s + "</select>";
+                                        }
+                                },
+            },
             { label: 'División', name: 'cod_div', jsonmap: 'name_div', width: 250,
                 		    stype: 'select',
                 			searchoptions: {
@@ -353,8 +388,6 @@ $(document).ready(function(){
      	        autowidth:true,
                 shrinkToFit:false,
                 forceFit:true,
-                //subGrid: true,
-                //subGridRowExpanded: showSubTaskSubGrid,
      	        regional : "es",
                 rowList: [],
                 pgbuttons: false,
@@ -441,7 +474,7 @@ $(document).ready(function(){
 				height: 'auto',
 		        autowidth:true,
 		        //width: 950,
-       	        loadonce: true,
+       	        //loadonce: true,
 		        rowNum: 25,
 		        shrinkToFit:false,
                 forceFit:true,
@@ -455,7 +488,7 @@ $(document).ready(function(){
 
         grid.jqGrid('navGrid','#jqGridPager',{edit: false, add: false, del: false,refresh:true,search: false, position: "left", cloneToTop: false }
         );
-
+/*
         grid.navButtonAdd('#jqGridPager', {
             buttonicon: "ui-icon-circle-triangle-e",
             title: "Excel",
@@ -468,6 +501,20 @@ $(document).ready(function(){
                     includeFooter: true,
                     fileName: "prueba.xlsx"
                 })
+            }
+        });
+*/
+
+        grid.navButtonAdd('#jqGridPager', {
+            buttonicon: "ui-icon-circle-triangle-e",
+            title: "Excel",
+            caption: "Excel",
+            position: "last",
+            onClickButton: function() {
+                //var grid = $("#jqGrid");
+                //var rowKey = grid.getGridParam("selrow");
+                var url = '/report/X/0/0';
+                grid.jqGrid('excelExport',{"url":url});
             }
         });
 
@@ -484,8 +531,6 @@ $(document).ready(function(){
            }
         });
 */
-
-
         return false;
 
         ui.jqXHR.fail(function() {

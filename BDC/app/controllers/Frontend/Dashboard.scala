@@ -1,51 +1,29 @@
 package controllers.Frontend
 
 import java.util.List
-
 import scala.math.BigDecimal.double2bigDecimal
 import scala.math.BigDecimal.int2bigDecimal
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
-import org.json.JSONObject
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import services.DepartmentService
-import services.DivisionService
-import services.ProgramService
-import services.ProjectService
-import services.SubTaskServices
-import services.TimesheetService
-import services.UserService
 import java.util.Calendar
 import java.util.Date
-import models.Report
 import models._
-//import play.libs.Json
 import play.api.libs.json._
 import org.json.JSONObject
-import services.ProgramMemberService
 import art_forms.ARTForms
-import services.ProgramTypeService
-import services.SubTypeService
-import services.TaskService
-import services.DocumentService
-import services.DashboardService
-import services.BudgetTypeService
-import services.EarnValueService
-
+import services._
 import scala.math.BigDecimal.RoundingMode
-import utils.DateTime
-import services.SpiCpiCalculationsService
-import services.RiskService
 import java.io.File
+import java.io.PrintWriter
 import java.io.FileOutputStream
-
 import org.apache.poi.xssf.usermodel._
 import utils.FormattedOutPuts
 import net.liftweb.json._
-import net.liftweb.json.JsonParser._
-import models.Formatters._
 import play.Logger
+import play.api.libs.Files.TemporaryFile
+
 
 object Dashboard extends Controller {
 
@@ -2503,18 +2481,133 @@ object Dashboard extends Controller {
 
       Logger.debug("view: -------> " + view)
 
-      data = DashboardService.manager(page, rows, qrystr, order)
-      records = DashboardService.countManager(qrystr)
+      view match {
+        case "H" =>
+          data = DashboardService.manager(page, rows, qrystr, order)
+          records = DashboardService.countManager(qrystr)
 
-      val pagedisplay = Math.ceil(records.toInt / rows.toFloat).toInt
-      val grid = Grid(page, pagedisplay, records,Json.toJson(data))
+          val pageDisplay = Math.ceil(records.toInt / rows.toFloat).toInt
+          val grid = Grid(page, pageDisplay, records,Json.toJson(data))
 
-      Ok(Json.toJson(grid)).withSession(
-        "username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get
-      )
+          Ok(Json.toJson(grid)).withSession(
+            "username" -> request.session.get("username").get,
+            "utype" -> request.session.get("utype").get,
+            "uId" -> request.session.get("uId").get,
+            "user_profile" -> request.session.get("user_profile").get
+          )
+
+        case "X" =>
+          data = DashboardService.managerWwithoutPage(qrystr, order)
+          val fileToServe = TemporaryFile(new File("report.xlsx"))
+          val file = new File("report.xlsx")
+          val fileOut = new FileOutputStream(file);
+          val wb = new XSSFWorkbook
+          val sheet = wb.createSheet("ART")
+
+          val rowHead = sheet.createRow(0)
+          val style = wb.createCellStyle()
+          val font = wb.createFont()
+
+          var rNum = 1
+          var cNum = 0
+
+          font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL)
+          font.setFontHeightInPoints(10)
+          font.setBold(true)
+          style.setFont(font)
+          rowHead.createCell(0).setCellValue("Programa")
+          rowHead.createCell(1).setCellValue("Lider")
+          rowHead.createCell(2).setCellValue("Tipo")
+          rowHead.createCell(3).setCellValue("Estado")
+          rowHead.createCell(4).setCellValue("división")
+          rowHead.createCell(5).setCellValue("Gerencia")
+          rowHead.createCell(6).setCellValue("Departamento")
+          rowHead.createCell(7).setCellValue("Fecha inicio")
+          rowHead.createCell(8).setCellValue("Fecha término")
+          rowHead.createCell(9).setCellValue("Fecha inicio real")
+          rowHead.createCell(10).setCellValue("Fecha término real")
+          rowHead.createCell(11).setCellValue("Pai")
+          rowHead.createCell(12).setCellValue("Pae")
+          rowHead.createCell(13).setCellValue("Spi")
+          rowHead.createCell(14).setCellValue("Cpi")
+          rowHead.createCell(15).setCellValue("Horas consumidas")
+          rowHead.createCell(16).setCellValue("Horas asignadas")
+
+
+          for (j <- 0 to 16)
+            rowHead.getCell(j).setCellStyle(style);
+
+          for (s <- data) {
+            var row = sheet.createRow(rNum)
+
+            val cel0 = row.createCell(cNum)
+            cel0.setCellValue(s.program_name.getOrElse(""))
+
+            val cel1 = row.createCell(cNum + 1)
+            cel1.setCellValue(s.nombre_lider.getOrElse(""))
+
+            val cel2 = row.createCell(cNum + 2)
+            cel2.setCellValue(s.program_type.getOrElse(""))
+
+            val cel3 = row.createCell(cNum + 3)
+            cel3.setCellValue(s.work_flow_status.getOrElse(""))
+
+            val cel4 = row.createCell(cNum + 4)
+            cel4.setCellValue(s.name_div.getOrElse(""))
+
+            val cel5 = row.createCell(cNum + 5)
+            cel5.setCellValue(s.name_man.getOrElse(""))
+
+            val cel6 = row.createCell(cNum + 6)
+            cel6.setCellValue(s.name_dep.getOrElse(""))
+
+            val cel7 = row.createCell(cNum + 7)
+            cel7.setCellValue(s.plan_start_date.getOrElse("").toString)
+
+            val cel8 = row.createCell(cNum + 8)
+            cel8.setCellValue(s.plan_end_date.getOrElse("").toString)
+
+            val cel9 = row.createCell(cNum + 9)
+            cel9.setCellValue(s.real_start_date.getOrElse("").toString)
+
+            val cel10 = row.createCell(cNum + 10)
+            cel10.setCellValue(s.real_end_date.getOrElse("").toString)
+
+            val cel11 = row.createCell(cNum + 11)
+            cel11.setCellValue(s.pai.getOrElse(0).toString())
+
+            val cel12 = row.createCell(cNum + 12)
+            cel12.setCellValue(s.pae.getOrElse(0).toString())
+
+            val cel13 = row.createCell(cNum + 13)
+            cel13.setCellValue(s.spi.getOrElse(0).toString())
+
+            val cel14 = row.createCell(cNum + 14)
+            cel14.setCellValue(s.cpi.getOrElse(0).toString())
+
+            val cel15 = row.createCell(cNum + 15)
+            cel15.setCellValue(s.hours.getOrElse(0).toString)
+
+            val cel16 = row.createCell(cNum + 16)
+            cel16.setCellValue(s.allocation.getOrElse(0).toString)
+
+            rNum = rNum + 1
+            cNum = 0
+
+          }
+
+          for (a <- 0 to 16) {
+            sheet.autoSizeColumn((a.toInt));
+          }
+
+          val time = new Date()
+
+          wb.write(fileOut);
+          fileOut.close();
+          Ok.sendFile(content = file, fileName = _ => "report_" + time.getTime + ".xlsx")
+
+      }
+
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
@@ -2526,6 +2619,36 @@ object Dashboard extends Controller {
     request.session.get("username").map { user =>
 
       val div = DashboardService.findAllDivisionRRHH
+
+      Ok(Json.toJson(div)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def listAllSubType = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val div = DashboardService.findAllSubType
+
+      Ok(Json.toJson(div)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def listAllInternalState = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val div = DashboardService.findAllInternalState
 
       Ok(Json.toJson(div)).withSession("username" -> request.session.get("username").get,
         "utype" -> request.session.get("utype").get,
@@ -2610,6 +2733,27 @@ object Dashboard extends Controller {
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
+  }
+
+  def writeToTempFile(contents: String,
+                      prefix: Option[String] = None,
+                      suffix: Option[String] = None): File = {
+    val tempFi = File.createTempFile(prefix.getOrElse("prefix-"),
+      suffix.getOrElse("-suffix"))
+    tempFi.deleteOnExit()
+    new PrintWriter(tempFi) {
+      // Any statements inside the body of a class in scala are executed on construction.
+      // Therefore, the following try-finally block is executed immediately as we're creating
+      // a standard PrinterWriter (with its implementation) and then using it.
+      // Alternatively, we could have created the PrintWriter, assigned it a name,
+      // then called .write() and .close() on it. Here, we're simply opting for a terser representation.
+      try {
+        write(contents)
+      } finally {
+        close()
+      }
+    }
+    tempFi
   }
 
 }

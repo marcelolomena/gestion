@@ -45,7 +45,10 @@ case class Report(
                   spi: Option[BigDecimal],
                   cpi: Option[BigDecimal],
                   hours: Option[BigDecimal],
-                  allocation: Option[BigDecimal]
+                  allocation: Option[BigDecimal],
+                  pcod: Option[BigDecimal],
+                  foco: Option[String],
+                  tamano: Option[String]
  )
 
 object Report {
@@ -71,7 +74,10 @@ object Report {
       get[Option[BigDecimal]]("spi") ~
       get[Option[BigDecimal]]("cpi") ~
       get[Option[BigDecimal]]("hours") ~
-      get[Option[BigDecimal]]("allocation")  map {
+      get[Option[BigDecimal]]("allocation") ~
+      get[Option[BigDecimal]]("pcod") ~
+      get[Option[String]]("foco") ~
+      get[Option[String]]("tamano") map {
       case
         program_id ~
         project_id  ~
@@ -93,7 +99,10 @@ object Report {
         spi ~
         cpi ~
           hours ~
-          allocation => Report(
+          allocation ~
+        pcod ~
+        foco ~
+        tamano => Report(
         program_id ,
         project_id,
         task_id,
@@ -114,7 +123,10 @@ object Report {
         spi ,
         cpi,
         hours,
-        allocation
+        allocation,
+        pcod,
+        foco,
+        tamano
         )
     }
 
@@ -143,7 +155,10 @@ object Report {
         "spi" -> JsNumber(report.spi.getOrElse(0)),
         "cpi" -> JsNumber(report.cpi.getOrElse(0)),
         "hours" -> JsNumber(report.hours.getOrElse(0)),
-        "allocation" -> JsNumber(report.allocation.getOrElse(0))
+        "allocation" -> JsNumber(report.allocation.getOrElse(0)),
+        "pcod" -> JsNumber(report.pcod.getOrElse(0)),
+        "foco" -> JsString(report.foco.getOrElse("")),
+        "tamano" -> JsString(report.tamano.getOrElse(""))
       )
       JsObject(reportSeq)
     }
@@ -170,7 +185,10 @@ object Report {
         Option[BigDecimal](0),
         Option[BigDecimal](0),
         Option[BigDecimal](0),
-        Option[BigDecimal](0)
+        Option[BigDecimal](0),
+        Option[BigDecimal](0),
+        Option[String](""),
+        Option[String]("")
       ))
     }
 
