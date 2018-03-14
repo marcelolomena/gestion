@@ -4,39 +4,17 @@ var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 var contratoservicioController = require('../controllers/contratoservicio');
 var contratoController = require('../controllers/contrato');
-var models = require('../models');
-var sequelize = require('../models/index').sequelize;
-var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-/*
-    router.get('/contratos', isAuthenticated, function (req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'contratos' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'contratos',
-                title: 'CONTRATOS',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });
+    router.get('/contratos', isAuthenticated, function (req, res) {
+        res.render('contratos', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/contratos/list')
         .post(isAuthenticated, contratoController.list)
         .get(isAuthenticated, contratoController.listall);
-
+ 
     router.route('/contratos/action')
         .post(isAuthenticated, contratoController.action);
 
@@ -51,15 +29,15 @@ module.exports = function (passport) {
 
     router.route('/contratoservicio/:id')
         .post(isAuthenticated, contratoservicioController.list);
-
+        
     router.route('/contratoproveedor/:id')
-        .get(isAuthenticated, contratoController.listaporproveedor);
-
+        .get(isAuthenticated, contratoController.listaporproveedor); 
+        
     router.route('/contratoservicio/plantillapresupuesto/:id')
         .get(isAuthenticated, contratoservicioController.plantillapresupuesto);
-
+        
     router.route('/contratoservicio/cuiforservice/:idp/:ids/:sap')
-        .get(isAuthenticated, contratoservicioController.cuiforservice);
+        .get(isAuthenticated, contratoservicioController.cuiforservice);               
 
     router.route('/contratoservicio/action/:id')
         .post(isAuthenticated, contratoservicioController.action);
@@ -68,23 +46,27 @@ module.exports = function (passport) {
         .post(isAuthenticated, contratoservicioController.oper);
 
     router.route('/contratoperiodos')
-        .get(isAuthenticated, contratoservicioController.getPeriodos);
-
+        .get(isAuthenticated, contratoservicioController.getPeriodos);  
+        
     router.route('/contratoservicio/saldopresup/:id/:id2')
-        .get(isAuthenticated, contratoservicioController.getSaldoPresup);
+        .get(isAuthenticated, contratoservicioController.getSaldoPresup);            
 
     router.route('/contrato/tipodocumento')
-        .get(isAuthenticated, contratoController.getTipoDocumentos);
-
+        .get(isAuthenticated, contratoController.getTipoDocumentos);   
+        
     router.route('/getcodigoart/:id')
-        .get(isAuthenticated, contratoController.getCodigoart);
-
+        .get(isAuthenticated, contratoController.getCodigoart);        
+        
     router.route('/getlistasap/:id/:id2')
-        .get(isAuthenticated, contratoservicioController.getListaSAP);
-
+        .get(isAuthenticated, contratoservicioController.getListaSAP);        
+        
     router.route('/getlistatareas/:id/:id2')
-        .get(isAuthenticated, contratoservicioController.getListaTareas);
+        .get(isAuthenticated, contratoservicioController.getListaTareas);   
 
+    router.get('/contratoslectura', isAuthenticated, function (req, res) {
+        res.render('contrato_lectura', { user: req.user, data: req.session.passport.sidebar });
+    });		
+        
     return router;
 
 }

@@ -2,9 +2,8 @@ $(document).ready(function () {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Glosa Presupuesto {glosa}</div>";
+    template += "<div class='column-half'>Glosa Presupuesto {glosa}</div>";
     template += "<div class='column-half'><span style='color: red'>*</span>N° SAP{sap}</div>";
-    template += "<div class='column-half'>Extensión{extension}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -39,10 +38,6 @@ $(document).ready(function () {
                 }
             },
         },
-        {
-            label: 'Extension', name: 'extension', width: 50, align: 'left',
-            search: false, editable: true, hidden: false
-        },           
         /*
         {
             label: 'program_id', name: 'program_id', width: 150, align: 'left',
@@ -285,7 +280,6 @@ $(document).ready(function () {
                 $('input#codigoart', form).attr('readonly', 'readonly');
                 $('input#glosa', form).attr('readonly', 'readonly');
                 $('input#fechafinal', form).attr('readonly', 'readonly');
-                $('input#extension', form).attr('readonly', 'readonly');
                 //$('#program_id').attr('disabled', 'disabled');
                 var grid = $("#table_iniciativa");
                 var rowKey = grid.getGridParam("selrow");

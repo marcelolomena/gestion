@@ -46,6 +46,7 @@ exports.action = function (req, res) {
             });
             break;
         case "edit":
+
             bitacora.registrar(
                 req.body.idsolicitudcotizacion,
                 'documentoscotizacion',
@@ -80,19 +81,28 @@ exports.action = function (req, res) {
 
             break;
         case "del":
+
             models.documentoscotizacion.findAll({
                 where: {
                     id: req.body.id
                 }
             }).then(function (documentoscotizacion) {
+                //console.dir(documentoscotizacion)
+                //logger.debug("--->>>" + documentoscotizacion[0].nombrearchivo)
+                //logger.debug("--->>>" + documentoscotizacion[0].nombrearchivo.trim().length)
                 if (documentoscotizacion[0].nombrearchivo.trim().length > 0) {
                     var filedoc = path.join(__dirname, '../../', 'public/docs/' + req.body.idsolicitudcotizacion, documentoscotizacion[0].nombrearchivo);
+                    //logger.debug(filedoc)
                     fs.stat(filedoc, function (err, stats) {
+                        //logger.debug(stats);
+
                         if (err) {
                             return logger.error(err);
                         }
+
                         fs.unlink(filedoc, function (err) {
                             if (err) return logger.error(err);
+                            //logger.debug('file deleted successfully');
                         });
                     });
                 }
@@ -130,9 +140,10 @@ exports.action = function (req, res) {
 
             break;
     }
-};
+}
 
 exports.list = function (req, res) {
+
     var page = req.query.page;
     var rows = req.query.rows;
     var filters = req.query.filters;
@@ -176,8 +187,11 @@ exports.list = function (req, res) {
 exports.upload = function (req, res) {
 
     if (req.method === 'POST') {
+
         var busboy = new Busboy({ headers: req.headers });
+
         var awaitId = new Promise(function (resolve, reject) {
+
             busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
                 if (fieldname === 'id') {
                     try {
@@ -192,6 +206,7 @@ exports.upload = function (req, res) {
         });
 
         var awaitParent = new Promise(function (resolve, reject) {
+
             busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
                 if (fieldname === 'parent') {
                     try {
@@ -230,14 +245,20 @@ exports.upload = function (req, res) {
         }
 
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+
             var saveTo = path.join(__dirname, '../../', 'docs', filename);
+            //logger.debug("actual : " + saveTo)
             file.pipe(fs.createWriteStream(saveTo));
+
             awaitParent.then(function (idParent) {
+
                 var dir = path.join(__dirname, '../../', 'public/docs/' + idParent);
                 checkDirectorySync(dir);
                 var dest = path.join(__dirname, '../../', 'public/docs/' + idParent, filename);
                 copyFile(saveTo, dest)
+
                 awaitId.then(function (idDetail) {
+                    //logger.debug("idDetail : " + idDetail)
                     models.documentoscotizacion.update({
                         nombrearchivo: filename
                     }, {
@@ -249,38 +270,47 @@ exports.upload = function (req, res) {
                             logger.error(err)
                             res.json({ id: 0, message: err.message, success: false });
                         });
+
                 }).catch(function (err) {
                     res.json({ error_code: 1, message: err.message, success: false });
                     logger.error(err)
                 });
+
             }).catch(function (err) {
                 res.json({ error_code: 1, message: err.message, success: false });
                 logger.error(err)
             });
+
         });
 
         busboy.on('finish', function () {
             logger.debug("Finalizo la transferencia del archivo")
+
             res.json({ error_code: 0, message: 'Archivo guardado', success: true });
         });
 
         return req.pipe(busboy);
     }
 
-};
+}
 exports.gettipodocumentos = function (req, res) {
+
     sequelize.query(
         'select a.* ' +
         'from sic.tipodocumento a ' +
         'order by a.nombrecorto asc',
+        //'select a.* ' +
+        //'from sic.tipodocumento a ',
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
+        //logger.debug(valores)
         res.json(valores);
     }).catch(function (err) {
         logger.error(err);
         res.json({ error: 1 });
     });
-};
+}
+
 exports.getplantillatipo = function (req, res) {
     var idtipo = req.params.idtipo;
     sequelize.query(
@@ -288,15 +318,18 @@ exports.getplantillatipo = function (req, res) {
         'from sic.tipodocumento a where id=' + idtipo,
         { type: sequelize.QueryTypes.SELECT }
     ).then(function (valores) {
+        //logger.debug(valores)
         res.json(valores);
     }).catch(function (err) {
         logger.error(err);
         res.json({ error: 1 });
     });
-};
+}
 exports.documentousuario = function (req, res) {
+
     var iddoc = req.params.iddoc;
     var idusuario = req.session.passport.user;
+
     sequelize.query(
         'SELECT uid ' +
         'FROM sic.documentoscotizacion ' +
@@ -312,7 +345,8 @@ exports.documentousuario = function (req, res) {
         logger.error(err);
         res.json({ error: 1 });
     });
-};
+}
+
 exports.listaaprobaciondoc = function (req, res) {
 
     var id = req.params.id;
@@ -362,6 +396,7 @@ exports.listaaprobaciondoc = function (req, res) {
     });
 
 };
+
 exports.actionaprobaciondoc = function (req, res) {
     var action = req.body.oper;
     var iddocumentocotizacion = req.body.parent_id;
@@ -466,4 +501,4 @@ exports.actionaprobaciondoc = function (req, res) {
             })
             break;
     }
-};
+}

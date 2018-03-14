@@ -14,10 +14,6 @@ $(document).ready(function () {
     tmpl += "<div class='column-full'>Valor {valor}</div>";
     tmpl += "</div>";
 
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Secuencia {secuencia}</div>";
-    tmpl += "</div>";
-
     tmpl += "<div class='form-row' style='display: none;'>";
     tmpl += "<div class='column-half'>tipo {tipo}</div>";
     tmpl += "</div>";
@@ -28,14 +24,14 @@ $(document).ready(function () {
 
     var modelParametro = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        {
+        {   
             label: 'Tipo', name: 'tipo', width: 300, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true,
             stype: 'select',
             searchoptions: {
                 dataUrl: '/tipos',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#table_parametro");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.tipo;
@@ -54,12 +50,13 @@ $(document).ready(function () {
             }
         },
         {
+            
             label: 'Tipo', name: 'idtipo', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/tipos',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#table_parametro");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.tipo;
@@ -84,32 +81,6 @@ $(document).ready(function () {
         },
 
         {
-            label: 'Secuencia', name: 'secuencia', width: 300, align: 'left', search: true, editable: true,
-            editrules: { edithidden: false }, hidedlg: true,
-            stype: 'select',
-            searchoptions: {
-                dataUrl: '/tipos',
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.tipo;
-                    var data = JSON.parse(response);
-                    var s = "<select>";//el default
-                    s += '<option value="0">--Escoger Secuencia--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].tipo == thissid) {
-                            s += '<option value="' + data[i].secuencia + '" selected>' + data[i].secuencia + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].secuencia + '">' + data[i].secuencia + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                }
-            }
-        },
-
-        {
             label: 'Nombre', name: 'nombre', width: 300, align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
@@ -122,7 +93,7 @@ $(document).ready(function () {
 
     ];
 
-    $("#grid").jqGrid({
+    $("#table_parametro").jqGrid({
         url: '/parametros/list',
         mtype: "POST",
         datatype: "json",
@@ -134,7 +105,7 @@ $(document).ready(function () {
         width: null,
         shrinkToFit: false,
         caption: 'Lista de parametros',
-        pager: "#pager",
+        pager: "#pager_parametro",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/parametros/action',
@@ -145,9 +116,9 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#table_parametro").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#grid').jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#table_parametro').jqGrid('navGrid', "#pager_parametro", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
             editCaption: "Modifica Parametro",
             closeAfterEdit: true,
@@ -165,9 +136,9 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#grid').attr('id'));
+                sipLibrary.centerDialog($('#table_parametro').attr('id'));
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_parametro").attr('id'));
             }
         },
         {
@@ -192,13 +163,13 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 } else {
                     var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                    $("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                    $("#table_parametro").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#grid').attr('id'));
+                sipLibrary.centerDialog($('#table_parametro').attr('id'));
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_parametro").attr('id'));
             }
         },
         {
@@ -220,5 +191,5 @@ $(document).ready(function () {
         }
     );
 
-    $("#pager_left").css("width", "");
+    $("#pager_parametro_left").css("width", "");
 });

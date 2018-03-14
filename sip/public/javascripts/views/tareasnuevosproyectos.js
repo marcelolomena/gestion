@@ -17,9 +17,9 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
     template += "<div class='column-half'><span style='color: red'>*</span>Tarea{tarea}</div>";
     template += "</div>";
     
-    template += "<div class='form-row'>";
-    template += "<div class='column-full'><span style='color: red'>*</span>Nombre Tarea{nombre}</div>";
-    template += "</div>";  
+    //template += "<div class='form-row'>";
+    //template += "<div class='column-full'><span style='color: red'>*</span>Nombre Tarea{nombre}</div>";
+    //template += "</div>";  
     
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>CUI{idcui}</div>";
@@ -52,14 +52,12 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'>Glosa Factura (Max 140){glosa}</div>";
-    template += "<div class='column-half'>Extension{extension}</div>";
     template += "</div>";
 
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
     template += "<div class='column-half'>idiniciativaprograma{nombreiniciativa}</div>";
     template += "<div class='column-half'>idmoneda{glosamoneda}</div>";
-    
     template += "</div>";
 
     template += "<hr style='width:100%;'/>";
@@ -258,11 +256,6 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             editrules: { required: true },
             editoptions: {placeholder: "X.X.X de acuerdo a formato de tarea" }
         },
-        {
-            label: 'Extension', name: 'extension', width: 300, align: 'left',
-            search: false, editable: true, hidden: true,
-            editoptions: { readonly: 'readonly' }
-        },         
         {
             label: 'Nombre Tarea', name: 'nombre', width: 300, align: 'left',
             search: false, editable: true, hidden: true,
@@ -532,12 +525,12 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
             beforeSubmit: function (postdata, formid) {
                 var costounitario = new Number(postdata.costounitario.replace(",", "."));
                 postdata.costounitario=costounitario;
-                var tareatxt =   postdata.nombre;
+                var tareatxt =   postdata.tarea;
                 const regex = /^\d{1}.\d{1,2}.\d{1}$|^\d{1}.\d{1,2}$/gm;
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe seleccionar un valor", ""];
-                } if (!regex.test(postdata.tarea)) { 
-                    return [false, "Tarea: Ingrese valor (X.XX.X)", ""];  
+                //} if (!regex.test(postdata.tarea)) { 
+                //    return [false, "Tarea: Ingrese valor (X.XX.X)", ""];  
                 } if (tareatxt.length > 100) { 
                     return [false, "Tarea: Ingrese un nombre más corto", ""];                  
                 } if (postdata.idcui == 0) {
@@ -662,13 +655,13 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 var costounitario = new Number(postdata.costounitario.replace(",", "."));
                 postdata.costounitario=costounitario;
                 const regex = /^\d{1}.\d{1,2}.\d{1}$|^\d{1}.\d{1,2}$/gm;  
-                var tareatxt =   postdata.nombre;            
+                var tareatxt =   postdata.tarea;            
                 if (postdata.idservicio == 0) {
                     return [false, "Servicio: Debe seleccionar un valor", ""];
-                } if (!regex.test(postdata.tarea)) {
-                    return [false, "Tarea: Ingrese valor (X.XX.X)", ""];  
+                //} if (!regex.test(postdata.tarea)) {
+                //    return [false, "Tarea: Ingrese valor (X.XX.X)", ""];  
                 } if (tareatxt.length > 100) { 
-                    return [false, "Nombre: Ingrese un nombre más corto", ""];                                    
+                    return [false, "Tarea: Ingrese un nombre más corto", ""];                                    
                 } if (postdata.idcui == 0) {
                     return [false, "CUI: Debe seleccionar un valor", ""];
                 } if (postdata.idproveedor == 0) {
@@ -691,13 +684,7 @@ function gridTareasNuevosProyectos(parentRowID, parentRowKey, suffix) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                //document.getElementsByName("reqcontrato").checked = true;
-                var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
-                var grid = $('#' + subgrid_table_id);
-                var rowData = $("#" + grillapadre).getRowData(parentRowKey);
-                console.log("Data:"+JSON.stringify(rowData));
-                var extension = rowData.extension;
-                $("#extension", form).val(extension);                                   
+                //document.getElementsByName("reqcontrato").checked = true; 
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
                 //$('select#idcui').attr("disabled", true); 

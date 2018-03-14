@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-
     var $grid = $("#grid"), modelProyecto = [
         { label: 'id', name: 'id', key: true, hidden: true },
         { label: '# SAP', name: 'sap', width: 150, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },

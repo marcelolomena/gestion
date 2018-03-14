@@ -1,7 +1,5 @@
 (function ($) {
-
   $(document).ready(function () {
-
     $('#cssmenu > ul > li > a').click(function () {
       $('#cssmenu li').removeClass('active');
       $(this).closest('li').addClass('active');
@@ -20,7 +18,5 @@
         return false;
       }
     });
-
   });
-
 })(jQuery);

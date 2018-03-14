@@ -39,7 +39,7 @@ module.exports = function (passport) {
 	passport.use('local', new LocalStrategy({
 		/*usernameField: 'email',*/ passReqToCallback: true
 	},
-		function (req, username, password, done) {
+        function (req, username, password, done) {
 			//logger.debug('Sistema. ' +req.body.sistema);
 			models.user.find({
 				where: { 'uname': username }
@@ -66,7 +66,7 @@ module.exports = function (passport) {
 								return done(null, false, req.flash('message', 'Clave inválida')); // redirect back to login page
 								//return done(null, false, {message: "Clave inválida."});
 							} else {
-								registraLogin(user, req);
+                                registraLogin(user, req);
 								return done(null, user);
 							}
 						}
@@ -81,13 +81,13 @@ module.exports = function (passport) {
 				done(err)
 			});
 
-		})
-	);
+        })
+    );
 
-	var isValidPassword = function (user, password) {
-		return bCrypt.compareSync(password, user.password);
+    var isValidPassword = function (user, password) {
+        return bCrypt.compareSync(password, user.password);
 
-	}
+    }
 
 	var registraLogin= function (user, req) {
 		//console.log('Sistema. ' +req.body.sistema);
@@ -100,6 +100,6 @@ module.exports = function (passport) {
 		}).catch(function (err) {
 			console.log(err);
 		});		
-	}
+	}    
 
 }

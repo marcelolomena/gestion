@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    console.log(uid);
 
     var template = "<div id='responsive-form' class='clearfix'>";
 
@@ -54,7 +55,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/monedas',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#table_roldenegocio");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.rolnegocio;
@@ -97,7 +98,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/usuariosdelegados/'+uid,
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#table_roldenegocio");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uiddelegado;
@@ -130,7 +131,7 @@ $(document).ready(function () {
         },
     ];
 
-    $("#grid").jqGrid({
+    $("#table_roldenegocio").jqGrid({
         url: '/roldenegocio/list',
         mtype: "POST",
         datatype: "json",
@@ -144,17 +145,17 @@ $(document).ready(function () {
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         caption: 'Lista de Usuarios',
-        pager: "#pager",
+        pager: "#pager_roldenegocio",
         viewrecords: true,
         rowList: [10, 20, 50, 100],
         editurl: '/roldenegocio/action',
         styleUI: "Bootstrap",
         onSelectRow: function (rowid, selected) {
             if (rowid != null) {
-                var grid = $("#grid");
+                var grid = $("#table_roldenegocio");
                 var rowData = grid.getRowData(rowid);
                 var uidnecesario = rowData.uid;
-                jQuery('#grid').setColProp('uiddelegado',{editoptions:{dataUrl: '/usuariosdelegados/'+uidnecesario}});
+                jQuery('#table_roldenegocio').setColProp('uiddelegado',{editoptions:{dataUrl: '/usuariosdelegados/'+uidnecesario}});
             }
         },
 
@@ -164,9 +165,9 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#table_roldenegocio").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#grid').jqGrid('navGrid', "#pager", { edit: true, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#table_roldenegocio').jqGrid('navGrid', "#pager_roldenegocio", { edit: true, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
             editCaption: "Modificar Rol de negocio/Delegado",
             closeAfterEdit: true,
@@ -190,7 +191,7 @@ $(document).ready(function () {
                 $('input#uname', form).attr('readonly', 'readonly');
                 $('input#email', form).attr('readonly', 'readonly');
 
-                var grid = $("#grid");
+                var grid = $("#table_roldenegocio");
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
                 var thissid = rowData.id;
@@ -198,7 +199,7 @@ $(document).ready(function () {
                     alert("Debe seleccionar una fila");
                     return [false, result.error_text, ""];
                 }
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_roldenegocio").attr('id'));
             },
             afterShowForm: function (form) {
                 if (uid != 1) {
@@ -213,7 +214,7 @@ $(document).ready(function () {
         }
     );
 
-    $("#pager_left").css("width", "");
+    $("#pager_roldenegocio_left").css("width", "");
 
 
 });

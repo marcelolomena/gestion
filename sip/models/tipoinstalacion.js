@@ -14,10 +14,6 @@ module.exports = function (sequelize, DataTypes) {
         borrado: {
             type: DataTypes.INTEGER,
             allowNull: true
-        },
-        nombrearchivo: {
-            type: DataTypes.STRING,
-            allowNull: true
         }
     }, {
             schema: 'lic',

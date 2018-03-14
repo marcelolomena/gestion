@@ -51,7 +51,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/serviciosext/cuentas',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#table_servicio2");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.idcuenta;
@@ -120,7 +120,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/parameters/tiposervicio',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#table_servicio");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.tipo;
@@ -155,7 +155,7 @@ $(document).ready(function () {
         },          
     ];
 
-    $("#grid").jqGrid({
+    $("#table_servicio").jqGrid({
         url: '/serviciosext/list',
         mtype: "POST",
         datatype: "json",
@@ -168,17 +168,17 @@ $(document).ready(function () {
         autowidth: true,
         shrinkToFit: true,
         caption: 'Lista de servicios',
-        pager: "#pager",
+        pager: "#pager_servicio",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/serviciosext/action',
         styleUI: "Bootstrap",
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         gridComplete: function () {
-            var recs = $("#grid").getGridParam("reccount");
+            var recs = $("#table_servicio").getGridParam("reccount");
             if (isNaN(recs) || recs == 0) {
 
-                $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
+                $("#table_servicio").addRowData("blankRow", { "nombre": "No hay datos" });
             }
         }
     }).jqGrid('filterToolbar', { 
@@ -187,7 +187,7 @@ $(document).ready(function () {
          defaultSearch: 'cn',         
          searchOperators: true, 
          beforeSearch: function () {
-            var postData = $("#grid").jqGrid('getGridParam', 'postData');
+            var postData = $("#table_servicio").jqGrid('getGridParam', 'postData');
             var searchData = jQuery.parseJSON(postData.filters);
             for (var iRule = 0; iRule < searchData.rules.length; iRule++) {
                 if (searchData.rules[iRule].field === "cuentacontable") {
@@ -202,7 +202,7 @@ $(document).ready(function () {
 
         } });
 
-    $('#grid').jqGrid('navGrid', "#pager",
+    $('#table_servicio').jqGrid('navGrid', "#pager_servicio",
      { edit: true, add: true, del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false },           
         {
             editCaption: "Modifica Servicio",
@@ -221,9 +221,9 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#grid').attr('id'));
+                sipLibrary.centerDialog($('#table_servicio').attr('id'));
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_servicio").attr('id'));
             }
         },
         {
@@ -249,12 +249,12 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 } else {
                     var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
-                    $("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                    $("#table_servicio").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
                     
-                sipLibrary.centerDialog($('#grid').attr('id'));
+                sipLibrary.centerDialog($('#table_servicio').attr('id'));
             }
         },
         {
@@ -276,18 +276,18 @@ $(document).ready(function () {
         }
     );
 
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
+    $('#table_servicio').jqGrid('navButtonAdd', '#pager_servicio', {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",
         position: "last",
         onClickButton: function () {
-            var grid = $('#grid');
+            var grid = $('#table_servicio');
             var rowKey = grid.getGridParam("selrow");
             var url = '/serviciosext/excel';
-            $('#grid').jqGrid('excelExport', { "url": url });
+            $('#table_servicio').jqGrid('excelExport', { "url": url });
         }
     });
     
-    $("#pager_left").css("width", "");
+    $("#pager_servicio_left").css("width", "");
 });

@@ -32,7 +32,7 @@ $(document).ready(function () {
             search: true, editable: true
         }
     ];
-    $("#grid").jqGrid({
+    $("#table_iniciativa").jqGrid({
         url: '/iniciativasconsultalist',
         mtype: "GET",
         datatype: "json",
@@ -44,7 +44,7 @@ $(document).ready(function () {
         caption: 'Consulta de Iniciativas',
         autowidth: false,  // set 'true' here
         shrinkToFit: false, // well, it's 'true' by default
-        pager: "#pager",
+        pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/iniciativas/action',
@@ -55,12 +55,12 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#grid").jqGrid('filterToolbar', {
+    $("#table_iniciativa").jqGrid('filterToolbar', {
         stringResult: true, searchOperators: true,
         searchOnEnter: false, defaultSearch: 'cn'
     });
 
-    $('#grid').jqGrid('navGrid', "#pager", {
+    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {
         edit: false, add: false, del: false, search: false, refresh: true,
         cloneToTop: false
     }, 
@@ -71,17 +71,17 @@ $(document).ready(function () {
         }
     );
 
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
+    $('#table_iniciativa').jqGrid('navButtonAdd', '#pager_iniciativa', {
         caption: "Excel",
         buttonicon: "silk-icon-page-excel",
         title: "Excel",
         position: "last",
         onClickButton: function () {
-            var grid = $('#grid');
+            var grid = $('#table_iniciativa');
             var rowKey = grid.getGridParam("selrow");
             var url = '/iniciativasconsultaexcel';
-            $('#grid').jqGrid('excelExport', { "url": url });
+            $('#table_iniciativa').jqGrid('excelExport', { "url": url });
         }
     });
-    $("#pager_left").css("width", "");
+    $("#pager_iniciativa_left").css("width", "");
 });

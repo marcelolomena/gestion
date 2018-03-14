@@ -48,7 +48,8 @@ html
                  option(value='4') Licencias de Software
           .send
             a(href='#', onmouseout='MM_swapImgRestore()', onmouseover="MM_swapImage('Image1','','../images/send2.png',1)", onclick='document.login.submit();')
-              img#Image1(src='../images/send1.png', name='Image1', width='80', height='80', border='0', title='Ent' ID='Enter')
+              img#Image1(src='../images/send1.png', name='Image1', width='80', height='80', border='0', title='Ent')
         .fail(style='margin-top: 20px')
          if message
           h2.text-center.error-message(style='text-align:center') #{message}
+                           

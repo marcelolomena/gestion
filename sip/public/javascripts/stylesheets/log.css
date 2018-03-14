@@ -1,0 +1,135 @@
+@import url('stylesheet.css'); 
+body {
+	margin: 0px;
+}
+.contenido {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	background-image: url(../images/fondoLogin.jpg);
+	background-repeat: repeat-y;
+	background-position: center top;
+}
+.contenido .logCentro {
+	height: 269px;
+	width: 309px;
+	margin-right: auto;
+	margin-left: auto;
+	background-image: url(../images/topLog.jpg);
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+.contenido .cajaLog {
+	height: 270px;
+	width: 309px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.contenido .cajaLog .caja1 {
+	height: 229px;
+	width: 309px;
+	margin-right: auto;
+	margin-left: auto;
+	background-image: url(../images/caja1.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.contenido .logCentro .titLogo {
+	height: 60px;
+	text-align: center;
+	padding-top: 239px;
+	font-family: 'robotolight';
+	font-size: 15px;
+	font-weight: 300;
+	color: #036;
+}
+.contenido .cajaLog .caja1 .sep1 {
+	height: 53px;
+	width: 308px;
+}
+.contenido .cajaLog .caja1 .usuario {
+	height: 45px;
+	width: 224px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 16px;
+	font-family: 'robotolight';
+	font-size: 14px;
+	font-weight: 300;
+	color: #036;
+	line-height:45px;
+}
+.contenido .cajaLog .caja1 .usuario input {
+	height: 45px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	background-color:transparent;
+	font-family: 'robotolight';
+	font-size: 15px;
+	font-weight: 300;
+	color: #036;
+	width: 160px;
+	padding-left: 5px;
+}
+.contenido .cajaLog .caja1 .usuario input:focus {
+	outline:0px;
+}
+
+.contenido .cajaLog .caja1 .clave {
+	height: 45px;
+	width: 224px;
+	margin-right: auto;
+	margin-left: auto;
+	font-family: 'robotolight';
+	font-size: 14px;
+	font-weight: 300;
+	color: #036;
+	line-height:45px;
+}
+.contenido .cajaLog .caja1 .clave input {
+	height: 45px;
+	width: 160px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	background-color:transparent;
+	font-family: 'robotolight';
+	font-size: 15px;
+	font-weight: 300;
+	color: #036;
+	padding-left: 5px;
+}
+.contenido .cajaLog .caja1 .clave input:focus {
+	outline:0px;
+
+}
+.contenido .cajaLog .send {
+	float: left;
+	height: 80px;
+	width: 80px;
+	position: relative;
+	z-index: 999;
+	margin-top: -42px;
+	margin-left: 111px;
+}
+.titUser     {
+	height: 45px;
+	width: 55px;
+	float: left;
+}
+.fail    {
+	height: 60px;
+	width: 203px;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 12px;
+	line-height: 25px;
+	color: #F60;
+	font-family: 'robotolight';
+	padding-right: 15px;
+	padding-left: 15px;
+	padding-top: 10px;
+}

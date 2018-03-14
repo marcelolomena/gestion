@@ -22,7 +22,7 @@ $(document).ready(function () {
         },
     ];
 
-    $("#grid").jqGrid({
+    $("#table_roles").jqGrid({
         url: '/roles/list',
         mtype: "POST",
         datatype: "json",
@@ -42,7 +42,7 @@ $(document).ready(function () {
             minusicon: "glyphicon-hand-down"
         },
         caption: 'Lista de Usuarios',
-        pager: "#pager",
+        pager: "#pager_roles",
         viewrecords: true,
         rowList: [10, 20, 50,100],
         editurl: '/roles/action',
@@ -53,9 +53,9 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#table_roles").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#grid').jqGrid('navGrid', "#pager", { edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#table_roles').jqGrid('navGrid', "#pager_roles", { edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
@@ -75,7 +75,7 @@ $(document).ready(function () {
         }
     );
 
-    $("#pager_left").css("width", "");
+    $("#pager_roles_left").css("width", "");
 
     function showSubGrids(subgrid_id, row_id) {
         gridRoles2(subgrid_id, row_id, 'roles2');

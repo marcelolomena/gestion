@@ -9,7 +9,7 @@ $(document).ready(function () {
         }
     ];
 
-    $("#grid").jqGrid({
+    $("#table_permisos").jqGrid({
         url: '/permisos/list',
         mtype: "POST",
         datatype: "json",
@@ -29,7 +29,7 @@ $(document).ready(function () {
             minusicon: "glyphicon-hand-down"
         },
         caption: 'Lista de Roles',
-        pager: "#pager",
+        pager: "#pager_permisos",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/permisos/action',
@@ -40,9 +40,9 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#table_permisos").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#grid').jqGrid('navGrid', "#pager", { edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#table_permisos').jqGrid('navGrid', "#pager_permisos", { edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
@@ -62,7 +62,7 @@ $(document).ready(function () {
         }
     );
 
-    $("#pager_left").css("width", "");
+    $("#pager_permisos_left").css("width", "");
 
     function showSubGrids(subgrid_id, row_id) {
         gridPermisos2(subgrid_id, row_id, 'permisos2');

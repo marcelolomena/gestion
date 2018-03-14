@@ -172,8 +172,7 @@ exports.action = function (req, res) {
         coniva: req.body.coniva,
         glosa: req.body.glosa,
         borrado: 1,
-        idcotizacion: req.body.idcotizacion,
-        extension: req.body.extension
+        idcotizacion: req.body.idcotizacion
       }).then(function (tarea) {
         console.log("****THEN Id Tarea:"+JSON.stringify(tarea)+ ", cot:"+req.body.idcotizacion);
         if (req.body.idcotizacion != 0) {
@@ -211,8 +210,7 @@ exports.action = function (req, res) {
         cantidad: req.body.cantidad,
         coniva: req.body.coniva,
         glosa: req.body.glosa,
-        idcotizacion: req.body.idcotizacion,
-        
+        idcotizacion: req.body.idcotizacion
       }, {
           where: {
             id: req.body.id

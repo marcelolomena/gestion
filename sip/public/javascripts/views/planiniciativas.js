@@ -141,7 +141,7 @@ $(document).ready(function () {
 
 
     ];
-    $("#grid").jqGrid({
+    $("#table_planiniciativas").jqGrid({
         url: '/planiniciativas/list',
         mtype: "POST",
         datatype: "json",
@@ -155,7 +155,7 @@ $(document).ready(function () {
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
-        pager: "#pager",
+        pager: "#pager_planiniciativas",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '',
@@ -168,26 +168,26 @@ $(document).ready(function () {
         },
         loadComplete: function () {
 
-            var ids = jQuery("#grid").jqGrid('getDataIDs');
+            var ids = jQuery("#table_planiniciativas").jqGrid('getDataIDs');
             for (var i = 0; i < ids.length; i++) {
                 var rowId = ids[i];
-                var rowData = jQuery('#grid').jqGrid('getRowData', rowId);
+                var rowData = jQuery('#table_planiniciativas').jqGrid('getRowData', rowId);
 
                 console.log(rowData.mesinicioprevisto);
                 console.log(rowId);
 
                 if (rowData.mesinicioprevisto == 7) {
                     console.log('es julio');
-                    $("#grid").jqGrid('setCell',i,"Julio","",{color:'red'});
+                    $("#table_planiniciativas").jqGrid('setCell',i,"Julio","",{color:'red'});
                 }
                 if (rowData.mesinicioprevisto == 8) {
-                    $("#grid").jqGrid('setCell', i + 1, "AGOSTO", "", { color: 'green' });
+                    $("#table_planiniciativas").jqGrid('setCell', i + 1, "AGOSTO", "", { color: 'green' });
                 }
             }
         }
     });
 
-    $('#grid').jqGrid('navGrid', "#pager", {
+    $('#table_planiniciativas').jqGrid('navGrid', "#pager_planiniciativas", {
         edit: true, add: true, del: true, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },
@@ -211,9 +211,9 @@ $(document).ready(function () {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#grid').attr('id'));
+                sipLibrary.centerDialog($('#table_planiniciativas').attr('id'));
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_planiniciativas").attr('id'));
             }
         },
         {
@@ -248,5 +248,5 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
-    $("#pager").css("width", "");
+    $("#pager_planiniciativas").css("width", "");
 });

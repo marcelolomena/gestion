@@ -28,7 +28,7 @@ $(document).ready(function () {
         }
     ];
 
-    $("#grid").jqGrid({
+    $("#table_registro").jqGrid({
         url: '/registro/list',
         mtype: "POST",
         datatype: "json",
@@ -42,7 +42,7 @@ $(document).ready(function () {
         autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         caption: 'Registro de cambios',
-        pager: "#pager",
+        pager: "#pager_registro",
         viewrecords: true,
         rowList: [10, 20, 50,100],
         editurl: '/registro/action',
@@ -53,9 +53,9 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#table_registro").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#grid').jqGrid('navGrid', "#pager", { edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#table_registro').jqGrid('navGrid', "#pager_registro", { edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,

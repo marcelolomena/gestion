@@ -225,26 +225,6 @@ function showDocumentos(cui, periodo, proveedor) {
                 editoptions: { size: 5, readonly: 'readonly' }
             },
             {
-                label: 'SAP',
-                name: 'sap',
-                width: 50,
-                align: 'left',
-                search: false,
-                editable: true,
-                hidden: false,
-                editoptions: { size: 5, readonly: 'readonly' }
-            },   
-            {
-                label: 'Tarea',
-                name: 'tarea',
-                width: 50,
-                align: 'left',
-                search: false,
-                editable: true,
-                hidden: false,
-                editoptions: { size: 5, readonly: 'readonly' }
-            },                       
-            {
                 label: 'Proveedor',
                 name: 'razonsocial',
                 width: 220,

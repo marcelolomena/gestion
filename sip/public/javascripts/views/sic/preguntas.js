@@ -1,14 +1,17 @@
 var gridPreguntas = {
 
     renderGrid: function (loadurl, parentRowKey, targ) {
-        var $gridTab = $(targ + "_t_" + parentRowKey);
+        var $gridTab = $(targ + "_t_" + parentRowKey)
         var tmpl = "<div id='responsive-form' class='clearfix'>";
+
         tmpl += "<div class='form-row'>";
         tmpl += "<div class='column-full'>Proveedor<span style='color:red'>*</span>{idproveedor}</div>";
         tmpl += "</div>";
+
         tmpl += "<div class='form-row'>";
         tmpl += "<div class='column-full'>Archivo<span style='color:red'>*</span>{fileToUpload}</div>";
         tmpl += "</div>";
+
         tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
@@ -44,8 +47,14 @@ var gridPreguntas = {
                             return s + "</select>";
                         }
                     }
-                }, { name: 'proveedor', width: 250, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
+                },
+                { name: 'proveedor', width: 250, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
                 { name: 'tipo', width: 100, search: false, editable: false, hidden: false },
+
+
+
+
+
                 { name: 'responsable', width: 100, search: false, editable: true, hidden: false, },
                 { name: 'pregunta', width: 350, search: false, editable: false, hidden: false },
                 {
@@ -56,24 +65,47 @@ var gridPreguntas = {
                     editrules: { edithidden: true },
                     editoptions: {
                         enctype: "multipart/form-data"
-                    }, search: false
+                    },
+                    search: false
                 },
                 { name: 'respuesta', width: 350, search: false, editable: false, hidden: false },
             ],
             rowNum: 20,
             pager: '#navGridPre',
+            //subGrid: true,
+            //subGridRowExpanded: showSubGridsRespuesta,
+            //subGridOptions: {
+            //    plusicon: "glyphicon glyphicon-hand-right",
+            //    minusicon: "glyphicon glyphicon-hand-down"
+            //},
             styleUI: "Bootstrap",
             sortname: 'id',
             sortorder: "asc",
             height: "auto",
             autowidth: true,
             shrinkToFit: true,
+            //loadonce: true,
+            //onSelectRow: editRow,
+            //width: 1000,
+            //rownumbers: true,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
             caption: "Preguntas"
         });
+
+        /*
+        var lastSelection;
+
+        function editRow(id) {
+            if (id && id !== lastSelection) {
+                var grid = $gridTab;
+                grid.jqGrid('restoreRow', lastSelection);
+                grid.jqGrid('editRow', id, { keys: true, focusField: 4 });
+                lastSelection = id;
+            }
+        }*/
 
         $gridTab.jqGrid('navGrid', '#navGridPre', { edit: false, add: true, del: true, search: false },
             {
@@ -126,6 +158,10 @@ var gridPreguntas = {
             title: "Generar Documento",
             position: "last",
             onClickButton: function () {
+                //var rowKey = $gridTab.getGridParam("selrow");
+                //var parentRowData = $("#gridMaster").getRowData(parentRowKey);
+                //console.log(parentRowData.idtipo)
+                //console.log(parentRowData.idgrupo)
                 try {
                     var url = '/sic/descargarespuestas/' + parentRowKey;
                     $gridTab.jqGrid('excelExport', { "url": url });
@@ -141,6 +177,7 @@ var gridPreguntas = {
 }
 
 function UploadPre(response, postdata) {
+    //console.log(postdata)
     var data = $.parseJSON(response.responseText);
     if (data.success) {
         if ($("#fileToUpload").val() != "") {
@@ -222,6 +259,15 @@ function gridRespuestasnew(parentRowID, parentRowKey, suffix) {
     console.log("la subgrid_id : " + subgrid_id)
     var parentSolicitud = subgrid_id.split("_")[2]
     console.log("la parentSolicitud : " + parentSolicitud)
+    /*
+var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
+
+console.log("la grilla padre: " + grillapadre)
+var rowData = $("#" + grillapadre).getRowData(parentRowKey);
+console.log("la rowData : " + rowData)
+var parentSolicitud = rowData.idsolicitudcotizacion;
+console.log("la parentSolicitud : " + parentSolicitud)
+*/
 
     var childGridURL = "/sic/asignarpreguntas/" + parentRowKey;
 
@@ -294,6 +340,7 @@ function gridRespuestasnew(parentRowID, parentRowKey, suffix) {
             editCaption: "Asignar Responsable",
             closeAfterEdit: false,
             recreateForm: true,
+            //template: tmpl,
             mtype: 'POST',
             url: '/sic/asignar',
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -409,6 +456,15 @@ function gridRespuestasnew1(parentRowID, parentRowKey, suffix) {
     console.log("la subgrid_id : " + subgrid_id)
     var parentSolicitud = subgrid_id.split("_")[2]
     console.log("la parentSolicitud : " + parentSolicitud)
+    /*
+var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
+
+console.log("la grilla padre: " + grillapadre)
+var rowData = $("#" + grillapadre).getRowData(parentRowKey);
+console.log("la rowData : " + rowData)
+var parentSolicitud = rowData.idsolicitudcotizacion;
+console.log("la parentSolicitud : " + parentSolicitud)
+*/
 
     var childGridURL = "/sic/preguntasresponsablenew/" + parentRowKey;
 
@@ -447,6 +503,11 @@ function gridRespuestasnew1(parentRowID, parentRowKey, suffix) {
                         var elm = $("<textarea></textarea>");
                         elm.val(value);
                         setTimeout(function () {
+                            //tinymce.remove();
+                            //var ctr = $("#" + options.id).tinymce();
+                            //if (ctr !== null) {
+                            //    ctr.remove();
+                            //}
                             try {
                                 tinymce.remove("#" + options.id);
                             } catch (ex) { }
@@ -454,6 +515,7 @@ function gridRespuestasnew1(parentRowID, parentRowKey, suffix) {
                                 menubar: false,
                                 statusbar: false,
                                 selector: "#" + options.id,
+                                //plugins: "link",
                                 plugins: [
                                     'link print'
                                 ],
@@ -500,14 +562,16 @@ function gridRespuestasnew1(parentRowID, parentRowKey, suffix) {
         rownumbers: true,
         onSelectRow: function (id) {
             var getID = $(this).jqGrid('getCell', id, 'id');
-        }, viewrecords: true,
+        },
+        viewrecords: true,
         caption: "Respuestas"
 
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true, add: false, del: false, search: false
-    }, {
+    },
+        {
             editCaption: "Responder",
             closeAfterEdit: true,
             recreateForm: true,
@@ -524,11 +588,13 @@ function gridRespuestasnew1(parentRowID, parentRowKey, suffix) {
                 } else {
                     return [true, "", ""]
                 }
-            }, beforeShowForm: function (form) {
+            },
+            beforeShowForm: function (form) {
                 $("#tipo", form).attr('readonly', 'readonly');
                 $("#pregunta", form).attr('readonly', 'readonly');
-            }
-        }, {
+            },
+        },
+        {
             closeAfterAdd: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -537,16 +603,19 @@ function gridRespuestasnew1(parentRowID, parentRowKey, suffix) {
             template: tmpl,
             errorTextFormat: function (data) {
                 return 'Error: ' + data.responseText
-            }, onclickSubmit: function (rowid) {
+            },
+            onclickSubmit: function (rowid) {
                 return { parent_id: parentRowKey, idsolicitudcotizacion: parentSolicitud };
-            }, beforeSubmit: function (postdata, formid) {
+            },
+            beforeSubmit: function (postdata, formid) {
                 if (parseInt(postdata.idproveedor) == 0) {
                     return [false, "Proveedor: Seleccionar un proveedor", ""];
                 } else {
                     return [true, "", ""]
                 }
-            }
-        }, {
+            },
+        },
+        {
             closeAfterDelete: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -564,10 +633,13 @@ function gridRespuestasnew1(parentRowID, parentRowKey, suffix) {
                     return [false, result.error_text, ""];
 
                 }
-            }, onclickSubmit: function (rowid) {
+
+            },
+            onclickSubmit: function (rowid) {
                 return { idsolicitudcotizacion: parentSolicitud };
-            }
-        }, {
+            },
+        },
+        {
             recreateFilter: true
         }
     );
