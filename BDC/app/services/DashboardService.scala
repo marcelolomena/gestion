@@ -284,9 +284,13 @@ object DashboardService {
 
       val ini = end * (page - 1)
 
+      Logger.debug("ini : " + ini)
+      Logger.debug("end : " + end)
+      Logger.debug("filter : " + filter)
+      Logger.debug("order : " + order)
+
       val sqlString =
-          """
-            SELECT
+          """SELECT
             program_id,
             ISNULL(project_id,0) project_id,
             ISNULL(task_id,0) task_id,
@@ -312,11 +316,13 @@ object DashboardService {
             foco,
             tamano
             FROM art_program_management
-            WHERE """ + filter + order  + """
-            OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
-          """.stripMargin
+            WHERE """ + filter + order  +
+            " OFFSET " + ini + " ROWS FETCH NEXT " + end + " ROWS ONLY"
+          //""".stripMargin
 
-        SQL(sqlString).on('ini -> ini,'end -> end).as(Report.report * )
+      Logger.debug(sqlString)
+
+        SQL(sqlString).as(Report.report * )
     }
   }
 

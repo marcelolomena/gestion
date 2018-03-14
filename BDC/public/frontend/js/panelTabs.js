@@ -62,7 +62,7 @@ $(document).ready(function(){
                 				}
                 		    },
             },
-            { label: 'Tipo', name: 'program_type', jsonmap: 'program_type', width: 150,
+            { label: 'Tipo', name: 'program_type', jsonmap: 'program_type', width: 200,
                 		    stype: 'select',
                 			searchoptions: {
                 				dataUrl: '/list-all-programtype',
@@ -77,12 +77,12 @@ $(document).ready(function(){
                 				}
                 		    },
             },
-            { label: 'Numero', name: 'pcod', width: 100,
+            { label: 'Numero', name: 'pcod', width: 120, align: 'center',
                   searchoptions:{
-                      sopt: ["ge","le","eq"]
+                      sopt: ["eq","ge","le"]
                   }
             },
-            { label: 'Foco', name: 'foco', width: 150,
+            { label: 'Foco', name: 'foco', width: 200,
                             		    stype: 'select',
                             			searchoptions: {
                             				dataUrl: '/list-all-sub-type',

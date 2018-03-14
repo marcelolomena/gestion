@@ -2479,7 +2479,7 @@ object Dashboard extends Controller {
         qrystr += "task_id = " + parent + " "
       }
 
-      Logger.debug("view: -------> " + view)
+      //Logger.debug("view: -------> " + view)
 
       view match {
         case "H" =>
