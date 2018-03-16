@@ -323,13 +323,10 @@ module.exports = function (passport) {
     router.route('/lic/existeOtroFabricante/:otroFabricante')
         .get(isAuthenticated, fabricanteController.existeOtroFabricante);
 
-<<<<<<< HEAD
     router.route('/lic/actualizarChubi')
         .get(isAuthenticated, productoController.actualizarChubi);
-=======
     router.route('/lic/getproductosreserva')
         .get(isAuthenticated, reservaAutorizacionController.getProductoReserva);
 
->>>>>>> ec6e4b8eed142bfd34266a62b409110e08790732
     return router;
 };
