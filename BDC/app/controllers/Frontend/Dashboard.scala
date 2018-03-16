@@ -2438,7 +2438,7 @@ object Dashboard extends Controller {
               val elements = (json \\ "rules").children
               for (acct <- elements) {
                 val m = acct.extract[DBFilter]
-                  if(!m.data.equals("0")) {
+                  if(!m.data.equals("-1")) {
                     if (m.op.equals("cn"))
                       qrystr += m.field + " like '%" + m.data + "%' AND "
                     if (m.op.equals("eq"))
@@ -2636,6 +2636,21 @@ object Dashboard extends Controller {
       val div = DashboardService.findAllSubType
 
       Ok(Json.toJson(div)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def listAllImpactType = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val imp = DashboardService.findAllImpactType
+
+      Ok(Json.toJson(imp)).withSession("username" -> request.session.get("username").get,
         "utype" -> request.session.get("utype").get,
         "uId" -> request.session.get("uId").get,
         "user_profile" -> request.session.get("user_profile").get)

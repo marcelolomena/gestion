@@ -390,6 +390,7 @@ GET    /issue-report-subtasks                                                   
 GET    /list-all-divisions                                                                            controllers.Frontend.Dashboard.listAllDiv
 GET    /list-all-sub-type                                                                             controllers.Frontend.Dashboard.listAllSubType
 GET    /list-all-internal-state                                                                       controllers.Frontend.Dashboard.listAllInternalState
+GET    /list-all-impact-type                                                                          controllers.Frontend.Dashboard.listAllImpactType
 GET    /list-all-user-active                                                                          controllers.Frontend.Dashboard.listAllUserActiveProgram
 GET    /list-all-workflowstatus                                                                       controllers.Frontend.Dashboard.listAllProgramWorkflowStatus
 GET    /list-all-programtype                                                                          controllers.Frontend.Dashboard.listAllProgramType

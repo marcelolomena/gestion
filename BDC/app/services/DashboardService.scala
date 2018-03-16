@@ -284,10 +284,10 @@ object DashboardService {
 
       val ini = end * (page - 1)
 
-      Logger.debug("ini : " + ini)
-      Logger.debug("end : " + end)
-      Logger.debug("filter : " + filter)
-      Logger.debug("order : " + order)
+      //Logger.debug("ini : " + ini)
+      //Logger.debug("end : " + end)
+      //Logger.debug("filter : " + filter)
+      //Logger.debug("order : " + order)
 
       val sqlString =
           """SELECT
@@ -299,6 +299,7 @@ object DashboardService {
             nombre_lider,
             program_type,
             work_flow_status,
+            impact_type,
             name_div,
             name_man,
             name_dep,
@@ -306,6 +307,7 @@ object DashboardService {
             plan_end_date,
             real_start_date,
             real_end_date,
+            release_date,
             ROUND(pai,2) pai,
             ROUND(pae,2) pae,
             ROUND(spi,2) spi,
@@ -314,13 +316,15 @@ object DashboardService {
             allocation,
             pcod,
             foco,
-            tamano
+            tamano,
+            count_project,
+            count_task,
+            count_subtask
             FROM art_program_management
             WHERE """ + filter + order  +
             " OFFSET " + ini + " ROWS FETCH NEXT " + end + " ROWS ONLY"
-          //""".stripMargin
 
-      Logger.debug(sqlString)
+        //Logger.debug(sqlString)
 
         SQL(sqlString).as(Report.report * )
     }
@@ -439,6 +443,17 @@ object DashboardService {
       val sqlstr =
         """
           |select DISTINCT foco AS value,foco AS name from art_program_management where tipo='PROGRAMA' ORDER BY foco
+        """.stripMargin
+
+      SQL(sqlstr).as(DummyList.dummyList *)
+    }
+  }
+
+  def findAllImpactType(): Seq[DummyList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |select DISTINCT impact_type AS value,impact_type AS name from art_program_management where tipo='PROGRAMA' ORDER BY impact_type
         """.stripMargin
 
       SQL(sqlstr).as(DummyList.dummyList *)

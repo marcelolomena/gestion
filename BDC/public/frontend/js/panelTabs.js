@@ -47,14 +47,19 @@ $(document).ready(function(){
 	var modelProgramGrid=[
             { label: 'id', name: 'program_id', key: true, hidden:true },
             { label: 'Programa', name: 'program_name', width: 350,formatter: returnProgramLink },
-            { label: 'Estado', name: 'work_flow_status', jsonmap: 'work_flow_status', width: 200,
+            { label: 'Numero', name: 'pcod', width: 120, align: 'center',
+                  searchoptions:{
+                      sopt: ["eq","ge","le"]
+                  }
+            },
+            { label: 'Estado', name: 'work_flow_status', jsonmap: 'work_flow_status', width: 150,
                 		    stype: 'select',
                 			searchoptions: {
                 				dataUrl: '/list-all-workflowstatus',
                 				buildSelect: function (response) {
                 					var data = JSON.parse(response);
                 					var s = "<select>";
-                					s += '<option value="0">--Escoger Estado--</option>';
+                					s += '<option value="-1">--Estado--</option>';
                 					$.each(data, function(i, item) {
                 						s += '<option value="' + data[i].value + '">' + data[i].name + '</option>';
                 					});
@@ -69,18 +74,13 @@ $(document).ready(function(){
                 				buildSelect: function (response) {
                 					var data = JSON.parse(response);
                 					var s = "<select>";
-                					s += '<option value="0">--Escoger Tipo--</option>';
+                					s += '<option value="-1">--Tipo--</option>';
                 					$.each(data, function(i, item) {
                 						s += '<option value="' + data[i].value + '">' + data[i].name + '</option>';
                 					});
                 					return s + "</select>";
                 				}
                 		    },
-            },
-            { label: 'Numero', name: 'pcod', width: 120, align: 'center',
-                  searchoptions:{
-                      sopt: ["eq","ge","le"]
-                  }
             },
             { label: 'Foco', name: 'foco', width: 200,
                             		    stype: 'select',
@@ -89,7 +89,22 @@ $(document).ready(function(){
                             				buildSelect: function (response) {
                             					var data = JSON.parse(response);
                             					var s = "<select>";
-                            					s += '<option value="0">--Escoger Foco--</option>';
+                            					s += '<option value="-1">--Foco--</option>';
+                            					$.each(data, function(i, item) {
+                            						s += '<option value="' + data[i].value + '">' + data[i].name + '</option>';
+                            					});
+                            					return s + "</select>";
+                            				}
+                            		    },
+            },
+            { label: 'Impacto', name: 'impact_type', width: 200,
+                            		    stype: 'select',
+                            			searchoptions: {
+                            				dataUrl: '/list-all-impact-type',
+                            				buildSelect: function (response) {
+                            					var data = JSON.parse(response);
+                            					var s = "<select>";
+                            					s += '<option value="-1">--Impacto--</option>';
                             					$.each(data, function(i, item) {
                             						s += '<option value="' + data[i].value + '">' + data[i].name + '</option>';
                             					});
@@ -104,7 +119,7 @@ $(document).ready(function(){
                                     buildSelect: function (response) {
                                         var data = JSON.parse(response);
                                         var s = "<select>";
-                                        s += '<option value="0">--Escoger Tamaño--</option>';
+                                        s += '<option value="-1">--Tamaño--</option>';
                                         $.each(data, function(i, item) {
                                             s += '<option value="' + data[i].value + '">' + data[i].name + '</option>';
                                         });
@@ -119,7 +134,7 @@ $(document).ready(function(){
                 				buildSelect: function (response) {
                 					var data = JSON.parse(response);
                 					var s = "<select>";
-                					s += '<option value="0">--Escoger División--</option>';
+                					s += '<option value="-1">--División--</option>';
                 					$.each(data, function(i, item) {
                 						s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
                 					});
@@ -134,7 +149,7 @@ $(document).ready(function(){
                          				buildSelect: function (response) {
                          					var data = JSON.parse(response);
                          					var s = "<select>";
-                         					s += '<option value="0">--Escoger Gerencia--</option>';
+                         					s += '<option value="-1">--Gerencia--</option>';
                          					$.each(data, function(i, item) {
                          						s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
                          					});
@@ -149,7 +164,7 @@ $(document).ready(function(){
                          				buildSelect: function (response) {
                          					var data = JSON.parse(response);
                          					var s = "<select>";
-                         					s += '<option value="0">--Escoger Departamento--</option>';
+                         					s += '<option value="-1">--Departamento--</option>';
                          					$.each(data, function(i, item) {
                          						s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
                          					});
@@ -157,14 +172,14 @@ $(document).ready(function(){
                          				}
                          		    },
             },
-            { label: 'Lider', name: 'uid', jsonmap: 'nombre_lider', width: 200,
+            { label: 'Lider', name: 'uid', jsonmap: 'nombre_lider', width: 300,
                                  		    stype: 'select',
                                  			searchoptions: {
                                  				dataUrl: '/list-all-user-active',
                                  				buildSelect: function (response) {
                                  					var data = JSON.parse(response);
                                  					var s = "<select>";
-                                 					s += '<option value="0">--Escoger Responsable--</option>';
+                                 					s += '<option value="-1">--Lider--</option>';
                                  					$.each(data, function(i, item) {
                                  						s += '<option value="' + data[i].codDivision + '">' + data[i].glosaDivision + '</option>';
                                  					});
@@ -172,7 +187,7 @@ $(document).ready(function(){
                                  				}
                                  		    },
             },
-            { label: 'Fecha Inicio', name: 'plan_start_date',width: 150, align: 'center',
+            { label: 'Inicio', name: 'plan_start_date',width: 120, align: 'center',
                 searchoptions:{
                     dataInit:function(el){
                         $(el).datepicker({
@@ -189,7 +204,24 @@ $(document).ready(function(){
                     sopt: ["le","ge"]
                 },
             },
-            { label: 'Fecha Cierre',   name: 'plan_end_date', width: 150, align: 'center',
+            { label: 'Liberación',   name: 'release_date', width: 120, align: 'center',
+                searchoptions:{
+                    dataInit:function(el){
+                        $(el).datepicker({
+                            dateFormat:'yy-mm-dd',
+                            changeYear: true,
+                            changeMonth: true,
+                            onSelect: function (dateText, inst) {
+                                setTimeout(function () {
+                                    $('#jqGrid')[0].triggerToolbar();
+                                }, 100);
+                            }
+                        });
+                    },
+                    sopt: ["le","ge"]
+                },
+            },
+            { label: 'Cierre',   name: 'plan_end_date', width: 120, align: 'center',
                 searchoptions:{
                     dataInit:function(el){
                         $(el).datepicker({
@@ -209,13 +241,14 @@ $(document).ready(function(){
             { label: '% Informado', name: 'pai', width: 100, align: 'right',
                 searchoptions:{
                     sopt: ["ge","le","eq"]
-                }
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
             { label: '% Esperado', name: 'pae', width: 100, align: 'right',
                 searchoptions:{
                     sopt: ["ge","le","eq"]
-                }
-
+                },
+                formatter: 'number', formatoptions: { decimalPlaces: 2 }
             },
             { label: 'SPI', name: 'spi', width: 100, align: 'right',
                 searchoptions:{
@@ -241,8 +274,22 @@ $(document).ready(function(){
                     sopt: ["ge","le","eq"]
                 },
                 formatter: 'number', formatoptions: { decimalPlaces: 2 }
+            },
+            { label: 'Proyectos', name: 'count_project', width: 100, align: 'right',
+                              searchoptions:{
+                                  sopt: ["eq","ge","le"]
+                              }
+            },
+            { label: 'Tareas', name: 'count_task', width: 100, align: 'right',
+                              searchoptions:{
+                                  sopt: ["eq","ge","le"]
+                              }
+            },
+            { label: 'Sub - Tareas', name: 'count_subtask', width: 100, align: 'right',
+                              searchoptions:{
+                                  sopt: ["eq","ge","le"]
+                              }
             }
-
         ];
 
 	var modelProjectSubGrid=[
