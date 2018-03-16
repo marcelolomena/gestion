@@ -11,82 +11,24 @@ var flujonuevatareaController = require('../controllers/flujonuevatarea');
 var compromisosporcuiController = require('../controllers/compromisosporcui');
 var planiniciativasController = require('../controllers/planiniciativas');
 var iniciativaconsultaController = require('../controllers/iniciativaconsulta');
-var models = require('../models');
-var sequelize = require('../models/index').sequelize;
-var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-/*
-    router.get('/iniciativas', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'iniciativas' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'iniciativas',
-                title: 'INICIATIVAS',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });         
+    router.get('/iniciativas', isAuthenticated, function (req, res) {
+        res.render('iniciativas', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.get('/compromisosporcui', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'compromisosporcui' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'compromisosporcui',
-                title: 'COMPROMISOS POR CUI',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });         
-        
+        res.render('compromisosporcui', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/compromisosporcui/list')
         .post(isAuthenticated, compromisosporcuiController.list);
-/*
-    router.get('/planiniciativas', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'planiniciativas' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'planiniciativas',
-                title: 'PLAN INICIATIVAS',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });         
+    router.get('/planiniciativas', isAuthenticated, function (req, res) {
+        res.render('planiniciativas', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/planiniciativas/list')
         .post(isAuthenticated, planiniciativasController.list);
 
@@ -122,9 +64,6 @@ module.exports = function (passport) {
 
     router.route('/iniciativafecha/action')
         .post(isAuthenticated, iniciativafechaController.action);
-        
-    router.route('/iniciativafecha/actionfp')
-        .post(isAuthenticated, iniciativafechaController.actionfp);        
 
     router.route('/iniciativafecha/:id')
         .post(isAuthenticated, iniciativafechaController.list);
@@ -209,29 +148,11 @@ module.exports = function (passport) {
 
     router.route('/iniciativagetfechas')
         .get(isAuthenticated, iniciativafechaController.getFechas);
-/*
-    router.get('/iniciativasconsulta', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'iniciativasconsulta' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'iniciativasconsulta',
-                title: 'CONSULTA DE INICIATIVAS',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });          
+    router.get('/iniciativasconsulta', isAuthenticated, function (req, res) {
+        res.render('iniciativasconsulta', { user: req.user, data: req.session.passport.sidebar });
     });
-  */  
+    
     router.route('/iniciativasconsultalist')
         .get(isAuthenticated, iniciativaconsultaController.getInciativaConsulta);        
 
@@ -240,10 +161,12 @@ module.exports = function (passport) {
 
     router.route('/iniciativasconsultaword')
         .get(isAuthenticated, iniciativaconsultaController.getWord);
-        
+
+    router.route('/presupuestoiniciativa/copiasap/:id')
+        .get(isAuthenticated, presupuestoiniciativaController.copiaSAP); 
+
     router.route('/proveedorcotizaciones/:idcui/:idservicio/:idproveedor')
-        .get(isAuthenticated, tareasnuevosproyectosController.getCotizaciones);
-     
+        .get(isAuthenticated, tareasnuevosproyectosController.getCotizaciones);        
                 
     return router;
 

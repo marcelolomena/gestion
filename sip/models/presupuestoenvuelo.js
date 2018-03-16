@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'programa',
+        model: 'art_program',
         key: 'program_id'
       }
     },
@@ -50,27 +50,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     uidlider: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'user',
-        key: 'uid'
-      }
+      allowNull: true
     },
     uidjefeproyecto: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'user',
-        key: 'uid'
-      }
+      allowNull: true
     },
     uidpmoresponsable: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'user',
-        key: 'uid'
-      }
+      allowNull: true
     },
     dolar: {
       type: DataTypes.FLOAT,

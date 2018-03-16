@@ -34,7 +34,6 @@ exports.action = function (req, res) {
 
   switch (action) {
     case "add":
-     console.log("**ADD:"+JSON.stringify(req.body));
       models.presupuestoiniciativa.create({
         idiniciativaprograma: req.body.parent_id,
         cuifinanciamiento1: req.body.cuifinanciamiento1,
@@ -51,10 +50,7 @@ exports.action = function (req, res) {
         glosa: req.body.glosa,
         sap: req.body.sap,
         parainscripcion: req.body.parainscripcion,
-        borrado: 1,
-        descripcion: req.body.descripcion,
-        extension: req.body.extension,
-        sapmadre: req.body.sapmadre
+        borrado: 1
       }).then(function (iniciativa) {
         res.json({ error_code: 0 });
       }).catch(function (err) {
@@ -78,10 +74,7 @@ exports.action = function (req, res) {
         glosa: req.body.glosa,
         sap: req.body.sap,
         parainscripcion: req.body.parainscripcion,
-        uf: uf,
-        descripcion: req.body.descripcion,
-        extension: req.body.extension,
-        sapmadre: req.body.sapmadre        
+        uf: uf
       }, {
           where: {
             id: req.body.id
@@ -122,7 +115,6 @@ exports.actualiSAP = function (req, res) {
     case "edit":
       models.presupuestoiniciativa.update({
         sap: req.body.sap,
-        parainscripcion: 0
       }, {
           where: {
             id: req.body.id
@@ -272,7 +264,7 @@ exports.listSAP = function (req, res) {
     "Select count(*) AS count "+
     "FROM [sip].[presupuestoiniciativa] a " +
 	   "JOIN [sip].[iniciativaprograma] iniciativaprograma  ON a.[idiniciativaprograma] = iniciativaprograma.[id] " +
-    "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[id] = iniciativafecha.[idpresupuestoiniciativa] "+
+    "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] "+
     "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1 AND a.parainscripcion=1) " +  
     "and iniciativafecha.idtipofecha = @idfechafinal "; 
   if (filters && condition != "") {
@@ -290,7 +282,7 @@ exports.listSAP = function (req, res) {
     "as resultNum, a.*, iniciativaprograma.codigoart as codigoart, iniciativafecha.fecha as fechafinal " +
     "FROM [sip].[presupuestoiniciativa] a " +
 	   "JOIN [sip].[iniciativaprograma] iniciativaprograma  ON a.[idiniciativaprograma] = iniciativaprograma.[id] " +
-    "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[id] = iniciativafecha.[idpresupuestoiniciativa] "+
+    "JOIN [sip].[iniciativafecha] iniciativafecha  ON a.[idiniciativaprograma] = iniciativafecha.[idiniciativaprograma] "+
     "WHERE (iniciativaprograma.[estado] like 'Aprobada%' AND a.[borrado] = 1 AND a.parainscripcion=1) " +
     "and iniciativafecha.idtipofecha = @idfechafinal ";
     if (filters && condition != "") {

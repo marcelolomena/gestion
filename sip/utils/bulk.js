@@ -57,7 +57,7 @@ module.exports = (function () {
                             logger.error(err)
                             throw new Error(err)
                         });
-                    }
+                    } 
                 },
                     tbuf
                 );
@@ -118,7 +118,7 @@ module.exports = (function () {
                             logger.debug("lista la carga de " + table)
 
                             if (table === 'RecursosHumanos') {
-
+                                
                                 var parseDate = dateLoad.toISOString().slice(0, 10).split("-");
                                 var period = parseDate[0] + parseDate[1];
                                 logger.debug("period : " + period);
@@ -141,26 +141,25 @@ module.exports = (function () {
                                     });
                             }
                             else if (table === 'Proyecto') {
-
+                                
                                 var parseDate = dateLoad.toISOString().slice(0, 10).split("-");
 
-                                var query = "EXECUTE sip.CargaProyectoNode;";
+                                var query = "EXECUTE sip.CargaProyecto;";
                                 sequelize.query(query,
                                     {
                                         type: sequelize.QueryTypes.SELECT
                                     }).then(function (rows) {
                                         logger.debug("error : " + rows[0].ErrorNumber);
                                         if (rows[0].ErrorNumber === 0)
-                                            callback(undefined, "lista la carga de " + table);
-                                        else if (rows[0].ErrorNumber === 60000)
-                                            callback(rows[0].ErrorMessage, undefined);
+                                            callback(undefined, "lista la carga de " + table);                                      
+                                        else  if (rows[0].ErrorNumber === 60000)
+                                            callback(rows[0].ErrorMessage,undefined);      
                                     }).catch(function (err) {
                                         logger.error(err)
                                         throw new Error(err)
                                     });
-
                             } else if (table === 'DetalleProyecto') {
-
+                                
                                 var parseDate = dateLoad.toISOString().slice(0, 10).split("-");
 
                                 var query = "EXECUTE sip.GuardaDetalleProyecto;";
@@ -170,15 +169,15 @@ module.exports = (function () {
                                     }).then(function (rows) {
                                         logger.debug("error : " + rows[0].ErrorNumber);
                                         if (rows[0].ErrorNumber === 0)
-                                            callback(undefined, "lista la carga de " + table);
-                                        else if (rows[0].ErrorNumber === 60000)
-                                            callback(rows[0].ErrorMessage, undefined);
+                                            callback(undefined, "lista la carga de " + table);                                      
+                                        else  if (rows[0].ErrorNumber === 60000)
+                                            callback(rows[0].ErrorMessage,undefined);      
                                     }).catch(function (err) {
                                         logger.error(err)
                                         throw new Error(err)
                                     });
                             } else if (table === 'ErogacionProyecto') {
-
+                                
                                 var parseDate = dateLoad.toISOString().slice(0, 10).split("-");
 
                                 var query = "EXECUTE sip.GuardaErogacionProyecto;";
@@ -188,14 +187,14 @@ module.exports = (function () {
                                     }).then(function (rows) {
                                         logger.debug("error : " + rows[0].ErrorNumber);
                                         if (rows[0].ErrorNumber === 0)
-                                            callback(undefined, "lista la carga de " + table);
-                                        else if (rows[0].ErrorNumber === 60000)
-                                            callback(rows[0].ErrorMessage, undefined);
+                                            callback(undefined, "lista la carga de " + table);                                      
+                                        else  if (rows[0].ErrorNumber === 60000)
+                                            callback(rows[0].ErrorMessage,undefined);      
                                     }).catch(function (err) {
                                         logger.error(err)
                                         throw new Error(err)
                                     });
-                            }
+                            }                                 
 
                         }).catch(function (err) {
                             throw new Error(err)

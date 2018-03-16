@@ -48,7 +48,7 @@
             {
                 label: 'Producto',
                 name: 'idProducto',
-                jsonmap: 'producto.nombre',
+                jsonmap: 'nombre',
                 width: 200,
                 align: 'center',
                 editable: true,
@@ -63,7 +63,20 @@
                         return new zs.SelectTemplate(data, 'Seleccione el Producto', thissid).template;
                     },
                 },
-                search: false,
+                search: true,
+                stype: 'select',
+                searchoptions: {
+                    dataUrl: '/lic/getproductosreserva',
+                    buildSelect: function (response) {
+                        var data = JSON.parse(response);
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger Producto--</option>';
+                        $.each(data, function (i, item) {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        });
+                        return s + "</select>";
+                    }
+                },                
                 sortable: false
             },
             {
@@ -77,13 +90,13 @@
             },
             {
                 label: 'Fecha de Uso',
-                name: 'fechaUso',
+                name: 'fechauso',
                 width: 150,
                 align: 'center',
                 search: false,
                 formatter: function (cellvalue, options, rowObject) {
                     //2017-12-31T00:00:00.000Z
-                    var val = rowObject.fechaUso;
+                    var val = rowObject.fechauso;
                     if (val != null) {
                         val = val.substring(0, 10);
                         var fechaok = val.substring(8) + '-' + val.substring(5, 7) + '-' + val.substring(0, 4);
@@ -148,18 +161,17 @@
                 sortable: false
             }, {
                 label: 'Solicitante',
-                name: 'idUsuario',
-                jsonmap: 'solicitante.first_name',
+                name: 'solicitante',
+                jsonmap: 'solicitante',
                 align: 'center',
                 width: 100,
                 editable: false,
-                formatter: returnSolicitante,
                 search: false,
                 sortable: false
             },
             {
                 label: 'Comentario de Solicitud',
-                name: 'comentarioSolicitud',
+                name: 'comentariosolicitud',
                 width: 300,
                 hidden: false,
                 editable: true,
@@ -172,18 +184,17 @@
             },
             {
                 label: 'Aprobador',
-                name: 'idUsuarioJefe',
-                jsonmap: 'aprobador.first_name',
+                name: 'aprobador',
+                jsonmap: 'aprobador',
                 align: 'center',
                 width: 100,
                 editable: false,
-                formatter: returnAprobador,
                 search: false,
                 sortable: false
             },
             {
                 label: 'Comentario de Aprobación',
-                name: 'comentarioAprobacion',
+                name: 'comentarioaprobacion',
                 width: 300,
                 hidden: false,
                 editable: true,
@@ -196,7 +207,7 @@
             },
             {
                 label: 'Estado Autorización',
-                name: 'estadoAutorizacion',
+                name: 'estadoautorizacion',
                 width: 130,
                 align: 'center',
                 editable: true,
@@ -239,7 +250,7 @@
             // },
             {
                 label: 'Comentario de Autorización',
-                name: 'comentarioAutorizacion',
+                name: 'comentarioautorizacion',
                 width: 300,
                 hidden: false,
                 editable: true,
@@ -255,7 +266,7 @@
             },
             {
                 label: 'Codigo Autorización',
-                name: 'codAutoriza',
+                name: 'codautoriza',
                 width: 200,
                 hidden: false,
                 editable: false,

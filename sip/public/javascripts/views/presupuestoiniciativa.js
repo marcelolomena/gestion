@@ -13,12 +13,8 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     var template = "<div id='responsive-form' class='clearfix'>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'><span style='color: red'>*</span>Glosa(Max 250){glosa}</div>";
-    template += "</div>";
-    
-    template += "<div class='form-row'>";
+    template += "<div class='column-half'><span style='color: red'>*</span>Glosa(Max: 50){glosa}</div>";
     template += "<div class='column-half'>N° SAP{sap}</div>";
-    template += "<div class='column-half'>Extensión{extension}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -32,15 +28,11 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Descripción (Max 1000){descripcion}</div>";
-    template += "</div>";
-    
-    template += "<div class='form-row'>";
-    template += "<div class='column-full'>Beneficios Cuantitativos(Max 1000){beneficioscuantitativos}</div>";
+    template += "<div class='column-full'>Beneficios Cuantitativos(Max 250){beneficioscuantitativos}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-full'>Beneficios Cualitativos(Max 1000){beneficioscualitativos}</div>";
+    template += "<div class='column-full'>Beneficios Cualitativos(Max 250){beneficioscualitativos}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
@@ -55,9 +47,8 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     template += "</div>";
 
     template += "<div class='form-row'>";
-    template += "<div class='column-half'><span style='color: red'>*</span>Para inscripción{parainscripcion}</div>";
-    template += "<div class='column-half'>SAP Madre{sapmadre}</div>";
-    template += "</div>"; 
+    template += "<div class='column-full'><span style='color: red'>*</span>Para inscripción{parainscripcion}</div>";
+    template += "</div>";
     
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>idiniciativapadre{nombreiniciativapadre}</div>";
@@ -84,7 +75,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         {
             label: 'Glosa', name: 'glosa', width: 100, align: 'left',
             search: true, editable: true, hidden: false,
-            editoptions: {size:100, maxlength: 255},
+            editoptions: {size:10, maxlength: 50},
             editrules: { required: true },
         },
         {
@@ -96,15 +87,6 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 }
             },
         },
-        {
-            label: 'Extensión', name: 'extension', width: 30, align: 'left',
-            search: true, editable: true, hidden: false,
-            editoptions: {
-                dataInit: function (element) {
-                    $(element).mask("00000", { placeholder: "_____" });
-                }
-            },
-        },        
         {
             label: 'Cui 1', name: 'cuifinanciamiento1', width: 50, align: 'left',
             search: true, editable: true, hidden: false,
@@ -165,18 +147,13 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             hidedlg: false
         },
         {
-            label: 'Descripción', name: 'descripcion', width: 200,
-            align: 'left', edittype: "textarea", editoptions: {maxlength:"1000"},
-            search: true, editable: true, hidden: false,
-        },        
-        {
             label: 'Beneficios Cuantitativos', name: 'beneficioscuantitativos', width: 200,
-            align: 'left', edittype: "textarea", editoptions: {maxlength:"1000"},
+            align: 'left', edittype: "textarea", editoptions: {maxlength:"250"},
             search: true, editable: true, hidden: false,
         },
         {
             label: 'Beneficios Cualitativos', name: 'beneficioscualitativos', width: 200,
-            align: 'left', edittype: "textarea", editoptions: {maxlength:"1000"},
+            align: 'left', edittype: "textarea", editoptions: {maxlength:"250"},
             search: true, editable: true, hidden: false,
         },
         {
@@ -331,11 +308,6 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 return dato;
             }
         },
-        {
-            label: 'SAP Madre', name: 'sapmadre', width: 50, align: 'left',
-            search: true, editable: true, hidden: false, jsonmap: "sapmadre",
-            editoptions: {placeholder: "YYYY-#"}
-        }        
 
     ];
 
@@ -390,7 +362,6 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 return 'Error: ' + data.responseText
             },
             beforeSubmit: function (postdata, formid) {
-                const regex = /^\d{4}-\d{1}$/gm;
                 var uf = new Number(postdata.uf.replace(",", "."));
                 postdata.uf=uf;
                 var dolar = new Number(postdata.dolar.replace(",", "."));
@@ -418,14 +389,8 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                     return [false, "Dolar: Ingrese un número valido", ""];
                 }  if (isNaN(uf) || uf < 0) {
                     return [false, "UF: Ingrese un número valido", ""];
-                }  if (postdata.sapmadre.length > 0){
-                    if (!regex.test(postdata.sapmadre)) {
-                        return [false, "SAP Madre: Debe ingresar valor válido (YYYY-#)", ""];
-                    } else {
-                        return [true, "", ""];
-                    }
                 } else {
-                    return [true, "", ""];
+                    return [true, "", ""]
                 }
             },
             afterSubmit: function (response, postdata) {
@@ -489,7 +454,6 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 return { parent_id: parentRowKey };
             },
             beforeSubmit: function (postdata, formid) {
-                const regex = /^\d{4}-\d{1}$/gm;
                 var dolar = new Number(postdata.dolar.replace(",", "."));
                 postdata.dolar=dolar;
                 var uf = new Number(postdata.uf.replace(",", "."));
@@ -517,14 +481,8 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                     return [false, "Dolar: Ingrese un número valido", ""];
                 }  if (isNaN(uf) || uf < 0) {
                     return [false, "UF: Ingrese un número valido", ""];
-                }  if (postdata.sapmadre.length > 0){
-                    if (!regex.test(postdata.sapmadre)) {
-                        return [false, "SAP Madre: Debe ingresar valor válido (YYYY-#)", ""];
-                    } else {
-                        return [true, "", ""];
-                    }
                 } else {
-                    return [true, "", ""];
+                    return [true, "", ""]
                 }
             },
             afterSubmit: function (response, postdata) {
@@ -535,12 +493,6 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
                 else
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
-                var grillapadre = subgrid_id.substring(0, subgrid_id.lastIndexOf("_"));
-                var grid = $('#' + subgrid_table_id);
-                var rowData = $("#" + grillapadre).getRowData(parentRowKey);
-                console.log("Data:"+JSON.stringify(rowData));
-                var nombre = rowData.nombre;
-                $("#glosa", form).val(nombre);                
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
             }, afterShowForm: function (form) {
                 sipLibrary.centerDialog($("#" + childGridID).attr('id'));
@@ -604,5 +556,4 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
 }
 function showSubGrids2(subgrid_id, row_id) {
     gridTareasNuevosProyectos(subgrid_id, row_id, 'tareas');
-    gridIniciativaFechaPrep(subgrid_id, row_id, 'fecha')
 }

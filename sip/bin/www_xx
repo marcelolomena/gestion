@@ -1,0 +1,187 @@
+#!/usr/bin/env node
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app'),
+  models = require("../models"),
+  debug = require('debug')('sip:server'),
+  http = require('http'),
+  https = require('https'),
+  fs = require('fs'),
+  cluster = require('cluster'),
+  logger = require("../utils/logger");
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+var options = {
+  key: fs.readFileSync('newkey.pem'),
+  cert: fs.readFileSync('cert.pem')
+};
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+var secure_server = https.createServer(options, app);
+var io = require('socket.io')(secure_server);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+
+
+if (cluster.isMaster) {
+  var numWorkers = require('os').cpus().length;
+
+  logger.debug('Iniciando cluster maestro con ' + numWorkers + ' trabajadores...');
+
+  for (var i = 0; i < numWorkers; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('online', function (worker) {
+    logger.debug('Trabajador ' + worker.process.pid + ' esta en linea');
+  });
+
+  cluster.on('exit', function (worker, code, signal) {
+    logger.debug('Trabajador ' + worker.process.pid + ' muerto con codigo: ' + code + ', y señal: ' + signal);
+    logger.debug('Iniciando un nuevo trabajador');
+    cluster.fork();
+  });
+} else {
+  models.sequelize.sync().then(startApp)
+    .catch(function (e) {
+      logger.error(e)
+      throw new Error(e);
+    });
+}
+
+
+var handleClient = function (socket) {
+  function log() {
+    var array = [">>> Mensaje desde el servidor: "];
+    for (var i = 0; i < arguments.length; i++) {
+      array.push(arguments[i]);
+    }
+    socket.emit('log', array);
+  }
+
+  socket.on('message', function (message) {
+    logger.debug(message);
+    //console.log("------------->>" + message)
+
+    if (message === 'bye') {
+      socket.disconnect();
+      logger.debug("socket.disconnect()")
+    }
+    // for a real app, would be room only (not broadcast)
+    socket.broadcast.emit('message', message);
+  });
+
+  socket.on('create or join', function (room) {
+    var namespace = '/';
+    //var sala = io.nsps[namespace].adapter.rooms[room];//no funciona en 1.4.X
+    var sala = io.sockets.adapter.rooms[room];
+    var numClients = 0;
+    //for (var i in sala) numClients++;
+    if (sala) numClients = sala.length;
+
+    logger.debug("numClients ->>>>>>>>>>> " + numClients)
+
+    log('Sala ' + room + ' tiene ' + numClients + ' cliente(s)');
+    log('Peticion para crear o unirse a una sala ' + room);
+
+    if (numClients === 0) {
+      socket.join(room);
+      socket.emit('created', room);
+    } else if (numClients === 1) {
+      io.sockets.in(room).emit('join', room);
+      socket.join(room);
+      socket.emit('joined', room);
+    } else { // maximo dos clientes
+      socket.emit('full', room);
+    }
+    socket.emit('emit(): client ' + socket.id + ' joined room ' + room);
+    socket.broadcast.emit('broadcast(): client ' + socket.id + ' joined room ' + room);
+
+  });
+
+};
+
+function startApp() {
+  server.listen(port);
+  secure_server.listen(3001);
+  server.on('error', onError);
+  server.on('listening', onListening);
+
+  io.sockets.on('connection', handleClient);
+
+}
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      logger.error(bind + ' no tiene acceso');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      logger.error(bind + ' ya esta en uso');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  logger.debug('Escuchando en ' + bind);
+}

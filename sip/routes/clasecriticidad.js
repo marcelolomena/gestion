@@ -2,35 +2,13 @@ var express = require('express')
 var router = express.Router()
 var isAuthenticated = require('../policies/isAuthenticated')
 var criticidadController = require('../controllers/sic/clasecriticidad');
-var models = require('../models');
-var sequelize = require('../models/index').sequelize;
-var logger = require("../utils/logger");
+
 
 module.exports = function(passport) {
-/*    
-    router.get('/clasecriticidad', isAuthenticated, function(req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'clasecriticidad' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home2', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'clasecriticidad',
-                title: '',
-                type: pagina.contenido.nombre
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });
-        
+    router.get('/sic/clasecriticidad', isAuthenticated, function(req, res) {
+        res.render('sic/clasecriticidad', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/sic/clasecriticidad/list')
         .get(isAuthenticated, criticidadController.list);
 

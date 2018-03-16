@@ -45,11 +45,11 @@ module.exports = function (passport) {
                                     nombre: home.pagina
                                 },
                                 include: [{
-                                    model: models.sistema
-                                },
-                                {
-                                    model: models.contenido
-                                }
+                                        model: models.sistema
+                                    },
+                                    {
+                                        model: models.contenido
+                                    }
                                 ]
                             }).then(function (pagina) {
                                 var tmpl = pug.renderFile(pagina.contenido.plantilla, {
@@ -108,20 +108,22 @@ module.exports = function (passport) {
                 where: {
                     id: idsistema
                 }
-            }).then(function (home) {
+            })
+            .then(function (home) {
 
                 return models.pagina.findOne({
                     where: {
                         nombre: req.params.opt
                     },
                     include: [{
-                        model: models.sistema
-                    },
-                    {
-                        model: models.contenido
-                    }
+                            model: models.sistema
+                        },
+                        {
+                            model: models.contenido
+                        }
                     ]
-                }).then(function (pagina) {
+                })
+                .then(function (pagina) {
                     var tmpl = pug.renderFile(pagina.contenido.plantilla, {
                         title: pagina.title
                     });
@@ -136,14 +138,17 @@ module.exports = function (passport) {
                         html: tmpl,
                         script: script
                     });
+
                 }).catch(function (err) {
                     throw err;
                 });
+
             }).catch(function (err) {
                 logger.error(err);
                 return next(err)
             });
         }
     });
+
     return router;
 }

@@ -1,5 +1,5 @@
 var proveedorController = require('../controllers/proveedor');
-var contactoController = require('../controllers/contacto');
+var contactoController = require('../controllers/contacto')
 var parametroController = require('../controllers/parametro');
 var proyectoController = require('../controllers/proyecto');
 var proyectoTareasController = require('../controllers/proyectotareas');
@@ -12,44 +12,21 @@ var servicioController = require('../controllers/servicio');
 var monedaController = require('../controllers/moneda');
 var compromisoController = require('../controllers/detallecompromiso');
 var graficoController = require('../controllers/graficotest');
-var testController = require('../controllers/test');
-var rolesController = require('../controllers/roles');
-var permisosController = require('../controllers/permisos');
-var registroController = require('../controllers/registro');
-var rolnegocioController = require('../controllers/rolnegocio');
-var express = require('express');
-var router = express.Router();
-var isAuthenticated = require('../policies/isAuthenticated');
-var testxmlController = require('../controllers/testxml');
-var models = require('../models');
-var sequelize = require('../models/index').sequelize;
-var logger = require("../utils/logger");
+var testController = require('../controllers/test')
+var rolesController = require('../controllers/roles')
+var permisosController = require('../controllers/permisos')
+var registroController = require('../controllers/registro')
+var express = require('express')
+var router = express.Router()
+var isAuthenticated = require('../policies/isAuthenticated')
+var testxmlController = require('../controllers/testxml')
 
 module.exports = function (passport) {
-/*
-    router.get('/proveedores', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'proveedores' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'proveedores',
-                title: 'Proveedores',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });        
-        
+    router.get('/proveedores', isAuthenticated, function (req, res) {
+        res.render('proveedores', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/proveedores/combobox')
         .get(isAuthenticated, proveedorController.combobox);
 
@@ -67,53 +44,15 @@ module.exports = function (passport) {
 
     router.route('/contactos/action')
         .post(isAuthenticated, contactoController.action);
-/*
-    router.get('/parametros', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'parametros' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'parametros',
-                title: 'PARAMETROS',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });        
-        
+    router.get('/parametros', isAuthenticated, function (req, res) {
+        res.render('parametros', { user: req.user, data: req.session.passport.sidebar });
     });
 
     router.get('/roles', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'roles' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'roles',
-                title: 'ROLES',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });        
-        
+        res.render('roles', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/roles/list')
         .post(isAuthenticated, rolesController.list);
 
@@ -122,30 +61,11 @@ module.exports = function (passport) {
 
     router.route('/roles/action')
         .post(isAuthenticated, rolesController.action);
-/*
-    router.get('/permisos', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'permisos' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'permisos',
-                title: 'ROLES',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });        
-        
+    router.get('/permisos', isAuthenticated, function (req, res) {
+        res.render('permisos', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/permisos/list')
         .post(isAuthenticated, permisosController.list);
 
@@ -181,30 +101,11 @@ module.exports = function (passport) {
 
     router.route('/parameters/:param')
         .get(isAuthenticated, paramController.getListParam);
-/*
-    router.get('/proyectos', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'proyectos' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'proyectos',
-                title: 'Informe de Saldos de Proyectos DIVOT',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });        
-        
+    router.get('/proyectos', isAuthenticated, function (req, res) {
+        res.render('proyectos', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/proyectoslist')
         .get(isAuthenticated, proyectoController.getProyectosPaginados);
 
@@ -222,9 +123,6 @@ module.exports = function (passport) {
 
     router.route('/programa/:id')
         .get(isAuthenticated, programaController.getPrograma);
-        
-    router.route('/programacode/:id')
-        .get(isAuthenticated, programaController.getProgramaCode);        
 
     router.route('/programas/:id')
         .get(isAuthenticated, programaController.getProgramasId);
@@ -234,6 +132,10 @@ module.exports = function (passport) {
 
     router.route('/tipos')
         .get(isAuthenticated, parametroController.getTipos);
+
+    router.get('/erogaciones', isAuthenticated, function (req, res) {
+        res.render('erogaciones', { user: req.user, data: req.session.passport.sidebar });
+    });
 
     router.route('/erogacioneslist/:id')
         .get(isAuthenticated, erogacionesController.getErogacionesPaginados);
@@ -261,30 +163,11 @@ module.exports = function (passport) {
 
     router.route('/contactos/:id')
         .get(isAuthenticated, contactoController.getContactos);
-/*
-    router.get('/serviciosext', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'serviciosext' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'serviciosext',
-                title: 'SERVICIOS',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });        
-        
+    router.get('/serviciosext', isAuthenticated, function (req, res) {
+        res.render('servicios', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/serviciosext/list')
         .post(isAuthenticated, servicioController.list);
 
@@ -299,29 +182,11 @@ module.exports = function (passport) {
 
     router.route('/test')
         .get(isAuthenticated, testController.test);
-/*
-    router.get('/graficotest', isAuthenticated, function (req, res) {
-        models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-        return models.pagina.findOne({
-            where: { nombre: 'graficotest' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'graficotest',
-                title: '',
-                type: pagina.contenido.nombre
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });
+    router.get('/graficotest', isAuthenticated, function (req, res) {
+        res.render('grafico', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/graficodatareal/:idsap')
         .get(isAuthenticated, graficoController.graficoDataReal);
 
@@ -330,72 +195,21 @@ module.exports = function (passport) {
 
     router.route('/sapgrafico')
         .get(isAuthenticated, graficoController.sapgrafico);
-/*
-    router.get('/registro', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'registro' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
 
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'registro',
-                title: 'REGISTRO',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });          
+    router.get('/registro', isAuthenticated, function (req, res) {
+        res.render('registro', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+
     router.route('/registro/list')
         .post(isAuthenticated, registroController.list);
-/*
-    router.get('/resetpwd', isAuthenticated, function (req, res) {
-        return models.pagina.findOne({
-            where: { nombre: 'resetpwd' },
-            include: [{
-                model: models.contenido
-            }
-            ]
-        }).then(function (pagina) {
-
-            return res.render('home', {
-                user: req.user,
-                data: req.session.passport.sidebar,
-                page: 'resetpwd',
-                title: 'Cambio de Password',
-                type: pagina.contenido.nombre,
-                idtype: pagina.contenido.id
-            });
-        }).catch(function (err) {
-            logger.error(err);
-        });          
         
+    router.get('/resetpwd', isAuthenticated, function (req, res) {
+        res.render('resetpwd', { user: req.user, data: req.session.passport.sidebar });
     });
-*/
+    
     router.route('/testxml')
         .get(isAuthenticated, testxmlController.xmltest);
-
         
-    router.route('/rolnegocio/user/list')
-        .post(isAuthenticated, rolnegocioController.listUsers);
-    
-    router.route('/rolnegocio/list/:id')
-        .post(isAuthenticated,rolnegocioController.getRolesUsuario);
-
-    router.route('/rolnegocio/action/:id')
-        .post(isAuthenticated, rolnegocioController.action);
-    
-    router.route('/rolnegocio/getroles')
-        .get(isAuthenticated,rolnegocioController.getRoles);
-
     return router;
 
 }
-

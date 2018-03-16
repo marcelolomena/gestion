@@ -129,7 +129,7 @@ $(document).ready(function () {
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
                 buildSelect: function (response) {
-                    var grid = $("#grid");
+                    var grid = $("#table_proveedor");
                     var rowKey = grid.getGridParam("selrow");
                     var rowData = grid.getRowData(rowKey);
                     var thissid = rowData.uid;
@@ -235,7 +235,7 @@ $(document).ready(function () {
     tmpc += "<div> {sData} {cData}  </div>";
     tmpc += "</div>";
 
-    $("#grid").jqGrid({
+    $("#table_proveedor").jqGrid({
         url: '/proveedores/list',
         mtype: "POST",
         datatype: "json",
@@ -247,7 +247,7 @@ $(document).ready(function () {
         width: 1300,
         shrinkToFit: false,
         caption: 'Lista de proveedores',
-        pager: "#pager",
+        pager: "#pager_proveedor",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         editurl: '/proveedores/action',
@@ -260,9 +260,9 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#grid").jqGrid('filterToolbar', {  stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+    $("#table_proveedor").jqGrid('filterToolbar', {  stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
-    $('#grid').jqGrid('navGrid', "#pager", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
+    $('#table_proveedor').jqGrid('navGrid', "#pager_proveedor", { edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false },
         {
             editCaption: "Modifica Proveedor",
             closeAfterEdit: true,
@@ -283,7 +283,7 @@ $(document).ready(function () {
                     return [true, "", ""]
             }, beforeShowForm: function (form) {
                 $('input#numrut', form).attr('readonly', 'readonly');
-                sipLibrary.centerDialog($('#grid').attr('id'));
+                sipLibrary.centerDialog($('#table_proveedor').attr('id'));
             }
         },
         {
@@ -314,13 +314,13 @@ $(document).ready(function () {
                     return [false, result.error_text, ""];
                 } else {
                     var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"razonsocial\",\"op\":\"cn\",\"data\":\"" + postdata.razonsocial + "\"}]}";
-                    $("#grid").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
+                    $("#table_proveedor").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
             }, beforeShowForm: function (form) {
-                sipLibrary.centerDialog($('#grid').attr('id'));
+                sipLibrary.centerDialog($('#table_proveedor').attr('id'));
             }, afterShowForm: function (form) {
-                sipLibrary.centerDialog($("#grid").attr('id'));
+                sipLibrary.centerDialog($("#table_proveedor").attr('id'));
             }
         },
         {
@@ -342,16 +342,16 @@ $(document).ready(function () {
         }
     );
 
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
+    $('#table_proveedor').jqGrid('navButtonAdd', '#pager_proveedor', {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",
         position: "last",
         onClickButton: function () {
-            var grid = $('#grid');
+            var grid = $('#table_proveedor');
             var rowKey = grid.getGridParam("selrow");
             var url = '/proveedoresexcel';
-            $('#grid').jqGrid('excelExport', { "url": url });
+            $('#table_proveedor').jqGrid('excelExport', { "url": url });
         }
     });
 
@@ -525,5 +525,5 @@ $(document).ready(function () {
 
     }
 
-    $("#pager_left").css("width", "");
+    $("#pager_proveedor_left").css("width", "");
 });

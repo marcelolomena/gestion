@@ -35,7 +35,7 @@ module.exports = function(sequelize, DataTypes) {
     titulo: {
       type: DataTypes.STRING,
       allowNull: true
-    },
+    },    
     glosa: {
       type: DataTypes.TEXT,
       allowNull: true

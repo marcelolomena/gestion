@@ -75,19 +75,7 @@ module.exports = function(sequelize, DataTypes) {
     parainscripcion: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },
-    descripcion: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    extension: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    sapmadre: {
-      type: DataTypes.STRING,
-      allowNull: true
-    }    
+    }
   }, {
     schema: 'sip',timestamps: false,tableName: 'presupuestoiniciativa'
   });

@@ -111,7 +111,7 @@ $(document).ready(function () {
                     $(el).mask('000.000.000.000.000', { reverse: true });
                 }
             }
-        }    
+        }
 
     ];
     $("#grid").jqGrid({

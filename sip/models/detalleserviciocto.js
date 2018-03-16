@@ -185,7 +185,11 @@ module.exports = function(sequelize, DataTypes) {
     numerosolicitud: {
       type: DataTypes.STRING,
       allowNull: true
-    }      
+    },
+    numfichacriticidad: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }     
   }, {
     schema: 'sip',timestamps: false,tableName: 'detalleserviciocto'
   });

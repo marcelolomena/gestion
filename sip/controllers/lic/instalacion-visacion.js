@@ -34,7 +34,7 @@ exports.action = function (req, res) {
       console.log("archivo:" + req.body.nombrearchivo2);
       var archivo = req.body.nombrearchivo2;
       var filePath = "docs"+path.sep+"lic";
-      var fullpath = filePath + path.sep + archivo;
+      var fullpath = filePath +path.sep+ archivo;
       var htmltext = '<b>Estimados <br><br> La solicitud de instalación del producto "' +
         req.body.idProducto + '" ha sido autorizada. <br>Por favor proceder con la instalación. <br> Se adjunta información requerida.</b>' +
         'Una vez realizada exitosamente la instalación debe registrar como instalado el producto en "http://152.139.49.217:8090/menu/instalador"';
@@ -45,6 +45,7 @@ exports.action = function (req, res) {
         sequelize.query(sqltorre).then(function (torre) {
           var mailtorre = torre[0][0].correo;
           if (req.body.estado == 'Aprobado') {
+	     console.log("File:"+fullpath);
             fs.readFile(fullpath, function (err, data) {
               let transporter = nodemailer.createTransport({
                 host: constants.CORREOIP,
@@ -67,7 +68,7 @@ exports.action = function (req, res) {
               };
 
               //console.log('MailOPt'+JSON.stringify(mailOptions));
-              console.log("TO:"+ constants.CORREOTO + ',' + mailtorre);
+		console.log("TO:"+constants.CORREOTO + ',' + mailtorre);
               // send mail with defined transport object
               transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {

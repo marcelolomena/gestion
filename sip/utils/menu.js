@@ -103,8 +103,7 @@ module.exports = (function () {
                     }).catch(function (err) {
                         logger.error(err)
                     });
-
-                    /*
+/*
                     var _countQuestion = yield models.preguntaproveedor.count({
                         where: [{ 'respuesta': null }, { idresponsable: user.uid }]
                     }).catch(function (err) {
@@ -112,7 +111,7 @@ module.exports = (function () {
                     });
 
                     logger.debug("cantidad : " + _countQuestion)
-                    */
+*/
                     var sqlrol = `
                         select c.id, c.glosarol from art_user a 
                         join sip.usr_rol b on a.uid = b.uid
@@ -150,7 +149,7 @@ module.exports = (function () {
                         if (usr.length > 0) {
                             var usuario = []
                             var nombre = {}
-                            nombre["contadorPreguntas"] = 0
+                            nombre["contadorPreguntas"] = 0;
                             nombre["nombre"] = usr[0].first_name + " " + usr[0].last_name
                             nombre["uid"] = user.uid
                             nombre["sistema"] = req.body.sistema;

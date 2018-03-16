@@ -17,6 +17,7 @@ public class Inicio {
     public static void main(String[] args) {
         try {
             new ProcesoDAO().actualizaArchivo();
+            //new ProcesoDAO().obtieneBancos();
         } catch (Exception e){
             e.printStackTrace();
         }

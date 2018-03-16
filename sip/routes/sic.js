@@ -26,11 +26,8 @@ var participantesproveedorController = require('../controllers/sic/participantes
 var cotizacionservicioController = require('../controllers/sic/cotizacionservicio')
 var matrizevaluacionController = require('../controllers/sic/matrizevaluacion')
 var adjudicacionController = require('../controllers/sic/adjudicacion')
-var solicitudcontratoController = require('../controllers/sic/solicitudcontrato')
+var solicitudcontratoController =  require('../controllers/sic/solicitudcontrato')
 var triadaController = require('../controllers/sic/triada');
-//var triada2Controller = require('../controllers/sic/triada2');
-
-//var plantillaController = require('../controllers/plantilla');
 var detalleplantillaController = require('../controllers/sic/detalleplantilla2');
 var plantillacuiController = require('../controllers/sic/plantillacui2');
 
@@ -87,6 +84,15 @@ module.exports = function (passport) {
             
         });
     */
+	
+	router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
+        return res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.get('/sic/preguntaproveedor', isAuthenticated, function (req, res) {
+        return res.render('sic/preguntaproveedor', { user: req.user, data: req.session.passport.sidebar });
+    });
+	
     router.route('/sic/grid_solicitudcotizacion')
         .post(isAuthenticated, solicitudcotizacionController.action)
         .get(isAuthenticated, solicitudcotizacionController.list);
@@ -102,6 +108,9 @@ module.exports = function (passport) {
 
     router.route('/sic/preguntas/:id')
         .get(isAuthenticated, preguntasController.list);
+
+    //router.route('/sic/asignarpreguntas/:id')
+    //    .get(isAuthenticated, preguntasController.listasignar);
 
     router.route('/sic/servicios/:id')
         .get(isAuthenticated, serviciosController.list);
@@ -213,6 +222,14 @@ module.exports = function (passport) {
             
         });
     */
+	router.get('/sic/catalogoclausulas', isAuthenticated, function (req, res) {
+        return res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
+    });
+
+    router.get('/sic/claseevaluaciontecnica', isAuthenticated, function (req, res) {
+        return res.render('sic/claseevaluaciontecnica', { user: req.user, data: req.session.passport.sidebar });
+    });
+	
     router.route('/sic/usuarios_por_rolid/:id')
         .get(isAuthenticated, responsablesController.getUsersByRolId);
 
@@ -328,6 +345,11 @@ module.exports = function (passport) {
             
         });
     */
+	
+	router.get('/sic/toc', isAuthenticated, function (req, res) {
+        return res.render('sic/toc', { user: req.user, data: req.session.passport.sidebar });
+    });
+	
     router.route('/sic/grid_toctipo')
         .post(isAuthenticated, tocController.action)
         .get(isAuthenticated, tocController.list);
@@ -423,6 +445,11 @@ module.exports = function (passport) {
             
         });
     */
+	
+	router.get('/sic/tipodocumento', isAuthenticated, function (req, res) {
+        res.render('sic/tipodocumento', { user: req.user, data: req.session.passport.sidebar });
+    });
+	
     router.route('/sic/grid_tipodocumento')
         .post(isAuthenticated, tipodocumentoController.action)
         .get(isAuthenticated, tipodocumentoController.list);
@@ -515,6 +542,10 @@ module.exports = function (passport) {
 
     router.route('/sic/porcentajecriterios/:parentRowKey')
         .get(isAuthenticated, claseevaluaciontecnicaController.porcentajecriterios);
+		
+		router.get('/sic/roles', isAuthenticated, function (req, res) {
+        res.render('sic/rolessic', { user: req.user, data: req.session.passport.sidebar });
+    });
     /*
         router.get('/rolessic', isAuthenticated, function (req, res) {
             models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
@@ -573,6 +604,11 @@ module.exports = function (passport) {
             
         });
     */
+	
+	router.get('/sic/permisos', isAuthenticated, function (req, res) {
+        res.render('sic/permisossic', { user: req.user, data: req.session.passport.sidebar });
+    });
+	
     router.route('/sic/permisos/list')
         .post(isAuthenticated, permisosController.list);
 
@@ -742,18 +778,16 @@ module.exports = function (passport) {
 
     router.route('/sic/guardarcontrato/:id')
         .get(isAuthenticated, solicitudcontratoController.guardarcontrato)
-
-    router.route('/sic/BorrarClausulas/:id/:numero')
+		
+	router.route('/sic/BorrarClausulas/:id/:numero')
         .get(isAuthenticated, clausulasController.BorrarClausulas)
-
-    router.route('/sic/getjustificacion/:nombrefactor/:nota')
+		
+	router.route('/sic/getjustificacion/:nombrefactor/:nota')
         .get(isAuthenticated, serviciosController.getjustificacion);
-
-    //-----------------------------------------------------------------
-
-    router.route('/sic/triada/:id')
+		
+	router.route('/sic/triada/:id')
         .get(isAuthenticated, triadaController.list);
-
+    
     router.route('/sic/triada/action')
         .post(isAuthenticated, triadaController.action);
 
@@ -765,7 +799,19 @@ module.exports = function (passport) {
 
     router.route('/sic/cuiproveedores/:id/:idservicio')
         .get(isAuthenticated, plantillacuiController.getCuiProveedores);
+		
+		
+	router.get('/sic/solicitudcontrato', isAuthenticated, function (req, res) {
+        return res.render('sic/solicitudcontrato', { user: req.user, data: req.session.passport.sidebar });
+    });
 
+    router.get('/sic/solicitudcontratofinal', isAuthenticated, function (req, res) {
+        return res.render('sic/solicitudcontratofinal', { user: req.user, data: req.session.passport.sidebar });
+    });
+	
+	router.get('/sic/triada', isAuthenticated, function (req, res) {
+        return res.render('sic/triada', { user: req.user, data: req.session.passport.sidebar });
+    });
 
     return router;
 }
