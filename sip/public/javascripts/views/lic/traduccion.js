@@ -180,5 +180,30 @@ $(document).ready(function () {
             });
         }
     });
+
+    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-repeat",
+        title: "Refrescar Chubi",
+        position: "last",
+        onClickButton: function () {
+            var dialog = bootbox.dialog({
+                title: 'Procedimiento Chequeo de Alertas',
+                message: '<p><i class="fa fa-spin fa-spinner"></i> Actualizando...</p>'
+            });
+            dialog.init(function () {
+                setTimeout(function () {
+                    $.ajax({
+                        url: "/lic/actualizarChubi",
+                        dataType: 'json',
+                        async: false,
+                        success: function (j) {
+                            dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                        }
+                    });
+                }, 2000);
+            });
+        }
+    });
     $("#pager_left").css("width", "");
 });

@@ -323,6 +323,15 @@ function existeOtroProducto(req, res) {
         });
 }
 
+function actualizarChubi(req, res) {
+    sequelize.query('EXEC lic.alertaRenoSoporteSIN ').then(function (response) {
+        res.json(response)
+    }).error(function (err) {
+        res.json(err);
+    });
+}
+
+
 module.exports = {
     list: list,
     action: action,
@@ -332,5 +341,6 @@ module.exports = {
     getProductoLicTramite: getProductoLicTramite,
     listcompratramite: listcompratramite,
     getProductoCompra: getProductoCompra,
-    existeOtroProducto: existeOtroProducto
+    existeOtroProducto: existeOtroProducto,
+    actualizarChubi: actualizarChubi
 }
