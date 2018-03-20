@@ -442,7 +442,7 @@ object DashboardService {
     DB.withConnection { implicit connection =>
       val sqlstr =
         """
-          |select DISTINCT foco AS value,foco AS name from art_program_management where tipo='PROGRAMA' ORDER BY foco
+          |select DISTINCT foco AS value,foco AS name from art_program_management where tipo='PROGRAMA' and foco is not null ORDER BY foco
         """.stripMargin
 
       SQL(sqlstr).as(DummyList.dummyList *)
@@ -492,5 +492,15 @@ object DashboardService {
       SQL(sqlstr).as(DummyList.dummyList *)
     }
   }
+
+  def updateTableManager(): Boolean = {
+
+    DB.withConnection { implicit connection =>
+      val lola=SQL("exec proc_art_program_management").execute()
+      Logger.debug("traza : " + lola )
+      lola
+    }
+  }
+
 
 }
