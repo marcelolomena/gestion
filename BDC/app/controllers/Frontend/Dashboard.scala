@@ -2498,8 +2498,7 @@ object Dashboard extends Controller {
 
         case "X" =>
           data = DashboardService.managerWwithoutPage(qrystr, order)
-          val fileToServe = TemporaryFile(new File("report.xlsx"))
-          val file = new File("report.xlsx")
+          val file = new File("eliminar.xlsx")
           val fileOut = new FileOutputStream(file);
           val wb = new XSSFWorkbook
           val sheet = wb.createSheet("ART")
@@ -2602,9 +2601,10 @@ object Dashboard extends Controller {
 
           val time = new Date()
 
-          wb.write(fileOut);
-          fileOut.close();
-          Ok.sendFile(content = file, fileName = _ => "report_" + time.getTime + ".xlsx")
+          wb.write(fileOut)
+          fileOut.close()
+          val tempFile = TemporaryFile(file)
+          Ok.sendFile(content = file, fileName = _ => "report_" + time.getTime + ".xlsx",  onClose = () => { tempFile.clean })
 
       }
 

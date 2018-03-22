@@ -53,7 +53,10 @@ case class Report(
                   tamano: Option[String],
                   count_project: Option[BigDecimal],
                   count_task: Option[BigDecimal],
-                  count_subtask: Option[BigDecimal]
+                  count_subtask: Option[BigDecimal],
+                  tipo: Option[String],
+                  pmo: Option[String],
+                  count_subtask_usr: Option[BigDecimal]
  )
 
 object Report {
@@ -87,7 +90,10 @@ object Report {
       get[Option[String]]("tamano") ~
       get[Option[BigDecimal]]("count_project") ~
       get[Option[BigDecimal]]("count_task") ~
-      get[Option[BigDecimal]]("count_subtask") map {
+      get[Option[BigDecimal]]("count_subtask") ~
+      get[Option[String]]("tipo") ~
+      get[Option[String]]("pmo") ~
+      get[Option[BigDecimal]]("count_subtask_usr")  map {
       case
         program_id ~
         project_id  ~
@@ -117,7 +123,10 @@ object Report {
         tamano ~
         count_project ~
         count_task ~
-        count_subtask => Report(
+        count_subtask ~
+        tipo ~
+        pmo ~
+        count_subtask_usr => Report(
         program_id ,
         project_id,
         task_id,
@@ -146,7 +155,10 @@ object Report {
         tamano,
         count_project,
         count_task,
-        count_subtask
+        count_subtask,
+        tipo,
+        pmo,
+        count_subtask_usr
         )
     }
 
@@ -183,7 +195,10 @@ object Report {
         "tamano" -> JsString(report.tamano.getOrElse("")),
         "count_project" -> JsNumber(report.count_project.getOrElse(0)),
         "count_task" -> JsNumber(report.count_task.getOrElse(0)),
-        "count_subtask" -> JsNumber(report.count_subtask.getOrElse(0))
+        "count_subtask" -> JsNumber(report.count_subtask.getOrElse(0)),
+        "tipo" -> JsString(report.tipo.getOrElse("")),
+        "pmo" -> JsString(report.pmo.getOrElse("")),
+        "count_subtask_usr" -> JsNumber(report.count_subtask_usr.getOrElse(0))
       )
       JsObject(reportSeq)
     }
@@ -218,6 +233,9 @@ object Report {
         Option[String](""),
         Option[BigDecimal](0),
         Option[BigDecimal](0),
+        Option[BigDecimal](0),
+        Option[String](""),
+        Option[String](""),
         Option[BigDecimal](0)
       ))
     }

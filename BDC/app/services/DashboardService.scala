@@ -5,6 +5,12 @@ import anorm.SqlParser._;
 import models._;
 import anorm._
 import play.Logger
+import org.apache.poi.xssf.usermodel._
+import java.io.File
+import java.io.PrintWriter
+import java.io.FileOutputStream
+import java.util.Date
+
 object DashboardService {
 
   def reporteProgramaFiltrado(did: String, pageSize: String, pageNumber: String, Json: String): Seq[Panel] = {
@@ -291,6 +297,7 @@ object DashboardService {
 
       val sqlString =
           """SELECT
+            tipo,
             program_id,
             ISNULL(project_id,0) project_id,
             ISNULL(task_id,0) task_id,
@@ -319,7 +326,9 @@ object DashboardService {
             tamano,
             count_project,
             count_task,
-            count_subtask
+            count_subtask,
+            pmo,
+            count_subtask_usr
             FROM art_program_management
             WHERE """ + filter + order  +
             " OFFSET " + ini + " ROWS FETCH NEXT " + end + " ROWS ONLY"
@@ -335,32 +344,40 @@ object DashboardService {
 
       val sqlString =
         """
-            SELECT
-            program_id,
-            ISNULL(project_id,0) project_id,
-            ISNULL(task_id,0) task_id,
-            ISNULL(subtask_id,0) subtask_id,
-            program_name,
-            nombre_lider,
-            program_type,
-            work_flow_status,
-            name_div,
-            name_man,
-            name_dep,
-            plan_start_date,
-            plan_end_date,
-            real_start_date,
-            real_end_date,
-            ROUND(pai,2) pai,
-            ROUND(pae,2) pae,
-            ROUND(spi,2) spi,
-            ROUND(cpi,2) cpi,
-            ROUND(hours,2) hours,
-            ROUND(allocation,2) allocation,
-            pcod,
-            foco,
-            tamano
-            FROM art_program_management
+             SELECT
+             tipo,
+             program_id,
+             ISNULL(project_id,0) project_id,
+             ISNULL(task_id,0) task_id,
+             ISNULL(subtask_id,0) subtask_id,
+             program_name,
+             nombre_lider,
+             program_type,
+             work_flow_status,
+             impact_type,
+             name_div,
+             name_man,
+             name_dep,
+             plan_start_date,
+             plan_end_date,
+             real_start_date,
+             real_end_date,
+             release_date,
+             ROUND(pai,2) pai,
+             ROUND(pae,2) pae,
+             ROUND(spi,2) spi,
+             ROUND(cpi,2) cpi,
+             hours,
+             allocation,
+             pcod,
+             foco,
+             tamano,
+             count_project,
+             count_task,
+             count_subtask,
+             pmo,
+             count_subtask_usr
+             FROM art_program_management
             WHERE """ + filter + order  + """
           """.stripMargin
 
@@ -493,14 +510,195 @@ object DashboardService {
     }
   }
 
-  def updateTableManager(): Boolean = {
+  def updateTableManager(): Int = {
 
     DB.withConnection { implicit connection =>
-      val lola=SQL("exec proc_art_program_management").execute()
-      Logger.debug("traza : " + lola )
-      lola
+      SQL("EXEC art.proc_art_program_management").executeQuery() as (scalar[Int].single)
     }
   }
 
+  def createExcel() = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+         |SELECT
+         |tipo,
+         |pcod,
+         |program_id,
+         |ISNULL(project_id,0) project_id,
+         |ISNULL(task_id,0) task_id,
+         |ISNULL(subtask_id,0) subtask_id,
+         |program_name,
+         |ISNULL(foco, '') foco,
+         |ISNULL(tamano,'') tamano,
+         |ISNULL(nombre_lider,'') nombre_lider,
+         |ISNULL(program_type,'') program_type,
+         |ISNULL(work_flow_status,'') work_flow_status,
+         |ISNULL(impact_type,'') impact_type,
+         |ISNULL(name_div,'') name_div,
+         |ISNULL(name_man,'') name_man,
+         |ISNULL(name_dep,'') name_dep,
+         |ISNULL(plan_start_date,'') plan_start_date,
+         |ISNULL(plan_end_date,'') plan_end_date,
+         |real_start_date,
+         |real_end_date,
+         |release_date,
+         |ISNULL(spi,0) spi,
+         |ISNULL(cpi,0) cpi,
+         |ISNULL(pai,0) pai,
+         |ISNULL(pae,0) pae,
+         |count_project,
+         |count_task,
+         |count_subtask,
+         |ISNULL(pmo,'') pmo,
+         |ISNULL(hours,0) hours,
+         |ISNULL(allocation,0) allocation,
+         |count_subtask_usr
+         |FROM art_program_management
+         |order by program_id,project_id,task_id,subtask_id
+        """.stripMargin
+
+      val data=SQL(sqlstr).as(Report.report *)
+
+      val file = new File("reporte.xlsx")
+      val fileOut = new FileOutputStream(file);
+      val wb = new XSSFWorkbook
+      val sheet = wb.createSheet("ART")
+
+      val rowHead = sheet.createRow(0)
+      val style = wb.createCellStyle()
+      val font = wb.createFont()
+
+      var rNum = 1
+      var cNum = 0
+
+      font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL)
+      font.setFontHeightInPoints(26)
+      font.setBold(true)
+      style.setFont(font)
+
+      rowHead.createCell(0).setCellValue("Tipo")
+      rowHead.createCell(1).setCellValue("Número")
+      rowHead.createCell(2).setCellValue("Programa")
+      rowHead.createCell(3).setCellValue("Foco")
+      rowHead.createCell(4).setCellValue("Tamaño")
+      rowHead.createCell(5).setCellValue("Lider")
+      rowHead.createCell(6).setCellValue("Tipo programa")
+      rowHead.createCell(7).setCellValue("Estado")
+      rowHead.createCell(8).setCellValue("Impacto")
+      rowHead.createCell(9).setCellValue("División")
+      rowHead.createCell(10).setCellValue("Gerencia")
+      rowHead.createCell(11).setCellValue("Departamento")
+      rowHead.createCell(12).setCellValue("Inicio")
+      rowHead.createCell(13).setCellValue("Término")
+      rowHead.createCell(14).setCellValue("Liberación")
+      rowHead.createCell(15).setCellValue("Spi")
+      rowHead.createCell(16).setCellValue("Cpi")
+      rowHead.createCell(17).setCellValue("informado")
+      rowHead.createCell(18).setCellValue("Esperado")
+      rowHead.createCell(19).setCellValue("N° proyectos")
+      rowHead.createCell(20).setCellValue("N° tareas")
+      rowHead.createCell(21).setCellValue("N° subtareas")
+      rowHead.createCell(22).setCellValue("Pmo")
+      rowHead.createCell(23).setCellValue("Consumidas")
+      rowHead.createCell(24).setCellValue("Asignadas")
+      rowHead.createCell(25).setCellValue("recursos sin horas")
+
+      for (j <- 0 to 25)
+        rowHead.getCell(j).setCellStyle(style)
+
+      for (s <- data) {
+        val row = sheet.createRow(rNum)
+
+        val cel0 = row.createCell(cNum)
+        cel0.setCellValue(s.tipo.getOrElse(""))
+
+        val cel1 = row.createCell(cNum + 1)
+        cel1.setCellValue(s.pcod.getOrElse(0).toString)
+
+        val cel2 = row.createCell(cNum + 2)
+        cel2.setCellValue(s.program_name.getOrElse(""))
+
+        val cel3 = row.createCell(cNum + 3)
+        cel3.setCellValue(s.foco.getOrElse(""))
+
+        val cel4 = row.createCell(cNum + 4)
+        cel4.setCellValue(s.tamano.getOrElse(""))
+
+        val cel5 = row.createCell(cNum + 5)
+        cel5.setCellValue(s.nombre_lider.getOrElse(""))
+
+        val cel6 = row.createCell(cNum + 6)
+        cel6.setCellValue(s.program_type.getOrElse(""))
+
+        val cel7 = row.createCell(cNum + 7)
+        cel7.setCellValue(s.work_flow_status.getOrElse(""))
+
+        val cel8 = row.createCell(cNum + 8)
+        cel8.setCellValue(s.impact_type.getOrElse(""))
+
+        val cel9 = row.createCell(cNum + 9)
+        cel9.setCellValue(s.name_div.getOrElse(""))
+
+        val cel10 = row.createCell(cNum + 10)
+        cel10.setCellValue(s.name_man.getOrElse(""))
+
+        val cel11 = row.createCell(cNum + 11)
+        cel11.setCellValue(s.name_dep.getOrElse(""))
+
+        val cel12 = row.createCell(cNum + 12)
+        cel12.setCellValue(s.plan_start_date.getOrElse("").toString)
+
+        val cel13 = row.createCell(cNum + 13)
+        cel13.setCellValue(s.plan_end_date.getOrElse(0).toString())
+
+        val cel14 = row.createCell(cNum + 14)
+        cel14.setCellValue(s.release_date.getOrElse(0).toString())
+
+        val cel15 = row.createCell(cNum + 15)
+        cel15.setCellValue(s.spi.getOrElse(0).toString())
+
+        val cel16 = row.createCell(cNum + 16)
+        cel16.setCellValue(s.cpi.getOrElse(0).toString())
+
+        val cel17 = row.createCell(cNum + 17)
+        cel17.setCellValue(s.pai.getOrElse(0).toString)
+
+        val cel18 = row.createCell(cNum + 18)
+        cel18.setCellValue(s.pae.getOrElse(0).toString)
+
+        val cel19 = row.createCell(cNum + 19)
+        cel19.setCellValue(s.count_project.getOrElse(0).toString)
+
+        val cel20 = row.createCell(cNum + 20)
+        cel20.setCellValue(s.count_task.getOrElse(0).toString)
+
+        val cel21 = row.createCell(cNum + 21)
+        cel21.setCellValue(s.count_subtask.getOrElse(0).toString)
+
+        val cel22 = row.createCell(cNum + 22)
+        cel22.setCellValue(s.pmo.getOrElse(""))
+
+        val cel23 = row.createCell(cNum + 23)
+        cel23.setCellValue(s.hours.getOrElse(0).toString)
+
+        val cel24 = row.createCell(cNum + 24)
+        cel24.setCellValue(s.allocation.getOrElse(0).toString)
+
+        val cel25 = row.createCell(cNum + 25)
+        cel25.setCellValue(s.count_subtask_usr.getOrElse(0).toString)
+
+        rNum = rNum + 1
+        cNum = 0
+
+      }
+
+      for (a <- 0 to 25) {
+        sheet.autoSizeColumn((a.toInt));
+      }
+      wb.write(fileOut)
+      fileOut.close()
+    }
+  }
 
 }

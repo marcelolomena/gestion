@@ -85,6 +85,7 @@ class DailyBatch02 extends Actor
     case Message =>
       Logger.info("Moe is updating the data")
       val rt=DashboardService.updateTableManager()
+      DashboardService.createExcel()
     case _ =>
       Logger.info("none")
 
