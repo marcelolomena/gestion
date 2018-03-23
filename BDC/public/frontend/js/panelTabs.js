@@ -157,7 +157,7 @@ $(document).ready(function(){
                          				}
                          		    },
             },
-            { label: 'Departamento', name: 'cod_dep', jsonmap: 'name_dep', width: 250,
+            { label: 'Departamento', name: 'cod_dep', jsonmap: 'name_dep', width: 300,
                          		    stype: 'select',
                          			searchoptions: {
                          				dataUrl: '/list-all-departament',
@@ -553,15 +553,21 @@ $(document).ready(function(){
 */
 
         grid.navButtonAdd('#jqGridPager', {
-            buttonicon: "ui-icon-circle-triangle-e",
+            buttonicon: "ui-icon-save",
             title: "Excel",
             caption: "Excel",
             position: "last",
             onClickButton: function() {
                 //var grid = $("#jqGrid");
                 //var rowKey = grid.getGridParam("selrow");
+                var postData = grid.jqGrid("getGridParam", "postData")
+                console.log(postData)
+                //var filters = $.parseJSON(postData.filters)
+                //console.log(filters)
                 var url = '/report/X/0/0';
                 grid.jqGrid('excelExport',{"url":url});
+                //document.forms['_export']._buffer.value = grid.jqGrid('getGridParam', 'postData')
+                //document.forms['_export'].submit()
             }
         });
 
