@@ -535,55 +535,32 @@ $(document).ready(function(){
 
         grid.jqGrid('navGrid','#jqGridPager',{edit: false, add: false, del: false,refresh:true,search: false, position: "left", cloneToTop: false }
         );
-/*
+
         grid.navButtonAdd('#jqGridPager', {
             buttonicon: "ui-icon-circle-triangle-e",
             title: "Excel",
             caption: "Excel",
             position: "last",
             onClickButton: function() {
-                grid.jqGrid("exportToExcel", {
-                    includeLabels: true,
-                    includeGroupHeader: true,
-                    includeFooter: true,
-                    fileName: "prueba.xlsx"
-                })
-            }
-        });
-*/
-
-        grid.navButtonAdd('#jqGridPager', {
-            buttonicon: "ui-icon-save",
-            title: "Excel",
-            caption: "Excel",
-            position: "last",
-            onClickButton: function() {
-                //var grid = $("#jqGrid");
-                //var rowKey = grid.getGridParam("selrow");
                 var postData = grid.jqGrid("getGridParam", "postData")
-                console.log(postData)
-                //var filters = $.parseJSON(postData.filters)
-                //console.log(filters)
-                var url = '/report/X/0/0';
-                grid.jqGrid('excelExport',{"url":url});
-                //document.forms['_export']._buffer.value = grid.jqGrid('getGridParam', 'postData')
-                //document.forms['_export'].submit()
+                if(postData._search)
+                {
+                    var query = "";
+                    for (key in postData) {
+                        query += encodeURIComponent(key)+"="+encodeURIComponent(postData[key])+"&";
+                    }
+                    //console.log(query)
+                    var url = '/report/X/0/0?'+query;
+                    grid.jqGrid('excelExport',{"url":url});
+
+                }else{
+                    //archivo generado
+                    grid.jqGrid('excelExport',{"url":'/report_full'});
+                }
+
             }
         });
 
-/*
-        grid.jqGrid('navButtonAdd','#jqGridPager',{
-            caption:"",
-            buttonicon : "silk-icon-page-excel",
-            title: "Exportar a Excel",
-            onClickButton : function () {
-                var grid = $("#jqGrid");
-                var rowKey = grid.getGridParam("selrow");
-                var url = '/report/X/0/0';
-                $("#jqGrid").jqGrid('excelExport',{"url":url});
-           }
-        });
-*/
         return false;
 
         ui.jqXHR.fail(function() {

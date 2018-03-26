@@ -2466,23 +2466,24 @@ object Dashboard extends Controller {
       else
         order = "ORDER BY " + sidx + " " +  sord
 
-      if(level == 0) {
-        qrystr += "tipo ='PROGRAMA' "
-      } else if(level == 1) {
-        qrystr += "tipo ='PROYECTO' AND "
-        qrystr += "program_id = " + parent + " "
-      } else if(level == 2) {
-        qrystr += "tipo ='TAREA' AND "
-        qrystr += "project_id = " + parent + " "
-      } else if(level == 3) {
-        qrystr += "tipo ='SUBTAREA' AND "
-        qrystr += "task_id = " + parent + " "
-      }
-
       //Logger.debug("view: -------> " + view)
 
       view match {
         case "H" =>
+
+          if(level == 0) {
+            qrystr += "tipo ='PROGRAMA' "
+          } else if(level == 1) {
+            qrystr += "tipo ='PROYECTO' AND "
+            qrystr += "program_id = " + parent + " "
+          } else if(level == 2) {
+            qrystr += "tipo ='TAREA' AND "
+            qrystr += "project_id = " + parent + " "
+          } else if(level == 3) {
+            qrystr += "tipo ='SUBTAREA' AND "
+            qrystr += "task_id = " + parent + " "
+          }
+
           data = DashboardService.manager(page, rows, qrystr, order)
           records = DashboardService.countManager(qrystr)
 
@@ -2497,9 +2498,13 @@ object Dashboard extends Controller {
           )
 
         case "X" =>
-          data = DashboardService.managerWwithoutPage(qrystr, order)
+          //Logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +qrystr)
+          qrystr += "tipo ='PROGRAMA' OR tipo='PROYECTO' OR tipo='TAREA' OR tipo ='SUBTAREA' "
+          val odn = "order by program_id,project_id,task_id,subtask_id"
+          data = DashboardService.managerWwithoutPage(qrystr, odn)
+          //Logger.debug(data.toString())
           val file = new File("eliminar.xlsx")
-          val fileOut = new FileOutputStream(file);
+          val fileOut = new FileOutputStream(file)
           val wb = new XSSFWorkbook
           val sheet = wb.createSheet("ART")
 
@@ -2514,90 +2519,125 @@ object Dashboard extends Controller {
           font.setFontHeightInPoints(10)
           font.setBold(true)
           style.setFont(font)
-          rowHead.createCell(0).setCellValue("Programa")
-          rowHead.createCell(1).setCellValue("Lider")
-          rowHead.createCell(2).setCellValue("Tipo")
-          rowHead.createCell(3).setCellValue("Estado")
-          rowHead.createCell(4).setCellValue("división")
-          rowHead.createCell(5).setCellValue("Gerencia")
-          rowHead.createCell(6).setCellValue("Departamento")
-          rowHead.createCell(7).setCellValue("Fecha inicio")
-          rowHead.createCell(8).setCellValue("Fecha término")
-          rowHead.createCell(9).setCellValue("Fecha inicio real")
-          rowHead.createCell(10).setCellValue("Fecha término real")
-          rowHead.createCell(11).setCellValue("Pai")
-          rowHead.createCell(12).setCellValue("Pae")
-          rowHead.createCell(13).setCellValue("Spi")
-          rowHead.createCell(14).setCellValue("Cpi")
-          rowHead.createCell(15).setCellValue("Horas consumidas")
-          rowHead.createCell(16).setCellValue("Horas asignadas")
+          rowHead.createCell(0).setCellValue("Tipo")
+          rowHead.createCell(1).setCellValue("Número")
+          rowHead.createCell(2).setCellValue("Programa")
+          rowHead.createCell(3).setCellValue("Foco")
+          rowHead.createCell(4).setCellValue("Tamaño")
+          rowHead.createCell(5).setCellValue("Lider")
+          rowHead.createCell(6).setCellValue("Tipo programa")
+          rowHead.createCell(7).setCellValue("Estado")
+          rowHead.createCell(8).setCellValue("Impacto")
+          rowHead.createCell(9).setCellValue("División")
+          rowHead.createCell(10).setCellValue("Gerencia")
+          rowHead.createCell(11).setCellValue("Departamento")
+          rowHead.createCell(12).setCellValue("Inicio")
+          rowHead.createCell(13).setCellValue("Término")
+          rowHead.createCell(14).setCellValue("Liberación")
+          rowHead.createCell(15).setCellValue("Spi")
+          rowHead.createCell(16).setCellValue("Cpi")
+          rowHead.createCell(17).setCellValue("informado")
+          rowHead.createCell(18).setCellValue("Esperado")
+          rowHead.createCell(19).setCellValue("N° proyectos")
+          rowHead.createCell(20).setCellValue("N° tareas")
+          rowHead.createCell(21).setCellValue("N° subtareas")
+          rowHead.createCell(22).setCellValue("Pmo")
+          rowHead.createCell(23).setCellValue("Consumidas")
+          rowHead.createCell(24).setCellValue("Asignadas")
+          rowHead.createCell(25).setCellValue("recursos sin horas")
 
 
-          for (j <- 0 to 16)
+          for (j <- 0 to 25)
             rowHead.getCell(j).setCellStyle(style);
 
           for (s <- data) {
-            var row = sheet.createRow(rNum)
+            val row = sheet.createRow(rNum)
 
             val cel0 = row.createCell(cNum)
-            cel0.setCellValue(s.program_name.getOrElse(""))
+            cel0.setCellValue(s.tipo.getOrElse(""))
 
             val cel1 = row.createCell(cNum + 1)
-            cel1.setCellValue(s.nombre_lider.getOrElse(""))
+            cel1.setCellValue(s.pcod.getOrElse(0).toString)
 
             val cel2 = row.createCell(cNum + 2)
-            cel2.setCellValue(s.program_type.getOrElse(""))
+            cel2.setCellValue(s.program_name.getOrElse(""))
 
             val cel3 = row.createCell(cNum + 3)
-            cel3.setCellValue(s.work_flow_status.getOrElse(""))
+            cel3.setCellValue(s.foco.getOrElse(""))
 
             val cel4 = row.createCell(cNum + 4)
-            cel4.setCellValue(s.name_div.getOrElse(""))
+            cel4.setCellValue(s.tamano.getOrElse(""))
 
             val cel5 = row.createCell(cNum + 5)
-            cel5.setCellValue(s.name_man.getOrElse(""))
+            cel5.setCellValue(s.nombre_lider.getOrElse(""))
 
             val cel6 = row.createCell(cNum + 6)
-            cel6.setCellValue(s.name_dep.getOrElse(""))
+            cel6.setCellValue(s.program_type.getOrElse(""))
 
             val cel7 = row.createCell(cNum + 7)
-            cel7.setCellValue(s.plan_start_date.getOrElse("").toString)
+            cel7.setCellValue(s.work_flow_status.getOrElse(""))
 
             val cel8 = row.createCell(cNum + 8)
-            cel8.setCellValue(s.plan_end_date.getOrElse("").toString)
+            cel8.setCellValue(s.impact_type.getOrElse(""))
 
             val cel9 = row.createCell(cNum + 9)
-            cel9.setCellValue(s.real_start_date.getOrElse("").toString)
+            cel9.setCellValue(s.name_div.getOrElse(""))
 
             val cel10 = row.createCell(cNum + 10)
-            cel10.setCellValue(s.real_end_date.getOrElse("").toString)
+            cel10.setCellValue(s.name_man.getOrElse(""))
 
             val cel11 = row.createCell(cNum + 11)
-            cel11.setCellValue(s.pai.getOrElse(0).toString())
+            cel11.setCellValue(s.name_dep.getOrElse(""))
 
             val cel12 = row.createCell(cNum + 12)
-            cel12.setCellValue(s.pae.getOrElse(0).toString())
+            cel12.setCellValue(s.plan_start_date.getOrElse("").toString)
 
             val cel13 = row.createCell(cNum + 13)
-            cel13.setCellValue(s.spi.getOrElse(0).toString())
+            cel13.setCellValue(s.plan_end_date.getOrElse(0).toString())
 
             val cel14 = row.createCell(cNum + 14)
-            cel14.setCellValue(s.cpi.getOrElse(0).toString())
+            cel14.setCellValue(s.release_date.getOrElse(0).toString())
 
             val cel15 = row.createCell(cNum + 15)
-            cel15.setCellValue(s.hours.getOrElse(0).toString)
+            cel15.setCellValue(s.spi.getOrElse(0).toString())
 
             val cel16 = row.createCell(cNum + 16)
-            cel16.setCellValue(s.allocation.getOrElse(0).toString)
+            cel16.setCellValue(s.cpi.getOrElse(0).toString())
+
+            val cel17 = row.createCell(cNum + 17)
+            cel17.setCellValue(s.pai.getOrElse(0).toString)
+
+            val cel18 = row.createCell(cNum + 18)
+            cel18.setCellValue(s.pae.getOrElse(0).toString)
+
+            val cel19 = row.createCell(cNum + 19)
+            cel19.setCellValue(s.count_project.getOrElse(0).toString)
+
+            val cel20 = row.createCell(cNum + 20)
+            cel20.setCellValue(s.count_task.getOrElse(0).toString)
+
+            val cel21 = row.createCell(cNum + 21)
+            cel21.setCellValue(s.count_subtask.getOrElse(0).toString)
+
+            val cel22 = row.createCell(cNum + 22)
+            cel22.setCellValue(s.pmo.getOrElse(""))
+
+            val cel23 = row.createCell(cNum + 23)
+            cel23.setCellValue(s.hours.getOrElse(0).toString)
+
+            val cel24 = row.createCell(cNum + 24)
+            cel24.setCellValue(s.allocation.getOrElse(0).toString)
+
+            val cel25 = row.createCell(cNum + 25)
+            cel25.setCellValue(s.count_subtask_usr.getOrElse(0).toString)
 
             rNum = rNum + 1
             cNum = 0
 
           }
 
-          for (a <- 0 to 16) {
-            sheet.autoSizeColumn((a.toInt));
-          }
+          for (a <- 0 to 25)
+            sheet.autoSizeColumn((a.toInt))
 
           val time = new Date()
 
@@ -2750,25 +2790,16 @@ object Dashboard extends Controller {
     }
   }
 
-  def writeToTempFile(contents: String,
-                      prefix: Option[String] = None,
-                      suffix: Option[String] = None): File = {
-    val tempFi = File.createTempFile(prefix.getOrElse("prefix-"),
-      suffix.getOrElse("-suffix"))
-    tempFi.deleteOnExit()
-    new PrintWriter(tempFi) {
-      // Any statements inside the body of a class in scala are executed on construction.
-      // Therefore, the following try-finally block is executed immediately as we're creating
-      // a standard PrinterWriter (with its implementation) and then using it.
-      // Alternatively, we could have created the PrintWriter, assigned it a name,
-      // then called .write() and .close() on it. Here, we're simply opting for a terser representation.
-      try {
-        write(contents)
-      } finally {
-        close()
-      }
+  def reportFull = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val file = new File("reporte.xlsx")
+      val time = new Date()
+      Ok.sendFile(content = file, fileName = _ => "report_" + time.getTime + ".xlsx")
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
     }
-    tempFi
   }
+
 
 }

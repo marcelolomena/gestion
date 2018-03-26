@@ -344,41 +344,41 @@ object DashboardService {
 
       val sqlString =
         """
-             SELECT
-             tipo,
-             program_id,
-             ISNULL(project_id,0) project_id,
-             ISNULL(task_id,0) task_id,
-             ISNULL(subtask_id,0) subtask_id,
-             program_name,
-             nombre_lider,
-             program_type,
-             work_flow_status,
-             impact_type,
-             name_div,
-             name_man,
-             name_dep,
-             plan_start_date,
-             plan_end_date,
-             real_start_date,
-             real_end_date,
-             release_date,
-             ROUND(pai,2) pai,
-             ROUND(pae,2) pae,
-             ROUND(spi,2) spi,
-             ROUND(cpi,2) cpi,
-             hours,
-             allocation,
-             pcod,
-             foco,
-             tamano,
-             count_project,
-             count_task,
-             count_subtask,
-             pmo,
-             count_subtask_usr
-             FROM art_program_management
-            WHERE """ + filter + order  + """
+        SELECT
+        tipo,
+        pcod,
+        program_id,
+        ISNULL(project_id,0) project_id,
+        ISNULL(task_id,0) task_id,
+        ISNULL(subtask_id,0) subtask_id,
+        program_name,
+        ISNULL(foco, '') foco,
+        ISNULL(tamano,'') tamano,
+        ISNULL(nombre_lider,'') nombre_lider,
+        ISNULL(program_type,'') program_type,
+        ISNULL(work_flow_status,'') work_flow_status,
+        ISNULL(impact_type,'') impact_type,
+        ISNULL(name_div,'') name_div,
+        ISNULL(name_man,'') name_man,
+        ISNULL(name_dep,'') name_dep,
+        ISNULL(plan_start_date,'') plan_start_date,
+        ISNULL(plan_end_date,'') plan_end_date,
+        real_start_date,
+        real_end_date,
+        release_date,
+        ISNULL(spi,0) spi,
+        ISNULL(cpi,0) cpi,
+        ISNULL(pai,0) pai,
+        ISNULL(pae,0) pae,
+        count_project,
+        count_task,
+        count_subtask,
+        ISNULL(pmo,'') pmo,
+        ISNULL(hours,0) hours,
+        ISNULL(allocation,0) allocation,
+        count_subtask_usr
+        FROM art_program_management
+        WHERE """ + filter + order  + """
           """.stripMargin
 
       SQL(sqlString).as(Report.report * )
