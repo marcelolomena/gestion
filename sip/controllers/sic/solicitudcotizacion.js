@@ -14,45 +14,77 @@ exports.action = function (req, res) {
     }
     secuencia.getSecuencia(0, function (err, sec) {
         switch (action) {
-
-
             case "add":
                 req.body.numerorfp = parseInt(sec);
                 var hoy = "" + new Date().toISOString();
-                req.body.fechaenviorfp = hoy;
-                models.solicitudcotizacion.create({
-                    idcui: req.body.idcui,
-                    idtecnico: req.body.idtecnico,
-                    tipocontrato: req.body.tipocontrato,
-                    program_id: req.body.program_id,
-                    codigoart: req.body.codigoart,
-                    sap: req.body.sap,
-                    descripcion: req.body.descripcion,
-                    codigosolicitud: req.body.codigosolicitud,
-                    idclasificacionsolicitud: req.body.idclasificacionsolicitud,
-                    idnegociador: req.body.idnegociador,
-                    correonegociador: req.body.correonegociador,
-                    fononegociador: req.body.fononegociador,
-                    numerorfp: req.body.numerorfp,
-                    fechaenviorfp: req.body.fechaenviorfp,
-                    direccionnegociador: req.body.direccionnegociador,
-                    colorestado: 'Rojo',
-                    borrado: 1,
-                    idtipo: req.body.idtipo,
-                    idgrupo: req.body.idgrupo
-                }).then(function (solicitudcotizacion) {
-                    res.json({
-                        error: 0,
-                        glosa: ''
+                if (req.body.fechaenviorfp) {
+                    models.solicitudcotizacion.create({
+                        idcui: req.body.idcui,
+                        idtecnico: req.body.idtecnico,
+                        tipocontrato: req.body.tipocontrato,
+                        program_id: req.body.program_id,
+                        codigoart: req.body.codigoart,
+                        sap: req.body.sap,
+                        descripcion: req.body.descripcion,
+                        codigosolicitud: req.body.codigosolicitud,
+                        idclasificacionsolicitud: req.body.idclasificacionsolicitud,
+                        idnegociador: req.body.idnegociador,
+                        correonegociador: req.body.correonegociador,
+                        fononegociador: req.body.fononegociador,
+                        numerorfp: req.body.numerorfp,
+                        fechaenviorfp: req.body.fechaenviorfp,
+                        direccionnegociador: req.body.direccionnegociador,
+                        colorestado: 'Rojo',
+                        borrado: 1,
+                        idtipo: req.body.idtipo,
+                        idgrupo: req.body.idgrupo
+                    }).then(function (solicitudcotizacion) {
+                        res.json({
+                            error: 0,
+                            glosa: ''
+                        });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({
+                            error: 1,
+                            glosa: err.message
+                        });
                     });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({
-                        error: 1,
-                        glosa: err.message
+                } else {
+                    req.body.fechaenviorfp = hoy;
+                    models.solicitudcotizacion.create({
+                        idcui: req.body.idcui,
+                        idtecnico: req.body.idtecnico,
+                        tipocontrato: req.body.tipocontrato,
+                        program_id: req.body.program_id,
+                        codigoart: req.body.codigoart,
+                        sap: req.body.sap,
+                        descripcion: req.body.descripcion,
+                        codigosolicitud: req.body.codigosolicitud,
+                        idclasificacionsolicitud: req.body.idclasificacionsolicitud,
+                        idnegociador: req.body.idnegociador,
+                        correonegociador: req.body.correonegociador,
+                        fononegociador: req.body.fononegociador,
+                        numerorfp: req.body.numerorfp,
+                        fechaenviorfp: req.body.fechaenviorfp,
+                        direccionnegociador: req.body.direccionnegociador,
+                        colorestado: 'Rojo',
+                        borrado: 1,
+                        idtipo: req.body.idtipo,
+                        idgrupo: req.body.idgrupo
+                    }).then(function (solicitudcotizacion) {
+                        res.json({
+                            error: 0,
+                            glosa: ''
+                        });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({
+                            error: 1,
+                            glosa: err.message
+                        });
                     });
-                });
-
+                }
                 break;
             case "edit":
                 models.solicitudcotizacion.update({
@@ -69,8 +101,8 @@ exports.action = function (req, res) {
                     correonegociador: req.body.correonegociador,
                     fononegociador: req.body.fononegociador,
                     direccionnegociador: req.body.direccionnegociador,
-                    numerorfp: req.body.numerorfp
-                    // fechaenviorfp: fechaenviorfp,
+                    numerorfp: req.body.numerorfp,
+                    fechaenviorfp: req.body.fechaenviorfp
                 }, {
                     where: {
                         id: req.body.id

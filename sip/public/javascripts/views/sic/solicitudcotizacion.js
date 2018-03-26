@@ -31,14 +31,14 @@ $(document).ready(function () {
     t1 += "<div class='column-half' id='d_direccionnegociador'>Dirección Negociador<span style='color:red'>*</span>{direccionnegociador}</div>";
     t1 += "</div>";
 
-    // t1 += "<div class='form-row'>";
-    // // t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
-    // t1 += "<div class='column-full' id='d_fechaenviorfp'>Fecha RFP<span style='color:red'>*</span>{fechaenviorfp}</div>";
-    // t1 += "</div>";
-
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
     t1 += "<div class='column-half' id='d_grupo'>Grupo<span style='color:red'>*</span>{idgrupo}</div>";
+    t1 += "</div>";
+
+    t1 += "<div class='form-row'>";
+    // // t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
+    t1 += "<div class='column-half' id='d_fechaenviorfp'>Fecha de Solicitud{fechaenviorfp}</div>";
     t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
@@ -57,7 +57,7 @@ $(document).ready(function () {
                 label: 'Estado',
                 name: 'colorestado',
                 index: 'colorestado',
-                width: 58,
+                width: 60,
                 align: "left",
                 editable: true,
                 search: false,
@@ -89,9 +89,9 @@ $(document).ready(function () {
                 }
             },
             {
-                label: 'Código',
+                label: 'Código Solicitud',
                 name: 'codigosolicitud',
-                width: 100,
+                width: 125,
                 align: 'center',
                 search: true,
                 editable: true,
@@ -102,8 +102,8 @@ $(document).ready(function () {
                     size: 10,
                     maxlengh: 10,
                     dataInit: function (element) {
-                        $(element).mask("AAA-AA-000", {
-                            placeholder: "___-__-___"
+                        $(element).mask("AAA-AA-00000.000", {
+                            placeholder: "___-__-_____.___"
                         });
                     }
                 },
@@ -126,7 +126,7 @@ $(document).ready(function () {
                 label: 'Tipo',
                 name: 'tipo',
                 jsonmap: "tipoclausula.nombre",
-                width: 70,
+                width: 60,
                 align: 'center',
                 search: false,
                 editable: false,
@@ -142,24 +142,50 @@ $(document).ready(function () {
                 editable: false,
                 hidden: false
             },
+            // {
+            //     label: 'Fecha Solicitud',
+            //     name: 'fechaenviorfp',
+            //     width: 105,
+            //     align: 'center',
+            //     sortable: false,
+            //     editable: true,
+            //     formatter: function (cellvalue, options, rowObject) {
+            //         var val = rowObject.fechaenviorfp;
+            //         if (val != null) {
+            //             val = val.substring(0,10);
+            //             var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+            //             return fechaok;
+            //         } else {
+            //             return '';
+            //         }
+            //     },
+            //     search: false
+            // },
             {
-                label: 'Fecha Solicitud',
-                name: 'fechaenviorfp',
-                width: 105,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                formatter: function (cellvalue, options, rowObject) {
-                    var val = rowObject.fechaenviorfp;
-                    if (val != null) {
-                        val = val.substring(0,10);
-                        var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
-                        return fechaok;
-                    } else {
-                        return '';
-                    }
+                label: 'Fecha Solicitud', name: 'fechaenviorfp', width: 120, align: 'center', search: true, editable: true, hidden: false,
+                formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+                searchoptions: {
+                    dataInit: function (el) {
+                        $(el).datepicker({
+                            language: 'es',
+                            format: 'yyyy-mm-dd',
+                            autoclose: true,
+                            onSelect: function (dateText, inst) {
+                                setTimeout(function () {
+                                    $('#' + subgrid_table_id)[0].triggerToolbar();
+                                }, 100);
+                            }
+                        });
+                    },
+                    sopt: ["eq", "le", "ge"]
                 },
-                search: false
+                editoptions: {
+                    size: 10, maxlengh: 10,
+                    dataInit: function (element) {
+                        $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                        $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    }
+                }
             },
             // {
             //     label: 'Fecha Solicitud',
@@ -283,7 +309,7 @@ $(document).ready(function () {
                 label: 'CUI',
                 name: 'cui',
                 jsonmap: "estructuracui.cui",
-                width: 80,
+                width: 90,
                 align: 'center',
                 search: true,
                 sortable: false,
@@ -293,7 +319,7 @@ $(document).ready(function () {
             {
                 label: 'SAP',
                 name: 'sap',
-                width: 80,
+                width: 90,
                 align: 'center',
                 search: false,
                 editable: true,
@@ -307,7 +333,7 @@ $(document).ready(function () {
                 }
             },
             {
-                label: 'CódigoART',
+                label: 'Código ART',
                 name: 'codigoart',
                 width: 90,
                 align: 'center',
@@ -364,8 +390,9 @@ $(document).ready(function () {
             {
                 label: 'Técnico Responsable',
                 name: 'first_name',
-                width: 170,
+                width: 180,
                 search: true,
+                align: 'center',
                 editable: false,
                 formatter: returnTecnico,
                 hidden: false
@@ -377,7 +404,7 @@ $(document).ready(function () {
                 editable: true,
                 hidden: false,
                 align: 'center',
-                width: 115,
+                width: 130,
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
@@ -423,7 +450,7 @@ $(document).ready(function () {
             {
                 label: 'Descripción',
                 name: 'descripcion',
-                width: 352,
+                width: 250,
                 align: 'left',
                 search: true,
                 editable: true,
@@ -469,7 +496,7 @@ $(document).ready(function () {
                 label: 'Clasificación',
                 name: 'clasificacion',
                 jsonmap: "clasificacion.nombre",
-                width: 89,
+                width: 100,
                 align: 'center',
                 search: false,
                 editable: true,

@@ -2,381 +2,586 @@ $(document).ready(function () {
     var t1 = "<div id='responsive-form' class='clearfix'>";
     t1 += "</div>";
 
-    var $grid = $("#gridMaster"), solicitudcotizacionModel = [
-        { label: 'ID', name: 'id', key: true, hidden: true },
-        {
-            label: 'Estado',
-            name: 'colorestado',
-            index: 'colorestado', width: 60, align: "left", editable: true, search: false, editoptions: { size: 10 },
-            formatter: function (cellvalue, options, rowObject) {
-                var color = rowObject.colorestado;
-
-                if (color == 'Rojo') {
-                    color = 'red';
-                } else if (color == 'Verde') {
-                    color = 'green';
-                } else if (color == 'Amarillo') {
-                    color = 'yellow';
-                } else if (color == 'Azul') {
-                    color = 'blue';
-                } else if (color == 'indefinido') {
-                    color = 'gray';
-                }
-
-
-                return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
-
-
-
-
-
-            }
-        },
-        { label: 'N° RFP', name: 'numerorfp', width: 60, hidden: false, search: false, editable: true, formatter: 'integer', editrules: { required: true } },
-        {
-            label: 'CUI', name: 'idcui', width: 80, align: 'left', search: false, sortable: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/allcuis',
-                buildSelect: function (response) {
-                    var grid = $("#grid");
-                    var rowKey = grid.getGridParam("selrow");
-                    var rowData = grid.getRowData(rowKey);
-                    var thissid = rowData.idcui;
-                    var data = JSON.parse(response);
-                    var s = "<select>";
-                    s += '<option value="0">--Escoger CUI--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].cui + ' - ' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].cui + ' - ' + data[i].nombre + '</option>';
-                        }
-                    });
-                    return s + "</select>";
+    var $grid = $("#gridMaster"),
+        solicitudcotizacionModel = [{
+                label: 'ID',
+                name: 'id',
+                key: true,
+                hidden: true
+            },
+            {
+                label: 'Estado',
+                name: 'colorestado',
+                index: 'colorestado',
+                width: 60,
+                align: "left",
+                editable: true,
+                search: false,
+                editoptions: {
+                    size: 10
                 },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        //$("input#lider").val($('option:selected', this).val());
-                        var idcui = $('option:selected', this).val();
-                        //console.log(idcui);
+                formatter: function (cellvalue, options, rowObject) {
+                    var color = rowObject.colorestado;
 
-                        if (idcui != "0") {
-
-                            $.ajax({
-                                type: "GET",
-                                url: '/sic/tecnicosresponsablescui/' + idcui,
-                                async: false,
-                                success: function (data) {
-                                    var grid = $("#grid");
-                                    var rowKey = grid.getGridParam("selrow");
-                                    var rowData = grid.getRowData(rowKey);
-                                    var thissid = rowData.idtecnico;
-                                    var s = "<select>";//el default
-                                    s += '<option value="0">--Escoger Técnico--</option>';
-                                    $.each(data, function (i, item) {
-                                        if (data[i].uid == thissid) {
-                                            s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + ' ' + data[i].apellido + '</option>';
-                                        } else {
-                                            s += '<option value="' + data[i].uid + '">' + data[i].nombre + ' ' + data[i].apellido + '</option>';
-                                        }
-                                    });
-                                    s += "</select>";
-                                    //lahora = new Date();
-                                    //console.log('Termina el for a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
-                                    $("select#idtecnico").empty().html(s);
-                                    //lahora = new Date();
-                                    //console.log('Seteo el html a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
-                                }
-                            });
-                        }
-
+                    if (color == 'Rojo') {
+                        color = 'red';
+                    } else if (color == 'Verde') {
+                        color = 'green';
+                    } else if (color == 'Amarillo') {
+                        color = 'yellow';
+                    } else if (color == 'Azul') {
+                        color = 'blue';
+                    } else if (color == 'indefinido') {
+                        color = 'gray';
                     }
-                }],
-            },
-            dataInit: function (elem) { $(elem).width(200); }
-        },
-        { label: 'CUI', name: 'cui', jsonmap: "estructuracui.cui", width: 80, align: 'left', search: true, sortable: false, editable: true, hidden: false },
-        {
-            label: 'Técnico', name: 'idtecnico', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                value: "0:--Escoger Técnico--"
-                ,
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        $("input#tecnico").val($('option:selected', this).text());
-                    }
-                }],
-            }
-        },
-        { label: 'Técnico', name: 'first_name', width: 150, search: true, editable: false, formatter: returnTecnico, hidden: false },
-        {
-            label: 'T.Contrato', name: 'tipocontrato', search: false, editable: true, hidden: false, width: 100,
-            edittype: "custom",
-            editoptions: {
-                custom_value: sipLibrary.getRadioElementValue,
-                custom_element: sipLibrary.radioElemContrato,
-                defaultValue: "Continuidad",
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        var actual = $("input#codigoart").attr("readonly");
-                        if (actual == 'readonly') {
-                            $("input#codigoart").attr("readonly", false);
-                        } else {
-                            $("input#codigoart").attr("readonly", true);
-                        }
-                    }
-                }],
-            },
-            formatter: function (cellvalue, options, rowObject) {
-                var dato = '';
-                var val = rowObject.tipocontrato;
-                if (val == 1) {
-                    dato = 'Continuidad';
-
-                } else if (val == 0) {
-                    dato = 'Proyectos';
+                    return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
                 }
-                return dato;
-            }
-        },
-        {
-            label: 'Código Programa', name: 'program_id', width: 200, align: 'left', search: false, editable: false,
-            hidden: true, editoptions: { defaultValue: "0" }
-        },
-        {
-            label: 'CódigoART', name: 'codigoart', width: 90, align: 'left', search: false, editable: true, hidden: false,
-            editrules: { edithidden: false }, hidedlg: true, editoptions: {
-                size: 10, readonly: 'readonly',
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        var rowKey = $grid.getGridParam("selrow");
-                        var rowData = $grid.getRowData(rowKey);
-                        var thissid = $(this).val();
-                        $.ajax({
-                            type: "GET",
-                            url: '/getcodigoart/' + thissid,
-                            async: false,
-                            success: function (data) {
-                                if (data.length > 0) {
-                                    $("input#program_id").val(data[0].program_id);
-                                } else {
-                                    alert("No existe el codigo art ingresado");
-                                    $("input#program_id").val("0");
-                                }
+            },
+            {
+                label: 'Código Solicitud',
+                name: 'codigosolicitud',
+                width: 125,
+                align: 'center',
+                search: true,
+                editable: true,
+                editrules: {
+                    required: true
+                },
+                hidden: false
+            },
+            {
+                label: 'Tipo',
+                name: 'tipo',
+                jsonmap: "tipoclausula.nombre",
+                width: 60,
+                align: 'center',
+                search: false,
+                editable: false,
+                hidden: false
+            },
+            {
+                label: 'Grupo',
+                name: 'grupo',
+                jsonmap: "grupo.nombre",
+                width: 120,
+                align: 'center',
+                search: false,
+                editable: false,
+                hidden: false
+            },
+            {
+                label: 'Fecha Solicitud',
+                name: 'fechaenviorfp',
+                width: 120,
+                align: 'center',
+                search: false,
+                formatter: 'date',
+                formatoptions: {
+                    srcformat: 'ISO8601Long',
+                    newformat: 'd-m-Y'
+                },
+                editable: true,
+                editrules: {
+                    required: true
+                },
+                searchoptions: {
+                    dataInit: function (el) {
+                        $(el).datepicker({
+                            language: 'es',
+                            format: 'dd-mm-yyyy',
+                            autoclose: true,
+                            onSelect: function (dateText, inst) {
+                                setTimeout(function () {
+                                    $gridTab[0].triggerToolbar();
+                                }, 100);
                             }
                         });
-                    }
-                }],
-            }
-        },
-        {
-            label: 'SAP', name: 'sap', width: 50, align: 'left', search: false, editable: true, hidden: false, editoptions: {
-                dataInit: function (element) {
-                    $(element).mask("00000", { placeholder: "_____" });
-                }
-            }
-        },
-        {
-            label: 'Descripción', name: 'descripcion', width: 250, align: 'left',
-            search: true, editable: true, editoptions: { rows: "2", cols: "50" },
-            editrules: { required: true }, edittype: "textarea", hidden: false
-
-        },
-
-        { label: 'Código', name: 'codigosolicitud', width: 100, align: 'left', search: true, editable: true, editrules: { required: true }, hidden: false },
-        {
-            name: 'idclasificacionsolicitud', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/sic/parametros/clasificacionsolicitud',
-                buildSelect: function (response) {
-                    var rowKey = $grid.getGridParam("selrow");
-                    var rowData = $grid.getRowData(rowKey);
-                    var thissid = rowData.idclasificacionsolicitud;
-                    var data = JSON.parse(response);
-                    var s = "<select>";
-                    s += '<option value="0">--Escoger una Clasificación--</option>';
-                    $.each(data, function (i, item) {
-
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                        }
-                    });
-                    return s + "</select>";
-                }
-            }
-        },
-        { label: 'Clasificación', name: 'clasificacion', jsonmap: "clasificacion.nombre", width: 120, align: 'left', search: false, editable: true, hidden: false },
-        {
-            label: 'Criticidad',
-            name: 'colornota',
-            index: 'colornota', width: 80, align: "left", editable: true, search: false, editoptions: { size: 10 },
-            formatter: function (cellvalue, options, rowObject) {
-
-                var solicitud = rowObject.id;
-                var color = 'pink'
-
-                $.ajax({
-                    type: "GET",
-                    url: '/sic/getcolorservicios/' + solicitud,
-                    async: false,
-                    success: function (data) {
-
-                        if (data == 'Rojo') {
-                            color = 'red';
-                        } else if (data == 'Verde') {
-                            color = 'green';
-                        } else if (data == 'Amarillo') {
-                            color = 'yellow';
-                        } else if (data == 'Azul') {
-                            color = 'blue';
-                        } else if (data == 'indefinido') {
-                            color = 'gray';
-                        }
-
-                    }
-                });
-
-
-                return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; height: 16px;"></span>';
-            }
-        },
-        {
-            label: 'Negociador', name: 'idnegociador', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/usuarios_por_rol/Negociador',
-                buildSelect: function (response) {
-                    var rowKey = $grid.getGridParam("selrow");
-                    var rowData = $grid.getRowData(rowKey);
-                    var thissid = rowData.uidpmo;
-                    var data = JSON.parse(response);
-                    var s = "<select>";
-                    s += '<option value="0">--Escoger Negociador--</option>';
-                    $.each(data, function (i, item) {
-                        if (data[i].uid == thissid) {
-                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
-                        }
-                    });
-                    return s + "</select>";
+                    },
+                    sopt: ["eq", "le", "ge"]
                 },
-                dataEvents: [{
-                    type: 'change', fn: function (e) {
-                        $("input#negociador").val($('option:selected', this).text());
-                        var idnegociador = $('option:selected', this).val();
+                editoptions: {
+                    size: 10,
+                    maxlengh: 10,
+                    dataInit: function (element) {
+                        $(element).mask("00-00-0000", {
+                            placeholder: "__-__-____"
+                        });
+                        $(element).datepicker({
+                            language: 'es',
+                            format: 'dd-mm-yyyy',
+                            autoclose: true
+                        })
+                    }
+                },
+            },
+            {
+                label: 'N° RFP',
+                name: 'numerorfp',
+                width: 60,
+                hidden: true,
+                search: false,
+                editable: true,
+                formatter: 'integer',
+                editrules: {
+                    required: true
+                }
+            },
+            {
+                label: 'CUI',
+                name: 'idcui',
+                width: 80,
+                align: 'left',
+                search: false,
+                sortable: false,
+                editable: true,
+                hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/allcuis',
+                    buildSelect: function (response) {
+                        var grid = $("#grid");
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.idcui;
+                        var data = JSON.parse(response);
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger CUI--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].cui + ' - ' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].cui + ' - ' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change',
+                        fn: function (e) {
+                            //$("input#lider").val($('option:selected', this).val());
+                            var idcui = $('option:selected', this).val();
+                            //console.log(idcui);
 
-                        if (idnegociador != "0") {
+                            if (idcui != "0") {
 
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/sic/tecnicosresponsablescui/' + idcui,
+                                    async: false,
+                                    success: function (data) {
+                                        var grid = $("#grid");
+                                        var rowKey = grid.getGridParam("selrow");
+                                        var rowData = grid.getRowData(rowKey);
+                                        var thissid = rowData.idtecnico;
+                                        var s = "<select>"; //el default
+                                        s += '<option value="0">--Escoger Técnico--</option>';
+                                        $.each(data, function (i, item) {
+                                            if (data[i].uid == thissid) {
+                                                s += '<option value="' + data[i].uid + '" selected>' + data[i].nombre + ' ' + data[i].apellido + '</option>';
+                                            } else {
+                                                s += '<option value="' + data[i].uid + '">' + data[i].nombre + ' ' + data[i].apellido + '</option>';
+                                            }
+                                        });
+                                        s += "</select>";
+                                        //lahora = new Date();
+                                        //console.log('Termina el for a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
+                                        $("select#idtecnico").empty().html(s);
+                                        //lahora = new Date();
+                                        //console.log('Seteo el html a las ' + lahora.getHours() + ":" + lahora.getMinutes() + ":" + lahora.getSeconds());
+                                    }
+                                });
+                            }
+
+                        }
+                    }],
+                },
+                dataInit: function (elem) {
+                    $(elem).width(200);
+                }
+            },
+            {
+                label: 'CUI',
+                name: 'cui',
+                jsonmap: "estructuracui.cui",
+                width: 90,
+                align: 'center',
+                search: true,
+                sortable: false,
+                editable: true,
+                hidden: false
+            },
+            {
+                label: 'SAP',
+                name: 'sap',
+                width: 90,
+                align: 'center',
+                search: false,
+                editable: true,
+                hidden: false,
+                editoptions: {
+                    dataInit: function (element) {
+                        $(element).mask("00000", {
+                            placeholder: "_____"
+                        });
+                    }
+                }
+            },
+            {
+                label: 'Código ART',
+                name: 'codigoart',
+                width: 90,
+                align: 'center',
+                search: false,
+                editable: true,
+                hidden: false,
+                editrules: {
+                    edithidden: false
+                },
+                hidedlg: true,
+                editoptions: {
+                    size: 10,
+                    readonly: 'readonly',
+                    dataEvents: [{
+                        type: 'change',
+                        fn: function (e) {
+                            var rowKey = $grid.getGridParam("selrow");
+                            var rowData = $grid.getRowData(rowKey);
+                            var thissid = $(this).val();
                             $.ajax({
                                 type: "GET",
-                                url: '/sic/traerdatos/' + idnegociador,
+                                url: '/getcodigoart/' + thissid,
                                 async: false,
                                 success: function (data) {
-                                    var grid = $("#grid");
-                                    var rowKey = grid.getGridParam("selrow");
-                                    var rowData = grid.getRowData(rowKey);
-                                    var thissid = rowData.idnegociador;
-                                    $("input#correonegociador").val(data[0].email);
-                                    $("input#fononegociador").val(data[0].contact_number);
-                                    $("input#direccionnegociador").val('Estado 260, Entrepiso');
+                                    if (data.length > 0) {
+                                        $("input#program_id").val(data[0].program_id);
+                                    } else {
+                                        alert("No existe el codigo art ingresado");
+                                        $("input#program_id").val("0");
+                                    }
                                 }
                             });
                         }
-
-                    }
-                }],
-            }
-        },
-        { label: 'Negociador', name: 'negociador', width: 150, search: true, editable: false, formatter: returnNegociador, hidden: false },
-        { label: 'C.Negociador', name: 'correonegociador', width: 130, hidden: true, search: false, editable: true },
-        { label: 'F.Negociador', name: 'fononegociador', width: 100, hidden: true, search: false, editable: true },
-        { label: 'D.Negociador', name: 'direccionnegociador', width: 150, hidden: true, search: false, editable: true },
-
-        {
-            label: 'Fecha RFP', name: 'fechaenviorfp', width: 150, align: 'left', search: false,
-            formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
-            editable: true, editrules: { required: true },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'dd-mm-yyyy',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                $gridTab[0].triggerToolbar();
-                            }, 100);
+                    }],
+                }
+            },
+            {
+                label: 'Técnico',
+                name: 'idtecnico',
+                search: false,
+                editable: true,
+                hidden: true,
+                edittype: "select",
+                editoptions: {
+                    value: "0:--Escoger Técnico--",
+                    dataEvents: [{
+                        type: 'change',
+                        fn: function (e) {
+                            $("input#tecnico").val($('option:selected', this).text());
                         }
-                    });
+                    }],
+                }
+            },
+            {
+                label: 'Técnico Responsable',
+                name: 'first_name',
+                width: 180,
+                align: 'center',
+                search: true,
+                editable: false,
+                formatter: returnTecnico,
+                hidden: false
+            },
+            {
+                label: 'Tipo de Contrato',
+                name: 'tipocontrato',
+                search: false,
+                editable: true,
+                align: 'center',
+                hidden: false,
+                width: 130,
+                edittype: "custom",
+                editoptions: {
+                    custom_value: sipLibrary.getRadioElementValue,
+                    custom_element: sipLibrary.radioElemContrato,
+                    defaultValue: "Continuidad",
+                    dataEvents: [{
+                        type: 'change',
+                        fn: function (e) {
+                            var actual = $("input#codigoart").attr("readonly");
+                            if (actual == 'readonly') {
+                                $("input#codigoart").attr("readonly", false);
+                            } else {
+                                $("input#codigoart").attr("readonly", true);
+                            }
+                        }
+                    }],
                 },
-                sopt: ["eq", "le", "ge"]
-            },
-            editoptions: {
-                size: 10, maxlengh: 10,
-                dataInit: function (element) {
-                    $(element).mask("00-00-0000", { placeholder: "__-__-____" });
-                    $(element).datepicker({ language: 'es', format: 'dd-mm-yyyy', autoclose: true })
+                formatter: function (cellvalue, options, rowObject) {
+                    var dato = '';
+                    var val = rowObject.tipocontrato;
+                    if (val == 1) {
+                        dato = 'Continuidad';
+
+                    } else if (val == 0) {
+                        dato = 'Proyectos';
+                    }
+                    return dato;
                 }
             },
-        },
+            {
+                label: 'Código Programa',
+                name: 'program_id',
+                width: 200,
+                align: 'left',
+                search: false,
+                editable: false,
+                hidden: true,
+                editoptions: {
+                    defaultValue: "0"
+                }
+            },
+            {
+                label: 'Descripción',
+                name: 'descripcion',
+                width: 250,
+                align: 'left',
+                search: true,
+                editable: true,
+                editoptions: {
+                    rows: "2",
+                    cols: "50"
+                },
+                editrules: {
+                    required: true
+                },
+                edittype: "textarea",
+                hidden: false
 
-        {
-            name: 'idtipo', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/sic/tipos',
-                buildSelect: function (response) {
-                    var rowKey = $grid.getGridParam("selrow");
-                    var rowData = $grid.getRowData(rowKey);
-                    var thissid = rowData.idtipo;
-                    var data = JSON.parse(response);
-                    var s = "<select>";
-                    s += '<option value="0">--Escoger un Tipo--</option>';
-                    $.each(data, function (i, item) {
+            },
 
-                        if (data[i].id == 3) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+
+            {
+                name: 'idclasificacionsolicitud',
+                search: false,
+                editable: true,
+                hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/sic/parametros/clasificacionsolicitud',
+                    buildSelect: function (response) {
+                        var rowKey = $grid.getGridParam("selrow");
+                        var rowData = $grid.getRowData(rowKey);
+                        var thissid = rowData.idclasificacionsolicitud;
+                        var data = JSON.parse(response);
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger una Clasificación--</option>';
+                        $.each(data, function (i, item) {
+
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    }
+                }
+            },
+            {
+                label: 'Clasificación',
+                name: 'clasificacion',
+                jsonmap: "clasificacion.nombre",
+                width: 100,
+                align: 'center',
+                search: false,
+                editable: true,
+                hidden: false
+            },
+            {
+                label: 'Criticidad',
+                name: 'colornota',
+                index: 'colornota',
+                width: 80,
+                align: "left",
+                editable: true,
+                search: false,
+                editoptions: {
+                    size: 10
+                },
+                formatter: function (cellvalue, options, rowObject) {
+
+                    var solicitud = rowObject.id;
+                    var color = 'pink'
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/sic/getcolorservicios/' + solicitud,
+                        async: false,
+                        success: function (data) {
+
+                            if (data == 'Rojo') {
+                                color = 'red';
+                            } else if (data == 'Verde') {
+                                color = 'green';
+                            } else if (data == 'Amarillo') {
+                                color = 'yellow';
+                            } else if (data == 'Azul') {
+                                color = 'blue';
+                            } else if (data == 'indefinido') {
+                                color = 'gray';
+                            }
+
                         }
                     });
-                    return s + "</select>";
-                }
-            }
-        },
-        { label: 'Tipo', name: 'tipo', jsonmap: "tipoclausula.nombre", width: 100, align: 'left', search: false, editable: false, hidden: false },
-        {
-            name: 'idgrupo', search: false, editable: true, hidden: true,
-            edittype: "select",
-            editoptions: {
-                dataUrl: '/sic/parametros/grupoclausula',
-                buildSelect: function (response) {
-                    var rowKey = $grid.getGridParam("selrow");
-                    var rowData = $grid.getRowData(rowKey);
-                    var thissid = rowData.idgrupo;
-                    var data = JSON.parse(response);
-                    var s = "<select>";
-                    s += '<option value="0">--Escoger un Grupo--</option>';
-                    $.each(data, function (i, item) {
 
-                        if (data[i].id == thissid) {
-                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                        } else {
-                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+
+                    return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; height: 16px;"></span>';
+                }
+            },
+            {
+                label: 'Negociador',
+                name: 'idnegociador',
+                search: false,
+                editable: true,
+                hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/usuarios_por_rol/Negociador',
+                    buildSelect: function (response) {
+                        var rowKey = $grid.getGridParam("selrow");
+                        var rowData = $grid.getRowData(rowKey);
+                        var thissid = rowData.uidpmo;
+                        var data = JSON.parse(response);
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger Negociador--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].uid == thissid) {
+                                s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change',
+                        fn: function (e) {
+                            $("input#negociador").val($('option:selected', this).text());
+                            var idnegociador = $('option:selected', this).val();
+
+                            if (idnegociador != "0") {
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/sic/traerdatos/' + idnegociador,
+                                    async: false,
+                                    success: function (data) {
+                                        var grid = $("#grid");
+                                        var rowKey = grid.getGridParam("selrow");
+                                        var rowData = grid.getRowData(rowKey);
+                                        var thissid = rowData.idnegociador;
+                                        $("input#correonegociador").val(data[0].email);
+                                        $("input#fononegociador").val(data[0].contact_number);
+                                        $("input#direccionnegociador").val('Estado 260, Entrepiso');
+                                    }
+                                });
+                            }
+
                         }
-                    });
-                    return s + "</select>";
+                    }],
+                }
+            },
+            {
+                label: 'Negociador',
+                name: 'negociador',
+                width: 150,
+                search: true,
+                editable: false,
+                formatter: returnNegociador,
+                hidden: false
+            },
+            {
+                label: 'C.Negociador',
+                name: 'correonegociador',
+                width: 130,
+                hidden: true,
+                search: false,
+                editable: true
+            },
+            {
+                label: 'F.Negociador',
+                name: 'fononegociador',
+                width: 100,
+                hidden: true,
+                search: false,
+                editable: true
+            },
+            {
+                label: 'D.Negociador',
+                name: 'direccionnegociador',
+                width: 150,
+                hidden: true,
+                search: false,
+                editable: true
+            },
+
+
+
+            {
+                name: 'idtipo',
+                search: false,
+                editable: true,
+                hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/sic/tipos',
+                    buildSelect: function (response) {
+                        var rowKey = $grid.getGridParam("selrow");
+                        var rowData = $grid.getRowData(rowKey);
+                        var thissid = rowData.idtipo;
+                        var data = JSON.parse(response);
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger un Tipo--</option>';
+                        $.each(data, function (i, item) {
+
+                            if (data[i].id == 3) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    }
+                }
+            },
+            {
+                name: 'idgrupo',
+                search: false,
+                editable: true,
+                hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/sic/parametros/grupoclausula',
+                    buildSelect: function (response) {
+                        var rowKey = $grid.getGridParam("selrow");
+                        var rowData = $grid.getRowData(rowKey);
+                        var thissid = rowData.idgrupo;
+                        var data = JSON.parse(response);
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger un Grupo--</option>';
+                        $.each(data, function (i, item) {
+
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    }
                 }
             }
-        },
-        { label: 'Grupo', name: 'grupo', jsonmap: "grupo.nombre", width: 120, align: 'left', search: false, editable: false, hidden: false },
-    ];
+        ];
     var previousRowId = 0;
     $grid.jqGrid({
         url: '/sic/grid_solicitudcotizacion',
@@ -427,46 +632,52 @@ $(document).ready(function () {
     });
 
     $grid.jqGrid('filterToolbar', {
-        stringResult: true, searchOperators: true,
-        searchOnEnter: false, defaultSearch: 'cn'
+        stringResult: true,
+        searchOperators: true,
+        searchOnEnter: false,
+        defaultSearch: 'cn'
     });
 
-    $grid.jqGrid('navGrid', '#pagerMaster', { edit: false, add: false, del: false, search: false },
-        {
-            editCaption: "Modifica Solicitud",
-            closeAfterEdit: true,
-            recreateForm: true,
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: t1,
+    $grid.jqGrid('navGrid', '#pagerMaster', {
+        edit: false,
+        add: false,
+        del: false,
+        search: false
+    }, {
+        editCaption: "Modifica Solicitud",
+        closeAfterEdit: true,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        template: t1,
 
 
-        }, {
-            addCaption: "Agrega Solicitud",
-            closeAfterAdd: true,
-            recreateForm: true,
-            mtype: 'POST',
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            template: t1,
+    }, {
+        addCaption: "Agrega Solicitud",
+        closeAfterAdd: true,
+        recreateForm: true,
+        mtype: 'POST',
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        template: t1,
 
-        }, {
-            ajaxEditOptions: sipLibrary.jsonOptions,
-            serializeEditData: sipLibrary.createJSON,
-            mtype: 'POST',
-            afterSubmit: function (response, postdata) {
-                var json = response.responseText;
-                var result = JSON.parse(json);
-                if (!result.success)
-                    return [false, result.message, ""];
-                else
-                    return [true, "", ""]
-            }
+    }, {
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        mtype: 'POST',
+        afterSubmit: function (response, postdata) {
+            var json = response.responseText;
+            var result = JSON.parse(json);
+            if (!result.success)
+                return [false, result.message, ""];
+            else
+                return [true, "", ""]
+        }
 
 
-        }, {
+    }, {
 
-        });
+    });
 
     function returnTecnico(cellValue, options, rowdata, action) {
         if (rowdata.tecnico != null)
@@ -500,7 +711,7 @@ $(document).ready(function () {
         //tabs += "<div class='tab-pane active' id='proveedores'><div class='container-fluid'><table id='proveedores_t_" + parentRowKey + "'></table><div id='navGridPro'></div></div></div>"
         tabs += "<div class='tab-pane active' id='estadosolicitud'><div class='container-fluid'><table id='estadosolicitud_t_" + parentRowKey + "'></table><div id='navGridEst'></div></div></div>"
         tabs += "<div class='tab-pane' id='preguntas'><table id='preguntas_t_" + parentRowKey + "'></table><div id='navGridPre'></div></div>"
-       
+
         tabs += "<div class='tab-pane' id='respuestasrfp'><table id='respuestasrfp_t_" + parentRowKey + "'></table><div id='navGridRespRFP'></div></div>"
         tabs += "<div class='tab-pane' id='participantesproveedor'><table id='participantesproveedor_t_" + parentRowKey + "'></table><div id='navGridPartPro'></div></div>"
         tabs += "<div class='tab-pane' id='evaluacioneconomica'><table id='evaluacioneconomica_t_" + parentRowKey + "'></table><div id='navGridEvEco'></div></div>"
@@ -523,7 +734,7 @@ $(document).ready(function () {
                 gridEstado.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#preguntas') {
                 gridPreguntas.renderGrid(loadurl, parentRowKey, targ)
-           
+
             } else if (targ === '#respuestasrfp') {
                 gridRespuestasRFP.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#participantesproveedor') {
@@ -553,7 +764,7 @@ $(document).ready(function () {
                 gridEstado.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#preguntas') {
                 gridPreguntas.renderGrid(loadurl, parentRowKey, targ)
-           
+
             } else if (targ === '#respuestasrfp') {
                 gridRespuestasRFP.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#participantesproveedor') {
@@ -567,7 +778,7 @@ $(document).ready(function () {
             } else if (targ === '#bitacora') {
                 gridBitacora.renderGrid(loadurl, parentRowKey, targ)
             }
- 
+
             $this.tab('show');
             return false;
         });
