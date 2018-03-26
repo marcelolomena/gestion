@@ -21,6 +21,23 @@ function returnUserLink(cellValue, options, rowdata, action)
 }
 
 $(document).ready(function(){
+	$.datepicker.regional['es'] = {
+	        closeText: 'Cerrar',
+	        prevText: '<Ant',
+	        nextText: 'Sig>',
+	        currentText: 'Hoy',
+	        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+	        monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+	        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+	        dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+	        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+	        weekHeader: 'Sm',
+	        dateFormat: 'yy-mm-dd',
+	        firstDay: 1,
+	        isRTL: false,
+	        showMonthAfterYear: false,
+	        yearSuffix: ''
+	};
 	$.datepicker.setDefaults($.datepicker.regional['es']);
 
 	Highcharts.setOptions({
@@ -43,6 +60,40 @@ $(document).ready(function(){
         decimalPoint: '.'  
     }   
 	});
+
+	var optionsChart = {
+		    chart: {
+		        renderTo: 'chart',
+	            type: 'scatter',
+	            zoomType: 'xy'
+		    },title: {
+		    	text: 'CPI/SPI',
+	            style: {
+	                fontWeight: 'bold'
+	            }
+	        },tooltip: {
+	            formatter: function() {
+	                return '<b>' + this.point.programa +'</b>';
+	            }
+	        },xAxis: {
+	            title: {
+	                text: 'CPI'
+	            },plotLines:[{value:0.75,color: 'red',width:2},{value:0.95,color: 'red',width:2}]
+	        },plotOptions: {
+	            series: {
+	                cursor: 'pointer',
+	                events: {
+	                    click: function (e) {
+	                    	window.location.href = full + e.point.z;
+	                    }
+	                }
+	            }
+	        },yAxis: {
+	            title: {
+	                text: 'SPI'
+	            },plotLines:[{value:0.7,color: 'red',width:2},{value:0.9,color: 'red',width:2}]
+	        },series: []
+	};
 
 	var modelProgramGrid=[
             { label: 'id', name: 'program_id', key: true, hidden:true },
@@ -289,6 +340,12 @@ $(document).ready(function(){
                               searchoptions:{
                                   sopt: ["eq","ge","le"]
                               }
+            },
+            { label: 'PMO', name: 'pmo', width: 350 },
+            { label: 'N° no asignados', name: 'count_subtask_usr', width: 100, align: 'right',
+                searchoptions:{
+                    sopt: ["eq","ge","le"]
+                }
             }
         ];
 
@@ -484,7 +541,63 @@ $(document).ready(function(){
 
     $("#tabs").tabs({
       beforeLoad: function( event, ui ) {
-        var tourl = ui.ajaxSettings.url;
+        var url = ui.ajaxSettings.url;
+
+        //console.log("tourl ---> : " + tourl)
+        if(url==='grid'){
+            var name = "Programas"
+            var grid =	$("#jqGrid").jqGrid({
+                    mtype: "GET",
+                    url: "/report/H/0/0",
+                    datatype: "json",
+                    page: 1,
+                    colModel: modelProgramGrid,
+                    viewrecords: true,
+                    regional : "es",
+                    height: 'auto',
+                    autowidth:true,
+                    //width: 950,
+                    //loadonce: true,
+                    rowNum: 25,
+                    shrinkToFit:false,
+                    forceFit:true,
+                    pager: "#jqGridPager",
+                    subGrid: true,
+                    subGridRowExpanded: showProjectSubGrid,
+                    ignoreCase: true
+                }).jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
+
+            grid.jqGrid('setCaption', name).jqGrid('setGridParam', { url: tourl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+
+            grid.jqGrid('navGrid','#jqGridPager',{edit: false, add: false, del: false,refresh:true,search: false, position: "left", cloneToTop: false }
+            );
+
+            grid.navButtonAdd('#jqGridPager', {
+                buttonicon: "ui-icon-circle-triangle-e",
+                title: "Excel",
+                caption: "Excel",
+                position: "last",
+                onClickButton: function() {
+                    var postData = grid.jqGrid("getGridParam", "postData")
+                    if(postData._search)
+                    {
+                        var query = "";
+                        for (key in postData) {
+                            query += encodeURIComponent(key)+"="+encodeURIComponent(postData[key])+"&";
+                        }
+                        //console.log(query)
+                        var url = '/report/X/0/0?'+query;
+                        grid.jqGrid('excelExport',{"url":url});
+
+                    }else{
+                        //archivo generado
+                        grid.jqGrid('excelExport',{"url":'/report_full'});
+                    }
+
+                }
+            });
+
+        } else {
         /*
         $.getJSON(url, function (data) {
                  charPie.update({
@@ -508,60 +621,8 @@ $(document).ready(function(){
 
         });
         */
-        //console.log("tourl ---> : " + tourl)
-        var name = "Programas"
-		var grid =	$("#jqGrid").jqGrid({
-		        mtype: "GET",
-		        url: tourl,
-		        datatype: "json",
-		        page: 1,
-		        colModel: modelProgramGrid,
-				viewrecords: true,
-				regional : "es",
-				height: 'auto',
-		        autowidth:true,
-		        //width: 950,
-       	        //loadonce: true,
-		        rowNum: 25,
-		        shrinkToFit:false,
-                forceFit:true,
-		        pager: "#jqGridPager",
-		        subGrid: true,
-                subGridRowExpanded: showProjectSubGrid,
-		        ignoreCase: true
-		    }).jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
+        }
 
-        grid.jqGrid('setCaption', name).jqGrid('setGridParam', { url: tourl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
-
-        grid.jqGrid('navGrid','#jqGridPager',{edit: false, add: false, del: false,refresh:true,search: false, position: "left", cloneToTop: false }
-        );
-
-        grid.navButtonAdd('#jqGridPager', {
-            buttonicon: "ui-icon-circle-triangle-e",
-            title: "Excel",
-            caption: "Excel",
-            position: "last",
-            onClickButton: function() {
-                var postData = grid.jqGrid("getGridParam", "postData")
-                if(postData._search)
-                {
-                    var query = "";
-                    for (key in postData) {
-                        query += encodeURIComponent(key)+"="+encodeURIComponent(postData[key])+"&";
-                    }
-                    //console.log(query)
-                    var url = '/report/X/0/0?'+query;
-                    grid.jqGrid('excelExport',{"url":url});
-
-                }else{
-                    //archivo generado
-                    grid.jqGrid('excelExport',{"url":'/report_full'});
-                }
-
-            }
-        });
-
-        return false;
 
         ui.jqXHR.fail(function() {
           ui.panel.html(

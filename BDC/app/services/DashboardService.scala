@@ -287,14 +287,7 @@ object DashboardService {
 
   def manager(page: Int, end: Int, filter: String, order: String): Seq[Report] = {
     DB.withConnection { implicit connection =>
-
       val ini = end * (page - 1)
-
-      //Logger.debug("ini : " + ini)
-      //Logger.debug("end : " + end)
-      //Logger.debug("filter : " + filter)
-      //Logger.debug("order : " + order)
-
       val sqlString =
           """SELECT
             tipo,
