@@ -1,8 +1,8 @@
 package services;
 import play.api.Play.current
-import play.api.db.DB;
-import anorm.SqlParser._;
-import models._;
+import play.api.db.DB
+import anorm.SqlParser._
+import models._
 import anorm._
 import play.Logger
 import org.apache.poi.xssf.usermodel._
@@ -134,59 +134,68 @@ object DashboardService {
     }
   }
 
-  def reportBubble(uid:String): Seq[Bubble] = {
+  def reportBubble(uid:String): Seq[Report.Point] = {
 
-    var sqlString = "EXEC art.bubble "+uid
+    //var sqlString = "EXEC art.bubble "+uid
+    val sqlString =
+      """
+        |select a.cpi x, a.spi y, a.program_id z,a.program_name programa
+        |from art_program_management a join art_program_members b on a.program_id = b.program_id
+        |where
+        | a.tipo ='PROGRAMA' and
+        | b.is_active = 0 and
+        | b.member_id = {uid}
+      """.stripMargin
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Bubble.bubble *)
+      SQL(sqlString).on('uid->uid.toInt) as (Report.Point.point *)
     }
   }
 
-  def reportPie(): Seq[Pie] = {
+  def reportPie(): Seq[Report.Pie] = {
 
     var sqlString = "EXEC art.porcentaje_programas_for_division"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportType(): Seq[Pie] = {
+  def reportType(): Seq[Report.Pie] = {
 
     var sqlString = "EXEC art.porcentaje_programas_for_type"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportDepa(): Seq[Pie] = {
+  def reportDepa(): Seq[Report.Pie] = {
 
     var sqlString = "EXEC art.porcentaje_programas_for_departamento"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportSubType(): Seq[Pie] = {
+  def reportSubType(): Seq[Report.Pie] = {
 
     var sqlString = "EXEC art.porcentaje_programas_for_subtype"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportStatus(): Seq[Pie] = {
+  def reportStatus(): Seq[Report.Pie] = {
 
     var sqlString = "EXEC art.porcentaje_programas_for_status"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportSap(): Seq[Pie] = {
+  def reportSap(): Seq[Report.Pie] = {
 
     var sqlString = "EXEC art.porcentaje_programas_for_sap"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 

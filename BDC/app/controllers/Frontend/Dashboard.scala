@@ -451,26 +451,14 @@ object Dashboard extends Controller {
     request.session.get("username").map { user =>
 
       val uid = request.session.get("uId").get
-      val bubble = DashboardService.reportBubble(uid)
+      val data = DashboardService.reportBubble(uid)
+      val bubble = Bubble("Indicadores de Programa",Json.toJson(data))
 
-      var node = new JSONObject()
-
-      node.put("showInLegend", false)
-      node.put("name", "Indicadores de Programa")
-      var puntos = new JSONArray()
-      for (p <- bubble) {
-        var punto = new JSONObject()
-        punto.put("x", p.x)
-        punto.put("y", p.y)
-        punto.put("z", p.z)
-        punto.put("programa", p.programa)
-
-        puntos.put(punto)
-      }
-
-      node.put("data", puntos)
-
-      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(Json.toJson(bubble)).withSession(
+        "username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession

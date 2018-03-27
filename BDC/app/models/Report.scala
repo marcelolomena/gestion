@@ -24,6 +24,19 @@ object Grid {
   }
 }
 
+case class Bubble(a: String, v: JsValue)
+
+object Bubble {
+  implicit val implicitBubbleWrites = new Writes[Bubble] {
+    def writes(bubble: Bubble): JsValue = {
+      Json.obj(
+        "name" -> bubble.a,
+        "data" -> bubble.v
+      )
+    }
+  }
+}
+
 case class Report(
                   program_id: Int,
                   project_id: Option[BigDecimal],
@@ -237,6 +250,90 @@ object Report {
         Option[String](""),
         Option[String](""),
         Option[BigDecimal](0)
+      ))
+    }
+  }
+
+  case class Pie(
+                  dId: BigDecimal,
+                  division: String,
+                  cantidad: BigDecimal,
+                  porcentaje: BigDecimal
+                )
+
+  object Pie {
+    val pie = {
+      get[BigDecimal]("dId") ~
+        get[String]("division") ~
+        get[BigDecimal]("cantidad") ~
+        get[BigDecimal]("porcentaje")  map {
+        case dId ~
+          division ~
+          cantidad ~
+          porcentaje  => Pie(dId, division, cantidad, porcentaje)
+      }
+    }
+  }
+
+
+  implicit object PieFormat extends Format[Pie] {
+    def writes(pie: Pie): JsValue = {
+      val pieSeq = Seq(
+        "dId" -> JsNumber(pie.dId),
+        "division" -> JsString(pie.division),
+        "cantidad" -> JsNumber(pie.cantidad),
+        "porcentaje" -> JsNumber(pie.porcentaje)
+      )
+      JsObject(pieSeq)
+    }
+
+    def reads(json: JsValue): JsResult[Pie] = {
+      JsSuccess(Pie(
+        0,
+        "",
+        0,
+        0
+      ))
+    }
+  }
+
+  case class Point(
+                     x: BigDecimal,
+                     y: BigDecimal,
+                     z: BigDecimal,
+                     programa: String
+                   )
+  object Point {
+    val point = {
+      get[BigDecimal]("x") ~
+        get[BigDecimal]("y") ~
+        get[BigDecimal]("z") ~
+        get[String]("programa")  map {
+        case x ~
+          y ~
+          z ~
+          programa  => Point(x, y, z, programa)
+      }
+    }
+  }
+
+  implicit object BubbleFormat extends Format[Point] {
+    def writes(point: Point): JsValue = {
+      val pointSeq = Seq(
+        "x" -> JsNumber(point.x),
+        "y" -> JsNumber(point.y),
+        "z" -> JsNumber(point.z),
+        "programa" -> JsString(point.programa)
+      )
+      JsObject(pointSeq)
+    }
+
+    def reads(json: JsValue): JsResult[Point] = {
+      JsSuccess(Point(
+        0,
+        0,
+        0,
+        ""
       ))
     }
   }

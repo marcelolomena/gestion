@@ -60,10 +60,10 @@ $(document).ready(function(){
         decimalPoint: '.'  
     }   
 	});
-
+    var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + '/program-details/';
 	var optionsChart = {
 		    chart: {
-		        renderTo: 'chart',
+		        renderTo: 'container_bubble',
 	            type: 'scatter',
 	            zoomType: 'xy'
 		    },title: {
@@ -538,14 +538,10 @@ $(document).ready(function(){
 	            }
 	        },series: []			
 	};	
-
+    var chart
     $("#tabs").tabs({
-      beforeLoad: function( event, ui ) {
-        var url = ui.ajaxSettings.url;
-
-        //console.log("tourl ---> : " + tourl)
-        if(url==='grid'){
-            var name = "Programas"
+        active: 0,
+        create: function (event, ui) {
             var grid =	$("#jqGrid").jqGrid({
                     mtype: "GET",
                     url: "/report/H/0/0",
@@ -563,11 +559,10 @@ $(document).ready(function(){
                     forceFit:true,
                     pager: "#jqGridPager",
                     subGrid: true,
+                    caption : 'Programas',
                     subGridRowExpanded: showProjectSubGrid,
                     ignoreCase: true
                 }).jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
-
-            grid.jqGrid('setCaption', name).jqGrid('setGridParam', { url: tourl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
 
             grid.jqGrid('navGrid','#jqGridPager',{edit: false, add: false, del: false,refresh:true,search: false, position: "left", cloneToTop: false }
             );
@@ -596,38 +591,32 @@ $(document).ready(function(){
 
                 }
             });
+            $.ajax({
+				  url: '/burbujas',
+				  type: 'GET',
+				  success: function(data) {
+					optionsChart.series.push(data);
+					chart = new Highcharts.Chart(optionsChart);
+				  }
+			});
+       	}, activate: function( event, ui ) {
 
-        } else {
-        /*
-        $.getJSON(url, function (data) {
-                 charPie.update({
-                     title: {
-                         text:  data.titulo
-                     },
-                     plotOptions: {
-                        pie: {
-                            point: {
-                                events: {
-                                    click: function(event) {
-                                        //gridIncident("department",this.options.dId,this.options.name);
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    series:data
-                 });
-				 //Limpia grilla
-
-        });
-        */
+        if(ui.newTab.index()===0){
+            $("#jqGrid").jqGrid('setCaption', name).jqGrid('setGridParam', { url: '/report/H/0/0', page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+        } else if(ui.newTab.index()===1) {
+            $.ajax({
+				  url: '/burbujas',
+				  type: 'GET',
+				  success: function(data) {
+                          chart.update({
+                              title: {
+                              text:  data.name
+                              },
+                              series:data
+                          });
+				  }
+    		});
         }
-
-
-        ui.jqXHR.fail(function() {
-          ui.panel.html(
-            "Couldn't load this tab. We'll try to fix this as soon as possible." );
-        });
       }
     });
 
