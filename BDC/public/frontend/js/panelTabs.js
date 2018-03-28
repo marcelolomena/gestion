@@ -40,26 +40,41 @@ $(document).ready(function(){
 	};
 	$.datepicker.setDefaults($.datepicker.regional['es']);
 
-	Highcharts.setOptions({
-        lang: {  
-        loading: 'Cargando...',  
-        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],  
-        weekdays: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado'],  
-        shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],  
-        exportButtonTitle: "Exportar",  
-        printButtonTitle: "Importar",  
-        rangeSelectorFrom: "De",  
-        rangeSelectorTo: "A",  
-        rangeSelectorZoom: "Periodo",  
-        downloadPNG: 'Descargar gráfica PNG',  
-        downloadJPEG: 'Descargar gráfica JPEG',  
-        downloadPDF: 'Descargar gráfica PDF',  
-        downloadSVG: 'Descargar gráfica SVG',  
-        printChart: 'Imprimir Gráfica',  
-        thousandsSep: ",",  
-        decimalPoint: '.'  
-    }   
-	});
+        Highcharts.setOptions({
+            lang: {
+            loading: 'Cargando...',
+            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            weekdays: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado'],
+            shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            exportButtonTitle: "Exportar",
+            printButtonTitle: "Importar",
+            rangeSelectorFrom: "De",
+            rangeSelectorTo: "A",
+            rangeSelectorZoom: "Periodo",
+            downloadPNG: 'Descargar gráfica PNG',
+            downloadJPEG: 'Descargar gráfica JPEG',
+            downloadPDF: 'Descargar gráfica PDF',
+            downloadSVG: 'Descargar gráfica SVG',
+            printChart: 'Imprimir Gráfica',
+            thousandsSep: ",",
+            decimalPoint: '.'
+        }
+        });
+
+	  Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+	        return {
+	            radialGradient: {
+	                cx: 0.5,
+	                cy: 0.3,
+	                r: 0.7
+	            },
+	            stops: [
+	                [0, color],
+	                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')]
+	            ]
+	        };
+	    });
+
     var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + '/program-details/';
 	var optionsChart = {
 		    chart: {
@@ -94,6 +109,44 @@ $(document).ready(function(){
 	            },plotLines:[{value:0.7,color: 'red',width:2},{value:0.9,color: 'red',width:2}]
 	        },series: []
 	};
+
+	var optionsPie ={
+			chart: {
+				//renderTo: 'container_bubble_division',
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	            text: 'Programas por División'
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + ' (' +  this.point.y + ')</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}
+	        },plotOptions: {
+	            pie: {
+	                size: "70%",
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   //grillaPrograma(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name} ({point.y})</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []
+	};
+
 
 	var modelProgramGrid=[
             { label: 'id', name: 'program_id', key: true, hidden:true },
@@ -503,42 +556,7 @@ $(document).ready(function(){
      	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
      	}
 
-	var optionsPie ={
-			chart: {
-				renderTo: 'containerChart',
-	            plotBackgroundColor: null,
-	            plotBorderWidth: null,
-	            plotShadow: false,
-	            type: 'pie'
-	        },title: {
-	            text: 'Programas por División'
-	        },tooltip: {
-	        	formatter: function() {
-	        	    return '<b>'+ this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
-	        	}	        	
-	        },plotOptions: {
-	            pie: {
-	                allowPointSelect: true,
-	                cursor: 'pointer',
-	                point: {
-	                    events: {
-	                       click: function(event) {
-	                    	   grillaPrograma(this.options.dId,this.options.name);
-	                       }
-	                    }
-	                 },
-	                dataLabels: {
-	                    enabled: true,
-	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-	                    style: {
-	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-	                    },
-	                    connectorColor: 'silver'
-	                }
-	            }
-	        },series: []			
-	};	
-    var chart
+    var chart,chartPie
     $("#tabs").tabs({
         active: 0,
         create: function (event, ui) {
@@ -599,6 +617,24 @@ $(document).ready(function(){
 					chart = new Highcharts.Chart(optionsChart);
 				  }
 			});
+            $.ajax({
+				  url: '/pie',
+				  type: 'GET',
+				  success: function(data) {
+				    optionsPie.chart.renderTo = 'container_bubble_division'
+					optionsPie.series.push(data)
+					chartPie = new Highcharts.Chart(optionsPie)
+				  }
+			});
+            $.ajax({
+				  url: '/pieDepa',
+				  type: 'GET',
+				  success: function(data) {
+				    optionsPie.chart.renderTo = 'container_bubble_depa'
+					optionsPie.series.push(data)
+					chartPie = new Highcharts.Chart(optionsPie)
+				  }
+			});
        	}, activate: function( event, ui ) {
 
         if(ui.newTab.index()===0){
@@ -616,10 +652,35 @@ $(document).ready(function(){
                           });
 				  }
     		});
+            $.ajax({
+				  url: '/pie',
+				  type: 'GET',
+				  success: function(data) {
+                          chartPie.update({
+                              title: {
+                                text:  data.name
+                              },
+                              series:data
+                          });
+				  }
+    		});
+            $.ajax({
+				  url: '/pieDepa',
+				  type: 'GET',
+				  success: function(data) {
+                          chartPie.update({
+                              title: {
+                                text:  data.name
+                              },
+                              series:data
+                          });
+				  }
+    		});
         }
       }
     });
 
-
+    //$("#container_bubble_depa").highcharts().setSize(850, 350, false);
+    //$("#container_bubble_division").highcharts().setSize(850, 350, false);
 });
 

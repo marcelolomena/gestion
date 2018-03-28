@@ -256,16 +256,16 @@ object Report {
 
   case class Pie(
                   dId: BigDecimal,
-                  division: String,
-                  cantidad: BigDecimal,
+                  name: String,
+                  y: BigDecimal,
                   porcentaje: BigDecimal
                 )
 
   object Pie {
     val pie = {
       get[BigDecimal]("dId") ~
-        get[String]("division") ~
-        get[BigDecimal]("cantidad") ~
+        get[String]("name") ~
+        get[BigDecimal]("y") ~
         get[BigDecimal]("porcentaje")  map {
         case dId ~
           division ~
@@ -280,8 +280,8 @@ object Report {
     def writes(pie: Pie): JsValue = {
       val pieSeq = Seq(
         "dId" -> JsNumber(pie.dId),
-        "division" -> JsString(pie.division),
-        "cantidad" -> JsNumber(pie.cantidad),
+        "name" -> JsString(pie.name),
+        "y" -> JsNumber(pie.y),
         "porcentaje" -> JsNumber(pie.porcentaje)
       )
       JsObject(pieSeq)

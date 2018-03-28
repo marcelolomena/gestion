@@ -153,7 +153,28 @@ object DashboardService {
 
   def reportPie(): Seq[Report.Pie] = {
 
-    var sqlString = "EXEC art.porcentaje_programas_for_division"
+    //var sqlString = "EXEC art.porcentaje_programas_for_division"
+    val sqlString =
+      """
+        |;WITH T
+        |AS
+        |(
+        |	SELECT COUNT(*) AS Total
+        |	FROM art_program_management where tipo='PROGRAMA'
+        |),
+        |G AS
+        |(
+        |	SELECT ISNULL(cod_div,0) dId, ISNULL(name_div,'N/A') name, COUNT(*) AS y
+        |	FROM art_program_management where tipo='PROGRAMA'
+        |	GROUP BY name_div,cod_div
+        |)
+        |SELECT
+        |	G.dId, G.name, G.y,
+        |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+        |FROM
+        |	G CROSS JOIN T
+      """.stripMargin
+
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
@@ -169,7 +190,28 @@ object DashboardService {
 
   def reportDepa(): Seq[Report.Pie] = {
 
-    var sqlString = "EXEC art.porcentaje_programas_for_departamento"
+    //var sqlString = "EXEC art.porcentaje_programas_for_departamento"
+    val sqlString =
+      """
+        |;WITH T
+        |AS
+        |(
+        |	SELECT COUNT(*) AS Total
+        |	FROM art_program_management where tipo='PROGRAMA'
+        |),
+        |G AS
+        |(
+        |	SELECT ISNULL(cod_dep,0) dId, ISNULL(name_dep,'N/A') name, COUNT(*) AS y
+        |	FROM art_program_management where tipo='PROGRAMA'
+        |	GROUP BY name_dep,cod_dep
+        |)
+        |SELECT
+        |	G.dId, G.name, G.y,
+        |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+        |FROM
+        |	G CROSS JOIN T
+      """.stripMargin
+
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }

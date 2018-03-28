@@ -14,6 +14,8 @@
     tr.jqgroup td {
     	font-weight: bold !important; font-size: 12px;
 	}
+
+
 </style>
 </head>
 <body>
@@ -30,51 +32,41 @@
 						<div id="jqGridPager"></div>
 					</div>
 					<div id="tabs-2" style="overflow:auto;">
-
 						<div class="container-fluid">
+
 							<div class="row">
-
-								<div class="col-sm-6">
+								<div class="col-sm-6 col-md-6">
 									<div class="chart-wrapper">
-										<div class="chart-title">
-											Pageviews by browser (past 24 hours)
-										</div>
 										<div class="chart-stage">
-											<img data-src="holder.js/100%x350/white">
-										</div>
-										<div class="chart-notes">
-											This is a sample text region to describe this chart.
+											<div id="grid-1-1">
+												<div id="container_bubble_depa" class="content"></div>
+											</div>
 										</div>
 									</div>
 								</div>
 
-								<div class="col-sm-6">
+								<div class="col-sm-6 col-md-6">
 									<div class="chart-wrapper">
-										<div class="chart-title">
-											Pageviews by browser (past 5 days)
-										</div>
 										<div class="chart-stage">
-											<img data-src="holder.js/100%x350/white">
-										</div>
-										<div class="chart-notes">
-											Notes go down here
+											<div id="grid-1-2">
+												<div id="container_bubble_division" class="content"></div>
+											</div>
 										</div>
 									</div>
 								</div>
-
 							</div>
-							<div class="row">
 
-								<div class="col-sm-12">
+							<div class="row">
+								<div class="col-sm-6 col-md-6">
 									<div class="chart-wrapper">
 										<div class="chart-title">
-											Impressions by advertiser
+											Cell Title
 										</div>
 										<div class="chart-stage">
-											<div id="container_bubble" />
+											<div id="container_bubble" class="content"></div>
 										</div>
 										<div class="chart-notes">
-											Notes go down here
+											Notes about this chart
 										</div>
 									</div>
 								</div>
@@ -83,31 +75,11 @@
 
 						</div>
 
-
-					</div>
 				</div>
 
-		<div id="chart_box" style="display:none;">
-			<div id="chart1"></div>
-		</div>
 
 	<button>Volver</button>
-	<div id="dialog-modal" style="display:none">
-	    <table border="0" style="border-spacing: 5px;border-collapse:separate" class="ui-widget" align="center">
-	        <thead class="ui-widget-header">
-	            <tr>
-	                <td>CPI</td>
-	                <td>SPI</td>
-	            </tr>               
-	        </thead>
-	        <tbody class="ui-widget-content">
-	            <tr>
-	                <td id="cell_cpi"></td>
-	                <td id="cell_spi"></td>
-	            </tr>
-	        </tbody>
-	    </table>
-	</div>	
+
 </div>
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.min.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid_5.3.1/css/ui.jqgrid.css")">

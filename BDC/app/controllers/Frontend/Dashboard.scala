@@ -475,31 +475,19 @@ object Dashboard extends Controller {
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
-  }  
+  }
 
   def pie = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val pie = DashboardService.reportPie
+      val data = DashboardService.reportPie
+      val bubble = Bubble("Indicadores de Programa",Json.toJson(data))
 
-      var node = new JSONObject()
-
-      node.put("showInLegend", false)
-      node.put("titulo", "Programas por División")
-      var puntos = new JSONArray()
-      for (p <- pie) {
-        var punto = new JSONObject()
-        punto.put("dId", p.dId)
-        punto.put("name", p.division + " (" + p.cantidad + ")")
-        punto.put("y", p.cantidad)
-        punto.put("porcentaje", p.porcentaje)
-
-        puntos.put(punto)
-      }
-
-      node.put("data", puntos)
-
-      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        Ok(Json.toJson(bubble)).withSession(
+        "username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
@@ -519,8 +507,8 @@ object Dashboard extends Controller {
       for (p <- pie) {
         var punto = new JSONObject()
         punto.put("dId", p.dId)
-        punto.put("name", p.division + " (" + p.cantidad + ")")
-        punto.put("y", p.cantidad)
+        punto.put("name", p.name + " (" + p.y + ")")
+        punto.put("y", p.y)
         punto.put("porcentaje", p.porcentaje)
 
         puntos.put(punto)
@@ -534,30 +522,23 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-  
+  /*
+      val data = DashboardService.reportBubble(uid)
+    val bubble = Bubble("Indicadores de Programa",Json.toJson(data))
+
+      Ok(Json.toJson(bubble)).withSession(
+ */
   def pieDepa = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val pie = DashboardService.reportDepa
+      val data = DashboardService.reportDepa
+      val bubble = Bubble("Indicadores de Departamento",Json.toJson(data))
 
-      var node = new JSONObject()
-
-      node.put("showInLegend", false)
-      node.put("titulo", "Programas por Departamento")
-      var puntos = new JSONArray()
-      for (p <- pie) {
-        var punto = new JSONObject()
-        punto.put("dId", p.dId)
-        punto.put("name", p.division + " (" + p.cantidad + ")")
-        punto.put("y", p.cantidad)
-        //punto.put("porcentaje", p.porcentaje)
-
-        puntos.put(punto)
-      }
-
-      node.put("data", puntos)
-
-      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(Json.toJson(bubble)).withSession(
+        "username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
@@ -577,8 +558,8 @@ object Dashboard extends Controller {
       for (p <- pie) {
         var punto = new JSONObject()
         punto.put("dId", p.dId)
-        punto.put("name", p.division + " (" + p.cantidad + ")")
-        punto.put("y", p.cantidad)
+        punto.put("name", p.name + " (" + p.y + ")")
+        punto.put("y", p.y)
         punto.put("porcentaje", p.porcentaje)
 
         puntos.put(punto)
@@ -606,8 +587,8 @@ object Dashboard extends Controller {
       for (p <- pie) {
         var punto = new JSONObject()
         punto.put("dId", p.dId)
-        punto.put("name", p.division + " (" + p.cantidad + ")")
-        punto.put("y", p.cantidad)
+        punto.put("name", p.name + " (" + p.y + ")")
+        punto.put("y", p.y)
         punto.put("porcentaje", p.porcentaje)
 
         puntos.put(punto)
@@ -635,8 +616,8 @@ object Dashboard extends Controller {
       for (p <- pie) {
         var punto = new JSONObject()
         punto.put("dId", p.dId)
-        punto.put("name", p.division + " (" + p.cantidad + ")")
-        punto.put("y", p.cantidad)
+        punto.put("name", p.name + " (" + p.y + ")")
+        punto.put("y", p.y)
         punto.put("porcentaje", p.porcentaje)
 
         puntos.put(punto)
