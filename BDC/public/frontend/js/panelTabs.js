@@ -556,7 +556,7 @@ $(document).ready(function(){
      	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
      	}
 
-    var chart,chartPie
+    var chart,chartPie_1,chartPie_2
     $("#tabs").tabs({
         active: 0,
         create: function (event, ui) {
@@ -623,7 +623,7 @@ $(document).ready(function(){
 				  success: function(data) {
 				    optionsPie.chart.renderTo = 'container_bubble_division'
 					optionsPie.series.push(data)
-					chartPie = new Highcharts.Chart(optionsPie)
+					chartPie_1 = new Highcharts.Chart(optionsPie)
 				  }
 			});
             $.ajax({
@@ -632,7 +632,7 @@ $(document).ready(function(){
 				  success: function(data) {
 				    optionsPie.chart.renderTo = 'container_bubble_depa'
 					optionsPie.series.push(data)
-					chartPie = new Highcharts.Chart(optionsPie)
+					chartPie_2 = new Highcharts.Chart(optionsPie)
 				  }
 			});
        	}, activate: function( event, ui ) {
@@ -640,6 +640,7 @@ $(document).ready(function(){
         if(ui.newTab.index()===0){
             $("#jqGrid").jqGrid('setCaption', name).jqGrid('setGridParam', { url: '/report/H/0/0', page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
         } else if(ui.newTab.index()===1) {
+
             $.ajax({
 				  url: '/burbujas',
 				  type: 'GET',
@@ -656,7 +657,7 @@ $(document).ready(function(){
 				  url: '/pie',
 				  type: 'GET',
 				  success: function(data) {
-                          chartPie.update({
+                          chartPie_1.update({
                               title: {
                                 text:  data.name
                               },
@@ -668,7 +669,7 @@ $(document).ready(function(){
 				  url: '/pieDepa',
 				  type: 'GET',
 				  success: function(data) {
-                          chartPie.update({
+                          chartPie_2.update({
                               title: {
                                 text:  data.name
                               },
@@ -676,6 +677,7 @@ $(document).ready(function(){
                           });
 				  }
     		});
+
         }
       }
     });
