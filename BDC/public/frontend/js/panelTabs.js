@@ -78,7 +78,6 @@ $(document).ready(function(){
     var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + '/program-details/';
 	var optionsChart = {
 		    chart: {
-		        renderTo: 'container_bubble',
 	            type: 'scatter',
 	            zoomType: 'xy'
 		    },title: {
@@ -110,22 +109,91 @@ $(document).ready(function(){
 	        },series: []
 	};
 
-	var optionsPie ={
+	var optionsPie_1 ={
 			chart: {
-				//renderTo: 'container_bubble_division',
 	            plotBackgroundColor: null,
 	            plotBorderWidth: null,
 	            plotShadow: false,
 	            type: 'pie'
 	        },title: {
-	            text: 'Programas por División'
 	        },tooltip: {
 	        	formatter: function() {
 	        	    return '<b>'+ this.point.name + ' (' +  this.point.y + ')</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
 	        	}
 	        },plotOptions: {
 	            pie: {
-	                size: "70%",
+	                //size: "70%",
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   //grillaPrograma(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name} ({point.y})</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []
+	};
+
+
+	var optionsPie_2 ={
+			chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + ' (' +  this.point.y + ')</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}
+	        },plotOptions: {
+	            pie: {
+	                //size: "70%",
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   //grillaPrograma(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name} ({point.y})</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []
+	};
+
+	var optionsPie_3 ={
+			chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + ' (' +  this.point.y + ')</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}
+	        },plotOptions: {
+	            pie: {
+	                //size: "70%",
 	                allowPointSelect: true,
 	                cursor: 'pointer',
 	                point: {
@@ -496,8 +564,6 @@ $(document).ready(function(){
 			            viewrecords: false,
               	        pager: "#" + childGridPagerID
               	    });
-
-              	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
               	}
 
 	function showTaskSubGrid(parentRowID, parentRowKey) {
@@ -526,7 +592,6 @@ $(document).ready(function(){
      	        pager: "#" + childGridPagerID
      	    });
 
-     	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
      	}
 
 	function showSubTaskSubGrid(parentRowID, parentRowKey) {
@@ -553,10 +618,8 @@ $(document).ready(function(){
      	        pager: "#" + childGridPagerID
      	    });
 
-     	    //$("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
      	}
 
-    var chart,chartPie_1,chartPie_2
     $("#tabs").tabs({
         active: 0,
         create: function (event, ui) {
@@ -609,80 +672,59 @@ $(document).ready(function(){
 
                 }
             });
-            $.ajax({
-				  url: '/burbujas',
-				  type: 'GET',
-				  success: function(data) {
-					optionsChart.series.push(data);
-					chart = new Highcharts.Chart(optionsChart);
-				  }
-			});
-            $.ajax({
-				  url: '/pie',
-				  type: 'GET',
-				  success: function(data) {
-				    optionsPie.chart.renderTo = 'container_bubble_division'
-					optionsPie.series.push(data)
-					chartPie_1 = new Highcharts.Chart(optionsPie)
-				  }
-			});
-            $.ajax({
-				  url: '/pieDepa',
-				  type: 'GET',
-				  success: function(data) {
-				    optionsPie.chart.renderTo = 'container_bubble_depa'
-					optionsPie.series.push(data)
-					chartPie_2 = new Highcharts.Chart(optionsPie)
-				  }
-			});
+
        	}, activate: function( event, ui ) {
 
         if(ui.newTab.index()===0){
             $("#jqGrid").jqGrid('setCaption', name).jqGrid('setGridParam', { url: '/report/H/0/0', page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
         } else if(ui.newTab.index()===1) {
-
             $.ajax({
 				  url: '/burbujas',
 				  type: 'GET',
 				  success: function(data) {
-                          chart.update({
-                              title: {
-                              text:  data.name
-                              },
-                              series:data
-                          });
+				    optionsChart.chart.renderTo = 'container_c1'
+				    optionsChart.title.text = data.name
+					optionsChart.series.push(data);
+					var chart = new Highcharts.Chart(optionsChart);
 				  }
-    		});
+			});
             $.ajax({
 				  url: '/pie',
 				  type: 'GET',
-				  success: function(data) {
-                          chartPie_1.update({
-                              title: {
-                                text:  data.name
-                              },
-                              series:data
-                          });
+				  success: function(data1) {
+				    optionsPie_1.chart.renderTo = 'container_c2'
+				    optionsPie_1.title.text = data1.name
+					optionsPie_1.series.push(data1)
+					var chartPie_1 = new Highcharts.Chart(optionsPie_1)
+					chartPie_1.setSize(400, 300);
 				  }
-    		});
+			});
             $.ajax({
 				  url: '/pieDepa',
 				  type: 'GET',
-				  success: function(data) {
-                          chartPie_2.update({
-                              title: {
-                                text:  data.name
-                              },
-                              series:data
-                          });
+				  success: function(data2) {
+				    optionsPie_2.chart.renderTo = 'container_c3'
+				    optionsPie_2.title.text = data2.name
+					optionsPie_2.series.push(data2)
+					var chartPie_2 = new Highcharts.Chart(optionsPie_2)
+					chartPie_2.setSize(400, 300);
 				  }
-    		});
+			});
+            $.ajax({
+				  url: '/pieSubType',
+				  type: 'GET',
+				  success: function(data3) {
+				    optionsPie_3.chart.renderTo = 'container_c4'
+				    optionsPie_3.title.text = data3.name
+					optionsPie_3.series.push(data3)
+					var chartPie_3 = new Highcharts.Chart(optionsPie_3)
+					chartPie_3.setSize(400, 300);
+				  }
+			});
 
         }
       }
     });
 
-    //$("#container_bubble_depa").highcharts().setSize(850, 350, false);
-    //$("#container_bubble_division").highcharts().setSize(850, 350, false);
 });
 

@@ -219,7 +219,28 @@ object DashboardService {
 
   def reportSubType(): Seq[Report.Pie] = {
 
-    var sqlString = "EXEC art.porcentaje_programas_for_subtype"
+    //var sqlString = "EXEC art.porcentaje_programas_for_subtype"
+    val sqlString =
+      """
+        |;WITH T
+        |AS
+        |(
+        |	SELECT COUNT(*) AS Total
+        |	FROM art_program_management where tipo='PROGRAMA'
+        |),
+        |G AS
+        |(
+        |	SELECT b.id dId, a.foco name, COUNT(*) AS y
+        |	FROM art_program_management a join art_program_sub_type b on a.foco = b.sub_type
+        |	where a.tipo='PROGRAMA' AND a.foco is not null and b.is_deleted = 0
+        |	GROUP BY a.foco,b.id
+        |)
+        |SELECT
+        |	G.dId, G.name, G.y,
+        |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+        |FROM
+        |	G CROSS JOIN T
+      """.stripMargin
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
