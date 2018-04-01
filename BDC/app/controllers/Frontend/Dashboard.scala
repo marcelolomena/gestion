@@ -447,12 +447,19 @@ object Dashboard extends Controller {
 
   }
 
-  def burbujas = Action { implicit request =>
+  def burbujas(id: Int) = Action { implicit request =>
     request.session.get("username").map { user =>
 
       val uid = request.session.get("uId").get
-      val data = DashboardService.reportBubble(uid)
-      val bubble = Bubble("Indicadores de Programa",Json.toJson(data))
+      var data : Seq[Report.Point] = null
+      var bubble: Bubble = null
+
+      id match {
+          case 1 =>
+            data = DashboardService.reportBubble(uid)
+            bubble = Bubble("Indicadores de Programa",Json.toJson(data))
+      }
+
 
         Ok(Json.toJson(bubble)).withSession(
         "username" -> request.session.get("username").get,
@@ -477,11 +484,35 @@ object Dashboard extends Controller {
     }
   }
 
-  def pie = Action { implicit request =>
+  def pie(id: Int) = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val data = DashboardService.reportPie
-      val bubble = Bubble("Programas por División",Json.toJson(data))
+      var data : Seq[Report.Pie] = null
+      var bubble: Bubble = null
+
+      id match {
+        case 1 =>
+          data = DashboardService.reportPie(id)
+          bubble = Bubble("Programas por División", Json.toJson(data))
+        case 2 =>
+          data = DashboardService.reportDepa
+          bubble = Bubble("Indicadores de Departamento",Json.toJson(data))
+        case 3 =>
+          data = DashboardService.reportType
+          bubble = Bubble("Programas por Tipo",Json.toJson(data))
+        case 4 =>
+          data = DashboardService.reportSubType
+          bubble = Bubble("Foco estrategico",Json.toJson(data))
+        case 5 =>
+          data = DashboardService.reportStatus
+          bubble = Bubble("Programas por Estado",Json.toJson(data))
+        case 6 =>
+          data = DashboardService.reportPie(id)
+          bubble = Bubble("Programas por Gerencia", Json.toJson(data))
+        case 7 =>
+          data = DashboardService.reportPie(id)
+          bubble = Bubble("Programas por Departamento", Json.toJson(data))
+      }
 
         Ok(Json.toJson(bubble)).withSession(
         "username" -> request.session.get("username").get,
@@ -493,36 +524,25 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-
+/*
   def pieType = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val pie = DashboardService.reportType
+      val data = DashboardService.reportType
+      val bubble = Bubble("Programas por Tipo",Json.toJson(data))
 
-      var node = new JSONObject()
-
-      node.put("showInLegend", false)
-      node.put("titulo", "Programas por Tipo")
-      var puntos = new JSONArray()
-      for (p <- pie) {
-        var punto = new JSONObject()
-        punto.put("dId", p.dId)
-        punto.put("name", p.name + " (" + p.y + ")")
-        punto.put("y", p.y)
-        punto.put("porcentaje", p.porcentaje)
-
-        puntos.put(punto)
-      }
-
-      node.put("data", puntos)
-
-      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(Json.toJson(bubble)).withSession(
+        "username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-
+*/
+/*
   def pieDepa = Action { implicit request =>
     request.session.get("username").map { user =>
 
@@ -539,7 +559,8 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }  
-
+*/
+  /*
   def pieSubType = Action { implicit request =>
     request.session.get("username").map { user =>
 
@@ -556,36 +577,25 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-  
+  */
+  /*
   def pieState = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val pie = DashboardService.reportStatus()
+      val data = DashboardService.reportStatus
+      val bubble = Bubble("Programas por Estado",Json.toJson(data))
 
-      var node = new JSONObject()
-
-      node.put("showInLegend", false)
-      node.put("titulo", "Programas por Estado")
-      var puntos = new JSONArray()
-      for (p <- pie) {
-        var punto = new JSONObject()
-        punto.put("dId", p.dId)
-        punto.put("name", p.name + " (" + p.y + ")")
-        punto.put("y", p.y)
-        punto.put("porcentaje", p.porcentaje)
-
-        puntos.put(punto)
-      }
-
-      node.put("data", puntos)
-
-      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(Json.toJson(bubble)).withSession(
+        "username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-  
+  */
     def pieSap = Action { implicit request =>
     request.session.get("username").map { user =>
 

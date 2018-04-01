@@ -92,7 +92,8 @@ $(document).ready(function(){
 	        },xAxis: {
 	            title: {
 	                text: 'CPI'
-	            },plotLines:[{value:0.75,color: 'red',width:2},{value:0.95,color: 'red',width:2}]
+	            },
+	            plotLines:[{value:0.75,color: 'red',width:2},{value:0.95,color: 'red',width:2}]
 	        },plotOptions: {
 	            series: {
 	                cursor: 'pointer',
@@ -106,7 +107,17 @@ $(document).ready(function(){
 	            title: {
 	                text: 'SPI'
 	            },plotLines:[{value:0.7,color: 'red',width:2},{value:0.9,color: 'red',width:2}]
-	        },series: []
+	        },legend: {
+                     enabled: false,
+                     layout: 'vertical',
+                     align: 'left',
+                     verticalAlign: 'top',
+                     x: 100,
+                     y: 70,
+                     floating: true,
+                     backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                     borderWidth: 1
+            },series: []
 	};
 
 	var optionsPie_1 ={
@@ -215,6 +226,145 @@ $(document).ready(function(){
 	        },series: []
 	};
 
+	var optionsPie_4 ={
+			chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + ' (' +  this.point.y + ')</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}
+	        },plotOptions: {
+	            pie: {
+	                //size: "70%",
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   //grillaPrograma(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name} ({point.y})</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []
+	};
+
+	var optionsPie_5 ={
+			chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + ' (' +  this.point.y + ')</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}
+	        },plotOptions: {
+	            pie: {
+	                //size: "70%",
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   //grillaPrograma(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name} ({point.y})</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []
+	};
+
+	var optionsPie_6 ={
+			chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + ' (' +  this.point.y + ')</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}
+	        },plotOptions: {
+	            pie: {
+	                //size: "70%",
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   //grillaPrograma(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name} ({point.y})</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []
+	};
+
+	var optionsPie_7 ={
+			chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + ' (' +  this.point.y + ')</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}
+	        },plotOptions: {
+	            pie: {
+	                //size: "70%",
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   //grillaPrograma(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name} ({point.y})</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []
+	};
 
 	var modelProgramGrid=[
             { label: 'id', name: 'program_id', key: true, hidden:true },
@@ -224,7 +374,7 @@ $(document).ready(function(){
                       sopt: ["eq","ge","le"]
                   }
             },
-            { label: 'Estado', name: 'work_flow_status', jsonmap: 'work_flow_status', width: 150,
+            { label: 'Estado', name: 'work_flow_status', jsonmap: 'work_flow_status', width: 200,
                 		    stype: 'select',
                 			searchoptions: {
                 				dataUrl: '/list-all-workflowstatus',
@@ -679,7 +829,7 @@ $(document).ready(function(){
             $("#jqGrid").jqGrid('setCaption', name).jqGrid('setGridParam', { url: '/report/H/0/0', page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
         } else if(ui.newTab.index()===1) {
             $.ajax({
-				  url: '/burbujas',
+				  url: '/burbujas/1',
 				  type: 'GET',
 				  success: function(data) {
 				    optionsChart.chart.renderTo = 'container_c1'
@@ -689,36 +839,83 @@ $(document).ready(function(){
 				  }
 			});
             $.ajax({
-				  url: '/pie',
+				  url: '/pie/1',
 				  type: 'GET',
-				  success: function(data1) {
+				  success: function(data) {
 				    optionsPie_1.chart.renderTo = 'container_c2'
-				    optionsPie_1.title.text = data1.name
-					optionsPie_1.series.push(data1)
+				    optionsPie_1.title.text = data.name
+					optionsPie_1.series.push(data)
 					var chartPie_1 = new Highcharts.Chart(optionsPie_1)
-					chartPie_1.setSize(400, 300);
+					//chartPie_1.setSize(400, 300);
 				  }
 			});
             $.ajax({
-				  url: '/pieDepa',
+				  url: '/pie/2',
 				  type: 'GET',
-				  success: function(data2) {
+				  success: function(data) {
 				    optionsPie_2.chart.renderTo = 'container_c3'
-				    optionsPie_2.title.text = data2.name
-					optionsPie_2.series.push(data2)
+				    optionsPie_2.title.text = data.name
+					optionsPie_2.series.push(data)
 					var chartPie_2 = new Highcharts.Chart(optionsPie_2)
-					chartPie_2.setSize(400, 300);
+					//chartPie_2.setSize(400, 300);
 				  }
 			});
             $.ajax({
-				  url: '/pieSubType',
+				  url: '/pie/3',
 				  type: 'GET',
-				  success: function(data3) {
+				  success: function(data) {
 				    optionsPie_3.chart.renderTo = 'container_c4'
-				    optionsPie_3.title.text = data3.name
-					optionsPie_3.series.push(data3)
+				    optionsPie_3.title.text = data.name
+					optionsPie_3.series.push(data)
 					var chartPie_3 = new Highcharts.Chart(optionsPie_3)
-					chartPie_3.setSize(400, 300);
+					//chartPie_3.setSize(400, 300);
+				  }
+			});
+
+            $.ajax({
+				  url: '/pie/4',
+				  type: 'GET',
+				  success: function(data) {
+				    optionsPie_4.chart.renderTo = 'container_c5'
+				    optionsPie_4.title.text = data.name
+					optionsPie_4.series.push(data)
+					var chartPie_4 = new Highcharts.Chart(optionsPie_4)
+					//chartPie_2.setSize(400, 300);
+				  }
+			});
+            $.ajax({
+				  url: '/pie/5',
+				  type: 'GET',
+				  success: function(data) {
+				    optionsPie_5.chart.renderTo = 'container_c6'
+				    optionsPie_5.title.text = data.name
+					optionsPie_5.series.push(data)
+					var chartPie_5 = new Highcharts.Chart(optionsPie_5)
+					//chartPie_3.setSize(400, 300);
+				  }
+			});
+
+            $.ajax({
+				  url: '/pie/6',
+				  type: 'GET',
+				  success: function(data) {
+				    optionsPie_6.chart.renderTo = 'container_c7'
+				    optionsPie_6.title.text = data.name
+					optionsPie_6.series.push(data)
+					var chartPie_6 = new Highcharts.Chart(optionsPie_6)
+					//chartPie_1.setSize(400, 300);
+				  }
+			});
+
+            $.ajax({
+				  url: '/pie/7',
+				  type: 'GET',
+				  success: function(data) {
+				    optionsPie_7.chart.renderTo = 'container_c8'
+				    optionsPie_7.title.text = data.name
+					optionsPie_7.series.push(data)
+					var chartPie_7 = new Highcharts.Chart(optionsPie_7)
+					//chartPie_1.setSize(400, 300);
 				  }
 			});
 

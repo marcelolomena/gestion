@@ -151,9 +151,84 @@ object DashboardService {
     }
   }
 
-  def reportPie(): Seq[Report.Pie] = {
+  def reportPie(id: Int): Seq[Report.Pie] = {
 
-    //var sqlString = "EXEC art.porcentaje_programas_for_division"
+    var sqlString = ""
+
+    id match {
+      case 1 =>
+        sqlString =
+          """
+            |;WITH T
+            |AS
+            |(
+            |	SELECT COUNT(*) AS Total
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |),
+            |G AS
+            |(
+            |	SELECT ISNULL(cod_div,0) dId, ISNULL(name_div,'N/A') name, COUNT(*) AS y
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |	GROUP BY name_div,cod_div
+            |)
+            |SELECT
+            |	G.dId, G.name, G.y,
+            |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+            |FROM
+            |	G CROSS JOIN T
+          """.stripMargin
+      case 6 =>
+        sqlString =
+          """
+            |;WITH T
+            |AS
+            |(
+            |	SELECT COUNT(*) AS Total
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |),
+            |G AS
+            |(
+            |	SELECT ISNULL(cod_man,0) dId, ISNULL(name_man,'N/A') name, COUNT(*) AS y
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |	GROUP BY name_man,cod_man
+            |)
+            |SELECT
+            |	G.dId, G.name, G.y,
+            |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+            |FROM
+            |	G CROSS JOIN T
+          """.stripMargin
+      case 7 =>
+        sqlString =
+          """
+            |;WITH T
+            |AS
+            |(
+            |	SELECT COUNT(*) AS Total
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |),
+            |G AS
+            |(
+            |	SELECT ISNULL(cod_dep,0) dId, ISNULL(name_dep,'N/A') name, COUNT(*) AS y
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |	GROUP BY name_dep,cod_dep
+            |)
+            |SELECT
+            |	G.dId, G.name, G.y,
+            |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+            |FROM
+            |	G CROSS JOIN T
+          """.stripMargin
+    }
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
+    }
+  }
+
+  def reportType(): Seq[Report.Pie] = {
+
+    //var sqlString = "EXEC art.porcentaje_programas_for_type"
     val sqlString =
       """
         |;WITH T
@@ -164,25 +239,18 @@ object DashboardService {
         |),
         |G AS
         |(
-        |	SELECT ISNULL(cod_div,0) dId, ISNULL(name_div,'N/A') name, COUNT(*) AS y
-        |	FROM art_program_management where tipo='PROGRAMA'
-        |	GROUP BY name_div,cod_div
+        |	SELECT b.id dId, a.program_type name, COUNT(*) AS y
+        |	FROM art_program_management a join art_program_type b on a.program_type = b.program_type
+        |	where a.tipo='PROGRAMA' AND a.program_type is not null and b.is_deleted = 0
+        |	GROUP BY a.program_type,b.id
         |)
         |SELECT
         |	G.dId, G.name, G.y,
         |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
         |FROM
         |	G CROSS JOIN T
+        |
       """.stripMargin
-
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
-    }
-  }
-
-  def reportType(): Seq[Report.Pie] = {
-
-    var sqlString = "EXEC art.porcentaje_programas_for_type"
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
@@ -248,7 +316,28 @@ object DashboardService {
 
   def reportStatus(): Seq[Report.Pie] = {
 
-    var sqlString = "EXEC art.porcentaje_programas_for_status"
+    //var sqlString = "EXEC art.porcentaje_programas_for_status"
+    val sqlString =
+      """
+        |;WITH T
+        |AS
+        |(
+        |	SELECT COUNT(*) AS Total
+        |	FROM art_program_management where tipo='PROGRAMA'
+        |),
+        |G AS
+        |(
+        |	SELECT b.id dId, a.work_flow_status name, COUNT(*) AS y
+        |	FROM art_program_management a join art_program_workflow_status b on a.work_flow_status = b.workflow_status
+        |	where a.tipo='PROGRAMA' AND a.work_flow_status is not null
+        |	GROUP BY a.work_flow_status,b.id
+        |)
+        |SELECT
+        |	G.dId, G.name, G.y,
+        |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+        |FROM
+        |	G CROSS JOIN T
+      """.stripMargin
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
