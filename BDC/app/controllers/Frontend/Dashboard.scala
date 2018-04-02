@@ -495,8 +495,8 @@ object Dashboard extends Controller {
           data = DashboardService.reportPie(id)
           bubble = Bubble("Programas por División", Json.toJson(data))
         case 2 =>
-          data = DashboardService.reportDepa
-          bubble = Bubble("Indicadores de Departamento",Json.toJson(data))
+          data = DashboardService.reportImpact
+          bubble = Bubble("Impacto por Programas",Json.toJson(data))
         case 3 =>
           data = DashboardService.reportType
           bubble = Bubble("Programas por Tipo",Json.toJson(data))

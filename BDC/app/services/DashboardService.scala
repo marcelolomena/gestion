@@ -249,14 +249,13 @@ object DashboardService {
         |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
         |FROM
         |	G CROSS JOIN T
-        |
       """.stripMargin
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportDepa(): Seq[Report.Pie] = {
+  def reportImpact(): Seq[Report.Pie] = {
 
     //var sqlString = "EXEC art.porcentaje_programas_for_departamento"
     val sqlString =
@@ -269,9 +268,10 @@ object DashboardService {
         |),
         |G AS
         |(
-        |	SELECT ISNULL(cod_dep,0) dId, ISNULL(name_dep,'N/A') name, COUNT(*) AS y
-        |	FROM art_program_management where tipo='PROGRAMA'
-        |	GROUP BY name_dep,cod_dep
+        |	SELECT b.id dId, a.impact_type name, COUNT(*) AS y
+        |	FROM art_program_management a join art_program_impact_type b on a.impact_type = b.impact_type
+        |	where a.tipo='PROGRAMA' AND a.impact_type is not null
+        |	GROUP BY a.impact_type,b.id
         |)
         |SELECT
         |	G.dId, G.name, G.y,
