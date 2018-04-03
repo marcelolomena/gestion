@@ -198,6 +198,7 @@ object ARTForms {
       "program_type" -> number,
       "program_sub_type" -> optional(number),
       "program_name" -> text.verifying(Messages.get(langObj, "error.program.program_name.MinMax"), program_name => program_name.trim().length() >= 4 && program_name.trim().length() <= 140),
+      "user_responsible" -> text.verifying(Messages.get(langObj, "error.program.user_responsible.MinMax"), user_responsible => user_responsible.trim().length() > 0),
       "program_code" -> of[Long], //.verifying(Messages.get(langObj, "error.program.program_code.MinMax"), program_code => (program_code >= 0 && program_code < 99999999)).verifying(Messages.get(langObj, "error.program.program_code.unique"), program_code => ProgramService.findPrgoramCode(program_code)),
       "internal_number" -> optional(number),
       "pLevel" -> optional(text),
@@ -220,11 +221,11 @@ object ARTForms {
         "release_date" -> play.api.data.Forms.date("dd-MM-yyyy"))(ProgramDate.apply)(ProgramDate.unapply),
       "is_active" -> optional(number),
       "planned_hours" -> optional(of[Long]),
-      "internal_state" -> text,
-      "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, program_code,internal_number,pLevel,
+      "internal_state" -> text.verifying(Messages.get(langObj, "error.program.internal_state.MinMax"), internal_state => internal_state.trim().length() > 0),
+      "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, user_responsible,program_code,internal_number,pLevel,
         program_description, work_flow_status, demand_manager,clasificacion,program_manager,
 		program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
-        Programs(None, program_type, program_sub_type, program_name, program_code, internal_number, pLevel,
+        Programs(None, program_type, program_sub_type, program_name,user_responsible, program_code, internal_number, pLevel,
           program_description, work_flow_status, demand_manager,
           clasificacion, 
 		  program_manager, 
@@ -233,7 +234,7 @@ object ARTForms {
 		  is_active, 
 		  planned_hours, 
 		  internal_state, 
-		  estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name, program.program_code,
+		  estimated_cost))((program: Programs) => Some((program.program_type, program.program_sub_type, program.program_name,program.user_responsible, program.program_code,
       program.internal_number,program.pLevel,
         program.program_description, program.work_flow_status, program.demand_manager, program.clasificacion, program.program_manager,
         program.program_details, program.program_dates, program.is_active, program.planned_hours, program.internal_state, program.estimated_cost))))
@@ -246,6 +247,7 @@ object ARTForms {
       "program_type" -> number,
       "program_sub_type" -> optional(number),
       "program_name" -> text.verifying(Messages.get(langObj, "error.program.program_name.MinMax"), program_name => program_name.trim().length() >= 4 && program_name.trim().length() <= 140),
+      "user_responsible" -> text.verifying(Messages.get(langObj, "error.program.user_responsible.MinMax"), user_responsible => user_responsible.trim().length() > 0),
       "program_code" -> of[Long], //.verifying(Messages.get(langObj, "error.program.program_code.MinMax"), program_code => (program_code >= 0 && program_code < 99999999)), //
       "internal_number" -> optional(number),
       "pLevel" -> optional(text),
@@ -268,17 +270,17 @@ object ARTForms {
         "release_date" -> play.api.data.Forms.date("dd-MM-yyyy"))(ProgramDate.apply)(ProgramDate.unapply),
       "is_active" -> optional(number),
       "planned_hours" -> optional(of[Long]),
-      "internal_state" -> text,
-      "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, program_code, internal_number, pLevel,
+      "internal_state" -> text.verifying(Messages.get(langObj, "error.program.internal_state.MinMax"), internal_state => internal_state.trim().length() > 0),
+      "estimated_cost" -> optional(of[Long]))((program_type, program_sub_type, program_name, user_responsible,program_code, internal_number, pLevel,
         program_description, work_flow_status, demand_manager, clasificacion, program_manager, program_details, program_dates, is_active, planned_hours, internal_state, estimated_cost) =>
-        Programs(None, program_type, program_sub_type, program_name, program_code, internal_number, pLevel,
+        Programs(None, program_type, program_sub_type, program_name,user_responsible, program_code, internal_number, pLevel,
           program_description, work_flow_status, demand_manager, clasificacion,
           program_manager, program_details, 
 		  program_dates, is_active,
 		  planned_hours, internal_state, 
 		  estimated_cost))((program: Programs) => 
 		  Some((program.program_type, program.program_sub_type, 
-		  program.program_name, program.program_code, program.internal_number, program.pLevel,
+		  program.program_name, program.user_responsible,program.program_code, program.internal_number, program.pLevel,
         program.program_description, program.work_flow_status, program.demand_manager, program.clasificacion, program.program_manager,
         program.program_details, program.program_dates, program.is_active, program.planned_hours, program.internal_state, program.estimated_cost))))
 

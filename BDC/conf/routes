@@ -604,7 +604,7 @@ GET    /photo/:file                                                             
 
 #Pert
 GET    /generatePert                                                                                  controllers.Frontend.Pert.generatePert
-GET    /getPanel                                                                                      controllers.Frontend.Dashboard.getPanel
+#GET    /getPanel                                                                                      controllers.Frontend.Dashboard.getPanel
 GET    /getNewPanel                                                                                   controllers.Frontend.Dashboard.getPanel2
 GET    /getATM                                                                                        controllers.Frontend.Dashboard.getATM
 GET    /getExcel/:did                                                                                 controllers.Frontend.Dashboard.getExcel(did:String)

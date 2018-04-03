@@ -46,7 +46,7 @@ object UserService extends CustomColumns {
     DB.withConnection { implicit connection =>
       //val sqlString = """SELECT CAST(periodo AS VARCHAR) + '|' + CAST(numRut AS VARCHAR) value,RTRIM(nombre) + ' ' + apellido label FROM RecursosHumanos WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND (nombre like '%""" + pattern + """%' OR apellido like '%""" + pattern + """%') ORDER BY nombre,apellido"""
       val spat = pattern.replace(" ","%")
-      play.Logger.debug("trompa : " + spat)
+      //play.Logger.debug("trompa : " + spat)
 
       val sqlString = "SELECT CAST(periodo AS VARCHAR) + '|' + CAST(numRut AS VARCHAR) value, " +
       "RTRIM(nombre) + ' ' + apellido label,glosaDivision categorias FROM RecursosHumanos " +
@@ -58,6 +58,19 @@ object UserService extends CustomColumns {
     }
   }
 
+
+
+  def validateHumanResources(pattern: String): Int = {
+    DB.withConnection { implicit connection =>
+
+      val sqlString =
+        """
+          | SELECT count(*) cantidad FROM RecursosHumanos WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND CONCAT(RTRIM(nombre),' ', apellido) = {pattern}
+        """.stripMargin
+
+      SQL(sqlString).on('pattern->pattern).as(scalar[Int].single)
+    }
+  }
 
   def findAllUserList(): Seq[Users] = {
 		DB.withConnection { implicit connection =>
@@ -1463,7 +1476,7 @@ object UserService extends CustomColumns {
   }
 
   def findProgramListForUser(employee_id: String): Seq[ProgramMaster] = {
-    val sqlString = "select * from art_program where is_active=1 AND program_id IN(select DISTINCT(program) from art_project_master where is_active=1 AND pId IN ( select DISTINCT(pId) from art_task where is_active=1 AND tId IN ( select DISTINCT(task_id) from art_sub_task where (completion_percentage<100 OR completion_percentage Is Null) AND is_active=1 AND sub_task_id IN (select DISTINCT(sub_task_id) from art_sub_task_allocation where user_id =" + employee_id + " AND is_deleted = 1) )))"
+    val sqlString = "select *,'' user_responsible from art_program where is_active=1 AND program_id IN(select DISTINCT(program) from art_project_master where is_active=1 AND pId IN ( select DISTINCT(pId) from art_task where is_active=1 AND tId IN ( select DISTINCT(task_id) from art_sub_task where (completion_percentage<100 OR completion_percentage Is Null) AND is_active=1 AND sub_task_id IN (select DISTINCT(sub_task_id) from art_sub_task_allocation where user_id =" + employee_id + " AND is_deleted = 1) )))"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(ProgramMaster.pMaster *)
     }

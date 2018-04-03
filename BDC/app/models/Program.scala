@@ -31,6 +31,7 @@ program_id: Option[Int],
 program_type: Int, 
 program_sub_type: Option[Int],
   program_name: String,
+user_responsible: String,
   program_code: Long,
   internal_number:Option[Int],
   pLevel: Option[String],
@@ -97,6 +98,7 @@ object ProgramMaster extends CustomColumns {
       get[Int]("program_type") ~
       get[Option[Int]]("program_sub_type") ~
       get[String]("program_name") ~
+      get[String]("user_responsible") ~
       get[Long]("program_code") ~
       get[Option[Int]]("internal_number") ~
       get[Option[String]]("pLevel") ~
@@ -115,6 +117,7 @@ object ProgramMaster extends CustomColumns {
                 program_type ~
                 program_sub_type ~
                 program_name ~
+                user_responsible ~
                 program_code ~
                 internal_number ~
                 pLevel ~
@@ -134,6 +137,7 @@ object ProgramMaster extends CustomColumns {
               program_type,
               program_sub_type,
               program_name,
+              user_responsible,
               program_code,
               internal_number,
               pLevel,
@@ -403,6 +407,7 @@ case class Programs(
                      program_type: Int,
                      program_sub_type: Option[Int],
                      program_name: String,
+                     user_responsible: String,
                      program_code: Long,
                      internal_number: Option[Int],
                      pLevel: Option[String],

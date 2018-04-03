@@ -491,9 +491,11 @@ object Program extends Controller {
     }
 
     val old_form = ARTForms.programForm.bindFromRequest
+    //Logger.debug(old_form.toString())
     old_form.fold(
       errors => {
         val theForm = ProgramService.validateForm(old_form, "")
+        //Logger.debug(theForm.toString)
         BadRequest(views.html.frontend.program.addNewProgram(
           theForm,
           program_code,
@@ -997,6 +999,7 @@ object Program extends Controller {
         program.get.program_type,
         program.get.program_sub_type,
         program.get.program_name,
+        program.get.user_responsible,
         program.get.program_code,
         program.get.internal_number,
         program.get.pLevel,

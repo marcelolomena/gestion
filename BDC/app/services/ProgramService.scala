@@ -4,7 +4,7 @@ import play.api.db.DB
 import anorm.SqlParser._
 import models._
 import anorm._
-//import com.typesafe.plugin._
+import play.Logger
 import org.apache.commons.lang3.StringUtils
 import java.util.Date
 import SqlParser.scalar
@@ -19,6 +19,8 @@ import org.json.JSONObject
 import play.api.libs.json
 import play.i18n._
 import play.mvc._
+import java.util.List
+import java.util.ArrayList
 
 import controllers.Frontend.Program
 
@@ -315,15 +317,31 @@ object ProgramService extends CustomColumns {
     var chkdate = false
     var chkreldate = false
     var chkinidate = false
-
     val today = new Date();
     val format = new java.text.SimpleDateFormat("dd-MM-yyyy")
+
+    if (!form("user_responsible").value.isEmpty && !StringUtils.isEmpty(form("user_responsible").value.get)) {
+      val user_responsible = form("user_responsible").value.get
+      val cantid=UserService.validateHumanResources(user_responsible)
+      if (cantid == 0 ) {
+        Logger.debug("el numeritooooooooo : " + cantid)
+        new_form = form.withError("user_responsible", "Este usuario no existe en Recursos Humanos")
+      }
+    }
+
+    if (form("clasificacion").value.isEmpty || StringUtils.isEmpty(form("clasificacion").value.get)) {
+      new_form = form.withError("clasificacion", Messages.get(langObj, "error.program.clasificacion.MinMax"))
+    }
+
 
     if (!form("program_dates.release_date").value.isEmpty && !StringUtils.isEmpty(form("program_dates.release_date").value.get)) {
       release_date = form("program_dates.release_date").value.get
       date4 = format.parse(release_date).getTime()
       chkreldate = true
     }
+
+
+
     if (!form("program_dates.closure_date").value.isEmpty && !StringUtils.isEmpty(form("program_dates.closure_date").value.get)) {
       clouser_date = form("program_dates.closure_date").value.get
       date1 = format.parse(clouser_date).getTime()
@@ -378,6 +396,8 @@ object ProgramService extends CustomColumns {
     if (date1 < date4 && date1 != 0) {
       new_form = form.withError("program_dates.closure_date", "Fecha de cierre no debe ser menor que la fecha de lanzamiento.")
     }
+
+
     if (new_form != null) {
       new_form
     } else {
@@ -430,9 +450,23 @@ object ProgramService extends CustomColumns {
   }
 
   def programas_sin_avance_en_tareas(uid: String): Seq[ProgramMaster] = {
-    var sqlString = "EXEC art.sin_avance {uid}"
+    var sqlString =
+      """
+        |select distinct a.*,'' user_responsible from art_program a
+        |	join (select * from art_project_master) b on b.program=a.program_id
+        |	join (select * from art_task) c on c.pId=b.pId
+        |	join (select * from art_sub_task) d on d.task_id=c.tId
+        |	join (select sum(hours) hours,sub_task_id from art_timesheet group by sub_task_id) e on e.sub_task_id=d.sub_task_id
+        |	where
+        |	a.is_active=1 and
+        |	b.is_active=1 and
+        |	c.is_active=1 and
+        |	d.is_deleted=1 and
+        |	c.owner={uid} and
+        |	(d.completion_percentage is null OR d.completion_percentage=0)
+      """.stripMargin
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('uid -> uid.toInt).executeQuery() as (ProgramMaster.pMaster *)
+      SQL(sqlString).on('uid -> uid.toInt).as(ProgramMaster.pMaster *)
     }
   }
 
@@ -440,7 +474,7 @@ object ProgramService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val result = SQL(
         """
-          select  * from art_program where program_id = {pId}
+          select  *,'' user_responsible from art_program where program_id = {pId}
           """).on(
           'pId -> pId).as(ProgramMaster.pMaster.singleOpt)
       result
@@ -540,7 +574,7 @@ object ProgramService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val result = SQL(
         """
-          select * from art_program where devison = {divison} AND is_active=1
+          select *,'' user_responsible from art_program where devison = {divison} AND is_active=1
           """).on(
           'divison -> divison).as(ProgramMaster.pMaster.*)
       result
@@ -562,7 +596,7 @@ object ProgramService extends CustomColumns {
     //println("select * from art_program where program_code=" + program_code)
     DB.withConnection { implicit connection =>
       val result = SQL(
-        "select * from art_program where program_code=" + program_code + "").on(
+        "select *,'' user_responsible from art_program where program_code=" + program_code + "").on(
           'program_code -> program_code).as(ProgramMaster.pMaster *)
       if (result.size > 0) {
         isNotPresent = false

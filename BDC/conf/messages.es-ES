@@ -1,11 +1,14 @@
-error.program.program_name.MinMax=Tipo de programa debe tener 4 min y max 140 caracteres.
+error.program.program_name.MinMax=Nombre de programa debe tener 4 min y max 140 caracteres.
+error.program.user_responsible.MinMax=Debe tener un usuario responsable.
+error.program.clasificacion.MinMax=Debe ingresar una clasificación.
 error.program.program_code.MinMax=Código del programa debe ser un número positivo.
 error.program.projects_numbers.numericValidation=Número de proyecto debe ser numérico.
 error.program.program_code.unique=Por favor, introduzca el código de programa único.
 error.program.pLevel.MinMax=Nivel de proyecto debe tener min 4 y un máximo de 20 caracteres.
 error.program.program_description.MinMax=Descripción del proyecto debe tener mínimo 4 y máximo 500 caracteres.
 error.program.work_flow_status.MinMax=Estado de flujo de trabajo debe tener mínimo 4 y máximo de 20 caracteres.
-error.program.internal_state.MinMax=Interior del Estado debe tener mínimo 4 y máximo de 20 caracteres.
+error.program.internal_state.MinMax=Debe ingresar un tamaño.
+
 error.program.demand_management_status.MinMax=Demanda Gestión Estado debería tener 4 min y max 20 caracteres.
 error.program.program_details_management_representative.MinMax=Representante de la Dirección debe tener mínimo 2 y máximo 20 caracteres.
 error.program.program_details_department_representative.MinMax=Departamento Representante debe tener mínimo 2 y máximo 20 caracteres.
