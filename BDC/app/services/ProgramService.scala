@@ -533,14 +533,6 @@ object ProgramService extends CustomColumns {
 
   }
 
-  def findAllUserJunior(user_id: Int, page: Int): Seq[ProgramMaster] = {
-    var sqlString = "EXEC art.list_member_junior {uid},{page}"
-
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).on('uid -> user_id, 'page -> page).executeQuery() as (ProgramMaster.pMaster *)
-    }
-  }
-
   def countAllUserJunior(user_id: Int): Int = {
     var sqlString = "EXEC art.count_program_member {uid}"
 
@@ -548,6 +540,78 @@ object ProgramService extends CustomColumns {
       SQL(sqlString).on('uid -> user_id).executeQuery() as (scalar[Int].single)
     }
   }
+
+  def findAllUserJunior(user_id: Int, page: Int, rol: String, uid: Int): Seq[ProgramMaster] = {
+
+
+    var sqlString = "EXEC art.list_member_junior {uid},{page}"
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('uid -> user_id, 'page -> page).executeQuery() as (ProgramMaster.pMaster *)
+    }
+
+    /*
+    val offset = 10 * (page - 1)
+    var sqlString = ""
+
+    if(rol.equals("su") || rol.equals("cl")){
+      sqlString =
+        """
+          |SELECT *,'' user_responsible FROM art_program WHERE is_active = 1
+          |AND (art_program.work_flow_status=1 OR art_program.work_flow_status=3
+          |OR art_program.work_flow_status=4 OR art_program.work_flow_status=5)
+          |ORDER BY program_id OFFSET {offset} ROWS FETCH NEXT 10 ROWS ONLY
+        """.stripMargin
+      DB.withConnection { implicit connection =>
+        SQL(sqlString).on('uid -> user_id, 'offset -> offset).as(ProgramMaster.pMaster *)
+      }
+
+    } else {
+
+      HumanService.ifHeExists(uid) match {
+
+        case 0 =>
+          sqlString =
+            """
+              |SELECT *,'' user_responsible FROM art_program WHERE is_active = 1 AND
+              |program_id IN (SELECT program_id FROM art_program_members WHERE is_active = 0 AND
+              |member_id=@uid)
+              |AND (work_flow_status=1 OR work_flow_status=3 OR work_flow_status=4 OR work_flow_status=5)
+              |ORDER BY art_program.program_id OFFSET {offset} ROWS FETCH NEXT 10 ROWS ONLY
+            """.stripMargin
+        case 1 =>
+          sqlString =
+            """
+              |WITH tblSubalternos AS
+              |(
+              |  SELECT IIF(LEN(emailTrab)>1,LEFT(emailTrab, CHARINDEX('@', emailTrab) -1 ),null) uname,numRut FROM RecursosHumanos
+              |  WHERE emailTrab = @email and periodo=(select MAX(periodo) from RecursosHumanos)
+              |  UNION ALL
+              |SELECT IIF(LEN(emailTrab)>1,LEFT(emailTrab, CHARINDEX('@', emailTrab) -1 ),null) uname,RecursosHumanos.numRut
+              |FROM RecursosHumanos JOIN tblSubalternos ON RecursosHumanos.rutJefe = tblSubalternos.numRut where periodo=(select MAX(periodo) from RecursosHumanos)
+              |)
+              |SELECT DISTINCT art_program.*,'' user_responsible
+              |  FROM tblSubalternos,art_user,art_program_members,art_program
+              |WHERE tblSubalternos.uname=art_user.uname AND
+              | art_user.uid=art_program_members.member_id AND
+              | art_program.program_id=art_program_members.program_id AND
+              |	 art_program.is_active=1 AND (art_program.work_flow_status=1 OR art_program.work_flow_status=3 OR
+              |  art_program.work_flow_status=4 OR art_program.work_flow_status=5)
+              |  AND art_program_members.is_active = 0 ORDER BY art_program.program_id OFFSET {offset} ROWS FETCH NEXT 10 ROWS ONLY
+              |OPTION(MAXRECURSION 32767)
+            """.stripMargin
+      }
+
+      DB.withConnection { implicit connection =>
+        SQL(sqlString).on('uid -> user_id, 'offset -> offset).as(ProgramMaster.pMaster *)
+
+
+    }
+    */
+
+  }
+
+
 
   def findProjectManagerPrograms(uId: String): Seq[ProgramMaster] = {
     var sqlString = ""

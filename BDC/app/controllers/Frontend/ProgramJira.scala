@@ -112,7 +112,9 @@ object ProgramJira extends Controller {
         start = ((programnumber - 1) * 10) + 1;
         end = start + 9;
       }
-      val programs = ProgramService.findAllUserJunior(user_id.toInt, programnumber.toInt)
+      var user_role = request.session.get("user_profile").get
+      Logger.debug("user_role : " + user_role)
+      val programs = ProgramService.findAllUserJunior(user_id.toInt, programnumber.toInt, user_role, user_id)
       val programCount = ProgramService.countAllUserJunior(user_id.toInt)
       
       val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)

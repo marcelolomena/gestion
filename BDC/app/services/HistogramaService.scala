@@ -11,8 +11,8 @@ import play.i18n._
 import play.mvc._
 
 /**
- * @author marcelo
- */
+  * @author marcelo
+  */
 object HistogramaService {
 
   def listadoHistograma(uid: String,mes: String, ano: String): Seq[Histograma] = {
@@ -26,13 +26,13 @@ object HistogramaService {
         'ano ->ano).executeQuery().as(Histograma.histograma *)
     }
   }
-  
+
   def listadoSubTareas(uid: String, plan_start_date: String, plan_end_date: String, SortColumnName: String, SortOrderBy: String, NumberOfRows: Int, StartRow: Int): Seq[XRecurso] = {
-//println("uid:" + uid)
-//println("SortColumnName:" + SortColumnName)
-//println("SortOrderBy:" + SortOrderBy)
-//println("NumberOfRows:" + NumberOfRows)
-//println("StartRow:" + StartRow)
+    //println("uid:" + uid)
+    //println("SortColumnName:" + SortColumnName)
+    //println("SortOrderBy:" + SortOrderBy)
+    //println("NumberOfRows:" + NumberOfRows)
+    //println("StartRow:" + StartRow)
 
 
     DB.withConnection { implicit connection =>
@@ -45,6 +45,6 @@ object HistogramaService {
         'NumberOfRows -> NumberOfRows,
         'StartRow -> StartRow).executeQuery().as(XRecurso.xrecurso *)
     }
-  }  
-  
+  }
+
 }

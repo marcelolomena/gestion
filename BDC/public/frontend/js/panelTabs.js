@@ -366,6 +366,36 @@ $(document).ready(function(){
 	        },series: []
 	};
 
+	//change the # in the url when switching tabs
+    //makes refresh work!
+    $("#tabs li a").click(function(){
+    	window.location.hash = $(this).attr("href");
+    });
+
+    //make back/forward buttons work on tabs
+    if($("#tabs").length > 0) {
+    	//prevent scrolling when clicking on a tab
+    	var doit = true;
+    	$("#tabs a").click(function(){
+    		doit = false;
+    	});
+
+    	$(window).bind('popstate', function() {
+    		//must be asynchronous, because usually popstate happens before the a click event.
+    		setTimeout(function(){
+    			if(doit) {
+    				//only happens if back/forward buttons are used
+    				if(window.location.hash.length > 0) {
+    					$("a[href="+window.location.hash+"]").click();
+    				} else {
+    					$("#tabs li:first a").click();
+    				}
+    			}
+    			doit = true;
+    		}, 0);
+    	});
+    }
+
 	var modelProgramGrid=[
             { label: 'id', name: 'program_id', key: true, hidden:true },
             { label: 'Programa', name: 'program_name', width: 350,formatter: returnProgramLink },
