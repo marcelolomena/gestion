@@ -10,19 +10,33 @@ var css = require('../../utils/css');
 
 exports.action = function (req, res) {
 	var action = req.body.oper;
+	var hoy = "" + new Date().toISOString();
 	if (action != "del") {
-		if (req.body.fecha != "")
-			fecha = req.body.fecha.split("-").reverse().join("-")
+		fechaesperada = req.body.fechaestadoesperada.split("-").reverse().join("-")
+		if (req.body.fecha != "") {
+			// fecha = req.body.fecha.split("-").reverse().join("-")
+			fecha = hoy;
+		}
+		if (req.body.estado == 'Abierto') {
+			fecha = null
+		}
 	}
+
+
+
+
 
 	switch (action) {
 		case "add":
 			models.estadosolicitud.create({
 				idsolicitudcotizacion: req.body.idsolicitudcotizacion,
-				idcolor: req.body.idcolor,
 				comentario: req.body.comentario,
 				fecha: fecha,
-				borrado: 1
+				borrado: 1,
+				fechaestadoesperada: fechaesperada,
+				colorestado: 'bAl Dia',
+				estado: req.body.estado,
+				idclasificacionsolicitud: req.body.idclasificacionsolicitud
 			}).then(function (estadosolicitud) {
 
 				bitacora.registrar(
@@ -35,39 +49,40 @@ exports.action = function (req, res) {
 					models.estadosolicitud,
 					function (err, data) {
 						if (!err) {
-							return res.json({ id: estadosolicitud.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
+							return res.json({
+								id: estadosolicitud.id,
+								parent: req.body.idsolicitudcotizacion,
+								message: 'Inicio carga',
+								success: true
+							});
 						} else {
 							logger.error(err)
-							return res.json({ id: estadosolicitud.id, parent: req.body.idsolicitudcotizacion, message: 'Falla', success: false });
+							return res.json({
+								id: estadosolicitud.id,
+								parent: req.body.idsolicitudcotizacion,
+								message: 'Falla',
+								success: false
+							});
 						}
 					});
-				models.estadosolicitud.belongsTo(models.valores, { foreignKey: 'idcolor' });
-				models.estadosolicitud.findAll({
-					order: 'fecha DESC',
-					where: {
-						idsolicitudcotizacion: req.body.idsolicitudcotizacion
-					},
-					include: [
-						{ model: models.valores }
-					]
-				}).then(function (estadosolicitud) {
-
-					//logger.debug('--------------> EL COLOR ES: ' + estadosolicitud[0].valore.nombre)
 					models.solicitudcotizacion.update({
-						colorestado: estadosolicitud[0].valore.nombre,
+						idclasificacionsolicitud: req.body.idclasificacionsolicitud
 					}, {
-							where: {
-								id: req.body.idsolicitudcotizacion
-							}
-						})
+						where: {
+							id: req.body.idsolicitudcotizacion
+						}
+					}),
+					models.sequelize.query('EXECUTE sic.estadoSICSIN;');
 
 
-				});
 
 
 			}).catch(function (err) {
 				logger.error(err.message)
-				res.json({ message: err.message, success: false });
+				res.json({
+					message: err.message,
+					success: false
+				});
 			});
 			break;
 		case "edit":
@@ -84,46 +99,64 @@ exports.action = function (req, res) {
 					if (!err) {
 						models.estadosolicitud.update({
 							idtipodocumento: req.body.idtipodocumento,
-							idcolor: req.body.idcolor,
+							// idcolor: req.body.idcolor,
 							comentario: req.body.comentario,
-							//fecha: fecha,
+							fecha: fecha,
+							fechaestadoesperada: fechaesperada,
+							// colorestado: 'bAl Dia',
+							estado: req.body.estado,
+							idclasificacionsolicitud: req.body.idclasificacionsolicitud
 						}, {
-								where: {
-									id: req.body.id
-								}
-							}).then(function (estadosolicitud) {
-								models.estadosolicitud.belongsTo(models.valores, { foreignKey: 'idcolor' });
-								models.estadosolicitud.findAll({
-									order: 'fecha DESC',
-									where: {
-										idsolicitudcotizacion: req.body.idsolicitudcotizacion
-									},
-									include: [
-										{ model: models.valores }
-									]
-								}).then(function (estadosolicitud) {
+							where: {
+								id: req.body.id
+							}
+						}).then(function (estadosolicitud) {
+							// models.estadosolicitud.belongsTo(models.valores, {
+							// 	foreignKey: 'idcolor'
+							// });
+							// models.estadosolicitud.findAll({
+							// 	order: 'fecha DESC',
+							// 	where: {
+							// 		idsolicitudcotizacion: req.body.idsolicitudcotizacion
+							// 	},
+							// 	include: [{
+							// 		model: models.valores
+							// 	}]
+							// }).then(function (estadosolicitud) {
 
-									logger.debug('--------------> EL COLOR ES: ' + estadosolicitud[0].valore.nombre)
-									models.solicitudcotizacion.update({
-										colorestado: estadosolicitud[0].valore.nombre,
-									}, {
-											where: {
-												id: req.body.idsolicitudcotizacion
-											}
-										})
+							// 	logger.debug('--------------> EL COLOR ES: ' + estadosolicitud[0].valore.nombre)
+							// 	models.solicitudcotizacion.update({
+							// 		colorestado: estadosolicitud[0].valore.nombre,
+							// 	}, {
+							// 		where: {
+							// 			id: req.body.idsolicitudcotizacion
+							// 		}
+							// 	})
 
 
-								});
+							// });
+							models.sequelize.query('EXECUTE sic.estadoSICSIN;');
 
 
-								res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
-							}).catch(function (err) {
-								logger.error(err)
-								res.json({ message: err.message, success: false });
+							res.json({
+								id: req.body.id,
+								parent: req.body.idsolicitudcotizacion,
+								message: 'Inicio carga',
+								success: true
 							});
+						}).catch(function (err) {
+							logger.error(err)
+							res.json({
+								message: err.message,
+								success: false
+							});
+						});
 					} else {
 						logger.error(err)
-						return res.json({ message: err.message, success: false });
+						return res.json({
+							message: err.message,
+							success: false
+						});
 					}
 				});
 
@@ -153,46 +186,61 @@ exports.action = function (req, res) {
 								}
 							}).then(function (rowDeleted) {
 
-								models.estadosolicitud.belongsTo(models.valores, { foreignKey: 'idcolor' });
-								models.estadosolicitud.findAll({
-									order: 'fecha DESC',
-									where: {
-										idsolicitudcotizacion: req.body.idsolicitudcotizacion
-									},
-									include: [
-										{ model: models.valores }
-									]
-								}).then(function (estadosolicitud) {
+								// models.estadosolicitud.belongsTo(models.valores, {
+								// 	foreignKey: 'idcolor'
+								// });
+								// models.estadosolicitud.findAll({
+								// 	order: 'fecha DESC',
+								// 	where: {
+								// 		idsolicitudcotizacion: req.body.idsolicitudcotizacion
+								// 	},
+								// 	include: [{
+								// 		model: models.valores
+								// 	}]
+								// }).then(function (estadosolicitud) {
 
-									var nuevocolor = "Rojo"
-									if (estadosolicitud[0] != undefined) {
-										logger.debug('--------------> EL COLOR ES: ' + estadosolicitud[0].valore.nombre)
-										nuevocolor = estadosolicitud[0].valore.nombre
-									}
-									models.solicitudcotizacion.update({
-										colorestado: nuevocolor
-									}, {
-											where: {
-												id: req.body.idsolicitudcotizacion
-											}
-										})
+								// 	var nuevocolor = "Rojo"
+								// 	if (estadosolicitud[0] != undefined) {
+								// 		logger.debug('--------------> EL COLOR ES: ' + estadosolicitud[0].valore.nombre)
+								// 		nuevocolor = estadosolicitud[0].valore.nombre
+								// 	}
+								// 	models.solicitudcotizacion.update({
+								// 		colorestado: nuevocolor
+								// 	}, {
+								// 		where: {
+								// 			id: req.body.idsolicitudcotizacion
+								// 		}
+								// 	})
 
 
+								// });
+								models.sequelize.query('EXECUTE sic.estadoSICSIN;');
+								return res.json({
+									message: '',
+									success: true
 								});
-								return res.json({ message: '', success: true });
 							}).catch(function (err) {
 								logger.error(err)
-								res.json({ message: err.message, success: false });
+								res.json({
+									message: err.message,
+									success: false
+								});
 							});
 						} else {
 							logger.error(err)
-							return res.json({ message: err.message, success: false });
+							return res.json({
+								message: err.message,
+								success: false
+							});
 						}
 					});
 
 			}).catch(function (err) {
 				logger.error(err);
-				res.json({ message: err.message, success: false });
+				res.json({
+					message: err.message,
+					success: false
+				});
 			});
 
 			break;
@@ -223,8 +271,15 @@ exports.list = function (req, res) {
 
 	utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
 		if (data) {
-			models.estadosolicitud.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
-			models.estadosolicitud.belongsTo(models.valores, { foreignKey: 'idcolor' });
+			models.estadosolicitud.belongsTo(models.solicitudcotizacion, {
+				foreignKey: 'idsolicitudcotizacion'
+			});
+			// models.estadosolicitud.belongsTo(models.valores, { foreignKey: 'idcolor' , as: 'color'});
+			// models.estadosolicitud.belongsTo(models.valores, { foreignKey: 'idclasificacionsolicitud'})
+			models.estadosolicitud.belongsTo(models.valores, {
+				as: 'clasificacion',
+				foreignKey: 'idclasificacionsolicitud'
+			});
 			models.estadosolicitud.count({
 				where: data
 			}).then(function (records) {
@@ -236,13 +291,22 @@ exports.list = function (req, res) {
 					order: orden,
 					include: [{
 						model: models.solicitudcotizacion
-					}, { model: models.valores }
-					]
+					}, {
+						model: models.valores,
+						as: 'clasificacion'
+					}]
 				}).then(function (estadosolicitud) {
-					return res.json({ records: records, total: total, page: page, rows: estadosolicitud });
+					return res.json({
+						records: records,
+						total: total,
+						page: page,
+						rows: estadosolicitud
+					});
 				}).catch(function (err) {
 					logger.error(err);
-					res.json({ error_code: 1 });
+					res.json({
+						error_code: 1
+					});
 				});
 			})
 		}
@@ -255,7 +319,9 @@ exports.download = function (req, res) {
 	// var idgrup = req.params.gid;
 	return models.solicitudcotizacion.findOne({
 		attributes: ['id', 'descripcion', 'numerorfp'],
-		where: { id: idsolicitud }
+		where: {
+			id: idsolicitud
+		}
 	}).then(function (solicitudcotizacion) {
 
 		var result = `
@@ -370,7 +436,42 @@ exports.download = function (req, res) {
 		logger.error(err.message);
 		res.status(500).send(err.message);
 	});
+}
 
-
-
+exports.estadoCerrado = function (req, res) {
+	var idsolic = req.params.id;
+	sequelize.query(
+		`
+		SELECT TOP(1) estado
+		FROM sic.estadosolicitud
+		WHERE idsolicitudcotizacion = :idsolic 
+		ORDER BY id DESC `, {
+			replacements: {
+				idsolic: idsolic
+			},
+			type: sequelize.QueryTypes.SELECT
+		}
+	).then(function (valores) {
+		if(valores.length!= 0){
+			if (valores[0].estado == 'Cerrado') {
+				return res.json({
+					validado: 1
+				})
+			} else {
+				return res.json({
+					validado: 0
+				})
+			}
+		}else{
+			return res.json({
+				validado: 1
+			})
+		}
+		
+	}).catch(function (err) {
+		logger.error(err);
+		res.json({
+			error: 1
+		});
+	});
 }

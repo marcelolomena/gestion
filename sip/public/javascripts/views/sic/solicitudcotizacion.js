@@ -18,7 +18,8 @@ $(document).ready(function () {
 
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_idnegociador'>Negociador<span style='color:red'>*</span>{idnegociador}</div>";
-    t1 += "<div class='column-half' id='d_idclasificacionsolicitud'>Clasificación<span style='color:red'>*</span>{idclasificacionsolicitud}</div>";
+    // t1 += "<div class='column-half' id='d_idclasificacionsolicitud'>Clasificación<span style='color:red'>*</span>{idclasificacionsolicitud}</div>";
+    t1 += "<div class='column-half' id='d_fechaenviorfp'>Fecha de Solicitud{fechaenviorfp}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
@@ -38,7 +39,7 @@ $(document).ready(function () {
 
     t1 += "<div class='form-row'>";
     // // t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
-    t1 += "<div class='column-half' id='d_fechaenviorfp'>Fecha de Solicitud{fechaenviorfp}</div>";
+
     t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
@@ -56,38 +57,71 @@ $(document).ready(function () {
             {
                 label: 'Estado',
                 name: 'colorestado',
-                index: 'colorestado',
-                width: 60,
-                align: "left",
-                editable: true,
+                width: 80,
+                hidden: false,
                 search: false,
-                editoptions: {
-                    size: 10
-                },
+                editable: true,
+                align: 'right',
+                align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
-                    var color = rowObject.colorestado;
+                    var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                    var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                    var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
+                    var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
+                    if (rowObject.colorestado === 'aGris') {
+                        return gris;
+                    } else {
+                        if (rowObject.colorestado === 'Vencida') {
+                            return rojo;
+                        } else {
+                            if (rowObject.colorestado === 'Renovar') {
+                                return amarillo;
+                            } else {
+                                if (rowObject.colorestado === 'bAl Dia')
 
-                    if (color == 'Rojo') {
-                        color = 'red';
-                    } else if (color == 'Verde') {
-                        color = 'green';
-                    } else if (color == 'Amarillo') {
-                        color = 'yellow';
-                    } else if (color == 'Azul') {
-                        color = 'blue';
-                    } else if (color == 'indefinido') {
-                        color = 'gray';
+
+                                    return verde;
+                            }
+                        }
                     }
-
-
-                    return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
-
-
-
-
-
                 }
             },
+
+            // {
+            //     label: 'Estado',
+            //     name: 'colorestado',
+            //     index: 'colorestado',
+            //     width: 60,
+            //     align: "left",
+            //     editable: true,
+            //     search: false,
+            //     editoptions: {
+            //         size: 10
+            //     },
+            //     formatter: function (cellvalue, options, rowObject) {
+            //         var color = rowObject.colorestado;
+
+            //         if (color == 'Rojo') {
+            //             color = 'red';
+            //         } else if (color == 'Verde') {
+            //             color = 'green';
+            //         } else if (color == 'Amarillo') {
+            //             color = 'yellow';
+            //         } else if (color == 'Azul') {
+            //             color = 'blue';
+            //         } else if (color == 'indefinido') {
+            //             color = 'gray';
+            //         }
+
+
+            //         return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
+
+
+
+
+
+            //     }
+            // },
             {
                 label: 'Código Solicitud',
                 name: 'codigosolicitud',
@@ -133,6 +167,16 @@ $(document).ready(function () {
                 hidden: false
             },
             {
+                label: 'Etapa',
+                name: 'clasificacion',
+                jsonmap: "clasificacion.nombre",
+                width: 100,
+                align: 'center',
+                search: false,
+                editable: true,
+                hidden: false
+            },
+            {
                 label: 'Grupo',
                 name: 'grupo',
                 jsonmap: "grupo.nombre",
@@ -162,8 +206,18 @@ $(document).ready(function () {
             //     search: false
             // },
             {
-                label: 'Fecha Solicitud', name: 'fechaenviorfp', width: 120, align: 'center', search: true, editable: true, hidden: false,
-                formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+                label: 'Fecha Solicitud',
+                name: 'fechaenviorfp',
+                width: 120,
+                align: 'center',
+                search: true,
+                editable: true,
+                hidden: false,
+                formatter: 'date',
+                formatoptions: {
+                    srcformat: 'ISO8601Long',
+                    newformat: 'Y-m-d'
+                },
                 searchoptions: {
                     dataInit: function (el) {
                         $(el).datepicker({
@@ -180,10 +234,17 @@ $(document).ready(function () {
                     sopt: ["eq", "le", "ge"]
                 },
                 editoptions: {
-                    size: 10, maxlengh: 10,
+                    size: 10,
+                    maxlengh: 10,
                     dataInit: function (element) {
-                        $(element).mask("0000-00-00", { placeholder: "____-__-__" });
-                        $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                        $(element).mask("0000-00-00", {
+                            placeholder: "____-__-__"
+                        });
+                        $(element).datepicker({
+                            language: 'es',
+                            format: 'yyyy-mm-dd',
+                            autoclose: true
+                        })
                     }
                 }
             },
@@ -465,43 +526,33 @@ $(document).ready(function () {
                 hidden: false
 
             },
-            {
-                name: 'idclasificacionsolicitud',
-                search: false,
-                editable: true,
-                hidden: true,
-                edittype: "select",
-                editoptions: {
-                    dataUrl: '/sic/parametros/clasificacionsolicitud',
-                    buildSelect: function (response) {
-                        var rowKey = $grid.getGridParam("selrow");
-                        var rowData = $grid.getRowData(rowKey);
-                        var thissid = rowData.idclasificacionsolicitud;
-                        var data = JSON.parse(response);
-                        var s = "<select>";
-                        s += '<option value="0">--Escoger una Clasificación--</option>';
-                        $.each(data, function (i, item) {
+            // {
+            //     name: 'idclasificacionsolicitud',
+            //     search: false,
+            //     editable: true,
+            //     hidden: true,
+            //     edittype: "select",
+            //     editoptions: {
+            //         dataUrl: '/sic/parametros/clasificacionsolicitud',
+            //         buildSelect: function (response) {
+            //             var rowKey = $grid.getGridParam("selrow");
+            //             var rowData = $grid.getRowData(rowKey);
+            //             var thissid = rowData.idclasificacionsolicitud;
+            //             var data = JSON.parse(response);
+            //             var s = "<select>";
+            //             s += '<option value="0">--Escoger una Clasificación--</option>';
+            //             $.each(data, function (i, item) {
 
-                            if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                            } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                            }
-                        });
-                        return s + "</select>";
-                    }
-                }
-            },
-            {
-                label: 'Clasificación',
-                name: 'clasificacion',
-                jsonmap: "clasificacion.nombre",
-                width: 100,
-                align: 'center',
-                search: false,
-                editable: true,
-                hidden: false
-            },
+            //                 if (data[i].id == thissid) {
+            //                     s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+            //                 } else {
+            //                     s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+            //                 }
+            //             });
+            //             return s + "</select>";
+            //         }
+            //     }
+            // },
             {
                 label: 'Criticidad',
                 name: 'colornota',
@@ -697,7 +748,7 @@ $(document).ready(function () {
         autowidth: true,
         //width: 1500,
         sortname: 'colorestado',
-        sortorder: "asc",
+        sortorder: "desc",
         shrinkToFit: false,
         forceFit: true,
         viewrecords: true,
@@ -869,15 +920,13 @@ $(document).ready(function () {
                 return [false, "Descripción: Debe ingresar una descripción", ""];
             } else if (parseInt(postdata.idnegociador) == 0) {
                 return [false, "Negociador: Debe escoger un valor", ""];
-            } else  if (parseInt(postdata.idclasificacionsolicitud) == 0) {
-                return [false, "Clasificación: Debe escoger un valor", ""];
             } else if (postdata.codigosolicitud.trim().length == 0) {
                 return [false, "Código de Solicitud: Debe agregar un valor", ""];
             } else if (parseInt(postdata.idtipo) == 0) {
                 return [false, "Tipo: Debe escoger un valor", ""];
             } else if (parseInt(postdata.idgrupo) == 0) {
                 return [false, "Grupo: Debe escoger un valor", ""];
-            } else   {
+            } else {
                 return [true, "", ""]
             }
 

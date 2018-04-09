@@ -46,6 +46,20 @@ var sipLibrary = {
         jQuery(document.body).html(xht.responseText);
 
     },
+    radioElemEstadoSolici: function (value, options) {
+        var receivedradio = '<label class="radio-inline"><input type="radio" name="estado" value="Abierto"',
+            breakline = '/>Abierto</label>',
+            naradio = '<label class="radio-inline"><input type="radio" name="estado" value="Cerrado"',
+            endnaradio = '/>Cerrado</label>';
+
+        if (value === 'Abierto') {
+            return "<div style='margin-top:5px'>" + receivedradio + ' checked="checked"' + breakline + naradio + endnaradio + "</div>";
+        }
+        if (value === 'Cerrado') {
+            return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + ' checked="checked"' + endnaradio + "</div>";
+        }
+        return "<div style='margin-top:5px'>" + receivedradio + breakline + naradio + endnaradio + "</div>";
+    },
 
     radioElemReservaAutorizacion: function (value, options) {
         var receivedradio = '<label class="radio-inline"><input type="radio" name="estado" value="Autorizado"',

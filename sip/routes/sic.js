@@ -813,5 +813,8 @@ module.exports = function (passport) {
         return res.render('sic/triada', { user: req.user, data: req.session.passport.sidebar });
     });
 
+    router.route('/sic/estadoCerrado/:id')
+        .get(isAuthenticated, estadosolicitudController.estadoCerrado);
+
     return router;
 }

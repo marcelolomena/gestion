@@ -12,31 +12,63 @@ $(document).ready(function () {
             {
                 label: 'Estado',
                 name: 'colorestado',
-                index: 'colorestado',
-                width: 60,
-                align: "left",
-                editable: true,
+                width: 80,
+                hidden: false,
                 search: false,
-                editoptions: {
-                    size: 10
-                },
+                editable: true,
+                align: 'right',
+                align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
-                    var color = rowObject.colorestado;
+                    var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                    var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                    var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
+                    var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
+                    if (rowObject.colorestado === 'aGris') {
+                        return gris;
+                    } else {
+                        if (rowObject.colorestado === 'Vencida') {
+                            return rojo;
+                        } else {
+                            if (rowObject.colorestado === 'Renovar') {
+                                return amarillo;
+                            } else {
+                                if (rowObject.colorestado === 'bAl Dia')
 
-                    if (color == 'Rojo') {
-                        color = 'red';
-                    } else if (color == 'Verde') {
-                        color = 'green';
-                    } else if (color == 'Amarillo') {
-                        color = 'yellow';
-                    } else if (color == 'Azul') {
-                        color = 'blue';
-                    } else if (color == 'indefinido') {
-                        color = 'gray';
+
+                                    return verde;
+                            }
+                        }
                     }
-                    return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
                 }
             },
+            // {
+            //     label: 'Estado',
+            //     name: 'colorestado',
+            //     index: 'colorestado',
+            //     width: 60,
+            //     align: "left",
+            //     editable: true,
+            //     search: false,
+            //     editoptions: {
+            //         size: 10
+            //     },
+            //     formatter: function (cellvalue, options, rowObject) {
+            //         var color = rowObject.colorestado;
+
+            //         if (color == 'Rojo') {
+            //             color = 'red';
+            //         } else if (color == 'Verde') {
+            //             color = 'green';
+            //         } else if (color == 'Amarillo') {
+            //             color = 'yellow';
+            //         } else if (color == 'Azul') {
+            //             color = 'blue';
+            //         } else if (color == 'indefinido') {
+            //             color = 'gray';
+            //         }
+            //         return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
+            //     }
+            // },
             {
                 label: 'Código Solicitud',
                 name: 'codigosolicitud',
@@ -57,6 +89,16 @@ $(document).ready(function () {
                 align: 'center',
                 search: false,
                 editable: false,
+                hidden: false
+            },
+            {
+                label: 'Clasificación',
+                name: 'clasificacion',
+                jsonmap: "clasificacion.nombre",
+                width: 100,
+                align: 'center',
+                search: false,
+                editable: true,
                 hidden: false
             },
             {
@@ -388,16 +430,6 @@ $(document).ready(function () {
                 }
             },
             {
-                label: 'Clasificación',
-                name: 'clasificacion',
-                jsonmap: "clasificacion.nombre",
-                width: 100,
-                align: 'center',
-                search: false,
-                editable: true,
-                hidden: false
-            },
-            {
                 label: 'Criticidad',
                 name: 'colornota',
                 index: 'colornota',
@@ -594,7 +626,7 @@ $(document).ready(function () {
         height: 'auto',
         autowidth: true,
         //width: 1500,
-        sortname: 'numerorfp',
+        sortname: 'colorestado',
         sortorder: "desc",
         shrinkToFit: false,
         forceFit: true,

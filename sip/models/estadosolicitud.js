@@ -14,14 +14,14 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        idcolor: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-            references: {
-                model: 'valores',
-                key: 'id'
-            }
-        },
+        // idcolor: {
+        //     type: DataTypes.INTEGER,
+        //     allowNull: true,
+        //     references: {
+        //         model: 'valores',
+        //         key: 'id'
+        //     }
+        // },
         comentario: {
             type: DataTypes.STRING,
             allowNull: true
@@ -33,8 +33,30 @@ module.exports = function (sequelize, DataTypes) {
         borrado: {
             type: DataTypes.INTEGER,
             allowNull: true
+        },
+        fechaestadoesperada: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        colorestado: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        estado: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        idclasificacionsolicitud: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            references: {
+                model: 'valores',
+                key: 'id'
+            }
         }
     }, {
-            schema: 'sic', timestamps: false, tableName: 'estadosolicitud'
-        });
+        schema: 'sic',
+        timestamps: false,
+        tableName: 'estadosolicitud'
+    });
 };
