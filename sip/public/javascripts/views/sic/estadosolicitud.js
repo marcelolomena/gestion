@@ -120,7 +120,7 @@ var gridEstado = {
                     hidden: true,
                     edittype: "select",
                     editoptions: {
-                        dataUrl: '/sic/parametros/clasificacionsolicitud',
+                        dataUrl: '/sic/etapa',
                         buildSelect: function (response) {
                             var grid = $("#grid");
                             var rowKey = grid.getGridParam("selrow");
@@ -128,7 +128,7 @@ var gridEstado = {
                             var thissid = rowData.idclasificacionsolicitud;
                             var data = JSON.parse(response);
                             var s = "<select>";
-                            s += '<option value="0">--Escoger una Clasificación--</option>';
+                            s += '<option value="0">--Escoger una Etapa--</option>';
                             $.each(data, function (i, item) {
 
                                 if (data[i].id == thissid) {
@@ -388,7 +388,7 @@ var gridEstado = {
 
 
             viewrecords: true,
-            caption: "Estado",
+            caption: "Etapa",
             loadComplete: function (data) {
                 var thisId = $.jgrid.jqID(this.id);
                 $.get('/sic/getsession', function (data) {
@@ -415,7 +415,7 @@ var gridEstado = {
             del: true,
             search: false
         }, {
-            editCaption: "Modifica Estado",
+            editCaption: "Edita Etapa",
             closeAfterEdit: true,
             recreateForm: true,
             template: tmpl,
@@ -444,7 +444,7 @@ var gridEstado = {
                 }
             }
         }, {
-            addCaption: "Agrega Estado",
+            addCaption: "Agrega Etapa",
             closeAfterAdd: true,
             recreateForm: true,
             template: tmpl,

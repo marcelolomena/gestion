@@ -38,9 +38,13 @@ $(document).ready(function () {
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
-    // // t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
-
+    t1 += "<div class='column-half' id='d_estado'>Estado<span style='color:red'>*</span>{idestado}</div>";
     t1 += "</div>";
+
+    // t1 += "<div class='form-row'>";
+    // // // t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
+
+    // t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
     t1 += "<div> {sData} {cData}  </div>";
@@ -56,37 +60,14 @@ $(document).ready(function () {
             },
             {
                 label: 'Estado',
-                name: 'colorestado',
+                name: 'Estado',
+                jsonmap: "estado.nombre",
                 width: 80,
-                hidden: false,
-                search: false,
-                editable: true,
-                align: 'right',
                 align: 'center',
-                formatter: function (cellvalue, options, rowObject) {
-                    var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
-                    var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
-                    var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
-                    var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
-                    if (rowObject.colorestado === 'aGris') {
-                        return gris;
-                    } else {
-                        if (rowObject.colorestado === 'Vencida') {
-                            return rojo;
-                        } else {
-                            if (rowObject.colorestado === 'Renovar') {
-                                return amarillo;
-                            } else {
-                                if (rowObject.colorestado === 'bAl Dia')
-
-
-                                    return verde;
-                            }
-                        }
-                    }
-                }
+                search: false,
+                editable: false,
+                hidden: false
             },
-
             // {
             //     label: 'Estado',
             //     name: 'colorestado',
@@ -135,10 +116,7 @@ $(document).ready(function () {
                 editoptions: {
                     size: 10,
                     maxlengh: 10,
-                    dataInit: function (element) {
-                        $(element).mask("AAA-AA-00000.000", {
-                            placeholder: "___-__-_____.___"
-                        });
+                    dataInit: function (element) { placeholder: "__-__-____"
                     }
                 },
                 hidden: false
@@ -167,10 +145,40 @@ $(document).ready(function () {
                 hidden: false
             },
             {
+                label: '.',
+                width: 40,
+                hidden: false,
+                search: false,
+                editable: true,
+                align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                    var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                    var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
+                    var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
+                    if (rowObject.colorestado === 'aGris') {
+                        return gris;
+                    } else {
+                        if (rowObject.colorestado === 'Vencida') {
+                            return rojo;
+                        } else {
+                            if (rowObject.colorestado === 'Renovar') {
+                                return amarillo;
+                            } else {
+                                if (rowObject.colorestado === 'bAl Dia')
+
+
+                                    return verde;
+                            }
+                        }
+                    }
+                }
+            },
+            {
                 label: 'Etapa',
                 name: 'clasificacion',
                 jsonmap: "clasificacion.nombre",
-                width: 100,
+                width: 120,
                 align: 'center',
                 search: false,
                 editable: true,
@@ -733,6 +741,33 @@ $(document).ready(function () {
                         return s + "</select>";
                     }
                 }
+            },
+            {
+                name: 'idestado',
+                search: false,
+                editable: true,
+                hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/sic/valores/etapa',
+                    buildSelect: function (response) {
+                        var rowKey = $grid.getGridParam("selrow");
+                        var rowData = $grid.getRowData(rowKey);
+                        var thissid = rowData.idestado;
+                        var data = JSON.parse(response);
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger Estado--</option>';
+                        $.each(data, function (i, item) {
+
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    }
+                }
             }
         ];
     var previousRowId = 0;
@@ -812,6 +847,8 @@ $(document).ready(function () {
                 return [false, "CUI: Debe escoger un valor", ""];
             } else if (parseInt(postdata.idtecnico) == 0) {
                 return [false, "Técnico: Debe escoger un valor", ""];
+            } else if (parseInt(postdata.idestado) == 0) {
+                return [false, "Estado: Debe escoger un estado", ""];
             } else if (postdata.codigosolicitud.trim().length == 0) {
                 return [false, "Código de Solicitud: Debe agregar un valor", ""];
             } else {
@@ -924,6 +961,8 @@ $(document).ready(function () {
                 return [false, "Código de Solicitud: Debe agregar un valor", ""];
             } else if (parseInt(postdata.idtipo) == 0) {
                 return [false, "Tipo: Debe escoger un valor", ""];
+            } else if (parseInt(postdata.idestado) == 0) {
+                return [false, "Estado: Debe escoger una estado", ""];
             } else if (parseInt(postdata.idgrupo) == 0) {
                 return [false, "Grupo: Debe escoger un valor", ""];
             } else {
@@ -1015,7 +1054,7 @@ $(document).ready(function () {
 
     function showChildGrid(parentRowID, parentRowKey) {
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-        tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Estado</a></li>"
+        tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
         tabs += "<li><a href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
         tabs += "<li><a href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
         tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"

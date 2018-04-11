@@ -34,10 +34,17 @@ exports.list = function (req, res) {
           order: orden,
           where: data
         }).then(function (valores) {
-          res.json({ records: records, total: total, page: page, rows: valores });
+          res.json({
+            records: records,
+            total: total,
+            page: page,
+            rows: valores
+          });
         }).catch(function (err) {
           logger.error(err);
-          res.json({ error_code: 1 });
+          res.json({
+            error_code: 1
+          });
         });
       })
     }
@@ -48,8 +55,10 @@ exports.list = function (req, res) {
 exports.action = function (req, res) {
   var action = req.body.oper;
   var valor = req.body.valor;
- 
-  if (valor == '') {valor = null}
+
+  if (valor == '') {
+    valor = null
+  }
 
   switch (action) {
     case "add":
@@ -59,94 +68,120 @@ exports.action = function (req, res) {
         valor: valor,
         borrado: 1
       }).then(function (valores) {
-           bitacora.registrar(
-                    null,
-                    'valores',
-                    valores.id,
-                    'insert',
-                    req.session.passport.user,
-                    new Date(),
-                    models.valores,
-                    function (err, data) {
-                        if (data) {
-                            logger.debug("->>> " + data)
+        bitacora.registrar(
+          null,
+          'valores',
+          valores.id,
+          'insert',
+          req.session.passport.user,
+          new Date(),
+          models.valores,
+          function (err, data) {
+            if (data) {
+              logger.debug("->>> " + data)
 
-                        } else {
-                            logger.error("->>> " + err)
-                        }
-                    });
-        res.json({ id: valores.id, parent: null, message: 'Insertando', success: true });
+            } else {
+              logger.error("->>> " + err)
+            }
+          });
+        res.json({
+          id: valores.id,
+          parent: null,
+          message: 'Insertando',
+          success: true
+        });
       }).catch(function (err) {
         logger.error(err);
-        res.json({ error_code: 1 });
+        res.json({
+          error_code: 1
+        });
       });
 
       break;
     case "edit":
-             bitacora.registrar(
-                null,
-                'valores',
-                req.body.id,
-                'update',
-                req.session.passport.user,
-                new Date(),
-                models.valores, function (err, data) {
-                    if (data) {
-                        logger.debug("->>> " + data)
+      bitacora.registrar(
+        null,
+        'valores',
+        req.body.id,
+        'update',
+        req.session.passport.user,
+        new Date(),
+        models.valores,
+        function (err, data) {
+          if (data) {
+            logger.debug("->>> " + data)
 
-                         models.valores.update({
-                            tipo: req.body.tipo,
-                            nombre: req.body.nombre,
-                            valor: valor
-                         }, {
-                         where: {
-                                 id: req.body.id
-                                }
-                          }).then(function (valores) {
+            models.valores.update({
+              tipo: req.body.tipo,
+              nombre: req.body.nombre,
+              valor: valor
+            }, {
+              where: {
+                id: req.body.id
+              }
+            }).then(function (valores) {
 
-                                res.json({ id: req.body.id, parent: req.body.id, message: 'Actualizando', success: true });
-                            }).catch(function (err) {
-                                logger.error(err)
-                                res.json({ id: 0, message: err.message, success: false });
-                            });
-                    } else {
-                        logger.error("->>> " + err)
-                    }
+              res.json({
+                id: req.body.id,
+                parent: req.body.id,
+                message: 'Actualizando',
+                success: true
+              });
+            }).catch(function (err) {
+              logger.error(err)
+              res.json({
+                id: 0,
+                message: err.message,
+                success: false
+              });
+            });
+          } else {
+            logger.error("->>> " + err)
+          }
 
-                });
-     
-                break;
+        });
+
+      break;
     case "del":
-              bitacora.registrar(
-                null,
-                'valores',
-                req.body.id, 'delete',
-                req.session.passport.user,
-                new Date(),
-                models.valores, function (err, data) {
-                    if (data) {
-                        logger.debug("->>> " + data)
+      bitacora.registrar(
+        null,
+        'valores',
+        req.body.id, 'delete',
+        req.session.passport.user,
+        new Date(),
+        models.valores,
+        function (err, data) {
+          if (data) {
+            logger.debug("->>> " + data)
 
-                        models.valores.destroy({
-                        where: {
-                                id: req.body.id
-                               }
-                        }).then(function (rowDeleted) {
-                            // rowDeleted will return number of rows deleted
+            models.valores.destroy({
+              where: {
+                id: req.body.id
+              }
+            }).then(function (rowDeleted) {
+              // rowDeleted will return number of rows deleted
 
-                            if (rowDeleted === 1) {
+              if (rowDeleted === 1) {
 
-                                logger.debug('Deleted successfully');
-                            }
-                            res.json({ error: 0, glosa: '' ,success: true});
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({ id: 0, message: err.message, success: false });
-                        });
-                    } else {
-                        logger.error("->>> " + err)
-                    }
-                });
+                logger.debug('Deleted successfully');
+              }
+              res.json({
+                error: 0,
+                glosa: '',
+                success: true
+              });
+            }).catch(function (err) {
+              logger.error(err)
+              res.json({
+                id: 0,
+                message: err.message,
+                success: false
+              });
+            });
+          } else {
+            logger.error("->>> " + err)
+          }
+        });
 
       break;
 
@@ -158,6 +193,17 @@ exports.getTipos = function (req, res) {
 
   var sql = "select distinct tipo from sic.valores " +
     "where borrado=1 order by tipo";
+
+  sequelize.query(sql)
+    .spread(function (rows) {
+      res.json(rows);
+    });
+
+};
+
+exports.getEtapa = function (req, res) {
+
+  var sql = "select * from sic.valores where tipo = 'tipoetapa' order by valor asc";
 
   sequelize.query(sql)
     .spread(function (rows) {

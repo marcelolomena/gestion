@@ -11,36 +11,14 @@ $(document).ready(function () {
             },
             {
                 label: 'Estado',
-                name: 'colorestado',
+                name: 'Estado',
+                jsonmap: "estado.nombre",
                 width: 80,
-                hidden: false,
-                search: false,
-                editable: true,
-                align: 'right',
                 align: 'center',
-                formatter: function (cellvalue, options, rowObject) {
-                    var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
-                    var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
-                    var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
-                    var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
-                    if (rowObject.colorestado === 'aGris') {
-                        return gris;
-                    } else {
-                        if (rowObject.colorestado === 'Vencida') {
-                            return rojo;
-                        } else {
-                            if (rowObject.colorestado === 'Renovar') {
-                                return amarillo;
-                            } else {
-                                if (rowObject.colorestado === 'bAl Dia')
-
-
-                                    return verde;
-                            }
-                        }
-                    }
-                }
-            },
+                search: false,
+                editable: false,
+                hidden: false
+            },            
             // {
             //     label: 'Estado',
             //     name: 'colorestado',
@@ -92,7 +70,38 @@ $(document).ready(function () {
                 hidden: false
             },
             {
-                label: 'Clasificación',
+                label: '.',
+                width: 40,
+                hidden: false,
+                search: false,
+                editable: true,
+                align: 'right',
+                align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                    var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                    var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
+                    var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
+                    if (rowObject.colorestado === 'aGris') {
+                        return gris;
+                    } else {
+                        if (rowObject.colorestado === 'Vencida') {
+                            return rojo;
+                        } else {
+                            if (rowObject.colorestado === 'Renovar') {
+                                return amarillo;
+                            } else {
+                                if (rowObject.colorestado === 'bAl Dia')
+
+
+                                    return verde;
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                label: 'Etapa',
                 name: 'clasificacion',
                 jsonmap: "clasificacion.nombre",
                 width: 100,
@@ -729,7 +738,7 @@ $(document).ready(function () {
     function showChildGrid(parentRowID, parentRowKey) {
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
         //tabs += "<li><a href='/sic/proveedores/" + parentRowKey + "' data-target='#proveedores' id='proveedores_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Proveedores</a></li>"
-        tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Estado</a></li>"
+        tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
         tabs += "<li><a href='/sic/preguntas/" + parentRowKey + "' data-target='#preguntas' id='preguntas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas del Proveedor</a></li>"
         tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#respuestasrfp' id='respuestasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Respuestas del Proveedor</a></li>"
         tabs += "<li><a href='/sic/participantesproveedor/" + parentRowKey + "' data-target='#participantesproveedor' id='participantesproveedor_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Participantes Proveedor</a></li>"

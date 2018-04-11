@@ -37,7 +37,8 @@ exports.action = function (req, res) {
                         colorestado: 'Rojo',
                         borrado: 1,
                         idtipo: req.body.idtipo,
-                        idgrupo: req.body.idgrupo
+                        idgrupo: req.body.idgrupo,
+                        idestado: req.body.idestado
                     }).then(function (solicitudcotizacion) {
                         res.json({
                             error: 0,
@@ -71,7 +72,8 @@ exports.action = function (req, res) {
                         colorestado: 'Rojo',
                         borrado: 1,
                         idtipo: req.body.idtipo,
-                        idgrupo: req.body.idgrupo
+                        idgrupo: req.body.idgrupo,
+                        idestado: req.body.idestado
                     }).then(function (solicitudcotizacion) {
                         res.json({
                             error: 0,
@@ -102,7 +104,8 @@ exports.action = function (req, res) {
                     fononegociador: req.body.fononegociador,
                     direccionnegociador: req.body.direccionnegociador,
                     numerorfp: req.body.numerorfp,
-                    fechaenviorfp: req.body.fechaenviorfp
+                    fechaenviorfp: req.body.fechaenviorfp,
+                    idestado: req.body.idestado
                 }, {
                     where: {
                         id: req.body.id
@@ -240,6 +243,10 @@ exports.list = function (req, res) {
                 as: 'grupo',
                 foreignKey: 'idgrupo'
             });
+            models.solicitudcotizacion.belongsTo(models.valores, {
+                as: 'estado',
+                foreignKey: 'idestado'
+            });
             models.solicitudcotizacion.count({
                 where: filter_one,
                 include: [{
@@ -262,27 +269,31 @@ exports.list = function (req, res) {
                     order: orden,
                     where: filter_one,
                     include: [{
-                        model: models.estructuracui,
-                        where: filter_two
-                    }, {
-                        model: models.programa
-                    }, {
-                        model: models.user,
-                        as: 'tecnico',
-                        where: filter_three
-                    }, {
-                        model: models.valores,
-                        as: 'clasificacion'
-                    }, {
-                        model: models.user,
-                        as: 'negociador',
-                        where: filter_four
-                    }, {
-                        model: models.tipoclausula
-                    }, {
-                        model: models.valores,
-                        as: 'grupo'
-                    }]
+                            model: models.estructuracui,
+                            where: filter_two
+                        }, {
+                            model: models.programa
+                        }, {
+                            model: models.user,
+                            as: 'tecnico',
+                            where: filter_three
+                        }, {
+                            model: models.valores,
+                            as: 'clasificacion'
+                        }, {
+                            model: models.user,
+                            as: 'negociador',
+                            where: filter_four
+                        }, {
+                            model: models.tipoclausula
+                        }, {
+                            model: models.valores,
+                            as: 'grupo'
+                        },{
+                            model: models.valores,
+                            as: 'estado'
+                        }
+                    ]
                 }).then(function (solicitudcotizacion) {
                     return res.json({
                         records: records,

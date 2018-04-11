@@ -34,3 +34,17 @@ exports.listall2 = function (req, res) {
         res.json({ error: 1 });
     });
 }
+
+exports.getEtapa = function (req, res) {
+
+    models.valores.findAll({
+        order: 'valor ASC',
+        attributes: ['id', 'nombre'],
+        where: { tipo: 'clasificacionsolicitud' },
+    }).then(function (valores) {
+        return res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}

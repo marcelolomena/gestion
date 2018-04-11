@@ -4,9 +4,12 @@ var isAuthenticated = require('../policies/isAuthenticated')
 var valoresController = require('../controllers/sic/valores');
 
 
-module.exports = function(passport) {
-    router.get('/sic/valores', isAuthenticated, function(req, res) {
-        res.render('sic/valores', { user: req.user, data: req.session.passport.sidebar });
+module.exports = function (passport) {
+    router.get('/sic/valores', isAuthenticated, function (req, res) {
+        res.render('sic/valores', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
 
     router.route('/sic/valores/list')
@@ -17,6 +20,9 @@ module.exports = function(passport) {
 
     router.route('/sic/valores/tipos')
         .get(isAuthenticated, valoresController.getTipos);
+
+    router.route('/sic/valores/etapa')
+        .get(isAuthenticated, valoresController.getEtapa);
 
     return router;
 }
