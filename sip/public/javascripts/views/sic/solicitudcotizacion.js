@@ -114,10 +114,7 @@ $(document).ready(function () {
                     required: true
                 },
                 editoptions: {
-                    size: 10,
-                    maxlengh: 10,
-                    dataInit: function (element) { placeholder: "__-__-____"
-                    }
+                    placeholder: "AAA-AA-000 o AAA-AA-000.0"
                 },
                 hidden: false
             },
@@ -143,8 +140,7 @@ $(document).ready(function () {
                 search: false,
                 editable: false,
                 hidden: false
-            },
-            {
+            }, {
                 label: '.',
                 width: 40,
                 hidden: false,
@@ -173,8 +169,7 @@ $(document).ready(function () {
                         }
                     }
                 }
-            },
-            {
+            }, {
                 label: 'Etapa',
                 name: 'clasificacion',
                 jsonmap: "clasificacion.nombre",
@@ -183,8 +178,7 @@ $(document).ready(function () {
                 search: false,
                 editable: true,
                 hidden: false
-            },
-            {
+            }, {
                 label: 'Grupo',
                 name: 'grupo',
                 jsonmap: "grupo.nombre",
@@ -373,8 +367,7 @@ $(document).ready(function () {
                 dataInit: function (elem) {
                     $(elem).width(200);
                 }
-            },
-            {
+            }, {
                 label: 'CUI',
                 name: 'cui',
                 jsonmap: "estructuracui.cui",
@@ -384,8 +377,7 @@ $(document).ready(function () {
                 sortable: false,
                 editable: true,
                 hidden: false
-            },
-            {
+            }, {
                 label: 'SAP',
                 name: 'sap',
                 width: 90,
@@ -400,8 +392,7 @@ $(document).ready(function () {
                         });
                     }
                 }
-            },
-            {
+            }, {
                 label: 'Código ART',
                 name: 'codigoart',
                 width: 90,
@@ -438,8 +429,7 @@ $(document).ready(function () {
                         }
                     }],
                 }
-            },
-            {
+            }, {
                 label: 'Técnico Responsable',
                 name: 'idtecnico',
                 search: false,
@@ -455,8 +445,7 @@ $(document).ready(function () {
                         }
                     }],
                 }
-            },
-            {
+            }, {
                 label: 'Técnico Responsable',
                 name: 'first_name',
                 width: 180,
@@ -465,8 +454,7 @@ $(document).ready(function () {
                 editable: false,
                 formatter: returnTecnico,
                 hidden: false
-            },
-            {
+            }, {
                 label: 'Tipo de Contrato',
                 name: 'tipocontrato',
                 search: false,
@@ -502,8 +490,7 @@ $(document).ready(function () {
                     }
                     return dato;
                 }
-            },
-            {
+            }, {
                 label: 'Código Programa',
                 name: 'program_id',
                 width: 200,
@@ -601,8 +588,7 @@ $(document).ready(function () {
 
                     return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; height: 16px;"></span>';
                 }
-            },
-            {
+            }, {
                 label: 'Negociador',
                 name: 'idnegociador',
                 search: false,
@@ -654,8 +640,7 @@ $(document).ready(function () {
                         }
                     }],
                 }
-            },
-            {
+            }, {
                 label: 'Negociador',
                 name: 'negociador',
                 width: 150,
@@ -663,32 +648,28 @@ $(document).ready(function () {
                 editable: false,
                 formatter: returnNegociador,
                 hidden: false
-            },
-            {
+            }, {
                 label: 'C.Negociador',
                 name: 'correonegociador',
                 width: 130,
                 hidden: true,
                 search: false,
                 editable: true
-            },
-            {
+            }, {
                 label: 'F.Negociador',
                 name: 'fononegociador',
                 width: 100,
                 hidden: true,
                 search: false,
                 editable: true
-            },
-            {
+            }, {
                 label: 'D.Negociador',
                 name: 'direccionnegociador',
                 width: 150,
                 hidden: true,
                 search: false,
                 editable: true
-            },
-            {
+            }, {
                 name: 'idtipo',
                 search: false,
                 editable: true,
@@ -714,8 +695,7 @@ $(document).ready(function () {
                         return s + "</select>";
                     }
                 }
-            },
-            {
+            }, {
                 name: 'idgrupo',
                 search: false,
                 editable: true,
@@ -741,8 +721,7 @@ $(document).ready(function () {
                         return s + "</select>";
                     }
                 }
-            },
-            {
+            }, {
                 name: 'idestado',
                 search: false,
                 editable: true,
@@ -842,7 +821,7 @@ $(document).ready(function () {
             return 'Error: ' + data.responseText
         },
         beforeSubmit: function (postdata, formid) {
-
+            const regex = /[A-Z]{3}-[A-Z]{2}-([0-9]{2,})(.?)[0-9]{1}$/;
             if (parseInt(postdata.idcui) == 0) {
                 return [false, "CUI: Debe escoger un valor", ""];
             } else if (parseInt(postdata.idtecnico) == 0) {
@@ -851,6 +830,8 @@ $(document).ready(function () {
                 return [false, "Estado: Debe escoger un estado", ""];
             } else if (postdata.codigosolicitud.trim().length == 0) {
                 return [false, "Código de Solicitud: Debe agregar un valor", ""];
+            } else if (!regex.test(postdata.codigosolicitud)) {
+                return [false, "Código de Solicitud: Debe Ingresar valores de este tipo AAA-AA-000 o AAA-AA-000.0", ""];
             } else {
                 return [true, "", ""]
             }
@@ -948,7 +929,7 @@ $(document).ready(function () {
             return 'Error: ' + data.responseText
         },
         beforeSubmit: function (postdata, formid) {
-
+            const regex = /[A-Z]{3}-[A-Z]{2}-([0-9]{2,})(.?)[0-9]{1}$/;
             if (parseInt(postdata.idcui) == 0) {
                 return [false, "CUI: Debe escoger un valor", ""];
             } else if (parseInt(postdata.idtecnico) == 0) {
@@ -959,6 +940,8 @@ $(document).ready(function () {
                 return [false, "Negociador: Debe escoger un valor", ""];
             } else if (postdata.codigosolicitud.trim().length == 0) {
                 return [false, "Código de Solicitud: Debe agregar un valor", ""];
+            } else if (!regex.test(postdata.codigosolicitud)) {
+                return [false, "Código de Solicitud: Debe Ingresar valores de este tipo AAA-AA-000 o AAA-AA-000.0", ""];
             } else if (parseInt(postdata.idtipo) == 0) {
                 return [false, "Tipo: Debe escoger un valor", ""];
             } else if (parseInt(postdata.idestado) == 0) {

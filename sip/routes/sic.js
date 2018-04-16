@@ -852,5 +852,8 @@ module.exports = function (passport) {
     router.route('/sic/etapa')
         .get(isAuthenticated, parametrosController.getEtapa);
 
+    router.route('/sic/existeClase/:id')
+        .get(isAuthenticated, serviciosController.existeClase);
+
     return router;
 }

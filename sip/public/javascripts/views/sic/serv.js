@@ -7,12 +7,12 @@ var gridServ = {
 
         var tmplServ = "<div id='responsive-form' class='clearfix'>";
 
-        tmplServ += "<div class='form-row', id='elcodigo'>";
-        tmplServ += "<div class='column-full'>Código SIC{codigosic}</div>";
+        tmplServ += "<div class='form-row'>";
+        tmplServ += "<div class='column-half'>Servicio<span style='color:red'>*</span>{idservicio}</div>";
         tmplServ += "</div>";
 
-        tmplServ += "<div class='form-row'>";
-        tmplServ += "<div class='column-full'>Servicio<span style='color:red'>*</span>{idservicio}</div>";
+        tmplServ += "<div class='form-row', id='elcodigo'>";
+        tmplServ += "<div class='column-half'>Código SIC{codigosic}</div>";
         tmplServ += "</div>";
 
         tmplServ += "<div class='form-row'>";
@@ -161,7 +161,7 @@ var gridServ = {
                     name: 'codigosic',
                     index: 'codigosic',
                     width: 100,
-                    editable: false
+                    editable: true
                 },
 
                 {
@@ -391,10 +391,10 @@ var gridServ = {
                     if (thissid != "") {
                         // var lol = jQuery(thissid).attr('href');
                         // var numero = jQuery(thissid).attr('href').split("/", 3).join("/").length;
-                        $('#elcodigo').html("<div class='column-full'>Código SIC: " + thissid + "</div>");
-                        $('input#codigosic', form).attr('readonly', 'readonly');
+                        // $('#elcodigo').html("<div class='column-half'>Código SIC: " + thissid + "</div>");
+                        $('input#codigosic', thissid).attr('readonly', 'readonly');
                     } else {
-                        $('#elcodigo').html("<div class='column-full'>Código SIC: </div>");
+                        $('#elcodigo').html("<div class='column-half'>Código SIC: </div>");
                         $('input#codigosic', form).attr('readonly', 'readonly');
                     }
 
@@ -834,6 +834,7 @@ function gridProveedores(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
     var subgrid_table_id, pager_id, toppager_id;
+    var claseeva;
     subgrid_table_id = subgrid_id + '_t';
     pager_id = 'p_' + subgrid_table_id;
     toppager_id = subgrid_table_id + '_toppager';
@@ -986,7 +987,8 @@ console.log("la parentSolicitud : " + parentSolicitud)
         },
         onclickSubmit: function (rowid) {
             return {
-                parent_id: parentRowKey
+                parent_id: parentRowKey,
+                idclaseevalutec: claseeva
             };
         },
         beforeSubmit: function (postdata, formid) {
@@ -996,6 +998,27 @@ console.log("la parentSolicitud : " + parentSolicitud)
                 return [true, "", ""]
             }
         },
+        beforeShowForm: function (form) {
+            $("#idproveedor", form).attr('disabled', 'disabled');
+            $.ajax({
+                type: "GET",
+                url: '/sic/existeClase/' + parentSolicitud,
+                async: false,
+                success: function (data) {
+                    if (!data[0].claseevaluaciontecnica) {
+                        setTimeout(function () {
+                            $("#idproveedor", form).attr('disabled', 'disabled');
+                            var dialog = bootbox.dialog({
+                                message: '<p class="text-center">Debe seleccionar una Clase de Evaluación Técnica, Ver Pestaña "Criterios"</p>',
+                                closeButton: true
+                            });
+                        }, 450);
+                    }else{
+                        claseeva = data[0].claseevaluaciontecnica
+                    }
+                }
+            });
+        }
     }, {
         closeAfterDelete: true,
         recreateForm: true,
