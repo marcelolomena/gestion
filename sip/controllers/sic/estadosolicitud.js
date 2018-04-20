@@ -112,7 +112,7 @@ exports.action = function (req, res) {
 									id: req.body.id
 								}
 							}).then(function (estadosolicitud) {
-								models.sequelize.query('EXECUTE sic.estadoSICSIN2;');
+								models.sequelize.query('EXECUTE sic.estadoSICSIN;');
 								res.json({
 									id: req.body.id,
 									parent: req.body.idsolicitudcotizacion,
@@ -139,7 +139,7 @@ exports.action = function (req, res) {
 									id: req.body.id
 								}
 							}).then(function (estadosolicitud) {
-								models.sequelize.query('EXECUTE sic.estadoSICSIN2;');
+								models.sequelize.query('EXECUTE sic.estadoSICSIN;');
 								res.json({
 									id: req.body.id,
 									parent: req.body.idsolicitudcotizacion,
@@ -191,7 +191,7 @@ exports.action = function (req, res) {
 								}
 							}).then(function (rowDeleted) {
 
-								models.sequelize.query('EXECUTE sic.estadoSICSIN2;');
+								models.sequelize.query('EXECUTE sic.estadoSICSIN;');
 								return res.json({
 									message: '',
 									success: true
