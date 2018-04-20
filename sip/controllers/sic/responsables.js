@@ -168,7 +168,7 @@ exports.getUsersByRolId = function (req, res) {
 exports.getRoles = function (req, res) {
 
     var sql = "select * from sip.rol " +
-        "where borrado=1 order by glosarol";
+        "where idsistema = 2 and borrado=1 order by glosarol";
 
     sequelize.query(sql)
         .spread(function (rows) {

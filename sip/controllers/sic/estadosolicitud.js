@@ -112,7 +112,7 @@ exports.action = function (req, res) {
 									id: req.body.id
 								}
 							}).then(function (estadosolicitud) {
-								models.sequelize.query('EXECUTE sic.estadoSICSIN;');
+								models.sequelize.query('EXECUTE sic.estadoSICSIN2;');
 								res.json({
 									id: req.body.id,
 									parent: req.body.idsolicitudcotizacion,
@@ -139,7 +139,7 @@ exports.action = function (req, res) {
 									id: req.body.id
 								}
 							}).then(function (estadosolicitud) {
-								models.sequelize.query('EXECUTE sic.estadoSICSIN;');
+								models.sequelize.query('EXECUTE sic.estadoSICSIN2;');
 								res.json({
 									id: req.body.id,
 									parent: req.body.idsolicitudcotizacion,
@@ -191,35 +191,7 @@ exports.action = function (req, res) {
 								}
 							}).then(function (rowDeleted) {
 
-								// models.estadosolicitud.belongsTo(models.valores, {
-								// 	foreignKey: 'idcolor'
-								// });
-								// models.estadosolicitud.findAll({
-								// 	order: 'fecha DESC',
-								// 	where: {
-								// 		idsolicitudcotizacion: req.body.idsolicitudcotizacion
-								// 	},
-								// 	include: [{
-								// 		model: models.valores
-								// 	}]
-								// }).then(function (estadosolicitud) {
-
-								// 	var nuevocolor = "Rojo"
-								// 	if (estadosolicitud[0] != undefined) {
-								// 		logger.debug('--------------> EL COLOR ES: ' + estadosolicitud[0].valore.nombre)
-								// 		nuevocolor = estadosolicitud[0].valore.nombre
-								// 	}
-								// 	models.solicitudcotizacion.update({
-								// 		colorestado: nuevocolor
-								// 	}, {
-								// 		where: {
-								// 			id: req.body.idsolicitudcotizacion
-								// 		}
-								// 	})
-
-
-								// });
-								models.sequelize.query('EXECUTE sic.estadoSICSIN;');
+								models.sequelize.query('EXECUTE sic.estadoSICSIN2;');
 								return res.json({
 									message: '',
 									success: true
