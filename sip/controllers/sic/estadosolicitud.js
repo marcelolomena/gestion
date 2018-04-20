@@ -65,7 +65,7 @@ exports.action = function (req, res) {
 							});
 						}
 					});
-					models.solicitudcotizacion.update({
+				models.solicitudcotizacion.update({
 						idclasificacionsolicitud: req.body.idclasificacionsolicitud
 					}, {
 						where: {
@@ -97,60 +97,65 @@ exports.action = function (req, res) {
 				models.estadosolicitud,
 				function (err, data) {
 					if (!err) {
-						models.estadosolicitud.update({
-							idtipodocumento: req.body.idtipodocumento,
-							// idcolor: req.body.idcolor,
-							comentario: req.body.comentario,
-							fecha: fecha,
-							fechaestadoesperada: fechaesperada,
-							// colorestado: 'bAl Dia',
-							estado: req.body.estado,
-							idclasificacionsolicitud: req.body.idclasificacionsolicitud
-						}, {
-							where: {
-								id: req.body.id
-							}
-						}).then(function (estadosolicitud) {
-							// models.estadosolicitud.belongsTo(models.valores, {
-							// 	foreignKey: 'idcolor'
-							// });
-							// models.estadosolicitud.findAll({
-							// 	order: 'fecha DESC',
-							// 	where: {
-							// 		idsolicitudcotizacion: req.body.idsolicitudcotizacion
-							// 	},
-							// 	include: [{
-							// 		model: models.valores
-							// 	}]
-							// }).then(function (estadosolicitud) {
-
-							// 	logger.debug('--------------> EL COLOR ES: ' + estadosolicitud[0].valore.nombre)
-							// 	models.solicitudcotizacion.update({
-							// 		colorestado: estadosolicitud[0].valore.nombre,
-							// 	}, {
-							// 		where: {
-							// 			id: req.body.idsolicitudcotizacion
-							// 		}
-							// 	})
-
-
-							// });
-							models.sequelize.query('EXECUTE sic.estadoSICSIN;');
-
-
-							res.json({
-								id: req.body.id,
-								parent: req.body.idsolicitudcotizacion,
-								message: 'Inicio carga',
-								success: true
+						if (req.body.estado == 'Cerrado') {
+							models.estadosolicitud.update({
+								idtipodocumento: req.body.idtipodocumento,
+								// idcolor: req.body.idcolor,
+								comentario: req.body.comentario,
+								fecha: fecha,
+								fechaestadoesperada: fechaesperada,
+								colorestado: 'aGris',
+								estado: req.body.estado,
+								idclasificacionsolicitud: req.body.idclasificacionsolicitud
+							}, {
+								where: {
+									id: req.body.id
+								}
+							}).then(function (estadosolicitud) {
+								models.sequelize.query('EXECUTE sic.estadoSICSIN;');
+								res.json({
+									id: req.body.id,
+									parent: req.body.idsolicitudcotizacion,
+									message: 'Inicio carga',
+									success: true
+								});
+							}).catch(function (err) {
+								logger.error(err)
+								res.json({
+									message: err.message,
+									success: false
+								});
 							});
-						}).catch(function (err) {
-							logger.error(err)
-							res.json({
-								message: err.message,
-								success: false
+						} else {
+							models.estadosolicitud.update({
+								idtipodocumento: req.body.idtipodocumento,
+								comentario: req.body.comentario,
+								fecha: fecha,
+								fechaestadoesperada: fechaesperada,
+								estado: req.body.estado,
+								idclasificacionsolicitud: req.body.idclasificacionsolicitud
+							}, {
+								where: {
+									id: req.body.id
+								}
+							}).then(function (estadosolicitud) {
+								models.sequelize.query('EXECUTE sic.estadoSICSIN;');
+								res.json({
+									id: req.body.id,
+									parent: req.body.idsolicitudcotizacion,
+									message: 'Inicio carga',
+									success: true
+								});
+							}).catch(function (err) {
+								logger.error(err)
+								res.json({
+									message: err.message,
+									success: false
+								});
 							});
-						});
+						}
+
+
 					} else {
 						logger.error(err)
 						return res.json({
@@ -452,7 +457,7 @@ exports.estadoCerrado = function (req, res) {
 			type: sequelize.QueryTypes.SELECT
 		}
 	).then(function (valores) {
-		if(valores.length!= 0){
+		if (valores.length != 0) {
 			if (valores[0].estado == 'Cerrado') {
 				return res.json({
 					validado: 1
@@ -462,12 +467,12 @@ exports.estadoCerrado = function (req, res) {
 					validado: 0
 				})
 			}
-		}else{
+		} else {
 			return res.json({
 				validado: 1
 			})
 		}
-		
+
 	}).catch(function (err) {
 		logger.error(err);
 		res.json({

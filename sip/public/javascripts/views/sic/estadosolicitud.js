@@ -351,39 +351,39 @@ var gridEstado = {
 
 
             },
-            gridComplete: function () {
-                // var recs = $gridTab.getGridParam("reccount");
-                // var thisId = $.jgrid.jqID(this.id);
-                // console.log("este es el id po: " + thisId)
+            // gridComplete: function () {
+            //     // var recs = $gridTab.getGridParam("reccount");
+            //     // var thisId = $.jgrid.jqID(this.id);
+            //     // console.log("este es el id po: " + thisId)
 
-                // //$("#add_" + thisId).addClass('ui-disabled');
-                // $("#edit_" + thisId).addClass('ui-disabled');
-                // $("#del_" + thisId).addClass('ui-disabled');
-                // //$("#refresh_" + thisId).addClass('ui-disabled');
-                var recs = $gridTab.getGridParam("reccount");
-                var thisId = $.jgrid.jqID(this.id);
-                $.ajax({
-                    type: "GET",
-                    url: '/sic/estadoCerrado/' + parentRowKey,
-                    async: false,
-                    success: function (data) {
-                        var validado = data.validado
-                        console.log(validado)
-                        if (validado != "1") {
-                            $("#add_" + thisId).addClass('ui-disabled');
-                            // $("#edit_" + thisId).addClass('ui-disabled');
-                            // $("#del_" + thisId).addClass('ui-disabled');
-                            // //$("#refresh_" + thisId).addClass('ui-disabled');
-                        } else {
-                            $("#add_" + thisId).removeClass('ui-disabled');
-                            // $("#edit_" + thisId).removeClass('ui-disabled');
-                            // $("#del_" + thisId).removeClass('ui-disabled');
-                            //$("#refresh_" + thisId).removeClass('ui-disabled');
-                        }
+            //     // //$("#add_" + thisId).addClass('ui-disabled');
+            //     // $("#edit_" + thisId).addClass('ui-disabled');
+            //     // $("#del_" + thisId).addClass('ui-disabled');
+            //     // //$("#refresh_" + thisId).addClass('ui-disabled');
+            //     var recs = $gridTab.getGridParam("reccount");
+            //     var thisId = $.jgrid.jqID(this.id);
+            //     $.ajax({
+            //         type: "GET",
+            //         url: '/sic/estadoCerrado/' + parentRowKey,
+            //         async: false,
+            //         success: function (data) {
+            //             var validado = data.validado
+            //             console.log(validado)
+            //             if (validado != "1") {
+            //                 $("#add_" + thisId).addClass('ui-disabled');
+            //                 // $("#edit_" + thisId).addClass('ui-disabled');
+            //                 // $("#del_" + thisId).addClass('ui-disabled');
+            //                 // //$("#refresh_" + thisId).addClass('ui-disabled');
+            //             } else {
+            //                 $("#add_" + thisId).removeClass('ui-disabled');
+            //                 // $("#edit_" + thisId).removeClass('ui-disabled');
+            //                 // $("#del_" + thisId).removeClass('ui-disabled');
+            //                 //$("#refresh_" + thisId).removeClass('ui-disabled');
+            //             }
 
-                    }
-                });
-            },
+            //         }
+            //     });
+            // },
 
 
 

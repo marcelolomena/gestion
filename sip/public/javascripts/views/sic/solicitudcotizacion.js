@@ -60,7 +60,7 @@ $(document).ready(function () {
             },
             {
                 label: 'Estado',
-                name: 'Estado',
+                name: 'idestado',
                 jsonmap: "estado.nombre",
                 width: 80,
                 align: 'center',
@@ -133,7 +133,7 @@ $(document).ready(function () {
             // },
             {
                 label: 'Tipo',
-                name: 'tipo',
+                name: 'idtipo',
                 jsonmap: "tipoclausula.nombre",
                 width: 60,
                 align: 'center',
@@ -146,6 +146,7 @@ $(document).ready(function () {
                 hidden: false,
                 search: false,
                 editable: true,
+                sortable: false,
                 align: 'center',
                 formatter: function (cellvalue, options, rowObject) {
                     var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
@@ -171,7 +172,7 @@ $(document).ready(function () {
                 }
             }, {
                 label: 'Etapa',
-                name: 'clasificacion',
+                name: 'idclasificacionsolicitud',
                 jsonmap: "clasificacion.nombre",
                 width: 120,
                 align: 'center',
@@ -180,7 +181,7 @@ $(document).ready(function () {
                 hidden: false
             }, {
                 label: 'Grupo',
-                name: 'grupo',
+                name: 'idgrupo',
                 jsonmap: "grupo.nombre",
                 width: 120,
                 align: 'center',
@@ -369,12 +370,12 @@ $(document).ready(function () {
                 }
             }, {
                 label: 'CUI',
-                name: 'cui',
+                name: 'idcui',
                 jsonmap: "estructuracui.cui",
                 width: 90,
                 align: 'center',
                 search: true,
-                sortable: false,
+                sortable: true,
                 editable: true,
                 hidden: false
             }, {
@@ -383,6 +384,7 @@ $(document).ready(function () {
                 width: 90,
                 align: 'center',
                 search: false,
+                sortable: false,
                 editable: true,
                 hidden: false,
                 editoptions: {
@@ -400,6 +402,7 @@ $(document).ready(function () {
                 search: false,
                 editable: true,
                 hidden: false,
+                sortable: false,
                 editrules: {
                     edithidden: false
                 },
@@ -447,7 +450,7 @@ $(document).ready(function () {
                 }
             }, {
                 label: 'Técnico Responsable',
-                name: 'first_name',
+                name: 'idtecnico',
                 width: 180,
                 search: true,
                 align: 'center',
@@ -554,6 +557,7 @@ $(document).ready(function () {
                 index: 'colornota',
                 width: 80,
                 align: "left",
+                sortable: false,
                 editable: true,
                 search: false,
                 editoptions: {
@@ -642,7 +646,7 @@ $(document).ready(function () {
                 }
             }, {
                 label: 'Negociador',
-                name: 'negociador',
+                name: 'idnegociador',
                 width: 150,
                 search: true,
                 editable: false,
