@@ -32,7 +32,7 @@ object ProgramMembersExternal {
 
 
 case class ProgramMembersExternalAllocation(id: Option[Int], program_id: Int, provider_type: Int, provider_name: String, resource_name: Option[String], number_of_resources: Option[Int],
-   control_field1 : Option[String], control_field2 : Option[String], created_by : Int, creation_date : Date, updation_date : Date, is_deleted : Int, estimated_time : Double,hours : Double,diferencia : Double )
+   control_field1 : Option[String], control_field2 : Option[String], created_by : Int, creation_date : Date, updation_date : Date, is_deleted : Int, estimated_time : Double,ev : Double, pv : Double, hours : Double,diferencia : Double )
 
 object ProgramMembersExternalAllocation {
   val programMembersExternalAllocation = {
@@ -49,10 +49,12 @@ object ProgramMembersExternalAllocation {
       get[Date]("updation_date") ~
       get[Int]("is_deleted") ~
       get[Double]("estimated_time") ~
+      get[Double]("ev") ~
+      get[Double]("pv") ~
       get[Double]("hours") ~
       get[Double]("diferencia") map {
-        case id ~ program_id ~ provider_type ~ provider_name ~ resource_name ~ number_of_resources ~ control_field1 ~ control_field2 ~  created_by ~ creation_date ~ updation_date ~ is_deleted ~ estimated_time ~ hours ~ diferencia =>
-          ProgramMembersExternalAllocation(id, program_id, provider_type, provider_name, resource_name, number_of_resources, control_field1, control_field2, created_by, creation_date, updation_date, is_deleted,estimated_time,hours,diferencia)
+        case id ~ program_id ~ provider_type ~ provider_name ~ resource_name ~ number_of_resources ~ control_field1 ~ control_field2 ~  created_by ~ creation_date ~ updation_date ~ is_deleted ~ estimated_time ~ ev ~ pv ~ hours ~ diferencia =>
+          ProgramMembersExternalAllocation(id, program_id, provider_type, provider_name, resource_name, number_of_resources, control_field1, control_field2, created_by, creation_date, updation_date, is_deleted,estimated_time, ev, pv, hours,diferencia)
       }
   }
 }

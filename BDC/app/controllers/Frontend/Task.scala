@@ -279,6 +279,8 @@ object Task extends Controller {
             new Date(), success.task_status, user_id.toInt, success.owner, Option(success.task_discipline), success.completion_percentage,
             success.remark, success.task_depend, success.dependencies_type, Option(success.task_details.stage), Option(success.task_details.user_role), success.task_details.deliverable, success.task_details.task_type, 1)
           val latest_task = TaskService.insertTask(milestoneDetails)
+          //RRM:Agrega tarea en tabla art_program_management
+          ProgramService.saveProgramManagement(latest_task,3);
 
           if(success.project_mode==42){
             val subtask = SubTaskMaster(None, latest_task, success.task_title, success.task_description,
@@ -323,6 +325,9 @@ object Task extends Controller {
               }             
             }
           }
+
+          //RRM:Agrega tarea en tabla art_program_management
+          ProgramService.saveProgramManagement(latest_task,6);
 
           /**
            * Activity log

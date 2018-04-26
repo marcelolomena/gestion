@@ -2285,4 +2285,20 @@ object RiskService extends CustomColumns {
     }
   }
 
+  def createAutomaticRisk2(idPrograma: Long, user_id: Integer) = {
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.risk_automatic_create {idPrograma},{user_id}").on(
+        'idPrograma -> idPrograma.toInt, 'user_id -> user_id.toInt).executeQuery().as(scalar[Int].single)
+    }
+  }
+
+  def createAutomaticRisk(idPrograma: Long, user_id: Integer) = {
+    var sqlString = ""
+    sqlString = "EXEC art.risk_automatic_create {idPrograma},{user_id}"
+    Logger.debug("******Ejecutando createAutomaticRisk")
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('idPrograma -> idPrograma.toInt, 'user_id -> user_id.toInt).executeUpdate()
+    }
+  }
+
 }

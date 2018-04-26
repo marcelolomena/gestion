@@ -1,16 +1,12 @@
 package controllers.Frontend
 
 import java.util.Date
+
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
 import org.json.JSONArray
 import art_forms.ARTForms
-import models.Activity
-import models.ActivityTypes
-import models.ProgramDate
-import models.ProgramDetail
-import models.ProgramMaster
-import models.Programs
+import models._
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import services.DepartmentService
@@ -22,39 +18,33 @@ import services.TimesheetService
 import services.UserService
 import services.DocumentService
 import services.DistributionTimeSheetService
-import models.VersionDetails
 import services.GenericProjectService
 import services.GenericService
-import models.UserSetting
 import services.TaskService
 import services.SubTaskServices
 import java.text.SimpleDateFormat
 import java.util.Calendar
+
 import utils.ExportToExcel
 import services.SubTypeService
 import services.ProgramTypeService
 import services.UserRoleService
-import models.Baseline
 import play.libs.Json
 import services.ProgramMemberService
-import models.ProgramMembers
 import services.SAPServices
 import services.BudgetTypeService
-import models.Expenditure
-import models.Investment
-import models.SAPMaster
-import models.SAP
 import play.api._
+
 import scala.math.BigDecimal.RoundingMode
 import services.EarnValueService
 import services.SpiCpiCalculationsService
-import models.RiskManagementMaster
-import models.RiskManagementIssue
 import services.RiskService
-import models.ProgramMembersExternal
 import services.ProgramMemberExternalService
 import services.ImpactTypeService
+
 import scala.collection.mutable
+import play.api.mvc.AnyContent
+
 /**
  * This will have program and project details..
  */
@@ -680,6 +670,8 @@ object Program extends Controller {
         } else {
 
           val last_program = ProgramService.insertProgramDetails(program)
+          //RRM:Agrega programa en tabla art_program_management
+          ProgramService.saveProgramManagement(last_program,1);
 
           val dm = program.demand_manager
           val pms = ProgramMembers(None, last_program.toInt, dm, 7, 0, "")
@@ -688,12 +680,15 @@ object Program extends Controller {
 
           ///NUEVO PARA RIESGO
           val user_id = Integer.parseInt(request.session.get("uId").get)
+          //RRM crea los 10 riesgos más frecuentes asociados al programa
+          Logger.debug("******Creando riesgos:"+last_program+", "+user_id);
+          RiskService.createAutomaticRisk(last_program, user_id)
           //val kaka=createDefaultListRisks(user_id, last_program, 0)
-          val ret = createInitialRisk(user_id, last_program, 0)
+          /*val ret = createInitialRisk(user_id, last_program, 0)
           if (ret == 1)
             Logger.debug("FRACASO AL CREAR RIESGOS!!!")
            else
-            Logger.debug("EXITO AL CREAR RIESGOS!!!")
+            Logger.debug("EXITO AL CREAR RIESGOS!!!")*/
           ///FIN RIESGO
           /**
            * Default project of type Initiative and its tasks...
@@ -1023,7 +1018,7 @@ object Program extends Controller {
   def createInitialRisk(user_id: Integer, parent_id: Long, parent_type: Integer): Long = {
     try {
       val projectTypes = GenericProjectService.findProjectTypeDetailsByDescription(0);
-
+      Logger.debug("EN createInitialRisk:"+projectTypes)
       if (!projectTypes.isEmpty) {
         Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : user_id" + user_id)
         Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_id" + parent_id)
@@ -1551,6 +1546,49 @@ object Program extends Controller {
     Ok(node.toString())
   }
   
+  /**
+   * calculate earn value for project in panel defined by user
+   */
+  def calculateProgramEarnValueActionPanel(id: String, program:String ) = Action { implicit request =>
+
+    var node = new JSONObject()
+
+    if (id == "0"){
+      var calculos = SpiCpiCalculationsService.findIndicators(program, 2)
+      for (s <- calculos) {
+
+        node.put("EV", s.ev + " hrs")
+        node.put("PV", s.pv + " hrs")
+        node.put("AC", s.ac + " hrs")
+        node.put("CPI", s.cpi)
+        node.put("SPI", s.spi)
+        node.put("ETC", s.etc + " hrs")
+        node.put("EAC", s.eac + " hrs")
+        node.put("PAI", s.pai + " %")
+        node.put("PAE", s.pae + " %")
+        node.put("HP", s.hp + " hrs")
+        node.put("HA", s.ha + " hrs")
+      }
+    } else {
+      var calculos = SpiCpiCalculationsService.findIndicatorsPanel(id)
+      for (s <- calculos) {
+
+        node.put("EV", s.ev + " hrs")
+        node.put("PV", s.pv + " hrs")
+        node.put("AC", s.ac + " hrs")
+        node.put("CPI", s.cpi)
+        node.put("SPI", s.spi)
+        node.put("ETC", s.etc + " hrs")
+        node.put("EAC", s.eac + " hrs")
+        node.put("PAI", s.pai + " %")
+        node.put("PAE", s.pae + " %")
+        node.put("HP", s.hp + " hrs")
+        node.put("HA", s.ha + " hrs")
+      }
+    }
+    Ok(node.toString())
+  }
+  
   def calculateProgramEarnValueActionpro(id: String) = Action { implicit request =>
 
     var node = new JSONObject()
@@ -1572,6 +1610,52 @@ object Program extends Controller {
 	  node.put("AGI", s.ev/s.hp*100)
 	  node.put("AGE", s.pv/s.hp*100)	  
     }
+
+    Ok(node.toString())
+  }
+  
+  def calculateProgramEarnValueActionPanelpro(id: String, program:String) = Action { implicit request =>
+	println("*****PANEL -------" + id)
+    var node = new JSONObject()
+	if (id == "0") {
+		var calculos = SpiCpiCalculationsService.findIndicatorspro(program, 2)
+		for (s <- calculos) {
+
+		  node.put("EV", s.ev + " hrs")
+		  node.put("PV", s.pv + " hrs")
+		  node.put("AC", s.ac + " hrs")
+		  node.put("CPI", s.cpi)
+		  node.put("SPI", s.spi)
+		  node.put("ETC", s.etc + " hrs")
+		  node.put("EAC", s.eac + " hrs")
+		  node.put("PAI", s.pai + " %")
+		  node.put("PAE", s.pae + " %")
+		  node.put("HP", s.hp + " hrs")
+		  node.put("HA", s.ha + " hrs")
+		  //RRM
+		  node.put("AGI", s.ev/s.hp*100)
+		  node.put("AGE", s.pv/s.hp*100)	  
+		}
+	} else {
+		var calculos = SpiCpiCalculationsService.findIndicatorsPanelProporcional(id)
+		for (s <- calculos) {
+
+		  node.put("EV", s.ev + " hrs")
+		  node.put("PV", s.pv + " hrs")
+		  node.put("AC", s.ac + " hrs")
+		  node.put("CPI", s.cpi)
+		  node.put("SPI", s.spi)
+		  node.put("ETC", s.etc + " hrs")
+		  node.put("EAC", s.eac + " hrs")
+		  node.put("PAI", s.pai + " %")
+		  node.put("PAE", s.pae + " %")
+		  node.put("HP", s.hp + " hrs")
+		  node.put("HA", s.ha + " hrs")
+		  //RRM
+		  node.put("AGI", s.ev/s.hp*100)
+		  node.put("AGE", s.pv/s.hp*100)	  
+		}		
+	}
 
     Ok(node.toString())
   }
@@ -2715,7 +2799,7 @@ object Program extends Controller {
     }
   }
 
-  def getSpiGraph(program_id: String) = Action { implicit request =>
+  def getSpiGraph(program_id: String, panel:String) = Action { implicit request =>
     request.session.get("username").map { user =>
       val node = new JSONObject()
       val spi_date_map = new java.util.LinkedHashMap[Long, Double];
@@ -2735,52 +2819,99 @@ object Program extends Controller {
       val e_planned_value_map = new java.util.LinkedHashMap[Long, Double];
       val e_actual_cost_map = new java.util.LinkedHashMap[Long, Double];
 
-      var spicpiCal = SpiCpiCalculationsService.findCalculationsById(program_id);
-      //if (!spicpiCal.isEmpty) {
-      if (spicpiCal != null) {
-        for (s <- spicpiCal) {
-          var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
-          if (!s.spi.isEmpty && !s.fecha.isEmpty) {
-            spi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.spi.getOrElse(0))
-            espi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.espi.getOrElse(0))
-            cpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.cpi.get)
-            ecpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ecpi.get)
-            actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vb.get)
-            e_actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
-            earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vg.get)
-            e_earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evg.get)
-            planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vp.get)
-            //e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evp.get)
-            e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
-            tp.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.tp.get)
-            ta.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ta.get)
-            program_id_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.pid);
+      if (panel == "0") {
+        var spicpiCal = SpiCpiCalculationsService.findCalculationsById(program_id);
+        //if (!spicpiCal.isEmpty) {
+        if (spicpiCal != null) {
+          for (s <- spicpiCal) {
+            var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+            if (!s.spi.isEmpty && !s.fecha.isEmpty) {
+              spi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.spi.getOrElse(0))
+              espi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.espi.getOrElse(0))
+              cpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.cpi.get)
+              ecpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ecpi.get)
+              actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vb.get)
+              e_actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
+              earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vg.get)
+              e_earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evg.get)
+              planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vp.get)
+              //e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evp.get)
+              e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
+              tp.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.tp.get)
+              ta.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ta.get)
+              program_id_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.pid);
+            }
           }
+          node.put("spi_date_map", spi_date_map)
+          node.put("cpi_date_map", cpi_date_map)
+          node.put("ecpi_date_map", ecpi_date_map)
+          node.put("espi_date_map", espi_date_map)
 
+          node.put("actual_cost_map", actual_cost_map)
+          node.put("e_actual_cost_map", e_actual_cost_map)
+
+          node.put("earn_value_map", earn_value_map)
+          node.put("e_earn_value_map", e_earn_value_map)
+
+          node.put("planned_value_map", planned_value_map)
+          node.put("e_planned_value_map", e_planned_value_map)
+
+          node.put("ta", ta)
+          node.put("tp", tp)
+          node.put("program_id", program_id_map);
+          val EV_list = EarnValueService.getGraphCalculationForProgram(program_id)
+          for (ev_obj <- EV_list) {
+            var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+            var date1 = formattedDate.format(ev_obj.recorded_date)
+
+          }
         }
+      } else {
+        var spicpiCal = SpiCpiCalculationsService.findCalculationsByIdPanel(program_id, panel);
+        //if (!spicpiCal.isEmpty) {
+        if (spicpiCal != null) {
+          for (s <- spicpiCal) {
+            var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+            if (!s.spi.isEmpty && !s.fecha.isEmpty) {
+              spi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.spi.getOrElse(0))
+              espi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.espi.getOrElse(0))
+              cpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.cpi.get)
+              ecpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ecpi.get)
+              actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vb.get)
+              e_actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
+              earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vg.get)
+              e_earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evg.get)
+              planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vp.get)
+              //e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evp.get)
+              e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
+              tp.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.tp.get)
+              ta.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ta.get)
+              program_id_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.pid);
+            }
+          }
+          node.put("spi_date_map", spi_date_map)
+          node.put("cpi_date_map", cpi_date_map)
+          node.put("ecpi_date_map", ecpi_date_map)
+          node.put("espi_date_map", espi_date_map)
 
-        node.put("spi_date_map", spi_date_map)
-        node.put("cpi_date_map", cpi_date_map)
-        node.put("ecpi_date_map", ecpi_date_map)
-        node.put("espi_date_map", espi_date_map)
+          node.put("actual_cost_map", actual_cost_map)
+          node.put("e_actual_cost_map", e_actual_cost_map)
 
-        node.put("actual_cost_map", actual_cost_map)
-        node.put("e_actual_cost_map", e_actual_cost_map)
+          node.put("earn_value_map", earn_value_map)
+          node.put("e_earn_value_map", e_earn_value_map)
 
-        node.put("earn_value_map", earn_value_map)
-        node.put("e_earn_value_map", e_earn_value_map)
+          node.put("planned_value_map", planned_value_map)
+          node.put("e_planned_value_map", e_planned_value_map)
 
-        node.put("planned_value_map", planned_value_map)
-        node.put("e_planned_value_map", e_planned_value_map)
+          node.put("ta", ta)
+          node.put("tp", tp)
+          node.put("program_id", program_id_map);
+          val EV_list = EarnValueService.getGraphCalculationForProgram(program_id)
+          for (ev_obj <- EV_list) {
+            var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+            var date1 = formattedDate.format(ev_obj.recorded_date)
 
-        node.put("ta", ta)
-        node.put("tp", tp)
-        node.put("program_id", program_id_map);
-        val EV_list = EarnValueService.getGraphCalculationForProgram(program_id)
-        for (ev_obj <- EV_list) {
-          var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
-          var date1 = formattedDate.format(ev_obj.recorded_date)
-
+          }
         }
       }
 
@@ -3382,4 +3513,151 @@ object Program extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
+  
+  def getProgramsPanels(program_id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      var paneles = "<option value='0'>Seleccionar Panel</option>"
+	  val PanelesServices = ProgramService.findProgramPanels(program_id)
+	  for (panel <- PanelesServices) {
+	    paneles += " <option value='" + panel.id.get + "'>" + panel.name + "</option>"
+	  }
+      Ok(paneles);
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }  
+  
+  def listPanelByProgram(id: String) = Action { implicit request =>
+    val panellist = ProgramService.listPanelByProgram(id)
+    println("Edit Panel: " + panellist)
+    Ok(play.api.libs.json.Json.toJson(panellist))
+  }
+
+  def getProjectsPanel(id: String) = Action { implicit request =>
+    val panelprojlist = ProgramService.listProjectsByPanel(id)
+    println("Edit Panel: " + panelprojlist)
+    Ok(play.api.libs.json.Json.toJson(panelprojlist))
+  }
+
+
+  def saveProjectPanel = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        var incident: Option[ErrorPanel] = null
+        val body: AnyContent = request.body
+        val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
+        var ret: Int = 0
+        println("**body:"+body)
+        println("**jsonBody:"+jsonBody)
+        println("**jsonBody2:"+jsonBody.mkString)
+        println("**OPER:"+request.getQueryString("oper"))
+        jsonBody.map { jsValue =>
+        val oper = (jsValue \ "oper")
+          println("****Operacion:"+oper)
+          if (oper.toString().replace("\"", "").equals("del")) {
+            println("****Borrando")
+            val id_panel = (jsValue \ "id")
+            incident = ProgramService.delProgramPanel(id_panel.toString().replace("\"", ""))
+          } else if (oper.toString().replace("\"", "").equals("add")) {
+            println("****Agregando")
+            val id_program = (jsValue \ "id_program")
+            val name = (jsValue \ "name")
+            val description = (jsValue \ "description")
+
+            incident = ProgramService.saveProgramPanel(
+              id_program.toString().replace("\"", ""),
+              name.toString().replace("\"", ""),
+              description.toString().replace("\"", ""))
+
+            println(incident.get.error_code)
+          } else if (oper.toString().replace("\"", "").equals("edit")) {
+            println("****Editaando")
+            val name = (jsValue \ "name")
+            val description = (jsValue \ "description")
+            val id_panel = (jsValue \ "id")
+
+            incident = ProgramService.updateProgramPanel(
+              id_panel.toString().replace("\"", ""),
+              name.toString().replace("\"", ""),
+              description.toString().replace("\"", ""))
+
+          }
+        }
+
+        Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+  }
+
+  def deletePanel(oper: String, id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val cod = ProgramService.delProgramPanel(id)
+
+      Ok(play.api.libs.json.Json.toJson(cod)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def getPanelProjects(program: String, panel: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      var paneles = "<option>Seleccionar Projecto</option>"
+      val PanelesServices = ProgramService.findPanelProjects(program, panel)
+      for (panel <- PanelesServices) {
+        paneles += " <option value='" + panel.id + "'>" + panel.project + "</option>"
+      }
+      Ok(paneles);
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+
+  def saveProjectForPanel = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        var incident: Option[ErrorPanel] = null
+        val body: AnyContent = request.body
+        val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
+        var ret: Int = 0
+        println("**body:"+body)
+        println("**jsonBody:"+jsonBody)
+        println("**jsonBody2:"+jsonBody.mkString)
+        println("**OPER:"+request.getQueryString("oper"))
+        jsonBody.map { jsValue =>
+          val oper = (jsValue \ "oper")
+          println("****Operacion:"+oper)
+          if (oper.toString().replace("\"", "").equals("del")) {
+            println("****Borrando")
+          } else if (oper.toString().replace("\"", "").equals("add")) {
+            println("****Agregando")
+            val id_panel = (jsValue \ "id_panel")
+            val id_project = (jsValue \ "id_project")
+
+            incident = ProgramService.saveProjectPanel(
+              id_panel.toString().replace("\"", ""),
+              id_project.toString().replace("\"", ""))
+
+            println(incident.get.error_code)
+          } else if (oper.toString().replace("\"", "").equals("edit")) {
+            println("****Editaando")
+          }
+        }
+
+        Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+  }
+
+  def deletePanelProject(oper: String, id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val cod = ProgramService.delPanelProject(id)
+
+      Ok(play.api.libs.json.Json.toJson(cod)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
 }

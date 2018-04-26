@@ -46,14 +46,18 @@ object Global extends GlobalSettings {
 
     scheduler.schedule("Every15Seconds", dailyBatch01, Message)
     Logger.info("Larry :: start()")
+
+    val dailyBatch02 = akkaSystem.actorOf(Props[DailyBatch02])
+
+    scheduler.schedule("Every1Hour", dailyBatch02, Message)
+    Logger.info("Moe :: start()")
   }
 
   override def onStart(app: Application) {
 
-    Logger.info("Application BDC onStart*********************************************")
+    Logger.info("Application BDC onStart*****************")
     startScheduler(Akka.system)
 
-    //InitialData.insertUser()
   }
 
 }
@@ -71,6 +75,24 @@ class DailyBatch01 extends Actor
 
 }
 
-object DaliyBatch01 {
+object DailyBatch02 {
+
+}
+
+class DailyBatch02 extends Actor
+{
+  def receive = {
+    case Message =>
+      Logger.info("Moe is updating the data")
+      val rt=DashboardService.updateTableManager()
+      //DashboardService.createExcel()
+    case _ =>
+      Logger.info("none")
+
+  }
+
+}
+
+object HourBatch01 {
 
 }

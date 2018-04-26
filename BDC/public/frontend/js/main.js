@@ -3657,7 +3657,39 @@ function renderProgramEarnValue(id) {
 	$.get(url, function(data) {
 
 		var obj = JSON.parse(data);
+		//var rd = Math.random();
+		if (obj.EV) {
+			$("#ev").html(obj.EV);
+			$("#pv").html(obj.PV);
+			$("#pai").html(obj.PAI);
+			$("#ac").html(obj.AC);
+			$("#spi").html(obj.SPI);
+			$("#cpi").html(obj.CPI);
+			$("#eac").html(obj.EAC);
+			$("#etc").html(obj.ETC);
+			$("#pae").html(obj.PAE);
+			$("#hp").html(obj.HP);
+			$("#ha").html(obj.HA);
+		} else {
+			$("#subtask-details").addClass("display-none");
+		}
 
+	});
+	var delay = 200;
+	setTimeout(function() {
+		$(".loader").css("display", "none");
+	}, delay);
+}
+
+function renderProgramEarnValuePanel(id, program) {
+
+	var url = "/program-earn-value-panel?id=" + id + "&program=" + program +"&t=" + Date.now();
+	$(".loader").css("display", "block");
+
+	$.get(url, function(data) {
+
+		var obj = JSON.parse(data);
+		//var rd = Math.random();
 		if (obj.EV) {
 			$("#ev").html(obj.EV);
 			$("#pv").html(obj.PV);
@@ -3684,6 +3716,43 @@ function renderProgramEarnValue(id) {
 function renderProgramEarnValuepro(id) {
 
 	var url = "/program-earn-value-pro?id=" + id + "&t=" + Date.now();
+	$(".loader").css("display", "block");
+
+	$.get(url, function(data) {
+
+		var obj = JSON.parse(data);
+
+		if (obj.EV) {
+			//$("#ev").html(obj.EV);
+			$("#pv2").html(obj.PV);
+			//$("#pai").html(obj.PAI);
+			//$("#ac").html(obj.AC);
+			$("#spi2").html(obj.SPI);
+			//$("#cpi").html(obj.CPI);
+			//$("#eac").html(obj.EAC);
+			//$("#etc").html(obj.ETC);
+			$("#pae2").html(obj.PAE);
+			//$("#hp").html(obj.HP);
+			//$("#ha").html(obj.HA);
+			console.log("HOla:"+obj.AGI);
+			var num = obj.AGI;
+			$("#agi").html(num.toFixed(2)+' %');
+			var num2 = obj.AGE;
+			$("#age").html(num2.toFixed(2)+' %');			
+		} else {
+			$("#subtask-details").addClass("display-none");
+		}
+
+	});
+	var delay = 200;
+	setTimeout(function() {
+		$(".loader").css("display", "none");
+	}, delay);
+}
+
+function renderProgramEarnValuePanelpro(id, program) {
+
+	var url = "/program-earn-value-panel-pro?id=" + id + "&program=" + program +"&t=" + Date.now();
 	$(".loader").css("display", "block");
 
 	$.get(url, function(data) {

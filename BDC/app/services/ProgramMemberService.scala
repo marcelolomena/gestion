@@ -88,7 +88,7 @@ object ProgramMemberService extends CustomColumns {
   }
 
   def findActiveProgramMember(program_id: String): Seq[ProgramInternalMembers] = {
-    var sqlString = "EXEC art.asignacion_interna {pId}"
+    var sqlString = "EXEC art.asignacion_interna_ext {pId}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('pId -> program_id.toInt).executeQuery() as (ProgramInternalMembers.program_internal_members *)
     }

@@ -186,15 +186,15 @@ object ProgramMembers {
   }
 }
 
-case class ProgramInternalMembers(id: Option[Int], program_id: Int, role_id: Int, member_id: Int, is_active: Int,estimated_time : Double,hours : Double,diferencia : Double)
+case class ProgramInternalMembers(id: Option[Int], program_id: Int, role_id: Int, member_id: Int, is_active: Int,estimated_time : Double,ev : Double,pv : Double,hours : Double,diferencia : Double)
 
 object ProgramInternalMembers {
 
   val program_internal_members = {
     get[Option[Int]]("id") ~ get[Int]("program_id") ~ get[Int]("role_id") ~ get[Int]("member_id") ~
-      get[Int]("is_active") ~ get[Double]("estimated_time") ~ get[Double]("hours") ~ get[Double]("diferencia") map {
-        case id ~ program_id ~ role_id ~ member_id ~ is_active ~ estimated_time ~ hours ~ diferencia=>
-          ProgramInternalMembers(id, program_id, role_id, member_id, is_active,estimated_time,hours,diferencia)
+      get[Int]("is_active") ~ get[Double]("estimated_time") ~ get[Double]("ev") ~ get[Double]("pv") ~ get[Double]("hours") ~ get[Double]("diferencia") map {
+        case id ~ program_id ~ role_id ~ member_id ~ is_active ~ estimated_time ~ ev ~ pv ~ hours ~ diferencia=>
+          ProgramInternalMembers(id, program_id, role_id, member_id, is_active,estimated_time,ev, pv,hours,diferencia)
       }
   }
 }
@@ -741,4 +741,52 @@ object ProgramUserCapacity {
     }
   }
   implicit val capacityWrites = Json.writes[ProgramUserCapacity]
+}
+
+case class Panels (id:Int, id_program:Int, name:String, description:String)
+object Panels {
+
+  val panel = {
+      get[Int]("id") ~
+      get[Int]("id_program") ~
+      get[String]("name") ~
+      get[String]("description") map {
+      case id ~ id_program ~ name ~ description => Panels(id,id_program,name,description)
+    }
+  }
+  implicit val panelList = Json.writes[Panels]
+}
+
+case class PanelsProject (id:Int, id_project:Int, id_program_panel:Int, project:String)
+object PanelsProject {
+
+  val panelproj = {
+      get[Int]("id") ~
+      get[Int]("id_project") ~
+      get[Int]("id_program_panel") ~
+      get[String]("project") map {
+      case id ~ id_project ~ id_program_panel ~ project => PanelsProject(id,id_project,id_program_panel,project)
+    }
+  }
+  implicit val panelprojList = Json.writes[PanelsProject]
+}
+case class ErrorPanel(
+                          error_code: Int,
+                          error_text: String,
+                          panel_id: Int)
+object ErrorPanel {
+  val error = {
+    get[Int]("error_code") ~
+      get[String]("error_text") ~
+      get[Int]("panel_id") map {
+      case error_code ~
+        error_text ~
+        panel_id => ErrorPanel(
+        error_code,
+        error_text,
+        panel_id)
+    }
+
+  }
+  implicit val errorWrites = Json.writes[ErrorPanel]
 }

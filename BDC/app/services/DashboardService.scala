@@ -278,4 +278,11 @@ object DashboardService {
       count
     }
   }
+
+  def updateTableManager(): Int = {
+
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.proc_art_program_management").executeQuery() as (scalar[Int].single)
+    }
+  }
 }

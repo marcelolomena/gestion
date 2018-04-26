@@ -75,7 +75,7 @@ object ProgramMemberExternalService {
 */
   def findProgramMemberExternalByProgramId(program_id: String): Seq[ProgramMembersExternalAllocation] = {
     if (!program_id.isEmpty()) {
-      var sqlString = "EXEC art.asignacion_externa {pId}"
+      var sqlString = "EXEC art.asignacion_externa_ext {pId}"
       DB.withConnection { implicit connection =>
         SQL(sqlString).on('pId -> program_id.toInt).executeQuery() as (ProgramMembersExternalAllocation.programMembersExternalAllocation *)
       }
