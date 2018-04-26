@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   "org.imgscalr" % "imgscalr-lib" % "4.2",
   "org.apache.poi" % "poi" % "3.10.1",
   "org.apache.poi" % "poi-ooxml" % "3.10.1",
+  "com.typesafe.play" %% "play" % "2.3.10",
   "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.1",
   "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.0-akka-2.4.x",
   "org.apache.commons" % "commons-email" % "1.3",
