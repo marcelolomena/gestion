@@ -1164,10 +1164,9 @@ object RiskService extends CustomColumns {
     }
   }
 
-  def findAllOpenAlerts(): Seq[RiskAlerts] = {
+def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
     val sqlString =
       """
-        |
         |SELECT a.id
         |,a.risk_id
         |,a.event_code
@@ -1186,13 +1185,11 @@ object RiskService extends CustomColumns {
         |,a.change_state
         |,a.responsible_answer
         |,null template_id
-        |FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'
+        |FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada' 
       """.stripMargin
 
-    //val sqlString = "SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'"
     DB.withConnection { implicit connection =>
-      val result = SQL(sqlString).as(RiskAlerts.alerts *)
-      result
+      SQL(sqlString).on('employeeid->employeeid)as(RiskAlerts.alerts *)
     }
   }
 
@@ -1897,7 +1894,7 @@ object RiskService extends CustomColumns {
 
   def findNewUserAlertsIds(employeeid: String): String = {
     var risk_ids = ""
-    val risksAlerts = RiskService.findAllOpenAlerts()
+    val risksAlerts = RiskService.findAllOpenAlerts(employeeid.toInt)
     for (r <- risksAlerts) {
 
       if (!r.person_invloved.isEmpty) {//obtiene los id de alerta en que figura el usuario
@@ -1922,14 +1919,14 @@ object RiskService extends CustomColumns {
     }
   }
 
-  def findAllCCEmail(): Option[String] = {
+  def findAllCCEmail(id_template:String): Option[String] = {
     val sqlString =
       """
-        SELECT TOP 1 ISNULL(RTRIM(em1),'') + ',' + ISNULL(RTRIM(em2),'') + ',' + ISNULL(RTRIM(em3),'')
-        emails FROM art_risk_alert_conf ORDER BY id DESC
+        SELECT ISNULL(RTRIM(em1),'') + ',' + ISNULL(RTRIM(em2),'') + ',' + ISNULL(RTRIM(em3),'')
+        emails FROM art_risk_alert_conf WHERE is_active = 1 AND id={id_template}
       """
     DB.withConnection { implicit connection =>
-      SQL(sqlString).as(scalar[String].singleOpt)
+      SQL(sqlString).on('id_template->id_template.toInt).as(scalar[String].singleOpt)
     }
   }
   
@@ -2178,9 +2175,10 @@ object RiskService extends CustomColumns {
           if (!alert.get.person_invloved.isEmpty) {
             persons = alert.get.person_invloved.get
           }
-
-          val template = findTmplMail(alert_id)
-          var cc = findAllCCEmail().get.toString
+		  
+		  val template = findTmplMail(alert_id)
+          val tId = findTmplId(alert_id)
+          var cc = findAllCCEmail(tId.toString).get.toString
 
           val lastchar = cc.charAt(cc.length-1).toString
 
@@ -2284,5 +2282,12 @@ object RiskService extends CustomColumns {
       null
     }
   }
+  
+  def findTmplId(id_alert: String) : Int = {
+
+    DB.withConnection { implicit connection =>
+      SQL("select id_template from art_risk_alert_send where id_alert={id_alert}").on('id_alert->id_alert.toInt).as(scalar[Int].single)
+    }
+  }  
 
 }

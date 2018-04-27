@@ -51,7 +51,8 @@ object SendEmail {
       val program_code = program.get.program_code.toString
 
       var subject = s"ALERTA PMO - ART ${program_code} – ${programName}"
-      val fromEmail = Play.application().configuration().getString("smtp.user")
+      //val fromEmail = Play.application().configuration().getString("smtp.user")
+	  val fromEmail = Play.application().configuration().getString("mail.pmo")
       val mail = use[MailerPlugin].email
 
       /////
@@ -123,6 +124,7 @@ object SendEmail {
       mail.setRecipient(user.get.email.toString())
 
       val mylist  = cc.split(",").toList
+	  Logger.debug(mylist.toString)
       mail.setCc(mylist:_*)
 
       val builderRisk = StringBuilder.newBuilder
@@ -156,7 +158,10 @@ object SendEmail {
 
 
     } catch {
-      case ex: Exception => return ex.getMessage
+      case ex: Exception => {
+			Logger.error(ex.getMessage)
+		return ex.getMessage
+	  }
     }
 
     "OK"
