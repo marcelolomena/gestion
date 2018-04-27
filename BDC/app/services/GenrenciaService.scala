@@ -107,6 +107,20 @@ object GenrenciaService extends CustomColumns {
     }
   }
 
+  def findGenrenciaByIdHumanResources(numrut: Integer,periodo: Integer) = {
+    play.Logger.debug("numrut : " + numrut)
+    play.Logger.debug("periodo : " + periodo)
+    if(numrut==null)
+      play.Logger.debug("LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!")
+
+    DB.withConnection { implicit connection =>
+      val result = SQL(
+        "SELECT glosaArea gerencia FROM RecursosHumanos WHERE periodo={periodo} AND numrut={numrut}").on(
+        'numrut -> numrut,'periodo -> periodo).as(BankEmployee.bankEmployee.singleOpt)
+      result
+    }
+  }
+
   /**
    * delete milestone information
    */

@@ -5,25 +5,35 @@ import play.api.db.DB;
 import anorm.SqlParser._;
 import models._;
 import anorm._
-import com.typesafe.plugin._;
 import play.api.data.Form
 import play.i18n._
-import play.mvc._
+import play.Logger
 import java.util.Date;
 object DivisionService extends CustomColumns {
   val langObj = new Lang(Lang.forCode("es-ES"))
 
   def findAllDivisionList(pagNo: String, recordOnPage: String): Seq[Divisions] = {
 
-    val rec = Integer.parseInt(pagNo.toInt.toString) * Integer.parseInt(recordOnPage.toInt.toString)
-    val start = rec - Integer.parseInt(recordOnPage.toInt.toString)
-    val end = Integer.parseInt(recordOnPage.toInt.toString)
-    var sqlString = ""
+    val ini = recordOnPage.toInt * (pagNo.toInt - 1)
+    val end = recordOnPage.toInt
 
-    sqlString = "SELECT * FROM  (SELECT  ROW_NUMBER() OVER(ORDER BY dId) AS Row, * FROM art_division_master AS tbl)as ss WHERE  (  Row >=" + (start + 1) + " AND Row <= " + (start + end) + ")"
+    val sqlString =
+      """
+        |SELECT a.dId,a.division,a.user_id,a.is_deleted,a.updated_by,a.updation_date,a.idRRHH,b.codDivision,b.glosaDivision FROM art_division_master a
+        |LEFT OUTER JOIN
+        |(
+        |SELECT codDivision,glosaDivision FROM RecursosHumanos
+        |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+        |AND rutJefe=(SELECT numRut FROM RecursosHumanos WHERE cui=852 AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND glosaCargoAct NOT LIKE '%Secretaria%' AND glosaCargoAct NOT LIKE '%auxiliar%')
+        |AND glosaCargoAct NOT LIKE '%Secretaria%'
+        |AND glosaCargoAct NOT LIKE '%auxiliar%'
+        |) b
+        |ON a.idRRHH = b.codDivision
+        |ORDER BY a.division OFFSET {ini} ROWS FETCH NEXT {end} ROWS ONLY
+      """.stripMargin
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).as(Divisions.division *)
+      SQL(sqlString).on('ini->ini,'end->end).as(Divisions.division *)
     }
   }
 
@@ -55,7 +65,8 @@ object DivisionService extends CustomColumns {
           'user_id -> division.user_id,
           'updated_by -> division.updated_by,
           'updation_date -> new Date(),
-          'is_deleted -> division.is_deleted).executeInsert(scalar[Long].singleOpt)
+          'is_deleted -> division.is_deleted,
+          'idRRHH -> division.idRRHH).executeInsert(scalar[Long].singleOpt)
       lastsaved.last
     }
   }
@@ -70,7 +81,8 @@ object DivisionService extends CustomColumns {
           user_id={user_id} ,
 			    is_deleted={is_deleted},
           updated_by={updated_by},
-          updation_date={updation_date}
+          updation_date={updation_date},
+          idRRHH={idRRHH}
           where dId={dId}
           """).on(
           'dId -> division.dId,
@@ -78,17 +90,49 @@ object DivisionService extends CustomColumns {
           'user_id -> division.user_id,
           'updated_by -> division.updated_by,
           'updation_date -> new Date(),
-          'is_deleted -> division.is_deleted).executeUpdate()
+          'is_deleted -> division.is_deleted,
+           'idRRHH -> division.codDivision).executeUpdate()
     }
   }
 
   def findDivisionById(dId: Integer) = {
     DB.withConnection { implicit connection =>
-      val result = SQL(
-        "select * from art_division_master  where   dId = {dId}").on(
-          'dId -> dId).as(
-            Divisions.division.singleOpt)
-      result
+
+      val sqlString =
+        """
+          |SELECT a.dId,a.division,a.user_id,a.is_deleted,a.updated_by,a.updation_date,a.idRRHH,b.codDivision,b.glosaDivision FROM art_division_master a
+          |LEFT OUTER JOIN
+          |(
+          |SELECT codDivision,glosaDivision FROM RecursosHumanos
+          |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND rutJefe=(SELECT numRut FROM RecursosHumanos WHERE cui=852 AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND glosaCargoAct NOT LIKE '%Secretaria%' AND glosaCargoAct NOT LIKE '%auxiliar%')
+          |AND glosaCargoAct NOT LIKE '%Secretaria%'
+          |AND glosaCargoAct NOT LIKE '%auxiliar%'
+          |) b
+          |ON a.idRRHH = b.codDivision
+          |WHERE dId = {dId}
+        """.stripMargin
+
+      SQL(sqlString).on('dId -> dId).as(Divisions.division.singleOpt)
+
+    }
+  }
+
+  def findDivisionByTable(): Seq[DivisionsList] = {
+    DB.withConnection { implicit connection =>
+
+      val sqlString =
+        """
+          |SELECT codDivision,glosaDivision FROM RecursosHumanos
+          |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND rutJefe=(SELECT numRut FROM RecursosHumanos WHERE cui=852 AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND glosaCargoAct NOT LIKE '%Secretaria%' AND glosaCargoAct NOT LIKE '%auxiliar%')
+          |AND glosaCargoAct NOT LIKE '%Secretaria%'
+          |AND glosaCargoAct NOT LIKE '%auxiliar%'
+          |ORDER BY glosaDivision
+        """.stripMargin
+
+      SQL(sqlString).as(DivisionsList.divisionList *)
+
     }
   }
 
@@ -164,6 +208,88 @@ object DivisionService extends CustomColumns {
     sqlString = "SELECT  d.* from art_division_master d where d.is_deleted = 0"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(Divisions.division *)
+    }
+  }
+
+  def findAllDivisionCompatibility(): Seq[Divisions] = {
+
+    var sqlString =
+      """
+        |SELECT a.dId,
+        |a.division,
+        |a.user_id,
+        |a.is_deleted,
+        |a.updated_by,
+        |a.updation_date,
+        |a.idRRHH,
+        |b.codDivision,
+        |b.glosaDivision FROM art_division_master a
+        |LEFT OUTER JOIN
+        |(
+        |SELECT codDivision,glosaDivision FROM RecursosHumanos
+        |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+        |AND rutJefe=(SELECT numRut FROM RecursosHumanos WHERE cui=852 AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND glosaCargoAct NOT LIKE '%Secretaria%' AND glosaCargoAct NOT LIKE '%auxiliar%')
+        |AND glosaCargoAct NOT LIKE '%Secretaria%'
+        |AND glosaCargoAct NOT LIKE '%auxiliar%'
+        |) b
+        |ON a.idRRHH = b.codDivision
+        |WHERE a.is_deleted = 0
+      """.stripMargin
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(Divisions.division *)
+    }
+  }
+
+  def findAllDivisionsCompatibility(): Seq[Divisions] = {
+
+    var sqlString =
+      """
+        |SELECT a.dId,
+        |a.division,
+        |a.user_id,
+        |a.is_deleted,
+        |a.updated_by,
+        |a.updation_date,
+        |a.idRRHH,
+        |b.codDivision,
+        |b.glosaDivision FROM art_division_master a
+        |LEFT OUTER JOIN
+        |(
+        |SELECT codDivision,glosaDivision FROM RecursosHumanos
+        |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+        |AND rutJefe=(SELECT numRut FROM RecursosHumanos WHERE cui=852 AND periodo=(SELECT MAX(periodo) FROM RecursosHumanos) AND glosaCargoAct NOT LIKE '%Secretaria%' AND glosaCargoAct NOT LIKE '%auxiliar%')
+        |AND glosaCargoAct NOT LIKE '%Secretaria%'
+        |AND glosaCargoAct NOT LIKE '%auxiliar%'
+        |) b
+        |ON a.idRRHH = b.codDivision
+        |WHERE a.is_deleted = 0
+        |ORDER BY a.division
+      """.stripMargin
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(Divisions.division *)
+    }
+  }
+
+
+
+  def findIdDivisionRRHH(dId:Int): Option[Int] = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT idRRHH FROM art_division_master WHERE dId={dId}").on('dId->dId).as(scalar[Int].singleOpt)
+    }
+  }
+
+  def findNewDivisionRRHH(dId:Int): Option[String] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT TOP 1 b.glosaDivision FROM art_division_master a
+          |JOIN RecursosHumanos b
+          |ON a.idRRHH = b.codDivision
+          |WHERE a.dId = {dId}
+          |AND b.periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+        """.stripMargin
+
+      SQL(sqlstr).on('dId->dId).as(scalar[String].singleOpt)
     }
   }
 

@@ -41,7 +41,7 @@
              <div class="skill-list" style="width:50%; float:right;  margin-top: 10px;">
 				<div class="dash_detail_1_right push-top6px" style="margin:20px 0 0 20px;float:left"><h3 style="width:436px;font-size:14px">Perfil Rol</h3>
 					@for((u,index) <- userProfileRoles.zipWithIndex){
-						<div class="dash_right_data_main">
+
 							<div class="dash_right_data_2 @if(index%2!=0){dash_right_data_2_odd}" style="width:448px">
 								<div class="dash_right_data_left" style="width:400px"> 
 										@if(!UserRoleService.findUserRoleById(u.user_role.toString()).isEmpty){
@@ -50,7 +50,7 @@
 								</div>
 								<span id="m_@u.id" style="float:right;margin-right: 11px;margin-left: 0px" class="delete_icon remove-role"></span>
 							</div>
-						</div>
+
 					}
 			</div>
 			</div>

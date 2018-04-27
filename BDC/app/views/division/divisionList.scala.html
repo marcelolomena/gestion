@@ -63,6 +63,7 @@
 	          <th>@Messages("addDivison.departmenthead")</th>
 	         <th>@Messages("budgettype.updatedby") </th>
 	             <th>@Messages("budgettype.updateddate")</th>
+				<th>@Messages("addDivison.divisionRRHH")</th>
 	               <th>@Messages("service.catelogue.status")</th>
 	          <th style="width: 26px;">@Messages("addDepartment.action") </th>
 	        </tr>
@@ -97,7 +98,13 @@
 	          }
 	           </a>
 	           </td>
-	           
+				<td>
+					@if(!div.codDivision.isEmpty){
+						@div.glosaDivision
+					}else{
+					<span style="color:red">División no mapeada</span>
+					}
+				</td>
 	         <td><a href="@routes.Division.editDivision(div.dId.get.toString())">
 	          @if(div.is_deleted.toLong ==1){
 	          	Inactive

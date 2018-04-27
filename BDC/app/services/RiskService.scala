@@ -1133,7 +1133,13 @@ object RiskService extends CustomColumns {
       Logger.debug("EL VALOR DEL TEMPLATE ES " + risk.template_id.get)
       RiskService.insertAlertSend(last_index.toInt, risk.template_id.get)
 
-      sendEmailAlerts(last_index.toString,risk.reiteration.get)
+      val state_ret=sendEmailAlerts(last_index.toString,risk.reiteration.get)
+      state_ret match {
+        case "OK" =>
+          Logger.debug("Send Email OK")
+        case _   => Logger.debug(state_ret)
+      }
+
 
       last_index
     }
@@ -1164,7 +1170,8 @@ object RiskService extends CustomColumns {
     }
   }
 
-def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
+
+  def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
     val sqlString =
       """
         |SELECT a.id
@@ -1185,18 +1192,21 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
         |,a.change_state
         |,a.responsible_answer
         |,null template_id
-        |FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada' 
+        |FROM art_risk_alert a JOIN art_risk_alert_status b
+        | ON a.status_id = b.id
+        | WHERE a.is_active=1 AND b.is_active = 1
+        | AND b.description != 'Cerrada'
       """.stripMargin
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('employeeid->employeeid)as(RiskAlerts.alerts *)
+      SQL(sqlString).as(RiskAlerts.alerts *)
     }
   }
 
   def findAllFirstExpiredAlerts(): Seq[RiskAlerts] = {
     val sqlString =
       """
-        SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
+        SELECT a.*,null template_id FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
         WHERE dbo.BusinessDays(a.event_date, CAST(a.change_state AS DATE)) > 2
         AND b.description = 'Vigente' AND a.reiteration = 1
       """
@@ -1244,6 +1254,24 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
         |  WHERE risk_id = {id}
       """.stripMargin
     //val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND risk_id = " + id
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).on('id->id.toInt).as(RiskAlerts.alerts *)
+      result
+    }
+  }
+
+  def findAllResponsibleIds(id: String): Seq[RiskAlerts] = {
+    val sqlString =
+      """
+        |SELECT a.* ,null template_id
+        |  FROM art_risk_alert a join art_risk_alert_status b on a.status_id=b.id
+        |  WHERE
+        |  a.responsible = {id}
+        |  and a.is_active = 1
+        |  and b.is_active = 1
+        |  and b.description!='Cerrada'
+      """.stripMargin
+
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).on('id->id.toInt).as(RiskAlerts.alerts *)
       result
@@ -1794,10 +1822,16 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
       SQL("select id_template from art_risk_alert_send where id_alert={id_alert}").on('id_alert->id_alert.toInt).as(scalar[Int].single)
     }
 
-    //val sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf WHERE is_active = 1 ORDER BY id DESC"
     val sqlString = "SELECT tpl FROM art_risk_alert_conf WHERE is_active = 1 AND id={id_template}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id_template->id_template).as(scalar[String].single)
+    }
+  }
+
+  def findTmplId(id_alert: String) : Int = {
+
+    DB.withConnection { implicit connection =>
+      SQL("select id_template from art_risk_alert_send where id_alert={id_alert}").on('id_alert->id_alert.toInt).as(scalar[Int].single)
     }
   }
 
@@ -1970,6 +2004,21 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
     }
   }
 
+  def updateAlertState(alert_id: String) = {
+    DB.withConnection { implicit connection =>
+
+      SQL(
+        """
+          update art_risk_alert SET
+          status_id=3,
+          change_state=GETDATE()
+          where id={alert_id}
+          """).on(
+        'alert_id -> alert_id).executeUpdate()
+
+    }
+  }
+
   def automaticAlert() {
     val FormattedDATE = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")
     val now = FormattedDATE.format(new Date().getTime).toString
@@ -1978,8 +2027,9 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
     if(!firstCandidates.isEmpty) {
       for (t <- firstCandidates) {
         Logger.info("First round : " + t.id.get.toString + " " + t.reiteration.get.toInt)
-        val round = t.reiteration.get.toInt + 1
-
+        //val round = t.reiteration.get.toInt + 1
+        updateAlertState(t.id.get.toString)//cambia estaddo alerta
+        /*
         sendEmailAlerts(t.id.get.toString, round) match {
           case "OK" =>
             // update Alert
@@ -1987,6 +2037,7 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
             updateFirstAlertCronMail(t.id.get.toString, round)
           case _   => Logger.info("I DO NOT SEND THE MAIL!!")
         }
+        */
 
       } //first iteration
     }else{
@@ -1994,6 +2045,7 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
     }
 
     //second iteration
+    /*
     val secondCandidates = RiskService.findAllSecondExpiredAlerts()
     if(!secondCandidates.isEmpty) {
       for (r <- secondCandidates) {
@@ -2012,6 +2064,7 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
     } else {
       Logger.info("["  + now + "] There are no valid alerts with more than eight days of delay.")
     }
+    */
   }
 
   def riskAutomaticAlert() {
@@ -2175,8 +2228,7 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
           if (!alert.get.person_invloved.isEmpty) {
             persons = alert.get.person_invloved.get
           }
-		  
-		  val template = findTmplMail(alert_id)
+          val template = findTmplMail(alert_id)
           val tId = findTmplId(alert_id)
           var cc = findAllCCEmail(tId.toString).get.toString
 
@@ -2192,28 +2244,37 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
               if (!user.isEmpty) {
                 val email = user.get.email.toString()
 
-                //println(email)
+                Logger.debug("EMAIL : " + email)
 
                 if (!StringUtils.isEmpty(email)) {
 
                   if(increment == 2) {
                     val boss = findBossMail(email)
                     if(!boss.isEmpty) {
-                      println("el jefe es : " + boss.get.toString)
+                      Logger.debug("el jefe es : " + boss.get.toString)
                       cc = cc + "," + boss.get.toString
                     }else{
-                      println("no tiene jefe")
+                      Logger.debug("no tiene jefe")
                     }
 
                   } else if (increment == 3) {
                     val bigboss = findBigBossMail(email)
                     if(!bigboss.isEmpty) {
-                      println("el gran jefe : " + bigboss.get.toString)
+                      Logger.debug("el gran jefe : " + bigboss.get.toString)
                       cc = cc + "," + bigboss.get.toString
                     }else{
-                      println("no tiene gran jefe")
+                      Logger.debug("no tiene gran jefe")
                     }
                   }
+
+                  Logger.debug("USER : " + user.toString)
+                  Logger.debug("PROGRAM : " + program.toString)
+                  Logger.debug("ALERT : " + alert.toString)
+                  Logger.debug("RISK : " + risks.toString)
+                  Logger.debug("RISK DETAIL : " + risk_details.toString)
+                  Logger.debug("INCREMENT : " + increment.toString)
+                  Logger.debug("TEMPLATE : " + template.toString)
+                  Logger.debug("CC : " + cc.toString)
 
                   response=utils.SendEmail.sendEmailRiskAlert(
                     user,
@@ -2225,7 +2286,7 @@ def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
                     template,
                     cc)
 
-                  println("RESPUESTA : " + response)
+                  Logger.debug("RESPUESTA : " + response)
 
 
                 }

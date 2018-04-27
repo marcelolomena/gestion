@@ -132,7 +132,7 @@ object SubTaskJira extends Controller {
    * id - sub task id
    */
   def editSubTask(id: String) = Action { implicit request =>
-    
+
       val subTask = SubTaskServices.findSubTaskDetailsBySubtaskId(id)
       val TaskDetails = TaskService.findTaskDetailsByTaskId(subTask.get.task_id)
       val projectDetails = ProjectService.findProject(TaskDetails.get.pId)
@@ -163,15 +163,14 @@ object SubTaskJira extends Controller {
     def saveAdvanceRate(sub_task_id: String, advance_rate: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       val employeeid = request.session.get("uId").get
-      println("sub_task_id:" + sub_task_id)
-      println("advance_rate:" + advance_rate)
-      //Ok("OK")
+      val responsibleAlerts = RiskService.findAllResponsibleIds(employeeid)
       
       SubTaskServices.updateSubTaskAdvanceRate(sub_task_id,advance_rate)
       
       
       val employee = UserService.findUserDetails(Integer.parseInt(employeeid.toString()))
-      val employeeOffice = UserService.findUserOfficeDetails(Integer.parseInt(employeeid.toString()))
+      //val employeeOffice = UserService.findUserOfficeDetails(Integer.parseInt(employeeid.toString()))
+      val employeeOffice = UserService.findBankEmployeeDetails(employee.get.email)
       val programs = UserService.findProgramListForUser(employeeid.toString())
       val pUserProjectList = null // UserService.findProjectsByUser(Integer.parseInt(employee.get.uid.get.toString()))
       val alerts = RiskService.findUserAlertsIds(employeeid.toString())
@@ -195,7 +194,17 @@ object SubTaskJira extends Controller {
       val program_task=ProgramService.programas_sin_avance_en_tareas(employeeid.toString())
       // EarnValueService.calculateSubTaskEarnValue()
 
-      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, consumos, program_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.user.employee(
+        employee,
+        employeeOffice,
+        pUserProjectList,
+        ARTForms.imgCropForm,
+        programs,
+        alerts,
+        consumos,
+        program_task,
+        responsibleAlerts
+      )).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
       
       
       

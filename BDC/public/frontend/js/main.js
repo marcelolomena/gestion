@@ -3702,7 +3702,7 @@ function renderProgramEarnValuepro(id) {
 			$("#pae2").html(obj.PAE);
 			//$("#hp").html(obj.HP);
 			//$("#ha").html(obj.HA);
-			console.log("HOla:"+obj.AGI);
+
 			var num = obj.AGI;
 			$("#agi").html(num.toFixed(2)+' %');
 			var num2 = obj.AGE;

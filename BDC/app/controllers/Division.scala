@@ -52,8 +52,8 @@ object Division extends Controller with Secured {
       username = result.get
 
       val departments = DivisionService.findAllDivisionList(pageNumber, recordOnPage)
-      var totalCount = DivisionService.divisionCount
-      var pagination = Application.Pagination(totalCount, pageNumber, recordOnPage, search)
+      val totalCount = DivisionService.divisionCount
+      val pagination = Application.Pagination(totalCount, pageNumber, recordOnPage, search)
       Ok(views.html.division.divisionList(departments, username, totalCount, pagination))
     }
   }
@@ -65,7 +65,7 @@ object Division extends Controller with Secured {
     { implicit request =>
       val users = getDropDawnMap
       val result = request.session.get("username")
-      var username = result.get
+      val username = result.get
       Ok(views.html.division.addDivision(username, users, ARTForms.divisionForm))
     }
   }
@@ -75,7 +75,7 @@ object Division extends Controller with Secured {
       ARTForms.divisionForm.bindFromRequest.fold(
         hasErrors => {
           val result = request.session.get("username")
-          var username = result.get
+          val username = result.get
           val users = getDropDawnMap
           BadRequest(views.html.division.addDivision(username, users, hasErrors))
         },
@@ -83,15 +83,25 @@ object Division extends Controller with Secured {
           var division = ""
           division = success.division.trim()
           val obj = DivisionService.findDivisionByName(division)
-          println(obj.size)
+          //println(obj.size)
           if (obj.size > 0) {
             val result = request.session.get("username")
-            var username = result.get
+            val username = result.get
             val users = getDropDawnMap
             BadRequest(views.html.division.addDivision(username, users, ARTForms.divisionForm.withError("division", Messages.get(langObj, "divison.divisionexist")).fill(success)))
           } else {
             val uId = Integer.parseInt(request.session.get("uId").get)
-            val obj = Divisions(success.dId, success.division, success.user_id, Option(uId), success.updation_date, 0)
+            val obj = Divisions(
+              success.dId,
+              success.division,
+              success.user_id,
+              Option(uId),
+              success.updation_date,
+              0,
+              success.idRRHH,
+              success.codDivision,
+              success.glosaDivision
+            )
             val last = DivisionService.saveDivision(obj)
             /**
              * Activity log
@@ -116,11 +126,12 @@ object Division extends Controller with Secured {
             Redirect(routes.Division.divisionList())
           case Some(dep: Divisions) =>
             val gerenciaList = GenrenciaService.findAllGenrenciaListByDivision(dId)
-            val obj = Divisions(dep.dId, dep.division, dep.user_id, dep.updated_by, dep.updation_date, dep.is_deleted)
+            val obj = Divisions(dep.dId, dep.division, dep.user_id, dep.updated_by, dep.updation_date, dep.is_deleted,dep.idRRHH,dep.codDivision,dep.glosaDivision)
             val result = request.session.get("username")
             username = result.get
             val users = getDropDawnMap
-            Ok(views.html.division.divisionUpdate(username, users, ARTForms.divisionForm.fill(obj), gerenciaList))
+            val divisionsTable = getDropDawnMapTable
+            Ok(views.html.division.divisionUpdate(username, users,divisionsTable, ARTForms.divisionForm.fill(obj), gerenciaList))
         }
       } else {
         Redirect(routes.Division.divisionList())
@@ -137,16 +148,18 @@ object Division extends Controller with Secured {
       myForm.fold(
         hasErrors => {
           val gerenciaList = GenrenciaService.findAllGenrenciaListByDivision(hasErrors.data.get("id").get)
-          BadRequest(views.html.division.divisionUpdate(username, users, hasErrors, gerenciaList))
+          val divisionsTable = getDropDawnMapTable
+          BadRequest(views.html.division.divisionUpdate(username, users, divisionsTable, hasErrors, gerenciaList))
         },
         success => {
           val theForm = DivisionService.validateDivisionForm(myForm.fill(success))
           if (theForm.hasErrors) {
             val gerenciaList = GenrenciaService.findAllGenrenciaListByDivision(success.dId.get.toString())
-            BadRequest(views.html.division.divisionUpdate(username, users, theForm, gerenciaList))
+            val divisionsTable = getDropDawnMapTable
+            BadRequest(views.html.division.divisionUpdate(username, users, divisionsTable, theForm, gerenciaList))
           } else {
             val uId = Integer.parseInt(request.session.get("uId").get)
-            val obj = Divisions(success.dId, success.division, success.user_id, Option(uId), success.updation_date, success.is_deleted)
+            val obj = Divisions(success.dId, success.division, success.user_id, Option(uId), success.updation_date, success.is_deleted,success.idRRHH,success.codDivision,success.glosaDivision)
             val last = DivisionService.updateDivision(obj)
             /**
              * Activity log
@@ -194,10 +207,19 @@ object Division extends Controller with Secured {
   }
   private def getDropDawnMap: java.util.HashMap[String, String] = {
     val users = UserService.findAllUsers
-    var usersMap = new java.util.HashMap[String, String]()
+    val usersMap = new java.util.LinkedHashMap[String, String]()
     for (user <- users) {
       usersMap.put(user.uid.get.toString(), user.first_name + " " + user.last_name)
     }
     usersMap
+  }
+
+  private def getDropDawnMapTable: java.util.HashMap[String, String] = {
+    val divisions = DivisionService.findDivisionByTable()
+    val divisionsMap = new java.util.LinkedHashMap[String, String]()
+    for (div <- divisions) {
+      divisionsMap.put(div.codDivision.get.toString(), div.glosaDivision.get.toString)
+    }
+    divisionsMap
   }
 }

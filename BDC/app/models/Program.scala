@@ -2,7 +2,8 @@ package models
 import anorm.SqlParser._
 import play.api.Play.current
 import java.util.Date
-import anorm._
+
+import anorm.{~, _}
 import play.api.db.DB
 import play.api.data.format.Formats._
 import play.api.data.Form
@@ -25,17 +26,40 @@ case class ProgramSearch(
     sort_type: Option[String],
     impact_type: Option[String])
 
-case class ProgramMaster(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int],
-  //program_name: String, program_code: Long, program_description: Option[String],
-  program_name: String, program_code: Long, sap_code: Option [Long], program_description: Option[String], //Cambio  
-  work_flow_status: Integer, demand_manager: Integer, program_manager: Integer, completion_percentage: Option[Double], is_active: Option[Int], planned_hours: Option[Long],internal_state: String, estimated_cost: Option[Long])
+case class ProgramMaster(
+program_id: Option[Int], 
+program_type: Int, 
+program_sub_type: Option[Int],
+  program_name: String,
+user_responsible: String,
+  program_code: Long,
+  internal_number:Option[Int],
+  pLevel: Option[String],
+  sap_code: Option [Long], 
+  program_description: Option[String],
+  work_flow_status: Integer, 
+  demand_manager: Integer, 
+  program_manager: Integer,
+  completion_percentage: Option[Double], 
+  is_active: Option[Int], 
+  planned_hours: Option[Long],
+  internal_state: String, 
+  estimated_cost: Option[Long],
+  clasificacion: Option[String]
+                        )
+
+case class ProgramResult(
+      program_id:Option[Int],
+      program_type:Option[Int],
+      program_name:String,
+      devison:Option[Int])
 
 object ProgramSearch {
   val programSearch = {
     //get[Option[String]]("delay_level") ~
       //get[Option[String]]("project_classification") ~
       get[Option[String]]("work_flow_status") ~
-      get[Option[String]]("program_name") ~
+      get[Option[String]]("program_name") ~ //agregado
       get[Option[String]]("program_code") ~ //agregado
       get[Option[String]]("sap_code") ~ //agregado     
       get[Option[String]]("program_type") ~
@@ -51,35 +75,129 @@ object ProgramSearch {
       }
   }
 }
+
+object ProgramResult extends CustomColumns  {
+  val programResult = {
+      get[Option[Int]]("program_id") ~
+      get[Option[Int]]("program_type") ~
+      get[String]("program_name") ~
+      get[Option[Int]]("devison")  map {
+      case program_id ~
+        program_type ~
+        program_name ~
+        devison =>
+        ProgramResult(program_id, program_type,program_name, devison)
+    }
+  }
+}
+
 object ProgramMaster extends CustomColumns {
 
   val pMaster = {
-    get[Option[Int]]("program_id") ~ get[Int]("program_type") ~ get[Option[Int]]("program_sub_type") ~ get[String]("program_name") ~
-          get[Long]("program_code") ~ get[Option[Long]]("sap_code") ~ get[Option[String]]("program_description") ~ //cambio
-      //get[Long]("program_code") ~ get[Option[String]]("program_description") ~
-      get[Int]("work_flow_status") ~ get[Int]("demand_manager") ~ get[Int]("program_manager") ~ get[Option[Double]]("completion_percentage") ~ get[Option[Int]]("is_active") ~ get[Option[Long]]("planned_hours") ~ get[String]("internal_state") ~ get[Option[Long]]("estimated_cost") map {
-        //case program_id ~ program_type ~ program_sub_type ~ program_name ~ program_code ~
-              case program_id ~ program_type ~ program_sub_type ~ program_name ~ program_code ~ sap_code ~ //cambio
-          program_description ~ work_flow_status ~
-          demand_manager ~ program_manager ~ completion_percentage ~ is_active ~ planned_hours ~ internal_state ~ estimated_cost =>
-        //  ProgramMaster(program_id, program_type, program_sub_type, program_name, program_code,
-            ProgramMaster(program_id, program_type, program_sub_type, program_name, program_code, sap_code, //cambio
-            program_description, work_flow_status,
-            demand_manager, program_manager, completion_percentage, is_active, planned_hours, internal_state,estimated_cost)
+    get[Option[Int]]("program_id") ~
+      get[Int]("program_type") ~
+      get[Option[Int]]("program_sub_type") ~
+      get[String]("program_name") ~
+      get[String]("user_responsible") ~
+      get[Long]("program_code") ~
+      get[Option[Int]]("internal_number") ~
+      get[Option[String]]("pLevel") ~
+      get[Option[Long]]("sap_code") ~
+      get[Option[String]]("program_description") ~
+      get[Int]("work_flow_status") ~
+      get[Int]("demand_manager") ~
+      get[Int]("program_manager") ~
+      get[Option[Double]]("completion_percentage") ~
+      get[Option[Int]]("is_active") ~
+      get[Option[Long]]("planned_hours") ~
+      get[String]("internal_state") ~
+      get[Option[Long]]("estimated_cost")  ~
+      get[Option[String]]("clasificacion") map {
+              case program_id ~
+                program_type ~
+                program_sub_type ~
+                program_name ~
+                user_responsible ~
+                program_code ~
+                internal_number ~
+                pLevel ~
+                sap_code ~
+                program_description ~
+                work_flow_status ~
+                demand_manager ~
+                program_manager ~
+                completion_percentage ~
+                is_active ~
+                planned_hours ~
+                internal_state ~
+                estimated_cost ~
+                clasificacion =>
+            ProgramMaster(
+              program_id,
+              program_type,
+              program_sub_type,
+              program_name,
+              user_responsible,
+              program_code,
+              internal_number,
+              pLevel,
+              sap_code,
+              program_description,
+              work_flow_status,
+              demand_manager,
+              program_manager,
+              completion_percentage,
+              is_active,
+              planned_hours,
+              internal_state,
+              estimated_cost,
+              clasificacion)
       }
   }
 }
 
-case class ProgramDetails(program_id: Int, devison: Int, management: Option[Int], department: Option[Int],
-  impact_type: Int, business_line: Option[String], sap_code: Option[Int])
+case class ProgramDetails(
+       program_id: Int,
+       devison: Int,
+       management: Option[Int],
+       department: Option[Int],
+       impact_type: Int,
+       business_line: Option[String],
+       sap_code: Option[Int],
+       numrut: Option[Int],
+       periodo: Option[Int])
 
 object ProgramDetails {
 
   val pDetails = {
-    get[Int]("program_id") ~ get[Int]("devison") ~ get[Option[Int]]("management") ~ get[Option[Int]]("department") ~
-      get[Int]("impact_type") ~ get[Option[String]]("business_line") ~ get[Option[Int]]("sap_code") map {
-        case program_id ~ devison ~ management ~ department ~ impact_type ~ business_line ~ sap_code =>
-          ProgramDetails(program_id, devison, management, department, impact_type, business_line, sap_code)
+    get[Int]("program_id") ~
+      get[Int]("devison") ~
+      get[Option[Int]]("management") ~
+      get[Option[Int]]("department") ~
+      get[Int]("impact_type") ~
+      get[Option[String]]("business_line") ~
+      get[Option[Int]]("sap_code") ~
+      get[Option[Int]]("numrut") ~
+      get[Option[Int]]("periodo") map {
+        case program_id ~
+          devison ~
+          management ~
+          department ~
+          impact_type ~
+          business_line ~
+          sap_code ~
+          numrut ~
+          periodo =>
+          ProgramDetails(
+            program_id,
+            devison,
+            management,
+            department,
+            impact_type,
+            business_line,
+            sap_code,
+            numrut,
+            periodo)
 
       }
   }
@@ -284,9 +402,27 @@ object ProgramStatus {
   implicit val statusWrites = Json.writes[ProgramStatus]
 }
 
-case class Programs(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int], program_name: String,
-  program_code: Long, program_description: Option[String], work_flow_status: Integer, demand_manager: Integer,
-  program_manager: Integer, program_details: ProgramDetail, program_dates: ProgramDate, is_active: Option[Int], planned_hours: Option[Long], internal_state:String,estimated_cost: Option[Long])
+case class Programs(
+                     program_id: Option[Int],
+                     program_type: Int,
+                     program_sub_type: Option[Int],
+                     program_name: String,
+                     user_responsible: String,
+                     program_code: Long,
+                     internal_number: Option[Int],
+                     pLevel: Option[String],
+                     program_description: Option[String],
+                     work_flow_status: Integer,
+                     demand_manager: Integer,
+                     clasificacion:Option[String],
+                     program_manager: Integer,
+                     program_details: ProgramDetail,
+                     program_dates: ProgramDate,
+                     is_active: Option[Int],
+                     planned_hours: Option[Long],
+                     internal_state:String,
+                     estimated_cost: Option[Long]
+                   )
 
 object Programs {
 

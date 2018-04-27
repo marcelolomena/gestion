@@ -19,8 +19,8 @@
 @import play.api._
 @import java.math.BigInteger; var subTasks: Seq[SubTasks]= null ; var i=1;var pStatus: Option[ProjectStatus] = null;var version: Option[VersionDetails] = null;var versions: Seq[VersionDetails] = null;var user: Option[Users] = null;
 @import utils._;var programtypes: Option[ProgramTypeMaster] = ProgramTypeService.findProgramTypeById(program.get.program_type.toString);var subtypes: Option[SubTypes] = null; var genrenciaDetails :Option[Genrencias] =  null;var departmentDetails : Option[Departments]= null;
-<link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/jquery-ui.css")">
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="http://www.pureexample.com/js/flot/excanvas.min.js"></script><![endif]-->
+
 <style type="text/css" media="screen">
     th.ui-th-column div{
         white-space:normal !important;
@@ -38,14 +38,9 @@
 
     .ui-autocomplete {
         font-size: 11px;
-    } 
-    
-    .ui-dialog .ui-dialog-title {
-    float: left;
-    margin: .1em 16px .1em 0;
-    text-align: center;
-    width: 100%;
-}    
+    }
+
+
 </style>
 </head>
 <body>
@@ -106,7 +101,7 @@
 		</li>
 		
 		<li>
-			<span class="header">@Messages("addNewProgram.programSubType")</span>
+			<span class="header">@Messages("programDetails.programSubType")</span>
 			<span class="program-data">
 				
 				@if(!program.get.program_sub_type.isEmpty){
@@ -125,14 +120,14 @@
 		</li>
   		<li>
 			<span class="header">@Messages("programDetails.division")</span>
-			<span class="program-data">@DivisionService.findDivisionById(programDetail.get.devison).get.division</span>
+			<span class="program-data">@DivisionService.findDivisionById(programDetail.get.devison).get.glosaDivision</span>
 		</li>
-		
+@*
 		<li>
 			<span class="header">@Messages("programDetails.gerencia") </span>
 			<span class="program-data">
 				@if(!programDetail.get.management.isEmpty){
-					@{genrenciaDetails = GenrenciaService.findGenrenciaById(programDetail.get.management.get) }
+					@{genrenciaDetails = GenrenciaService.findGenrenciaByIdHumanResources(programDetail.get.numrut.get,programDetail.get.periodo.get) }
 					@if(!genrenciaDetails.isEmpty){
 						@genrenciaDetails.get.genrencia
 					}
@@ -140,19 +135,7 @@
 	  			}	
 	  		</span>
 		</li>
-
-		<li>
-			<span class="header">@Messages("programDetails.department") </span>
-			<span class="program-data">
-				@if(!programDetail.get.department.isEmpty){
-					@{departmentDetails= DepartmentService.findDepartmentById(programDetail.get.department.get) }
-  					@if(!departmentDetails.isEmpty){
-  						@departmentDetails.get.department
- 					}
- 				}
-			</span>
-		</li>
-		
+*@
          <li>
 			<span class="header">Estado </span>
 			<span class="program-data">
@@ -237,14 +220,6 @@
 			<span class="program-data ">
 				@if(program.get.program_code.isWhole() ){
 					@program.get.program_code
-				}
-			</span>
-		</li>
-		<li>
-			<span class="header">@Messages("addNewProgram.ppmnumber")</span>
-			<span class="program-data ">
-				@if(!programDetail.get.sap_code.isEmpty ){
-					@programDetail.get.sap_code.get
 				}
 			</span>
 		</li>
@@ -839,11 +814,12 @@
 <script src="@routes.Assets.at("frontend/highcharts/highcharts-more.js")"></script>
 <script src="@routes.Assets.at("frontend/highcharts/modules/exporting.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
-<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.css")">
+
 <link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
 <script src="@routes.Assets.at("frontend/jqgrid/js/i18n/grid.locale-es.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/jqgrid/js/jquery.jqGrid.min.js")" type="text/javascript"></script>
 <link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/documents.css")">
+
 <script src="@routes.Assets.at("frontend/js/documents.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/js/jquery.mask.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/js/jquery.simplePagination.js")" type="text/javascript"></script>
@@ -911,20 +887,20 @@
 			                }
 			);	
 	
-								
+
 		$("#dialog-edit-member-capacity").dialog({
 					autoOpen: false,
 		            modal: true,
 		            resizable: true,
 		            open: function(event, ui) {
 			        	//$("#scroll38").setGridHeight($(this).height()-54);
-			        	$("#scroll38").setGridHeight($(this).height()); 
+			        	$("#scroll38").setGridHeight($(this).height());
 			        	$("#scroll38").setGridWidth($(this).width(), true);
 			    	},resizeStop: function(event, ui) {
 			        	//$("#scroll38").setGridHeight($(this).height()-54);
 			        	$("#scroll38").setGridHeight($(this).height()); 
 			        	$("#scroll38").setGridWidth($(this).width(), true);
-    				}, position: 'center',
+    				},
 					show: {
 		              effect: "blind",
 		              duration: 1000
@@ -946,7 +922,7 @@
 			autoOpen: false,
             width: 800,
             height: 600,
-            position: 'center',
+            //position: 'center',
 	          show: {
 	              effect: "blind",
 	              duration: 1000

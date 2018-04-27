@@ -1,6 +1,15 @@
 @import org.json.JSONArray
 @import org.json.JSONObject 
-@(employee :Option[Users],employeeOffice:Option[Office] ,projects:Seq[Project],profileImgForm :Form[ProfileImage], programs:Seq[ProgramMaster],alerts:String,consumos:JSONArray, programTask:Seq[ProgramMaster])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@(employee :Option[Users],
+employeeOffice:Option[BankEmployee],
+projects:Seq[Project],
+profileImgForm :Form[ProfileImage],
+programs:Seq[ProgramMaster],
+alerts:String,
+consumos:JSONArray,
+programTask:Seq[ProgramMaster],
+moreAlerts:Seq[RiskAlerts]
+)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import services._
 @import helper._
@@ -158,24 +167,46 @@
 						<div class="emp_img_container">@Messages("employee.email")</div>
 						<span class="emp_email" style="width: 225px;margin-top: 5px;">@employee.get.email</span>
 					</div>
+				@if(employeeOffice.getOrElse("").toString.length>0){
+				<div class="emp_div_rut">
+					<div class="emp_img_container">@Messages("employee.position") </div>
+					<span class="emp_rut" style="width: 225px;margin-top: 5px;">
+							<span id="ladivision">@employeeOffice.get.position</span>
+						</span>
+				</div>
+				}
+				@if(employeeOffice.getOrElse("").toString.length>0){
+				<div class="emp_div_rut">
+					<div class="emp_img_container">@Messages("employee.boss") </div>
+					<span class="emp_rut" style="width: 225px;margin-top: 5px;">
+							<span id="ladivision">@employeeOffice.get.boss</span>
+						</span>
+				</div>
+				}
+				@if(employeeOffice.getOrElse("").toString.length>0){
 					<div class="emp_div_rut">
                         <div class="emp_img_container">@Messages("employee.division") </div>
 						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
-							<span id="ladivision"></span>
+							<span id="ladivision">@employeeOffice.get.division</span>
 						</span>
 					</div>
+				}
+				@if(employeeOffice.getOrElse("").toString.length>0){
 					<div class="emp_div_rut">
                         <div class="emp_img_container">@Messages("employee.gerencia") </div>
 						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
-							<span id="lagerencia"></span>
+							<span id="lagerencia">@employeeOffice.get.gerencia</span>
 						</span>
 					</div>
+				}
+				@if(employeeOffice.getOrElse("").toString.length>0){
 					<div class="emp_div_rut">
                         <div class="emp_img_container">@Messages("employee.department") </div>
 						<span class="emp_rut" style="width: 225px;margin-top: 5px;">
-							<span id="eldepto"></span>
+							<span id="eldepto">@employeeOffice.get.department</span>
 						</span>
 					</div>
+				}
 				</div>
 				<div class="skill-list">
 						 @if(UserService.findAllSkillsByUserId(employee.get.uid.get).size > 0){
@@ -229,27 +260,45 @@
 				
 					<div class="width_full dash_detail_1_right border-none risk-alerts-header"> 
 						<h3>@Messages("employeeProfile.myalerts")&nbsp;<img width="16px" height="16px" src="@routes.Assets.at("frontend/images/warning-16.png")" alt=""/></h3>
-						<div class="width_full">
-						@for((id,index) <- alerts.split(",").zipWithIndex){
-							<div id="rsk_@id" class=" width290px @if(index%2==0){dash_right_data_2_odd}else{dash_right_data_2}">
+						@if(!utils.UserAccess.checkAccess(req,"alert_view_profile")){
+							<div class="width_full">
+							@for((id,index) <- alerts.split(",").zipWithIndex){
+								<div id="rsk_@id" class=" width290px @if(index%2==0){dash_right_data_2_odd}else{dash_right_data_2}">
 
-       					 			@if(RiskService.findRiskAlertsById(id) != null){
-       					 				<div class="width_full">
-		       					 		<span class="left alert-title">
-											<a href="/edit-generic-alert/@RiskService.findRiskAlertsById(id).get.risk_id/@id">@RiskService.findRiskAlertsById(id).get.event_title</a>
-		       					 		</span>
-		       					 		<span id="alert_@id" class="show-alert"></span>
-		       					 		</div>
-       					 			}else{
-       					 			<div style="width:282px;padding: 4px;background: #e7edef" class="dash_right_data_left">No hay alertas disponibles</div>
-       					 			}
+										@if(RiskService.findRiskAlertsById(id) != null){
+											<div class="width_full">
+											<span class="left alert-title">
+												<a href="/edit-generic-alert/@RiskService.findRiskAlertsById(id).get.risk_id/@id">@RiskService.findRiskAlertsById(id).get.event_title</a>
+											</span>
+											<span id="alert_@id" class="show-alert"></span>
+											</div>
+										}else{
+										<div style="width:282px;padding: 4px;background: #e7edef" class="dash_right_data_left">No hay alertas disponibles</div>
+										}
 
-       					 		<div id="ad_@id" class="width_full oculto">
-	       					 		@frontend.risks.riskalertDetails(id)
+									<div id="ad_@id" class="width_full oculto">
+										@frontend.risks.riskalertDetails(id)
+									</div>
 								</div>
-       					 	</div>	
-     					}
-     					</div>
+							}
+							</div>
+						}else{
+							<div class="width_full">
+							@for(t <- moreAlerts){
+
+									<div class="width_full">
+												<span class="left alert-title">
+													<a href="/edit-generic-alert/@t.risk_id/@t.id">@t.event_title</a>
+												</span>
+										<span id="alert_@t.id" class="show-alert"></span>
+									</div>
+									<div id="ad_@t.id" class="width_full oculto">
+										@frontend.risks.riskalertDetails(t.id.get.toString)
+									</div>
+							}
+							</div>
+						}
+
 					</div>
 				</div>
 		</div>

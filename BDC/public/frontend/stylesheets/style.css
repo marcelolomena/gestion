@@ -75,9 +75,14 @@ body {
 	padding: 37px 0 0;
 }
 .report {
-	width: 1200px;
-	margin: 0 auto;
-	padding: 50px 0 0;
+ 	width: 1200px;
+ 	margin: 0 auto;
+ 	padding: 50px 0 0;
+ }
+.reporttabs {
+	width: 100%;
+	margin: 10 auto;
+	padding: 50px 0 0 0;
 }
 /***********  Header Part   *************/
 header {
@@ -3803,11 +3808,21 @@ float: left;
     margin: 5px 0;
  }
  .delete-icon{
-  	background: url("../images/close_icon.png") no-repeat;
+   	background: url("../images/close_icon.png") no-repeat;
+     cursor: pointer;
+      float: left;
+     height: 19px;
+     width: 9px;
+     margin: 5px 0;
+ }
+
+ .close-state-alert-icon{
+  	background: url("../images/Pen.png") no-repeat;
     cursor: pointer;
      float: left;
     height: 19px;
     width: 9px;
+    margin: 5px 0;
 }
 .remove-skill{
 	    cursor: pointer;

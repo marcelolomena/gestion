@@ -17,8 +17,7 @@
 					}
 					@if(utils.UserAccess.checkAccess(req,"tab_dashboard")){				
 						<li><a href="@controllers.Frontend.routes.Incident.home()" id="incident"> @Messages("header.incident")</a></li>
-	       				<li><a href="@controllers.Frontend.routes.Dashboard.getPanel()" id="reporte_id">@Messages("header.dashboard")</a></li>
-						
+	       				<li><a href="@controllers.Frontend.routes.Dashboard.getPanel2()" id="reporte_id">@Messages("header.dashboard")</a></li>
 					}
 					@if(utils.UserAccess.isBoss(req)){
 						<li><a id="personal" href="/personal" > @Messages("header.personal")</a></li>

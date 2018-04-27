@@ -112,7 +112,9 @@ object ProgramJira extends Controller {
         start = ((programnumber - 1) * 10) + 1;
         end = start + 9;
       }
-      val programs = ProgramService.findAllUserJunior(user_id.toInt, programnumber.toInt)
+      var user_role = request.session.get("user_profile").get
+      Logger.debug("user_role : " + user_role)
+      val programs = ProgramService.findAllUserJunior(user_id.toInt, programnumber.toInt, user_role, user_id)
       val programCount = ProgramService.countAllUserJunior(user_id.toInt)
       
       val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
@@ -361,11 +363,11 @@ object ProgramJira extends Controller {
             StringUtils.isEmpty(program_sub_type) && StringUtils.isEmpty(division) &&
             StringUtils.isEmpty(impact_type) && StringUtils.isEmpty(program_role) &&
             StringUtils.isEmpty(item_budget)) {
-            val programs = ProgramService.findAllProgramList()
+            val programs = ProgramService.findAllProgramList2()
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
           } else {
-            val programs = ProgramService.searchDashboardReport(impact_type,work_flow_status, program_name, program_code, sap_code, program_type, program_sub_type, division, program_role, item_budget, "") //agregado
+            val programs = ProgramService.searchProgramResult(impact_type,work_flow_status, program_name, program_code, sap_code, program_type, program_sub_type, division, program_role, item_budget, "") //agregado
             Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
 
             //Ok("SUCCESS");
@@ -381,7 +383,7 @@ object ProgramJira extends Controller {
       val user_id = Integer.parseInt(request.session.get("uId").get)
       val username = request.session.get("username").get
 
-      val programs = ProgramService.findAllProgramList()
+      val programs = ProgramService.findAllProgramList2()
       var tasksDependents = new java.util.HashMap[Integer, Long]()
       val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
       Ok(views.html.frontend.program.programListing(programs)).withSession(userSession)
@@ -648,7 +650,17 @@ object ProgramJira extends Controller {
           }
         }
 
-        BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        BadRequest(views.html.frontend.program.addNewProgram(
+          theForm,
+          program_code,
+          usersMap,
+          divisionMap,
+          //gerenciasMap,
+          //departmentsMap,
+          programSubType,
+          programType,
+          workflowStatusValues,
+          impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
       },
       program => {
@@ -662,7 +674,17 @@ object ProgramJira extends Controller {
               departmentsMap.put(d.dId.get.toString(), d.department)
             }
           }
-          BadRequest(views.html.frontend.program.addNewProgram(theForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.program.addNewProgram(theForm,
+            program_code,
+            usersMap,
+            divisionMap,
+            //gerenciasMap,
+            //departmentsMap,
+            programSubType,
+            programType,
+            workflowStatusValues,
+            impacttypeMap
+          )).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
         } else {
 
@@ -921,7 +943,13 @@ object ProgramJira extends Controller {
       val pDetail = ProgramDetail(programDetails.get.devison, programDetails.get.management, programDetails.get.department, programDetails.get.impact_type, programDetails.get.business_line, programDetails.get.sap_code)
       val pDate = ProgramDate(programDates.get.initiation_planned_date, programDates.get.creation_date, programDates.get.closure_date.getOrElse(new Date), programDates.get.release_date)
 
-      val progrm = Programs(program.get.program_id, program.get.program_type, program.get.program_sub_type, program.get.program_name, program.get.program_code, program.get.program_description, program.get.work_flow_status, program.get.demand_manager: Integer, program.get.program_manager, pDetail, pDate, program.get.is_active, program.get.planned_hours, program.get.internal_state,program.get.estimated_cost)
+      val progrm = Programs(program.get.program_id, program.get.program_type, program.get.program_sub_type,
+        program.get.program_name, program.get.user_responsible,program.get.program_code,program.get.internal_number,program.get.pLevel,
+        program.get.program_description, program.get.work_flow_status,
+        program.get.demand_manager: Integer,program.get.clasificacion,
+        program.get.program_manager, pDetail, pDate,
+        program.get.is_active, program.get.planned_hours,
+        program.get.internal_state,program.get.estimated_cost)
 
       var users = UserService.findAllDemandManager();
 
@@ -930,7 +958,19 @@ object ProgramJira extends Controller {
         usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
       }
 
-      Ok(views.html.frontend.program.editProgram(ARTForms.programFormEdit.fill(progrm), id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.program.editProgram(
+        ARTForms.programFormEdit.fill(progrm),
+        id,
+        usersMap,
+        divisionMap,
+        programSubType,
+        programType,
+        workflowStatusValues,
+        impacttypeMap)).withSession(
+        "username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
@@ -1035,7 +1075,19 @@ object ProgramJira extends Controller {
             departmentsMap.put(d.dId.get.toString(), d.department)
           }
         }
-        BadRequest(views.html.frontend.program.editProgram(errors, id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+        BadRequest(views.html.frontend.program.editProgram(
+          errors,
+          id,
+          usersMap,
+          divisionMap,
+          programSubType,
+          programType,
+          workflowStatusValues,
+          impacttypeMap)).withSession(
+          "username" -> request.session.get("username").get,
+          "utype" -> request.session.get("utype").get,
+          "uId" -> request.session.get("uId").get,
+          "user_profile" -> request.session.get("user_profile").get)
       },
       program => {
         val theForm = ProgramService.validateForm(ARTForms.programFormEdit.fill(program), id)
@@ -1066,7 +1118,19 @@ object ProgramJira extends Controller {
               departmentsMap.put(d.dId.get.toString(), d.department)
             }
           }
-          BadRequest(views.html.frontend.program.editProgram(theForm, id, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues,impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+          BadRequest(views.html.frontend.program.editProgram(
+            theForm,
+            id,
+            usersMap,
+            divisionMap,
+            programSubType,
+            programType,
+            workflowStatusValues,
+            impacttypeMap)).withSession(
+            "username" -> request.session.get("username").get,
+            "utype" -> request.session.get("utype").get,
+            "uId" -> request.session.get("uId").get,
+            "user_profile" -> request.session.get("user_profile").get)
         } else {
 
           val dm = program.demand_manager

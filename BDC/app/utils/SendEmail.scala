@@ -12,12 +12,15 @@ import services._
 object SendEmail {
 
   def sendEmailVerification(message: String, recipientEmail: String, url: String, fromEmail: String): String = {
-    println("message :" + message)
-    println("recipientEmail :" + recipientEmail)
-    println("fromEmail :" + fromEmail)
-    println("user smtp :" + Play.application().configuration().getString("smtp.user"))
-    println("user pwd :" + Play.application().configuration().getString("smtp.password"))
-    println("url :" + url)
+    Logger.debug("message :" + message)
+    Logger.debug("recipientEmail :" + recipientEmail)
+    Logger.debug("fromEmail :" + fromEmail)
+    Logger.debug("message :" + message)
+    Logger.debug("recipientEmail :" + recipientEmail)
+    Logger.debug("fromEmail :" + fromEmail)
+    Logger.debug("user smtp :" + Play.application().configuration().getString("smtp.user"))
+    Logger.debug("user pwd :" + Play.application().configuration().getString("smtp.password"))
+    Logger.debug("url :" + url)
     
     var mail = use[MailerPlugin].email
     mail.setSubject("Reset Your Password")
@@ -46,16 +49,22 @@ object SendEmail {
                           template: String,
                           cc: String
                         ): String = {
+    var retState : String = "OK"
     try {
+
       val programName = program.get.program_description.get.toString
       val program_code = program.get.program_code.toString
 
       var subject = s"ALERTA PMO - ART ${program_code} – ${programName}"
+<<<<<<< HEAD
       //val fromEmail = Play.application().configuration().getString("smtp.user")
 	  val fromEmail = Play.application().configuration().getString("mail.pmo")
+=======
+      val fromEmail = Play.application().configuration().getString("mail.pmo")
+      Logger.debug("fromEmail : " + fromEmail )
+>>>>>>> 54658c702dd24edcb150251a7ab88eddc9d24a89
       val mail = use[MailerPlugin].email
 
-      /////
       val programDetail = ProgramService.findProgramOtherDetailsById(program.get.program_id.get.toString)
       val program_impact_type = ImpactTypeService.findImpactTypeById(programDetail.get.impact_type.toString()).get.impact_type
       val program_internal_state = program.get.internal_state
@@ -63,7 +72,7 @@ object SendEmail {
       val program_release_date = ProgramService.findClouseDateBaslineChange(program.get.program_id.get.toString)
       val alert_count_current = RiskService.countCurrentAlerts(alert.get.id.get.toString).toString
 
-      println("subject : " + subject )
+      Logger.debug("subject : " + subject )
       //println("program_impact_type : " + program_impact_type )
       //println("program_internal_state : " + program_internal_state )
       //println("program_program_manager : " + program_program_manager )
@@ -121,10 +130,15 @@ object SendEmail {
 
       mail.setSubject(subject)
       mail.setFrom(fromEmail.toString())
+      Logger.debug("A ESTE MAIL SE ENVIO EL CORREO : " + user.get.email.toString())
       mail.setRecipient(user.get.email.toString())
 
       val mylist  = cc.split(",").toList
+<<<<<<< HEAD
 	  Logger.debug(mylist.toString)
+=======
+      Logger.debug("A ESTE MAIL SE ENVIO UNA COPIA : " + mylist.toString())
+>>>>>>> 54658c702dd24edcb150251a7ab88eddc9d24a89
       mail.setCc(mylist:_*)
 
       val builderRisk = StringBuilder.newBuilder
@@ -156,14 +170,19 @@ object SendEmail {
 
       mail.sendHtml(html)
 
-
     } catch {
       case ex: Exception => {
+<<<<<<< HEAD
 			Logger.error(ex.getMessage)
 		return ex.getMessage
 	  }
+=======
+        play.Logger.error(ex.getMessage)
+        retState = "NOK"
+      }
+>>>>>>> 54658c702dd24edcb150251a7ab88eddc9d24a89
     }
 
-    "OK"
+    retState
   }
 }

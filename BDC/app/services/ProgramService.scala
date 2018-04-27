@@ -4,7 +4,7 @@ import play.api.db.DB
 import anorm.SqlParser._
 import models._
 import anorm._
-//import com.typesafe.plugin._
+import play.Logger
 import org.apache.commons.lang3.StringUtils
 import java.util.Date
 import SqlParser.scalar
@@ -19,6 +19,8 @@ import org.json.JSONObject
 import play.api.libs.json
 import play.i18n._
 import play.mvc._
+import java.util.List
+import java.util.ArrayList
 
 import controllers.Frontend.Program
 
@@ -36,30 +38,61 @@ object ProgramService extends CustomColumns {
     val program_code = getUniqueProgramCode()
 
     DB.withConnection { implicit connection =>
+
+      val art_division: Int = SQL("SELECT TOP 1 dId FROM art_division_master WHERE idRRHH={idRRHH}").on('idRRHH -> pm.program_details.devison )as(scalar[Int].single)
+      val dataRRHH=UserService.findBankEmployeeDetails(UserService.findUserOfficeDetailsExtend(pm.demand_manager).get.email)
+      play.Logger.debug("-------------------->> " + dataRRHH.toString)
+      var rut: Int = 0
+      var periodo: Int = 0
+
+      if(!dataRRHH.isEmpty) {
+        play.Logger.debug("rut ->>>>>>>" + dataRRHH.get.numRut.toString)
+        play.Logger.debug("periodo ->>>>>>>" + dataRRHH.get.periodo)
+        rut = dataRRHH.get.numRut
+        periodo = dataRRHH.get.periodo
+      }
+
       val result = SQL(
         """
           insert into art_program (
-          program_type, program_sub_type, program_name,program_code, 
+          program_type, program_sub_type, program_name,program_code,
+          internal_number,pLevel,
           program_description, work_flow_status, 
           demand_manager, program_manager, devison, management, department, sap_code,
           impact_type, business_line, creation_date, initiation_planned_date, closure_date,release_date,
-          planned_hours,internal_state, estimated_cost 
+          planned_hours,internal_state, estimated_cost, clasificacion,numrut,periodo
           ) 
           values(
-          {program_type},{program_sub_type},{program_name},{program_code},
+          {program_type},{program_sub_type},{program_name},{program_code},{internal_number},{pLevel},
           {program_description},{work_flow_status}, {demand_manager},{program_manager},{devison},
-					{management},{department},{sap_code}, {impact_type},{business_line}, {creation_date},{initiation_planned_date},{closure_date},{release_date},{planned_hours},{internal_state}, {estimated_cost} 
+					{management},
+					{department},
+					{sap_code},
+					 {impact_type},
+					 {business_line},
+					  {creation_date},
+					  {initiation_planned_date},
+					  {closure_date},
+					  {release_date},
+					  {planned_hours},
+					  {internal_state},
+					   {estimated_cost},
+					   {clasificacion},
+					   {numrut},
+					   {periodo}
           )
           """).on(
           'program_type -> pm.program_type,
           'program_sub_type -> pm.program_sub_type,
           'program_name -> pm.program_name.trim(),
           'program_code -> program_code,
+          'internal_number -> pm.internal_number,
+          'pLevel -> pm.pLevel,
           'program_description -> pm.program_description,
           'work_flow_status -> pm.work_flow_status,
           'demand_manager -> pm.demand_manager,
           'program_manager -> pm.demand_manager, //pm.program_manager,
-          'devison -> pm.program_details.devison,
+          'devison -> art_division,//pm.program_details.devison
           'management -> pm.program_details.management,
           'department -> pm.program_details.department,
           'sap_code -> pm.program_details.sap_code,
@@ -71,7 +104,10 @@ object ProgramService extends CustomColumns {
           'release_date -> pm.program_dates.release_date,
           'planned_hours -> pm.planned_hours,
           'internal_state -> pm.internal_state,
-          'estimated_cost -> pm.estimated_cost).executeInsert(scalar[Long].singleOpt)
+          'estimated_cost -> pm.estimated_cost,
+		  'clasificacion -> pm.clasificacion,
+      'numrut -> rut,
+      'periodo -> periodo).executeInsert(scalar[Long].singleOpt)
 
       result.last
 
@@ -81,6 +117,21 @@ object ProgramService extends CustomColumns {
 
   def updateProgram(id: String, pm: Programs): Int = {
     DB.withConnection { implicit connection =>
+
+      val art_division: Int = SQL("SELECT TOP 1 dId FROM art_division_master WHERE idRRHH={idRRHH}").on('idRRHH -> pm.program_details.devison )as(scalar[Int].single)
+
+      val dataRRHH=UserService.findBankEmployeeDetails(UserService.findUserOfficeDetailsExtend(pm.demand_manager).get.email)
+      play.Logger.debug("-------------------->> " + dataRRHH.toString)
+      var rut: Int = 0
+      var periodo: Int = 0
+
+      if(!dataRRHH.isEmpty) {
+        play.Logger.debug("rut ->>>>>>>" + dataRRHH.get.numRut.toString)
+        play.Logger.debug("periodo ->>>>>>>" + dataRRHH.get.periodo)
+        rut = dataRRHH.get.numRut
+        periodo = dataRRHH.get.periodo
+      }
+
       SQL(
         """
           update art_program
@@ -105,7 +156,10 @@ object ProgramService extends CustomColumns {
           is_active={is_active},
           planned_hours={planned_hours},
           internal_state={internal_state},          
-          estimated_cost={estimated_cost}
+          estimated_cost={estimated_cost},
+          clasificacion={clasificacion},
+          numrut={numrut},
+          periodo={periodo}
           where program_id = {program_id}
           """).on(
           'program_id -> id,
@@ -117,7 +171,7 @@ object ProgramService extends CustomColumns {
           'work_flow_status -> pm.work_flow_status,
           'demand_manager -> pm.demand_manager,
           'program_manager -> pm.program_manager,
-          'devison -> pm.program_details.devison,
+          'devison -> art_division,//pm.program_details.devison,
           'management -> pm.program_details.management,
           'department -> pm.program_details.department,
           'impact_type -> pm.program_details.impact_type,
@@ -129,7 +183,11 @@ object ProgramService extends CustomColumns {
           'is_active -> pm.is_active.getOrElse(1),
           'planned_hours -> pm.planned_hours,
           'internal_state -> pm.internal_state,          
-          'estimated_cost -> pm.estimated_cost).executeUpdate()
+          'estimated_cost -> pm.estimated_cost,
+          'clasificacion -> pm.clasificacion,
+          'numrut -> rut,
+          'periodo -> periodo).executeUpdate()
+
     }
   }
 
@@ -259,15 +317,31 @@ object ProgramService extends CustomColumns {
     var chkdate = false
     var chkreldate = false
     var chkinidate = false
-
     val today = new Date();
     val format = new java.text.SimpleDateFormat("dd-MM-yyyy")
+
+    if (!form("user_responsible").value.isEmpty && !StringUtils.isEmpty(form("user_responsible").value.get)) {
+      val user_responsible = form("user_responsible").value.get
+      val cantid=UserService.validateHumanResources(user_responsible)
+      if (cantid == 0 ) {
+        Logger.debug("el numeritooooooooo : " + cantid)
+        new_form = form.withError("user_responsible", "Este usuario no existe en Recursos Humanos")
+      }
+    }
+
+    if (form("clasificacion").value.isEmpty || StringUtils.isEmpty(form("clasificacion").value.get)) {
+      new_form = form.withError("clasificacion", Messages.get(langObj, "error.program.clasificacion.MinMax"))
+    }
+
 
     if (!form("program_dates.release_date").value.isEmpty && !StringUtils.isEmpty(form("program_dates.release_date").value.get)) {
       release_date = form("program_dates.release_date").value.get
       date4 = format.parse(release_date).getTime()
       chkreldate = true
     }
+
+
+
     if (!form("program_dates.closure_date").value.isEmpty && !StringUtils.isEmpty(form("program_dates.closure_date").value.get)) {
       clouser_date = form("program_dates.closure_date").value.get
       date1 = format.parse(clouser_date).getTime()
@@ -291,9 +365,6 @@ object ProgramService extends CustomColumns {
       invalid_release_date = false
     }
 
-    //println(clouser_date + " " + end_planned_date + " " + initiation_planned_date + creationDate + "");
-    //println(date1.toLong + " " + date2.toLong + " " + date3.toLong + " " + (date1.toLong < date2.toLong) + " " + (date1.toLong < date3.toLong));
-
     if (date1 != 0 && date2 != 0) {
 
       if (date1.toLong < date2.toLong) {
@@ -306,22 +377,12 @@ object ProgramService extends CustomColumns {
       }
     }
 
-    /*if (!clouserDate || !clouserDate2) {
-      //form.withError("program_dates.closure_date", Messages.get(langObj, "error.addnewprogram.closuredatecreationdatecompare"))
-    } 
-      else if (date4.toLong > date1.toLong) {
-      form.withError("program_dates.closure_date", Messages.get(langObj, "error.addnewprogram.closuredatereleasedatecompare"))
-    }    */
-
     if (!form("program_name").value.isEmpty && !StringUtils.isEmpty(form("program_name").value.get)) {
       val program = form("program_name").value.get.trim
       val existData = findProgramMasterDetailsByProgramName(program, old_id)
 
       if (existData.size > 0) {
-        /*if (!StringUtils.equals(existData.get.program_id.toString(), old_id)) {*/
         new_form = form.withError("program_name", "This program name already in use, please insert unique program name.")
-        /* }*/
-
       }
     }
 
@@ -331,59 +392,12 @@ object ProgramService extends CustomColumns {
     if (!creationDate) {
       new_form = form.withError("program_dates.end_planned_date", Messages.get(langObj, "error.addnewprogram.creationdatetodaycompare"))
     }
-    /*
-    if (!StringUtils.isEmpty(old_id)) {
 
-      if (!invalid_release_date && release_date != null) {
-
-        val maxProjectEndDate = ProjectService.findMaxProjectEndDate(old_id);
-        if (maxProjectEndDate != null) {
-          if (date4.toLong < maxProjectEndDate.get.getTime) {
-            new_form = form.withError("program_dates.release_date", "Program end date can not be before project end date");
-          }
-        }
-
-        val minProjectEndDat = ProjectService.findMinProjectStartDate(old_id)
-        if (minProjectEndDat != null) {
-          if (date3.toLong > minProjectEndDat.get.getTime) {
-            new_form = form.withError("program_dates.initiation_planned_date", "Program start date can not be after project start date");
-          }
-        }
-
-      }
-
-      val planned_value = ProgramService.getPlannedHoursForProgram(old_id)
-      if (!form("planned_hours").value.isEmpty && !StringUtils.isEmpty(form("planned_hours").value.get)) {
-        val actual_planned_hours = form("planned_hours").value.get.toDouble
-        var project_planned_hours: Double = 0
-        val projects = ProjectService.findProjectListForProgram(old_id)
-        for (p <- projects) {
-          if (!p.planned_hours.isEmpty) {
-            project_planned_hours += p.planned_hours.get
-          }
-        }
-        if (actual_planned_hours < project_planned_hours) {
-          new_form = form.withError("planned_hours", "Total hours associated with program are less than planned hours for a project, please enter valid hours.")
-        }
-      } else {
-        val actual_planned_hours: Double = 0
-        var project_planned_hours: Double = 0
-        val projects = ProjectService.findProjectListForProgram(old_id)
-        for (p <- projects) {
-          if (!p.planned_hours.isEmpty) {
-            project_planned_hours += p.planned_hours.get
-          }
-        }
-        if (actual_planned_hours < project_planned_hours) {
-          new_form = form.withError("planned_hours", "Total hours associated with program are less than planned hours for a project, please enter valid hours.")
-        }
-      }
-
-    }
- */
     if (date1 < date4 && date1 != 0) {
       new_form = form.withError("program_dates.closure_date", "Fecha de cierre no debe ser menor que la fecha de lanzamiento.")
     }
+
+
     if (new_form != null) {
       new_form
     } else {
@@ -436,9 +450,23 @@ object ProgramService extends CustomColumns {
   }
 
   def programas_sin_avance_en_tareas(uid: String): Seq[ProgramMaster] = {
-    var sqlString = "EXEC art.sin_avance {uid}"
+    var sqlString =
+      """
+        |select distinct a.*,'' user_responsible from art_program a
+        |	join (select * from art_project_master) b on b.program=a.program_id
+        |	join (select * from art_task) c on c.pId=b.pId
+        |	join (select * from art_sub_task) d on d.task_id=c.tId
+        |	join (select sum(hours) hours,sub_task_id from art_timesheet group by sub_task_id) e on e.sub_task_id=d.sub_task_id
+        |	where
+        |	a.is_active=1 and
+        |	b.is_active=1 and
+        |	c.is_active=1 and
+        |	d.is_deleted=1 and
+        |	c.owner={uid} and
+        |	(d.completion_percentage is null OR d.completion_percentage=0)
+      """.stripMargin
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('uid -> uid.toInt).executeQuery() as (ProgramMaster.pMaster *)
+      SQL(sqlString).on('uid -> uid.toInt).as(ProgramMaster.pMaster *)
     }
   }
 
@@ -446,7 +474,7 @@ object ProgramService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val result = SQL(
         """
-          select  * from art_program where program_id = {pId}
+          select  *,'' user_responsible from art_program where program_id = {pId}
           """).on(
           'pId -> pId).as(ProgramMaster.pMaster.singleOpt)
       result
@@ -505,14 +533,6 @@ object ProgramService extends CustomColumns {
 
   }
 
-  def findAllUserJunior(user_id: Int, page: Int): Seq[ProgramMaster] = {
-    var sqlString = "EXEC art.list_member_junior {uid},{page}"
-
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).on('uid -> user_id, 'page -> page).executeQuery() as (ProgramMaster.pMaster *)
-    }
-  }
-
   def countAllUserJunior(user_id: Int): Int = {
     var sqlString = "EXEC art.count_program_member {uid}"
 
@@ -520,6 +540,85 @@ object ProgramService extends CustomColumns {
       SQL(sqlString).on('uid -> user_id).executeQuery() as (scalar[Int].single)
     }
   }
+
+  def findAllUserJunior(user_id: Int, page: Int, rol: String, uid: Int): Seq[ProgramMaster] = {
+
+/*
+    var sqlString = "EXEC art.list_member_junior {uid},{page}"
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('uid -> user_id, 'page -> page).executeQuery() as (ProgramMaster.pMaster *)
+    }
+*/
+
+    val offset = 10 * (page - 1)
+
+    var sqlString = ""
+
+    if(rol.trim == "su" || rol.trim == "cl"){
+
+      sqlString =
+        """
+          |SELECT *,'' user_responsible FROM art_program WHERE is_active = 1
+          |AND (art_program.work_flow_status=1 OR art_program.work_flow_status=3
+          |OR art_program.work_flow_status=4 OR art_program.work_flow_status=5)
+          |ORDER BY program_id OFFSET {offset} ROWS FETCH NEXT 10 ROWS ONLY
+        """.stripMargin
+      DB.withConnection { implicit connection =>
+        SQL(sqlString).on('offset -> offset).as(ProgramMaster.pMaster *)
+      }
+
+    } else {
+
+      HumanService.ifHeExists(uid) match {
+        case 0 =>
+          sqlString =
+            """
+              |SELECT *,'' user_responsible FROM art_program WHERE is_active = 1 AND
+              |program_id IN (SELECT program_id FROM art_program_members WHERE is_active = 0 AND
+              |member_id={uid})
+              |AND (work_flow_status=1 OR work_flow_status=3 OR work_flow_status=4 OR work_flow_status=5)
+              |ORDER BY art_program.program_id OFFSET {offset} ROWS FETCH NEXT 10 ROWS ONLY
+            """.stripMargin
+          DB.withConnection { implicit connection =>
+            SQL(sqlString).on('offset -> offset,'uid->uid).as(ProgramMaster.pMaster *)
+          }
+        case 1 =>
+
+          sqlString =
+            """
+              |WITH tblSubalternos AS
+              |(
+              |  SELECT IIF(LEN(emailTrab)>1,LEFT(emailTrab, CHARINDEX('@', emailTrab) -1 ),null) uname,numRut FROM RecursosHumanos
+              |  WHERE emailTrab = {email} and periodo=(select MAX(periodo) from RecursosHumanos)
+              |  UNION ALL
+              |SELECT IIF(LEN(emailTrab)>1,LEFT(emailTrab, CHARINDEX('@', emailTrab) -1 ),null) uname,RecursosHumanos.numRut
+              |FROM RecursosHumanos JOIN tblSubalternos ON RecursosHumanos.rutJefe = tblSubalternos.numRut
+              |)
+              |SELECT DISTINCT art_program.*,'' user_responsible
+              |  FROM tblSubalternos,art_user,art_program_members,art_program
+              |WHERE tblSubalternos.uname=art_user.uname AND
+              | art_user.uid=art_program_members.member_id AND
+              | art_program.program_id=art_program_members.program_id AND
+              |	 art_program.is_active=1 AND (art_program.work_flow_status=1 OR art_program.work_flow_status=3 OR
+              |  art_program.work_flow_status=4 OR art_program.work_flow_status=5)
+              |  AND art_program_members.is_active = 0 ORDER BY art_program.program_id OFFSET {offset} ROWS FETCH NEXT 10 ROWS ONLY
+              |OPTION(MAXRECURSION 32767)
+            """.stripMargin
+          val email = UserService.findUserDetailsById(user_id).get.email
+          DB.withConnection { implicit connection =>
+            SQL(sqlString).on('offset -> offset,'email->email).as(ProgramMaster.pMaster *)
+          }
+
+
+      }
+    }
+
+
+
+  }
+
+
 
   def findProjectManagerPrograms(uId: String): Seq[ProgramMaster] = {
     var sqlString = ""
@@ -546,7 +645,7 @@ object ProgramService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val result = SQL(
         """
-          select * from art_program where devison = {divison} AND is_active=1
+          select *,'' user_responsible from art_program where devison = {divison} AND is_active=1
           """).on(
           'divison -> divison).as(ProgramMaster.pMaster.*)
       result
@@ -568,7 +667,7 @@ object ProgramService extends CustomColumns {
     //println("select * from art_program where program_code=" + program_code)
     DB.withConnection { implicit connection =>
       val result = SQL(
-        "select * from art_program where program_code=" + program_code + "").on(
+        "select *,'' user_responsible from art_program where program_code=" + program_code + "").on(
           'program_code -> program_code).as(ProgramMaster.pMaster *)
       if (result.size > 0) {
         isNotPresent = false
@@ -645,6 +744,15 @@ object ProgramService extends CustomColumns {
     sqlString = "SELECT * from art_program where is_active = 1"
     DB.withConnection { implicit connection =>
       SQL(sqlString).as(ProgramMaster.pMaster *)
+    }
+
+  }
+
+  def findAllProgramList2(): Seq[ProgramResult] = {
+    var sqlString = ""
+    sqlString = "SELECT program_id, program_type,program_name, devison from art_program where is_active = 1"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).as(ProgramResult.programResult *)
     }
 
   }
@@ -899,16 +1007,25 @@ object ProgramService extends CustomColumns {
     }
   }
 
-  def searchDashboardReport(impact_type: String, work_flow_status: String, program_name: String, program_code: String, sap_code: String, program_type: String, program_sub_type: String, division: String, program_role: String, item_budget: String, sort_type: String): Seq[ProgramMaster] = {
-    //var sqlString = ""
-    //var stment1 = ""
-    //var stment2 = ""
-    //var stment3 = ""
-    //var stment4 = ""
-    //var stment5 = ""
-    //var stment6 = ""
-    //var stment7 = ""
-    //var tstx = "OR"
+  def searchDashboardReport(
+                             impact_type: String,
+                             work_flow_status: String,
+                             program_name: String,
+                             program_code: String,
+                             sap_code: String,
+                             program_type: String,
+                             program_sub_type: String,
+                             division: String,
+                             program_role: String,
+                             item_budget: String,
+                             sort_type: String): Seq[ProgramMaster] = {
+    DB.withConnection { implicit connection =>
+
+    var art_division: Int =0
+
+    if(!division.isEmpty)
+      art_division = SQL("SELECT TOP 1 dId FROM art_division_master WHERE idRRHH={idRRHH}").on('idRRHH -> division.toInt ).as(scalar[Int].single)
+
     var sqlString = "SELECT * from art_program where "
 
     if (!StringUtils.isEmpty(impact_type)) {
@@ -939,7 +1056,7 @@ object ProgramService extends CustomColumns {
     }
 
     if (!StringUtils.isEmpty(division)) {
-      sqlString = sqlString + " devison=" + division + " AND"
+      sqlString = sqlString + " devison=" + art_division + " AND"
     }
 
     if (!StringUtils.isEmpty(program_role)) {
@@ -951,128 +1068,6 @@ object ProgramService extends CustomColumns {
       sqlString = sqlString + " program_id IN (select DISTINCT(program_id) from art_program_sap_master where budget_type=" + item_budget + " and is_active=1) AND"
     }
 
-    /*
-    if (!StringUtils.isEmpty(delay_level)) {
-      var minVal: Double = 0
-      var maxVal: Double = 0
-      var programIds = ""
-      var nonProgramIds = ""
-
-      Integer.parseInt(delay_level) match {
-        case 0 =>
-          minVal = 0
-          maxVal = 0.7
-        case 1 =>
-          minVal = 0.7
-          maxVal = 0.9
-        case 2 =>
-          minVal = 0.9
-          maxVal = 1
-        case 3 =>
-          minVal = 1
-          maxVal = 1000000
-      }
-      */
-    /*
-      val programs = ProgramService.findActivePrograms()
-      for (p <- programs) {
-        val earn = SpiCpiCalculationsService.findCalculationsForDashboard(p.program_id.get.toString())
-
-        if (!earn.isEmpty) {
-          if (!earn.get.spi.isEmpty) {
-            var spi = earn.get.spi.get
-            if (spi >= minVal && spi < maxVal) {
-
-              if (StringUtils.isEmpty(programIds)) {
-                programIds = p.program_id.get.toString()
-              } else {
-                programIds += "," + p.program_id.get.toString()
-              }
-            }
-
-          }
-        }
-        if (StringUtils.isEmpty(nonProgramIds)) {
-          nonProgramIds = p.program_id.get.toString()
-        } else {
-          nonProgramIds += "," + p.program_id.get.toString()
-        }
-      }
-
-      if (!StringUtils.isEmpty(programIds)) {
-        sqlString = sqlString + " program_id IN (" + programIds + ") AND"
-      } else {
-        sqlString = sqlString + " program_id NOT IN (" + nonProgramIds + ") AND"
-      }
-    }
-*/
-    //println("---------------------"+sqlString)
-    /*
-    if (!StringUtils.isEmpty(project_classification)) {
-      var minVal: Double = 0
-      var maxVal: Double = 0
-      var programIds = ""
-      var nonProgramIds = ""
-
-      Integer.parseInt(project_classification) match {
-        case 0 =>
-          minVal = 0
-          maxVal = 1350
-        case 1 =>
-          maxVal = 12500
-          minVal = 1350
-        case 2 =>
-          minVal = 12500
-          maxVal = -1
-      }
-
-      val programs = ProgramService.findActivePrograms()
-      var isValid = false
-      for (p <- programs) {
-        isValid = false
-        val total_investment = SAPServices.calculateTotalSAPInvestment(p.program_id.get.toString())
-        val total_expenditure = SAPServices.calculateTotalSAPExpenditure(p.program_id.get.toString())
-        val total_sum = total_investment + total_expenditure
-
-        if (maxVal == -1) {
-          if (total_sum >= minVal) {
-            isValid = true
-          }
-        } else {
-
-          if (total_sum >= minVal && total_sum < maxVal) {
-            isValid = true
-          }
-        }
-
-        if (isValid) {
-          if (StringUtils.isEmpty(programIds)) {
-            programIds = p.program_id.get.toString()
-
-          } else {
-            programIds += "," + p.program_id.get.toString()
-
-          }
-        }
-
-        if (StringUtils.isEmpty(nonProgramIds)) {
-          nonProgramIds = p.program_id.get.toString()
-        } else {
-          nonProgramIds = nonProgramIds + "," + p.program_id.get.toString()
-        }
-
-        isValid = false
-
-      }
-
-      if (!StringUtils.isEmpty(programIds)) {
-        sqlString = sqlString + " program_id IN (" + programIds + ") AND"
-      } else {
-        sqlString = sqlString + " program_id NOT IN (" + nonProgramIds + ") AND"
-      }
-
-    }
-*/
     if (sqlString.contains("AND")) {
       sqlString = rtrim(sqlString).toString()
 
@@ -1090,9 +1085,91 @@ object ProgramService extends CustomColumns {
       }
     }
 
-    //println("la super query:" + sqlString)
-    DB.withConnection { implicit connection =>
+
       SQL(sqlString).as(ProgramMaster.pMaster *)
+    }
+  }
+
+  def searchProgramResult(
+                             impact_type: String,
+                             work_flow_status: String,
+                             program_name: String,
+                             program_code: String,
+                             sap_code: String,
+                             program_type: String,
+                             program_sub_type: String,
+                             division: String,
+                             program_role: String,
+                             item_budget: String,
+                             sort_type: String): Seq[ProgramResult] = {
+    DB.withConnection { implicit connection =>
+
+      var art_division: Int =0
+
+      if(!division.isEmpty)
+        art_division = SQL("SELECT TOP 1 dId FROM art_division_master WHERE idRRHH={idRRHH}").on('idRRHH -> division.toInt ).as(scalar[Int].single)
+
+      var sqlString = "SELECT program_id, program_type, program_name, devison from art_program where "
+
+      if (!StringUtils.isEmpty(impact_type)) {
+        sqlString = sqlString + " impact_type = " + impact_type + " AND"
+      }
+
+      if (!StringUtils.isEmpty(work_flow_status)) {
+        sqlString = sqlString + " work_flow_status = " + work_flow_status + " AND"
+      }
+
+      if (!StringUtils.isEmpty(program_name)) {
+        sqlString = sqlString + " program_name like '%" + program_name + "%' AND"
+      }
+
+      if (!StringUtils.isEmpty(program_code)) { //query para program_code
+        sqlString = sqlString + " program_code = " + program_code + " AND"
+      }
+      if (!StringUtils.isEmpty(sap_code)) { //query para sap_code
+        sqlString = sqlString + " program_id IN ( select DISTINCT(program_id) from art_program_sap_master where sap_number=" + sap_code + " AND is_active='1') AND"
+      }
+
+      if (!StringUtils.isEmpty(program_type)) {
+        sqlString = sqlString + " program_type=" + program_type + " AND"
+      }
+
+      if (!StringUtils.isEmpty(program_sub_type)) {
+        sqlString = sqlString + " program_sub_type=" + program_sub_type + " AND"
+      }
+
+      if (!StringUtils.isEmpty(division)) {
+        sqlString = sqlString + " devison=" + art_division + " AND"
+      }
+
+      if (!StringUtils.isEmpty(program_role)) {
+        sqlString = sqlString + " program_id IN ( select DISTINCT(program_id) from art_program_members where member_id=" + program_role + " ) AND"
+        //sqlString = sqlString + " program_id IN ( select DISTINCT(program_id) from art_program_members where role_id=6 AND member_id=" + program_role + " ) AND"
+      }
+
+      if (!StringUtils.isEmpty(item_budget)) {
+        sqlString = sqlString + " program_id IN (select DISTINCT(program_id) from art_program_sap_master where budget_type=" + item_budget + " and is_active=1) AND"
+      }
+
+      if (sqlString.contains("AND")) {
+        sqlString = rtrim(sqlString).toString()
+
+        sqlString = sqlString + " AND is_active=1"
+
+      } else {
+        sqlString = sqlString + " is_active=1"
+      }
+
+      if (StringUtils.isNotEmpty(sort_type)) {
+        if (sort_type.equals("1")) {
+          sqlString = sqlString + " ORDER BY program_name asc";
+        } else if (sort_type.equals("2")) {
+          sqlString = sqlString + " ORDER BY release_date asc";
+        }
+      }
+
+
+      SQL(sqlString).as(ProgramResult.programResult *)
     }
   }
 

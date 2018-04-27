@@ -1,4 +1,4 @@
-@(username : String,usersMap :java.util.HashMap[String,String],divisionForm :play.api.data.Form[Divisions],gerenciaList: Seq[models.Genrencias])(implicit lang:Lang)
+@(username : String,usersMap :java.util.HashMap[String,String],divisionsMap :java.util.HashMap[String,String],divisionForm :play.api.data.Form[Divisions],gerenciaList: Seq[models.Genrencias])(implicit lang:Lang)
 @import helper._
 @import services._
 	<!-- 
@@ -46,8 +46,11 @@
                @form(action = routes.Division.updateDivision, 'id->"myDivision") {
                		<input type="hidden" value='@divisionForm.data.get("is_deleted").get' name="is_deleted" id="is_deleted"/>
 	          	    	<input type="hidden" value='@divisionForm.data.get("id").get' name="id" id="id"/>
+				 <input type="hidden" value='@divisionForm.data.get("idRRHH").getOrElse("0")' name="idRRHH" id="idRRHH"/>
+				 <input type="hidden" value='@divisionForm.data.get("glosaDivision").getOrElse("")' name="glosaDivision" id="glosaDivision"/>
                     @inputText(divisionForm("division"),'name->"division",'class->"span4",'_label->Messages("addDivison.division"))   
-                    @select(divisionForm("user_id"),options(usersMap),'name->"user_id",'class->"input-xlarge",'_label->Messages("addDivison.departmenthead"),'default->"Select Division")	 	       	                 
+                    @select(divisionForm("user_id"),options(usersMap),'name->"user_id",'class->"input-xlarge",'_label->Messages("addDivison.departmenthead"),'default->"Select User")
+				 @select(divisionForm("codDivision"),options(divisionsMap),'name->"codDivision",'class->"input-xlarge",'_label->Messages("addDivison.divisionRRHH"),'default->"Select Division")
 	                <div> <input class="btn pull-left" value="@Messages("button.save")" type="submit"/><a href="javascript:history.back(-1);" class="btn push-left20px pull-left">@Messages("button.cancel")</a></div>
 	                <div class="clearfix"></div> 
                  

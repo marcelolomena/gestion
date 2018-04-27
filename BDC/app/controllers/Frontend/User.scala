@@ -1,54 +1,21 @@
 package controllers.Frontend
 
-import java.io.File
 import play.Play
-import play.api.data._
-import play.api.Play.current
-import java.util.Date
 import org.apache.commons.lang3.StringUtils
 import art_forms.ARTForms
-import models.Activity
-import models.ActivityTypes
-import models.Departments
-import models.ForgotPasswordMaster
-import models.Genrencias
-import models.OfficeMaster
-import models.PasswordMaster
-import models.PasswordRecoverMaster
-import models.UserMaster
-import models.UserSkills
-import models.Users
-import models.Users.Rating
+import models._
+import services._
+import models.Users._
 import play.api.data.Form
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import play.i18n.Lang
 import play.i18n.Messages
-import services.DepartmentService
-import services.DivisionService
-import services.GenrenciaService
-import services.UserService
-import services.ProgramService
-//import com.mongodb.casbah.Imports._
-//import com.mongodb.casbah.MongoCollection
-//import com.mongodb.DBObject
+import play.Logger
 import java.util.Date
 import utils.SendEmail
-import services.UserProfileServices
-import models.SubTasks
-import services.SubTaskServices
-import models.ProgramMembers
-import services.ProgramMemberService
 import org.json.JSONObject
 import org.json.JSONArray
-import models.UserProfileMapping
-import services.UserRoleService
-import services.ProjectService
-import services.TaskService
-import services.RiskService
-import services.ActivityLogServices
-import services.EarnValueService
-import services.UserProfileServices
 
 object User extends Controller {
 
@@ -60,33 +27,41 @@ object User extends Controller {
   def employeeDetails(employeeid: Long) = Action { implicit request =>
     request.session.get("username").map { user =>
       val employee = UserService.findUserDetails(employeeid.intValue())
-      val employeeOffice = UserService.findUserOfficeDetails(employeeid.intValue())
+      //val employeeOffice = UserService.findUserOfficeDetails(employeeid.intValue())
+      val employeeOffice = UserService.findBankEmployeeDetails(employee.get.email)
       val programs = UserService.findProgramListForUser(employeeid.toString())
-      val pUserProjectList = null // UserService.findProjectsByUser(Integer.parseInt(employee.get.uid.get.toString()))
+      val pUserProjectList = null
+      val uId = request.session.get("uId").get.toString()
+      val responsibleAlerts = RiskService.findAllResponsibleIds(uId)
+
       val alerts = RiskService.findNewUserAlertsIds(employeeid.toString())
       val availability = UserProfileServices.findAvailability(employeeid.intValue())
       
-      var consumos = new JSONArray();
+      val consumos = new JSONArray();
       for(a <- availability)
       {
-         var consumo = new JSONObject();
+         val consumo = new JSONObject();
          consumo.put(a.fecha.toString(),a.horas)
          consumos.put(consumo)
       }
-      //println(consumos)
-      
-      /*
-      var consumos = new JSONObject();
-      for(a <- availability)
-      {
-         consumos.put(a.fecha.toString(),a.horas)
-      }
-      */
       val program_task = ProgramService.programas_sin_avance_en_tareas(employeeid.toString())
-      
-      // EarnValueService.calculateSubTaskEarnValue()
 
-      Ok(views.html.frontend.user.employee(employee, employeeOffice, pUserProjectList, ARTForms.imgCropForm, programs, alerts, consumos, program_task)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      Ok(views.html.frontend.user.employee(
+        employee,
+        employeeOffice,
+        pUserProjectList,
+        ARTForms.imgCropForm,
+        programs,
+        alerts,
+        consumos,
+        program_task,
+        responsibleAlerts
+      )).withSession(
+        "username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get
+      )
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
@@ -109,8 +84,10 @@ object User extends Controller {
    * All employee listing
    */
   def userManagement() = Action { implicit request =>
-
-    var divisionList = DivisionService.findAllDivision()
+    Logger.debug("voy a cagar pal perro")
+    //var divisionList = DivisionService.findAllDivision()
+    val divisionList = DivisionService.findAllDivisionCompatibility()
+    Logger.debug("y cague")
     var gerenciaList = GenrenciaService.findAllGenrencia()
     var departmentList = DepartmentService.findAllDepartmentS()
     var divisionMap = new java.util.HashMap[String, String]()
@@ -172,7 +149,7 @@ object User extends Controller {
    */
   def employeeOverview() = Action { implicit request =>
 
-    var divisionList = DivisionService.findAllDivision();
+    var divisionList = DivisionService.findAllDivisionsCompatibility();
     var employeeCountDivisionWise = new java.util.HashMap[String, String]()
     var employeeCountReportingDirectToDivision = new java.util.HashMap[String, String]()
     var genrenciaDivisionWiseMap = new java.util.HashMap[String, Seq[Genrencias]]()
@@ -432,7 +409,7 @@ object User extends Controller {
       val result = request.session.get("username")
       val username = result.get
 
-      val divisions = DivisionService.findAllDivisions
+      val divisions = DivisionService.findAllDivisionsCompatibility
       val profiles = UserProfileServices.findActiveUserProfiles()
       val departments = DepartmentService.findAllDepartmentS()
       val gerencias = GenrenciaService.findAllGenrencia()
@@ -497,7 +474,7 @@ object User extends Controller {
       hasErrors => {
 
         val username = result.get
-        val divisions = DivisionService.findAllDivisions
+        val divisions = DivisionService.findAllDivisionsCompatibility
         val departments = DepartmentService.findAllDepartmentS()
         val gerencias = GenrenciaService.findAllGenrencia()
         var divisionMap = new java.util.HashMap[String, String]()
@@ -573,7 +550,7 @@ object User extends Controller {
 
       val result = request.session.get("username")
       val username = result.get
-      val divisions = DivisionService.findAllDivisions
+      val divisions = DivisionService.findAllDivisionsCompatibility
       val profiles = UserProfileServices.findActiveUserProfiles()
       val user1 = UserService.findUserDetailsById(Integer.parseInt(id).toLong)
       val office = UserService.findUserOfficeDetailsById(Integer.parseInt(id).toLong)
@@ -623,7 +600,7 @@ object User extends Controller {
     ARTForms.userUpdateForm.bindFromRequest.fold(
       errors => {
         val office = UserService.findUserOfficeDetailsById(Integer.parseInt(id).toLong)
-        val divisions = DivisionService.findAllDivisions
+        val divisions = DivisionService.findAllDivisionsCompatibility
         var divisionMap = new java.util.HashMap[String, String]()
         var departmentsMap = new java.util.HashMap[String, String]()
         var gerenciasMap = new java.util.HashMap[String, String]()
@@ -816,7 +793,7 @@ object User extends Controller {
         var profileIdMap = new java.util.HashMap[String, String]()
         var profileCodeMap = new java.util.HashMap[String, String]()
 
-        val divisions = DivisionService.findAllDivisions
+        val divisions = DivisionService.findAllDivisionsCompatibility
         val username = request.session.get("username").get
         val office = UserService.findUserOfficeDetailsById(Integer.parseInt(id).toLong)
         val gerenciaList = GenrenciaService.findAllGenrenciaListByDivision(office.get.division.toString)
@@ -876,7 +853,7 @@ object User extends Controller {
           val user = UserService.findUserDetailsById(Integer.parseInt(id).toLong)
           val office = UserService.findUserOfficeDetailsById(Integer.parseInt(id).toLong)
           val gerencias = GenrenciaService.findAllGenrenciaListByDivision(office.get.division.toString)
-          val divisions = DivisionService.findAllDivisions
+          val divisions = DivisionService.findAllDivisionsCompatibility
           val profiles = UserProfileServices.findActiveUserProfiles()
 
           for (d <- divisions) {

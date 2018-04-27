@@ -772,7 +772,7 @@ object Incident extends Controller {
 
               }
             }
-            println("qrystr:" + qrystr)
+            //println("qrystr:" + qrystr)
             if (tieneJson) {
               records = IncidentService.count(qrystr, user_id)
               panel = IncidentService.list(rows, page, qrystr, user_id)
@@ -1042,7 +1042,7 @@ object Incident extends Controller {
             }
 
           }
-          println(qrystr)
+          //println(qrystr)
           if (tieneJson) {
             panel = IncidentService.list("0", "0", qrystr,user_id)
           } else {
@@ -1160,8 +1160,8 @@ object Incident extends Controller {
         for (p <- pie) {
           val punto = new JSONObject()
           punto.put("dId", p.dId)
-          punto.put("name", p.division + " (" + p.cantidad + ")")
-          punto.put("y", p.cantidad)
+          punto.put("name", p.name + " (" + p.y + ")")
+          punto.put("y", p.y)
           if(p.dId == 1) {
             punto.put("color", "green")
           }else if(p.dId == 2) {
@@ -1176,8 +1176,8 @@ object Incident extends Controller {
         for (p <- pie) {
           val punto = new JSONObject()
           punto.put("dId", p.dId)
-          punto.put("name", p.division + " (" + p.cantidad + ")")
-          punto.put("y", p.cantidad)
+          punto.put("name", p.name + " (" + p.y + ")")
+          punto.put("y", p.y)
 
           puntos.put(punto)
         }
@@ -1213,8 +1213,8 @@ object Incident extends Controller {
         for (p <- pie) {
           val punto = new JSONObject()
           punto.put("dId", p.dId)
-          punto.put("name", p.division + " (" + p.cantidad + ")")
-          punto.put("y", p.cantidad)
+          punto.put("name", p.name + " (" + p.y + ")")
+          punto.put("y", p.y)
 
           puntos.put(punto)
         }
