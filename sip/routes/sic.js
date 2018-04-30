@@ -800,7 +800,7 @@ module.exports = function (passport) {
     router.route('/sic/proveedoressugeridosserviciodesdenota2/:id')
         .get(isAuthenticated, cotizacionservicioController.proveedoressugeridosserviciodesdenota2);
 
-    router.route('/sic/guardarcontrato/:id')
+    router.route('/sic/guardarcontrato/:id/:tipoTransfe')
         .get(isAuthenticated, solicitudcontratoController.guardarcontrato)
 
     router.route('/sic/BorrarClausulas/:id/:numero')
@@ -845,9 +845,6 @@ module.exports = function (passport) {
             data: req.session.passport.sidebar
         });
     });
-
-    router.route('/sic/estadoCerrado/:id')
-        .get(isAuthenticated, estadosolicitudController.estadoCerrado);
 
     router.route('/sic/etapa')
         .get(isAuthenticated, parametrosController.getEtapa);

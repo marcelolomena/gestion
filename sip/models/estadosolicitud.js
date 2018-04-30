@@ -14,19 +14,12 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        // idcolor: {
-        //     type: DataTypes.INTEGER,
-        //     allowNull: true,
-        //     references: {
-        //         model: 'valores',
-        //         key: 'id'
-        //     }
-        // },
         comentario: {
             type: DataTypes.STRING,
             allowNull: true
         },
-        fecha: {
+        fechaCierre: {
+            field: 'fecha',
             type: DataTypes.DATE,
             allowNull: true
         },
@@ -53,6 +46,11 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'valores',
                 key: 'id'
             }
+        },
+        fechaInicio: {
+            field: 'fechainicio',
+            type: DataTypes.DATE,
+            allowNull: true
         }
     }, {
         schema: 'sic',

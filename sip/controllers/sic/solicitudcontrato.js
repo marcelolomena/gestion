@@ -29,10 +29,18 @@ exports.list = function (req, res) {
 
     utilSeq.buildAdditionalCondition(filters, additional, function (err, data) {
         if (data) {
-            models.solicitudcontrato.belongsTo(models.solicitudcotizacion, { foreignKey: 'idsolicitudcotizacion' });
-            models.solicitudcontrato.belongsTo(models.serviciosrequeridos, { foreignKey: 'idserviciorequerido' });
-            models.serviciosrequeridos.belongsTo(models.servicio, { foreignKey: 'idservicio' });
-            models.solicitudcontrato.belongsTo(models.proveedor, { foreignKey: 'idproveedor' });
+            models.solicitudcontrato.belongsTo(models.solicitudcotizacion, {
+                foreignKey: 'idsolicitudcotizacion'
+            });
+            models.solicitudcontrato.belongsTo(models.serviciosrequeridos, {
+                foreignKey: 'idserviciorequerido'
+            });
+            models.serviciosrequeridos.belongsTo(models.servicio, {
+                foreignKey: 'idservicio'
+            });
+            models.solicitudcontrato.belongsTo(models.proveedor, {
+                foreignKey: 'idproveedor'
+            });
             models.solicitudcontrato.count({
                 where: data
             }).then(function (records) {
@@ -42,21 +50,28 @@ exports.list = function (req, res) {
                     limit: parseInt(rows),
                     where: data,
                     include: [{
-                        model: models.proveedor
-                    },
-                    {
-                        model: models.serviciosrequeridos,
-                        include: [{
-                            model: models.servicio
-                        }]
-                    }
+                            model: models.proveedor
+                        },
+                        {
+                            model: models.serviciosrequeridos,
+                            include: [{
+                                model: models.servicio
+                            }]
+                        }
                     ]
 
                 }).then(function (solicitudcontrato) {
-                    return res.json({ records: records, total: total, page: page, rows: solicitudcontrato });
+                    return res.json({
+                        records: records,
+                        total: total,
+                        page: page,
+                        rows: solicitudcontrato
+                    });
                 }).catch(function (err) {
                     logger.error(err);
-                    return res.json({ error_code: 1 });
+                    return res.json({
+                        error_code: 1
+                    });
                 });
             })
         }
@@ -88,18 +103,29 @@ exports.action = function (req, res) {
 
                             descripcion: req.body.descripcion
                         }, {
-                                where: {
-                                    id: req.body.id
-                                }
-                            }).then(function (solicitudcontrato) {
-                                return res.json({ id: req.body.id, parent: req.body.idsolicitudcotizacion, message: 'Inicio carga', success: true });
-                            }).catch(function (err) {
-                                logger.error(err)
-                                return res.json({ message: err.message, success: false });
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (solicitudcontrato) {
+                            return res.json({
+                                id: req.body.id,
+                                parent: req.body.idsolicitudcotizacion,
+                                message: 'Inicio carga',
+                                success: true
                             });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            return res.json({
+                                message: err.message,
+                                success: false
+                            });
+                        });
                     } else {
                         logger.error(err)
-                        return res.json({ message: err.message, success: false });
+                        return res.json({
+                            message: err.message,
+                            success: false
+                        });
                     }
                 });
             break;
@@ -109,18 +135,19 @@ exports.action = function (req, res) {
 
 exports.guardarcontrato = function (req, res) {
 
-    var idsolicitudcontrato = req.params.id
+    var idsolicitudcontrato = req.params.id;
+    var tipotransfe = req.params.tipoTransfe;
     console.log(idsolicitudcontrato)
     return models.solicitudcontrato.findOne({
         //attributes: ['id', 'descripcion', 'numerorfp'],
-        where: { id: idsolicitudcontrato }
+        where: {
+            id: idsolicitudcontrato
+        }
     }).then(function (solicitudcontrato) {
-        sequelize.query('EXECUTE sic.laviejaconfiable2 ' + idsolicitudcontrato)
+        sequelize.query('EXECUTE sic.laviejaconfiable2 ' + idsolicitudcontrato + ', ' + tipotransfe)
     }).catch(function (err) {
         logger.error(err.message);
         console.log("Error al buscar Solicitud:" + err)
         throw new Error(err);
     });
 }
-
-

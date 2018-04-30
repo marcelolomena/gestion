@@ -2,18 +2,17 @@ var gridEstado = {
 
     renderGrid: function (loadurl, parentRowKey, targ) {
         var $gridTab = $(targ + "_t_" + parentRowKey)
-        //console.log(targ + "_t_" + parentRowKey)
-
         var tmpl = "<div id='responsive-form' class='clearfix'>";
 
         tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-half'>Etapa<span style='color:red'>*</span>{idclasificacionsolicitud}</div>";
+        tmpl += "<div class='column-full'>Etapa<span style='color:red'>*</span>{idclasificacionsolicitud}</div>";
+        tmpl += "</div>";
+
+        tmpl += "<div class='form-row'>";
+        tmpl += "<div class='column-half'>Fecha Inicio<span style='color:red'>*</span>{fechaInicio}</div>";
         tmpl += "<div class='column-half'>Fecha Esperada<span style='color:red'>*</span>{fechaestadoesperada}</div>";
         tmpl += "</div>";
 
-        // tmpl += "<div class='form-row'>";
-        // tmpl += "<div class='column-full'>Color<span style='color:red'>*</span>{idcolor}</div>";
-        // tmpl += "</div>";
 
         tmpl += "<div class='form-row'>";
         tmpl += "<div class='column-full'>Comentario<span style='color:red'>*</span>{comentario}</div>";
@@ -23,14 +22,6 @@ var gridEstado = {
         tmpl += "<div class='column-full'>{estado}</div>";
         tmpl += "</div>";
 
-
-        // tmpl += "<div class='form-row'>";
-        // tmpl += "<div class='column-full' style='display: none;'>Fecha {fecha}</div>";
-        // tmpl += "</div>";
-        // tmpl += "<div class='form-row', id='mensajefecha'>";
-        // tmpl += "<div class='column-full'></div>";
-        // tmpl += "</div>";
-
         tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
@@ -39,7 +30,7 @@ var gridEstado = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'Color', 'Etapa', 'Etapa', 'Comentario', 'Fecha Esperada', 'Fecha Cierre', 'Estado', ''],
+            colNames: ['Id', 'Color', 'Etapa', 'Etapa', 'Comentario', 'Fecha Inicio', 'Fecha Esperada', 'Fecha Cierre', 'Estado', ''],
             colModel: [{
                     name: 'id',
                     index: 'id',
@@ -84,35 +75,6 @@ var gridEstado = {
                         }
                     }
                 },
-                // {
-                //     label: 'Color',
-                //     name: 'valore.nombre',
-                //     width: 50,
-                //     align: 'center',
-                //     search: false,
-                //     editable: true,
-                //     hidedlg: true,
-                //     editrules: {
-                //         edithidden: false,
-                //         required: true
-                //     },
-                //     formatter: function (cellvalue, options, rowObject) {
-                //         var color = rowObject.valore.nombre;
-
-                //         if (color == 'Rojo') {
-                //             color = 'red';
-                //         } else if (color == 'Verde') {
-                //             color = 'green';
-                //         } else if (color == 'Amarillo') {
-                //             color = 'yellow';
-                //         } else if (color == 'Azul') {
-                //             color = 'blue';
-                //         } else if (color == 'indefinido') {
-                //             color = 'gray';
-                //         }
-                //         return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
-                //     }
-                // },
                 {
                     name: 'idclasificacionsolicitud',
                     search: false,
@@ -141,37 +103,6 @@ var gridEstado = {
                         }
                     }
                 },
-                // {
-                //     name: 'idcolor', index: 'idcolor', editable: true, hidden: true,
-                //     edittype: "select",
-                //     editoptions: {
-                //         dataUrl: '/sic/clasecriticidad/color',
-                //         buildSelect: function (response) {
-                //             var grid = $("#grid");
-                //             var rowKey = grid.getGridParam("selrow");
-                //             var rowData = grid.getRowData(rowKey);
-                //             var thissid = rowData.idcolor;
-                //             var data = JSON.parse(response);
-                //             var s = "<select>";//el default
-                //             s += '<option value="0">--Escoger Color--</option>';
-                //             $.each(data, function (i, item) {
-                //                 if (data[i].nombre == thissid) {
-                //                     s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                //                 } else {
-                //                     s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                //                 }
-                //             });
-                //             return s + "</select>";
-                //         },
-                //         dataEvents: [{
-                //             type: 'change', fn: function (e) {
-                //                 var thistid = $(this).val();
-                //                 $("input#idcolor").val($('option:selected', this).text());
-                //             }
-                //         }],
-                //     }
-                // },
-
                 {
                     label: 'Etapa',
                     name: 'clasificacion',
@@ -240,6 +171,49 @@ var gridEstado = {
                     }
                 },
                 {
+                    label: 'Fecha Inicio',
+                    name: 'fechaInicio',
+                    width: 120,
+                    align: 'center',
+                    search: true,
+                    editable: true,
+                    hidden: false,
+                    formatter: 'date',
+                    formatoptions: {
+                        srcformat: 'ISO8601Long',
+                        newformat: 'd-m-Y'
+                    },
+                    searchoptions: {
+                        dataInit: function (el) {
+                            $(el).datepicker({
+                                language: 'es',
+                                format: 'dd-mm-yyyy',
+                                autoclose: true,
+                                onSelect: function (dateText, inst) {
+                                    setTimeout(function () {
+                                        $('#' + subgrid_table_id)[0].triggerToolbar();
+                                    }, 100);
+                                }
+                            });
+                        },
+                        sopt: ["eq", "le", "ge"]
+                    },
+                    editoptions: {
+                        size: 10,
+                        maxlengh: 10,
+                        dataInit: function (element) {
+                            $(element).mask("00-00-0000", {
+                                placeholder: "__-__-____"
+                            });
+                            $(element).datepicker({
+                                language: 'es',
+                                format: 'dd-mm-yyyy',
+                                autoclose: true
+                            })
+                        }
+                    }
+                },
+                {
                     label: 'Fecha Esperada',
                     name: 'fechaestadoesperada',
                     width: 120,
@@ -283,8 +257,15 @@ var gridEstado = {
                     }
                 },
                 {
-                    name: 'fecha', width: 120, align: 'center', search: false,
-                    formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
+                    name: 'fechaCierre',
+                    width: 120,
+                    align: 'center',
+                    search: false,
+                    formatter: 'date',
+                    formatoptions: {
+                        srcformat: 'ISO8601Long',
+                        newformat: 'd-m-Y'
+                    },
                     editable: true,
                     searchoptions: {
                         dataInit: function (el) {
@@ -302,7 +283,8 @@ var gridEstado = {
                         sopt: ["eq", "le", "ge"]
                     },
                     editoptions: {
-                        size: 10, maxlengh: 10,
+                        size: 10,
+                        maxlengh: 10,
 
                     },
                 },
@@ -338,55 +320,10 @@ var gridEstado = {
             sortname: 'fechaestadoesperada',
             sortorder: "asc",
             height: "auto",
-            //shrinkToFit: true,
-            //autowidth: true,
-            // width: 850,
-            // rownumbers: true,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
-                
-
-
-
-
 
             },
-            // gridComplete: function () {
-            //     // var recs = $gridTab.getGridParam("reccount");
-            //     // var thisId = $.jgrid.jqID(this.id);
-            //     // console.log("este es el id po: " + thisId)
-
-            //     // //$("#add_" + thisId).addClass('ui-disabled');
-            //     // $("#edit_" + thisId).addClass('ui-disabled');
-            //     // $("#del_" + thisId).addClass('ui-disabled');
-            //     // //$("#refresh_" + thisId).addClass('ui-disabled');
-            //     var recs = $gridTab.getGridParam("reccount");
-            //     var thisId = $.jgrid.jqID(this.id);
-            //     $.ajax({
-            //         type: "GET",
-            //         url: '/sic/estadoCerrado/' + parentRowKey,
-            //         async: false,
-            //         success: function (data) {
-            //             var validado = data.validado
-            //             console.log(validado)
-            //             if (validado != "1") {
-            //                 $("#add_" + thisId).addClass('ui-disabled');
-            //                 // $("#edit_" + thisId).addClass('ui-disabled');
-            //                 // $("#del_" + thisId).addClass('ui-disabled');
-            //                 // //$("#refresh_" + thisId).addClass('ui-disabled');
-            //             } else {
-            //                 $("#add_" + thisId).removeClass('ui-disabled');
-            //                 // $("#edit_" + thisId).removeClass('ui-disabled');
-            //                 // $("#del_" + thisId).removeClass('ui-disabled');
-            //                 //$("#refresh_" + thisId).removeClass('ui-disabled');
-            //             }
-
-            //         }
-            //     });
-            // },
-
-
-
             viewrecords: true,
             caption: "Etapa",
             loadComplete: function (data) {
@@ -424,10 +361,12 @@ var gridEstado = {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             beforeShowForm: function (form) {
-                var rowKey = $gridTab.getGridParam("selrow");
-                var rowData = $gridTab.getRowData(rowKey);
-                var thissid = rowData.fecha;
-                $('#mensajefecha').html("<div class='column-full'>Estado con fecha: " + thissid + "</div>");
+                setTimeout(function () {
+                    $("#idclasificacionsolicitud").attr('disabled', true);
+                }, 450);
+
+
+
             },
             onclickSubmit: function (rowid) {
                 return {
@@ -435,10 +374,35 @@ var gridEstado = {
                 };
             },
             beforeSubmit: function (postdata, formid) {
-                if (postdata.comentario.trim().length == 0) {
+                var lafechaactual = new Date();
+                var elanoactual = lafechaactual.getFullYear();
+                var elmesactual = (lafechaactual.getMonth() + 1);
+                if (elmesactual < 10) {
+                    elmesactual = "0" + elmesactual
+                }
+                var eldiaactual = lafechaactual.getDate();
+                if (eldiaactual < 10) {
+                    eldiaactual = "0" + eldiaactual
+                }
+                var fechahoy = elanoactual + elmesactual + eldiaactual
+                var f1 = postdata.fechaestadoesperada;
+                var f2 = postdata.fechaInicio
+                var f1compare = f1.substr(6) + f1.substr(3, 2) + f1.substr(0, 2);
+                var f2compare = f2.substr(6) + f2.substr(3, 2) + f2.substr(0, 2);
+                if (parseInt(postdata.idclasificacionsolicitud) == 0) {
+                    return [false, "Etapa: Debe escoger un valor", ""];
+                } else if (postdata.comentario.trim().length == 0) {
                     return [false, "Comentario: Debe ingresar un comentario", ""];
-                } else if (parseInt(postdata.idclasificacionsolicitud) == 0) {
-                    return [false, "Clasificación: Debe escoger un valor", ""];
+                } else if (postdata.fechaInicio.length == 0) {
+                    return [false, "Fecha Inicio: Debe escoger una fecha", ""];
+                } else if (postdata.fechaestadoesperada.length == 0) {
+                    return [false, "Fecha Esperada: Debe escoger un valor", ""];
+                } else if (fechahoy > f1compare) {
+                    return [false, "La fecha Esperada no puede ser menor a la fecha de Hoy", ""];
+                } else if (fechahoy > f2compare) {
+                    return [false, "La fecha Inicio no puede ser menor a la fecha de Hoy", ""];
+                } else if (f2compare > f1compare) {
+                    return [false, "La fecha de Inicio no puede ser menor que la fecha Esperada", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -453,46 +417,35 @@ var gridEstado = {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             beforeShowForm: function (form) {
-                var lafechaactual = new Date();
-                var elanoactual = lafechaactual.getFullYear();
-                var elmesactual = (lafechaactual.getMonth() + 1);
-                if (elmesactual < 10) {
-                    elmesactual = "0" + elmesactual
-                }
-                var eldiaactual = lafechaactual.getDate();
-                if (eldiaactual < 10) {
-                    eldiaactual = "0" + eldiaactual
-                }
-
-                var lafechastring = eldiaactual + "-" + elmesactual + "-" + elanoactual
-                $('input#fecha').html(lafechastring);
-                $('input#fecha').attr('value', lafechastring);
-                $('#mensajefecha').html("<div class='column-full'>El estado se guardará con fecha: " + lafechastring + "</div>");
-
+                $("#fechaInicio").attr('disabled', true);
             },
             onclickSubmit: function (rowid) {
-                var lafechaactual = new Date();
-                var elanoactual = lafechaactual.getFullYear();
-                var elmesactual = (lafechaactual.getMonth() + 1);
-                if (elmesactual < 10) {
-                    elmesactual = "0" + elmesactual
-                }
-                var eldiaactual = lafechaactual.getDate();
-                if (eldiaactual < 10) {
-                    eldiaactual = "0" + eldiaactual
-                }
-
-                var lafechastring = eldiaactual + "-" + elmesactual + "-" + elanoactual
                 return {
-                    idsolicitudcotizacion: parentRowKey,
-                    fecha: lafechastring
+                    idsolicitudcotizacion: parentRowKey
                 };
             },
             beforeSubmit: function (postdata, formid) {
-                if (postdata.comentario.trim().length == 0) {
+                var lafechaactual = new Date();
+                var elanoactual = lafechaactual.getFullYear();
+                var elmesactual = (lafechaactual.getMonth() + 1);
+                if (elmesactual < 10) {
+                    elmesactual = "0" + elmesactual
+                }
+                var eldiaactual = lafechaactual.getDate();
+                if (eldiaactual < 10) {
+                    eldiaactual = "0" + eldiaactual
+                }
+                var fechahoy = elanoactual + elmesactual + eldiaactual
+                var f1 = postdata.fechaestadoesperada;
+                var f1compare = f1.substr(6) + f1.substr(3, 2) + f1.substr(0, 2);
+                if (parseInt(postdata.idclasificacionsolicitud) == 0) {
+                    return [false, "Etapa: Debe escoger un valor", ""];
+                } else if (postdata.fechaestadoesperada.length == 0) {
+                    return [false, "Fecha Esperada: Debe escoger una fecha", ""];
+                } else if (fechahoy > f1compare) {
+                    return [false, "La fecha Esperada no puede ser menor a la fecha de Hoy", ""];
+                } else if (postdata.comentario.trim().length == 0) {
                     return [false, "Comentario: Debe ingresar un comentario", ""];
-                } else if (parseInt(postdata.idclasificacionsolicitud) == 0) {
-                    return [false, "Clasificación: Debe escoger un valor", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -528,10 +481,7 @@ var gridEstado = {
             title: "Generar Documento",
             position: "last",
             onClickButton: function () {
-                //var rowKey = $gridTab.getGridParam("selrow");
                 var parentRowData = $("#gridMaster").getRowData(parentRowKey);
-                //console.log(parentRowData.idtipo)
-                //console.log(parentRowData.idgrupo)
                 try {
                     var url = '/sic/documentowordfinal/' + parentRowKey + '/' + parentRowData.idtipo;
                     $gridTab.jqGrid('excelExport', {

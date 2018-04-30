@@ -13,6 +13,7 @@ exports.action = function (req, res) {
 	var hoy = "" + new Date().toISOString();
 	if (action != "del") {
 		fechaesperada = req.body.fechaestadoesperada.split("-").reverse().join("-")
+		fechaini = req.body.fechaInicio.split("-").reverse().join("-")
 		if (req.body.fecha != "") {
 			// fecha = req.body.fecha.split("-").reverse().join("-")
 			fecha = hoy;
@@ -22,21 +23,18 @@ exports.action = function (req, res) {
 		}
 	}
 
-
-
-
-
 	switch (action) {
 		case "add":
 			models.estadosolicitud.create({
 				idsolicitudcotizacion: req.body.idsolicitudcotizacion,
 				comentario: req.body.comentario,
-				fecha: fecha,
+				fechaCierre: fecha,
 				borrado: 1,
 				fechaestadoesperada: fechaesperada,
 				colorestado: 'bAl Dia',
 				estado: req.body.estado,
-				idclasificacionsolicitud: req.body.idclasificacionsolicitud
+				idclasificacionsolicitud: req.body.idclasificacionsolicitud,
+				fechaInicio: hoy
 			}).then(function (estadosolicitud) {
 
 				bitacora.registrar(
@@ -86,7 +84,7 @@ exports.action = function (req, res) {
 			});
 			break;
 		case "edit":
-
+			models.estadosolicitud.fechaCierre = fecha;
 			bitacora.registrar(
 				req.body.idsolicitudcotizacion,
 				'estadosolicitud',
@@ -100,13 +98,13 @@ exports.action = function (req, res) {
 						if (req.body.estado == 'Cerrado') {
 							models.estadosolicitud.update({
 								idtipodocumento: req.body.idtipodocumento,
-								// idcolor: req.body.idcolor,
 								comentario: req.body.comentario,
-								fecha: fecha,
+								fechaCierre: fecha,
 								fechaestadoesperada: fechaesperada,
 								colorestado: 'aGris',
 								estado: req.body.estado,
-								idclasificacionsolicitud: req.body.idclasificacionsolicitud
+								idclasificacionsolicitud: req.body.idclasificacionsolicitud,
+								fechaInicio: fechaini
 							}, {
 								where: {
 									id: req.body.id
@@ -130,10 +128,11 @@ exports.action = function (req, res) {
 							models.estadosolicitud.update({
 								idtipodocumento: req.body.idtipodocumento,
 								comentario: req.body.comentario,
-								fecha: fecha,
+								fechaCierre: fecha,
 								fechaestadoesperada: fechaesperada,
 								estado: req.body.estado,
-								idclasificacionsolicitud: req.body.idclasificacionsolicitud
+								idclasificacionsolicitud: req.body.idclasificacionsolicitud,
+								fechaInicio: fechaini
 							}, {
 								where: {
 									id: req.body.id
@@ -412,43 +411,5 @@ exports.download = function (req, res) {
 	}).catch(function (err) {
 		logger.error(err.message);
 		res.status(500).send(err.message);
-	});
-}
-
-exports.estadoCerrado = function (req, res) {
-	var idsolic = req.params.id;
-	sequelize.query(
-		`
-		SELECT TOP(1) estado
-		FROM sic.estadosolicitud
-		WHERE idsolicitudcotizacion = :idsolic 
-		ORDER BY id DESC `, {
-			replacements: {
-				idsolic: idsolic
-			},
-			type: sequelize.QueryTypes.SELECT
-		}
-	).then(function (valores) {
-		if (valores.length != 0) {
-			if (valores[0].estado == 'Cerrado') {
-				return res.json({
-					validado: 1
-				})
-			} else {
-				return res.json({
-					validado: 0
-				})
-			}
-		} else {
-			return res.json({
-				validado: 1
-			})
-		}
-
-	}).catch(function (err) {
-		logger.error(err);
-		res.json({
-			error: 1
-		});
 	});
 }
