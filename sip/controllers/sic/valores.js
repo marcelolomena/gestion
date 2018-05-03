@@ -9,14 +9,8 @@ exports.list = function (req, res) {
   var page = req.body.page;
   var rows = req.body.rows;
   var filters = req.body.filters;
-  var sidx = req.body.sidx;
-  var sord = req.body.sord;
-
-  if (!sidx)
-    sidx = "tipo";
-
-  if (!sord)
-    sord = "asc";
+  var sidx = req.body.sidx || 'valor';
+  var sord = req.body.sord || 'asc';
 
   var orden = sidx + " " + sord;
 
