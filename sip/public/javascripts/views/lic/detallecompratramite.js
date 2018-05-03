@@ -145,7 +145,7 @@ function renderGrid(loadurl, tableId) {
                                     $("input#otroFabricante").val("");
                                 }
                             }
-                        });  
+                        });
                     }
                 }]
             }
@@ -266,10 +266,10 @@ function renderGrid(loadurl, tableId) {
                                     $("input#otroProducto").val("");
                                 }
                             }
-                        });  
+                        });
                     }
                 }]
-            }          
+            }
         },
         {
             label: 'Fecha Inicio',
@@ -524,6 +524,8 @@ function renderGrid(loadurl, tableId) {
     }
 
     function beforeShowForm(form) {
+        // $("input#estado").attr('disabled', true);
+        //    $("input#estado").attr("readonly", true);
         var rowData = $table.getRowData($table.getGridParam('selrow'));
         var thissid = rowData.estado;
         if (thissid == 'Recepcionado') {
@@ -550,6 +552,13 @@ function renderGrid(loadurl, tableId) {
             }, 500);
         }
     };
+    grid.prmAdd.onInitializeForm = function (formid, action) {
+        if (action === 'add') {
+            setTimeout(function () {
+                $(':radio:not(:checked)').attr("disabled", true);
+            }, 500);
+        }
+    }
     grid.build();
 }
 
