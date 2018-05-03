@@ -40,7 +40,7 @@ exports.getEtapa = function (req, res) {
     models.valores.findAll({
         order: 'valor ASC',
         attributes: ['id', 'nombre'],
-        where: { tipo: 'clasificacionsolicitud' },
+        where: { tipo: 'etapasolicitud' },
     }).then(function (valores) {
         return res.json(valores);
     }).catch(function (err) {
