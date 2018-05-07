@@ -82,7 +82,7 @@ function mapProducto(data) {
     return {
         nombre: data.otroProducto,
         idFabricante: data.idFabricante,
-        licTramite: data.numero
+        licTramite: 0
     };
 }
 
@@ -182,20 +182,6 @@ function action(req, res) {
                                     error: 1,
                                     glosa: err.message
                                 });
-
-                                // return base.findById(models.producto, detalle.idProducto)
-                                //     .then(function (item) {
-                                //         return base.update(models.producto, {
-                                //             id: detalle.idProducto,
-                                //             licTramite: item.licTramite + data.numero
-                                //         }, res);
-                                //     }).catch(function (err) {
-                                //         logger.error('producto.LicTramite Upd, ' + err);
-                                //         return res.json({
-                                //             error: 1,
-                                //             glosa: err.message
-                                //         });
-                                //     });
                             }
                         }).catch(function (err) {
                             logger.error(entity.name + ':destroy, ' + err);
@@ -222,7 +208,7 @@ function action(req, res) {
                                     .then(function (item) {
                                         return base.update(models.producto, {
                                             id: detalle.idProducto,
-                                            licTramite: item.licTramite + detalle.numero
+                                            // licTramite: item.licTramite + detalle.numero
                                         }, res);
                                     }).catch(function (err) {
                                         logger.error('producto.LicTramite Upd, ' + err);
@@ -276,7 +262,83 @@ function action(req, res) {
     }
 }
 
+
+// function (req, res){
+//     function existeOtroFabricante(req, res) {
+//         var nombre = req.params.otroFabricante;
+//         entity.findOne({
+//                 where: {
+//                     nombre: nombre
+//                 },
+//                 attributes: ['nombre']
+//             })
+//             .then(function (result) {
+//                 return res.json({
+//                     error_code: 0,
+//                     nombre: result.nombre
+//                 });
+//             })
+//             .catch(function (err) {
+//                 return res.json({
+//                     error_code: 1
+//                 });
+//             });
+//     }
+
+
+// }
+
+// function existeRecepcion(req, res) {
+//     var ntt = models.detalleCompraTramite;
+//     base.listChilds(req, res, ntt, 'idCompraTramite', [{
+//         model: models.producto,
+//         include: [{
+//             model: models.clasificacion
+//         }, {
+//             model: models.tipoInstalacion
+//         }, {
+//             model: models.tipoLicenciamiento
+//         }]
+//     }], function (data) {
+//         var result = [];
+//         _.each(data, function (item) {
+//             if (item.estado === 1) {
+//                 var row = {
+//                     id: item.id,
+//                     nombre: item.producto.nombre,
+//                     idFabricante: item.idFabricante,
+//                     idProducto: item.idProducto,
+//                     idClasificacion: item.producto.idClasificacion,
+//                     idTipoInstalacion: item.producto.idTipoInstalacion,
+//                     idTipoLicenciamiento: item.producto.idTipoLicenciamiento,
+//                     fechaInicio: base.fromDate(item.fechaInicio),
+//                     fechaTermino: base.fromDate(item.fechaTermino),
+//                     fechaControl: base.fromDate(item.fechaControl),
+//                     idMoneda: item.idMoneda,
+//                     monto: item.monto,
+//                     cantidad: item.numero,
+//                     comentario: item.comentario
+//                 };
+//                 result.push(row);
+//             }
+//         });
+//         return result;
+//     })
+// }
+
+function existeRecepcion(req, res) {
+    var ntt = models.detalleRecepcion;
+    base.listChilds(req, res, ntt, 'numsolicitud', [{
+        model: models.producto,
+        model: models.fabricante,
+        model: models.moneda
+    }], function (data) {
+         return data;
+    })
+}
+
 module.exports = {
     listChilds: listChilds,
-    action: action
+    action: action,
+    existeRecepcion: existeRecepcion
 }
