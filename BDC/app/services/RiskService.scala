@@ -38,29 +38,29 @@ object RiskService extends CustomColumns {
           {risk_clouser_date},{user_id},{creation_date},
           {updation_date},{risk_state},{is_active})
           """).on(
-          'parent_id -> risk.parent_id,
-          'parent_type -> risk.parent_type,
-          'name -> risk.name,
-          'cause -> risk.cause,
-          'event -> risk.event,
-          'imapct -> risk.imapct,
-          'risk_category -> risk.risk_category,
-          'sub_category -> risk.sub_category,
-          'variable_imapact -> risk.variable_imapact,
-          'probablity_of_occurence -> risk.probablity_of_occurence,
-          'quantification -> risk.quantification,
-          'strategic_reply -> risk.strategic_reply,
-          'responsible -> risk.responsible,
-          'reply_action -> risk.reply_action,
-          'configuration_plan -> risk.configuration_plan,
-          'document_category -> risk.document_category,
-          'sub_category -> risk.sub_category,
-          'risk_clouser_date -> risk.risk_clouser_date,
-          'user_id -> risk.user_id,
-          'creation_date -> new Date,
-          'updation_date -> risk.updation_date,
-          'risk_state -> risk.risk_state,
-          'is_active -> 1).executeInsert(scalar[Long].singleOpt)
+        'parent_id -> risk.parent_id,
+        'parent_type -> risk.parent_type,
+        'name -> risk.name,
+        'cause -> risk.cause,
+        'event -> risk.event,
+        'imapct -> risk.imapct,
+        'risk_category -> risk.risk_category,
+        'sub_category -> risk.sub_category,
+        'variable_imapact -> risk.variable_imapact,
+        'probablity_of_occurence -> risk.probablity_of_occurence,
+        'quantification -> risk.quantification,
+        'strategic_reply -> risk.strategic_reply,
+        'responsible -> risk.responsible,
+        'reply_action -> risk.reply_action,
+        'configuration_plan -> risk.configuration_plan,
+        'document_category -> risk.document_category,
+        'sub_category -> risk.sub_category,
+        'risk_clouser_date -> risk.risk_clouser_date,
+        'user_id -> risk.user_id,
+        'creation_date -> new Date,
+        'updation_date -> risk.updation_date,
+        'risk_state -> risk.risk_state,
+        'is_active -> 1).executeInsert(scalar[Long].singleOpt)
 
       var last_index = sap_master.last
 
@@ -76,8 +76,8 @@ object RiskService extends CustomColumns {
 
       val alert_detail = SQL(
         """
-          update art_risk_alert  SET 
-          risk_id={risk_id},          
+          update art_risk_alert  SET
+          risk_id={risk_id},
           event_code={event_code},
           event_date={event_date},
           event_title={event_title},
@@ -94,22 +94,22 @@ object RiskService extends CustomColumns {
           responsible_answer={responsible_answer}
           where id={id}
           """).on(
-          'id -> alert.id.get,
-          'risk_id -> alert.risk_id,
-          'event_code -> alert.event_code,
-          'event_date -> alert.event_date,
-          'event_title -> alert.event_title,
-          'event_details -> alert.event_details.get.toString,
-          'responsible -> alert.responsible,
-          'person_invloved -> alert.person_invloved,
-          'criticality -> alert.criticality,
-          'category_id -> alert.category_id,
-          'impacted_variable -> alert.impacted_variable,
-          'reiteration -> alert.reiteration,
-          'status_id -> alert.status_id,
-          'task_id -> alert.task_id,
-          'change_state -> alert.change_state,
-          'responsible_answer -> alert.responsible_answer).executeUpdate()
+        'id -> alert.id.get,
+        'risk_id -> alert.risk_id,
+        'event_code -> alert.event_code,
+        'event_date -> alert.event_date,
+        'event_title -> alert.event_title,
+        'event_details -> alert.event_details.get.toString,
+        'responsible -> alert.responsible,
+        'person_invloved -> alert.person_invloved,
+        'criticality -> alert.criticality,
+        'category_id -> alert.category_id,
+        'impacted_variable -> alert.impacted_variable,
+        'reiteration -> alert.reiteration,
+        'status_id -> alert.status_id,
+        'task_id -> alert.task_id,
+        'change_state -> alert.change_state,
+        'responsible_answer -> alert.responsible_answer).executeUpdate()
     }
   }
 
@@ -177,7 +177,7 @@ object RiskService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val sap_master = SQL(
         """
-          update art_risk  SET 
+          update art_risk  SET
           name={name},
           cause={cause},
           event={event},
@@ -196,24 +196,24 @@ object RiskService extends CustomColumns {
           updation_date={updation_date}
           where id={id}
           """).on(
-          'id -> risk.id.get,
-          'name -> risk.name,
-          'cause -> risk.cause,
-          'event -> risk.event,
-          'imapct -> risk.imapct,
-          'risk_category -> risk.risk_category,
-          'sub_category -> risk.sub_category,
-          'variable_imapact -> risk.variable_imapact,
-          'probablity_of_occurence -> risk.probablity_of_occurence,
-          'quantification -> risk.quantification,
-          'strategic_reply -> risk.strategic_reply,
-          'responsible -> risk.responsible,
-          'reply_action -> risk.reply_action,
-          'configuration_plan -> risk.configuration_plan,
-          'document_category -> risk.document_category,
-          'risk_clouser_date -> risk.risk_clouser_date,
-          'updation_date -> risk.updation_date,
-          'sub_category -> risk.sub_category).executeUpdate()
+        'id -> risk.id.get,
+        'name -> risk.name,
+        'cause -> risk.cause,
+        'event -> risk.event,
+        'imapct -> risk.imapct,
+        'risk_category -> risk.risk_category,
+        'sub_category -> risk.sub_category,
+        'variable_imapact -> risk.variable_imapact,
+        'probablity_of_occurence -> risk.probablity_of_occurence,
+        'quantification -> risk.quantification,
+        'strategic_reply -> risk.strategic_reply,
+        'responsible -> risk.responsible,
+        'reply_action -> risk.reply_action,
+        'configuration_plan -> risk.configuration_plan,
+        'document_category -> risk.document_category,
+        'risk_clouser_date -> risk.risk_clouser_date,
+        'updation_date -> risk.updation_date,
+        'sub_category -> risk.sub_category).executeUpdate()
     } //          'risk_state -> risk.risk_state,
 
   }
@@ -222,12 +222,12 @@ object RiskService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val sap_master = SQL(
         """
-          update art_risk  SET 
+          update art_risk  SET
           is_active={is_active}
           where id={id}
           """).on(
-          'id -> id,
-          'is_active -> 0).executeUpdate()
+        'id -> id,
+        'is_active -> 0).executeUpdate()
     }
 
   }
@@ -335,23 +335,23 @@ object RiskService extends CustomColumns {
           {parent_id},{parent_type},{title},{description},{category},{sub_category},{members_involved},
           {action_plan},{priority},{issue_date}, {user_id},{closure_date},{planned_end_date}, {creation_date},{issue_status},{updation_date},{is_active})
           """).on(
-          'parent_id -> risk.parent_id,
-          'parent_type -> risk.parent_type,
-          'title -> risk.title,
-          'description -> risk.description,
-          'category -> risk.category,
-          'sub_category -> risk.sub_category,
-          'members_involved -> risk.members_involved,
-          'action_plan -> risk.action_plan,
-          'priority -> risk.priority,
-          'issue_date -> risk.riskManagementIssueDate.issue_date,
-          'user_id -> user_id,
-          'closure_date -> risk.riskManagementIssueDate.closure_date,
-          'planned_end_date -> risk.riskManagementIssueDate.planned_end_date,
-          'issue_status -> risk.issue_status,
-          'creation_date -> new Date(),
-          'updation_date -> new Date(),
-          'is_active -> 1).executeInsert(scalar[Long].singleOpt)
+        'parent_id -> risk.parent_id,
+        'parent_type -> risk.parent_type,
+        'title -> risk.title,
+        'description -> risk.description,
+        'category -> risk.category,
+        'sub_category -> risk.sub_category,
+        'members_involved -> risk.members_involved,
+        'action_plan -> risk.action_plan,
+        'priority -> risk.priority,
+        'issue_date -> risk.riskManagementIssueDate.issue_date,
+        'user_id -> user_id,
+        'closure_date -> risk.riskManagementIssueDate.closure_date,
+        'planned_end_date -> risk.riskManagementIssueDate.planned_end_date,
+        'issue_status -> risk.issue_status,
+        'creation_date -> new Date(),
+        'updation_date -> new Date(),
+        'is_active -> 1).executeInsert(scalar[Long].singleOpt)
 
       var last_index = risk_issue.last
 
@@ -367,7 +367,7 @@ object RiskService extends CustomColumns {
 
       val risk_issue = SQL(
         """
-          update art_issue SET 
+          update art_issue SET
           title={title},
           description={description},
           category={category},
@@ -375,26 +375,26 @@ object RiskService extends CustomColumns {
           members_involved={members_involved},
           priority={priority},
           action_plan={action_plan},
-          issue_date={issue_date}, 
+          issue_date={issue_date},
           closure_date={closure_date},
           planned_end_date={planned_end_date},
           issue_status ={issue_status},
           updation_date={updation_date}
           where id={id}
           """).on(
-          'id -> risk.id.get,
-          'title -> risk.title,
-          'description -> risk.description,
-          'category -> risk.category,
-          'sub_category -> risk.sub_category,
-          'members_involved -> risk.members_involved,
-          'action_plan -> risk.action_plan,
-          'priority -> risk.priority,
-          'issue_date -> risk.riskManagementIssueDate.issue_date,
-          'closure_date -> risk.riskManagementIssueDate.closure_date,
-          'planned_end_date -> risk.riskManagementIssueDate.planned_end_date,
-          'issue_status -> risk.issue_status,
-          'updation_date -> new Date()).executeUpdate()
+        'id -> risk.id.get,
+        'title -> risk.title,
+        'description -> risk.description,
+        'category -> risk.category,
+        'sub_category -> risk.sub_category,
+        'members_involved -> risk.members_involved,
+        'action_plan -> risk.action_plan,
+        'priority -> risk.priority,
+        'issue_date -> risk.riskManagementIssueDate.issue_date,
+        'closure_date -> risk.riskManagementIssueDate.closure_date,
+        'planned_end_date -> risk.riskManagementIssueDate.planned_end_date,
+        'issue_status -> risk.issue_status,
+        'updation_date -> new Date()).executeUpdate()
     }
 
   }
@@ -434,12 +434,12 @@ object RiskService extends CustomColumns {
     DB.withConnection { implicit connection =>
       val sap_master = SQL(
         """
-          update art_issue  SET 
+          update art_issue  SET
           is_active={is_active}
           where id={id}
           """).on(
-          'id -> id,
-          'is_active -> 0).executeUpdate()
+        'id -> id,
+        'is_active -> 0).executeUpdate()
     }
 
   }
@@ -534,8 +534,8 @@ object RiskService extends CustomColumns {
   }
 
   /**
-   * Risk Management Project & Task Creation....
-   */
+    * Risk Management Project & Task Creation....
+    */
   def createRiskManagementProject(parent_id: String, parent_type: Integer, risk_id: String) {
 
     var end_date: Date = new Date();
@@ -584,8 +584,8 @@ object RiskService extends CustomColumns {
           val pId = ProjectService.insertProject(projectVlaues)
 
           /**
-           * assign
-           */
+            * assign
+            */
 
           var isExist = false;
           isExist = UserService.checkUserSettingbyuIdandpId(res, pId.toInt)
@@ -609,9 +609,9 @@ object RiskService extends CustomColumns {
             Option(""), Option(""), Option(1), Option(0), Option(0), Option(0), 1, 1)
 
           /**
-           * asssign
-           *
-           */
+            * asssign
+            *
+            */
           var isExist = false;
           isExist = UserService.checkUserSettingbyuIdandpId(risk.get.responsible, project.pId.get)
           if (isExist) {
@@ -626,8 +626,8 @@ object RiskService extends CustomColumns {
   }
 
   /**
-   * Risk Initial Management Project & Task Creation from template ...
-   */
+    * Risk Initial Management Project & Task Creation from template ...
+    */
   def createInitialRiskManagementProject(parent_id: String, risk_id: String) {
 
     var end_date: Date = new Date();
@@ -653,8 +653,8 @@ object RiskService extends CustomColumns {
           val pId = ProjectService.insertProject(projectVlaues)
 
           /**
-           * assign
-           */
+            * assign
+            */
 
           var isExist = false;
           isExist = UserService.checkUserSettingbyuIdandpId(res, pId.toInt)
@@ -678,9 +678,9 @@ object RiskService extends CustomColumns {
             Option(""), Option(""), Option(1), Option(0), Option(0), Option(0), 1, 1)
 
           /**
-           * asssign
-           *
-           */
+            * asssign
+            *
+            */
           var isExist = false;
           isExist = UserService.checkUserSettingbyuIdandpId(risk.get.responsible, project.pId.get)
           if (isExist) {
@@ -722,8 +722,8 @@ object RiskService extends CustomColumns {
       }
     }
     /**
-     * insert unique Risk name
-     */
+      * insert unique Risk name
+      */
 
     if (!form("name").value.isEmpty) {
       name = form("name").value.get.trim()
@@ -805,8 +805,8 @@ object RiskService extends CustomColumns {
       }
     }
     /**
-     * update unique Risk name
-     */
+      * update unique Risk name
+      */
     if (!form("name").value.isEmpty) {
       name = form("name").value.get.trim()
       val riskObj = getRiskObjByProgramId(progrm.get.program_id.toString(), name)
@@ -840,8 +840,8 @@ object RiskService extends CustomColumns {
     var issue_date = ""
 
     /**
-     * insert unique Issue name
-     */
+      * insert unique Issue name
+      */
     if (!form("title").value.isEmpty) {
       name = form("title").value.get.trim()
       val issueObj = getIssueObjByTaskId(task_id, name)
@@ -961,8 +961,8 @@ object RiskService extends CustomColumns {
     var issue_date = ""
 
     /**
-     * insert unique Issue name
-     */
+      * insert unique Issue name
+      */
 
     if (!form("title").value.isEmpty) {
       name = form("title").value.get.trim()
@@ -1133,7 +1133,13 @@ object RiskService extends CustomColumns {
       Logger.debug("EL VALOR DEL TEMPLATE ES " + risk.template_id.get)
       RiskService.insertAlertSend(last_index.toInt, risk.template_id.get)
 
-      sendEmailAlerts(last_index.toString,risk.reiteration.get)
+      val state_ret=sendEmailAlerts(last_index.toString,risk.reiteration.get)
+      state_ret match {
+        case "OK" =>
+          Logger.debug("Send Email OK")
+        case _   => Logger.debug(state_ret)
+      }
+
 
       last_index
     }
@@ -1164,10 +1170,10 @@ object RiskService extends CustomColumns {
     }
   }
 
-  def findAllOpenAlerts(): Seq[RiskAlerts] = {
+
+  def findAllOpenAlerts(employeeid:Int): Seq[RiskAlerts] = {
     val sqlString =
       """
-        |
         |SELECT a.id
         |,a.risk_id
         |,a.event_code
@@ -1186,20 +1192,21 @@ object RiskService extends CustomColumns {
         |,a.change_state
         |,a.responsible_answer
         |,null template_id
-        |FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'
+        |FROM art_risk_alert a JOIN art_risk_alert_status b
+        | ON a.status_id = b.id
+        | WHERE a.is_active=1 AND b.is_active = 1
+        | AND b.description != 'Cerrada'
       """.stripMargin
 
-    //val sqlString = "SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b  ON a.status_id = b.id WHERE a.is_active=1 AND b.is_active = 1 AND b.description != 'Cerrada'"
     DB.withConnection { implicit connection =>
-      val result = SQL(sqlString).as(RiskAlerts.alerts *)
-      result
+      SQL(sqlString).as(RiskAlerts.alerts *)
     }
   }
 
   def findAllFirstExpiredAlerts(): Seq[RiskAlerts] = {
     val sqlString =
       """
-        SELECT a.* FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
+        SELECT a.*,null template_id FROM art_risk_alert a JOIN art_risk_alert_status b ON a.status_id = b.id
         WHERE dbo.BusinessDays(a.event_date, CAST(a.change_state AS DATE)) > 2
         AND b.description = 'Vigente' AND a.reiteration = 1
       """
@@ -1253,6 +1260,24 @@ object RiskService extends CustomColumns {
     }
   }
 
+  def findAllResponsibleIds(id: String): Seq[RiskAlerts] = {
+    val sqlString =
+      """
+        |SELECT a.* ,null template_id
+        |  FROM art_risk_alert a join art_risk_alert_status b on a.status_id=b.id
+        |  WHERE
+        |  a.responsible = {id}
+        |  and a.is_active = 1
+        |  and b.is_active = 1
+        |  and b.description!='Cerrada'
+      """.stripMargin
+
+    DB.withConnection { implicit connection =>
+      val result = SQL(sqlString).on('id->id.toInt).as(RiskAlerts.alerts *)
+      result
+    }
+  }
+
   def countCurrentAlerts(alert_id: String): Long = {
     DB.withConnection { implicit connection =>
       val count: Long = SQL("""
@@ -1268,7 +1293,7 @@ object RiskService extends CustomColumns {
 
   def riskCategory(id: String): String = {
     DB.withConnection { implicit connection =>
-     SQL("""
+      SQL("""
            SELECT b.category_name FROM art_risk a JOIN art_risk_category b ON a.risk_category = b.id
            WHERE a.id = (SELECT risk_id FROM art_risk_alert WHERE id = {id})
         """)
@@ -1287,7 +1312,7 @@ object RiskService extends CustomColumns {
           'id -> id).as(scalar[String].single)
     }
   }
-/**/
+  /**/
   def riskImapct(id: String): String = {
     DB.withConnection { implicit connection =>
       SQL("""
@@ -1301,12 +1326,12 @@ object RiskService extends CustomColumns {
   def countRisk(parent_id: String, probablity: Int, impact: Int): Long = {
     DB.withConnection { implicit connection =>
       val count1: Long = SQL("""
-              SELECT count(*) FROM art_risk 
-              WHERE 
-              probablity_of_occurence = {probablity} 
-              AND quantification = {impact} 
-              AND is_active = 1 
-              AND parent_id = {parent_id} 
+              SELECT count(*) FROM art_risk
+              WHERE
+              probablity_of_occurence = {probablity}
+              AND quantification = {impact}
+              AND is_active = 1
+              AND parent_id = {parent_id}
         """)
         .on(
           'parent_id -> parent_id.toInt,
@@ -1314,11 +1339,11 @@ object RiskService extends CustomColumns {
           'impact -> impact).as(scalar[Long].single)
 
       val count2: Long = SQL("""
-              SELECT count(*) FROM art_risk 
-              WHERE 
-              probablity_of_occurence = {probablity} 
-              AND quantification = {impact} 
-              AND is_active = 1 
+              SELECT count(*) FROM art_risk
+              WHERE
+              probablity_of_occurence = {probablity}
+              AND quantification = {impact}
+              AND is_active = 1
               AND parent_id in (SELECT pId FROM art_project_master WHERE program = {parent_id} AND is_active = 1)
         """)
         .on(
@@ -1327,11 +1352,11 @@ object RiskService extends CustomColumns {
           'impact -> impact).as(scalar[Long].single)
 
       val count3: Long = SQL("""
-            SELECT count(*) FROM art_risk 
-            WHERE 
-            probablity_of_occurence = {probablity} 
-            AND quantification = {impact} 
-            AND is_active = 1 
+            SELECT count(*) FROM art_risk
+            WHERE
+            probablity_of_occurence = {probablity}
+            AND quantification = {impact}
+            AND is_active = 1
             AND parent_id in (SELECT tId FROM art_task WHERE is_active = 1 AND pId in (SELECT pId FROM art_project_master WHERE program = {parent_id} AND is_active = 1))
         """)
         .on(
@@ -1346,24 +1371,24 @@ object RiskService extends CustomColumns {
   def countRiskForShow(parent_id: String): Long = {
     DB.withConnection { implicit connection =>
       val count1: Long = SQL("""
-              SELECT count(*) FROM art_risk 
-              WHERE is_active = 1 
-              AND parent_id = {parent_id} 
+              SELECT count(*) FROM art_risk
+              WHERE is_active = 1
+              AND parent_id = {parent_id}
         """)
         .on(
           'parent_id -> parent_id.toInt).as(scalar[Long].single)
 
       val count2: Long = SQL("""
-              SELECT count(*) FROM art_risk 
-              WHERE is_active = 1 
+              SELECT count(*) FROM art_risk
+              WHERE is_active = 1
               AND parent_id in (SELECT pId FROM art_project_master WHERE program = {parent_id} AND is_active = 1)
         """)
         .on(
           'parent_id -> parent_id.toInt).as(scalar[Long].single)
 
       val count3: Long = SQL("""
-            SELECT count(*) FROM art_risk 
-            WHERE is_active = 1 
+            SELECT count(*) FROM art_risk
+            WHERE is_active = 1
             AND parent_id in (SELECT tId FROM art_task WHERE is_active = 1 AND pId in (SELECT pId FROM art_project_master WHERE program = {parent_id} AND is_active = 1))
         """)
         .on(
@@ -1426,28 +1451,28 @@ object RiskService extends CustomColumns {
 
     //val sqlString = "SELECT * FROM art_risk_alert where is_active=1 AND id=" + alert_id + " AND risk_id =" + risk_id
     val sqlString = """
-      |SELECT id
-      |      ,risk_id
-      |      ,event_code
-      |      ,event_date
-      |      ,event_title
-      |      ,event_details
-      |      ,responsible
-      |      ,person_invloved
-      |      ,criticality
-      |      ,is_active
-      |      ,category_id
-      |      ,impacted_variable
-      |      ,reiteration
-      |      ,status_id
-      |      ,task_id
-      |      ,change_state
-      |      ,responsible_answer
-      |	  ,null template_id
-      |  FROM art_risk_alert
-      |  WHERE id = {alert_id}
-      |  AND risk_id = {risk_id}
-    """.stripMargin
+                      |SELECT id
+                      |      ,risk_id
+                      |      ,event_code
+                      |      ,event_date
+                      |      ,event_title
+                      |      ,event_details
+                      |      ,responsible
+                      |      ,person_invloved
+                      |      ,criticality
+                      |      ,is_active
+                      |      ,category_id
+                      |      ,impacted_variable
+                      |      ,reiteration
+                      |      ,status_id
+                      |      ,task_id
+                      |      ,change_state
+                      |      ,responsible_answer
+                      |	  ,null template_id
+                      |  FROM art_risk_alert
+                      |  WHERE id = {alert_id}
+                      |  AND risk_id = {risk_id}
+                    """.stripMargin
     //println(sqlString)
 
     DB.withConnection { implicit connection =>
@@ -1797,10 +1822,16 @@ object RiskService extends CustomColumns {
       SQL("select id_template from art_risk_alert_send where id_alert={id_alert}").on('id_alert->id_alert.toInt).as(scalar[Int].single)
     }
 
-    //val sqlString = "SELECT TOP 1 tpl FROM art_risk_alert_conf WHERE is_active = 1 ORDER BY id DESC"
     val sqlString = "SELECT tpl FROM art_risk_alert_conf WHERE is_active = 1 AND id={id_template}"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('id_template->id_template).as(scalar[String].single)
+    }
+  }
+
+  def findTmplId(id_alert: String) : Int = {
+
+    DB.withConnection { implicit connection =>
+      SQL("select id_template from art_risk_alert_send where id_alert={id_alert}").on('id_alert->id_alert.toInt).as(scalar[Int].single)
     }
   }
 
@@ -1897,7 +1928,7 @@ object RiskService extends CustomColumns {
 
   def findNewUserAlertsIds(employeeid: String): String = {
     var risk_ids = ""
-    val risksAlerts = RiskService.findAllOpenAlerts()
+    val risksAlerts = RiskService.findAllOpenAlerts(employeeid.toInt)
     for (r <- risksAlerts) {
 
       if (!r.person_invloved.isEmpty) {//obtiene los id de alerta en que figura el usuario
@@ -1914,7 +1945,7 @@ object RiskService extends CustomColumns {
 
     return risk_ids
   }
-  
+
   def findAllAlertStatus(): Seq[RiskStatus] = {
     var sqlString = "select id,description,is_active from art_risk_alert_status where is_active = 1"
     DB.withConnection { implicit connection =>
@@ -1922,17 +1953,17 @@ object RiskService extends CustomColumns {
     }
   }
 
-  def findAllCCEmail(): Option[String] = {
+  def findAllCCEmail(id_template:String): Option[String] = {
     val sqlString =
       """
-        SELECT TOP 1 ISNULL(RTRIM(em1),'') + ',' + ISNULL(RTRIM(em2),'') + ',' + ISNULL(RTRIM(em3),'')
-        emails FROM art_risk_alert_conf ORDER BY id DESC
+        SELECT ISNULL(RTRIM(em1),'') + ',' + ISNULL(RTRIM(em2),'') + ',' + ISNULL(RTRIM(em3),'')
+        emails FROM art_risk_alert_conf WHERE is_active = 1 AND id={id_template}
       """
     DB.withConnection { implicit connection =>
-      SQL(sqlString).as(scalar[String].singleOpt)
+      SQL(sqlString).on('id_template->id_template.toInt).as(scalar[String].singleOpt)
     }
   }
-  
+
   def findAllAlertCategory(): Seq[RiskCategory] = {
     var sqlString = "select id,description,is_active from art_risk_alert_category where is_active = 1"
     DB.withConnection { implicit connection =>
@@ -1973,6 +2004,21 @@ object RiskService extends CustomColumns {
     }
   }
 
+  def updateAlertState(alert_id: String) = {
+    DB.withConnection { implicit connection =>
+
+      SQL(
+        """
+          update art_risk_alert SET
+          status_id=3,
+          change_state=GETDATE()
+          where id={alert_id}
+          """).on(
+        'alert_id -> alert_id).executeUpdate()
+
+    }
+  }
+
   def automaticAlert() {
     val FormattedDATE = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")
     val now = FormattedDATE.format(new Date().getTime).toString
@@ -1981,8 +2027,9 @@ object RiskService extends CustomColumns {
     if(!firstCandidates.isEmpty) {
       for (t <- firstCandidates) {
         Logger.info("First round : " + t.id.get.toString + " " + t.reiteration.get.toInt)
-        val round = t.reiteration.get.toInt + 1
-
+        //val round = t.reiteration.get.toInt + 1
+        updateAlertState(t.id.get.toString)//cambia estaddo alerta
+        /*
         sendEmailAlerts(t.id.get.toString, round) match {
           case "OK" =>
             // update Alert
@@ -1990,6 +2037,7 @@ object RiskService extends CustomColumns {
             updateFirstAlertCronMail(t.id.get.toString, round)
           case _   => Logger.info("I DO NOT SEND THE MAIL!!")
         }
+        */
 
       } //first iteration
     }else{
@@ -1997,6 +2045,7 @@ object RiskService extends CustomColumns {
     }
 
     //second iteration
+    /*
     val secondCandidates = RiskService.findAllSecondExpiredAlerts()
     if(!secondCandidates.isEmpty) {
       for (r <- secondCandidates) {
@@ -2015,6 +2064,7 @@ object RiskService extends CustomColumns {
     } else {
       Logger.info("["  + now + "] There are no valid alerts with more than eight days of delay.")
     }
+    */
   }
 
   def riskAutomaticAlert() {
@@ -2025,19 +2075,19 @@ object RiskService extends CustomColumns {
     var users: Seq[Users] = null
 
     /**
-     * Step 1 - Send Alert when you calculate Task completion percentage on start & end date.
-     */
+      * Step 1 - Send Alert when you calculate Task completion percentage on start & end date.
+      */
     //    val tasks = TaskService.findAllTasks();
     //    for (t <- tasks) {
-    //      
+    //
     //      var start_date = format.parse(format.format(t.plan_start_date))
     //      var end_date = format.parse(format.format(t.plan_end_date))
-    //     
+    //
     //      if (start_date.getTime == todaydate.getTime) {
     //         if(t.tId.get==909){
-    //      println(t.tId.get)  
+    //      println(t.tId.get)
     //      }
-    //      
+    //
     //        val risks = RiskService.findAllRiskList(t.tId.get.toString(), 2)
     //        if (risks.size > 0) {
     //          program = TaskService.findProgramDetailForTask(t.tId.get.toString())
@@ -2080,7 +2130,7 @@ object RiskService extends CustomColumns {
     //              }
     //            }
     //            for (r <- risks) {
-    //            
+    //
     //              val alert = RiskAlerts(Option(1), r.id.get, Option(1), Option(1), Option(new Date()),
     //                r.name, Option(r.cause), Option(r.responsible), Option(persons),
     //                Option(1), Option(1), Option(1))
@@ -2097,8 +2147,8 @@ object RiskService extends CustomColumns {
     //} //Step 1 ends
 
     /**
-     * Step 2 - When SPI value is less than 1
-     */
+      * Step 2 - When SPI value is less than 1
+      */
     users = null
     val programs = ProgramService.findActivePrograms()
     for (p <- programs) {
@@ -2147,9 +2197,9 @@ object RiskService extends CustomColumns {
     } //Step 2 ends
 
     /**
-     * *
-     * Step 3 -
-     */
+      * *
+      * Step 3 -
+      */
 
   }
 
@@ -2178,9 +2228,9 @@ object RiskService extends CustomColumns {
           if (!alert.get.person_invloved.isEmpty) {
             persons = alert.get.person_invloved.get
           }
-
           val template = findTmplMail(alert_id)
-          var cc = findAllCCEmail().get.toString
+          val tId = findTmplId(alert_id)
+          var cc = findAllCCEmail(tId.toString).get.toString
 
           val lastchar = cc.charAt(cc.length-1).toString
 
@@ -2194,28 +2244,37 @@ object RiskService extends CustomColumns {
               if (!user.isEmpty) {
                 val email = user.get.email.toString()
 
-                //println(email)
+                Logger.debug("EMAIL : " + email)
 
                 if (!StringUtils.isEmpty(email)) {
 
                   if(increment == 2) {
                     val boss = findBossMail(email)
                     if(!boss.isEmpty) {
-                      println("el jefe es : " + boss.get.toString)
+                      Logger.debug("el jefe es : " + boss.get.toString)
                       cc = cc + "," + boss.get.toString
                     }else{
-                      println("no tiene jefe")
+                      Logger.debug("no tiene jefe")
                     }
 
                   } else if (increment == 3) {
                     val bigboss = findBigBossMail(email)
                     if(!bigboss.isEmpty) {
-                      println("el gran jefe : " + bigboss.get.toString)
+                      Logger.debug("el gran jefe : " + bigboss.get.toString)
                       cc = cc + "," + bigboss.get.toString
                     }else{
-                      println("no tiene gran jefe")
+                      Logger.debug("no tiene gran jefe")
                     }
                   }
+
+                  Logger.debug("USER : " + user.toString)
+                  Logger.debug("PROGRAM : " + program.toString)
+                  Logger.debug("ALERT : " + alert.toString)
+                  Logger.debug("RISK : " + risks.toString)
+                  Logger.debug("RISK DETAIL : " + risk_details.toString)
+                  Logger.debug("INCREMENT : " + increment.toString)
+                  Logger.debug("TEMPLATE : " + template.toString)
+                  Logger.debug("CC : " + cc.toString)
 
                   response=utils.SendEmail.sendEmailRiskAlert(
                     user,
@@ -2227,7 +2286,7 @@ object RiskService extends CustomColumns {
                     template,
                     cc)
 
-                  println("RESPUESTA : " + response)
+                  Logger.debug("RESPUESTA : " + response)
 
 
                 }
@@ -2282,13 +2341,6 @@ object RiskService extends CustomColumns {
       }
     } else {
       null
-    }
-  }
-
-  def createAutomaticRisk2(idPrograma: Long, user_id: Integer) = {
-    DB.withConnection { implicit connection =>
-      SQL("EXEC art.risk_automatic_create {idPrograma},{user_id}").on(
-        'idPrograma -> idPrograma.toInt, 'user_id -> user_id.toInt).executeQuery().as(scalar[Int].single)
     }
   }
 

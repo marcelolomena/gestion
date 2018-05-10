@@ -1160,8 +1160,8 @@ object Incident extends Controller {
         for (p <- pie) {
           val punto = new JSONObject()
           punto.put("dId", p.dId)
-          punto.put("name", p.division + " (" + p.cantidad + ")")
-          punto.put("y", p.cantidad)
+          punto.put("name", p.name + " (" + p.y + ")")
+          punto.put("y", p.y)
           if(p.dId == 1) {
             punto.put("color", "green")
           }else if(p.dId == 2) {
@@ -1176,8 +1176,8 @@ object Incident extends Controller {
         for (p <- pie) {
           val punto = new JSONObject()
           punto.put("dId", p.dId)
-          punto.put("name", p.division + " (" + p.cantidad + ")")
-          punto.put("y", p.cantidad)
+          punto.put("name", p.name + " (" + p.y + ")")
+          punto.put("y", p.y)
 
           puntos.put(punto)
         }
@@ -1210,14 +1210,14 @@ object Incident extends Controller {
 
 
       val puntos = new JSONArray()
-        for (p <- pie) {
-          val punto = new JSONObject()
-          punto.put("dId", p.dId)
-          punto.put("name", p.division + " (" + p.cantidad + ")")
-          punto.put("y", p.cantidad)
+      for (p <- pie) {
+        val punto = new JSONObject()
+        punto.put("dId", p.dId)
+        punto.put("name", p.name + " (" + p.y + ")")
+        punto.put("y", p.y)
 
-          puntos.put(punto)
-        }
+        puntos.put(punto)
+      }
 
 
       node.put("data", puntos)

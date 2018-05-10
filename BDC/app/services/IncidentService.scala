@@ -15,7 +15,7 @@ import models.SubTasks
 import models.Hours
 import models.IncidentSubTask
 import models.NameUsr
-import models.Pie;
+import models.Report.Pie;
 import anorm._
 import anorm.SqlParser._
 import play.api.libs.json.JsObject

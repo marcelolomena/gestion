@@ -1,4 +1,6 @@
-@(alerts:Seq[RiskAlertsExtended], risk:Option[RiskManagementMaster],parent_id:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader)
+@(alerts:Seq[RiskAlertsExtended],
+risk:Option[RiskManagementMaster],
+parent_id:String)(implicit session: play.api.mvc.Session,lang:Lang,req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import services._
 @import utils._
@@ -260,8 +262,14 @@
 							<span class="minimember">@p.reiteration</span>
 						</a>
 							<span class="rminimember">
-								@if(utils.UserAccess.checkAccess(req,"delete_alert")){    
+								@if(utils.UserAccess.checkAccess(req,"alert_create")){
 									<span class="delete-alert delete-icon" id="alert_@p.id" style="margin-left: 5px"></span>
+									@{
+										val uni = p.id.get.toString + "_" + risk.get.id.get.toString
+										if(p.status!="Cerrada"){
+											Html("<span class='close-state-alert close-state-alert-icon' id='close_" + uni + "' style='margin-left: 5px'></span>")
+										}
+									}
 								}
 							</span>
 						</li>
@@ -282,7 +290,48 @@
 </div>	 
 @frontend.headerScripts()	
 <script type="text/javascript" src="@routes.Assets.at("frontend/js/main.js")"></script>
-<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.css")">
-<link rel="stylesheet" href="@routes.Assets.at("frontend/jqgrid/css/ui.jqgrid.css")">
+
+    <script type="text/javascript">
+	  $(document).ready(function(){
+			$("#dialog-confirm").html("¿Esta seguro de dar por cerrada la alerta?");
+		  	$('.close-state-alert').click(function(){
+		  				var _this = $(this);
+		  				var alert_id = _this.attr("id").split("_")[1];
+		  				var risk_id =  _this.attr("id").split("_")[2];
+		  				//console.log(alert_id)
+		  				//console.log(risk_id)
+
+						$("#dialog-confirm").dialog({
+							resizable : false,
+							modal : true,
+							title : "Cerrar Alerta",
+							height : 150,
+							width : 300,
+							buttons : {
+								"Yes" : function() {
+									var url = "/close-alert/" + alert_id;
+
+									$.get(url, function(data) {
+										if (data == "Success") {
+											window.location.href ="/risk-details/" + risk_id
+										}
+									});
+									$(this).dialog('close');
+									$("#pop-box-over").css("display", "none");
+									$("#dialog-confirm").css("display", "none");
+								},
+								"No" : function() {
+									$(this).dialog('close');
+									$("#pop-box-over").css("display", "none");
+									$("#dialog-confirm").css("display", "none");
+								}
+							}
+						});
+
+			});
+
+
+	    });
+    </script>
 </body>	
 </html>
