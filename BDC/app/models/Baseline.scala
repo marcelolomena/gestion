@@ -1,6 +1,5 @@
 package models
 
-import anorm.Pk
 import java.util.Date
 import anorm.SqlParser._
 import play.api.Play.current
@@ -68,6 +67,7 @@ object Baseline {
 
   def getBaselineCount(ref: Int, object_type: String): Int = {
     DB.withConnection { implicit connection =>
+      /*
       var result = SQL(
         """
 			select count(*) as baseline_count from art_baseline
@@ -77,6 +77,14 @@ object Baseline {
           'object_type -> object_type).apply().head
       var count = result[Long]("baseline_count")
       count.toInt
+      */
+      SQL(
+        """
+			select count(*) as baseline_count from art_baseline
+			where ref_id = {ref_id} AND object_type = {object_type}
+			""").on(
+        'ref_id -> ref,
+        'object_type -> object_type).as(scalar[Int].single)
     }
   }
 

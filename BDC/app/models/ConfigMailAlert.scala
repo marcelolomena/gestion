@@ -9,7 +9,8 @@ import play.api.libs.json._
   * @author marcelo
   */
 case class ConfigMailAlert(id: Option[Int], uid: Int, em1: Option[String], em2: Option[String],
-                           em3: Option[String], tpl: String, fec: java.util.Date)
+                           em3: Option[String], tpl: String, fec: java.util.Date, is_active: Int,
+                           description: String)
 
 object ConfigMailAlert extends CustomColumns{
 
@@ -20,8 +21,11 @@ object ConfigMailAlert extends CustomColumns{
       get[Option[String]]("em2") ~
       get[Option[String]]("em3") ~
       get[String]("tpl") ~
-      get[Date]("fec")  map {
-      case id ~ uid ~ em1 ~ em2 ~ em3 ~ tpl ~ fec => ConfigMailAlert(id, uid,  em1, em2, em3, tpl, fec)
+      get[Date]("fec") ~
+      get[Int]("is_active") ~
+      get[String]("description") map {
+      case id ~ uid ~ em1 ~ em2 ~ em3 ~ tpl ~ fec ~ is_active ~ description =>
+        ConfigMailAlert(id, uid,  em1, em2, em3, tpl, fec, is_active, description)
     }
   }
   implicit val configMailAlertWrites = Json.writes[ConfigMailAlert]

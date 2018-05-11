@@ -1,0 +1,13 @@
+@(project: model.FullProject, userBase: model.UserBase)
+
+<div class="modal fade" id="createKolumnModal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index:1500;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Create New Column</h4>
+            </div>
+            @form.kolumnform(project, userBase)
+        </div>
+    </div>
+</div>

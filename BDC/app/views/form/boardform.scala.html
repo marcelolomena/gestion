@@ -1,0 +1,28 @@
+@(boardForm : Form[model.BoardValidators.NewBoardValidator], userBase : model.UserBase)
+
+@import helper._
+
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.render) }
+
+@form(controllers.Frontend.routes.BoardController.createNewBoard(), 'class -> "form-horizontal") {
+
+    @if(boardForm.hasGlobalErrors) {
+        <p class="error">
+            <span class="label label-danger">@boardForm.globalError.head.message</span>
+        </p>
+    }
+
+    <fieldset>
+        @inputText(
+            boardForm("name"),
+            'placeholder -> Messages("kanban.name.of.board"),
+            '_label -> Messages("name"),
+            '_help -> "",
+            'class -> "form-control"
+        )
+    </fieldset>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Guardar tablero</button>
+    </div>
+}

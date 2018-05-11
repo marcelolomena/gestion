@@ -4,7 +4,6 @@ import java.util.Date
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
-import anorm.NotAssigned
 import art_forms.ARTForms
 import models.Activity
 import models.ActivityTypes
@@ -301,6 +300,8 @@ object ProjectMaster extends Controller {
           val end_date = ProjectMaster.final_release_date
           val projectVlaues = Project(None, ProjectMaster.project_id, ProjectMaster.program, ProjectMaster.project_mode, ProjectMaster.project_name, ProjectMaster.description, ProjectMaster.project_manager, ProjectMaster.start_date, ProjectMaster.final_release_date, ProjectMaster.completion_percentage, ProjectMaster.ppm_number, ProjectMaster.work_flow_status, false, ProjectMaster.planned_hours)
           val pId = ProjectService.insertProject(projectVlaues)
+          //RRM:Agrega proyecto en tabla art_program_management
+          ProgramService.saveProgramManagement(pId,2);
 
           /**
            * Insert generic task for new project...
@@ -311,7 +312,7 @@ object ProjectMaster extends Controller {
 
           //genericTasks = GenericService.findGenericProjectTypeTasks(genericDetail.get.id.get.toString)
           var isBaselined = false
-          //println("hi sss    " + genericTasks.length)
+          println("hi sss    " + genericTasks.length)
           for (g <- genericTasks) {
             val predefined_id = g.predefined_task_id.toString()
             val service_id = GenericService.findPredefinedTasksDetails(predefined_id).get.catalogue_service
@@ -325,6 +326,8 @@ object ProjectMaster extends Controller {
             }
 
             val latest_task = TaskService.insertTask(taskDetails)
+            //RRM:Agrega tarea en tabla art_program_management
+            ProgramService.saveProgramManagement(latest_task,3);
 
             // println(g.tId.get.toString() + " --- " + latest_task)
 
@@ -332,7 +335,9 @@ object ProjectMaster extends Controller {
 
             val subtask = SubTaskMaster(None, latest_task, g.task_title, g.task_description,
               start_date, end_date, new Date(), null, null, new Date(), g.task_status, g.completion_percentage, 0, Option(""), Option(0), Option(service_id))
-            SubTaskServices.insertSubTask(subtask)
+            val id_subtask = SubTaskServices.insertSubTask(subtask)
+            //RRM:Agrega subtarea en tabla art_program_management
+            ProgramService.saveProgramManagement(id_subtask,4);
           }
 
           if (isBaselined) {
@@ -864,6 +869,9 @@ object ProjectMaster extends Controller {
       node.put("PAE", s.pae + " %")
       node.put("HP", s.hp + " hrs")
       node.put("HA", s.ha + " hrs")
+	  //RRM
+	  node.put("AGI", s.ev/s.hp*100)
+	  node.put("AGE", s.pv/s.hp*100)		  
     }    
     Ok(node.toString())
   }

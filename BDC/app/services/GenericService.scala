@@ -4,8 +4,9 @@ import play.api.db.DB
 import anorm.SqlParser._
 import models._
 import anorm._
-import com.typesafe.plugin._;
+import com.typesafe.plugin._
 import org.apache.commons.lang3.StringUtils
+import play.Logger
 
 object GenericService extends CustomColumns {
 
@@ -143,8 +144,38 @@ object GenericService extends CustomColumns {
 
   def findGenericProjectTypeTasks(id: String) = {
     DB.withConnection { implicit connection =>
-      var sqlString = "select * from art_generic_task where task_mode =  " + id + " AND is_active=1 AND predefined_task_id <> 0";
-      val result = SQL(sqlString).as(
+      val sqlString =
+        """
+          |SELECT tId
+          |,task_title
+          |,task_code
+          |,plan_start_date
+          |,plan_end_date
+          |,task_description
+          |,CAST(plan_time AS INTEGER) plan_time
+          |,creation_date
+          |,task_status
+          |,status
+          |,owner
+          |,task_discipline
+          |,completion_percentage
+          |,remark
+          |,task_depend
+          |,stage
+          |,user_role
+          |,deliverable
+          |,task_type
+          |,task_mode
+          |,predefined_task_id
+          |,is_active
+          |,catalogue_service
+          |FROM art_generic_task
+          |WHERE task_mode = {id}
+          |AND is_active=1
+          |AND predefined_task_id <> 0
+        """.stripMargin
+      //val sqlString = "select * from art_generic_task where task_mode = {id} AND is_active=1 AND predefined_task_id <> 0"
+      val result = SQL(sqlString).on('id->id)as(
         GenericTasks.tasks *)
       result
     }
@@ -283,29 +314,101 @@ object GenericService extends CustomColumns {
 
   def findAllPredefinedTasksDetails(task_mode: String) = {
     DB.withConnection { implicit connection =>
-      //val genericTasks = GenericService.findGenericProjectTypeTasks(task_mode);
-      var sqlString = "select * from art_predefined_task where is_active=1 AND tId NOT IN (select t.predefined_task_id from art_generic_task t where t.is_active=1 and t.task_mode='" + task_mode + "')";
-      // println("sqlString     "+sqlString)
-      val result = SQL(sqlString).as(PredefinedTasks.predefined_tasks *)
-
+      val sqlString = "select * from art_predefined_task where is_active=1 AND tId NOT IN (select t.predefined_task_id from art_generic_task t where t.is_active=1 and t.task_mode={task_mode})"
+      val result = SQL(sqlString).on('task_mode->task_mode).as(PredefinedTasks.predefined_tasks *)
       result
     }
   }
 
-  /*def getDependentTaskDetails(tasks:String)= {
+  def findAllDigestiblePredefinedTasksDetails(task_mode: String) = {
     DB.withConnection { implicit connection =>
-      for( s <- tasks.split(",")){
-        
-      }
-      //val genericTasks = GenericService.findGenericProjectTypeTasks(task_mode);
-      var sqlString =""
-      //"select * from art_predefined_task where is_active=1 AND tId NOT IN (select t.predefined_task_id from art_generic_task t where t.is_active=1 and t.task_mode='" + task_mode + "')";
-     // println("sqlString     "+sqlString)
-      val result = SQL(sqlString).as(PredefinedTasks.predefined_tasks *)
-
+      val sqlString =
+        """
+          |SELECT A.tId, A.task_title,A.task_description,B.task_discipline,C.role user_role,D.deliverable FROM
+          |(
+          |	SELECT X.* FROM
+          |	(
+          |	SELECT * from art_predefined_task
+          |	) X
+          |	LEFT OUTER JOIN
+          |	(
+          |	SELECT t.predefined_task_id FROM art_generic_task t WHERE t.is_active=1 and t.task_mode={task_mode}
+          |	) Y
+          |	ON X.tId = Y.predefined_task_id
+          |	WHERE Y.predefined_task_id IS NULL
+          |	AND X.is_active = 1
+          |) A
+          |JOIN
+          |(
+          |	SELECT * FROM art_task_discipline WHERE is_deleted = 0
+          |) B
+          |ON A.task_discipline = B.id
+          |JOIN
+          |(
+          |	SELECT * FROM art_user_role
+          |) C
+          |ON A.user_role = C.rId
+          |JOIN
+          |(
+          |	SELECT * FROM art_program_deliverable
+          |) D
+          |ON A.deliverable = D.id
+          |WHERE
+          |C.is_deleted = 0
+          |AND D.is_deleted = 0
+          |ORDER BY A.task_title
+        """.stripMargin
+      val result = SQL(sqlString).on('task_mode->task_mode).as(DigestiblePredefinedTasks.digestible_predefined_tasks *)
       result
     }
-  }*/
+  }
+
+  def findAllDigestiblePredefinedTasksFiltered(task_mode: String, task_title: String, discipline_id: Int) = {
+    DB.withConnection { implicit connection =>
+      Logger.debug("task_title : " + task_title)
+      val sqlString =
+        """
+          |SELECT A.tId, A.task_title,A.task_description,B.task_discipline,C.role user_role,D.deliverable FROM
+          |(
+          |	SELECT X.* FROM
+          |	(
+          |	SELECT * from art_predefined_task
+          |	) X
+          |	LEFT OUTER JOIN
+          |	(
+          |	SELECT t.predefined_task_id FROM art_generic_task t WHERE t.is_active=1 and t.task_mode={task_mode}
+          |	) Y
+          |	ON X.tId = Y.predefined_task_id
+          |	WHERE Y.predefined_task_id IS NULL
+          | AND X.task_discipline = {discipline_id}
+          |	AND X.is_active = 1
+          |) A
+          |JOIN
+          |(
+          |	SELECT * FROM art_task_discipline WHERE is_deleted = 0
+          |) B
+          |ON A.task_discipline = B.id
+          |JOIN
+          |(
+          |	SELECT * FROM art_user_role
+          |) C
+          |ON A.user_role = C.rId
+          |JOIN
+          |(
+          |	SELECT * FROM art_program_deliverable
+          |) D
+          |ON A.deliverable = D.id
+          |WHERE
+          |C.is_deleted = 0
+          |AND D.is_deleted = 0
+          |AND task_title like {title}
+          |ORDER BY A.task_title
+        """.stripMargin
+      val result = SQL(sqlString).on('task_mode->task_mode,'title->task_title,'discipline_id -> discipline_id).as(DigestiblePredefinedTasks.digestible_predefined_tasks *)
+      result
+    }
+  }
+
   def getPredefinedTasks(task_title: String) = {
     var isPresent = false
     DB.withConnection { implicit connection =>
@@ -356,6 +459,14 @@ object GenericService extends CustomColumns {
       newform
     } else {
       form
+    }
+  }
+
+  def updatePlanTime(task_id: String, plan_time: String) : Int = {
+    DB.withConnection { implicit connection =>
+      SQL("UPDATE art_generic_task SET plan_time = {plan_time} WHERE tId = {task_id}").on(
+        'task_id -> task_id,
+      'plan_time -> plan_time).executeUpdate()
     }
   }
 }

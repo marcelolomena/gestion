@@ -1,0 +1,39 @@
+@(searchForm : Form[GenericTaskSearch], disciplineMap: java.util.HashMap[String,String],deliverableMap: java.util.HashMap[String,String])(implicit session: play.api.mvc.Session,lang: Lang)
+@import play.api.i18n._
+@import play.api._
+@import services._
+@import helper._
+<div class="focus_on width_full" style="padding:10px 0px; margin:20px 0px;" id = "search_program_id">
+    <div class="focus_on_title"><img width="94" height="13" alt="" src="@routes.Assets.at("frontend/images/modify_search.png")"></div>
+    <div class="search-form-wrapper" style="padding: 10px 40px;">
+        @form(action = controllers.Frontend.routes.Generics.searchTaskResult, 'id->"search-program-form") {
+        <div class="left width_full">
+            <div class="left width-pr50 padding-top-3px">
+                @select(
+                searchForm("discipline_id"),
+                options(disciplineMap),
+                'class -> "input-xlarge ",
+                '_label -> Messages("Disciplina"),
+                '_default -> Messages("Escoja una Disciplina")
+                )
+            </div>
+
+            <div class="right width-pr50 padding-top-3px" >
+                @select(
+                searchForm("deliverable_id"),
+                options(deliverableMap),
+                'class -> "input-xlarge ",
+                '_label -> Messages("Entregable"),
+                '_default -> Messages("Escoja un entregable")
+                )
+            </div>
+
+        </div>
+
+        <div class="" style="margin: 10px auto;text-align: center;width: 300px;">
+            <span class="left" style="margin-top: 15px;"><input class="btn form-button" id="program-search-form" value='@Messages("button.search")' type="submit"/></span>
+            <span class="left" style="margin-left: 29px; margin-top: 15px;"> <input id="cancel-task-search" class="btn form-button" value='@Messages("button.cancel")' type="button"/></span>
+        </div>
+        }
+    </div>
+</div>

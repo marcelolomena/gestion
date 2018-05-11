@@ -1,4 +1,4 @@
-@(projectTypes:Seq[ProjectType])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader) 
+@(pagination :String, projectTypes:Seq[ProjectType])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @import services._
 @import java.text.SimpleDateFormat
 
@@ -13,6 +13,17 @@
 
 </style>
 <div class="project_list">
+	<div class="content-box">
+		<div class="content-box-header">
+			<ul class="content-box-tabs dashboard-overview-tab" style="width:100%;">
+				<li><a href="javascript:void(0)" id="search-tab2" class="search-tab2 current">@Messages("generics.projecttypelist.title")</a></li>
+				<li style="float:right;margin:0px;"><a href="javascript:void(0)" id="overview-tab2" class="overview-tab2">@Messages("dashboard.searchdashboard") </a></li>
+			</ul>
+		</div>
+		<div class="content-box-content2">
+
+		</div>
+	</div>
   <h3 class="title">
   		<span>  @Messages("generics.projecttypelist.projecttype") </span>	
   		
@@ -23,6 +34,7 @@
 
   </h3>
   	<div class="project_list_1  padding-none project_list_2" id="">
+
     	<div id="program_container" class="design_team_left_detail_1_left width_full" >
    		    	  @if(projectTypes.size>0){
 				    	@for((pType , index)<- projectTypes.zipWithIndex){
@@ -39,7 +51,7 @@
 					    					}
 					    				 }'></span>
 					    				 @if(!GenericProjectTypeService.findGenericProjectTypeById(pType.project_type.toString).isEmpty){
-					    				 @GenericProjectTypeService.findGenericProjectTypeById(pType.project_type.toString).get.generic_project_type
+					    				 	@GenericProjectTypeService.findGenericProjectTypeById(pType.project_type.toString).get.generic_project_type
 					    				 }
 					    				 
 					    			</span>
@@ -58,9 +70,8 @@
 					    		</a>			
 				    			<span class="left" style="margin-left:104px!important;">
 				    				<a href="@controllers.Frontend.routes.Generics.editProjectType(pType.id.get.toString())" class="edit-icon" ></a>
-				    				@* <a href="@controllers.Frontend.routes.GenericProjectMaster.deleteProjectType("")" class="doc_delete"> delete</a>*@
 				    			</span>
-				    			
+
 		      				</div>
 		      			
 		      			}
@@ -69,6 +80,12 @@
 		    		}
    	   </div>
     </div>
+</div>
+<!-- Pagination -->
+<div class="pagination">
+	<ul>
+		@Html(pagination)
+	</ul>
 </div>
 
 

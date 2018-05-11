@@ -7,12 +7,10 @@
 @import utils._
 @import controllers.Frontend.User
 <style>
-
 .emp_img_container {
     padding: 10px 10px 10px 0 !important;
     width: 70px !important;
 }
-
 </style>
 </head>
 <body>
@@ -230,24 +228,25 @@
 						}
 				
 					<div class="width_full dash_detail_1_right border-none risk-alerts-header"> 
-						<h3>@Messages("employeeProfile.myalerts")</h3>
+						<h3>@Messages("employeeProfile.myalerts")&nbsp;<img width="16px" height="16px" src="@routes.Assets.at("frontend/images/warning-16.png")" alt=""/></h3>
 						<div class="width_full">
 						@for((id,index) <- alerts.split(",").zipWithIndex){
 							<div id="rsk_@id" class=" width290px @if(index%2==0){dash_right_data_2_odd}else{dash_right_data_2}">
-       					 		
+
        					 			@if(RiskService.findRiskAlertsById(id) != null){
-       					 				<div class="width_full" >	
+       					 				<div class="width_full">
 		       					 		<span class="left alert-title">
-		       					 				@RiskService.findRiskAlertsById(id).get.event_title
+											<a href="/edit-generic-alert/@RiskService.findRiskAlertsById(id).get.risk_id/@id">@RiskService.findRiskAlertsById(id).get.event_title</a>
 		       					 		</span>
 		       					 		<span id="alert_@id" class="show-alert"></span>
 		       					 		</div>
        					 			}else{
        					 			<div style="width:282px;padding: 4px;background: #e7edef" class="dash_right_data_left">No hay alertas disponibles</div>
        					 			}
-       					 		
-       					 		<div class="width_full display-none" id="ad_@id">
-       					 		@frontend.risks.riskalertDetails(id)</div>
+
+       					 		<div id="ad_@id" class="width_full oculto">
+	       					 		@frontend.risks.riskalertDetails(id)
+								</div>
        					 	</div>	
      					}
      					</div>
@@ -302,9 +301,9 @@
 
 <div class="tooltip"></div>
 @frontend.newHeaderScript()	
-<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.min.css")">
+<link rel="stylesheet" href="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.min.css")">
 <link rel="stylesheet" href="@routes.Assets.at("frontend/stylesheets/alert.css")">
-<script src="@routes.Assets.at("frontend/jquery-ui-1.11.4/jquery-ui.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/jquery-ui-1.12.1/jquery-ui.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/js/alert.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/highcharts/highcharts.js")"></script>
 <script src="@routes.Assets.at("frontend/highcharts/highcharts-more.js")"></script>

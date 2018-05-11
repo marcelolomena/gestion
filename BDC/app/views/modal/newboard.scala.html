@@ -1,0 +1,13 @@
+@(boardForm: Form[model.BoardValidators.NewBoardValidator])(implicit userBase : model.UserBase)
+
+<div class="modal fade" id="createBoardModal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index:1500;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">New Board</h4>
+            </div>
+            @form.boardform(boardForm,userBase)
+        </div>
+    </div>
+</div>
