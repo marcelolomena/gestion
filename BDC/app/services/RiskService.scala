@@ -1195,7 +1195,7 @@ object RiskService extends CustomColumns {
         |FROM art_risk_alert a JOIN art_risk_alert_status b
         | ON a.status_id = b.id
         | WHERE a.is_active=1 AND b.is_active = 1
-        | AND b.description != 'Cerrada'
+        | AND b.description != 'Cerrada' AND a.task_id is not null
       """.stripMargin
 
     DB.withConnection { implicit connection =>
