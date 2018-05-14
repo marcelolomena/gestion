@@ -148,15 +148,10 @@ $(document).ready(function () {
                         dataType: 'json',
                         async: false,
                         success: function (j) {
-                            if (j) {
-                                dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
-                            } else {
-                                dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
-                            }
-
-
-
-
+                            dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                        },
+                        error: function (errorThrown) {
+                            dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
                         }
                     });
                 }, 2000);
@@ -181,11 +176,10 @@ $(document).ready(function () {
                         dataType: 'json',
                         async: false,
                         success: function (j) {
-                            if (j) {
-                                dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
-                            } else {
-                                dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
-                            }
+                            dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                        },
+                        error: function (errorThrown) {
+                            dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
                         }
                     });
                 }, 2000);
@@ -210,11 +204,10 @@ $(document).ready(function () {
                         dataType: 'json',
                         async: false,
                         success: function (j) {
-                            if(j){
-                                dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
-                            }else{
-                                dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
-                            }
+                            dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                        },
+                        error: function (errorThrown) {
+                            dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
                         }
                     });
                 }, 2000);
