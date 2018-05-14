@@ -20,6 +20,414 @@ function returnUserLink(cellValue, options, rowdata, action)
     return "<a href='/employee/" + options.rowId + "' >" + cellValue +"</a>";
 }
 
+function findWithColor() {
+    var filters, i, l, rules, rule, iCol, $this = $(this);
+    if (this.p.search === true) {
+        filters = $.parseJSON(this.p.postData.filters);
+        if (filters !== null && typeof filters.rules !== 'undefined' &&
+                filters.rules.length > 0) {
+            rules = filters.rules;
+            l = rules.length;
+            for (i = 0; i < l; i++) {
+                rule = rules[i];
+                iCol = getColumnIndexByName($this, rule.field);
+                if (iCol >=0) {
+                    $('>tbody>tr.jqgrow>td:nth-child(' + (iCol + 1) +
+                        ')', this).highlight(rule.data);
+                }
+            }
+        }
+    }
+    return;
+}
+
+
+function showThirdLevelChildGrid(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    
+    var childGridPagerID = parentRowID + "_pager";
+
+    var childGridURL = "/reportSubTarea/" + parentRowKey;
+
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+                   { label: 'Codigo',
+                      name: 'codigo',
+                      width: 100,
+                      key: true,
+                      hidden:true
+                   },                   
+                   { label: 'Nivel',
+                     name: 'nivel',
+                     width: 100,
+                   },
+                   { label: 'Nombre', name: 'programa', width: 250,formatter: returnSubTaskLink },
+                   { label: 'Responsable', name: 'responsable', width: 150 },
+                   { label: 'Fecha Inicio Planeada',
+                     name: 'pfecini',
+                     width: 120,
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+                   },
+                   { label: 'Fecha Termino Planeada',
+                     name: 'pfecter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+                     
+                   },
+                   { label: 'Fecha Inicio Real',
+                     name: 'rfecini',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+                     
+                   },
+                   { label: 'Fecha Termino Real',
+                     name: 'rfecter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+                     
+                   },
+                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100 },
+                   { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+        ],
+        rowNum: 10,
+ 		height: 'auto',
+        autowidth:true,       
+        regional : "es",
+        pager: "#" + childGridPagerID
+    });
+}
+
+function showChildGrid(parentRowID, parentRowKey) {
+    var childGridID = parentRowID + "_table";
+    var childGridPagerID = parentRowID + "_pager";
+    var childGridURL = "/reportProyect/" + parentRowKey;
+
+    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+    $("#" + childGridID).jqGrid({
+        url: childGridURL,
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: [
+                   { label: 'Codigo',
+                      name: 'codigo',
+                      width: 100,
+                      key: true,
+                      hidden:true
+                   },                   
+                   { label: 'Nivel',
+                     name: 'nivel',
+                     width: 100,
+                   },
+                   { label: 'Nombre', name: 'programa', width: 250,formatter: returnProjectLink },
+                   { label: 'Responsable', name: 'responsable', width: 150 },
+                   { label: 'Fecha Inicio Planeada',
+                     name: 'pfecini',
+                     width: 120,
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+                   },
+                   { label: 'Fecha Termino Planeada',
+                     name: 'pfecter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+                     
+                   },
+                   { label: 'Fecha Inicio Real',
+                     name: 'rfecini',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+                     
+                   },
+                   { label: 'Fecha Termino Real',
+                     name: 'rfecter',
+                     width: 120,
+                     sorttype:'date',
+                     formatter: 'date',
+                     formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+                     
+                   },
+                   { label: 'Porcentaje Avance Informado', name: 'pai', width: 100},
+                   { label: 'Porcentaje Avance Esperado', name: 'pae', width: 100 }              
+        ],
+        rowNum: 20,
+		height: 'auto',
+        autowidth:true,
+        subGrid: true, 
+        subGridRowExpanded: showThirdLevelChildGrid, 
+        regional : "es",
+        pager: "#" + childGridPagerID
+    });
+	
+    $("#" + childGridID).jqGrid('navGrid',"#" + childGridPagerID,{add:false,edit:false,del:false,search: false,refresh:false});
+
+	$("#" + childGridID).jqGrid('navButtonAdd',"#" + childGridPagerID,{
+	       caption:"",
+	       buttonicon : "silk-icon-chart-bar",
+	       title: "Gráfico Avance", 
+	       onClickButton : function () { 
+	    	   var grid = $("#" + childGridID);
+	           var rowKey = grid.getGridParam("selrow");
+	           if(rowKey === null && typeof rowKey === "object"){
+		           alert('debe seleccionar un proyecto');
+	           }else{
+
+		           var curl = 'getPyChart/' + rowKey;
+
+		           $.ajax({
+						  url: curl,
+						  type: 'GET',
+						  success: function(data) {
+							  var largo=data.length;
+								if(largo>0){
+							  	var items6 = [];
+							  	var items7 = [];
+								$.each(data, function(index, element) {
+									var d = new Date(parseInt(element.fecha));
+									items6.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),parseFloat(element.ecpi)]);
+									items7.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),parseFloat(element.espi)]);
+							    });	
+								var now = new Date;
+								var chart = new Highcharts.Chart({
+									chart : {
+										renderTo : 'chart1',
+										zoomType : 'xy'
+									},title: {
+								            text: 'Gráfico Porcentaje de Avance'
+								    },xAxis : {
+										type : 'datetime',
+										plotLines: [{
+														value: Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate()),
+														width: 1,
+														color: 'red',
+														dashStyle: 'dash',
+														label: {
+															text: 'Hoy',
+															align: 'right',
+															y: 12,
+															x: 0
+														}
+													}]										
+									},yAxis: {
+							            title: {
+							                text: 'Porcentaje'
+							            }
+							        },series : [ {
+							            name: '% Avance Informado',
+							            data: items6
+		       					 	},{
+							            name: '% Avance Esperado',
+							            data: items7
+		       					 	}]
+	
+								});
+								
+								$("#chart_box").dialog({modal: true,height:'auto',width:'auto'});
+								}else{
+									alert('no hay datos');
+								}
+						  },
+						  error: function(e) {
+
+						  }
+					}); 
+	           }
+	       } 
+	}); 
+
+	$("#" + childGridID).jqGrid('navButtonAdd',"#" + childGridPagerID,{
+	       caption:"",
+	       buttonicon : "silk-icon-chart-curve",
+	       title: "Gráfico Valor Ganado", 
+	       onClickButton : function () { 
+	    	   var grid = $("#" + childGridID);
+	           var rowKey = grid.getGridParam("selrow");
+	           if(rowKey === null && typeof rowKey === "object"){
+		           alert('debe seleccionar un proyecto');
+	           }else{
+		           var curl = 'getPyChart/' + rowKey;
+		           $.ajax({
+						  url: curl,
+						  type: 'GET',
+						  success: function(data) {
+							  var largo=data.length;
+								if(largo>0){
+									var items3 = [];
+									var items4 = [];
+									var items5 = [];
+									var items9 = [];
+									var items10 = [];
+									$.each(data, function(index, element) {
+										var d = new Date(parseInt(element.fecha));
+										items3.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),parseFloat(element.vb)]);
+										items4.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),parseFloat(element.vg)]);
+										items5.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),parseFloat(element.vp)]);
+										items9.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),parseFloat(element.evg)]);	
+										items10.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),parseFloat(element.evb)]);																					
+								    });	
+								    
+								var now = new Date;
+								var chart_2 = new Highcharts.Chart({
+									chart : {
+										renderTo : 'chart1',
+										zoomType : 'xy'
+									},title: {
+								            text: 'Gráfico Valor Ganado'
+								    },xAxis : {
+										type : 'datetime',
+										plotLines: [{
+														value: Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate()),
+														width: 1,
+														color: 'red',
+														dashStyle: 'dash',
+														label: {
+															text: 'Hoy',
+															align: 'right',
+															y: 12,
+															x: 0
+														}
+													}]										
+									},yAxis: {
+							            title: {
+							                text: 'Horas'
+							            }
+							        },series : [ {
+										name: 'HC (100%)',
+										data : items3
+									},{
+						            	name: 'VG (100%)',
+						            	data: items4
+	       						 	},{
+	       						 		name :'Horas Asignadas',
+	       						 		data: items5
+	       						 	},{
+	       						 		name :'HC (% Avance)',
+	       						 		data: items10
+	       						 	},{
+	       						 		name :'VG (% Avance)',
+	       						 		data: items9
+	       						 	}]
+								});
+								
+								$("#chart_box").dialog({modal: true,height:'auto',width:'auto'});
+								}else{
+									alert('no hay datos');
+								}
+						  },
+						  error: function(e) {
+
+						  }
+					}); 
+	           }
+	       } 
+	});   		
+
+	$("#" + childGridID).jqGrid('navButtonAdd',"#" + childGridPagerID,{
+	       caption:"",
+	       buttonicon : "silk-icon-chart-line",
+	       title: "Gráfico Sub-Tareas Atrasadas", 
+	       onClickButton : function () { 
+	    	   var grid = $("#" + childGridID);
+	           var rowKey = grid.getGridParam("selrow");
+	           if(rowKey === null && typeof rowKey === "object"){
+		           alert('debe seleccionar un proyecto');
+	           }else{
+
+		           var curl = 'getPyChart/' + rowKey;
+
+		           $.ajax({
+						  url: curl,
+						  type: 'GET',
+						  success: function(data) {
+							  var largo=data.length;
+								if(largo>0){
+									var items11 = [];
+									var items12 = [];
+									$.each(data, function(index, element) {
+										var d = new Date(parseInt(element.fecha));
+										items11.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),parseFloat(element.ta)]);
+										items12.push([Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()),parseFloat(element.tp)]);
+								    });	
+								    
+								var now = new Date;
+								var chart3 = new Highcharts.Chart({
+									chart : {
+										renderTo : 'chart1',
+										zoomType : 'xy',
+									},plotOptions: {
+					                    series: {
+					                        stickyTracking: false,
+					                        events: {
+					                            click: function(evt) {
+					                            	var index = evt.point.index;
+					                            	var programId = items13[index][1];
+					                            	var date = items13[index][0]
+					                            }                      
+					                        }
+					                        
+					                    }
+					                },title: {
+								            text: 'Gráfico de Sub-Tareas'
+								    },xAxis : {
+										type : 'datetime',
+										plotLines: [{
+														value: Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate()),
+														width: 1,
+														color: 'red',
+														dashStyle: 'dash',
+														label: {
+															text: 'Hoy',
+															align: 'right',
+															y: 12,
+															x: 0
+														}
+													}]											
+									},yAxis: {
+							            title: {
+							                text: 'sub-tareas'
+							            }
+							        },series : [ {
+									 	name: 'Sub-Tarea Atrasada',
+										data : items11
+									},{
+						            	name: 'Sub-Tarea Planeada',
+						            	data: items12
+	       						 	}]
+								});
+								
+								$("#chart_box").dialog({modal: true,height:'auto',width:'auto'});
+								}else{
+									alert('no hay datos');
+								}
+						  },
+						  error: function(e) {
+
+						  }
+					}); 
+	           }
+	       } 
+	}); 
+
+}
+
 $(document).ready(function(){
 	$.datepicker.regional['es'] = {
 	        closeText: 'Cerrar',
@@ -119,6 +527,42 @@ $(document).ready(function(){
                      borderWidth: 1
             },series: []
 	};
+
+	var optionsPieDepa ={
+			chart: {
+				renderTo: 'containerDepa',
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false,
+	            type: 'pie'
+	        },title: {
+	            text: 'Programas por Departamento'
+	        },tooltip: {
+	        	formatter: function() {
+	        	    return '<b>'+ this.point.name + '</b>: ' + Highcharts.numberFormat(this.percentage, 2) +' %';
+	        	}	        	
+	        },plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                point: {
+	                    events: {
+	                       click: function(event) {
+	                    	   grillaProgramaDepa(this.options.dId,this.options.name);
+	                       }
+	                    }
+	                 },
+	                dataLabels: {
+	                    enabled: true,
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    },
+	                    connectorColor: 'silver'
+	                }
+	            }
+	        },series: []			
+	};		
 
 	var optionsPie_1 ={
 			chart: {
@@ -949,7 +1393,370 @@ $(document).ready(function(){
 				  }
 			});
 
-        }
+        }else if(ui.newTab.index()===2) {
+				if($('#jqGrid2').html() == "") {
+					$("#jqGrid2").jqGrid({
+				        url: '/reportProgram',
+				        mtype: "GET",
+				        datatype: "json",
+				        page: 1,
+				        colModel: [
+				            { label: 'Codigo',
+				               name: 'codigo',
+				               width: 100,
+				               key: true,
+				               hidden:true
+				            },                   
+				            { label: 'Nivel',
+				              name: 'nivel',
+				              width: 100,
+				            },
+				            { label: 'Estado',
+					              name: 'estado',
+					              width: 150, 
+					              stype: 'select',searchoptions: {dataUrl: '/listaEstado',
+			  	  	            		buildSelect: function (response) {
+			  	  	            			var data = JSON.parse(response);
+			  	  	            		    var s = "<select>";
+			  	  	            		    s += '<option value="0">--Sin Estado--</option>';
+			  	  	            		    $.each(data, function(i, item) {
+			  	  	            		    	s += '<option value="' + data[i].id + '">' + data[i].workflow_status + '</option>';
+			  	  	            		    });
+			  	  	            		    return s + "</select>";
+			  	  	            		}},
+				            },
+				            { label: 'Nombre', name: 'programa', width: 250,formatter: returnProgramLink },
+				            { label: 'Responsable', name: 'responsable', width: 150 },
+				            { label: 'Fecha Inicio Planeada',
+				              name: 'pfecini',
+				              width: 120,
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'yy-mm-dd',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid2')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["gt","lt","eq"]
+				             }
+				            },
+				            { label: 'Fecha Termino Planeada',
+				              name: 'pfecter',
+				              width: 120,
+				              sorttype:'date',
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'yy-mm-dd',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid2')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["gt","lt","eq"]
+				             }
+				            },
+				            { label: 'Fecha Inicio Real',
+				              name: 'rfecini',
+				              width: 120,
+				              sorttype:'date',
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'yy-mm-dd',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid2')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["gt","lt","eq"]
+				             }
+				            },
+				            { label: 'Fecha Termino Real',
+				              name: 'rfecter',
+				              width: 120,
+				              sorttype:'date',
+				              formatter: 'date',
+				              formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+				              searchoptions:{
+					              dataInit:function(el){
+						              	$(el).datepicker({
+							              	dateFormat:'yy-mm-dd',
+							              	changeYear: true,
+					                        changeMonth: true,                            
+					                        onSelect: function (dateText, inst) {
+					                            setTimeout(function () {
+					                                $('#jqGrid2')[0].triggerToolbar();
+					                            }, 100);
+					                        }
+								        });
+						              },sopt: ["gt","lt","eq"]
+				             }
+				            },
+				            { label: 'Horas Planificadas', name: 'hplan', width: 100,searchoptions: {sopt:["gt","lt","eq"] } },
+				            { label: 'Horas Consumidas', name: 'hreal', width: 100,searchoptions: {sopt:["gt","lt","eq"] } }              
+				        ],
+				        rowNum: 20,
+				        viewrecords: true,
+            	        rowList: [5, 10, 20, 50],
+            	        gridview: true,
+				        regional : 'es',
+				        height: 'auto',
+				        autowidth:true,        
+				        subGrid: true, 
+				        subGridRowExpanded: showChildGrid, 
+				        pager: "#jqGridPager2",
+				        loadComplete: findWithColor
+				    });	
+ 
+					$("#jqGrid2").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
+					$("#jqGrid2").jqGrid('navGrid','#jqGridPager2',{add:false,edit:false,del:false,search: false});
+				
+            		$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
+         		       caption:"",
+         		       buttonicon : "ui-icon-gear",//silk-icon-cog
+         		       onClickButton : function() { 
+         		    	   var grid = $("#jqGrid2");
+         		           var rowKey = grid.getGridParam("selrow");
+         		           var rowData = grid.getRowData(rowKey);
+         		           var titulo = rowData.program_name;
+         		           
+         		           if(rowKey === null && typeof rowKey === "object"){
+         			           alert('debe seleccionar un programa');
+         		           }else{
+         		        	  var iurl = 'indicadores/' + rowKey;
+         		        	  
+         		        	 $.ajax({
+									type: "GET",
+									url: iurl,
+									dataType: "json",
+									async: false,
+									success: function( data ) {
+										$("#cell_spi").text(data[0].spi);
+										$("#cell_cpi").text(data[0].cpi);
+										$("#dialog-modal").dialog({
+								              height: 140,
+								              modal: true
+								        });
+										$( "#dialog-modal" ).show();
+									},
+									error: function(model, response, options) {
+										alert(response);
+									}
+         		        	 });
+         		        	 
+         		        	 
+         		           }
+         		       } 
+         		});		
+            		
+					$("#jqGrid2").jqGrid('navButtonAdd','#jqGridPager2',{
+					       caption:"",
+					       buttonicon : "silk-icon-page-excel",
+					       title: "Exportar a Excel", 
+					       onClickButton : function () { 
+					    	   var grid = $("#jqGrid2");
+					           var rowKey = grid.getGridParam("selrow");
+					           if(rowKey === null && typeof rowKey === "object"){
+						           alert('debe seleccionar un programa');
+					           }else{
+						           var url = 'getProgramExcel/' + rowKey;
+						    	   $("#jqGrid2").jqGrid('excelExport',{"url":url});
+					           }
+					       } 
+					});            		
+				}
+		
+		}else if(ui.newTab.index()===3) {
+			if($('#jqGrid3').html() == "") {
+				$("#jqGrid3").jqGrid({
+					url: '/reportStateSubTask',
+					mtype: "GET",
+					datatype: "json",
+					page: 1,
+					colModel: [
+						{ label: 'sub_task_id', name: 'sub_task_id', width: 100, key: true, hidden:true }, 
+						{ label: 'Programa', name: 'programa', width: 250 },
+						{ label: 'Proyecto', name: 'proyecto', width: 250 },
+						{ label: 'Sub Tarea', name: 'subtarea', width: 250 },
+						{ label: 'Lider', name: 'lider', width: 150 },
+						{ label: 'Responsable', name: 'responsable', width: 150 },
+						{ label: 'Asignadas', name: 'asignadas', width: 50 },
+						{ label: 'Consumidas', name: 'consumidas', width: 50 },				            
+						{ label: 'Fecha Inicio Planeada',
+						  name: 'pfecini',
+						  width: 100,
+						  formatter: 'date',
+						  formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+						  searchoptions:{
+							  dataInit:function(el){
+									$(el).datepicker({
+										dateFormat:'yy-mm-dd',
+										changeYear: true,
+										changeMonth: true,                            
+										onSelect: function (dateText, inst) {
+											setTimeout(function () {
+												$('#jqGrid3')[0].triggerToolbar();
+											}, 100);
+										}
+									});
+								  },sopt: ["gt","lt","eq"]
+						 }
+						},
+						{ label: 'Fecha Termino Planeada',
+						  name: 'pfecter',
+						  width: 100,
+						  sorttype:'date',
+						  formatter: 'date',
+						  formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+						  searchoptions:{
+							  dataInit:function(el){
+									$(el).datepicker({
+										dateFormat:'yy-mm-dd',
+										changeYear: true,
+										changeMonth: true,                            
+										onSelect: function (dateText, inst) {
+											setTimeout(function () {
+												$('#jqGrid3')[0].triggerToolbar();
+											}, 100);
+										}
+									});
+								  },sopt: ["gt","lt","eq"]
+						 }
+						},
+						{ label: 'Fecha Inicio Real',
+						  name: 'rfecini',
+						  width: 100,
+						  sorttype:'date',
+						  formatter: 'date',
+						  formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+						  searchoptions:{
+							  dataInit:function(el){
+									$(el).datepicker({
+										dateFormat:'yy-mm-dd',
+										changeYear: true,
+										changeMonth: true,                            
+										onSelect: function (dateText, inst) {
+											setTimeout(function () {
+												$('#jqGrid3')[0].triggerToolbar();
+											}, 100);
+										}
+									});
+								  },sopt: ["gt","lt","eq"]
+						 }
+						},
+						{ label: 'Fecha Termino Real',
+						  name: 'rfecter',
+						  width: 100,
+						  sorttype:'date',
+						  formatter: 'date',
+						  formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+						  searchoptions:{
+							  dataInit:function(el){
+									$(el).datepicker({
+										dateFormat:'yy-mm-dd',
+										changeYear: true,
+										changeMonth: true,                            
+										onSelect: function (dateText, inst) {
+											setTimeout(function () {
+												$('#jqGrid3')[0].triggerToolbar();
+											}, 100);
+										}
+									});
+								  },sopt: ["gt","lt","eq"]
+						 }
+						},
+						{ label: 'Porcentaje Avance Informado', name: 'pai', width: 50,searchoptions: {sopt:["gt","lt","eq"] } },
+						{ label: 'Estado', name: 'estado', width: 100 }              
+					],
+					rowNum: 20,
+					regional : 'es',
+					height: 'auto',
+					autowidth:true,        
+					pager: "#jqGridPager3",
+					loadComplete: findWithColor
+				});	
+				$("#jqGrid3").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
+				$("#jqGrid3").jqGrid('navGrid','#jqGridPager3',{add:false,edit:false,del:false,search: false});
+				$("#jqGrid3").jqGrid('navButtonAdd','#jqGridPager3',{
+					   caption:"",
+					   buttonicon : "silk-icon-page-excel",
+					   title: "Exportar a Excel", 
+					   onClickButton : function () { 
+						   var grid = $("#jqGrid3");
+						   var rowKey = grid.getGridParam("selrow");
+						   var url = 'status-subtask';
+						   $("#jqGrid3").jqGrid('excelExport',{"url":url});
+					   } 
+				});
+			}		
+		} else if(ui.newTab.index()===4) {
+			if($('#containerDepa').html() == "") {	
+				$.ajax({
+					  url: '/pieDepa',
+					  type: 'GET',
+					  success: function(data) {
+						  optionsPieDepa.series.push(JSON.parse(data));
+							var charPieDepa = new Highcharts.Chart(optionsPieDepa);
+
+							$("#jqGridDepa").jqGrid({
+								url: '/panelDepa?did=6079',
+								mtype: "GET",
+								datatype: "json",
+								page: 1,
+								colModel: modelPieDepa,
+								viewrecords: true,
+								regional : "es",
+								height: 'auto',
+								autowidth:true,
+								rowNum: 20,
+								pager: "#jqGridPagerDepa",
+								ignoreCase: true,
+								gridComplete: function() {
+									var id= $("#jqGridDepa").getDataIDs()[0];
+									var rowData = $("#jqGridDepa").getRowData(id);
+									var val_division = rowData.division;
+									$("#jqGridDepa").jqGrid('setCaption', val_division)
+								}
+							});
+							$("#jqGridDepa").jqGrid('filterToolbar', {stringResult: true,searchOperators: true, searchOnEnter: false, defaultSearch: 'cn'});
+							$("#jqGridDepa").jqGrid('navGrid','#jqGridPagerDepa',{add:false,edit:false,del:false,search: false});
+							$("#jqGridDepa").jqGrid('navButtonAdd','#jqGridPagerDepa',{
+								   caption:"",
+								   buttonicon : "silk-icon-page-excel",
+								   title: "Exportar a Excel", 
+								   onClickButton : function () { 
+									   var grid = $("#jqGridDepa");
+									   var rowKey = grid.getGridParam("selrow");
+									   var url = 'depa-excel';
+									   $("#jqGridDepa").jqGrid('excelExport',{"url":url});
+								   } 
+							});								
+						
+					  },
+					  error: function(e) {
+
+					  }
+				});
+			}		
+		}
       }
     });
 
