@@ -148,7 +148,15 @@ $(document).ready(function () {
                         dataType: 'json',
                         async: false,
                         success: function (j) {
-                            dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                            if (j) {
+                                dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                            } else {
+                                dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
+                            }
+
+
+
+
                         }
                     });
                 }, 2000);
@@ -173,7 +181,11 @@ $(document).ready(function () {
                         dataType: 'json',
                         async: false,
                         success: function (j) {
-                            dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                            if (j) {
+                                dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                            } else {
+                                dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
+                            }
                         }
                     });
                 }, 2000);
@@ -198,7 +210,11 @@ $(document).ready(function () {
                         dataType: 'json',
                         async: false,
                         success: function (j) {
-                            dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                            if(j){
+                                dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                            }else{
+                                dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
+                            }
                         }
                     });
                 }, 2000);
