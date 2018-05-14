@@ -1393,7 +1393,7 @@ $(document).ready(function(){
 				  }
 			});
 
-        }else if(ui.newTab.index()===2) {
+        }else if(ui.newTab.index()===3) {
 				if($('#jqGrid2').html() == "") {
 					$("#jqGrid2").jqGrid({
 				        url: '/reportProgram',
@@ -1584,7 +1584,7 @@ $(document).ready(function(){
 					});            		
 				}
 		
-		}else if(ui.newTab.index()===3) {
+		}else if(ui.newTab.index()===4) {
 			if($('#jqGrid3').html() == "") {
 				$("#jqGrid3").jqGrid({
 					url: '/reportStateSubTask',
@@ -1707,7 +1707,7 @@ $(document).ready(function(){
 					   } 
 				});
 			}		
-		} else if(ui.newTab.index()===4) {
+		} else if(ui.newTab.index()===5) {
 			if($('#containerDepa').html() == "") {	
 				$.ajax({
 					  url: '/pieDepa',
