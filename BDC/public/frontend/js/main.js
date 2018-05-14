@@ -6,23 +6,7 @@
  */
 $(document).ready(
 		function() {
-			
-			Date.now = Date.now || function() { return +new Date; }; 
-
-			// $("#new-task").off("click").on("click", renderNewTask);
-
-			// $(".task_edit").live("click", renderTaskEdit);
-			// $(".edit_tasks_details").live("click", renderTaskEdit);
-
-			// $(".add_subtask").on("click", renderNewSubTask);
-
-			// $(".edit-sub-task").live("click", renderEditSubTask);
-
-			// $('#add-sub-task-form label').unbind('click');
-			
-			
-			
-			
+			Date.now = Date.now || function() { return +new Date; };
 			$('form label').click(
 					function(e) {
 						e.preventDefault();
@@ -89,35 +73,23 @@ $(document).ready(
 					});
 
 			$(".program-sap").live("click", renderSAPUpdate);
-
 			$(".active-project-sap").live("click", renderProjectSAPUpdate);
-
 			$(".delete_tasks_details").live("click", renderTasksUpdate);
-
 			$(".delete-predefined").on("click", renderDeletePredefinedTask);
-
 			$(".delete-sub-task-id").on("click", renderDeleteSubTask);
-
 			$(".dashboard-tab2").on("click", showSearchDashboard);
-			
 			$("#dashboard-risk-tab").on("click", renderShowRiskReport);
-			
 			$("#dashboard-issue-tab").on("click", renderShowIssueReport);
-
 			$(".program-tab2").on("click", showSearchProgram);
-
+			$(".alert-tab2").on("click", showSearchAlert);
+			$(".overview-tab2").on("click", showSearchGenericProject);
+			$(".overview-tab3").on("click", showSearchGenericTask);
+    		$(".overview-tab4").on("click", showSearchDigestGenericTask);
 			$(".edit-hours").off("click").on("click", renderEditProgramHours);
-			
 			$(".edit-status").off("click").live("click", renderEditProgramStatus);
-			
-
-			$(".edit-estimated-cost").off("click").on("click",
-					renderEditProgramEstimatedCost);
-
+			$(".edit-estimated-cost").off("click").on("click", renderEditProgramEstimatedCost);
 			$(".edit-project-hours").on("click", renderEditprojectHours);
-
 			$("#role_id").on("change", renderMembersFromRole);
-
 			$(".delete-risk").on("click", renderDeleteRisk);
 			$(".delete-alert").on("click", renderDeleteAlert);
 			$("#risk-filter-tab li").on("click", toggleTabRisk);
@@ -2296,7 +2268,7 @@ function renderGanttChart() {
 				scale : "days",
 				maxScale : "months",
 				minScale : "days",
-				itemsPerPage : 5,
+				itemsPerPage : 20,
 				waitText : "Please Wait...",
 				'scrollToToday' : true,
 				onItemClick : function(data) {
@@ -2447,7 +2419,7 @@ function renderProjectGanttChart() {
 				scale : "days",
 				maxScale : "months",
 				minScale : "days",
-				itemsPerPage : 10,
+				itemsPerPage : 20,
 				waitText : "Please Wait...",
 				'scrollToToday' : true,
 				onItemClick : function(data) {
@@ -2590,6 +2562,12 @@ function renderEarnValuepro(id) {
 			$("#pae2").html(obj.PAE);
 			//$("#hp2").html(obj.HP);
 			//$("#ha2").html(obj.HA);
+			//RRM:Llena dos filas nuevas en TaskDetails
+			console.log("Hola Task:"+obj.AGI);
+			var num = obj.AGI;
+			$("#agi").html(num.toFixed(2)+' %');
+			var num2 = obj.AGE;
+			$("#age").html(num2.toFixed(2)+' %');			
 		} else {
 			$("#subtask-details").addClass("display-none");
 		}
@@ -3563,7 +3541,13 @@ function renderProjectEarnValuepro(id) {
 			//$("#etc").html(obj.ETC);
 			$("#pae2").html(obj.PAE);
 			//$("#hp").html(obj.HP);
-			//$("#ha").html(obj.HA);			
+			//$("#ha").html(obj.HA);	
+			//RRM:Llena dos filas nuevas en TaskDetails
+			console.log("HOla Project:"+obj.AGI);
+			var num = obj.AGI;
+			$("#agi").html(num.toFixed(2)+' %');
+			var num2 = obj.AGE;
+			$("#age").html(num2.toFixed(2)+' %');			
 		} else {
 			$("#subtask-details").addClass("display-none");
 		}
@@ -3603,7 +3587,7 @@ function renderCriticalPathGantt() {
 				scale : "days",
 				maxScale : "months",
 				minScale : "days",
-				itemsPerPage : 10,
+				itemsPerPage : 20,
 				waitText : "Please Wait...",
 				'scrollToToday' : true,
 				onItemClick : function(data) {
@@ -3673,7 +3657,39 @@ function renderProgramEarnValue(id) {
 	$.get(url, function(data) {
 
 		var obj = JSON.parse(data);
+		//var rd = Math.random();
+		if (obj.EV) {
+			$("#ev").html(obj.EV);
+			$("#pv").html(obj.PV);
+			$("#pai").html(obj.PAI);
+			$("#ac").html(obj.AC);
+			$("#spi").html(obj.SPI);
+			$("#cpi").html(obj.CPI);
+			$("#eac").html(obj.EAC);
+			$("#etc").html(obj.ETC);
+			$("#pae").html(obj.PAE);
+			$("#hp").html(obj.HP);
+			$("#ha").html(obj.HA);
+		} else {
+			$("#subtask-details").addClass("display-none");
+		}
 
+	});
+	var delay = 200;
+	setTimeout(function() {
+		$(".loader").css("display", "none");
+	}, delay);
+}
+
+function renderProgramEarnValuePanel(id, program) {
+
+	var url = "/program-earn-value-panel?id=" + id + "&program=" + program +"&t=" + Date.now();
+	$(".loader").css("display", "block");
+
+	$.get(url, function(data) {
+
+		var obj = JSON.parse(data);
+		//var rd = Math.random();
 		if (obj.EV) {
 			$("#ev").html(obj.EV);
 			$("#pv").html(obj.PV);
@@ -3718,6 +3734,48 @@ function renderProgramEarnValuepro(id) {
 			$("#pae2").html(obj.PAE);
 			//$("#hp").html(obj.HP);
 			//$("#ha").html(obj.HA);
+			console.log("HOla:"+obj.AGI);
+			var num = obj.AGI;
+			$("#agi").html(num.toFixed(2)+' %');
+			var num2 = obj.AGE;
+			$("#age").html(num2.toFixed(2)+' %');			
+		} else {
+			$("#subtask-details").addClass("display-none");
+		}
+
+	});
+	var delay = 200;
+	setTimeout(function() {
+		$(".loader").css("display", "none");
+	}, delay);
+}
+
+function renderProgramEarnValuePanelpro(id, program) {
+
+	var url = "/program-earn-value-panel-pro?id=" + id + "&program=" + program +"&t=" + Date.now();
+	$(".loader").css("display", "block");
+
+	$.get(url, function(data) {
+
+		var obj = JSON.parse(data);
+
+		if (obj.EV) {
+			//$("#ev").html(obj.EV);
+			$("#pv2").html(obj.PV);
+			//$("#pai").html(obj.PAI);
+			//$("#ac").html(obj.AC);
+			$("#spi2").html(obj.SPI);
+			//$("#cpi").html(obj.CPI);
+			//$("#eac").html(obj.EAC);
+			//$("#etc").html(obj.ETC);
+			$("#pae2").html(obj.PAE);
+			//$("#hp").html(obj.HP);
+			//$("#ha").html(obj.HA);
+			console.log("HOla:"+obj.AGI);
+			var num = obj.AGI;
+			$("#agi").html(num.toFixed(2)+' %');
+			var num2 = obj.AGE;
+			$("#age").html(num2.toFixed(2)+' %');			
 		} else {
 			$("#subtask-details").addClass("display-none");
 		}
@@ -3752,7 +3810,7 @@ function renderSubTaskGanttChart() {
 						scale : "days",
 						maxScale : "months",
 						minScale : "days",
-						itemsPerPage : 10,
+						itemsPerPage : 20,
 						waitText : "Please Wait...",
 						'scrollToToday' : true,
 						onItemClick : function(data) {
@@ -3836,7 +3894,7 @@ function renderSubTaskCriticalPathGantt() {
 				scale : "days",
 				maxScale : "months",
 				minScale : "days",
-				itemsPerPage : 10,
+				itemsPerPage : 20,
 				waitText : "Por favor espere...",
 				'scrollToToday' : true,
 				onItemClick : function(data) {
@@ -4999,6 +5057,8 @@ function renderSubmitProjectHours() {
 			$(".edit-project-hours").removeClass("update-hours");
 			$(".edit-project-hours").off("click").on("click",
 					renderEditprojectHours);
+			//RRM:Refresac pantalla al cambiar las Horas del proyecto
+			location.reload(true);
 
 		});
 		$(".loader").css("display", "none");
@@ -5229,6 +5289,9 @@ function renderSubmitProgramHours() {
 			$(".update-hours").unbind();
 			$(".edit-hours").removeClass("update-hours");
 			$(".edit-hours").off("click").on("click", renderEditProgramHours);
+			
+			//RRM:Refresac pantalla al cambiar las Horas del programa
+			location.reload(true);
 		});
 	}
 

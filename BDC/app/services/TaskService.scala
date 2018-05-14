@@ -3,7 +3,6 @@ import play.api.Play.current
 import play.api.db.DB
 import anorm.SqlParser._
 import models._
-import anorm.Id
 import anorm._
 //import org.joda.time._
 import com.typesafe.plugin._
@@ -471,6 +470,7 @@ object TaskService extends CustomColumns {
    * get milestone details by milestone id
    */
   def findActiveTaskDetailsByTaskId(tId: Integer) = {
+    println("--------------------------->>>>>>>>>>>>>>>>>>>" + tId)
     val sqlString = "select * from art_task where is_active = 1 AND tId = " + tId
     DB.withConnection { implicit connection =>
       val result = SQL(sqlString).as(

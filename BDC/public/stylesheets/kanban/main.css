@@ -1,0 +1,55 @@
+.sortable {
+    border: 1px solid #eee;
+    min-width: 25%;
+    min-height: 20px;
+    flex: 1;
+    margin: 0;
+    padding: 5px;
+}
+.sortable li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 1.2em;
+    width: 120px;
+}
+.btn.avatar {
+    background-size:cover !important;
+    padding:10px 10px;
+    border-radius:9px;
+    margin:0;
+}
+.ticket-description {
+    text-align:left;
+    text-transform:none;
+    font-weight:normal;
+    color:gray;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+}
+
+.modal-backdrop {
+    position:fixed !important;
+}
+
+.popover-title {
+    background-color:inherit !important;
+}
+
+.collab {
+    color:white !important;
+}
+
+ul.ui-autocomplete {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    z-index: 1502;
+    max-height: 250px;
+    overflow: auto;
+}
+
+.av-chooser {
+    max-width:50px;
+    max-height:50px;
+}

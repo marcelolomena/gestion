@@ -1240,6 +1240,8 @@ profile.riskalertType=Alert type
 profile.eventcode=Event Code
 profile.eventdetails=Event Details
 profile.criticality=Criticality
+profile.impacted_variable=Variable
+profile.pmo=PMO
 
 editTask.updatetaskstatus=Update Task Status
 

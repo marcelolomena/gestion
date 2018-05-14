@@ -33,8 +33,8 @@ case class Incident(incident_id: Int,
                     owner_name: String,
                     note: String,
                     severity_description: String,
-                    dId: Int,
-                    department: String,
+                    delay: Int,
+                    //department: String,
                     status_id: Int,
                     status_name: String)
 
@@ -64,8 +64,8 @@ object Incident {
       get[String]("owner_name") ~
       get[String]("note") ~
       get[String]("severity_description") ~
-      get[Int]("dId") ~
-      get[String]("department") ~
+      get[Int]("delay") ~
+      //get[String]("department") ~
       get[Int]("status_id") ~
       get[String]("status_name") map {
         case incident_id ~
@@ -92,8 +92,8 @@ object Incident {
           owner_name ~
           note ~
           severity_description ~
-          dId ~
-          department ~
+          delay ~
+          //department ~
           status_id ~
           status_name => Incident(incident_id,
           configuration_id,
@@ -119,8 +119,8 @@ object Incident {
           owner_name,
           note,
           severity_description,
-          dId,
-          department,
+          delay,
+          //department,
           status_id,
           status_name)
       }
@@ -152,8 +152,8 @@ object Incident {
       "owner_name" -> incident.owner_name.toString(),
       "note" -> incident.note.toString(),
       "severity_description" -> incident.severity_description.toString(),
-      "dId" -> incident.dId.toInt,
-      "department" -> incident.department.toString(),
+      "delay" -> incident.delay.toInt,
+      //"department" -> incident.department.toString(),
       "status_id" -> incident.status_id.toInt,
       "status_name" -> incident.status_name.toString())
   }
@@ -301,19 +301,37 @@ object ErrorIncident {
 }
 
 case class NameUsr(
-  value: String,
-  label: String)
+                     value: String,
+                     label: String)
 
 object NameUsr {
   val name = {
     get[String]("value") ~
       get[String]("label") map {
-        case value ~ label => NameUsr(
-          value, label)
-      }
+      case value ~ label => NameUsr(
+        value, label)
+    }
 
   }
   implicit val nameUsr = Json.writes[NameUsr]
+}
+
+case class NameEmployee(
+                    value: String,
+                    label: String,
+                    category: String)
+
+object NameEmployee {
+  val employee = {
+    get[String]("value") ~
+      get[String]("label") ~
+      get[String]("category") map {
+      case value ~ label ~ category  => NameEmployee(
+        value, label, category)
+    }
+
+  }
+  implicit val nameEmployee = Json.writes[NameEmployee]
 }
 
 case class ComboStatus(

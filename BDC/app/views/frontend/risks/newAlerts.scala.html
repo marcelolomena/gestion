@@ -1,4 +1,13 @@
-@(risk_id: String, alertForm : Form[RiskAlerts],userMap: Seq[Users],start_date:java.util.Date,end_date: java.util.Date, alert_states :java.util.HashMap[String, String], alert_category :java.util.HashMap[String, String], alert_task :java.util.HashMap[String, String])(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
+@(risk_id: String,
+alertForm : Form[RiskAlerts],
+userMap: Seq[Users],
+start_date:java.util.Date,
+end_date: java.util.Date,
+alert_states :java.util.HashMap[String, String],
+alert_category :java.util.HashMap[String, String],
+alert_task :java.util.HashMap[String, String],
+mail_tmpl :java.util.HashMap[String, String]
+)(implicit session: play.api.mvc.Session,lang:Lang, req : play.api.mvc.RequestHeader)
 @frontend.layout()
 @import play.api.i18n._
 @import play.api._
@@ -84,8 +93,8 @@
 		</div>
 	</div>
 
-		         <div class="left width_full">
-			      	<div class="left width-pr50 padding-top-3px" >
+    <div class="left width_full">
+			      	<div class="right width-pr50 padding-top-3px" >
 					
 			      		<dl id="members_involved_field1" class=" ">
 						    <dt><label for="members_involved1">Miembros Implicado</label></dt>
@@ -106,10 +115,7 @@
 						                
 						            </ul>
 						        </div>
-						    
 							</dd>
-						    
-						    
 						</dl>
 						<div class="left width_full">
 			      	      	@inputText(
@@ -120,7 +126,17 @@
 				            )
 				            </div>
 			         </div>
-		         </div>
+
+					<div class="left width-pr50 padding-top-3px" >
+						@select(
+						alertForm("template_id"),
+						options(mail_tmpl),
+						'class -> "input-xlarge ",
+						'_label ->  Messages("newAlert.tmpl"),
+						'_default -> Messages("newAlert.placeholder.tmpl")
+						)
+					</div>
+    </div>
 
 		         <dl id="member_id_search_field " class=" display-none">
 	   				<dt>

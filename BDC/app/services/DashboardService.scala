@@ -1,9 +1,15 @@
 package services;
 import play.api.Play.current
-import play.api.db.DB;
-import anorm.SqlParser._;
-import models._;
+import play.api.db.DB
+import anorm.SqlParser._
+import models._
 import anorm._
+import play.Logger
+import org.apache.poi.xssf.usermodel._
+import java.io.File
+import java.io.PrintWriter
+import java.io.FileOutputStream
+import java.util.Date
 
 object DashboardService {
 
@@ -128,59 +134,220 @@ object DashboardService {
     }
   }
 
-  def reportBubble(uid:String): Seq[Bubble] = {
+  def reportBubble(uid:String): Seq[Report.Point] = {
 
-    var sqlString = "EXEC art.bubble "+uid
+    //var sqlString = "EXEC art.bubble "+uid
+    val sqlString =
+      """
+        |select a.cpi x, a.spi y, a.program_id z,a.program_name programa
+        |from art_program_management a join art_program_members b on a.program_id = b.program_id
+        |where
+        | a.tipo ='PROGRAMA' and
+        | b.is_active = 0 and
+        | b.member_id = {uid}
+      """.stripMargin
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Bubble.bubble *)
+      SQL(sqlString).on('uid->uid.toInt) as (Report.Point.point *)
     }
   }
 
-  def reportPie(): Seq[Pie] = {
+  def reportPie(id: Int): Seq[Report.Pie] = {
 
-    var sqlString = "EXEC art.porcentaje_programas_for_division"
+    var sqlString = ""
+
+    id match {
+      case 1 =>
+        sqlString =
+          """
+            |;WITH T
+            |AS
+            |(
+            |	SELECT COUNT(*) AS Total
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |),
+            |G AS
+            |(
+            |	SELECT ISNULL(cod_div,0) dId, ISNULL(name_div,'N/A') name, COUNT(*) AS y
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |	GROUP BY name_div,cod_div
+            |)
+            |SELECT
+            |	G.dId, G.name, G.y,
+            |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+            |FROM
+            |	G CROSS JOIN T
+          """.stripMargin
+      case 6 =>
+        sqlString =
+          """
+            |;WITH T
+            |AS
+            |(
+            |	SELECT COUNT(*) AS Total
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |),
+            |G AS
+            |(
+            |	SELECT ISNULL(cod_man,0) dId, ISNULL(name_man,'N/A') name, COUNT(*) AS y
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |	GROUP BY name_man,cod_man
+            |)
+            |SELECT
+            |	G.dId, G.name, G.y,
+            |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+            |FROM
+            |	G CROSS JOIN T
+          """.stripMargin
+      case 7 =>
+        sqlString =
+          """
+            |;WITH T
+            |AS
+            |(
+            |	SELECT COUNT(*) AS Total
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |),
+            |G AS
+            |(
+            |	SELECT ISNULL(cod_dep,0) dId, ISNULL(name_dep,'N/A') name, COUNT(*) AS y
+            |	FROM art_program_management where tipo='PROGRAMA'
+            |	GROUP BY name_dep,cod_dep
+            |)
+            |SELECT
+            |	G.dId, G.name, G.y,
+            |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+            |FROM
+            |	G CROSS JOIN T
+          """.stripMargin
+    }
+
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportType(): Seq[Pie] = {
+  def reportType(): Seq[Report.Pie] = {
 
-    var sqlString = "EXEC art.porcentaje_programas_for_type"
+    //var sqlString = "EXEC art.porcentaje_programas_for_type"
+    val sqlString =
+      """
+        |;WITH T
+        |AS
+        |(
+        |	SELECT COUNT(*) AS Total
+        |	FROM art_program_management where tipo='PROGRAMA'
+        |),
+        |G AS
+        |(
+        |	SELECT b.id dId, a.program_type name, COUNT(*) AS y
+        |	FROM art_program_management a join art_program_type b on a.program_type = b.program_type
+        |	where a.tipo='PROGRAMA' AND a.program_type is not null and b.is_deleted = 0
+        |	GROUP BY a.program_type,b.id
+        |)
+        |SELECT
+        |	G.dId, G.name, G.y,
+        |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+        |FROM
+        |	G CROSS JOIN T
+      """.stripMargin
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportDepa(): Seq[Pie] = {
+  def reportImpact(): Seq[Report.Pie] = {
 
-    var sqlString = "EXEC art.porcentaje_programas_for_departamento"
+    //var sqlString = "EXEC art.porcentaje_programas_for_departamento"
+    val sqlString =
+      """
+        |;WITH T
+        |AS
+        |(
+        |	SELECT COUNT(*) AS Total
+        |	FROM art_program_management where tipo='PROGRAMA'
+        |),
+        |G AS
+        |(
+        |	SELECT b.id dId, a.impact_type name, COUNT(*) AS y
+        |	FROM art_program_management a join art_program_impact_type b on a.impact_type = b.impact_type
+        |	where a.tipo='PROGRAMA' AND a.impact_type is not null
+        |	GROUP BY a.impact_type,b.id
+        |)
+        |SELECT
+        |	G.dId, G.name, G.y,
+        |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+        |FROM
+        |	G CROSS JOIN T
+      """.stripMargin
+
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportSubType(): Seq[Pie] = {
+  def reportSubType(): Seq[Report.Pie] = {
 
-    var sqlString = "EXEC art.porcentaje_programas_for_subtype"
+    //var sqlString = "EXEC art.porcentaje_programas_for_subtype"
+    val sqlString =
+      """
+        |;WITH T
+        |AS
+        |(
+        |	SELECT COUNT(*) AS Total
+        |	FROM art_program_management where tipo='PROGRAMA'
+        |),
+        |G AS
+        |(
+        |	SELECT b.id dId, a.foco name, COUNT(*) AS y
+        |	FROM art_program_management a join art_program_sub_type b on a.foco = b.sub_type
+        |	where a.tipo='PROGRAMA' AND a.foco is not null and b.is_deleted = 0
+        |	GROUP BY a.foco,b.id
+        |)
+        |SELECT
+        |	G.dId, G.name, G.y,
+        |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+        |FROM
+        |	G CROSS JOIN T
+      """.stripMargin
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportStatus(): Seq[Pie] = {
+  def reportStatus(): Seq[Report.Pie] = {
 
-    var sqlString = "EXEC art.porcentaje_programas_for_status"
+    //var sqlString = "EXEC art.porcentaje_programas_for_status"
+    val sqlString =
+      """
+        |;WITH T
+        |AS
+        |(
+        |	SELECT COUNT(*) AS Total
+        |	FROM art_program_management where tipo='PROGRAMA'
+        |),
+        |G AS
+        |(
+        |	SELECT b.id dId, a.work_flow_status name, COUNT(*) AS y
+        |	FROM art_program_management a join art_program_workflow_status b on a.work_flow_status = b.workflow_status
+        |	where a.tipo='PROGRAMA' AND a.work_flow_status is not null
+        |	GROUP BY a.work_flow_status,b.id
+        |)
+        |SELECT
+        |	G.dId, G.name, G.y,
+        |	ROUND(CAST(G.y AS float) / CAST(T.Total AS float) * 100 , 2) AS porcentaje
+        |FROM
+        |	G CROSS JOIN T
+      """.stripMargin
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
-  def reportSap(): Seq[Pie] = {
+  def reportSap(): Seq[Report.Pie] = {
 
     var sqlString = "EXEC art.porcentaje_programas_for_sap"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Report.Pie.pie *)
     }
   }
 
@@ -278,4 +445,414 @@ object DashboardService {
       count
     }
   }
+
+  def manager(page: Int, end: Int, filter: String, order: String): Seq[Report] = {
+    DB.withConnection { implicit connection =>
+      val ini = end * (page - 1)
+      val sqlString =
+          """SELECT
+            tipo,
+            program_id,
+            ISNULL(project_id,0) project_id,
+            ISNULL(task_id,0) task_id,
+            ISNULL(subtask_id,0) subtask_id,
+            program_name,
+            nombre_lider,
+            program_type,
+            work_flow_status,
+            impact_type,
+            name_div,
+            name_man,
+            name_dep,
+            plan_start_date,
+            plan_end_date,
+            real_start_date,
+            real_end_date,
+            release_date,
+            ROUND(pai,2) pai,
+            ROUND(pae,2) pae,
+            ROUND(spi,2) spi,
+            ROUND(cpi,2) cpi,
+            hours,
+            allocation,
+            pcod,
+            foco,
+            tamano,
+            count_project,
+            count_task,
+            count_subtask,
+            pmo,
+            count_subtask_usr
+            FROM art_program_management
+            WHERE """ + filter + order  +
+            " OFFSET " + ini + " ROWS FETCH NEXT " + end + " ROWS ONLY"
+
+        //Logger.debug(sqlString)
+
+        SQL(sqlString).as(Report.report * )
+    }
+  }
+
+  def managerWwithoutPage(filter: String, order: String): Seq[Report] = {
+    DB.withConnection { implicit connection =>
+
+      val sqlString =
+        """
+        SELECT
+        tipo,
+        pcod,
+        program_id,
+        ISNULL(project_id,0) project_id,
+        ISNULL(task_id,0) task_id,
+        ISNULL(subtask_id,0) subtask_id,
+        program_name,
+        ISNULL(foco, '') foco,
+        ISNULL(tamano,'') tamano,
+        ISNULL(nombre_lider,'') nombre_lider,
+        ISNULL(program_type,'') program_type,
+        ISNULL(work_flow_status,'') work_flow_status,
+        ISNULL(impact_type,'') impact_type,
+        ISNULL(name_div,'') name_div,
+        ISNULL(name_man,'') name_man,
+        ISNULL(name_dep,'') name_dep,
+        ISNULL(plan_start_date,'') plan_start_date,
+        ISNULL(plan_end_date,'') plan_end_date,
+        real_start_date,
+        real_end_date,
+        release_date,
+        ISNULL(spi,0) spi,
+        ISNULL(cpi,0) cpi,
+        ISNULL(pai,0) pai,
+        ISNULL(pae,0) pae,
+        count_project,
+        count_task,
+        count_subtask,
+        ISNULL(pmo,'') pmo,
+        ISNULL(hours,0) hours,
+        ISNULL(allocation,0) allocation,
+        count_subtask_usr
+        FROM art_program_management
+        WHERE """ + filter + order  + """
+          """.stripMargin
+
+      SQL(sqlString).as(Report.report * )
+    }
+  }
+
+
+
+  def countManager(filter: String): Int = {
+    DB.withConnection { implicit connection =>
+      var sqlString = ""
+      sqlString =
+        """
+            SELECT count(*)
+            FROM art_program_management
+            WHERE """ + filter
+      SQL(sqlString).as(scalar[Int].single)
+
+    }
+  }
+
+
+  def findAllDivisionRRHH(): Seq[DivisionsList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT DISTINCT codDivision,glosaDivision FROM RecursosHumanos
+          |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND codDivision in (SELECT DISTINCT cod_div FROM art_program_management)
+          |ORDER BY glosaDivision
+        """.stripMargin
+
+      SQL(sqlstr).as(DivisionsList.divisionList *)
+    }
+  }
+
+
+  def findAllManagerRRHH(): Seq[DivisionsList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT DISTINCT codArea AS codDivision,glosaArea AS glosaDivision FROM RecursosHumanos
+          |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND codArea in (SELECT DISTINCT cod_man FROM art_program_management)
+          |ORDER BY glosaArea
+        """.stripMargin
+
+      SQL(sqlstr).as(DivisionsList.divisionList *)
+    }
+  }
+
+  def findAllDepartamentRRHH(): Seq[DivisionsList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT DISTINCT codDepartamento AS codDivision,glosaDepartamento AS glosaDivision FROM RecursosHumanos
+          |WHERE periodo=(SELECT MAX(periodo) FROM RecursosHumanos)
+          |AND codDepartamento in (SELECT DISTINCT cod_dep FROM art_program_management)
+          |ORDER BY glosaDepartamento
+        """.stripMargin
+
+      SQL(sqlstr).as(DivisionsList.divisionList *)
+    }
+  }
+
+  def findAllUserActiveProgram(): Seq[DivisionsList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |select DISTINCT uid AS codDivision,nombre_lider AS glosaDivision from art_program_management where tipo='PROGRAMA' ORDER BY nombre_lider
+        """.stripMargin
+
+      SQL(sqlstr).as(DivisionsList.divisionList *)
+    }
+  }
+
+  def findAllSubType(): Seq[DummyList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |select DISTINCT foco AS value,foco AS name from art_program_management where tipo='PROGRAMA' and foco is not null ORDER BY foco
+        """.stripMargin
+
+      SQL(sqlstr).as(DummyList.dummyList *)
+    }
+  }
+
+  def findAllImpactType(): Seq[DummyList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |select DISTINCT impact_type AS value,impact_type AS name from art_program_management where tipo='PROGRAMA' ORDER BY impact_type
+        """.stripMargin
+
+      SQL(sqlstr).as(DummyList.dummyList *)
+    }
+  }
+
+  def findAllInternalState(): Seq[DummyList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |select DISTINCT tamano AS value,tamano AS name from art_program_management where tipo='PROGRAMA' and tamano != '' ORDER BY tamano
+        """.stripMargin
+
+      SQL(sqlstr).as(DummyList.dummyList *)
+    }
+  }
+
+  def findAllStatusProgram(): Seq[DummyList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT  DISTINCT work_flow_status name,work_flow_status value FROM art_program_management WHERE work_flow_status IS NOT NULL AND tipo='PROGRAMA'
+        """.stripMargin
+
+      SQL(sqlstr).as(DummyList.dummyList *)
+    }
+  }
+
+  def findAllTypeProgram(): Seq[DummyList] = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+          |SELECT  DISTINCT program_type name, program_type value FROM art_program_management WHERE program_type IS NOT NULL AND tipo='PROGRAMA'
+        """.stripMargin
+
+      SQL(sqlstr).as(DummyList.dummyList *)
+    }
+  }
+
+  def updateTableManager(): Int = {
+
+    DB.withConnection { implicit connection =>
+      SQL("EXEC art.proc_art_program_management").executeQuery() as (scalar[Int].single)
+    }
+  }
+
+  def createExcel() = {
+    DB.withConnection { implicit connection =>
+      val sqlstr =
+        """
+         |SELECT
+         |tipo,
+         |pcod,
+         |program_id,
+         |ISNULL(project_id,0) project_id,
+         |ISNULL(task_id,0) task_id,
+         |ISNULL(subtask_id,0) subtask_id,
+         |program_name,
+         |ISNULL(foco, '') foco,
+         |ISNULL(tamano,'') tamano,
+         |ISNULL(nombre_lider,'') nombre_lider,
+         |ISNULL(program_type,'') program_type,
+         |ISNULL(work_flow_status,'') work_flow_status,
+         |ISNULL(impact_type,'') impact_type,
+         |ISNULL(name_div,'') name_div,
+         |ISNULL(name_man,'') name_man,
+         |ISNULL(name_dep,'') name_dep,
+         |ISNULL(plan_start_date,'') plan_start_date,
+         |ISNULL(plan_end_date,'') plan_end_date,
+         |real_start_date,
+         |real_end_date,
+         |release_date,
+         |ISNULL(spi,0) spi,
+         |ISNULL(cpi,0) cpi,
+         |ISNULL(pai,0) pai,
+         |ISNULL(pae,0) pae,
+         |count_project,
+         |count_task,
+         |count_subtask,
+         |ISNULL(pmo,'') pmo,
+         |ISNULL(hours,0) hours,
+         |ISNULL(allocation,0) allocation,
+         |count_subtask_usr
+         |FROM art_program_management
+         |order by program_id,project_id,task_id,subtask_id
+        """.stripMargin
+
+      val data=SQL(sqlstr).as(Report.report *)
+
+      val file = new File("reporte.xlsx")
+      val fileOut = new FileOutputStream(file);
+      val wb = new XSSFWorkbook
+      val sheet = wb.createSheet("ART")
+
+      val rowHead = sheet.createRow(0)
+      val style = wb.createCellStyle()
+      val font = wb.createFont()
+
+      var rNum = 1
+      var cNum = 0
+
+      font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL)
+      font.setFontHeightInPoints(26)
+      font.setBold(true)
+      style.setFont(font)
+
+      rowHead.createCell(0).setCellValue("Tipo")
+      rowHead.createCell(1).setCellValue("Número")
+      rowHead.createCell(2).setCellValue("Programa")
+      rowHead.createCell(3).setCellValue("Foco")
+      rowHead.createCell(4).setCellValue("Tamaño")
+      rowHead.createCell(5).setCellValue("Lider")
+      rowHead.createCell(6).setCellValue("Tipo programa")
+      rowHead.createCell(7).setCellValue("Estado")
+      rowHead.createCell(8).setCellValue("Impacto")
+      rowHead.createCell(9).setCellValue("División")
+      rowHead.createCell(10).setCellValue("Gerencia")
+      rowHead.createCell(11).setCellValue("Departamento")
+      rowHead.createCell(12).setCellValue("Inicio")
+      rowHead.createCell(13).setCellValue("Término")
+      rowHead.createCell(14).setCellValue("Liberación")
+      rowHead.createCell(15).setCellValue("Spi")
+      rowHead.createCell(16).setCellValue("Cpi")
+      rowHead.createCell(17).setCellValue("informado")
+      rowHead.createCell(18).setCellValue("Esperado")
+      rowHead.createCell(19).setCellValue("N° proyectos")
+      rowHead.createCell(20).setCellValue("N° tareas")
+      rowHead.createCell(21).setCellValue("N° subtareas")
+      rowHead.createCell(22).setCellValue("Pmo")
+      rowHead.createCell(23).setCellValue("Consumidas")
+      rowHead.createCell(24).setCellValue("Asignadas")
+      rowHead.createCell(25).setCellValue("recursos sin horas")
+
+      for (j <- 0 to 25)
+        rowHead.getCell(j).setCellStyle(style)
+
+      for (s <- data) {
+        val row = sheet.createRow(rNum)
+
+        val cel0 = row.createCell(cNum)
+        cel0.setCellValue(s.tipo.getOrElse(""))
+
+        val cel1 = row.createCell(cNum + 1)
+        cel1.setCellValue(s.pcod.getOrElse(0).toString)
+
+        val cel2 = row.createCell(cNum + 2)
+        cel2.setCellValue(s.program_name.getOrElse(""))
+
+        val cel3 = row.createCell(cNum + 3)
+        cel3.setCellValue(s.foco.getOrElse(""))
+
+        val cel4 = row.createCell(cNum + 4)
+        cel4.setCellValue(s.tamano.getOrElse(""))
+
+        val cel5 = row.createCell(cNum + 5)
+        cel5.setCellValue(s.nombre_lider.getOrElse(""))
+
+        val cel6 = row.createCell(cNum + 6)
+        cel6.setCellValue(s.program_type.getOrElse(""))
+
+        val cel7 = row.createCell(cNum + 7)
+        cel7.setCellValue(s.work_flow_status.getOrElse(""))
+
+        val cel8 = row.createCell(cNum + 8)
+        cel8.setCellValue(s.impact_type.getOrElse(""))
+
+        val cel9 = row.createCell(cNum + 9)
+        cel9.setCellValue(s.name_div.getOrElse(""))
+
+        val cel10 = row.createCell(cNum + 10)
+        cel10.setCellValue(s.name_man.getOrElse(""))
+
+        val cel11 = row.createCell(cNum + 11)
+        cel11.setCellValue(s.name_dep.getOrElse(""))
+
+        val cel12 = row.createCell(cNum + 12)
+        cel12.setCellValue(s.plan_start_date.getOrElse("").toString)
+
+        val cel13 = row.createCell(cNum + 13)
+        cel13.setCellValue(s.plan_end_date.getOrElse(0).toString())
+
+        val cel14 = row.createCell(cNum + 14)
+        cel14.setCellValue(s.release_date.getOrElse(0).toString())
+
+        val cel15 = row.createCell(cNum + 15)
+        cel15.setCellValue(s.spi.getOrElse(0).toString())
+
+        val cel16 = row.createCell(cNum + 16)
+        cel16.setCellValue(s.cpi.getOrElse(0).toString())
+
+        val cel17 = row.createCell(cNum + 17)
+        cel17.setCellValue(s.pai.getOrElse(0).toString)
+
+        val cel18 = row.createCell(cNum + 18)
+        cel18.setCellValue(s.pae.getOrElse(0).toString)
+
+        val cel19 = row.createCell(cNum + 19)
+        cel19.setCellValue(s.count_project.getOrElse(0).toString)
+
+        val cel20 = row.createCell(cNum + 20)
+        cel20.setCellValue(s.count_task.getOrElse(0).toString)
+
+        val cel21 = row.createCell(cNum + 21)
+        cel21.setCellValue(s.count_subtask.getOrElse(0).toString)
+
+        val cel22 = row.createCell(cNum + 22)
+        cel22.setCellValue(s.pmo.getOrElse(""))
+
+        val cel23 = row.createCell(cNum + 23)
+        cel23.setCellValue(s.hours.getOrElse(0).toString)
+
+        val cel24 = row.createCell(cNum + 24)
+        cel24.setCellValue(s.allocation.getOrElse(0).toString)
+
+        val cel25 = row.createCell(cNum + 25)
+        cel25.setCellValue(s.count_subtask_usr.getOrElse(0).toString)
+
+        rNum = rNum + 1
+        cNum = 0
+
+      }
+
+      for (a <- 0 to 25) {
+        sheet.autoSizeColumn((a.toInt));
+      }
+      wb.write(fileOut)
+      fileOut.close()
+    }
+  }
+
 }

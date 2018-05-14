@@ -85,7 +85,8 @@ object Application extends Controller with Secured {
 
       if (uId != -1) {
         val user = UserService.findUserDetailsById(uId)
-        userSession = request.session + ("uId" -> uId.toString()) + ("username" -> user.get.uname) + ("utype" -> "1") + ("user_profile" -> user.get.user_profile)
+        userSession = request.session +
+          ("uId" -> uId.toString()) + ("username" -> user.get.uname) + ("utype" -> "1") + ("user_profile" -> user.get.user_profile)
 
         username = user.get.uname
       } else {
@@ -374,12 +375,12 @@ object Application extends Controller with Secured {
   def Pagination(count: Long, page: String, recordOnPage: String, search: String): String = {
     var i = 0
     var str = ""
-    var pagedisplay = Math.ceil(count.toInt / Integer.parseInt(recordOnPage.toString()).toFloat).toInt
-    if (pagedisplay != 1) {
+    val pageDisplay = Math.ceil(count.toInt / Integer.parseInt(recordOnPage)).toInt
+    if (pageDisplay != 1) {
       if (page != "1") {
         str += "<li class=preItem><a href=?page=1&record=" + recordOnPage + ">First</a></li>"
       }
-      for (i <- 1 to pagedisplay) {
+      for (i <- 1 to pageDisplay) {
         if (page.toInt == i) {
           str += "<li><a href=javascript:void(0) class=color-black >" + i + "</a></li>"
         } else {
@@ -387,8 +388,52 @@ object Application extends Controller with Secured {
         }
       }
 
-      if (page.toInt != pagedisplay && count != 0) {
-        str += "<li class=preItem><a href=?page=" + pagedisplay + "&record=" + recordOnPage + ">Last</a></li>"
+      if (page.toInt != pageDisplay && count != 0) {
+        str += "<li class=preItem><a href=?page=" + pageDisplay + "&record=" + recordOnPage + ">Last</a></li>"
+      }
+    }
+    return str
+  }
+
+  def PaginationProject(count: Int, page: Int, recordOnPage: Int): String = {
+    var str = ""
+    val pageDisplay = Math.ceil(count / recordOnPage).toInt
+    if (pageDisplay != 1) {
+      if (page != 1) {
+        str += "<li class=preItem><a href=?page=1&record=" + recordOnPage + ">First</a></li>"
+      }
+      for (i <- 1 to pageDisplay) {
+        if (page == i) {
+          str += "<li><a href=javascript:void(0) class=color-black >" + i + "</a></li>"
+        } else {
+          str += "<li><a href=?page=" + i + "&record=" + recordOnPage + ">" + i + "</a></li>"
+        }
+      }
+
+      if (page != pageDisplay && count != 0) {
+        str += "<li class=preItem><a href=?page=" + pageDisplay + "&record=" + recordOnPage + ">Last</a></li>"
+      }
+    }
+    return str
+  }
+
+  def PaginationTask(count: Int, page: Int, recordOnPage: Int): String = {
+    var str = ""
+    val pageDisplay = Math.ceil(count / recordOnPage).toInt
+    if (pageDisplay != 1) {
+      if (page != 1) {
+        str += "<li class=preItem><a href=?pages=1&records=" + recordOnPage + ">First</a></li>"
+      }
+      for (i <- 1 to pageDisplay) {
+        if (page == i) {
+          str += "<li><a href=javascript:void(0) class=color-black >" + i + "</a></li>"
+        } else {
+          str += "<li><a href=?pages=" + i + "&records=" + recordOnPage + ">" + i + "</a></li>"
+        }
+      }
+
+      if (page != pageDisplay && count != 0) {
+        str += "<li class=preItem><a href=?pages=" + pageDisplay + "&records=" + recordOnPage + ">Last</a></li>"
       }
     }
     return str

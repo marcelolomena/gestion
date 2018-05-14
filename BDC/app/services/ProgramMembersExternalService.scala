@@ -6,7 +6,6 @@ import anorm.SqlParser._
 import models.Stages
 import anorm._
 import com.typesafe.plugin._
-import com.sun.xml.internal.ws.wsdl.writer.document.Import
 import java.util._
 import play.api.data.Form
 import play.i18n._
@@ -76,7 +75,7 @@ object ProgramMemberExternalService {
 */
   def findProgramMemberExternalByProgramId(program_id: String): Seq[ProgramMembersExternalAllocation] = {
     if (!program_id.isEmpty()) {
-      var sqlString = "EXEC art.asignacion_externa {pId}"
+      var sqlString = "EXEC art.asignacion_externa_ext {pId}"
       DB.withConnection { implicit connection =>
         SQL(sqlString).on('pId -> program_id.toInt).executeQuery() as (ProgramMembersExternalAllocation.programMembersExternalAllocation *)
       }

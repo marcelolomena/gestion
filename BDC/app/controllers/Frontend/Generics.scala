@@ -4,28 +4,14 @@ import java.util.Date
 import scala.math.BigDecimal.int2bigDecimal
 import scala.util.Random
 import org.apache.commons.lang3.StringUtils
-import anorm.NotAssigned
 import art_forms.ARTForms
-import models.GenericTaskDetails
-import models.GenericTask
-import models.GenericTasks
-import models.PredefinedTasks
-import models.ProjectType
+import models._
+import services._
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import services.DeliverableService
-import services.GenericProjectService
-import services.GenericProjectTypeService
-import services.GenericService
-import services.StageService
-import services.TaskDesciplineService
-import services.UserRoleService
-import services.UserService
+import play.Logger
 import org.json.JSONObject
-import models.GenericProjectTypes
-import models.Activity
-import models.ActivityTypes
-import services.ServiceCatalogueService
+
 object Generics extends Controller {
 
   var pmMap = new java.util.HashMap[String, String]()
@@ -33,10 +19,49 @@ object Generics extends Controller {
   def overview() = Action {
     implicit request =>
       request.session.get("username").map { user =>
-        println("por aca")
-        val projectTypes = GenericProjectService.findAllProjectTypes();
-        val predefinedTasks = GenericProjectService.findAllPredefinedTasks();
-        Ok(views.html.frontend.generics.overview(projectTypes, predefinedTasks))
+        var pageNumber = 1
+        var recordOnPage = 10
+
+        var pageNumberTwo = 1
+        var recordOnPageTwo = 25
+
+        val pagNo = request.getQueryString("page")
+        val pageRecord = request.getQueryString("record")
+
+        val pagNoTwo = request.getQueryString("pages")
+        val pageRecordTwo = request.getQueryString("records")
+
+        if (pagNo != None) {
+          pageNumber = pagNo.get.toInt
+        }
+
+        if (pageRecord != None) {
+          recordOnPage = pageRecord.get.toInt
+        }
+
+        if (pagNoTwo != None) {
+          pageNumberTwo = pagNoTwo.get.toInt
+        }
+
+        if (pageRecordTwo != None) {
+          recordOnPageTwo = pageRecordTwo.get.toInt
+        }
+
+        val projectTypes = GenericProjectService.findAllProjectTypes(pageNumber, recordOnPage)
+        val countProjectTypes = GenericProjectService.projectTypesCount
+        val paginationProjectTypes = controllers.Application.PaginationProject(countProjectTypes, pageNumber, recordOnPage)
+
+        val predefinedTasks = GenericProjectService.findAllPredefinedTasks(pageNumberTwo, recordOnPageTwo)
+        val countPredefinedTasks = GenericProjectService.predefinedTasksCount
+        val paginationPredefinedTasks = controllers.Application.PaginationTask(countPredefinedTasks,pageNumberTwo, recordOnPageTwo)
+
+        Ok(views.html.frontend.generics.overview(
+          paginationProjectTypes,
+          projectTypes,
+          paginationPredefinedTasks,
+          predefinedTasks))
+
+
       }.getOrElse {
         Redirect(routes.Login.loginUser()).withNewSession
       }
@@ -580,17 +605,17 @@ object Generics extends Controller {
           stagesMap.put(stage.id.get.toString, stage.stage)
         }
 
-        var deliverablesMap = new java.util.HashMap[String, String]()
+        var deliverablesMap = new java.util.LinkedHashMap[String, String]()
         val deliverables = DeliverableService.findAllDeliverables()
         for (deliverable <- deliverables) {
           deliverablesMap.put(deliverable.id.get.toString, deliverable.deliverable)
         }
-        var userRolesMap = new java.util.HashMap[String, String]()
+        var userRolesMap = new java.util.LinkedHashMap[String, String]()
         val useRoles = UserRoleService.findAllUserRoles()
         for (uroles <- useRoles) {
           userRolesMap.put(uroles.rId.get.toString, uroles.role)
         }
-        val serviceCatalogueMap = new java.util.HashMap[String, String]()
+        val serviceCatalogueMap = new java.util.LinkedHashMap[String, String]()
         val serviceCatalogues = ServiceCatalogueService.getServiceCatalogue()
         for (serviceCatalogue <- serviceCatalogues) {
           serviceCatalogueMap.put(serviceCatalogue.id.get.toString, serviceCatalogue.service_name)
@@ -882,6 +907,35 @@ object Generics extends Controller {
     }
   }
 
+  def updatePlanTime(task_id: String, plan_time: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      var node = new JSONObject()
+      //var project_estimated_cost: Double = 0
+      if (!StringUtils.isEmpty(task_id)) {
+        if (!StringUtils.isEmpty(plan_time)) {
+          val last_update = GenericService.updatePlanTime(task_id, plan_time)
+          /**
+            * Activity log
+            */
+          val act = Activity(ActivityTypes.Generic_Project_Type.id, "Generic Task update by " + request.session.get("username").get, new Date(), Integer.parseInt(request.session.get("uId").get), last_update)
+          Activity.saveLog(act)
+
+          node.put("status", "Success")
+        } else {
+          node.put("status", "Fail")
+          node.put("message", "Plan time Should not empty.")
+        }
+      } else {
+        node.put("status", "Fail")
+        node.put("message", "Task is not present.")
+      }
+      Ok(node.toString());
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+
+
   def updateTaskDependency(task_id: String, selected_task: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var node = new JSONObject()
@@ -971,17 +1025,214 @@ object Generics extends Controller {
 
   def addGenericTask(task_mode: String) = Action { implicit request =>
     request.session.get("username").map { user =>
-      val tasks = GenericService.findAllPredefinedTasksDetails(task_mode)
-      /*for (t <- tasks) {
-        if (!t.task_discipline.isEmpty && !TaskDesciplineService.findTaskDesciplineById(t.task_discipline.get.toString).isEmpty) {
-          println(TaskDesciplineService.findTaskDesciplineById(t.task_discipline.get.toString).get.task_discipline);
-        }
-      }*/
+      val tasks = GenericService.findAllDigestiblePredefinedTasksDetails(task_mode)
       val predefined_tasks = GenericService.findGenericProjectTypeTasks(task_mode)
       Ok(views.html.frontend.generics.addGenericTask(tasks, predefined_tasks, task_mode))
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
+    }
+  }
+
+  def searchProjectType() = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val users = GenericProjectService.findAllResponsible();
+
+      val usersMap = new java.util.LinkedHashMap[String, String]()
+      for (u <- users) {
+        usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
+      }
+
+      val types = GenericProjectTypeService.findAllActiveGenericProjectType
+
+      val typesMap = new java.util.LinkedHashMap[String, String]()
+      for (t <- types) {
+        typesMap.put(t.id.get.toString, t.generic_project_type)
+      }
+
+      Ok(views.html.frontend.generics.searchProjectForm(
+        ARTForms.genericProjectSearchForm,
+        usersMap,typesMap)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def searchProjectResult() = Action { implicit request =>
+    request.session.get("username").map { user =>
+      ARTForms.genericProjectSearchForm.bindFromRequest.fold(
+        hasErrors => {
+
+          val users = GenericProjectService.findAllResponsible();
+
+          val usersMap = new java.util.LinkedHashMap[String, String]()
+          for (u <- users) {
+            usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
+          }
+
+          val types = GenericProjectTypeService.findAllActiveGenericProjectType
+
+          val typesMap = new java.util.LinkedHashMap[String, String]()
+          for (t <- types) {
+            typesMap.put(t.id.get.toString, t.generic_project_type)
+          }
+
+          BadRequest(views.html.frontend.generics.searchProjectForm(hasErrors, usersMap, typesMap))
+        },
+        success => {
+          val pageNumberTwo = 1
+          val recordOnPageTwo = 25
+
+          val res_id = success.responsible_id.getOrElse(0)
+          val type_id = success.type_id.getOrElse(0)
+
+          val projectTypes = GenericProjectService.findAllProjectTypesFiltered(type_id,res_id)
+          //val countProjectTypes = GenericProjectService.projectTypesCountFiltered(desc,res_id)
+          //val paginationProjectTypes = controllers.Application.PaginationProject(countProjectTypes, pageNumber, recordOnPage)
+          val paginationProjectTypes = ""
+
+          val predefinedTasks = GenericProjectService.findAllPredefinedTasks(pageNumberTwo, recordOnPageTwo)
+          val countPredefinedTasks = GenericProjectService.predefinedTasksCount
+          val paginationPredefinedTasks = controllers.Application.PaginationTask(countPredefinedTasks,pageNumberTwo, recordOnPageTwo)
+
+          Ok(views.html.frontend.generics.overview(
+            paginationProjectTypes,
+            projectTypes,
+            paginationPredefinedTasks,
+            predefinedTasks))
+        })
+  }.getOrElse {
+    Redirect(routes.Login.loginUser());
+  }
+}
+
+  def searchGenericTask() = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val discipline = TaskDesciplineService.findAllTaskDescipline()
+
+      val disciplineMap = new java.util.LinkedHashMap[String, String]()
+      for (u <- discipline) {
+        disciplineMap.put(u.id.get.toString(), u.task_discipline)
+      }
+
+      val deliverable = DeliverableService.findAllDeliverables()
+
+      val deliverableMap = new java.util.LinkedHashMap[String, String]()
+      for (t <- deliverable) {
+        deliverableMap.put(t.id.get.toString, t.deliverable)
+      }
+
+      Ok(views.html.frontend.generics.searchTaskForm(
+        ARTForms.genericTaskSearchForm,
+        disciplineMap,deliverableMap)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def searchDigestGenericTask(task_mode: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+
+      val discipline = TaskDesciplineService.findAllTaskDescipline()
+
+      val disciplineMap = new java.util.LinkedHashMap[String, String]()
+      for (u <- discipline) {
+        disciplineMap.put(u.id.get.toString(), u.task_discipline)
+      }
+
+      Ok(views.html.frontend.generics.searchDigestTaskForm(
+        ARTForms.genericDigestTaskSearchForm,task_mode,disciplineMap)).withSession("username" -> request.session.get("username").get,
+        "utype" -> request.session.get("utype").get,
+        "uId" -> request.session.get("uId").get,
+        "user_profile" -> request.session.get("user_profile").get)
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def searchTaskResult() = Action { implicit request =>
+    request.session.get("username").map { user =>
+      ARTForms.genericTaskSearchForm.bindFromRequest.fold(
+        hasErrors => {
+
+          val discipline = TaskDesciplineService.findAllTaskDescipline()
+
+          val disciplineMap = new java.util.LinkedHashMap[String, String]()
+          for (u <- discipline) {
+            disciplineMap.put(u.id.get.toString(), u.task_discipline)
+          }
+
+          val deliverable = DeliverableService.findAllDeliverables()
+
+          val deliverableMap = new java.util.LinkedHashMap[String, String]()
+          for (t <- deliverable) {
+            deliverableMap.put(t.id.get.toString, t.deliverable)
+          }
+          BadRequest(views.html.frontend.generics.searchTaskForm(hasErrors, disciplineMap, deliverableMap))
+        },
+        success => {
+          var pageNumber = 1
+          var recordOnPage = 10
+
+          val discipline_id = success.discipline_id.getOrElse(0)
+          val deliverable_id = success.deliverable_id.getOrElse(0)
+
+          val projectTypes = GenericProjectService.findAllProjectTypes(pageNumber, recordOnPage)
+          val countProjectTypes = GenericProjectService.projectTypesCount
+          val paginationProjectTypes = controllers.Application.PaginationProject(countProjectTypes, pageNumber, recordOnPage)
+
+          val predefinedTasks = GenericProjectService.findAllGenericTaskFiltered(discipline_id, deliverable_id)
+          //val countPredefinedTasks = GenericProjectService.predefinedTasksCount
+          val paginationPredefinedTasks = ""
+
+          Ok(views.html.frontend.generics.overview(
+            paginationProjectTypes,
+            projectTypes,
+            paginationPredefinedTasks,
+            predefinedTasks))
+        })
+    }.getOrElse {
+      Redirect(routes.Login.loginUser());
+    }
+  }
+
+  def searchDigestTaskResult() = Action { implicit request =>
+    request.session.get("username").map { user =>
+      ARTForms.genericDigestTaskSearchForm.bindFromRequest.fold(
+        hasErrors => {
+          val tm = ""
+          val discipline = TaskDesciplineService.findAllTaskDescipline()
+
+          val disciplineMap = new java.util.LinkedHashMap[String, String]()
+          for (u <- discipline) {
+            disciplineMap.put(u.id.get.toString(), u.task_discipline)
+          }
+          BadRequest(views.html.frontend.generics.searchDigestTaskForm(hasErrors,tm,disciplineMap))
+        },
+        success => {
+
+          val task_title = success.task_title.getOrElse("")
+          val criterion = "%" + task_title + "%"
+          val task_mode = success.task_mode.get
+          val discipline_id = success.discipline_id.getOrElse(0)
+
+          val tasks = GenericService.findAllDigestiblePredefinedTasksFiltered(task_mode, criterion, discipline_id)
+          val predefined_tasks = GenericService.findGenericProjectTypeTasks(task_mode)
+          Ok(views.html.frontend.generics.addGenericTask(tasks, predefined_tasks, task_mode))
+        })
+    }.getOrElse {
+      Redirect(routes.Login.loginUser());
     }
   }
 

@@ -4,7 +4,6 @@ import play.api.Play.current
 import play.api.db.DB
 import anorm.SqlParser._
 import models._
-import anorm.Id
 import anorm._
 
 object TemplateService extends CustomColumns {

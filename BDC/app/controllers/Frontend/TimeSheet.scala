@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
 //import org.codehaus.jackson.JsonNode
 import play.api.libs.json.{ JsNull, Json, JsString, JsValue }
-import anorm.NotAssigned
 import models.Activity
 import models.ActivityTypes
 import models.SubTasks
@@ -28,7 +27,6 @@ import play.api.libs.functional.syntax._
 import java.util.regex.Pattern
 import models.TimesheetExternal
 import java.text.DecimalFormat
-//import com.google.gson.JsonObject
 import java.util.ArrayList
 
 import scala.math.BigDecimal.RoundingMode

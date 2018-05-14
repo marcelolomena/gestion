@@ -40,6 +40,7 @@
     				<input id="program_details.state_gantt" name="program_details.state_gantt" type="hidden" class="span4" value="NA" >
     				<input id="program_dates.baseline_date" name="program_dates.baseline_date" type="hidden" class="span4" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
     				<input id="program_dates.closing_date_gantt" name="program_dates.closing_date_gantt" type="hidden" class="span4" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
+					<input id="program_dates.creation_date" name="program_dates.creation_date" type="hidden" class="span4" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
     				<input id="program_dates.actual_release_date" name="program_dates.actual_release_date" type="hidden" class="span4" value="@(new java.util.Date().format("dd-MM-yyyy"))" >
     				
     				<!-- Program Manager, Business Line, Impact type, SAP Code, Total SAP fields are no longer required at the create new program screen.  -->
@@ -85,6 +86,15 @@
 						     
 						      )
 					      </span>
+							<span class="left width_full padding-top-3px">
+								@select(
+								 programForm("clasificacion"),
+								 options("Evolutivo"->"Evolutivo", "Correccion"->"Corrección","Normativo"->"Normativo", "Obsolecencia Tecnologica"->"Obsolecencia Tecnologica", "Infraestructura"->"Infraestructura"),
+								 'class -> "input-xlarge ",
+								 '_label -> Messages("addNewProgram.clasificacion"),
+								  '_default -> Messages("addNewProgram.placeholder.clasificacion")
+							  )
+							</span>						  
 					      <span class="left width_full padding-top-3px">
 						      	@select(
 								         programForm("demand_manager"),
@@ -145,19 +155,15 @@
            			</div>
            		
            			<div class="left width_full">
-	           			<div class="left width-pr50 padding-top-3px" >
-	           			 <span class="left width_full ">
-							       	@select(
-							         programForm("program_details.department"),
-							         options(departmentsMap),
-							         'class -> "input-xlarge ",
-							         '_label -> Messages("addNewProgram.requestingDepartment"),
-							          '_default -> Messages("addNewProgram.placeholder.department")
-							      )
-						      </span>
-	           				
-	           				
-	           			</div>
+           				<div class="left width-pr50 padding-top-3px">
+	           			@inputText(
+				                programForm("planned_hours"),
+				                '_label -> Messages("addNewProgram.plannedhours"),
+				                'class -> "span4", 
+				                'maxlength ->"9",
+				                'placeholder ->Messages("addNewProgram.Enterplannedhours")
+				            )
+	           			</div>					
 	           				<div class="right width-pr50 padding-top-3px >
 	           			@inputText(
 				                programForm("program_dates.release_date"),
@@ -169,39 +175,17 @@
 	           			
 	           			
            			</div>
-           		@*	<div class="left width_full display-none">
-	          			<div class="left width-pr50 padding-top-3px" >
-	           				@inputText(
-				                programForm("program_dates.creation_date"),
-				                'class -> "span4", 
-				                '_label -> Messages("addNewProgram.programCreation"),
-				                'placeholder -> Messages("addNewProgram.placeholder.end_planned_date")
-				            )
-	           			</div>
+           			<div class="left width_full">        
 	           			<div class="left width-pr50 padding-top-3px" >
-	           				@inputText(
-				                programForm("program_dates.closure_date"),
-				                'class -> "span4", 
-				                '_label -> Messages("addNewProgram.estimatedClosureDate"),
-				                'placeholder -> Messages("addNewProgram.placeholder.closure_date"),
-				                'style->"width: 380px;"
-				            )
-	           			</div>
-	           			
-           			</div>*@
-           			<div class="left width_full">
-           				<div class="left width-pr50 padding-top-3px">
-	           			@inputText(
-				                programForm("planned_hours"),
-				                '_label -> Messages("addNewProgram.plannedhours"),
-				                'class -> "span4", 
-				                'maxlength ->"9",
-				                'placeholder ->Messages("addNewProgram.Enterplannedhours")
-				            )
-	           			</div>
-	         
-	           			
-	           			<div class="left width-pr50 padding-top-3px" >
+	    					 @select(
+						         programForm("program_details.impact_type"),
+						         options(impacttypeMap),
+						         'class -> "input-xlarge ",
+						         '_label -> Messages("addNewProgram.impactType"),
+						          '_default -> Messages("addNewProgram.placeholder.impact_type")
+						      )
+	           			</div>		           			
+	           			<div class="right width-pr50 padding-top-3px" >
 	           				@inputText(
 				                programForm("program_dates.closure_date"),
 				                'class -> "span4", 
@@ -211,40 +195,8 @@
 				            )
 	           			</div>
                     </div>
-
-      				 <div class="left width_full ">
-	          			<div class="left width-pr50 padding-top-3px display-none" >
-	           				@inputText(
-				                programForm("program_dates.creation_date"),
-				                'class -> "span4", 
-				                '_label -> Messages("addNewProgram.programCreation"),
-				                'placeholder -> Messages("addNewProgram.placeholder.end_planned_date")
-				            )
-	           			</div>
-	           		
-	           			
-           			</div>
-           			<div class="left width_full ">
-           				<div class="left width-pr50 padding-top-3px display-none" >
-	           				@select(
-						         programForm("is_active"),
-						         options("1"->"Yes","0"->"No"),
-						         'class -> "input-xlarge ",
-						         '_label -> Messages("addNewProgram.isActive"),
-						          '_default -> Messages("addNewProgram.placeholder.isActive")
-						      )
-	           			</div>
-	           			<div class="left width-pr50 padding-top-3px">
-	           			@inputText(
-				                programForm("program_details.sap_code"),
-				                '_label -> "PPM Number",
-				                'class -> "span4", 
-				                'maxlength ->"7",
-				                'type -> "text",
-				                'placeholder -> "Por favor, introduzca el nÃºmero de PPM" 
-				            )
-	           			</div>
-	           			<div class="right width-pr50 padding-top-3px >
+           			<div class="left width_full ">				
+	           			<div class="left width-pr50 padding-top-3px >
 	           			 @select(
 						        programForm("work_flow_status"),
 						         options(workflowStatus),
@@ -253,21 +205,11 @@
 						          '_default -> Messages("addNewProgram.placeholder.work_flow_status")
 					      )
 	           			</div>
-	           			
-	           			<div class="left width-pr50 padding-top-3px" >
-	    					 @select(
-						         programForm("program_details.impact_type"),
-						         options(impacttypeMap),
-						         'class -> "input-xlarge ",
-						         '_label -> Messages("addNewProgram.impactType"),
-						          '_default -> Messages("addNewProgram.placeholder.impact_type")
-						      )
-	           			</div>
-	           			
-					<div class="right width-pr50 padding-top-3px" >
+	           			           			
+					<div class="left width-pr50 padding-top-3px" >
 			      		@select(
 				         programForm("internal_state"),
-				         options("Menor"->"Menor", "Mediano"->"Mediano","Grande"->"Grande"),
+				         options("Menor"->"Menor", "SAP"->"SAP","CIG"->"CIG", "Directorio"->"Directorio"),
 				         'class -> "input-xlarge ",
 				         '_label -> Messages("addNewProgram.internal_state"),
 				          '_default -> Messages("addNewProgram.placeholder.internal_state")
@@ -389,6 +331,30 @@ $(document).ready(function(){
 		  changeYear: true
 	});
 
+	//Validaciones de campos obligatorios, no funciono via formulario ART
+	$("#add-new-program-form").submit(function(event) {
+		if ($("#program_sub_type").val() == null || $("#program_sub_type").val() == "") {
+			alert("Ingrese Tipo de Iniciativa");
+			event.preventDefault();
+		} else 		
+		if ($("#program_description").val() == null || $("#program_description").val() == "") {
+			alert("Ingrese Descripción de Programa");
+			event.preventDefault();
+		} else 
+		if ($("#program_details_management").val() == null || $("#program_details_management").val() == "") {
+			alert("Ingrese Gerencia Solicitante de Programa");
+			event.preventDefault();
+		} else 					
+		if ($("#planned_hours").val() == null || $("#planned_hours").val() == "") {
+			alert("Ingrese Horas de Programa");
+			event.preventDefault();
+		} else 
+		if ($("#internal_state").val() == null || $("#internal_state").val() == "") {
+			alert("Ingrese Tamaño de Programa");
+			event.preventDefault();
+		}						
+	});		
+	
 	@*var url="/get-genrencia-list?devision="+$("#program_details_devison").val();
 	   $.get(url,  function(data) {
 		   $("#program_details_management").html(data);

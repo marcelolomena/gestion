@@ -6,7 +6,7 @@ import scala.collection.mutable.ListBuffer
 import scala.math.BigDecimal.int2bigDecimal
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
-import anorm.NotAssigned
+import org.json.JSONArray
 import art_forms.ARTForms
 import models.Activity
 import models.ActivityTypes
@@ -279,6 +279,8 @@ object Task extends Controller {
             new Date(), success.task_status, user_id.toInt, success.owner, Option(success.task_discipline), success.completion_percentage,
             success.remark, success.task_depend, success.dependencies_type, Option(success.task_details.stage), Option(success.task_details.user_role), success.task_details.deliverable, success.task_details.task_type, 1)
           val latest_task = TaskService.insertTask(milestoneDetails)
+          //RRM:Agrega tarea en tabla art_program_management
+          ProgramService.saveProgramManagement(latest_task,3);
 
           if(success.project_mode==42){
             val subtask = SubTaskMaster(None, latest_task, success.task_title, success.task_description,
@@ -289,9 +291,10 @@ object Task extends Controller {
             var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
             
             if(success.pert==0){ //con plantilla pero sin pert
-
+              /*
               SubTaskServices.insertSubTaskFromTemplate(formattedDate.format(success.plan_start_date),
                   formattedDate.format(success.plan_end_date),latest_task.toString(),success.project_mode.toString())
+              */
 
             }else if(success.pert==1){//pert dias corridos
               try {
@@ -322,6 +325,9 @@ object Task extends Controller {
               }             
             }
           }
+
+          //RRM:Agrega tarea en tabla art_program_management
+          ProgramService.saveProgramManagement(latest_task,6);
 
           /**
            * Activity log
@@ -524,6 +530,16 @@ object Task extends Controller {
            * Update Baseline...
            */
           TaskService.taskBasline(task, success.plan_start_date, success.plan_end_date, request.session.get("uId").get.toString())
+		  
+		  //RRM: Agrega registro de cambio en baseline 
+		  var changeState = new JSONArray();
+		  var changeStateObject = new JSONObject();
+		  changeStateObject.put("fieldName", "task_hours");
+		  changeStateObject.put("org_value", task.get.plan_time.toString());
+		  changeStateObject.put("new_value", success.plan_time);
+		  changeState.put(changeStateObject);  	
+		  val baseline = Baseline(None, changeState.toString(), Integer.parseInt(request.session.get("uId").get), new Date(), "task", Integer.parseInt(id));
+		  Baseline.insert(baseline);		  
 
           Redirect(routes.Task.projectTaskDetails(id))
         }
@@ -793,6 +809,9 @@ object Task extends Controller {
       node.put("PAE", s.pae + " %")
       node.put("HP", s.hp + " hrs")
       node.put("HA", s.ha + " hrs")
+	  //RRM
+	  node.put("AGI", s.ev/s.hp*100)
+	  node.put("AGE", s.pv/s.hp*100)	  	  
     }
     Ok(node.toString())
   }

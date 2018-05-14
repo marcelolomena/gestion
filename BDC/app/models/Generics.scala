@@ -146,6 +146,29 @@ object PredefinedTasks {
 
 }
 
+case class DigestiblePredefinedTasks(
+                                      tId: Option[Int],
+                                      task_title: String,
+                                      task_description: String,
+                                      task_discipline: String,
+                                      user_role: String,
+                                      deliverable: String)
+
+object DigestiblePredefinedTasks {
+
+  val digestible_predefined_tasks = {
+    get[Option[Int]]("tId") ~
+      get[String]("task_title") ~
+      get[String]("task_description") ~
+      get[String]("task_discipline") ~
+      get[String]("user_role") ~
+      get[String]("deliverable") map {
+      case tId ~ task_title ~ task_description ~ task_discipline ~ user_role ~ deliverable =>
+        DigestiblePredefinedTasks(tId, task_title, task_description, task_discipline, user_role, deliverable)
+    }
+  }
+
+}
 
 case class GenericTask(tId: Option[Int], task_mode: Int, task_title: String,
   plan_start_date: Date, plan_end_date: Date, task_description: String, plan_time: BigDecimal, task_status: Int,
@@ -159,4 +182,53 @@ case class GenericTaskDetails(task_type: Int, task_code: String, stage: Option[I
 
 object GenericTaskDetails {
 
+}
+
+case class ProjectTypeSearch(
+                               type_id: Option[Int],
+                               responsible_id: Option[Int])
+
+object ProjectTypeSearch extends CustomColumns {
+  val search = {
+    get[Option[Int]]("type_id") ~
+      get[Option[Int]]("responsible_id") map {
+      case
+        type_id ~
+          responsible_id =>
+        ProjectTypeSearch(
+          type_id,
+          responsible_id)
+    }
+  }
+}
+
+case class GenericTaskSearch(
+                              discipline_id: Option[Int],
+                              deliverable_id: Option[Int])
+
+object GenericTaskSearch extends CustomColumns {
+  val search = {
+    get[Option[Int]]("discipline_id") ~
+      get[Option[Int]]("deliverable_id") map {
+      case
+        discipline_id ~
+          deliverable_id =>
+        GenericTaskSearch(
+          discipline_id,
+          deliverable_id)
+    }
+  }
+}
+
+case class DigestGenericTaskSearch(task_title: Option[String],task_mode: Option[String],discipline_id: Option[Int])
+
+object DigestGenericTaskSearch extends CustomColumns {
+  val search = {
+    get[Option[String]]("task_title") ~ get[Option[String]]("task_mode") ~ get[Option[Int]]("discipline_id") map {
+      case
+        task_title ~ task_mode ~ discipline_id=>
+        DigestGenericTaskSearch(
+          task_title,task_mode,discipline_id)
+    }
+  }
 }
