@@ -542,7 +542,7 @@ object Dashboard extends Controller {
     }
   }
 */
-/*
+
   def pieDepa = Action { implicit request =>
     request.session.get("username").map { user =>
 
@@ -559,7 +559,7 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }  
-*/
+
   /*
   def pieSubType = Action { implicit request =>
     request.session.get("username").map { user =>

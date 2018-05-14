@@ -854,5 +854,13 @@ object DashboardService {
       fileOut.close()
     }
   }
+  
+  def reportDepa(): Seq[Pie] = {
+
+    var sqlString = "EXEC art.porcentaje_programas_for_departamento"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).executeQuery() as (Pie.pie *)
+    }
+  }  
 
 }
