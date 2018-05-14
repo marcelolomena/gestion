@@ -12,13 +12,13 @@ opt.value = numeroMes;
 opt.innerHTML = nombreMes;
 //selectMes.appendChild(opt);
 var anoaingresar = 2016
-console.log(now.getFullYear()) ;
+//console.log(now.getFullYear()) ;
 while (anoaingresar <= now.getFullYear()) {
 	var optano = document.createElement('option');
 	optano.value = anoaingresar;
 	optano.innerHTML = anoaingresar;
 	if(anoaingresar==now.getFullYear()){
-		console.log("entramos");
+		//console.log("entramos");
 		optano.selected = "selected";
 	}
 	selectAno.appendChild(optano);
