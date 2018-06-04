@@ -535,6 +535,13 @@
             editable: true,
             search: false
         }, {
+            label: 'Responsable',
+            name: 'responsable',
+            align: 'left',
+            sortable: false,
+            editable: true,
+            search: false
+        },{
             label: 'Correo Comprador',
             name: 'correocomprador',
             align: 'left',

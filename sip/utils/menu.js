@@ -99,7 +99,7 @@ module.exports = (function () {
 
                 co(function* () {
                     var _rolnegocio = yield models.rol_negocio.find({
-                        where: { 'uid': user.uid }
+                        where: [{ 'uid': user.uid }, {'idsistema':parseInt(req.body.sistema)}]
                     }).catch(function (err) {
                         logger.error(err)
                     });
@@ -157,6 +157,7 @@ module.exports = (function () {
                             nombre["rol"] = _roles//[ { id: 12, glosarol: 'Técnico SIC' } ]
                             nombre["rid"] = _rolnegocio.rolnegocio
                             usuario.push(nombre)
+                            logger.debug('ROLNEGOCIO ------>> ' + _rolnegocio.rolnegocio);
 
                             return NeoMenu(user.uid, function (menu) {
                                 var supermenu = [];

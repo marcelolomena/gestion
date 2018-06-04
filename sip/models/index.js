@@ -9,7 +9,7 @@ var logger = require("../utils/logger");
 config.logging = function(sql){
 
   //  logger.debug(sql);
-  // console.log(sql);
+   console.log(sql);
   
   var sqlchico = sql.toLowerCase();
 

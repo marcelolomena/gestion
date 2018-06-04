@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes) {
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    idsistema: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     schema: 'sip',timestamps: false,tableName: 'rol_negocio'

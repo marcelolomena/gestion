@@ -65,6 +65,10 @@ module.exports = function (passport) {
 
     router.route('/presupuestoenvuelo/exportar')
         .get(isAuthenticated, presupuestoenvueloController.getExcel); 
+		
+    router.get('/presupuestoenvuelolectura', isAuthenticated, function (req, res) {
+        res.render('presupuestoenvuelolectura', { user: req.user, data: req.session.passport.sidebar });
+    });		
 
     return router;
 

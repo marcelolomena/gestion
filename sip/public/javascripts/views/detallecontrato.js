@@ -167,7 +167,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                 }         
             },                                   
             { label: 'Anexo', name: 'anexo', width: 100, align: 'left', search: true, editable: true },          
-            { label: 'Solicitud', name: 'numerosolicitud', width: 100, align: 'left', search: true, editable: true, hidden: true },            
+            { label: 'Solicitud', name: 'numerosolicitud', width: 100, align: 'left', search: true, editable: true, hidden: false },            
             {
                 label: 'idcui', name: 'idcui', search: false, editable: true, hidden: true,
                 edittype: "select",

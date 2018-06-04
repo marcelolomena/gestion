@@ -147,14 +147,16 @@ function list(req, res) {
     "DECLARE @PageNumber INT; " +
     "SELECT @PageNumber=" + page + "; " +
     "SELECT a.*, b.*, h.razonsocial, c.nombre nombreFab, d.nombre nombreClas, " +
-    "e.nombre nombreTipoLic, f.nombre nombreTipoInst, g.moneda " +
+    "e.nombre nombreTipoLic, f.nombre nombreTipoInst, g.moneda, j.comprador responsable " +
     "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto " +
     "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id " +
     "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id " +
     "LEFT JOIN lic.tipolicenciamiento e ON a.idtipolicenciamiento=e.id " +
     "LEFT JOIN lic.tipoinstalacion f ON a.idtipoinstalacion=f.id " +
     "LEFT JOIN sip.moneda g on b.idmoneda = g.id " +
-    "LEFT JOIN sip.proveedor h ON b.idproveedor=h.id ";
+    "LEFT JOIN sip.proveedor h ON b.idproveedor=h.id " +
+    "LEFT JOIN lic.detallerecepcion i ON b.id=i.idcompra " +
+    "LEFT JOIN lic.recepcion j ON i.idrecepcion=j.id " ;
   if (filters && condition != "") {
     sql += "WHERE " + condition + " ";
     // logger.debug("**" + sql + "**");
