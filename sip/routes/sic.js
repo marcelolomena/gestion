@@ -9,7 +9,6 @@ var clausulasController = require('../controllers/sic/clausulas');
 var anexosController = require('../controllers/sic/anexos');
 var catalogoclausulasController = require('../controllers/sic/catalogoclausulas');
 var tocController = require('../controllers/sic/toc');
-//var proveedoresController = require('../controllers/sic/proveedores');
 var preguntasController = require('../controllers/sic/preguntas');
 var responsablesController = require('../controllers/sic/responsables');
 var calendarioController = require('../controllers/sic/calendario');
@@ -30,6 +29,7 @@ var solicitudcontratoController = require('../controllers/sic/solicitudcontrato'
 var triadaController = require('../controllers/sic/triada');
 var detalleplantillaController = require('../controllers/sic/detalleplantilla2');
 var plantillacuiController = require('../controllers/sic/plantillacui2');
+var etaparolController = require('../controllers/sic/etaparol');
 
 
 var models = require('../models');
@@ -37,53 +37,6 @@ var sequelize = require('../models/index').sequelize;
 var logger = require("../utils/logger");
 
 module.exports = function (passport) {
-    /*    
-        router.get('/solicitudcotizacion', isAuthenticated, function (req, res) {
-            models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-            return models.pagina.findOne({
-                where: { nombre: 'solicitudcotizacion' },
-                include: [{
-                    model: models.contenido
-                }
-                ]
-            }).then(function (pagina) {
-    
-                return res.render('home2', {
-                    user: req.user,
-                    data: req.session.passport.sidebar,
-                    page: 'solicitudcotizacion',
-                    title: '',
-                    type: pagina.contenido.nombre
-                });
-            }).catch(function (err) {
-                logger.error(err);
-            });
-            
-        });
-    
-        router.get('/solicitudcontrato', isAuthenticated, function (req, res) {
-              models.pagina.belongsTo(models.contenido, { foreignKey: 'idtipo' });
-            return models.pagina.findOne({
-                where: { nombre: 'solicitudcontrato' },
-                include: [{
-                    model: models.contenido
-                }
-                ]
-            }).then(function (pagina) {
-    
-                return res.render('home2', {
-                    user: req.user,
-                    data: req.session.passport.sidebar,
-                    page: 'solicitudcontrato',
-                    title: '',
-                    type: pagina.contenido.nombre
-                });
-            }).catch(function (err) {
-                logger.error(err);
-            });
-            
-        });
-    */
 
     router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
         return res.render('sic/solicitudcotizacion', {
@@ -846,11 +799,26 @@ module.exports = function (passport) {
         });
     });
 
-    router.route('/sic/etapa')
-        .get(isAuthenticated, parametrosController.getEtapa);
+    router.route('/sic/etaparol')
+        .get(isAuthenticated, parametrosController.getEtapaRol);
 
     router.route('/sic/existeClase/:id')
         .get(isAuthenticated, serviciosController.existeClase);
+
+    router.route('/sic/etaparol/action')
+        .post(isAuthenticated, etaparolController.action)
+
+    router.route('/sic/etaparol/list')
+        .get(isAuthenticated, etaparolController.list);
+
+    router.route('/sic/etapassolicitud')
+        .get(isAuthenticated, etaparolController.etapassolicitud);
+
+    router.route('/sic/rolSIC')
+        .get(isAuthenticated, etaparolController.rolSIC);
+
+    router.route('/sic/getUsuariosAdmin')
+        .get(isAuthenticated, solicitudcotizacionController.getUsuariosAdmin);
 
     return router;
 }

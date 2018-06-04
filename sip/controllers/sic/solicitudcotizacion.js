@@ -89,42 +89,81 @@ exports.action = function (req, res) {
                 }
                 break;
             case "edit":
-                models.solicitudcotizacion.update({
-                    idcui: req.body.idcui,
-                    idtecnico: req.body.idtecnico,
-                    tipocontrato: req.body.tipocontrato,
-                    program_id: req.body.program_id,
-                    codigoart: req.body.codigoart,
-                    sap: req.body.sap,
-                    descripcion: req.body.descripcion,
-                    codigosolicitud: req.body.codigosolicitud,
-                    idclasificacionsolicitud: req.body.idclasificacionsolicitud,
-                    idnegociador: req.body.idnegociador,
-                    correonegociador: req.body.correonegociador,
-                    fononegociador: req.body.fononegociador,
-                    direccionnegociador: req.body.direccionnegociador,
-                    numerorfp: req.body.numerorfp,
-                    fechaenviorfp: req.body.fechaenviorfp,
-                    idestado: req.body.idestado
-                }, {
-                    where: {
-                        id: req.body.id
-                    }
-                }).then(function (solicitudcotizacion) {
-                    res.json({
-                        error: 0,
-                        glosa: ''
-                    });
-                }).catch(function (err) {
-                    logger.error(err)
-                    res.json({
-                        error: 1,
-                        glosa: err.message
-                    });
-                });
+                if (req.body.idadministracion) {
+                    models.solicitudcotizacion.update({
+                        idcui: req.body.idcui,
+                        idtecnico: req.body.idtecnico,
+                        tipocontrato: req.body.tipocontrato,
+                        program_id: req.body.program_id,
+                        codigoart: req.body.codigoart,
+                        sap: req.body.sap,
+                        descripcion: req.body.descripcion,
+                        codigosolicitud: req.body.codigosolicitud,
+                        idclasificacionsolicitud: req.body.idclasificacionsolicitud,
+                        idnegociador: req.body.idnegociador,
+                        correonegociador: req.body.correonegociador,
+                        fononegociador: req.body.fononegociador,
+                        direccionnegociador: req.body.direccionnegociador,
+                        numerorfp: req.body.numerorfp,
+                        fechaenviorfp: req.body.fechaenviorfp,
+                        idestado: req.body.idestado
+                    }, {
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (solicitudcotizacion) {
+                            res.json({
+                                error: 0,
+                                glosa: ''
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({
+                                error: 1,
+                                glosa: err.message
+                            });
+                        });
 
 
+                } else {
+                    req.body.fechaasignacionadmin = hoy;
 
+                    models.solicitudcotizacion.update({
+                        idcui: req.body.idcui,
+                        idtecnico: req.body.idtecnico,
+                        tipocontrato: req.body.tipocontrato,
+                        program_id: req.body.program_id,
+                        codigoart: req.body.codigoart,
+                        sap: req.body.sap,
+                        descripcion: req.body.descripcion,
+                        codigosolicitud: req.body.codigosolicitud,
+                        idclasificacionsolicitud: req.body.idclasificacionsolicitud,
+                        idnegociador: req.body.idnegociador,
+                        correonegociador: req.body.correonegociador,
+                        fononegociador: req.body.fononegociador,
+                        direccionnegociador: req.body.direccionnegociador,
+                        numerorfp: req.body.numerorfp,
+                        fechaenviorfp: req.body.fechaenviorfp,
+                        idestado: req.body.idestado,
+                        idadministracion: req.body.idadministracion,
+                        fechaasignacionadmin: req.body.fechaasignacionadmin
+                    }, {
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (solicitudcotizacion) {
+                            res.json({
+                                error: 0,
+                                glosa: ''
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({
+                                error: 1,
+                                glosa: err.message
+                            });
+                        });
+                }
                 break;
             case "del":
                 models.solicitudcotizacion.destroy({
@@ -166,6 +205,7 @@ exports.list = function (req, res) {
     var filter_two = []
     var filter_three = []
     var filter_four = []
+    var filter_five = []
 
     if (filters != undefined) {
         //logger.debug(filters)
@@ -203,6 +243,12 @@ exports.list = function (req, res) {
                 });
             } else if (item.field === "negociador") {
                 filter_four.push({
+                    ['first_name']: {
+                        $like: '%' + item.data + '%'
+                    }
+                });
+            } else if (item.field === "administrador") {
+                filter_five.push({
                     ['first_name']: {
                         $like: '%' + item.data + '%'
                     }
@@ -247,6 +293,12 @@ exports.list = function (req, res) {
                 as: 'estado',
                 foreignKey: 'idestado'
             });
+            // models.plantillaclausula.hasMany(models.cuerpoclausula, { constraints: false, foreignKey: 'idplantillaclausula' });
+            models.solicitudcotizacion.belongsTo(models.user,
+                {
+                    as: 'administrador',
+                    foreignKey: 'idadministracion'
+                });
             models.solicitudcotizacion.count({
                 where: filter_one,
                 include: [{
@@ -260,6 +312,10 @@ exports.list = function (req, res) {
                     model: models.user,
                     as: 'negociador',
                     where: filter_four
+                }, {
+                    model: models.user,
+                    as: 'administrador'
+                    // where: filter_five
                 }]
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
@@ -269,30 +325,34 @@ exports.list = function (req, res) {
                     order: orden,
                     where: filter_one,
                     include: [{
-                            model: models.estructuracui,
-                            where: filter_two
-                        }, {
-                            model: models.programa
-                        }, {
-                            model: models.user,
-                            as: 'tecnico',
-                            where: filter_three
-                        }, {
-                            model: models.valores,
-                            as: 'clasificacion'
-                        }, {
-                            model: models.user,
-                            as: 'negociador',
-                            where: filter_four
-                        }, {
-                            model: models.tipoclausula
-                        }, {
-                            model: models.valores,
-                            as: 'grupo'
-                        },{
-                            model: models.valores,
-                            as: 'estado'
-                        }
+                        model: models.estructuracui,
+                        where: filter_two
+                    }, {
+                        model: models.programa  //left
+                    }, {
+                        model: models.user,
+                        as: 'tecnico',
+                        where: filter_three
+                    }, {
+                        model: models.valores,  //left
+                        as: 'clasificacion'
+                    }, {
+                        model: models.user,
+                        as: 'negociador',
+                        where: filter_four
+                    }, {
+                        model: models.tipoclausula  //left
+                    }, {
+                        model: models.valores,      //left
+                        as: 'grupo'
+                    }, {
+                        model: models.valores,      //left
+                        as: 'estado'
+                    }, {
+                        model: models.user,
+                        as: 'administrador',
+                        // where: filter_five
+                    }
                     ]
                 }).then(function (solicitudcotizacion) {
                     return res.json({
@@ -388,3 +448,21 @@ exports.traerdatos = function (req, res) {
             return res.json(rows);
         });
 };
+
+
+exports.getUsuariosAdmin = function (req, res) {
+
+    models.usrrol.findAll({
+        order: 'id ASC',
+        attributes: ['id', 'uid'],
+        where: {
+            idsistema: 2,
+            rid: 26
+        },
+    }).then(function (usrol) {
+        return res.json(usrol);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({ error: 1 });
+    });
+}

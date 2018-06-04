@@ -82,7 +82,7 @@ var gridEstado = {
                     hidden: true,
                     edittype: "select",
                     editoptions: {
-                        dataUrl: '/sic/etapa',
+                        dataUrl: '/sic/etaparol',
                         buildSelect: function (response) {
                             var grid = $("#grid");
                             var rowKey = grid.getGridParam("selrow");
@@ -94,9 +94,9 @@ var gridEstado = {
                             $.each(data, function (i, item) {
 
                                 if (data[i].id == thissid) {
-                                    s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                                    s += '<option value="' + data[i].idetapa + '" selected>' + data[i].valore.nombre + '</option>';
                                 } else {
-                                    s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                                    s += '<option value="' + data[i].idetapa + '">' + data[i].valore.nombre + '</option>';
                                 }
                             });
                             return s + "</select>";
@@ -331,7 +331,7 @@ var gridEstado = {
                 $.get('/sic/getsession', function (data) {
                     $.each(data, function (i, item) {
                         console.log("EL ROL ES: " + item.glosarol)
-                        if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC') {
+                        if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC' && item.glosarol != 'Ejecutivo Administracion SIC' && item.glosarol != 'Encargado Administracion SIC' ) {
                             $("#add_" + thisId).addClass('ui-disabled');
                             //$("#add_gridMaster").hide();
                             $("#edit_" + thisId).addClass('ui-disabled');

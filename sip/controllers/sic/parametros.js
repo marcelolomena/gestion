@@ -35,12 +35,25 @@ exports.listall2 = function (req, res) {
     });
 }
 
-exports.getEtapa = function (req, res) {
-
-    models.valores.findAll({
-        order: 'valor ASC',
-        attributes: ['id', 'nombre'],
-        where: { tipo: 'etapasolicitud' },
+exports.getEtapaRol = function (req, res) {
+    var rol = req.session.passport.sidebar[0].rol[0].id
+    models.etaparol.belongsTo(models.valores, {
+        foreignKey: 'idetapa'
+    });
+    models.etaparol.belongsTo(models.rol, {
+        foreignKey: 'idrol'
+    })
+    models.etaparol.findAll({
+        where: {
+            idrol: rol
+        },
+        include: [{
+            model: models.valores,
+            order: 'valor ASC'
+        },
+        {
+            model: models.rol
+        }]
     }).then(function (valores) {
         return res.json(valores);
     }).catch(function (err) {
