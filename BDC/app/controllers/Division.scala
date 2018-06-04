@@ -2,17 +2,12 @@ package controllers
 
 import org.apache.commons.lang3.StringUtils
 import art_forms.ARTForms
-import models.Divisions
+import models._
 import play.api.mvc.Controller
-import services.DivisionService
-import services.ProjectService
-import services.UserService
-import services.GenrenciaService
-import services.DepartmentService
+import services._
 import play.i18n._
-import models.Activity
-import models.ActivityTypes
 import java.util.Date
+
 object Division extends Controller with Secured {
   var username = ""
   var project_id = ""

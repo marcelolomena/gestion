@@ -18,5 +18,13 @@ object CustomAssets {
     }else{
        Ok("File not found on the server. Its either deleted or removed from the server,")
     }
-  } 
+  }
+  def it(file: String): Action[AnyContent] = Action {
+    val docFile = new File(Play.application().configuration().getString("bdc.documents.location") + "/alldocuments/"+file)
+    if(docFile != null && docFile.exists()){
+      Ok.sendFile(content=docFile,inline = true)
+    }else{
+      Ok("File not found on the server. Its either deleted or removed from the server,")
+    }
+  }
 }

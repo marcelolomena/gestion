@@ -36,6 +36,7 @@ object ProgramService extends CustomColumns {
     val program_code = getUniqueProgramCode()
 
     DB.withConnection { implicit connection =>
+	  println("En insertProgramDetails:"+pm);
       val result = SQL(
         """
           insert into art_program (
@@ -43,12 +44,12 @@ object ProgramService extends CustomColumns {
           program_description, work_flow_status, 
           demand_manager, program_manager, devison, management, department, sap_code,
           impact_type, business_line, creation_date, initiation_planned_date, closure_date,release_date,
-          planned_hours,internal_state, estimated_cost 
+          planned_hours,internal_state, estimated_cost, clasificacion
           ) 
           values(
           {program_type},{program_sub_type},{program_name},{program_code},
           {program_description},{work_flow_status}, {demand_manager},{program_manager},{devison},
-					{management},{department},{sap_code}, {impact_type},{business_line}, {creation_date},{initiation_planned_date},{closure_date},{release_date},{planned_hours},{internal_state}, {estimated_cost} 
+					{management},{department},{sap_code}, {impact_type},{business_line}, {creation_date},{initiation_planned_date},{closure_date},{release_date},{planned_hours},{internal_state}, {estimated_cost}, {clasificacion} 
           )
           """).on(
           'program_type -> pm.program_type,
@@ -71,7 +72,8 @@ object ProgramService extends CustomColumns {
           'release_date -> pm.program_dates.release_date,
           'planned_hours -> pm.planned_hours,
           'internal_state -> pm.internal_state,
-          'estimated_cost -> pm.estimated_cost).executeInsert(scalar[Long].singleOpt)
+          'estimated_cost -> pm.estimated_cost,
+		  'clasificacion -> pm.clasificacion).executeInsert(scalar[Long].singleOpt)
 
       result.last
 
@@ -105,7 +107,8 @@ object ProgramService extends CustomColumns {
           is_active={is_active},
           planned_hours={planned_hours},
           internal_state={internal_state},          
-          estimated_cost={estimated_cost}
+          estimated_cost={estimated_cost},
+		  clasificacion={clasificacion}
           where program_id = {program_id}
           """).on(
           'program_id -> id,
@@ -129,7 +132,8 @@ object ProgramService extends CustomColumns {
           'is_active -> pm.is_active.getOrElse(1),
           'planned_hours -> pm.planned_hours,
           'internal_state -> pm.internal_state,          
-          'estimated_cost -> pm.estimated_cost).executeUpdate()
+          'estimated_cost -> pm.estimated_cost,
+		  'clasificacion -> pm.clasificacion).executeUpdate()
     }
   }
 
@@ -1725,4 +1729,121 @@ ON A.sub_task_id=B.sub_task_id
         'idPrograma -> idPrograma.toInt, 'user_id -> user_id.toInt).executeQuery().as(scalar[Int].single)
     }
   }
+  
+  def findProgramPanels(id_program: String): Seq[models.IssueSubCategory] = {
+      var sqlString = "SELECT id, name, id AS category_id, name AS description, id AS created_by, getdate() AS creation_date, getdate() AS updation_date, id AS is_deleted FROM art_program_panel WHERE id_program={id_program}"
+      DB.withConnection { implicit connection =>
+        SQL(sqlString).on(
+          'id_program -> id_program.toInt
+        ).executeQuery() as(models.IssueSubCategory.issueSubCategory *)
+      }
+  }  
+  
+  def listPanelByProgram(pid: String): Seq[Panels] = {
+    DB.withConnection { implicit connection =>
+      SQL("select * from art_program_panel where id_program={panel_id}").on(
+        'panel_id -> pid.toInt).executeQuery().as(Panels.panel *)
+    }
+  }
+
+  def listProjectsByPanel(pid: String): Seq[PanelsProject] = {
+    DB.withConnection { implicit connection =>
+      SQL("SELECT a.*, b.project_name project FROM dbo.art_program_panel_detail a JOIN dbo.art_project_master b ON a.id_project=b.pId WHERE a.id_program_panel={panel_id}").on(
+        'panel_id -> pid.toInt).executeQuery().as(PanelsProject.panelproj *)
+    }
+  }
+
+  def saveProgramPanel(id_program: String,
+                        name: String,
+                        description: String): Option[ErrorPanel] = {
+
+    var sqlString = """
+      EXEC art.save_project_panel {id_program},{name},{description}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'id_program -> id_program.toInt,
+        'name -> name,
+        'description -> description).executeQuery() as (ErrorPanel.error.singleOpt)
+    }
+  }
+
+  def delProgramPanel(id_panel: String): Option[ErrorPanel] = {
+
+    var sqlString = """
+      EXEC art.delete_panel {id_panel}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'id_panel -> id_panel.toInt).executeQuery() as (ErrorPanel.error.singleOpt)
+    }
+  }
+
+  def updateProgramPanel(id_panel: String, name: String,
+                       description: String): Option[ErrorPanel] = {
+
+    var sqlString = """
+      EXEC art.update_program_panel {id_panel}, {name},{description}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'id_panel -> id_panel.toInt,
+        'name -> name,
+        'description -> description).executeQuery() as (ErrorPanel.error.singleOpt)
+    }
+  }
+
+  def findPanelProjects(id_program: String, id_panel: String): Seq[models.PanelsProject] = {
+    var sqlString = "SELECT pId id, pId id_project, pId id_program_panel, project_name project FROM art_project_master WHERE program={id_program} AND pId NOT IN (SELECT id_project FROM art_program_panel_detail WHERE id_program_panel = {id_panel})"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'id_program -> id_program.toInt,
+        'id_panel -> id_panel.toInt
+      ).executeQuery() as(models.PanelsProject.panelproj *)
+    }
+  }
+
+  def saveProjectPanel(id_panel: String,
+                       id_project: String): Option[ErrorPanel] = {
+
+    var sqlString = """
+      EXEC art.add_project_topanel {id_project},{id_panel}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'id_project -> id_project.toInt,
+        'id_panel -> id_panel.toInt).executeQuery() as (ErrorPanel.error.singleOpt)
+    }
+  }
+
+  def delPanelProject(id_proj: String): Option[ErrorPanel] = {
+
+    var sqlString = """
+      EXEC art.delete_panel_project {id_proj}
+      """
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'id_proj -> id_proj.toInt).executeQuery() as (ErrorPanel.error.singleOpt)
+    }
+  }
+
+  def saveProgramManagement(oper_id: Long,
+                            nivel: Int): Option[ErrorPanel] = {
+
+    var sqlString = """
+      EXEC art.proc_art_program_management_crud {oper_id},{nivel}
+      """
+    println("***---------------------EXEC art.proc_art_program_management_crud")
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on(
+        'oper_id -> oper_id.toInt,
+        'nivel -> nivel).executeQuery() as (ErrorPanel.error.singleOpt)
+    }
+  }
+
 }

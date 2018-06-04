@@ -18,7 +18,8 @@ $(document).ready(function () {
 
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_idnegociador'>Negociador<span style='color:red'>*</span>{idnegociador}</div>";
-    t1 += "<div class='column-half' id='d_idclasificacionsolicitud'>Clasificación<span style='color:red'>*</span>{idclasificacionsolicitud}</div>";
+    // t1 += "<div class='column-half' id='d_idclasificacionsolicitud'>Clasificación<span style='color:red'>*</span>{idclasificacionsolicitud}</div>";
+    t1 += "<div class='column-half' id='d_fechaenviorfp'>Fecha de Solicitud{fechaenviorfp}</div>";
     t1 += "</div>";
 
     t1 += "<div class='form-row'>";
@@ -31,15 +32,19 @@ $(document).ready(function () {
     t1 += "<div class='column-half' id='d_direccionnegociador'>Dirección Negociador<span style='color:red'>*</span>{direccionnegociador}</div>";
     t1 += "</div>";
 
-    // t1 += "<div class='form-row'>";
-    // // t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
-    // t1 += "<div class='column-full' id='d_fechaenviorfp'>Fecha RFP<span style='color:red'>*</span>{fechaenviorfp}</div>";
-    // t1 += "</div>";
-
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-half' id='d_tipo'>Tipo<span style='color:red'>*</span>{idtipo}</div>";
     t1 += "<div class='column-half' id='d_grupo'>Grupo<span style='color:red'>*</span>{idgrupo}</div>";
     t1 += "</div>";
+
+    t1 += "<div class='form-row'>";
+    t1 += "<div class='column-half' id='d_estado'>Estado<span style='color:red'>*</span>{idestado}</div>";
+    t1 += "</div>";
+
+    // t1 += "<div class='form-row'>";
+    // // // t1 += "<div class='column-half' id='d_numerorfp'>Número RFP<span style='color:red'>*</span>{numerorfp}</div>";
+
+    // t1 += "</div>";
 
     t1 += "<hr style='width:100%;'/>";
     t1 += "<div> {sData} {cData}  </div>";
@@ -55,43 +60,53 @@ $(document).ready(function () {
             },
             {
                 label: 'Estado',
-                name: 'colorestado',
-                index: 'colorestado',
-                width: 58,
-                align: "left",
-                editable: true,
+                name: 'idestado',
+                jsonmap: "estado.nombre",
+                width: 80,
+                align: 'center',
                 search: false,
-                editoptions: {
-                    size: 10
-                },
-                formatter: function (cellvalue, options, rowObject) {
-                    var color = rowObject.colorestado;
-
-                    if (color == 'Rojo') {
-                        color = 'red';
-                    } else if (color == 'Verde') {
-                        color = 'green';
-                    } else if (color == 'Amarillo') {
-                        color = 'yellow';
-                    } else if (color == 'Azul') {
-                        color = 'blue';
-                    } else if (color == 'indefinido') {
-                        color = 'gray';
-                    }
-
-
-                    return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
-
-
-
-
-
-                }
+                editable: false,
+                hidden: false
             },
+            // {
+            //     label: 'Estado',
+            //     name: 'colorestado',
+            //     index: 'colorestado',
+            //     width: 60,
+            //     align: "left",
+            //     editable: true,
+            //     search: false,
+            //     editoptions: {
+            //         size: 10
+            //     },
+            //     formatter: function (cellvalue, options, rowObject) {
+            //         var color = rowObject.colorestado;
+
+            //         if (color == 'Rojo') {
+            //             color = 'red';
+            //         } else if (color == 'Verde') {
+            //             color = 'green';
+            //         } else if (color == 'Amarillo') {
+            //             color = 'yellow';
+            //         } else if (color == 'Azul') {
+            //             color = 'blue';
+            //         } else if (color == 'indefinido') {
+            //             color = 'gray';
+            //         }
+
+
+            //         return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; width: 50px; height: 16px;"></span>';
+
+
+
+
+
+            //     }
+            // },
             {
-                label: 'Código',
+                label: 'Código Solicitud',
                 name: 'codigosolicitud',
-                width: 100,
+                width: 125,
                 align: 'center',
                 search: true,
                 editable: true,
@@ -99,13 +114,7 @@ $(document).ready(function () {
                     required: true
                 },
                 editoptions: {
-                    size: 10,
-                    maxlengh: 10,
-                    dataInit: function (element) {
-                        $(element).mask("AAA-AA-000", {
-                            placeholder: "___-__-___"
-                        });
-                    }
+                    placeholder: "AAA-AA-000 o AAA-AA-000.0"
                 },
                 hidden: false
             },
@@ -124,17 +133,55 @@ $(document).ready(function () {
             // },
             {
                 label: 'Tipo',
-                name: 'tipo',
+                name: 'idtipo',
                 jsonmap: "tipoclausula.nombre",
-                width: 70,
+                width: 60,
                 align: 'center',
                 search: false,
                 editable: false,
                 hidden: false
-            },
-            {
+            }, {
+                label: '.',
+                width: 40,
+                hidden: false,
+                search: false,
+                editable: true,
+                sortable: false,
+                align: 'center',
+                formatter: function (cellvalue, options, rowObject) {
+                    var rojo = '<span><img src="../../../../images/redcircle.png" width="19px"/></span>';
+                    var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
+                    var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
+                    var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
+                    if (rowObject.colorestado === 'aGris') {
+                        return gris;
+                    } else {
+                        if (rowObject.colorestado === 'Vencida') {
+                            return rojo;
+                        } else {
+                            if (rowObject.colorestado === 'Renovar') {
+                                return amarillo;
+                            } else {
+                                if (rowObject.colorestado === 'bAl Dia')
+
+
+                                    return verde;
+                            }
+                        }
+                    }
+                }
+            }, {
+                label: 'Etapa',
+                name: 'idclasificacionsolicitud',
+                jsonmap: "clasificacion.nombre",
+                width: 120,
+                align: 'center',
+                search: false,
+                editable: true,
+                hidden: false
+            }, {
                 label: 'Grupo',
-                name: 'grupo',
+                name: 'idgrupo',
                 jsonmap: "grupo.nombre",
                 width: 120,
                 align: 'center',
@@ -142,24 +189,67 @@ $(document).ready(function () {
                 editable: false,
                 hidden: false
             },
+            // {
+            //     label: 'Fecha Solicitud',
+            //     name: 'fechaenviorfp',
+            //     width: 105,
+            //     align: 'center',
+            //     sortable: false,
+            //     editable: true,
+            //     formatter: function (cellvalue, options, rowObject) {
+            //         var val = rowObject.fechaenviorfp;
+            //         if (val != null) {
+            //             val = val.substring(0,10);
+            //             var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+            //             return fechaok;
+            //         } else {
+            //             return '';
+            //         }
+            //     },
+            //     search: false
+            // },
             {
                 label: 'Fecha Solicitud',
                 name: 'fechaenviorfp',
-                width: 105,
+                width: 120,
                 align: 'center',
-                sortable: false,
+                search: true,
                 editable: true,
-                formatter: function (cellvalue, options, rowObject) {
-                    var val = rowObject.fechaenviorfp;
-                    if (val != null) {
-                        val = val.substring(0,10);
-                        var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
-                        return fechaok;
-                    } else {
-                        return '';
-                    }
+                hidden: false,
+                formatter: 'date',
+                formatoptions: {
+                    srcformat: 'ISO8601Long',
+                    newformat: 'Y-m-d'
                 },
-                search: false
+                searchoptions: {
+                    dataInit: function (el) {
+                        $(el).datepicker({
+                            language: 'es',
+                            format: 'yyyy-mm-dd',
+                            autoclose: true,
+                            onSelect: function (dateText, inst) {
+                                setTimeout(function () {
+                                    $('#' + subgrid_table_id)[0].triggerToolbar();
+                                }, 100);
+                            }
+                        });
+                    },
+                    sopt: ["eq", "le", "ge"]
+                },
+                editoptions: {
+                    size: 10,
+                    maxlengh: 10,
+                    dataInit: function (element) {
+                        $(element).mask("0000-00-00", {
+                            placeholder: "____-__-__"
+                        });
+                        $(element).datepicker({
+                            language: 'es',
+                            format: 'yyyy-mm-dd',
+                            autoclose: true
+                        })
+                    }
+                }
             },
             // {
             //     label: 'Fecha Solicitud',
@@ -278,24 +368,23 @@ $(document).ready(function () {
                 dataInit: function (elem) {
                     $(elem).width(200);
                 }
-            },
-            {
+            }, {
                 label: 'CUI',
-                name: 'cui',
+                name: 'idcui',
                 jsonmap: "estructuracui.cui",
-                width: 80,
+                width: 90,
                 align: 'center',
                 search: true,
-                sortable: false,
+                sortable: true,
                 editable: true,
                 hidden: false
-            },
-            {
+            }, {
                 label: 'SAP',
                 name: 'sap',
-                width: 80,
+                width: 90,
                 align: 'center',
                 search: false,
+                sortable: false,
                 editable: true,
                 hidden: false,
                 editoptions: {
@@ -305,15 +394,15 @@ $(document).ready(function () {
                         });
                     }
                 }
-            },
-            {
-                label: 'CódigoART',
+            }, {
+                label: 'Código ART',
                 name: 'codigoart',
                 width: 90,
                 align: 'center',
                 search: false,
                 editable: true,
                 hidden: false,
+                sortable: false,
                 editrules: {
                     edithidden: false
                 },
@@ -343,8 +432,7 @@ $(document).ready(function () {
                         }
                     }],
                 }
-            },
-            {
+            }, {
                 label: 'Técnico Responsable',
                 name: 'idtecnico',
                 search: false,
@@ -360,24 +448,23 @@ $(document).ready(function () {
                         }
                     }],
                 }
-            },
-            {
+            }, {
                 label: 'Técnico Responsable',
-                name: 'first_name',
-                width: 170,
+                name: 'idtecnico',
+                width: 180,
                 search: true,
+                align: 'center',
                 editable: false,
                 formatter: returnTecnico,
                 hidden: false
-            },
-            {
+            }, {
                 label: 'Tipo de Contrato',
                 name: 'tipocontrato',
                 search: false,
                 editable: true,
                 hidden: false,
                 align: 'center',
-                width: 115,
+                width: 130,
                 edittype: "custom",
                 editoptions: {
                     custom_value: sipLibrary.getRadioElementValue,
@@ -406,8 +493,7 @@ $(document).ready(function () {
                     }
                     return dato;
                 }
-            },
-            {
+            }, {
                 label: 'Código Programa',
                 name: 'program_id',
                 width: 200,
@@ -423,7 +509,7 @@ $(document).ready(function () {
             {
                 label: 'Descripción',
                 name: 'descripcion',
-                width: 352,
+                width: 250,
                 align: 'left',
                 search: true,
                 editable: true,
@@ -438,49 +524,40 @@ $(document).ready(function () {
                 hidden: false
 
             },
-            {
-                name: 'idclasificacionsolicitud',
-                search: false,
-                editable: true,
-                hidden: true,
-                edittype: "select",
-                editoptions: {
-                    dataUrl: '/sic/parametros/clasificacionsolicitud',
-                    buildSelect: function (response) {
-                        var rowKey = $grid.getGridParam("selrow");
-                        var rowData = $grid.getRowData(rowKey);
-                        var thissid = rowData.idclasificacionsolicitud;
-                        var data = JSON.parse(response);
-                        var s = "<select>";
-                        s += '<option value="0">--Escoger una Clasificación--</option>';
-                        $.each(data, function (i, item) {
+            // {
+            //     name: 'idclasificacionsolicitud',
+            //     search: false,
+            //     editable: true,
+            //     hidden: true,
+            //     edittype: "select",
+            //     editoptions: {
+            //         dataUrl: '/sic/parametros/clasificacionsolicitud',
+            //         buildSelect: function (response) {
+            //             var rowKey = $grid.getGridParam("selrow");
+            //             var rowData = $grid.getRowData(rowKey);
+            //             var thissid = rowData.idclasificacionsolicitud;
+            //             var data = JSON.parse(response);
+            //             var s = "<select>";
+            //             s += '<option value="0">--Escoger una Clasificación--</option>';
+            //             $.each(data, function (i, item) {
 
-                            if (data[i].id == thissid) {
-                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                            } else {
-                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                            }
-                        });
-                        return s + "</select>";
-                    }
-                }
-            },
-            {
-                label: 'Clasificación',
-                name: 'clasificacion',
-                jsonmap: "clasificacion.nombre",
-                width: 89,
-                align: 'center',
-                search: false,
-                editable: true,
-                hidden: false
-            },
+            //                 if (data[i].id == thissid) {
+            //                     s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+            //                 } else {
+            //                     s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+            //                 }
+            //             });
+            //             return s + "</select>";
+            //         }
+            //     }
+            // },
             {
                 label: 'Criticidad',
                 name: 'colornota',
                 index: 'colornota',
                 width: 80,
                 align: "left",
+                sortable: false,
                 editable: true,
                 search: false,
                 editoptions: {
@@ -515,8 +592,7 @@ $(document).ready(function () {
 
                     return '<span class="cellWithoutBackground" style="background-color:' + color + '; display:block; height: 16px;"></span>';
                 }
-            },
-            {
+            }, {
                 label: 'Negociador',
                 name: 'idnegociador',
                 search: false,
@@ -568,41 +644,36 @@ $(document).ready(function () {
                         }
                     }],
                 }
-            },
-            {
+            }, {
                 label: 'Negociador',
-                name: 'negociador',
+                name: 'idnegociador',
                 width: 150,
                 search: true,
                 editable: false,
                 formatter: returnNegociador,
                 hidden: false
-            },
-            {
+            }, {
                 label: 'C.Negociador',
                 name: 'correonegociador',
                 width: 130,
                 hidden: true,
                 search: false,
                 editable: true
-            },
-            {
+            }, {
                 label: 'F.Negociador',
                 name: 'fononegociador',
                 width: 100,
                 hidden: true,
                 search: false,
                 editable: true
-            },
-            {
+            }, {
                 label: 'D.Negociador',
                 name: 'direccionnegociador',
                 width: 150,
                 hidden: true,
                 search: false,
                 editable: true
-            },
-            {
+            }, {
                 name: 'idtipo',
                 search: false,
                 editable: true,
@@ -628,8 +699,7 @@ $(document).ready(function () {
                         return s + "</select>";
                     }
                 }
-            },
-            {
+            }, {
                 name: 'idgrupo',
                 search: false,
                 editable: true,
@@ -644,6 +714,32 @@ $(document).ready(function () {
                         var data = JSON.parse(response);
                         var s = "<select>";
                         s += '<option value="0">--Escoger un Grupo--</option>';
+                        $.each(data, function (i, item) {
+
+                            if (data[i].id == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    }
+                }
+            }, {
+                name: 'idestado',
+                search: false,
+                editable: true,
+                hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/sic/valores/etapa',
+                    buildSelect: function (response) {
+                        var rowKey = $grid.getGridParam("selrow");
+                        var rowData = $grid.getRowData(rowKey);
+                        var thissid = rowData.idestado;
+                        var data = JSON.parse(response);
+                        var s = "<select>";
+                        s += '<option value="0">--Escoger Estado--</option>';
                         $.each(data, function (i, item) {
 
                             if (data[i].id == thissid) {
@@ -670,7 +766,7 @@ $(document).ready(function () {
         autowidth: true,
         //width: 1500,
         sortname: 'colorestado',
-        sortorder: "asc",
+        sortorder: "desc",
         shrinkToFit: false,
         forceFit: true,
         viewrecords: true,
@@ -729,13 +825,17 @@ $(document).ready(function () {
             return 'Error: ' + data.responseText
         },
         beforeSubmit: function (postdata, formid) {
-
+            const regex = /[A-Z]{3}-[A-Z]{2}-([0-9]{2,})(.?)[0-9]{1}$/;
             if (parseInt(postdata.idcui) == 0) {
                 return [false, "CUI: Debe escoger un valor", ""];
             } else if (parseInt(postdata.idtecnico) == 0) {
                 return [false, "Técnico: Debe escoger un valor", ""];
+            } else if (parseInt(postdata.idestado) == 0) {
+                return [false, "Estado: Debe escoger un estado", ""];
             } else if (postdata.codigosolicitud.trim().length == 0) {
                 return [false, "Código de Solicitud: Debe agregar un valor", ""];
+            } else if (!regex.test(postdata.codigosolicitud)) {
+                return [false, "Código de Solicitud: Debe Ingresar valores de este tipo AAA-AA-000 o AAA-AA-000.0", ""];
             } else {
                 return [true, "", ""]
             }
@@ -833,7 +933,7 @@ $(document).ready(function () {
             return 'Error: ' + data.responseText
         },
         beforeSubmit: function (postdata, formid) {
-
+            const regex = /[A-Z]{3}-[A-Z]{2}-([0-9]{2,})(.?)[0-9]{1}$/;
             if (parseInt(postdata.idcui) == 0) {
                 return [false, "CUI: Debe escoger un valor", ""];
             } else if (parseInt(postdata.idtecnico) == 0) {
@@ -842,15 +942,17 @@ $(document).ready(function () {
                 return [false, "Descripción: Debe ingresar una descripción", ""];
             } else if (parseInt(postdata.idnegociador) == 0) {
                 return [false, "Negociador: Debe escoger un valor", ""];
-            } else  if (parseInt(postdata.idclasificacionsolicitud) == 0) {
-                return [false, "Clasificación: Debe escoger un valor", ""];
             } else if (postdata.codigosolicitud.trim().length == 0) {
                 return [false, "Código de Solicitud: Debe agregar un valor", ""];
+            } else if (!regex.test(postdata.codigosolicitud)) {
+                return [false, "Código de Solicitud: Debe Ingresar valores de este tipo AAA-AA-000 o AAA-AA-000.0", ""];
             } else if (parseInt(postdata.idtipo) == 0) {
                 return [false, "Tipo: Debe escoger un valor", ""];
+            } else if (parseInt(postdata.idestado) == 0) {
+                return [false, "Estado: Debe escoger una estado", ""];
             } else if (parseInt(postdata.idgrupo) == 0) {
                 return [false, "Grupo: Debe escoger un valor", ""];
-            } else   {
+            } else {
                 return [true, "", ""]
             }
 
@@ -939,7 +1041,7 @@ $(document).ready(function () {
 
     function showChildGrid(parentRowID, parentRowKey) {
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-        tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Estado</a></li>"
+        tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
         tabs += "<li><a href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
         tabs += "<li><a href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
         tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"

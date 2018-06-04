@@ -24,11 +24,11 @@ entity.belongsTo(models.user, {
 });
 
 var includes = [{
-        model: models.producto
-    },
-    {
-        model: models.user
-    }
+    model: models.producto
+},
+{
+    model: models.user
+}
 ];
 
 function map(req) {
@@ -44,7 +44,7 @@ function map(req) {
 }
 
 
-function listAuto(req, res) {    
+function listAuto(req, res) {
     var page = req.query.page;
     var rowspp = req.query.rows;
     var sidx = req.query.sidx;
@@ -54,66 +54,66 @@ function listAuto(req, res) {
     var proveedor = req.params.proveedor
     var filters = req.query.filters;
     var condition = "";
-  
+
     if (filters) {
-      var jsonObj = JSON.parse(filters);
-      if (JSON.stringify(jsonObj.rules) != '[]') {
-        jsonObj.rules.forEach(function (item) {
-          if (item.data != '0') {
-            if (item.op === 'cn' || item.op === 'eq')
-              if (item.field == 'codautorizacion' ) {//Excepciones en filtros
-                condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
-              } else {
-                condition += 'a.' + item.field + "=" + item.data + " AND ";
-              }
-          }
-        });
-        condition = condition.substring(0, condition.length - 5);
-        logger.debug("***CONDICION:" + condition);
-      }
+        var jsonObj = JSON.parse(filters);
+        if (JSON.stringify(jsonObj.rules) != '[]') {
+            jsonObj.rules.forEach(function (item) {
+                if (item.data != '0') {
+                    if (item.op === 'cn' || item.op === 'eq')
+                        if (item.field == 'codautorizacion') {//Excepciones en filtros
+                            condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
+                        } else {
+                            condition += 'a.' + item.field + "=" + item.data + " AND ";
+                        }
+                }
+            });
+            condition = condition.substring(0, condition.length - 5);
+            logger.debug("***CONDICION:" + condition);
+        }
     }
     var sqlcount;
-    sqlcount = "SELECT count(*)  FROM lic.reserva a "+
-    "LEFT JOIN lic.producto b ON b.id = a.idproducto  "+
-    "LEFT JOIN art_user c ON c.uid=a.idusuario  "+
-    "LEFT JOIN art_user d ON d.uid=a.idusuariojefe "+
-    "WHERE a.estado IN ('Aprobado', 'Autorizado', 'Denegado') ";
-  
+    sqlcount = "SELECT count(*)  FROM lic.reserva a " +
+        "LEFT JOIN lic.producto b ON b.id = a.idproducto  " +
+        "LEFT JOIN art_user c ON c.uid=a.idusuario  " +
+        "LEFT JOIN art_user d ON d.uid=a.idusuariojefe " +
+        "WHERE a.estado IN ('Aprobado', 'Autorizado', 'Denegado') ";
+
     if (filters && condition != "") {
-      sqlcount += " and " + condition + " ";
+        sqlcount += " and " + condition + " ";
     }
-  
+
     var sql;
     sql = "DECLARE @PageSize INT; " +
-      "SELECT @PageSize=" + rowspp + "; " +
-      "DECLARE @PageNumber INT; " +
-      "SELECT @PageNumber=" + page + "; " +
-      "SELECT a.*, b.nombre, c.first_name+' '+c.last_name AS solicitante, d.first_name+' '+d.last_name AS aprobador  "+
-      "FROM lic.reserva a "+
-      "LEFT JOIN lic.producto b ON b.id = a.idproducto "+
-      "LEFT JOIN art_user c ON c.uid=a.idusuario "+
-      "LEFT JOIN art_user d ON d.uid=a.idusuariojefe "+
-      "WHERE a.estado IN ('Aprobado', 'Autorizado', 'Denegado') ";
+        "SELECT @PageSize=" + rowspp + "; " +
+        "DECLARE @PageNumber INT; " +
+        "SELECT @PageNumber=" + page + "; " +
+        "SELECT a.*, a.comentarioautorizacion AS comentarioAutorizacion, b.nombre, c.first_name+' '+c.last_name AS solicitante, d.first_name+' '+d.last_name AS aprobador  " +
+        "FROM lic.reserva a " +
+        "LEFT JOIN lic.producto b ON b.id = a.idproducto " +
+        "LEFT JOIN art_user c ON c.uid=a.idusuario " +
+        "LEFT JOIN art_user d ON d.uid=a.idusuariojefe " +
+        "WHERE a.estado IN ('Aprobado', 'Autorizado', 'Denegado') ";
     if (filters && condition != "") {
-      sql += " AND " + condition + " ";
-      logger.debug("**" + sql + "**");
+        sql += " AND " + condition + " ";
+        logger.debug("**" + sql + "**");
     }
     var sql2 = sql + " ORDER BY a.estado OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
     var records;
     logger.debug("query:" + sql2);
-  
+
     sequelize.query(sqlcount).spread(function (recs) {
-      var records = recs[0].count;
-      var total = Math.ceil(parseInt(recs[0].count) / rowspp);
-      sequelize.query(sql2).spread(function (rows) {
-        return res.json({ records: records, total: total, page: page, rows: rows });
-      }).catch(function (err) {
-        logger.error(err)
-        return res.json({ error_code: 1 });
-      });
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        sequelize.query(sql2).spread(function (rows) {
+            return res.json({ records: records, total: total, page: page, rows: rows });
+        }).catch(function (err) {
+            logger.error(err)
+            return res.json({ error_code: 1 });
+        });
     })
-  }
-  
+}
+
 
 function list(req, res) {
     base.list(req, res, entity, includes, mapper);
@@ -129,14 +129,14 @@ function action(req, res) {
             case 'edit':
                 return base.findById(entity, req.body.id)
                     .then(function (reser) {
-                        if (reser.estado!='Autorizado') {
+                        if (reser.estado != 'Autorizado') {
                             return base.findById(models.producto, req.body.idProducto)
                                 .then(function (prod) {
                                     var updData = {
                                         id: reser.idProducto
                                     }
                                     updData.licReserva = prod.licReserva + reser.numlicencia;
-                                    base.update(models.producto, updData, res);
+                                    base.updateP(models.producto, updData, res);
                                     var hoy = "" + new Date().toISOString();
                                     req.body.codAutoriza = sec;
                                     req.body.idUsuarioAutoriza = req.session.passport.user;
@@ -145,11 +145,6 @@ function action(req, res) {
                                 })
                         }
                     })
-
-
-
-
-
             case 'del':
                 return base.destroy(entity, req.body.id, res);
         }
@@ -161,8 +156,8 @@ function usuariocui(req, res) {
     models.sequelize.query("select b.cui from dbo.art_user a " +
         "join dbo.RecursosHumanos b on a.email = b.emailTrab " +
         "where a.uid = " + req.session.passport.user + " and periodo = (select max(periodo) from dbo.RecursosHumanos)").spread(function (rows) {
-        return res.json(rows);
-    });
+            return res.json(rows);
+        });
 }
 
 module.exports = {
@@ -175,11 +170,11 @@ module.exports = {
 
 function getProductoReserva(req, res) {
     var idFabricante = req.params.idFabricante;
-    var sql = 'select distinct a.id, a.nombre from lic.producto a '+
-            'join lic.reserva b on a.id = b.idproducto';
+    var sql = 'select distinct a.id, a.nombre from lic.producto a ' +
+        'join lic.reserva b on a.id = b.idproducto';
     sequelize.query(sql)
-      .spread(function (rows) {
-        return res.json(rows);
-      });
-  
-  };
+        .spread(function (rows) {
+            return res.json(rows);
+        });
+
+};

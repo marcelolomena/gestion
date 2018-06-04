@@ -314,9 +314,13 @@ function gridCotizaciones2(parentRowID, parentRowKey, suffix) {
                     console.log("ESTAMOS EN NIVEL 1 DE: " + data[0].niveles)
                     nivel = (data[0].niveles);
                     if (parseInt(nivel) > 1) {
-                        $("input#nota").attr("readonly", true);
+                        setTimeout(function () {
+                            $("input#nota").attr("readonly", true);
+                        }, 450);
                     } else {
-                        $("input#nota").attr("readonly", false);
+                        setTimeout(function () {
+                            $("input#nota").attr("readonly", false);
+                        }, 450);
                     }
                 }
             });

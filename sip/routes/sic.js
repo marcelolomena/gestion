@@ -26,7 +26,7 @@ var participantesproveedorController = require('../controllers/sic/participantes
 var cotizacionservicioController = require('../controllers/sic/cotizacionservicio')
 var matrizevaluacionController = require('../controllers/sic/matrizevaluacion')
 var adjudicacionController = require('../controllers/sic/adjudicacion')
-var solicitudcontratoController =  require('../controllers/sic/solicitudcontrato')
+var solicitudcontratoController = require('../controllers/sic/solicitudcontrato')
 var triadaController = require('../controllers/sic/triada');
 var detalleplantillaController = require('../controllers/sic/detalleplantilla2');
 var plantillacuiController = require('../controllers/sic/plantillacui2');
@@ -84,15 +84,21 @@ module.exports = function (passport) {
             
         });
     */
-	
-	router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
-        return res.render('sic/solicitudcotizacion', { user: req.user, data: req.session.passport.sidebar });
+
+    router.get('/sic/solicitudcotizacion', isAuthenticated, function (req, res) {
+        return res.render('sic/solicitudcotizacion', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
 
     router.get('/sic/preguntaproveedor', isAuthenticated, function (req, res) {
-        return res.render('sic/preguntaproveedor', { user: req.user, data: req.session.passport.sidebar });
+        return res.render('sic/preguntaproveedor', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
-	
+
     router.route('/sic/grid_solicitudcotizacion')
         .post(isAuthenticated, solicitudcotizacionController.action)
         .get(isAuthenticated, solicitudcotizacionController.list);
@@ -135,7 +141,7 @@ module.exports = function (passport) {
 
     router.get('/sic/getsession', function (req, res) {
         if (req.session.passport.sidebar[0].rol)
-            return res.json(req.session.passport.sidebar[0].rol);//JSON
+            return res.json(req.session.passport.sidebar[0].rol); //JSON
         else
             return res.send("no session value stored in DB ");
     });
@@ -222,14 +228,20 @@ module.exports = function (passport) {
             
         });
     */
-	router.get('/sic/catalogoclausulas', isAuthenticated, function (req, res) {
-        return res.render('sic/catalogoclausulas', { user: req.user, data: req.session.passport.sidebar });
+    router.get('/sic/catalogoclausulas', isAuthenticated, function (req, res) {
+        return res.render('sic/catalogoclausulas', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
 
     router.get('/sic/claseevaluaciontecnica', isAuthenticated, function (req, res) {
-        return res.render('sic/claseevaluaciontecnica', { user: req.user, data: req.session.passport.sidebar });
+        return res.render('sic/claseevaluaciontecnica', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
-	
+
     router.route('/sic/usuarios_por_rolid/:id')
         .get(isAuthenticated, responsablesController.getUsersByRolId);
 
@@ -345,11 +357,14 @@ module.exports = function (passport) {
             
         });
     */
-	
-	router.get('/sic/toc', isAuthenticated, function (req, res) {
-        return res.render('sic/toc', { user: req.user, data: req.session.passport.sidebar });
+
+    router.get('/sic/toc', isAuthenticated, function (req, res) {
+        return res.render('sic/toc', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
-	
+
     router.route('/sic/grid_toctipo')
         .post(isAuthenticated, tocController.action)
         .get(isAuthenticated, tocController.list);
@@ -445,11 +460,14 @@ module.exports = function (passport) {
             
         });
     */
-	
-	router.get('/sic/tipodocumento', isAuthenticated, function (req, res) {
-        res.render('sic/tipodocumento', { user: req.user, data: req.session.passport.sidebar });
+
+    router.get('/sic/tipodocumento', isAuthenticated, function (req, res) {
+        res.render('sic/tipodocumento', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
-	
+
     router.route('/sic/grid_tipodocumento')
         .post(isAuthenticated, tipodocumentoController.action)
         .get(isAuthenticated, tipodocumentoController.list);
@@ -542,9 +560,12 @@ module.exports = function (passport) {
 
     router.route('/sic/porcentajecriterios/:parentRowKey')
         .get(isAuthenticated, claseevaluaciontecnicaController.porcentajecriterios);
-		
-		router.get('/sic/roles', isAuthenticated, function (req, res) {
-        res.render('sic/rolessic', { user: req.user, data: req.session.passport.sidebar });
+
+    router.get('/sic/roles', isAuthenticated, function (req, res) {
+        res.render('sic/rolessic', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
     /*
         router.get('/rolessic', isAuthenticated, function (req, res) {
@@ -604,11 +625,14 @@ module.exports = function (passport) {
             
         });
     */
-	
-	router.get('/sic/permisos', isAuthenticated, function (req, res) {
-        res.render('sic/permisossic', { user: req.user, data: req.session.passport.sidebar });
+
+    router.get('/sic/permisos', isAuthenticated, function (req, res) {
+        res.render('sic/permisossic', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
-	
+
     router.route('/sic/permisos/list')
         .post(isAuthenticated, permisosController.list);
 
@@ -776,18 +800,18 @@ module.exports = function (passport) {
     router.route('/sic/proveedoressugeridosserviciodesdenota2/:id')
         .get(isAuthenticated, cotizacionservicioController.proveedoressugeridosserviciodesdenota2);
 
-    router.route('/sic/guardarcontrato/:id')
+    router.route('/sic/guardarcontrato/:id/:tipoTransfe')
         .get(isAuthenticated, solicitudcontratoController.guardarcontrato)
-		
-	router.route('/sic/BorrarClausulas/:id/:numero')
+
+    router.route('/sic/BorrarClausulas/:id/:numero')
         .get(isAuthenticated, clausulasController.BorrarClausulas)
-		
-	router.route('/sic/getjustificacion/:nombrefactor/:nota')
+
+    router.route('/sic/getjustificacion/:nombrefactor/:nota')
         .get(isAuthenticated, serviciosController.getjustificacion);
-		
-	router.route('/sic/triada/:id')
+
+    router.route('/sic/triada/:id')
         .get(isAuthenticated, triadaController.list);
-    
+
     router.route('/sic/triada/action')
         .post(isAuthenticated, triadaController.action);
 
@@ -799,19 +823,34 @@ module.exports = function (passport) {
 
     router.route('/sic/cuiproveedores/:id/:idservicio')
         .get(isAuthenticated, plantillacuiController.getCuiProveedores);
-		
-		
-	router.get('/sic/solicitudcontrato', isAuthenticated, function (req, res) {
-        return res.render('sic/solicitudcontrato', { user: req.user, data: req.session.passport.sidebar });
+
+
+    router.get('/sic/solicitudcontrato', isAuthenticated, function (req, res) {
+        return res.render('sic/solicitudcontrato', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
 
     router.get('/sic/solicitudcontratofinal', isAuthenticated, function (req, res) {
-        return res.render('sic/solicitudcontratofinal', { user: req.user, data: req.session.passport.sidebar });
+        return res.render('sic/solicitudcontratofinal', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
-	
-	router.get('/sic/triada', isAuthenticated, function (req, res) {
-        return res.render('sic/triada', { user: req.user, data: req.session.passport.sidebar });
+
+    router.get('/sic/triada', isAuthenticated, function (req, res) {
+        return res.render('sic/triada', {
+            user: req.user,
+            data: req.session.passport.sidebar
+        });
     });
+
+    router.route('/sic/etapa')
+        .get(isAuthenticated, parametrosController.getEtapa);
+
+    router.route('/sic/existeClase/:id')
+        .get(isAuthenticated, serviciosController.existeClase);
 
     return router;
 }

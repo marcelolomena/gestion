@@ -23,7 +23,7 @@ object Login extends Controller {
   def loginUser = Action { implicit request =>
     val sesssionToMaintain = request.session.get("username")
     val utypeSession = request.session.get("utype")
-    val us = UserService.findAllUsers();
+    //val us = UserService.findAllUsers();
 
     /*val act = Activity(ActivityTypes.Program.id, "New Program Test", new Date(), 1, 100)
 		val logs = Activities.saveLog(act)

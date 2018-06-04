@@ -25,10 +25,24 @@ case class ProgramSearch(
     sort_type: Option[String],
     impact_type: Option[String])
 
-case class ProgramMaster(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int],
+case class ProgramMaster(
+program_id: Option[Int], 
+program_type: Int, 
+program_sub_type: Option[Int],
   //program_name: String, program_code: Long, program_description: Option[String],
-  program_name: String, program_code: Long, sap_code: Option [Long], program_description: Option[String], //Cambio  
-  work_flow_status: Integer, demand_manager: Integer, program_manager: Integer, completion_percentage: Option[Double], is_active: Option[Int], planned_hours: Option[Long],internal_state: String, estimated_cost: Option[Long])
+  program_name: String, 
+  program_code: Long, 
+  sap_code: Option [Long], 
+  program_description: Option[String], //Cambio  
+  work_flow_status: Integer, 
+  demand_manager: Integer, 
+  program_manager: Integer, 
+  completion_percentage: Option[Double], 
+  is_active: Option[Int], 
+  planned_hours: Option[Long],
+  internal_state: String, 
+  estimated_cost: Option[Long],
+  clasificacion: Option[String])
 
 object ProgramSearch {
   val programSearch = {
@@ -57,15 +71,17 @@ object ProgramMaster extends CustomColumns {
     get[Option[Int]]("program_id") ~ get[Int]("program_type") ~ get[Option[Int]]("program_sub_type") ~ get[String]("program_name") ~
           get[Long]("program_code") ~ get[Option[Long]]("sap_code") ~ get[Option[String]]("program_description") ~ //cambio
       //get[Long]("program_code") ~ get[Option[String]]("program_description") ~
-      get[Int]("work_flow_status") ~ get[Int]("demand_manager") ~ get[Int]("program_manager") ~ get[Option[Double]]("completion_percentage") ~ get[Option[Int]]("is_active") ~ get[Option[Long]]("planned_hours") ~ get[String]("internal_state") ~ get[Option[Long]]("estimated_cost") map {
+      get[Int]("work_flow_status") ~ get[Int]("demand_manager") ~ get[Int]("program_manager") ~ get[Option[Double]]("completion_percentage") ~ 
+	  get[Option[Int]]("is_active") ~ get[Option[Long]]("planned_hours") ~ 
+	  get[String]("internal_state") ~ get[Option[Long]]("estimated_cost") ~ get[Option[String]]("clasificacion") map {
         //case program_id ~ program_type ~ program_sub_type ~ program_name ~ program_code ~
               case program_id ~ program_type ~ program_sub_type ~ program_name ~ program_code ~ sap_code ~ //cambio
           program_description ~ work_flow_status ~
-          demand_manager ~ program_manager ~ completion_percentage ~ is_active ~ planned_hours ~ internal_state ~ estimated_cost =>
+          demand_manager ~ program_manager ~ completion_percentage ~ is_active ~ planned_hours ~ internal_state ~ estimated_cost ~ clasificacion =>
         //  ProgramMaster(program_id, program_type, program_sub_type, program_name, program_code,
             ProgramMaster(program_id, program_type, program_sub_type, program_name, program_code, sap_code, //cambio
             program_description, work_flow_status,
-            demand_manager, program_manager, completion_percentage, is_active, planned_hours, internal_state,estimated_cost)
+            demand_manager, program_manager, completion_percentage, is_active, planned_hours, internal_state,estimated_cost,clasificacion)
       }
   }
 }
@@ -170,15 +186,15 @@ object ProgramMembers {
   }
 }
 
-case class ProgramInternalMembers(id: Option[Int], program_id: Int, role_id: Int, member_id: Int, is_active: Int,estimated_time : Double,hours : Double,diferencia : Double)
+case class ProgramInternalMembers(id: Option[Int], program_id: Int, role_id: Int, member_id: Int, is_active: Int,estimated_time : Double,ev : Double,pv : Double,hours : Double,diferencia : Double)
 
 object ProgramInternalMembers {
 
   val program_internal_members = {
     get[Option[Int]]("id") ~ get[Int]("program_id") ~ get[Int]("role_id") ~ get[Int]("member_id") ~
-      get[Int]("is_active") ~ get[Double]("estimated_time") ~ get[Double]("hours") ~ get[Double]("diferencia") map {
-        case id ~ program_id ~ role_id ~ member_id ~ is_active ~ estimated_time ~ hours ~ diferencia=>
-          ProgramInternalMembers(id, program_id, role_id, member_id, is_active,estimated_time,hours,diferencia)
+      get[Int]("is_active") ~ get[Double]("estimated_time") ~ get[Double]("ev") ~ get[Double]("pv") ~ get[Double]("hours") ~ get[Double]("diferencia") map {
+        case id ~ program_id ~ role_id ~ member_id ~ is_active ~ estimated_time ~ ev ~ pv ~ hours ~ diferencia=>
+          ProgramInternalMembers(id, program_id, role_id, member_id, is_active,estimated_time,ev, pv,hours,diferencia)
       }
   }
 }
@@ -285,7 +301,7 @@ object ProgramStatus {
 }
 
 case class Programs(program_id: Option[Int], program_type: Int, program_sub_type: Option[Int], program_name: String,
-  program_code: Long, program_description: Option[String], work_flow_status: Integer, demand_manager: Integer,
+  program_code: Long, program_description: Option[String], work_flow_status: Integer, demand_manager: Integer, clasificacion: String,
   program_manager: Integer, program_details: ProgramDetail, program_dates: ProgramDate, is_active: Option[Int], planned_hours: Option[Long], internal_state:String,estimated_cost: Option[Long])
 
 object Programs {
@@ -725,4 +741,52 @@ object ProgramUserCapacity {
     }
   }
   implicit val capacityWrites = Json.writes[ProgramUserCapacity]
+}
+
+case class Panels (id:Int, id_program:Int, name:String, description:String)
+object Panels {
+
+  val panel = {
+      get[Int]("id") ~
+      get[Int]("id_program") ~
+      get[String]("name") ~
+      get[String]("description") map {
+      case id ~ id_program ~ name ~ description => Panels(id,id_program,name,description)
+    }
+  }
+  implicit val panelList = Json.writes[Panels]
+}
+
+case class PanelsProject (id:Int, id_project:Int, id_program_panel:Int, project:String)
+object PanelsProject {
+
+  val panelproj = {
+      get[Int]("id") ~
+      get[Int]("id_project") ~
+      get[Int]("id_program_panel") ~
+      get[String]("project") map {
+      case id ~ id_project ~ id_program_panel ~ project => PanelsProject(id,id_project,id_program_panel,project)
+    }
+  }
+  implicit val panelprojList = Json.writes[PanelsProject]
+}
+case class ErrorPanel(
+                          error_code: Int,
+                          error_text: String,
+                          panel_id: Int)
+object ErrorPanel {
+  val error = {
+    get[Int]("error_code") ~
+      get[String]("error_text") ~
+      get[Int]("panel_id") map {
+      case error_code ~
+        error_text ~
+        panel_id => ErrorPanel(
+        error_code,
+        error_text,
+        panel_id)
+    }
+
+  }
+  implicit val errorWrites = Json.writes[ErrorPanel]
 }

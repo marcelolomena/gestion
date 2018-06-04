@@ -149,6 +149,9 @@ $(document).ready(function () {
                         async: false,
                         success: function (j) {
                             dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                        },
+                        error: function (errorThrown) {
+                            dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
                         }
                     });
                 }, 2000);
@@ -174,6 +177,37 @@ $(document).ready(function () {
                         async: false,
                         success: function (j) {
                             dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                        },
+                        error: function (errorThrown) {
+                            dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
+                        }
+                    });
+                }, 2000);
+            });
+        }
+    });
+
+    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-repeat",
+        title: "Refrescar Chubi",
+        position: "last",
+        onClickButton: function () {
+            var dialog = bootbox.dialog({
+                title: 'Procedimiento Chequeo de Alertas',
+                message: '<p><i class="fa fa-spin fa-spinner"></i> Actualizando...</p>'
+            });
+            dialog.init(function () {
+                setTimeout(function () {
+                    $.ajax({
+                        url: "/lic/actualizarChubi",
+                        dataType: 'json',
+                        async: false,
+                        success: function (j) {
+                            dialog.find('.bootbox-body').html('Fue actualizado la suite de productos!');
+                        },
+                        error: function (errorThrown) {
+                            dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
                         }
                     });
                 }, 2000);

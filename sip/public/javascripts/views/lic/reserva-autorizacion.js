@@ -207,7 +207,7 @@
             },
             {
                 label: 'Estado Autorización',
-                name: 'estadoautorizacion',
+                name: 'estadoAutorizacion',
                 width: 130,
                 align: 'center',
                 editable: true,
@@ -250,7 +250,7 @@
             // },
             {
                 label: 'Comentario de Autorización',
-                name: 'comentarioautorizacion',
+                name: 'comentarioAutorizacion',
                 width: 300,
                 hidden: false,
                 editable: true,

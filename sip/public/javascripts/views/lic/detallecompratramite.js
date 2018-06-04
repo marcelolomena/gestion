@@ -23,6 +23,31 @@ function renderGrid(loadurl, tableId) {
             search: false
         },
         {
+            label: 'Estado',
+            name: 'estado',
+            width: 90,
+            align: 'center',
+            editable: false,
+            edittype: "custom",
+            // editoptions: {
+            //     custom_value: sipLibrary.getRadioElementValue,
+            //     custom_element: sipLibrary.radioElemCompraTramite,
+            //     defaultValue: "En Trámite",
+            // },
+            formatter: function (cellvalue, options, rowObject) {
+                var dato = '';
+                var val = rowObject.estado;
+                if (val == 1) {
+                    dato = 'En Trámite';
+
+                } else if (val == 0) {
+                    dato = 'Recepcionado';
+                }
+                return dato;
+            },
+            search: false
+        },
+        {
             label: 'Fabricante',
             name: 'idFabricante',
             jsonmap: 'fabricante.nombre',
@@ -145,7 +170,7 @@ function renderGrid(loadurl, tableId) {
                                     $("input#otroFabricante").val("");
                                 }
                             }
-                        });  
+                        });
                     }
                 }]
             }
@@ -266,10 +291,10 @@ function renderGrid(loadurl, tableId) {
                                     $("input#otroProducto").val("");
                                 }
                             }
-                        });  
+                        });
                     }
                 }]
-            }          
+            }
         },
         {
             label: 'Fecha Inicio',
@@ -481,19 +506,20 @@ function renderGrid(loadurl, tableId) {
         return dia + "-" + mes + "-" + anio;
     }
 
-    function beforeSubmitDel(postdata, formid) {
-        var rowData = $table.getRowData($table.getGridParam('selrow'));
-        var thissid = rowData.estado;
+    // function beforeSubmitDel(postdata, formid) {
+    //     var rowData = $table.getRowData($table.getGridParam('selrow'));
+    //     var thissid = rowData.estado;
 
 
-        if (thissid == 'Recepcionado') {
-            return [false, 'el producto esta recepcionado, por lo tanto no se va a eliminar.', ''];
-        } else {
-            return [true, '', ''];
-        }
-    }
+    //     if (thissid == 'Recepcionado') {
+    //         return [false, 'el producto esta recepcionado, por lo tanto no se va a eliminar.', ''];
+    //     } else {
+    //         return [true, '', ''];
+    //     }
+    // }
 
     function beforeSubmit(postdata, formid) {
+        var err = 1;
         if (!(postdata.idFabricante || postdata.otroFabricante)) {
             return [false, 'Debe seleccionar Fabricante o ingresar Otro Fabricante', ''];
         }
@@ -502,7 +528,17 @@ function renderGrid(loadurl, tableId) {
         }
         var rowData = $table.getRowData($table.getGridParam('selrow'));
         var thissid = rowData.estado;
-
+        var idrecepci = rowData.id
+        $.ajax({
+            type: "GET",
+            url: '/lic/existeRecepcion/' + idrecepci,
+            async: false,
+            success: function (data) {
+                if (data.records == 0) {
+                    err = 0;
+                }
+            }
+        });
         var f1 = postdata.fechaInicio;
         var f2 = postdata.fechaTermino;
         var f3 = postdata.fechaControl;
@@ -518,26 +554,12 @@ function renderGrid(loadurl, tableId) {
             return [false, 'La fecha de Control debe ser mayor a la fecha de Inicio'];
         } else if (thissid == 'Recepcionado') {
             return [false, 'Esta compra ya está recepcionado!'];
+        } else if (err == 0) {
+            return [false, 'Debe recepcionar la compra en Detalle Recepción', ''];
         } else {
             return [true, '', ''];
         }
     }
-
-    function beforeShowForm(form) {
-        var rowData = $table.getRowData($table.getGridParam('selrow'));
-        var thissid = rowData.estado;
-        if (thissid == 'Recepcionado') {
-            bootbox.alert({
-                message: "el producto fue recepcionado, por lo tanto no se va a eliminar.",
-                size: 'small'
-
-            });
-            return [true, "listo", ""];
-        }
-
-    }
-
-    grid.prmDel.beforeSubmit = beforeSubmitDel;
     grid.prmAdd.beforeSubmit = beforeSubmit;
     grid.prmEdit.beforeSubmit = beforeSubmit;
     grid.prmEdit.onInitializeForm = function (formid, action) {
@@ -550,6 +572,13 @@ function renderGrid(loadurl, tableId) {
             }, 500);
         }
     };
+    grid.prmAdd.onInitializeForm = function (formid, action) {
+        if (action === 'add') {
+            setTimeout(function () {
+                $(':radio:not(:checked)').attr("disabled", true);
+            }, 500);
+        }
+    }
     grid.build();
 }
 

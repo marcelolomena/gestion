@@ -5,7 +5,6 @@ import java.util.Date
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
 import org.json.JSONObject
-import anorm.NotAssigned
 import art_forms.ARTForms
 import models.Activity
 import models.ActivityTypes

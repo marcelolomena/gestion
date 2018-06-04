@@ -1,20 +1,12 @@
 package controllers.Frontend
 
-import anorm.NotAssigned
 import java.util.Date
-import java.text.SimpleDateFormat
-//import org.joda.time.DateTime
-//import org.joda.time.DateTimeConstants
+
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONObject
+import org.json.JSONArray
 import art_forms.ARTForms
-import models.Activity
-import models.ActivityTypes
-import models.ProgramDate
-import models.ProgramDetail
-import models.ProgramMaster
-import models.Programs
-import play.api.data.Form
+import models._
 import play.api.mvc.Action
 import play.api.mvc.Controller
 import services.DepartmentService
@@ -26,62 +18,32 @@ import services.TimesheetService
 import services.UserService
 import services.DocumentService
 import services.DistributionTimeSheetService
-import models.VersionDetails
-import java.io._
-import services.TaskService
-import services.SubTaskServices
-import models.Project
-import models.SubTaskMaster
-import scala.util.Random
 import services.GenericProjectService
 import services.GenericService
-import models.Tasks
-import services.TaskService
-import models.UserSetting
-import java.text.SimpleDateFormat
-import java.io.FileOutputStream
 import services.TaskService
 import services.SubTaskServices
-import java.util.Calendar
-import utils.ExportToExcel
 import java.text.SimpleDateFormat
 import java.util.Calendar
+
 import utils.ExportToExcel
 import services.SubTypeService
 import services.ProgramTypeService
 import services.UserRoleService
-import models.Baseline
 import play.libs.Json
-import models.ProgramMembers
 import services.ProgramMemberService
-import models.ProgramMembers
-import models.SAPMaster
 import services.SAPServices
 import services.BudgetTypeService
-import models.SAPMaster
-import models.Expenditure
-import models.Investment
-import models.SAPMaster
-import models.SAP
 import play.api._
-import play.api.mvc._
-//import play.api.libs.json
-import play.api.libs.json._
+
 import scala.math.BigDecimal.RoundingMode
-import models.ProgramStatus
 import services.EarnValueService
-import models.SpiCpiCalculations
 import services.SpiCpiCalculationsService
-import models.RiskManagement
-import models.RiskManagementMaster
-import models.RiskManagementIssue
-import java.util.TreeMap
-import models.riskParentType
 import services.RiskService
-import models.ProgramDates
-import models.ProgramMembersExternal
 import services.ProgramMemberExternalService
 import services.ImpactTypeService
+
+import scala.collection.mutable
+import play.api.mvc.AnyContent
 
 /**
  * This will have program and project details..
@@ -401,6 +363,7 @@ object Program extends Controller {
       val uId = Integer.parseInt(request.session.get("uId").get)
       val utype = Integer.parseInt(request.session.get("utype").get)
       val program = ProgramService.findProgramMasterDetailsById(programId)
+	  play.Logger.debug(program.toString)
       val statusWorkflow = ProgramTypeService.findWorkflowByProgramId(programId)
       //val listStatus = ProgramService.findAllStatus(programId)
 
@@ -530,8 +493,10 @@ object Program extends Controller {
       }
 
       var programType = new java.util.LinkedHashMap[String, String]()
-      var programtype = ProgramTypeService.findAllProgramTypeList();
-
+      //var programtype = ProgramTypeService.findAllProgramTypeList();
+	  //RRM:Agrega cambio de tipos de programas por perfil
+	  println("Profile:" + request.session.get("user_profile").get)
+	  var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);
       for (s <- programtype) {
         programType.put(s.id.get.toString, s.program_type)
       }
@@ -542,7 +507,9 @@ object Program extends Controller {
         divisionMap.put(d.dId.get.toString(), d.division)
       }
 
-      var impacttype = ImpactTypeService.findAllImpactTypeList();
+	  //RRM:Agrega cambio de tipos de impactos por perfil
+      //var impacttype = ImpactTypeService.findAllImpactTypeList();
+	  var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);
       var impacttypeMap = new java.util.LinkedHashMap[String, String]()
       for (s <- impacttype) {
         impacttypeMap.put(s.id.get.toString, s.impact_type)
@@ -579,7 +546,10 @@ object Program extends Controller {
           gerenciasMap.put(g.dId.get.toString(), g.genrencia)
         }
       }
-
+	  /*val gerencias = GenrenciaService.findAllGenrencias
+		for (g <- gerencias) {
+		  gerenciasMap.put(g.dId.get.toString(), g.genrencia)
+		}	 */ 
       Ok(views.html.frontend.program.addNewProgram(ARTForms.programForm, program_code, usersMap, divisionMap, gerenciasMap, departmentsMap, programSubType, programType, workflowStatusValues, impacttypeMap)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
@@ -591,44 +561,47 @@ object Program extends Controller {
    * save program details...
    */
   def saveNewProgram = Action { implicit request =>
+    println("*****saveNewProgram")
     val count = ProgramService.findAllProgramList.size
     val today = Calendar.getInstance()
     today.setTime(new Date())
     val program_code = "20150101"
 
-    var workflowStatusValues = new java.util.HashMap[String, String]()
+    val workflowStatusValues = new java.util.LinkedHashMap[String, String]()
     for (d <- ProgramTypeService.findAllWorkflowStatus) {
       workflowStatusValues.put(d.id.get.toString, d.workflow_status.toString())
     }
 
-    var programSubType = new java.util.HashMap[String, String]()
-    var subtype = SubTypeService.findAllSubTypeList();
+    val programSubType = new java.util.LinkedHashMap[String, String]()
+    val subtype = SubTypeService.findAllSubTypeList();
     for (s <- subtype) {
       programSubType.put(s.id.get.toString, s.sub_type)
     }
 
-    var programType = new java.util.HashMap[String, String]()
+    val programType = new java.util.LinkedHashMap[String, String]()
 
-    var programtype = ProgramTypeService.findAllProgramTypeList();
+    //val programtype = ProgramTypeService.findAllProgramTypeList();
+	var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);	
     for (s <- programtype) {
       programType.put(s.id.get.toString, s.program_type)
     }
 
-    var impacttype = ImpactTypeService.findAllImpactTypeList();
-    var impacttypeMap = new java.util.HashMap[String, String]()
+    //val impacttype = ImpactTypeService.findAllImpactTypeList();
+	var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);	
+    val impacttypeMap = new java.util.LinkedHashMap[String, String]()
     for (s <- impacttype) {
       impacttypeMap.put(s.id.get.toString, s.impact_type)
     }
 
     val divisions = DivisionService.findAllDivisions
-    var divisionMap = new java.util.HashMap[String, String]()
+    val divisionMap = new java.util.LinkedHashMap[String, String]()
     for (d <- divisions) {
       divisionMap.put(d.dId.get.toString(), d.division)
     }
 
-    var users = UserService.findAllDemandManager();
+    val users = UserService.findAllDemandManager();
 
-    var usersMap = new java.util.HashMap[String, String]()
+    val usersMap = new java.util.LinkedHashMap[String, String]()
     for (u <- users) {
       usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
     }
@@ -646,7 +619,7 @@ object Program extends Controller {
     if (!divisionObj.isEmpty) {
       division_Id = divisionObj.apply(0).dId.get
     }
-    var gerenciasMap = new java.util.HashMap[String, String]()
+    var gerenciasMap = new java.util.LinkedHashMap[String, String]()
     if (division_Id == 0) {
       val gerencias = GenrenciaService.findAllGenrencias
 
@@ -664,9 +637,10 @@ object Program extends Controller {
     old_form.fold(
       // Form has errors, redisplay it
       errors => {
+	    println("***** VALIDA Form:"+old_form)
         val theForm = ProgramService.validateForm(old_form, "")
 
-        var departmentsMap = new java.util.HashMap[String, String]()
+        var departmentsMap = new java.util.LinkedHashMap[String, String]()
         if (!old_form.data.get("program_details.management").isEmpty && !old_form.data.get("program_details.management").get.isEmpty()) {
           var gerencia_id = old_form.data.get("program_details.management").get
           val departments = DepartmentService.findAllDepartmentListByGenrencia(gerencia_id)
@@ -679,9 +653,11 @@ object Program extends Controller {
 
       },
       program => {
+	    println("*****ANTES theForm:")
         val theForm = ProgramService.validateForm(ARTForms.programForm.fill(program), "")
+		println("*****theForm:"+theForm)
         if (theForm.hasErrors) {
-          var departmentsMap = new java.util.HashMap[String, String]()
+          var departmentsMap = new java.util.LinkedHashMap[String, String]()
           if (!program.program_details.management.isEmpty) {
             var gerencia_id = program.program_details.management.get.toString()
             val departments = DepartmentService.findAllDepartmentListByGenrencia(gerencia_id)
@@ -694,6 +670,8 @@ object Program extends Controller {
         } else {
 
           val last_program = ProgramService.insertProgramDetails(program)
+          //RRM:Agrega programa en tabla art_program_management
+          ProgramService.saveProgramManagement(last_program,1);
 
           val dm = program.demand_manager
           val pms = ProgramMembers(None, last_program.toInt, dm, 7, 0, "")
@@ -702,11 +680,15 @@ object Program extends Controller {
 
           ///NUEVO PARA RIESGO
           val user_id = Integer.parseInt(request.session.get("uId").get)
-          val ret = createInitialRisk(user_id, last_program, 0)
+          //RRM crea los 10 riesgos más frecuentes asociados al programa
+          Logger.debug("******Creando riesgos:"+last_program+", "+user_id);
+          RiskService.createAutomaticRisk(last_program, user_id)
+          //val kaka=createDefaultListRisks(user_id, last_program, 0)
+          /*val ret = createInitialRisk(user_id, last_program, 0)
           if (ret == 1)
-            println("FRACASO AL CREAR RIESGOS!!!")
+            Logger.debug("FRACASO AL CREAR RIESGOS!!!")
            else
-            println("EXITO AL CREAR RIESGOS!!!")
+            Logger.debug("EXITO AL CREAR RIESGOS!!!")*/
           ///FIN RIESGO
           /**
            * Default project of type Initiative and its tasks...
@@ -874,12 +856,173 @@ object Program extends Controller {
       })
   }
 
+  def createDefaultListRisks(user_id: Integer, parent_id: Long, parent_type: Integer): Long = {
+      try {
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : user_id" + user_id)
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_id" + parent_id)
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_type" + parent_type)
+        implicit val fullRisks = new mutable.MutableList[RiskManagementMaster]()
+
+        val risk_master_1 = RiskManagementMaster(Option(0),
+          Option(parent_id.toInt),
+          Option(parent_type),
+          "Planificación poco precisa", //name
+          "Estimaciones con errores superiores a un umbral predefinido para el tipo de proyecto", //risk.cause
+          "Cifras de esfuerzo por entregables han mostrado desviaciones superiores a ese umbral", //risk.event
+          "Cifras de Valor planificado no coinciden con valor ganado real y un análisis causa efecto muestra errores de planificación. Impacto principal es en atrasos", //risk.imapct
+          11, //risk.risk_category
+          "0", //risk.variable_imapact
+          0, //risk.probablity_of_occurence
+          0, //risk.quantification
+          0, //risk.strategic_reply
+          user_id, //risk.responsible
+          Option(""), //risk.reply_action
+          Option(""), //risk.configuration_plan
+          Option(""),
+          new Date(), //risk.risk_clouser_date
+          Option(user_id),
+          Option(new Date()),
+          Option(new Date()),
+          1, //risk.risk_state
+          82 //risk.sub_category
+        )
+
+        fullRisks+=risk_master_1
+
+        val risk_master_2 = RiskManagementMaster(Option(0),
+          Option(parent_id.toInt),
+          Option(parent_type),
+          "Cambio imprevisto de Alcance", //name
+          "La unidad Usuaria informa de necesidad de hacer cambios al alcance, indicando motivaciones", //risk.cause
+          "El riesgo se evidencia al iniciar pruebas unitarias", //risk.event
+          "Impacto en alcance y en calidad del producto. Significa hacer un nuevo proceso de planificación", //risk.imapct
+          1, //risk.risk_category
+          "0", //risk.variable_imapact
+          0, //risk.probablity_of_occurence
+          0, //risk.quantification
+          0, //risk.strategic_reply
+          user_id, //risk.responsible
+          Option(""), //risk.reply_action
+          Option(""), //risk.configuration_plan
+          Option(""),
+          new Date(), //risk.risk_clouser_date
+          Option(user_id),
+          Option(new Date()),
+          Option(new Date()),
+          1, //risk.risk_state
+          22 //risk.sub_category
+        )
+
+        fullRisks+=risk_master_2
+
+        val risk_master_3 = RiskManagementMaster(Option(0),
+          Option(parent_id.toInt),
+          Option(parent_type),
+          "Avance muy lento", //name
+          "Baja productividad del equipo y/o malas estimaciones iniciales de plazos", //risk.cause
+          "Índice de valor ganado menor que 1 en 4 o más controles consecutivos y sin proyecciones de recuperación", //risk.event
+          "Atrasos del proyecto causa problemas en unidad cliente del producto", //risk.imapct
+          11, //risk.risk_category
+          "0", //risk.variable_imapact
+          0, //risk.probablity_of_occurence
+          0, //risk.quantification
+          0, //risk.strategic_reply
+          user_id, //risk.responsible
+          Option(""), //risk.reply_action
+          Option(""), //risk.configuration_plan
+          Option(""),
+          new Date(), //risk.risk_clouser_date
+          Option(user_id),
+          Option(new Date()),
+          Option(new Date()),
+          1, //risk.risk_state
+          82 //risk.sub_category
+        )
+
+        fullRisks+=risk_master_3
+
+        val risk_master_4 = RiskManagementMaster(Option(0),
+          Option(parent_id.toInt),
+          Option(parent_type),
+          "Capacidad Insuficiente de Fábricas", //name
+          "Alguna de las fábricas involucradas no tienen disponibilidad para las fechas indicadas en el plan", //risk.cause
+          "Fábrica involucrada en el plan indica la no posibilidad de producción para las fechas indicadas", //risk.event
+          "Impacto directo en los plazos", //risk.imapct
+          12, //risk.risk_category
+          "0", //risk.variable_imapact
+          0, //risk.probablity_of_occurence
+          0, //risk.quantification
+          0, //risk.strategic_reply
+          user_id, //risk.responsible
+          Option(""), //risk.reply_action
+          Option(""), //risk.configuration_plan
+          Option(""),
+          new Date(), //risk.risk_clouser_date
+          Option(user_id),
+          Option(new Date()),
+          Option(new Date()),
+          1, //risk.risk_state
+          106 //risk.sub_category
+        )
+
+        fullRisks+=risk_master_4
+
+        val risk_master_5 = RiskManagementMaster(Option(0),
+          Option(parent_id.toInt),
+          Option(parent_type),
+          "Requerimientos Incompletos", //name
+          "Gestión de requerimientos", //risk.cause
+          "El riesgo se evidencia al gestionar el alcance y evidenciar funcionalidades faltantes", //risk.event
+          "Impacto en alcance y en calidad del producto", //risk.imapct
+          1, //risk.risk_category
+          "0", //risk.variable_imapact
+          0, //risk.probablity_of_occurence
+          0, //risk.quantification
+          0, //risk.strategic_reply
+          user_id, //risk.responsible
+          Option(""), //risk.reply_action
+          Option(""), //risk.configuration_plan
+          Option(""),
+          new Date(), //risk.risk_clouser_date
+          Option(user_id),
+          Option(new Date()),
+          Option(new Date()),
+          1, //risk.risk_state
+          22 //risk.sub_category
+        )
+
+        fullRisks+=risk_master_5
+
+
+        for (i <- 0 to fullRisks.length-1) {
+          Logger.debug("el monito : " + fullRisks.lift(i).toString)
+
+        }
+
+
+          /*
+                  val last = RiskService.insertRisk(risk_master)
+
+                  if (last.isWhole()) {
+                    val risk_project_id = RiskService.createRiskManagementProject(parent_id.toString(), parent_type, last.toString())
+                  }
+          */
+
+    } catch {
+      case e: Exception => return 1
+    }
+    return 0
+
+  }
+
   def createInitialRisk(user_id: Integer, parent_id: Long, parent_type: Integer): Long = {
     try {
       val projectTypes = GenericProjectService.findProjectTypeDetailsByDescription(0);
-      println(projectTypes)
+      Logger.debug("EN createInitialRisk:"+projectTypes)
       if (!projectTypes.isEmpty) {
-        println("ENTRO!!")
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : user_id" + user_id)
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_id" + parent_id)
+        Logger.debug("ENTRO A CREAR LOS RIESGOS POR DEFAULT : parent_type" + parent_type)
         var tasksDependents = new java.util.HashMap[Integer, Long]()
         val genericTasks = GenericService.findGenericProjectTypeTasks(projectTypes.get.id.get.toString)
         var isBaselined = false
@@ -946,12 +1089,14 @@ object Program extends Controller {
       }
 
       var programType = new java.util.LinkedHashMap[String, String]()
-      var programtype = ProgramTypeService.findAllProgramTypeList();
+      //var programtype = ProgramTypeService.findAllProgramTypeList();
+	  var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);	  
       for (s <- programtype) {
         programType.put(s.id.get.toString, s.program_type)
       }
 
-      var impacttype = ImpactTypeService.findAllImpactTypeList();
+      //var impacttype = ImpactTypeService.findAllImpactTypeList();
+	  var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);
       var impacttypeMap = new java.util.LinkedHashMap[String, String]()
       for (s <- impacttype) {
         impacttypeMap.put(s.id.get.toString, s.impact_type)
@@ -999,6 +1144,11 @@ object Program extends Controller {
           gerenciasMap.put(g.dId.get.toString(), g.genrencia)
         }
       }
+      /*  val gerencias = GenrenciaService.findAllGenrencias
+
+        for (g <- gerencias) {
+          gerenciasMap.put(g.dId.get.toString(), g.genrencia)
+        }	  */
 
       if (!programDetails.get.management.isEmpty) {
         val dep = programDetails.get.management
@@ -1011,7 +1161,15 @@ object Program extends Controller {
       val pDetail = ProgramDetail(programDetails.get.devison, programDetails.get.management, programDetails.get.department, programDetails.get.impact_type, programDetails.get.business_line, programDetails.get.sap_code)
       val pDate = ProgramDate(programDates.get.initiation_planned_date, programDates.get.creation_date, programDates.get.closure_date.getOrElse(new Date), programDates.get.release_date)
 
-      val progrm = Programs(program.get.program_id, program.get.program_type, program.get.program_sub_type, program.get.program_name, program.get.program_code, program.get.program_description, program.get.work_flow_status, program.get.demand_manager: Integer, program.get.program_manager, pDetail, pDate, program.get.is_active, program.get.planned_hours, program.get.internal_state, program.get.estimated_cost)
+      val progrm = Programs(
+	  program.get.program_id,
+	  program.get.program_type, 
+	  program.get.program_sub_type, 
+	  program.get.program_name, 
+	  program.get.program_code, 
+	  program.get.program_description,
+	  program.get.work_flow_status,
+	  program.get.demand_manager: Integer, program.get.clasificacion.getOrElse(""), program.get.program_manager, pDetail, pDate, program.get.is_active, program.get.planned_hours, program.get.internal_state, program.get.estimated_cost)
 
       var users = UserService.findAllDemandManager();
 
@@ -1046,7 +1204,8 @@ object Program extends Controller {
 
     var programType = new java.util.HashMap[String, String]()
 
-    var programtype = ProgramTypeService.findAllProgramTypeList();
+    //var programtype = ProgramTypeService.findAllProgramTypeList();
+	var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);	  	
     for (s <- programtype) {
       programType.put(s.id.get.toString, s.program_type)
     }
@@ -1064,7 +1223,8 @@ object Program extends Controller {
       usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
     }
 
-    var impacttype = ImpactTypeService.findAllImpactTypeList();
+    //var impacttype = ImpactTypeService.findAllImpactTypeList();
+	var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);
     var impacttypeMap = new java.util.HashMap[String, String]()
     for (s <- impacttype) {
       impacttypeMap.put(s.id.get.toString, s.impact_type)
@@ -1098,6 +1258,7 @@ object Program extends Controller {
 
     oldForm.fold(
       errors => {
+		play.Logger.debug(errors.toString)
         val divisionObj = DivisionService.findDivisionByNameActiveAndInactive("Division Operaciones y Tecnologia")
 
         var division_Id = 0
@@ -1161,6 +1322,8 @@ object Program extends Controller {
 
           val dm = program.demand_manager
           val old_program_data = ProgramService.findProgramMasterDetailsById(id)
+          //RRM: Agrega registro de cambio en baseline
+          val programact = ProgramService.findProgramMasterDetailsById(id);
 
           var programDates = ProgramService.findProgramDateDetailsById(id)
           ProgramService.updateProgram(id, program)
@@ -1200,6 +1363,19 @@ object Program extends Controller {
           if (program.program_dates.release_date != null) {
             releaseDateAfterUpdate = program.program_dates.release_date
           }
+		  
+
+			//RRM: Agrega registro de cambio en baseline 
+			var changeState = new JSONArray();
+			var changeStateObject = new JSONObject();
+			changeStateObject.put("fieldName", "programs_hours");
+			changeStateObject.put("org_value", programact.get.planned_hours.get);
+			println("planned_hours: " + program.planned_hours)
+			changeStateObject.put("new_value", program.planned_hours.get);
+			changeState.put(changeStateObject);  
+			val baseline = Baseline(None, changeState.toString(), Integer.parseInt(request.session.get("uId").get), new Date(), "program", Integer.parseInt(id));
+			Baseline.insert(baseline);		  
+			
           ProgramService.programBasline(programDates, initiationPalnnedDateAfterUpdate, clouserDateAfterUpadate, releaseDateAfterUpdate, request.session.get("uId").get, id)
           Redirect(routes.Program.programDetails(id))
         }
@@ -1370,6 +1546,49 @@ object Program extends Controller {
     Ok(node.toString())
   }
   
+  /**
+   * calculate earn value for project in panel defined by user
+   */
+  def calculateProgramEarnValueActionPanel(id: String, program:String ) = Action { implicit request =>
+
+    var node = new JSONObject()
+
+    if (id == "0"){
+      var calculos = SpiCpiCalculationsService.findIndicators(program, 2)
+      for (s <- calculos) {
+
+        node.put("EV", s.ev + " hrs")
+        node.put("PV", s.pv + " hrs")
+        node.put("AC", s.ac + " hrs")
+        node.put("CPI", s.cpi)
+        node.put("SPI", s.spi)
+        node.put("ETC", s.etc + " hrs")
+        node.put("EAC", s.eac + " hrs")
+        node.put("PAI", s.pai + " %")
+        node.put("PAE", s.pae + " %")
+        node.put("HP", s.hp + " hrs")
+        node.put("HA", s.ha + " hrs")
+      }
+    } else {
+      var calculos = SpiCpiCalculationsService.findIndicatorsPanel(id)
+      for (s <- calculos) {
+
+        node.put("EV", s.ev + " hrs")
+        node.put("PV", s.pv + " hrs")
+        node.put("AC", s.ac + " hrs")
+        node.put("CPI", s.cpi)
+        node.put("SPI", s.spi)
+        node.put("ETC", s.etc + " hrs")
+        node.put("EAC", s.eac + " hrs")
+        node.put("PAI", s.pai + " %")
+        node.put("PAE", s.pae + " %")
+        node.put("HP", s.hp + " hrs")
+        node.put("HA", s.ha + " hrs")
+      }
+    }
+    Ok(node.toString())
+  }
+  
   def calculateProgramEarnValueActionpro(id: String) = Action { implicit request =>
 
     var node = new JSONObject()
@@ -1387,7 +1606,56 @@ object Program extends Controller {
       node.put("PAE", s.pae + " %")
       node.put("HP", s.hp + " hrs")
       node.put("HA", s.ha + " hrs")
+	  //RRM
+	  node.put("AGI", s.ev/s.hp*100)
+	  node.put("AGE", s.pv/s.hp*100)	  
     }
+
+    Ok(node.toString())
+  }
+  
+  def calculateProgramEarnValueActionPanelpro(id: String, program:String) = Action { implicit request =>
+	println("*****PANEL -------" + id)
+    var node = new JSONObject()
+	if (id == "0") {
+		var calculos = SpiCpiCalculationsService.findIndicatorspro(program, 2)
+		for (s <- calculos) {
+
+		  node.put("EV", s.ev + " hrs")
+		  node.put("PV", s.pv + " hrs")
+		  node.put("AC", s.ac + " hrs")
+		  node.put("CPI", s.cpi)
+		  node.put("SPI", s.spi)
+		  node.put("ETC", s.etc + " hrs")
+		  node.put("EAC", s.eac + " hrs")
+		  node.put("PAI", s.pai + " %")
+		  node.put("PAE", s.pae + " %")
+		  node.put("HP", s.hp + " hrs")
+		  node.put("HA", s.ha + " hrs")
+		  //RRM
+		  node.put("AGI", s.ev/s.hp*100)
+		  node.put("AGE", s.pv/s.hp*100)	  
+		}
+	} else {
+		var calculos = SpiCpiCalculationsService.findIndicatorsPanelProporcional(id)
+		for (s <- calculos) {
+
+		  node.put("EV", s.ev + " hrs")
+		  node.put("PV", s.pv + " hrs")
+		  node.put("AC", s.ac + " hrs")
+		  node.put("CPI", s.cpi)
+		  node.put("SPI", s.spi)
+		  node.put("ETC", s.etc + " hrs")
+		  node.put("EAC", s.eac + " hrs")
+		  node.put("PAI", s.pai + " %")
+		  node.put("PAE", s.pae + " %")
+		  node.put("HP", s.hp + " hrs")
+		  node.put("HA", s.ha + " hrs")
+		  //RRM
+		  node.put("AGI", s.ev/s.hp*100)
+		  node.put("AGE", s.pv/s.hp*100)	  
+		}		
+	}
 
     Ok(node.toString())
   }
@@ -2531,7 +2799,7 @@ object Program extends Controller {
     }
   }
 
-  def getSpiGraph(program_id: String) = Action { implicit request =>
+  def getSpiGraph(program_id: String, panel:String) = Action { implicit request =>
     request.session.get("username").map { user =>
       val node = new JSONObject()
       val spi_date_map = new java.util.LinkedHashMap[Long, Double];
@@ -2551,52 +2819,99 @@ object Program extends Controller {
       val e_planned_value_map = new java.util.LinkedHashMap[Long, Double];
       val e_actual_cost_map = new java.util.LinkedHashMap[Long, Double];
 
-      var spicpiCal = SpiCpiCalculationsService.findCalculationsById(program_id);
-      //if (!spicpiCal.isEmpty) {
-      if (spicpiCal != null) {
-        for (s <- spicpiCal) {
-          var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
-          if (!s.spi.isEmpty && !s.fecha.isEmpty) {
-            spi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.spi.getOrElse(0))
-            espi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.espi.getOrElse(0))
-            cpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.cpi.get)
-            ecpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ecpi.get)
-            actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vb.get)
-            e_actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
-            earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vg.get)
-            e_earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evg.get)
-            planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vp.get)
-            //e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evp.get)
-            e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
-            tp.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.tp.get)
-            ta.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ta.get)
-            program_id_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.pid);
+      if (panel == "0") {
+        var spicpiCal = SpiCpiCalculationsService.findCalculationsById(program_id);
+        //if (!spicpiCal.isEmpty) {
+        if (spicpiCal != null) {
+          for (s <- spicpiCal) {
+            var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+            if (!s.spi.isEmpty && !s.fecha.isEmpty) {
+              spi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.spi.getOrElse(0))
+              espi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.espi.getOrElse(0))
+              cpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.cpi.get)
+              ecpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ecpi.get)
+              actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vb.get)
+              e_actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
+              earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vg.get)
+              e_earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evg.get)
+              planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vp.get)
+              //e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evp.get)
+              e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
+              tp.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.tp.get)
+              ta.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ta.get)
+              program_id_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.pid);
+            }
           }
+          node.put("spi_date_map", spi_date_map)
+          node.put("cpi_date_map", cpi_date_map)
+          node.put("ecpi_date_map", ecpi_date_map)
+          node.put("espi_date_map", espi_date_map)
 
+          node.put("actual_cost_map", actual_cost_map)
+          node.put("e_actual_cost_map", e_actual_cost_map)
+
+          node.put("earn_value_map", earn_value_map)
+          node.put("e_earn_value_map", e_earn_value_map)
+
+          node.put("planned_value_map", planned_value_map)
+          node.put("e_planned_value_map", e_planned_value_map)
+
+          node.put("ta", ta)
+          node.put("tp", tp)
+          node.put("program_id", program_id_map);
+          val EV_list = EarnValueService.getGraphCalculationForProgram(program_id)
+          for (ev_obj <- EV_list) {
+            var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+            var date1 = formattedDate.format(ev_obj.recorded_date)
+
+          }
         }
+      } else {
+        var spicpiCal = SpiCpiCalculationsService.findCalculationsByIdPanel(program_id, panel);
+        //if (!spicpiCal.isEmpty) {
+        if (spicpiCal != null) {
+          for (s <- spicpiCal) {
+            var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+            if (!s.spi.isEmpty && !s.fecha.isEmpty) {
+              spi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.spi.getOrElse(0))
+              espi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.espi.getOrElse(0))
+              cpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.cpi.get)
+              ecpi_date_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ecpi.get)
+              actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vb.get)
+              e_actual_cost_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
+              earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vg.get)
+              e_earn_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evg.get)
+              planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.vp.get)
+              //e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evp.get)
+              e_planned_value_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.evb.get)
+              tp.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.tp.get)
+              ta.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.ta.get)
+              program_id_map.put(formattedDate.parse(s.fecha.get.toString()).getTime(), s.pid);
+            }
+          }
+          node.put("spi_date_map", spi_date_map)
+          node.put("cpi_date_map", cpi_date_map)
+          node.put("ecpi_date_map", ecpi_date_map)
+          node.put("espi_date_map", espi_date_map)
 
-        node.put("spi_date_map", spi_date_map)
-        node.put("cpi_date_map", cpi_date_map)
-        node.put("ecpi_date_map", ecpi_date_map)
-        node.put("espi_date_map", espi_date_map)
+          node.put("actual_cost_map", actual_cost_map)
+          node.put("e_actual_cost_map", e_actual_cost_map)
 
-        node.put("actual_cost_map", actual_cost_map)
-        node.put("e_actual_cost_map", e_actual_cost_map)
+          node.put("earn_value_map", earn_value_map)
+          node.put("e_earn_value_map", e_earn_value_map)
 
-        node.put("earn_value_map", earn_value_map)
-        node.put("e_earn_value_map", e_earn_value_map)
+          node.put("planned_value_map", planned_value_map)
+          node.put("e_planned_value_map", e_planned_value_map)
 
-        node.put("planned_value_map", planned_value_map)
-        node.put("e_planned_value_map", e_planned_value_map)
+          node.put("ta", ta)
+          node.put("tp", tp)
+          node.put("program_id", program_id_map);
+          val EV_list = EarnValueService.getGraphCalculationForProgram(program_id)
+          for (ev_obj <- EV_list) {
+            var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+            var date1 = formattedDate.format(ev_obj.recorded_date)
 
-        node.put("ta", ta)
-        node.put("tp", tp)
-        node.put("program_id", program_id_map);
-        val EV_list = EarnValueService.getGraphCalculationForProgram(program_id)
-        for (ev_obj <- EV_list) {
-          var formattedDate: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
-          var date1 = formattedDate.format(ev_obj.recorded_date)
-
+          }
         }
       }
 
@@ -2616,6 +2931,8 @@ object Program extends Controller {
       val actual_planned_hours = hours.toDouble
       var project_planned_hours: Double = 0
       val projects = ProjectService.findProjectListForProgram(program)
+	  //RRM: Agrega registro de cambio en baseline
+	  val programact = ProgramService.findProgramMasterDetailsById(program);	  
       for (p <- projects) {
         if (!p.planned_hours.isEmpty) {
           project_planned_hours += p.planned_hours.get
@@ -2633,6 +2950,15 @@ object Program extends Controller {
         Activity.saveLog(act)
         node.put("status", "Sucess")
       }
+	  //RRM: Agrega registro de cambio en baseline 
+	  var changeState = new JSONArray();
+      var changeStateObject = new JSONObject();
+      changeStateObject.put("fieldName", "programs_hours");
+      changeStateObject.put("org_value", programact.get.planned_hours.get);
+      changeStateObject.put("new_value", hours);
+      changeState.put(changeStateObject);  
+	  val baseline = Baseline(None, changeState.toString(), Integer.parseInt(request.session.get("uId").get), new Date(), "program", Integer.parseInt(program));
+	  Baseline.insert(baseline);
 
       Ok(node.toString())
 
@@ -2690,6 +3016,16 @@ object Program extends Controller {
                 node.put("message", "Total hours associated with tasks are more than planned hours for a project, please enter valid hours.")
               } else {
                 SAPServices.updateProjectPlannedHours(project, hours)
+				
+				//RRM: Agrega registro de cambio en baseline 
+				var changeState = new JSONArray();
+				var changeStateObject = new JSONObject();
+				changeStateObject.put("fieldName", "project_hours");
+				changeStateObject.put("org_value", projectDetails.get.planned_hours.get);
+				changeStateObject.put("new_value", hours);
+				changeState.put(changeStateObject);  	
+				val baseline = Baseline(None, changeState.toString(), Integer.parseInt(request.session.get("uId").get), new Date(), "project", Integer.parseInt(project));
+				Baseline.insert(baseline);				
                 /**
                  * Activity log
                  */
@@ -3177,4 +3513,151 @@ object Program extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
+  
+  def getProgramsPanels(program_id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      var paneles = "<option value='0'>Seleccionar Panel</option>"
+	  val PanelesServices = ProgramService.findProgramPanels(program_id)
+	  for (panel <- PanelesServices) {
+	    paneles += " <option value='" + panel.id.get + "'>" + panel.name + "</option>"
+	  }
+      Ok(paneles);
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }  
+  
+  def listPanelByProgram(id: String) = Action { implicit request =>
+    val panellist = ProgramService.listPanelByProgram(id)
+    println("Edit Panel: " + panellist)
+    Ok(play.api.libs.json.Json.toJson(panellist))
+  }
+
+  def getProjectsPanel(id: String) = Action { implicit request =>
+    val panelprojlist = ProgramService.listProjectsByPanel(id)
+    println("Edit Panel: " + panelprojlist)
+    Ok(play.api.libs.json.Json.toJson(panelprojlist))
+  }
+
+
+  def saveProjectPanel = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        var incident: Option[ErrorPanel] = null
+        val body: AnyContent = request.body
+        val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
+        var ret: Int = 0
+        println("**body:"+body)
+        println("**jsonBody:"+jsonBody)
+        println("**jsonBody2:"+jsonBody.mkString)
+        println("**OPER:"+request.getQueryString("oper"))
+        jsonBody.map { jsValue =>
+        val oper = (jsValue \ "oper")
+          println("****Operacion:"+oper)
+          if (oper.toString().replace("\"", "").equals("del")) {
+            println("****Borrando")
+            val id_panel = (jsValue \ "id")
+            incident = ProgramService.delProgramPanel(id_panel.toString().replace("\"", ""))
+          } else if (oper.toString().replace("\"", "").equals("add")) {
+            println("****Agregando")
+            val id_program = (jsValue \ "id_program")
+            val name = (jsValue \ "name")
+            val description = (jsValue \ "description")
+
+            incident = ProgramService.saveProgramPanel(
+              id_program.toString().replace("\"", ""),
+              name.toString().replace("\"", ""),
+              description.toString().replace("\"", ""))
+
+            println(incident.get.error_code)
+          } else if (oper.toString().replace("\"", "").equals("edit")) {
+            println("****Editaando")
+            val name = (jsValue \ "name")
+            val description = (jsValue \ "description")
+            val id_panel = (jsValue \ "id")
+
+            incident = ProgramService.updateProgramPanel(
+              id_panel.toString().replace("\"", ""),
+              name.toString().replace("\"", ""),
+              description.toString().replace("\"", ""))
+
+          }
+        }
+
+        Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+  }
+
+  def deletePanel(oper: String, id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val cod = ProgramService.delProgramPanel(id)
+
+      Ok(play.api.libs.json.Json.toJson(cod)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
+  def getPanelProjects(program: String, panel: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      var paneles = "<option>Seleccionar Projecto</option>"
+      val PanelesServices = ProgramService.findPanelProjects(program, panel)
+      for (panel <- PanelesServices) {
+        paneles += " <option value='" + panel.id + "'>" + panel.project + "</option>"
+      }
+      Ok(paneles);
+    }.getOrElse {
+      Redirect(routes.Login.loginUser())
+    }
+  }
+
+  def saveProjectForPanel = Action {
+    implicit request =>
+      request.session.get("username").map { user =>
+        var incident: Option[ErrorPanel] = null
+        val body: AnyContent = request.body
+        val jsonBody: Option[play.api.libs.json.JsValue] = body.asJson
+        var ret: Int = 0
+        println("**body:"+body)
+        println("**jsonBody:"+jsonBody)
+        println("**jsonBody2:"+jsonBody.mkString)
+        println("**OPER:"+request.getQueryString("oper"))
+        jsonBody.map { jsValue =>
+          val oper = (jsValue \ "oper")
+          println("****Operacion:"+oper)
+          if (oper.toString().replace("\"", "").equals("del")) {
+            println("****Borrando")
+          } else if (oper.toString().replace("\"", "").equals("add")) {
+            println("****Agregando")
+            val id_panel = (jsValue \ "id_panel")
+            val id_project = (jsValue \ "id_project")
+
+            incident = ProgramService.saveProjectPanel(
+              id_panel.toString().replace("\"", ""),
+              id_project.toString().replace("\"", ""))
+
+            println(incident.get.error_code)
+          } else if (oper.toString().replace("\"", "").equals("edit")) {
+            println("****Editaando")
+          }
+        }
+
+        Ok(play.api.libs.json.Json.toJson(incident)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+      }.getOrElse {
+        Redirect(routes.Login.loginUser()).withNewSession
+      }
+  }
+
+  def deletePanelProject(oper: String, id: String) = Action { implicit request =>
+    request.session.get("username").map { user =>
+      val cod = ProgramService.delPanelProject(id)
+
+      Ok(play.api.libs.json.Json.toJson(cod)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
+
 }

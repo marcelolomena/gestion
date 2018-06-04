@@ -24,7 +24,13 @@
         var grid = new zs.StackGrid('gridMaster', 'pagerMaster', 'Compra en Trámite', 'Editar Trámite', 'Agregar Trámite', '/lic/compratramite', viewModel, 'fechaRecepcion', '/lic/getsession', ['Administrador LIC'], showChildGrid);
         grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.prmEdit.beforeSubmit = beforeSubmit;
-
+        grid.prmAdd.onInitializeForm = function (formid, action) {
+            if (action === 'add') {
+                setTimeout(function () {
+                    $(':radio:not(:checked)').attr("disabled", true);
+                }, 500);
+            }
+        }
         grid.build();
     };
 
