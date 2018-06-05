@@ -6,6 +6,8 @@ var base = require('./lic-controller');
 var _ = require('lodash');
 var logger = require('../../utils/logger');
 var secuencia = require("../../utils/secuencia");
+var nodemailer = require('nodemailer');
+var constants = require("../../utils/constants");
 
 var entity = models.reserva;
 entity.belongsTo(models.producto, {
@@ -93,7 +95,7 @@ function listAuto(req, res) {
         "LEFT JOIN lic.producto b ON b.id = a.idproducto " +
         "LEFT JOIN art_user c ON c.uid=a.idusuario " +
         "LEFT JOIN art_user d ON d.uid=a.idusuariojefe " +
-        "WHERE a.estado IN ('Aprobado', 'Autorizado', 'Denegado') ";
+        "WHERE a.estado IN ('Aprobado', 'Denegado') ";
     if (filters && condition != "") {
         sql += " AND " + condition + " ";
         logger.debug("**" + sql + "**");
@@ -120,35 +122,64 @@ function list(req, res) {
 }
 
 function action(req, res) {
-    secuencia.getSecuencia(0, function (err, sec) {
 
-        switch (req.body.oper) {
-            case 'add':
+
+    switch (req.body.oper) {
+        case 'add':
+            secuencia.getSecuencia(0, function (err, sec) {
                 req.body.codAutoriza = sec;
                 return base.create(entity, map(req), res);
-            case 'edit':
-                return base.findById(entity, req.body.id)
-                    .then(function (reser) {
-                        if (reser.estado != 'Autorizado') {
-                            return base.findById(models.producto, req.body.idProducto)
-                                .then(function (prod) {
-                                    var updData = {
-                                        id: reser.idProducto
-                                    }
-                                    updData.licReserva = prod.licReserva + reser.numlicencia;
-                                    base.updateP(models.producto, updData, res);
-                                    var hoy = "" + new Date().toISOString();
-                                    req.body.codAutoriza = sec;
-                                    req.body.idUsuarioAutoriza = req.session.passport.user;
-                                    req.body.fechaAutorizacion = hoy;
-                                    return base.update(entity, map(req), res);
-                                })
+            });
+        case 'edit':
+            var usr = req.session.passport.user;
+            var estado = req.body.estadoAutorizacion;
+            var comen = req.body.comentarioAutorizacion;
+
+            var sql = "UPDATE lic.producto SET licReserva= ISNULL(licReserva,0)+" + req.body.numlicencia + " WHERE id IN (SELECT idproducto FROM lic.reserva WHERE id=" + req.body.id + ");" +
+                "UPDATE lic.reserva SET fechaautorizacion=getdate(), idusuarioautoriza=" + usr + ", estado='" + estado + "', comentarioautorizacion='" + comen + "' WHERE id=" + req.body.id;
+            sequelize.query(sql).then(function (ok) {
+                var sqlmail = "select email from art_user where uid in (select idusuario from lic.reserva where id=" + usr + ")";
+                sequelize.query(sqlmail).then(function (mailto) {
+                    logger.debug("mailto:" + mailto[0][0].email + ", " + JSON.stringify(mailto));
+                    var htmltext = '<b>Estimado(a) <br><br> La solicitud de reserva del producto "' +
+                        req.body.idProducto + '" ha sido aprobada. <br>Por favor proceder con la instalación.';
+                    let transporter = nodemailer.createTransport({
+                        host: constants.CORREOIP,
+                        port: 25,
+                        secure: false, // true for 465, false for other ports
+                        auth: {
+                            user: constants.CORREOUSR,
+                            pass: constants.CORREOPWD
+                        },
+                        tls: { rejectUnauthorized: false }
+                    });
+                    // setup email data with unicode symbols
+                    let mailOptions = {
+                        from: constants.CORREOFROM, // sender address
+                        to: constants.CORREOTO + ',' + mailto[0][0].email, // list of receivers
+                        subject: 'Reserva de licencia de software APROBADA', // Subject line
+                        text: 'Aprueba reserva', // plain text body
+                        html: htmltext
+                    };
+
+                    //console.log('MailOPt'+JSON.stringify(mailOptions));
+                    console.log("TO:" + constants.CORREOTO + ',' + mailto[0][0].email);
+                    // send mail with defined transport object
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            return console.log(error);
                         }
-                    })
-            case 'del':
-                return base.destroy(entity, req.body.id, res);
-        }
-    });
+                        console.log('Msg Reserva-Aprob Enviado: %s', info.messageId);
+                        // Preview only available when sending through an Ethereal account
+                        console.log('URL: %s', nodemailer.getTestMessageUrl(info));
+                    });
+                    return res.json({ error_code: 0 });
+                });
+            });
+            break;
+        case 'del':
+            return base.destroy(entity, req.body.id, res);
+    }
 }
 
 function usuariocui(req, res) {
