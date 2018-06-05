@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('solicitudcotizacion', {
     id: {
       type: DataTypes.INTEGER,
@@ -143,8 +143,20 @@ module.exports = function(sequelize, DataTypes) {
         model: 'valores',
         key: 'id'
       }
+    },
+    idadministracion: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'user',
+        key: 'uid'
+      }
+    },
+    fechaasignacionadmin: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
-    schema: 'sic',timestamps: false,tableName: 'solicitudcotizacion'
-  });
+      schema: 'sic', timestamps: false, tableName: 'solicitudcotizacion'
+    });
 };
