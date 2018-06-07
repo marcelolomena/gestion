@@ -119,6 +119,9 @@ module.exports = function (passport) {
 
     router.route('/lic/exportplanilla')
         .get(isAuthenticated, planillaController.excel);
+		
+    router.route('/lic/downficha/:id')
+        .get(isAuthenticated, planillaController.downFicha);		
 
     router.route('/lic/traduccion')
         .get(isAuthenticated, traduccionController.list);
