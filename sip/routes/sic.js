@@ -820,5 +820,8 @@ module.exports = function (passport) {
     router.route('/sic/getUsuariosAdmin')
         .get(isAuthenticated, solicitudcotizacionController.getUsuariosAdmin);
 
+    router.route('/sic/proveeAdjudicado')
+        .get(isAuthenticated, solicitudcotizacionController.proveeAdjudicado);
+
     return router;
 }
