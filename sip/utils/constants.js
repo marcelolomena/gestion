@@ -96,10 +96,10 @@ if (process.env.NODE_ENV == 'qadesarrollo' ){
 } else if (process.env.NODE_ENV == 'development') {
     define("Servidor", 14);
     define("PC", 13);
-    define("CORREOFROM","proyecto_art@bancochile.cl");
-    define("CORREOTO","jcastro@zrismart.cl");
-    define("CORREOIP","mail.bancochile.cl");
-    define("CORREOUSR","proyecto_art");
+    define("CORREOFROM","pnsilva@labchile.cl");
+    define("CORREOTO","pnsilva@labchile.cl");
+    define("CORREOIP","200.14.165.153");
+    define("CORREOUSR","pnsilva");
     define("CORREOPWD","Banco01");         
 } else {
     define("Servidor", 4);

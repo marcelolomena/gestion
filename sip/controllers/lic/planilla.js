@@ -4,6 +4,8 @@ var base = require('./lic-controller');
 var logger = require('../../utils/logger');
 var sequelize = require('../../models/index').sequelize;
 var nodeExcel = require('excel-export');
+var path = require('path');
+var fs = require('fs');
 var _ = require('lodash');
 
 function update(data, res) {
@@ -147,7 +149,7 @@ function list(req, res) {
     "DECLARE @PageNumber INT; " +
     "SELECT @PageNumber=" + page + "; " +
     "SELECT a.*, b.*, h.razonsocial, c.nombre nombreFab, d.nombre nombreClas, " +
-    "e.nombre nombreTipoLic, f.nombre nombreTipoInst, g.moneda, j.comprador responsable " +
+    "e.nombre nombreTipoLic, f.nombre nombreTipoInst, g.moneda, j.comprador responsable, i.fichatecnica " +
     "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto " +
     "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id " +
     "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id " +
@@ -414,6 +416,38 @@ function excel(req, res) {
     });
 }
 
+function downFicha(req, res) {
+
+  var file = "Documento1.docx";
+  var filePath = "docs"+path.sep+"lic"+path.sep+"fichas";
+  var sql = "SELECT fichatecnica FROM lic.detallerecepcion WHERE idcompra=" + req.params.id;
+  sequelize.query(sql)
+    .spread(function (rows) {
+      file = rows[0].fichatecnica;
+      console.log("Archivo:" + filePath+ path.sep +file);
+      fs.exists(filePath+ path.sep + file, function (exists) {
+        if (exists) {
+          res.writeHead(200, {
+            "Content-Type": "application/octet-stream",
+            "Content-Disposition": "attachment; filename=" + file
+          });
+          fs.createReadStream(filePath + path.sep + file).pipe(res);
+        } else {
+          res.writeHead(400, { "Content-Type": "text/plain" });
+          res.end("ERROR Archivo no Existe");
+        }
+      });
+    });
+
+};
+
+module.exports = {
+  list: list,
+  action: action,
+  excel: excel,
+  downFicha: downFicha
+}
+
 // function excel(req, res) {
 //   var conf = {}
 //   conf.cols = [
@@ -496,14 +530,6 @@ function excel(req, res) {
 //     throw e;
 //   });
 // }
-
-
-module.exports = {
-  list: list,
-  action: action,
-  excel: excel
-}
-
 
 
 

@@ -1,45 +1,78 @@
-(function ($, _) {
-    'use strict';
-    var zs = window.zs;
 
-    function beforeSubmit(postdata, formid) {
-        if (!postdata.idfabricante) {
-            return [false, "Fabricante: Debe escoger un valor.", ""];
-        } else if (!postdata.idproveedor) {
-            return [false, "Proveedor: Debe escoger un valor.", ""];
-        } else if (postdata.nombre.trim().length == 0) {
-            return [false, "Software: Debe ingresar un software.", ""];
-        } else if (!postdata.idtipoinstalacion) {
-            return [false, "¿Donde está instalada?: Debe escoger un valor.", ""];
-        } else if (!postdata.idclasificacion) {
-            return [false, "Clasificación: Debe escoger un valor.", ""];
-        } else if (!postdata.idtipolicenciamiento) {
-            return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
-        } else if (postdata.liccompradas.trim().length == 0) {
-            return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
-        } else if (!postdata.idmoneda) {
-            return [false, "Moneda: Debe escoger un valor.", ""];
-        } else if (postdata.valorsoporte.trim().length == 0) {
-            return [false, "Valor Soportes: Debe ingresar un valor.", ""];
-        } else {
-            return [true, "", ""];
-        }
-    };
+    $(document).ready(function () {
+        var tmpl = "<div id='responsive-form' class='clearfix'>";
+        
+        tmpl += "<div style='display: none;'>Producto {idproducto}</div>";
 
-    function initGrid(viewModel) {
-        var grid = new zs.SimpleGrid('gridMaster', 'pagerMaster', 'Compras', 'Editar Compra', 'Agregar compra', '/lic/planilla', viewModel, 'nombre', '/lic/getsession', ['Administrador LIC']);
-        grid.prmEdit.beforeSubmit = beforeSubmit;
-        grid.prmAdd.beforeSubmit = beforeSubmit;
-        grid.navParameters.add = false;
-        grid.navParameters.del = false;
-        grid.build();
-        // grid.addExportButton('Excel', 'glyphicon glyphicon-download-alt', '/lic/exportplanilla');
-    }
-
+        tmpl += "<div class='form-row'>";
+        tmpl += "<div class='column-half'><span style='color:red'>*</span>Contrato {contrato}</div>";
+        tmpl += "<div class='column-half'><span style='color:red'>*</span>O. C. {ordencompra}</div>";
+        tmpl += "</div>";
     
+        tmpl += "<div class='form-row'>";
+        tmpl += "<div class='column-half'><span style='color:red'>*</span>CUI {idcui}</div>";
+        tmpl += "<div class='column-half'><span style='color:red'>*</span>SAP {sap}</div>";
+        tmpl += "</div>";
+    
+        tmpl += "<div class='form-row'>";
+        tmpl += "<div class='column-half'><span style='color:red'>*</span>Fabricante {idfabricante}</div>";
+        tmpl += "<div class='column-half'><span style='color:red'>*</span>Proveedor {idproveedor}</div>";
+        tmpl += "</div>";
+    
+        tmpl += "<div class='form-row' >";
+        tmpl += "<div class='column-half'>Software {nombre}</div>";
+        tmpl += "<div class='column-half'>¿Donde esta instalada? {idtipoinstalacion}</div>";
+        tmpl += "</div>";
+    
+        tmpl += "<div class='form-row' >";
+        tmpl += "<div class='column-half'>Clasificación {idclasificacion}</div>";
+        tmpl += "<div class='column-half'>Tipo de Licenciamiento {idtipolicenciamiento}</div>";
+        tmpl += "</div>";
 
-    $(function () {
-        var $table = $('#gridMaster');
+        tmpl += "<div class='form-row' >";
+        tmpl += "<div class='column-half'>Fecha Compra {fechacompra}</div>";
+        tmpl += "<div class='column-half'>Fecha Expiración {fechaexpiracion}</div>";
+        tmpl += "</div>";        
+
+        tmpl += "<div class='form-row' >";
+        tmpl += "<div class='column-half'>Tipo de Contrato {perpetua}</div>";
+        tmpl += "<div class='column-half'>N° Lic Compradas {liccompradas}</div>";
+        tmpl += "</div>"; 
+
+        tmpl += "<div class='form-row' >";
+        tmpl += "<div class='column-half'>Moneda {idmoneda}</div>";
+        tmpl += "<div class='column-half'>Valor Licencias {valorlicencia}</div>";
+        tmpl += "</div>";        
+
+        tmpl += "<div class='form-row' >";
+        tmpl += "<div class='column-half'>Valor Soporte {valorsoporte}</div>";
+        tmpl += "<div class='column-half'>Fecha Renovación Soporte {fecharenovasoporte}</div>";
+        tmpl += "</div>"; 
+        
+        tmpl += "<div class='form-row' >";
+        tmpl += "<div class='column-half'>Factura {factura}</div>";
+        tmpl += "<div class='column-half'>Cant. Compradas {licstock}</div>";
+        tmpl += "</div>"; 
+        
+        tmpl += "<div class='form-row' >";
+        tmpl += "<div class='column-half'>Instalada {licocupadas}</div>";
+        tmpl += "<div class='column-half'>Comprador {comprador}</div>";
+        tmpl += "</div>"; 
+
+        tmpl += "<div class='form-row' >";
+        tmpl += "<div class='column-half'>Responsable {responsable}</div>";
+        tmpl += "<div class='column-half'>Correo Comprador {correocomprador}</div>";
+        tmpl += "</div>";         
+
+        tmpl += "<div class='form-row'>";
+        tmpl += "<div class='column-full'>Comentario {comentario}</div>";
+        tmpl += "</div>";
+    
+        tmpl += "<hr style='width:100%;'/>";
+        tmpl += "<div> {sData} {cData}  </div>";
+        tmpl += "</div>";
+            
+        var $table = $('#grid');
         var viewModel = [{
             label: 'ID',
             name: 'id',
@@ -90,7 +123,17 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.cui;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione CUI', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione CUI', thissid).template;
+                    var s = "<select>";
+                    s += '<option value="">--Seleccione CUI--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";                    
                 }
             },
             search: false
@@ -124,7 +167,17 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione Fabricante', thissid).template;
+                    var s = "<select>";
+                    s += '<option value="">--Seleccione Fabricante--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";                    
                 }
             },
             editrules: {
@@ -138,7 +191,17 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    var s = "<select>";//el default
+                    s += '<option value="">--Seleccione Fabricante--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";                    
                 }
             }
         }, {
@@ -156,7 +219,17 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.proveedor;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
+                    var s = "<select>";//el default
+                    s += '<option value="">--Seleccione Proveedor--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";                    
                 }
             },
             editrules: {
@@ -188,7 +261,17 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.tipoInstalacion;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    var s = "<select>";//el default
+                    s += '<option value="">--Seleccione--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";                    
                 }
             },
             editrules: {
@@ -203,7 +286,17 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.tipoInstalacion;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    var s = "<select>";
+                    s += '<option value="">--Seleccione--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";                    
                 }
             }
         }, {
@@ -221,7 +314,17 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.clasificacion;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
+                    var s = "<select>";//el default
+                    s += '<option value="">--Seleccione Clasificación--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";                    
                 }
             },
             editrules: {
@@ -235,7 +338,17 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.clasificacion;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    var s = "<select>";
+                    s += '<option value="">--Seleccione--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";                    
                 }
             }
         }, {
@@ -253,7 +366,18 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.tipoLicenciamiento;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Tipo de Licencia', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione Tipo de Licencia', thissid).template;
+                    var s = "<select>";
+                    s += '<option value="">--Seleccione Tipo de Licencia--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                        
                 }
             },
             editrules: {
@@ -267,7 +391,18 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.tipoLicenciamiento;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
+                    var s = "<select>";
+                    s += '<option value="">--Seleccione--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                        
                 }
             }
         }, {
@@ -391,7 +526,18 @@
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.moneda;
                     var data = JSON.parse(response);
-                    return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
+                    //return new zs.SelectTemplate(data, 'Seleccione Moneda', thissid).template;
+                    var s = "<select>";
+                    s += '<option value="">--Escoger Producto--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                        
                 }
             },
             search: false
@@ -561,20 +707,110 @@
                 fullRow: true
             },            
         },
+        {
+            label: 'Ficha Técnica',
+            name: 'fichatecnica',
+            width: 100,
+            hidden: false,
+            editable: false,
+            search: false,
+            formatter: function (cellvalue, options, rowObject) {
+                var nombre = rowObject.fichatecnica;
+                var id = rowObject.id;
+                if (nombre != null) {
+                    return "<a href='/lic/downficha/"+id+"'>"+nombre+"</a>" ;
+                } else {
+                    return "Sin Adjunto";
+                }
+            }, 
+            sortable: false       
+        }        
         ];
-        
-        initGrid(viewModel);
-        $('#gridMaster').jqGrid('navButtonAdd', 'pagerMaster', {
-            caption: "",
-            buttonicon: "glyphicon glyphicon-download-alt",
-            title: "Excel",
-            position: "last",
-            onClickButton: function () {
-                var grid = $('#gridMaster');
-                var rowKey = grid.getGridParam("selrow");
-                var url = '/lic/exportplanilla';
-                $('#gridMaster').jqGrid('excelExport', { "url": url });
+
+        $("#grid").jqGrid({
+            url: '/lic/planilla',
+            mtype: "GET",
+            datatype: "json",
+            page: 1,
+            colModel: viewModel,
+            rowNum: 10,
+            regional: 'es',
+            height: 'auto',
+            sortable: "true",
+            width: null,
+            shrinkToFit: false,
+            caption: 'Compras',
+            pager: "#pager",
+            viewrecords: true,
+            rowList: [10, 20, 30, 40, 50],
+            styleUI: "Bootstrap",
+            editurl: '/lic/planilla'
+        });       
+
+        $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+
+
+        $('#grid').jqGrid('navGrid', "#pager", {
+            edit: true,
+            add: true,
+            del: true,
+            refresh: true,
+            search: false, // show search button on the toolbar        
+            cloneToTop: false
+        },
+        {
+            editCaption: "Modifica Compra",
+            closeAfterEdit: true,
+            recreateForm: true,
+            ajaxEditOptions: sipLibrary.jsonOptions,
+            serializeEditData: sipLibrary.createJSON,
+            template: tmpl,
+            errorTextFormat: function (data) {
+                return [true, 'Error: ' + data.responseText, ""];
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (!postdata.idfabricante) {
+                    return [false, "Fabricante: Debe escoger un valor.", ""];
+                } else if (!postdata.idproveedor) {
+                    return [false, "Proveedor: Debe escoger un valor.", ""];
+                } else if (postdata.nombre.trim().length == 0) {
+                    return [false, "Software: Debe ingresar un software.", ""];
+                } else if (!postdata.idtipoinstalacion) {
+                    return [false, "¿Donde está instalada?: Debe escoger un valor.", ""];
+                } else if (!postdata.idclasificacion) {
+                    return [false, "Clasificación: Debe escoger un valor.", ""];
+                } else if (!postdata.idtipolicenciamiento) {
+                    return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
+                } else if (postdata.liccompradas.trim().length == 0) {
+                    return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
+                } else if (!postdata.idmoneda) {
+                    return [false, "Moneda: Debe escoger un valor.", ""];
+                } else if (postdata.valorsoporte.trim().length == 0) {
+                    return [false, "Valor Soportes: Debe ingresar un valor.", ""];
+                } else {
+                    return [true, "", ""];
+                }
             }
-        });
+        },
+        {
+        }, {
+
+        }
+    );
+
+    $('#grid').jqGrid('navButtonAdd', 'pager', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Excel",
+        position: "last",
+        onClickButton: function () {
+            var grid = $('#grid');
+            var rowKey = grid.getGridParam("selrow");
+            var url = '/lic/exportplanilla';
+            $('#grid').jqGrid('excelExport', { "url": url });
+        }
     });
-})(jQuery, _);
+
+    $("#pager_left").css("width", "");
+});
+

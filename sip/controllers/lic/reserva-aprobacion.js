@@ -55,7 +55,7 @@ exports.action = function (req, res) {
             // Preview only available when sending through an Ethereal account
             console.log('URL: %s', nodemailer.getTestMessageUrl(info));
           });
-          res.json({ error_code: 0 });
+          return res.json({ error_code: 0 });
         }).catch(function (err) {
           logger.error(err);
           res.json({ error_code: 1 });
