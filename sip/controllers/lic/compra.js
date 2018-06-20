@@ -33,7 +33,8 @@ function map(req) {
         fechaRenovaSoporte: base.toDate(req.body.fechaRenovaSoporte),
         factura: req.body.factura,
         comprador: req.body.comprador,
-        correoComprador: req.body.correoComprador
+        correoComprador: req.body.correoComprador,
+        idRenovado: req.body.idRenovado
     }
 }
 
@@ -64,7 +65,8 @@ function mapper(data) {
                 nombre: item.moneda.moneda
             },
             alertaRenovacion: item.alertaRenovacion,
-            perpetua : item.perpetua ? 'PERPETUA' : 'SUSCRIPCIÓN'
+            perpetua: item.perpetua ? 'PERPETUA' : 'SUSCRIPCIÓN',
+            idRenovado: item.idRenovado
         }
     });
 }

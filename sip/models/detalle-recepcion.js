@@ -135,10 +135,15 @@ module.exports = function (sequelize, DataTypes) {
                 model: 'compra',
                 key: 'id'
             }
+        },
+        fichaTecnica: {
+            field: 'fichatecnica',
+            type: DataTypes.STRING,
+            allowNull: true
         }
     }, {
-        schema: 'lic',
-        timestamps: false,
-        tableName: 'detallerecepcion'
-    });
+            schema: 'lic',
+            timestamps: false,
+            tableName: 'detallerecepcion'
+        });
 };

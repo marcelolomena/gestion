@@ -115,6 +115,11 @@ module.exports = function (sequelize, DataTypes) {
     comentario: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    idRenovado: {
+      field: 'idrenovado',
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     schema: 'lic',

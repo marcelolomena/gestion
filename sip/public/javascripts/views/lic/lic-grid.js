@@ -88,6 +88,19 @@
         this.template = s + '</select>';
     }
 
+    function SelectTemplateIdCompra(data, caption, selectedId) {
+        selectedId = selectedId || 0;
+        var s = '<select><option value="">--' + caption + '--</option>';
+        var selected;
+        _.each(data, function (item, key) {
+            if (item) {
+                selected = item.id == selectedId ? '" selected>' : '">';
+                s += '<option value="' + item.id + selected + item.id +'</option>';
+            }
+        });
+        this.template = s + '</select>';
+    }
+
     function SimpleGrid(tableName, pagerName, caption, editCaption, addCaption, url, viewModel, sortField, sessionUrl, authorizedRoles) {
         var tableId = '#' + tableName;
         var $table = $(tableId);
@@ -300,7 +313,8 @@
         SelectTemplate: SelectTemplate,
         SimpleGrid: SimpleGrid,
         StackGrid: StackGrid,
-        TabGrid: TabGrid
+        TabGrid: TabGrid,
+        SelectTemplateIdCompra: SelectTemplateIdCompra
 
     });
 })(jQuery, _);
