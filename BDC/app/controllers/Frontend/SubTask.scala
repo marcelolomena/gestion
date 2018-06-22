@@ -125,8 +125,7 @@ object SubTask extends Controller {
 
           } else {
             val lastId = SubTaskServices.insertSubTask(success);
-            //RRM:Agrega asignacion en tabla art_program_management
-            ProgramService.saveProgramManagement(lastId,4);
+
             /**
              * Activity log
              */
@@ -450,8 +449,6 @@ object SubTask extends Controller {
         } else {
           val subTaskDetails = SubTaskAllocation(None, sub_task_id.toInt, task_id, project_id, user_Id.toInt, estimated_time, 0)
           last = SubTaskServices.saveSubTaskAllocation(subTaskDetails)
-          //RRM:Agrega asignacion en tabla art_program_management
-          ProgramService.saveProgramManagement(last,5);
           node.put("status", "Success")
         }
 
@@ -509,8 +506,6 @@ object SubTask extends Controller {
         } else {
           val subTaskDetails = SubTaskAllocationExternal(None, sub_task_id, task_id, project_id, user_Id, estimated_time, 0, 0)
           val last = SubTaskServices.saveSubTaskAllocationExternal(subTaskDetails)
-          //RRM:Agrega asignacion en tabla art_program_management
-          ProgramService.saveProgramManagement(last,5);
         }
 
         /**

@@ -84,7 +84,7 @@
 							 '_label -> Messages("addNewProgram.clasificacion"),
 							  '_default -> Messages("addNewProgram.placeholder.clasificacion")
 						  )
-						</span>						  
+						</span>
 					      <span class="left width_full padding-top-3px">
 						      	@select(
 								         programForm("demand_manager"),
@@ -116,10 +116,10 @@
 								 options(divisionMap),
 								 'class -> "input-xlarge ",
 								 '_label -> Messages("addNewProgram.requestingDivision"),
-								 '_default -> Messages("addNewProgram.placeholder.devison")  
+								 '_default -> Messages("addNewProgram.placeholder.devison")
 							  )
-					   </div>					
-           			
+					   </div>
+
 	           			<div class="right width-pr50 padding-top-3px" >
 	           					@inputText(
 				                programForm("program_dates.initiation_planned_date"),
@@ -140,7 +140,7 @@
 							         '_label -> Messages("addNewProgram.requestingGerencia"),
 							         '_default -> Messages("addNewProgram.placeholder.management")
 							      )
-	           			</div>					
+	           			</div>
 	           			<div class="right width-pr50 padding-top-3px" >
 	           				@inputText(
 				                programForm("program_dates.release_date"),
@@ -155,11 +155,11 @@
 	           			@inputText(
 				                programForm("planned_hours"),
 				                '_label -> Messages("addNewProgram.plannedhours"),
-				                'class -> "span4", 
+				                'class -> "span4",
 				                'maxlength ->"9",
 				                'placeholder ->Messages("addNewProgram.Enterplannedhours")
 				            )
-	           			</div>			
+	           			</div>
 	           			<div class="left width-pr50 padding-top-3px display-none" >
 	           				@inputText(
 				                programForm("program_dates.creation_date"),
@@ -188,7 +188,7 @@
 						         '_label -> Messages("addNewProgram.impactType"),
 						          '_default -> Messages("addNewProgram.placeholder.impact_type")
 						      )
-	           			</div>         				           			
+	           			</div>
 						<div class="right width-pr50 padding-top-3px" >
 							@select(
 							 programForm("internal_state"),
@@ -198,8 +198,8 @@
 							  '_default -> Messages("addNewProgram.placeholder.internal_state")
 						  )
 						</div>	           			
-	           			         			
-          			
+
+
            			</div>
 					<div class="left width_full ">
            				<div class="left width-pr50 padding-top-3px" >
@@ -210,7 +210,7 @@
 						         '_label -> Messages("addNewProgram.workFlowStatus"),
 						          '_default -> Messages("addNewProgram.placeholder.work_flow_status")
 					      )
-	          			</div>							
+	          			</div>
 					</div>
            			<div class="left width_full padding-top-3px" >
            				<label style="width:100%; text-align:center;">@Messages("artform.mandatorynote")</label>
@@ -375,7 +375,7 @@
 					   $("#program_details_management").html(data);
 				});*@
 
-				@*$("#program_details_devison").live("change", renderGerenciaList);*@
+				@* $("#program_details_devison").live("change", renderGerenciaList); *@
 
 				$("#program_details_management").live("change",renderDepartmentList);
 
@@ -384,7 +384,7 @@
 
     function isNumberKey(evt){
 	    var charCode = (evt.which) ? evt.which : event.keyCode;
-	    
+
 	    if(document.getElementById("planned_hours").value.indexOf('.') === -1){
 	        return (charCode<=31 ||  charCode==46 || (charCode>=48 && charCode<=57));
 		    }else{

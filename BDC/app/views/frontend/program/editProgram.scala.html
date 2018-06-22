@@ -89,7 +89,7 @@
 							<span class="left width_full padding-top-3px">
 								@select(
 								 programForm("clasificacion"),
-								 options("Evolutivo"->"Evolutivo", "Correccion"->"Corrección","Normativo"->"Normativo", "Obsolecencia Tecnologica"->"Obsolecencia Tecnologica", "Infraestructura"->"Infraestructura"),
+								 options("Evolutivo"->"Evolutivo", "Correccion"->"CorrecciÃ³n","Normativo"->"Normativo", "Obsolecencia Tecnologica"->"Obsolecencia Tecnologica", "Infraestructura"->"Infraestructura"),
 								 'class -> "input-xlarge ",
 								 '_label -> Messages("addNewProgram.clasificacion"),
 								  '_default -> Messages("addNewProgram.placeholder.clasificacion")
@@ -338,7 +338,7 @@ $(document).ready(function(){
 			event.preventDefault();
 		} else 		
 		if ($("#program_description").val() == null || $("#program_description").val() == "") {
-			alert("Ingrese Descripción de Programa");
+			alert("Ingrese Descripciï¿½n de Programa");
 			event.preventDefault();
 		} else 
 		if ($("#program_details_management").val() == null || $("#program_details_management").val() == "") {
@@ -350,7 +350,7 @@ $(document).ready(function(){
 			event.preventDefault();
 		} else 
 		if ($("#internal_state").val() == null || $("#internal_state").val() == "") {
-			alert("Ingrese Tamaño de Programa");
+			alert("Ingrese Tamaï¿½o de Programa");
 			event.preventDefault();
 		}						
 	});		

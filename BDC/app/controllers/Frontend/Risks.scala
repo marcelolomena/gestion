@@ -15,7 +15,6 @@ import models.UserSetting
 import models.Activity
 import models.ActivityTypes
 import play.Play
-import play.api.mvc.Result
 import play.Logger
 import java.io.{File, FileOutputStream}
 import java.util.UUID
@@ -338,16 +337,6 @@ object Risks extends Controller {
     }
   }
 
-  def closeAlert(alert_id: Integer) = Action { implicit request =>
-    request.session.get("username").map { user =>
-      RiskService.updateAlertState(alert_id.toString)
-    Ok("Success")
-  }.getOrElse {
-    Redirect(routes.Login.loginUser())
-  }
-}
-
-
   def editRiskAlert(risk_id: Integer, alert_id: Integer) = Action { implicit request =>
 
     request.session.get("username").map { user =>
@@ -433,7 +422,6 @@ object Risks extends Controller {
                     risk)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
 
                 }else{
-
                 Ok(views.html.frontend.risks.editAlert(
                   risk_id.toString,
                   alert_id.toString,
@@ -443,11 +431,7 @@ object Risks extends Controller {
                   alert_states,
                   alert_category,
                   alert_task,
-                  mail_tmpl)).withSession(
-                  "username" -> request.session.get("username").get,
-                  "utype" -> request.session.get("utype").get,
-                  "uId" -> request.session.get("uId").get,
-                  "user_profile" -> request.session.get("user_profile").get)
+                  mail_tmpl)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get);
 
               }
 
@@ -458,15 +442,6 @@ object Risks extends Controller {
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
-  }
-
-  implicit class RichResult (result: Result) {
-    def enableCors =  result.withHeaders(
-      "Access-Control-Allow-Origin" -> "*"
-      , "Access-Control-Allow-Methods" -> "OPTIONS, GET, POST, PUT, DELETE, HEAD"   // OPTIONS for pre-flight
-      , "Access-Control-Allow-Headers" -> "Accept, Content-Type, Origin, X-Json, X-Prototype-Version, X-Requested-With" //, "X-My-NonStd-Option"
-      , "Access-Control-Allow-Credentials" -> "true"
-    )
   }
 
   def deleteRisk(id: String) = Action { implicit request =>
@@ -1281,7 +1256,7 @@ def alertSearch() = Action { implicit request =>
                 risks => {
 
                   val user_id = Integer.parseInt(request.session.get("uId").get)
-                  //Logger.debug("TOA LA WEA " + risks)
+                  Logger.debug("TOA LA WEA " + risks)
                   val alert = RiskAlerts(
                     Option(1),
                     risk_id.toInt,

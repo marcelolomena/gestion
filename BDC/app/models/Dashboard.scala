@@ -1,9 +1,12 @@
 package models
 
-import anorm.SqlParser._
-import anorm._
 import java.util.Date
-import play.api.libs.json._
+import anorm.SqlParser._
+import play.api.Play.current
+import java.util.Date
+import anorm._
+import play.api.db.DB
+import play.api.libs.json.Json
 
 case class DashboardSearch(delay_level: Option[String], project_classification: Option[String], program_type: Option[String], program_sub_type: Option[String], division: Option[String], program_role: Option[String], item_budget: Option[String], sort_type: Option[String], gerencia: Option[String], department: Option[String])
 
@@ -366,6 +369,51 @@ object StateSubTarea {
   implicit val estadosubtareaWrites = Json.writes[StateSubTarea]
 }
 
+case class Bubble(x: Double, 
+    y: Double, 
+    z: Double, 
+    programa: String
+    )
+    
+object Bubble {
+  val bubble = {
+    get[Double]("x") ~
+      get[Double]("y") ~
+      get[Double]("z") ~
+      get[String]("programa")  map {
+        case x ~ 
+        y ~ 
+        z ~ 
+        programa  => Bubble(x, y, z, programa)
+      }
+    
+  }
+  implicit val bubbleWrites = Json.writes[Bubble]
+}
+
+//
+case class Pie(dId: Int, 
+    division: String, 
+    cantidad: Int, 
+    porcentaje: Double
+    )
+    
+object Pie {
+  val pie = {
+    get[Int]("dId") ~
+      get[String]("division") ~
+      get[Int]("cantidad") ~
+      get[Double]("porcentaje")  map {
+        case dId ~ 
+        division ~ 
+        cantidad ~ 
+        porcentaje  => Pie(dId, division, cantidad, porcentaje)
+      }
+    
+  }
+  implicit val pieWrites = Json.writes[Pie]
+}
+//
 
 case class ATMExcel(id: Int, 
     nivel: String, 
@@ -408,10 +456,4 @@ object ATMExcel {
     
   }
   implicit val atmWrites = Json.writes[ATMExcel]
-}
-
-case class ReportOnline(id: Int,tipo: String)
-
-object Formatters {
-  implicit val repoFormat = Json.format[ReportOnline]
 }

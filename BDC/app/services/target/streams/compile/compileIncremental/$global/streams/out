@@ -1,0 +1,328 @@
+[0m[[0mdebug[0m] [0m[0m
+[0m[[0mdebug[0m] [0mInitial source changes: [0m
+[0m[[0mdebug[0m] [0m	removed:Set()[0m
+[0m[[0mdebug[0m] [0m	added: Set(G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenericProjectTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ConfigMailAlertService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserStoryService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\WorkflowStatusService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\FunctionRoleService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserRoleService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProjectWorkflowStatusService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserprofileServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramaService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ServiceCatalogueService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RiskService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\KanbanService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\HistogramaService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\LoginService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\KolumnService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SAPServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\StageService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\IncidentService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProjectService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DepartmentService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TaskService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TemplateService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SpiCpiCalculationsService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\PersonnelService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DashboardService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\AdminService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\KanbanProjectService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SubTaskServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DivisionService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramMemberService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenericProjectService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\PersonalService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DocumentService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\PertService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramMembersExternalService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RiskCategoryService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DistributionTimeSheetService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DeliverableService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ImpactTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenrenciaService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProjectManagerService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TicketService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SubTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TaskDesciplineService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RiskStateService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TimesheetService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\EarnValueService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenericService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DocumentTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RoadmapServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala)[0m
+[0m[[0mdebug[0m] [0m	modified: Set()[0m
+[0m[[0mdebug[0m] [0mRemoved products: Set()[0m
+[0m[[0mdebug[0m] [0mExternal API changes: API Changes: Set()[0m
+[0m[[0mdebug[0m] [0mModified binary dependencies: Set()[0m
+[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set(G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenericProjectTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ConfigMailAlertService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserStoryService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\WorkflowStatusService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\FunctionRoleService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserRoleService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProjectWorkflowStatusService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserprofileServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramaService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ServiceCatalogueService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RiskService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\KanbanService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\HistogramaService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\LoginService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\KolumnService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SAPServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\StageService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\IncidentService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProjectService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DepartmentService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TaskService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TemplateService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SpiCpiCalculationsService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\PersonnelService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DashboardService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\AdminService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\KanbanProjectService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SubTaskServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DivisionService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramMemberService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenericProjectService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\PersonalService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DocumentService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\PertService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramMembersExternalService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RiskCategoryService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DistributionTimeSheetService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DeliverableService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ImpactTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenrenciaService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProjectManagerService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TicketService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SubTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TaskDesciplineService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RiskStateService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TimesheetService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\EarnValueService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenericService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DocumentTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RoadmapServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala)[0m
+[0m[[0mdebug[0m] [0m[0m
+[0m[[0mdebug[0m] [0mSources indirectly invalidated by:[0m
+[0m[[0mdebug[0m] [0m	product: Set()[0m
+[0m[[0mdebug[0m] [0m	binary dep: Set()[0m
+[0m[[0mdebug[0m] [0m	external source: Set()[0m
+[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set(G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenericProjectTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ConfigMailAlertService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserStoryService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\WorkflowStatusService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\FunctionRoleService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserRoleService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProjectWorkflowStatusService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserprofileServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramaService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ServiceCatalogueService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RiskService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\KanbanService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\HistogramaService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\LoginService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\KolumnService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SAPServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\StageService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\IncidentService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProjectService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DepartmentService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TaskService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TemplateService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SpiCpiCalculationsService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\PersonnelService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DashboardService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\AdminService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\KanbanProjectService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SubTaskServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DivisionService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramMemberService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenericProjectService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\PersonalService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DocumentService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\PertService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProgramMembersExternalService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RiskCategoryService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DistributionTimeSheetService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DeliverableService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ImpactTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenrenciaService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ProjectManagerService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\UserService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TicketService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\SubTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TaskDesciplineService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RiskStateService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\TimesheetService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\EarnValueService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\GenericService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\DocumentTypeService.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\RoadmapServices.scala, G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala)[0m
+[0m[[0mdebug[0m] [0mRecompiling all 57 sources: invalidated sources (57) exceeded 50.0% of all sources[0m
+[0m[[0minfo[0m] [0mCompiling 57 Scala sources to G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\target\scala-2.10\classes...[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.10.4[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.10.4[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 2cb873f5, interfacing (CompilerInterface) with Scala compiler version 2.10.4[0m
+[0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
+[0m[[0mdebug[0m] [0m	-bootclasspath[0m
+[0m[[0mdebug[0m] [0m	C:\Program Files\Java\jdk1.7.0_79\jre\lib\resources.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\rt.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\jce.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.7.0_79\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.7.0_79\jre\classes;C:\Users\Ricardo\.sbt\boot\scala-2.10.4\lib\scala-library.jar[0m
+[0m[[0mdebug[0m] [0m	-classpath[0m
+[0m[[0mdebug[0m] [0m	G:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\target\scala-2.10\classes[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala:3: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.Play.current[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala:4: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.db.DB;[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala:5: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm.SqlParser._;[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala:6: not found: object models[0m
+[0m[[31merror[0m] [0mimport models._;[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala:7: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala:12: not found: type Activity[0m
+[0m[[31merror[0m] [0m  def saveActivityLogServices(act: Activity): Int = {[0m
+[0m[[31merror[0m] [0m                                   ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala:13: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala:20: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala:25: not found: type Activity[0m
+[0m[[31merror[0m] [0m  def findPaginationActivityLog(PageSize: Integer, PageNumber: Integer): Seq[Activity] = {[0m
+[0m[[31merror[0m] [0m                                                                             ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ActivityLogServices.scala:26: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\AdminService.scala:2: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.Play.current[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\AdminService.scala:3: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.db.DB;[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\AdminService.scala:4: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm.SqlParser._;[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\AdminService.scala:5: not found: object models[0m
+[0m[[31merror[0m] [0mimport models._;[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\AdminService.scala:6: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\AdminService.scala:7: object typesafe is not a member of package com[0m
+[0m[[31merror[0m] [0mimport com.typesafe.plugin._;[0m
+[0m[[31merror[0m] [0m           ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:3: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm.SqlParser._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:4: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:5: not found: object controllers[0m
+[0m[[31merror[0m] [0mimport controllers.Frontend.KanbanSocketController[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:6: not found: object model[0m
+[0m[[31merror[0m] [0mimport model.AuthLevel.AuthLevel[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:7: not found: object model[0m
+[0m[[31merror[0m] [0mimport model.BoardValidators.NewBoardValidator[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:8: not found: object model[0m
+[0m[[31merror[0m] [0mimport model._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:9: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.db.DB[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:10: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.Play.current[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:25: not found: type Board[0m
+[0m[[31merror[0m] [0m  protected def getBoardsAuthorizedForUser(id: Long) : Seq[Board] = {[0m
+[0m[[31merror[0m] [0m                                                           ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:26: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection{ implicit c =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:45: not found: type UserBase[0m
+[0m[[31merror[0m] [0m  protected def getAuthorizedUsersForBoards(ids: Seq[Long]) : Seq[UserBase] = {[0m
+[0m[[31merror[0m] [0m                                                                  ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:46: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection{ implicit c =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:80: not found: type AuthLevel[0m
+[0m[[31merror[0m] [0m  protected def getAuthLevelForBoard(userId: Long, boardId: Long): AuthLevel = {[0m
+[0m[[31merror[0m] [0m                                                                   ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:81: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit c =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:102: not found: type ServiceResponse[0m
+[0m[[31merror[0m] [0m  def insertNewBoard(newBoardValidator: NewBoardValidator): ServiceResponse[Long] = {[0m
+[0m[[31merror[0m] [0m                                                            ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:102: not found: type NewBoardValidator[0m
+[0m[[31merror[0m] [0m  def insertNewBoard(newBoardValidator: NewBoardValidator): ServiceResponse[Long] = {[0m
+[0m[[31merror[0m] [0m                                        ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BoardService.scala:103: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit c =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:4: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm.SQL[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:5: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm.sqlToSimple[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:7: not found: object models[0m
+[0m[[31merror[0m] [0mimport models.BudgetTypes[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:8: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.Play.current[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:9: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.db.DB[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:10: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm.SqlParser._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:11: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:12: object typesafe is not a member of package com[0m
+[0m[[31merror[0m] [0mimport com.typesafe.plugin._[0m
+[0m[[31merror[0m] [0m           ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:13: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.data.Form[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:14: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.i18n._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:15: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.mvc._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:16: not found: object models[0m
+[0m[[31merror[0m] [0mimport models.CustomColumns[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:17: not found: object models[0m
+[0m[[31merror[0m] [0mimport models.CustomColumns[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:19: not found: type CustomColumns[0m
+[0m[[31merror[0m] [0mobject BudgetTypeService extends CustomColumns {[0m
+[0m[[31merror[0m] [0m                                 ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:21: not found: type Lang[0m
+[0m[[31merror[0m] [0m  val langObj = new Lang(Lang.forCode("es-ES"))[0m
+[0m[[31merror[0m] [0m                    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:26: not found: type BudgetTypes[0m
+[0m[[31merror[0m] [0m  def findAllBudgetType(pagNo: String, recordOnPage: String): Seq[BudgetTypes] = {[0m
+[0m[[31merror[0m] [0m                                                                  ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:34: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:39: not found: type BudgetTypes[0m
+[0m[[31merror[0m] [0m  def saveBudgetType(obj: BudgetTypes): Long = {[0m
+[0m[[31merror[0m] [0m                          ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:40: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:55: not found: type BudgetTypes[0m
+[0m[[31merror[0m] [0m  def updateBudgetType(obj: BudgetTypes): Int = {[0m
+[0m[[31merror[0m] [0m                            ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:57: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:70: not found: type BudgetTypes[0m
+[0m[[31merror[0m] [0m  def findBudgetTypeById(id: String): Option[BudgetTypes] = {[0m
+[0m[[31merror[0m] [0m                                             ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:74: not found: value DB[0m
+[0m[[31merror[0m] [0m      DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m      ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:83: not found: type BudgetTypes[0m
+[0m[[31merror[0m] [0m  def findBudgetTypeByName(budget_type: String): Seq[BudgetTypes] = {[0m
+[0m[[31merror[0m] [0m                                                     ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:86: not found: value DB[0m
+[0m[[31merror[0m] [0m      DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m      ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:98: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:114: not found: type BudgetTypes[0m
+[0m[[31merror[0m] [0m  def findActiveBudgetTypes(): Seq[BudgetTypes] = {[0m
+[0m[[31merror[0m] [0m                                   ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:116: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:122: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:132: not found: value DB[0m
+[0m[[31merror[0m] [0m      DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m      ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:144: not found: type Form[0m
+[0m[[31merror[0m] [0m  def validateBudgetTypeForm(form: Form[BudgetTypes]): Form[BudgetTypes] = {[0m
+[0m[[31merror[0m] [0m                                                       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:144: not found: type Form[0m
+[0m[[31merror[0m] [0m  def validateBudgetTypeForm(form: Form[BudgetTypes]): Form[BudgetTypes] = {[0m
+[0m[[31merror[0m] [0m                                   ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:145: not found: type Form[0m
+[0m[[31merror[0m] [0m    var newform: Form[BudgetTypes] = null[0m
+[0m[[31merror[0m] [0m                 ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:163: not found: type BudgetTypes[0m
+[0m[[31merror[0m] [0m  def findBudgetTypeByNameForEdit(budget_type: String, budget_type_id: String): Seq[BudgetTypes] = {[0m
+[0m[[31merror[0m] [0m                                                                                    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:165: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:175: not found: value DB[0m
+[0m[[31merror[0m] [0m      DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m      ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:187: not found: type Form[0m
+[0m[[31merror[0m] [0m  def validateEditBudgetTypeForm(form: Form[BudgetTypes]): Form[BudgetTypes] = {[0m
+[0m[[31merror[0m] [0m                                                           ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:187: not found: type Form[0m
+[0m[[31merror[0m] [0m  def validateEditBudgetTypeForm(form: Form[BudgetTypes]): Form[BudgetTypes] = {[0m
+[0m[[31merror[0m] [0m                                       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\BudgetTypeService.scala:188: not found: type Form[0m
+[0m[[31merror[0m] [0m    var newform: Form[BudgetTypes] = null[0m
+[0m[[31merror[0m] [0m                 ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:3: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.Play.current[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:4: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.db.DB[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:5: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.data.Form[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:6: not found: object models[0m
+[0m[[31merror[0m] [0mimport models._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:7: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:8: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.i18n._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:9: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm.SqlParser.scalar[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:11: not found: type CustomColumns[0m
+[0m[[31merror[0m] [0mobject CategoryServices extends CustomColumns {[0m
+[0m[[31merror[0m] [0m                                ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:13: not found: type Lang[0m
+[0m[[31merror[0m] [0m  val langObj = new Lang(Lang.forCode("es-ES"))[0m
+[0m[[31merror[0m] [0m                    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:15: not found: type Categories[0m
+[0m[[31merror[0m] [0m  def findCategoryList(pagNo: String, recordOnPage: String): Seq[Categories] = {[0m
+[0m[[31merror[0m] [0m                                                                 ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:23: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:29: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:35: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:44: not found: type Categories[0m
+[0m[[31merror[0m] [0m  def updateCategory(cat: Categories): Int = {[0m
+[0m[[31merror[0m] [0m                          ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:45: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:61: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:67: not found: type Categories[0m
+[0m[[31merror[0m] [0m  def saveCategory(cat: Categories): Long = {[0m
+[0m[[31merror[0m] [0m                        ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:68: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:80: not found: type Form[0m
+[0m[[31merror[0m] [0m  def validateCategoryForm(form: Form[Categories]): Form[Categories] = {[0m
+[0m[[31merror[0m] [0m                                                    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:80: not found: type Form[0m
+[0m[[31merror[0m] [0m  def validateCategoryForm(form: Form[Categories]): Form[Categories] = {[0m
+[0m[[31merror[0m] [0m                                 ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:81: not found: type Form[0m
+[0m[[31merror[0m] [0m    var newform: Form[Categories] = null[0m
+[0m[[31merror[0m] [0m                 ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\CategoryServices.scala:98: not found: value DB[0m
+[0m[[31merror[0m] [0m    DB.withConnection { implicit connection =>[0m
+[0m[[31merror[0m] [0m    ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ConfigMailAlertService.scala:5: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.data.Form[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ConfigMailAlertService.scala:6: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm.SQL[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ConfigMailAlertService.scala:7: not found: object anorm[0m
+[0m[[31merror[0m] [0mimport anorm.SqlParser.scalar[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ConfigMailAlertService.scala:8: not found: object models[0m
+[0m[[31merror[0m] [0mimport models.{ConfigMailAlert, CustomColumns, Stages}[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ConfigMailAlertService.scala:9: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.api.db.DB[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0mG:\Proyectos\BancoChile\ART\Fuentes\BDC\app\services\ConfigMailAlertService.scala:10: not found: object play[0m
+[0m[[31merror[0m] [0mimport play.i18n._[0m
+[0m[[31merror[0m] [0m       ^[0m
+[0m[[31merror[0m] [0m2440 errors found[0m
+[0m[[0mdebug[0m] [0mCompilation failed (CompilerInterface)[0m
+[0m[[31merror[0m] [0m(compile:[31mcompileIncremental[0m) Compilation failed[0m

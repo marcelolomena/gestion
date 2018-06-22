@@ -4152,7 +4152,7 @@ form button {
 
 #member_list .role {
 	float: left;
-	width: 120px;
+	width: 200px;
 }
 
 #member_list .member {
@@ -4165,7 +4165,7 @@ form button {
 }
 #member_list .asignacion {
 	float: left;
-	width: 50px;
+	width: 90px;
 }
 #member_list .consumo {
 	float: left;
@@ -6321,21 +6321,4 @@ div.oculto {
 	border: 1px solid #666;
     float: left;
     padding: 6px;
-}
-
-#div_sel_type {
-	font-weight: bold;
-	color: #666;
-}
-
-#div_sel_type .active {
-	float: left;
-    width: 25px;
-}
-
-.edit_paneles {
-	background: url("../images/Pen.png") no-repeat;
-	height: 22px;
-	margin-left: 5px;
-	cursor: pointer;
 }

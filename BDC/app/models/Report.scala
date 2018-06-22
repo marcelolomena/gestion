@@ -24,19 +24,6 @@ object Grid {
   }
 }
 
-case class Bubble(a: String, v: JsValue)
-
-object Bubble {
-  implicit val implicitBubbleWrites = new Writes[Bubble] {
-    def writes(bubble: Bubble): JsValue = {
-      Json.obj(
-        "name" -> bubble.a,
-        "data" -> bubble.v
-      )
-    }
-  }
-}
-
 case class Report(
                   program_id: Int,
                   project_id: Option[BigDecimal],

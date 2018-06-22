@@ -23,20 +23,6 @@ object SpiCpiCalculationsService extends CustomColumns {
 
   val langObj = new Lang(Lang.forCode("es-ES"))
 
-  def findCalculationsByIdPanel(id: String, id_panel: String): Seq[SpiCpiCalculations] = {
-
-    var sqlString = "EXEC art.grafico_panel {programId}, {panelId}"
-    val result_empty: Seq[SpiCpiCalculations] = null
-    try {
-      println("------------Grafico para Panel")
-      DB.withConnection { implicit connection =>
-        SQL(sqlString).on('programId -> id, 'panelId -> id_panel).executeQuery() as (SpiCpiCalculations.spiCpiCalculations *)
-      }
-    } catch {
-      case e: com.microsoft.sqlserver.jdbc.SQLServerException => result_empty
-    }
-  }
-
   def findCalculationsById(id: String): Seq[SpiCpiCalculations] = {
 
     var sqlString = "EXEC art.grafico {programId}"
@@ -94,21 +80,5 @@ object SpiCpiCalculationsService extends CustomColumns {
       result
     }
   }
-  
-  def findIndicatorsPanel(idpanel: String): Seq[Indicators] = {
-
-    var sqlString = "EXEC art.calc_task_panel {panel}"
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).on('panel -> idpanel.toInt).executeQuery() as (Indicators.indicators *)
-    }
-  }  
-  
-  def findIndicatorsPanelProporcional(idpanel: String): Seq[Indicators] = {
-
-    var sqlString = "EXEC art.calc_task_panel_proporcional {panel}"
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).on('panel -> idpanel.toInt).executeQuery() as (Indicators.indicators *)
-    }
-  }   
 
 }

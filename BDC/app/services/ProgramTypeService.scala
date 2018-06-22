@@ -158,19 +158,6 @@ object ProgramTypeService extends CustomColumns {
       SQL(sqlString).as(ProgramTypeMaster.programtypes *)
     }
   }
-  
-  /**
-   * Only program type by user profile
-   * RRM
-   */
-  def findProgramTypeListByProfile(profile: String): Seq[ProgramTypeMaster] = {
-    var sqlString = ""
-
-    sqlString = "SELECT a.* from art_profile_program_type b join art_program_type a ON a.id=b.program_type JOIN art_user_profile c ON c.id=b.user_profile where a.is_deleted = 0  AND c.profile_code='"+profile+"' order by a.program_type"
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).as(ProgramTypeMaster.programtypes *)
-    }
-  }  
 
   def programTypeCount(): Long = {
     DB.withConnection { implicit connection =>

@@ -26,13 +26,6 @@ object ImpactTypeService {
       SQL(sqlString).as(ImpactTypes.impactTypes *)
     }
   }  
-  
-  def findImpactTypeListByProfile(profile: String): Seq[ImpactTypes] = {
-    var sqlString = "SELECT a.* from art_program_impact_type a JOIN art_profile_impact_type b ON a.id=b.impact_type JOIN art_user_profile c ON c.id=b.user_profile WHERE c.profile_code='"+profile+"'"
-    DB.withConnection { implicit connection =>
-      SQL(sqlString).as(ImpactTypes.impactTypes *)
-    }
-  }    
 
   /*  def impactTypeCount() :Long = {
     DB.withConnection { implicit connection =>

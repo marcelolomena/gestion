@@ -5,26 +5,52 @@ import scala.math.BigDecimal.double2bigDecimal
 import scala.math.BigDecimal.int2bigDecimal
 import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
+import org.json.JSONObject
 import play.api.mvc.Action
 import play.api.mvc.Controller
+import services.DepartmentService
+import services.DivisionService
+import services.ProgramService
+import services.ProjectService
+import services.SubTaskServices
+import services.TimesheetService
+import services.UserService
 import java.util.Calendar
 import java.util.Date
-import models._
-import play.api.libs.json._
+import models.Baseline
+import play.libs.Json
 import org.json.JSONObject
+import play.api.libs.json
+import play.api.libs.json._
+import services.ProgramMemberService
 import art_forms.ARTForms
-import services._
+import services.ProgramTypeService
+import services.SubTypeService
+import models.SearchCriteria
+import models.VersionDetails
+import services.TaskService
+import services.DocumentService
+import services.DashboardService
+import services.BudgetTypeService
+import services.EarnValueService
 import scala.math.BigDecimal.RoundingMode
+import utils.DateTime
+import services.SpiCpiCalculationsService
+import models.ProgramDetails
+import models.EarnValue
+import models.ReportePrograma
+import services.RiskService
+import models.Panel;
+import models.PanelDepartamento
+import models.DBFilter;
 import java.io.File
-import java.io.PrintWriter
 import java.io.FileOutputStream
 import org.apache.poi.xssf.usermodel._
 import utils.FormattedOutPuts
 import net.liftweb.json._
-import play.Logger
-import play.api.libs.Files.TemporaryFile
-
-
+import net.liftweb.json.JsonParser._
+import models.ATM
+import models.StateSubTarea
 object Dashboard extends Controller {
 
   def fromDashboardName(choice: String, value: String): String = choice match {
@@ -432,10 +458,6 @@ object Dashboard extends Controller {
       }
 
   }
-
-
-
-
   def getATM = Action {
     implicit request =>
       request.session.get("username").map { user =>
@@ -447,25 +469,30 @@ object Dashboard extends Controller {
 
   }
 
-  def burbujas(id: Int) = Action { implicit request =>
+  def burbujas = Action { implicit request =>
     request.session.get("username").map { user =>
 
       val uid = request.session.get("uId").get
-      var data : Seq[Report.Point] = null
-      var bubble: Bubble = null
+      val bubble = DashboardService.reportBubble(uid)
 
-      id match {
-          case 1 =>
-            data = DashboardService.reportBubble(uid)
-            bubble = Bubble("Indicadores de Programa",Json.toJson(data))
+      var node = new JSONObject()
+
+      node.put("showInLegend", false)
+      node.put("name", "Indicadores de Programa")
+      var puntos = new JSONArray()
+      for (p <- bubble) {
+        var punto = new JSONObject()
+        punto.put("x", p.x)
+        punto.put("y", p.y)
+        punto.put("z", p.z)
+        punto.put("programa", p.programa)
+
+        puntos.put(punto)
       }
 
+      node.put("data", puntos)
 
-        Ok(Json.toJson(bubble)).withSession(
-        "username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
@@ -482,120 +509,153 @@ object Dashboard extends Controller {
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
-  }
+  }  
 
-  def pie(id: Int) = Action { implicit request =>
+  def pie = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      var data : Seq[Report.Pie] = null
-      var bubble: Bubble = null
+      val pie = DashboardService.reportPie
 
-      id match {
-        case 1 =>
-          data = DashboardService.reportPie(id)
-          bubble = Bubble("Programas por División", Json.toJson(data))
-        case 2 =>
-          data = DashboardService.reportImpact
-          bubble = Bubble("Impacto por Programas",Json.toJson(data))
-        case 3 =>
-          data = DashboardService.reportType
-          bubble = Bubble("Programas por Tipo",Json.toJson(data))
-        case 4 =>
-          data = DashboardService.reportSubType
-          bubble = Bubble("Foco estrategico",Json.toJson(data))
-        case 5 =>
-          data = DashboardService.reportStatus
-          bubble = Bubble("Programas por Estado",Json.toJson(data))
-        case 6 =>
-          data = DashboardService.reportPie(id)
-          bubble = Bubble("Programas por Gerencia", Json.toJson(data))
-        case 7 =>
-          data = DashboardService.reportPie(id)
-          bubble = Bubble("Programas por Departamento", Json.toJson(data))
+      var node = new JSONObject()
+
+      node.put("showInLegend", false)
+      node.put("titulo", "Programas por División")
+      var puntos = new JSONArray()
+      for (p <- pie) {
+        var punto = new JSONObject()
+        punto.put("dId", p.dId)
+        punto.put("name", p.division + " (" + p.cantidad + ")")
+        punto.put("y", p.cantidad)
+        punto.put("porcentaje", p.porcentaje)
+
+        puntos.put(punto)
       }
 
-        Ok(Json.toJson(bubble)).withSession(
-        "username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-/*
+
   def pieType = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val data = DashboardService.reportType
-      val bubble = Bubble("Programas por Tipo",Json.toJson(data))
+      val pie = DashboardService.reportType
 
-      Ok(Json.toJson(bubble)).withSession(
-        "username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
+      var node = new JSONObject()
+
+      node.put("showInLegend", false)
+      node.put("titulo", "Programas por Tipo")
+      var puntos = new JSONArray()
+      for (p <- pie) {
+        var punto = new JSONObject()
+        punto.put("dId", p.dId)
+        punto.put("name", p.division + " (" + p.cantidad + ")")
+        punto.put("y", p.cantidad)
+        punto.put("porcentaje", p.porcentaje)
+
+        puntos.put(punto)
+      }
+
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-*/
-/*
+  
   def pieDepa = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val data = DashboardService.reportDepa
-      val bubble = Bubble("Indicadores de Departamento",Json.toJson(data))
+      val pie = DashboardService.reportDepa
 
-      Ok(Json.toJson(bubble)).withSession(
-        "username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
+      var node = new JSONObject()
+
+      node.put("showInLegend", false)
+      node.put("titulo", "Programas por Departamento")
+      var puntos = new JSONArray()
+      for (p <- pie) {
+        var punto = new JSONObject()
+        punto.put("dId", p.dId)
+        punto.put("name", p.division + " (" + p.cantidad + ")")
+        punto.put("y", p.cantidad)
+        //punto.put("porcentaje", p.porcentaje)
+
+        puntos.put(punto)
+      }
+
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }  
-*/
-  /*
+
   def pieSubType = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val data = DashboardService.reportSubType
-      val bubble = Bubble("Foco estrategico",Json.toJson(data))
+      val pie = DashboardService.reportSubType
 
-      Ok(Json.toJson(bubble)).withSession(
-        "username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
+      var node = new JSONObject()
+
+      node.put("showInLegend", false)
+      node.put("titulo", "Programas por Foco Estratégico")
+      var puntos = new JSONArray()
+      for (p <- pie) {
+        var punto = new JSONObject()
+        punto.put("dId", p.dId)
+        punto.put("name", p.division + " (" + p.cantidad + ")")
+        punto.put("y", p.cantidad)
+        punto.put("porcentaje", p.porcentaje)
+
+        puntos.put(punto)
+      }
+
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-  */
-  /*
+  
   def pieState = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val data = DashboardService.reportStatus
-      val bubble = Bubble("Programas por Estado",Json.toJson(data))
+      val pie = DashboardService.reportStatus()
 
-      Ok(Json.toJson(bubble)).withSession(
-        "username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
+      var node = new JSONObject()
+
+      node.put("showInLegend", false)
+      node.put("titulo", "Programas por Estado")
+      var puntos = new JSONArray()
+      for (p <- pie) {
+        var punto = new JSONObject()
+        punto.put("dId", p.dId)
+        punto.put("name", p.division + " (" + p.cantidad + ")")
+        punto.put("y", p.cantidad)
+        punto.put("porcentaje", p.porcentaje)
+
+        puntos.put(punto)
+      }
+
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
-  */
+  
     def pieSap = Action { implicit request =>
     request.session.get("username").map { user =>
 
@@ -609,8 +669,8 @@ object Dashboard extends Controller {
       for (p <- pie) {
         var punto = new JSONObject()
         punto.put("dId", p.dId)
-        punto.put("name", p.name + " (" + p.y + ")")
-        punto.put("y", p.y)
+        punto.put("name", p.division + " (" + p.cantidad + ")")
+        punto.put("y", p.cantidad)
         punto.put("porcentaje", p.porcentaje)
 
         puntos.put(punto)
@@ -1256,15 +1316,7 @@ object Dashboard extends Controller {
                     if (m.data.toInt != 0) {
                       qrystr += "work_flow_status" + fromPredicate(m.op) + filtroNombrePrograma("estado", m.data) + " AND "
                     }
-               } else if (m.field.equals("pfecini")) {
-                    qrystr += "plan_start_date" + fromPredicate(m.op) + filtroNombrePrograma("pfecini", m.data) + " AND "
-               } else if (m.field.equals("pfecter")) {
-                 qrystr += "plan_end_date" + fromPredicate(m.op) + filtroNombrePrograma("pfecter", m.data) + " AND "
-               } else if (m.field.equals("rfecini")) {
-                 qrystr += "real_start_date" + fromPredicate(m.op) + filtroNombrePrograma("rfecini", m.data) + " AND "
-               } else if (m.field.equals("rfecter")) {
-                 qrystr += "real_end_date" + fromPredicate(m.op) + filtroNombrePrograma("rfecter", m.data) + " AND "
-               } else {
+               }else{
                     qrystr += m.field + fromPredicate(m.op) + filtroNombrePrograma(m.field, m.data) + " AND "
                }
               }
@@ -2354,414 +2406,5 @@ object Dashboard extends Controller {
       Redirect(routes.Login.loginUser())
     }
   }
-
-  def getPanel2 = Action {
-    implicit request =>
-      request.session.get("username").map { user =>
-
-        Ok(views.html.frontend.dashboard.panelTabs()).withSession(
-          "username" -> request.session.get("username").get,
-          "utype" -> request.session.get("utype").get,
-          "uId" -> request.session.get("uId").get,
-          "user_profile" -> request.session.get("user_profile").get)
-      }.getOrElse {
-        Redirect(routes.Login.loginUser()).withNewSession
-      }
-
-  }
-
-  def report(view: String, level: Int,parent: Int) = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val uid = request.session.get("uId").get
-      val rows = request.getQueryString("rows").getOrElse("20").toInt
-      val page = request.getQueryString("page").getOrElse("1").toInt
-      val sidx = request.getQueryString("sidx").getOrElse("")
-      val sord = request.getQueryString("sord").getOrElse("asc")
-
-      val filters = request.getQueryString("filters").getOrElse("").toString()
-      var qrystr,order = ""
-      var data : Seq[Report] = null
-      var records : Int = 0
-
-      if (!StringUtils.isEmpty(filters)) {
-        val jObject: play.api.libs.json.JsValue = play.api.libs.json.Json.parse(filters)
-
-        if (!jObject.\\("rules").isEmpty) {
-
-          val jList = jObject.\\("rules")
-          var jElement = ""
-          for (j <- jList) {
-            jElement = j.toString()
-            if (!jElement.equals("[]")) {
-
-              implicit val formats = DefaultFormats
-              val json = net.liftweb.json.JsonParser.parse(filters)
-              val elements = (json \\ "rules").children
-              for (acct <- elements) {
-                val m = acct.extract[DBFilter]
-                  if(!m.data.equals("-1")) {
-                    if (m.op.equals("cn"))
-                      qrystr += m.field + " like '%" + m.data + "%' AND "
-                    if (m.op.equals("eq"))
-                      qrystr += m.field + "='" + m.data + "' AND "
-                    else if (m.op.equals("ne"))
-                      qrystr += m.field + "!" + m.data + " AND "
-                    else if (m.op.equals("lt"))
-                      qrystr += m.field + "<" + m.data + " AND "
-                    else if (m.op.equals("le"))
-                      qrystr += m.field + "<='" + m.data + "' AND "
-                    else if (m.op.equals("gt"))
-                      qrystr += m.field + ">" + m.data + " AND "
-                    else if (m.op.equals("ge"))
-                      qrystr += m.field + ">='" + m.data + "' AND "
-                  }
-              }
-
-            }
-          }
-        }
-      }
-
-      if (sidx.isEmpty)
-        order = "ORDER BY program_name " + sord
-      else
-        order = "ORDER BY " + sidx + " " +  sord
-
-      //Logger.debug("view: -------> " + view)
-
-      view match {
-        case "H" =>
-
-          if(level == 0) {
-            qrystr += "tipo ='PROGRAMA' "
-          } else if(level == 1) {
-            qrystr += "tipo ='PROYECTO' AND "
-            qrystr += "program_id = " + parent + " "
-          } else if(level == 2) {
-            qrystr += "tipo ='TAREA' AND "
-            qrystr += "project_id = " + parent + " "
-          } else if(level == 3) {
-            qrystr += "tipo ='SUBTAREA' AND "
-            qrystr += "task_id = " + parent + " "
-          }
-
-          data = DashboardService.manager(page, rows, qrystr, order)
-          records = DashboardService.countManager(qrystr)
-
-          val pageDisplay = Math.ceil(records.toInt / rows.toFloat).toInt
-          val grid = Grid(page, pageDisplay, records,Json.toJson(data))
-
-          Ok(Json.toJson(grid)).withSession(
-            "username" -> request.session.get("username").get,
-            "utype" -> request.session.get("utype").get,
-            "uId" -> request.session.get("uId").get,
-            "user_profile" -> request.session.get("user_profile").get
-          )
-
-        case "X" =>
-          //Logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +qrystr)
-          qrystr += "tipo ='PROGRAMA' OR tipo='PROYECTO' OR tipo='TAREA' OR tipo ='SUBTAREA' "
-          val odn = "order by program_id,project_id,task_id,subtask_id"
-          data = DashboardService.managerWwithoutPage(qrystr, odn)
-          //Logger.debug(data.toString())
-          val file = new File("eliminar.xlsx")
-          val fileOut = new FileOutputStream(file)
-          val wb = new XSSFWorkbook
-          val sheet = wb.createSheet("ART")
-
-          val rowHead = sheet.createRow(0)
-          val style = wb.createCellStyle()
-          val font = wb.createFont()
-
-          var rNum = 1
-          var cNum = 0
-
-          font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL)
-          font.setFontHeightInPoints(10)
-          font.setBold(true)
-          style.setFont(font)
-          rowHead.createCell(0).setCellValue("Tipo")
-          rowHead.createCell(1).setCellValue("Número")
-          rowHead.createCell(2).setCellValue("Programa")
-          rowHead.createCell(3).setCellValue("Foco")
-          rowHead.createCell(4).setCellValue("Tamaño")
-          rowHead.createCell(5).setCellValue("Lider")
-          rowHead.createCell(6).setCellValue("Tipo programa")
-          rowHead.createCell(7).setCellValue("Estado")
-          rowHead.createCell(8).setCellValue("Impacto")
-          rowHead.createCell(9).setCellValue("División")
-          rowHead.createCell(10).setCellValue("Gerencia")
-          rowHead.createCell(11).setCellValue("Departamento")
-          rowHead.createCell(12).setCellValue("Inicio")
-          rowHead.createCell(13).setCellValue("Término")
-          rowHead.createCell(14).setCellValue("Liberación")
-          rowHead.createCell(15).setCellValue("Spi")
-          rowHead.createCell(16).setCellValue("Cpi")
-          rowHead.createCell(17).setCellValue("informado")
-          rowHead.createCell(18).setCellValue("Esperado")
-          rowHead.createCell(19).setCellValue("N° proyectos")
-          rowHead.createCell(20).setCellValue("N° tareas")
-          rowHead.createCell(21).setCellValue("N° subtareas")
-          rowHead.createCell(22).setCellValue("Pmo")
-          rowHead.createCell(23).setCellValue("Consumidas")
-          rowHead.createCell(24).setCellValue("Asignadas")
-          rowHead.createCell(25).setCellValue("recursos sin horas")
-
-
-          for (j <- 0 to 25)
-            rowHead.getCell(j).setCellStyle(style);
-
-          for (s <- data) {
-            val row = sheet.createRow(rNum)
-
-            val cel0 = row.createCell(cNum)
-            cel0.setCellValue(s.tipo.getOrElse(""))
-
-            val cel1 = row.createCell(cNum + 1)
-            cel1.setCellValue(s.pcod.getOrElse(0).toString)
-
-            val cel2 = row.createCell(cNum + 2)
-            cel2.setCellValue(s.program_name.getOrElse(""))
-
-            val cel3 = row.createCell(cNum + 3)
-            cel3.setCellValue(s.foco.getOrElse(""))
-
-            val cel4 = row.createCell(cNum + 4)
-            cel4.setCellValue(s.tamano.getOrElse(""))
-
-            val cel5 = row.createCell(cNum + 5)
-            cel5.setCellValue(s.nombre_lider.getOrElse(""))
-
-            val cel6 = row.createCell(cNum + 6)
-            cel6.setCellValue(s.program_type.getOrElse(""))
-
-            val cel7 = row.createCell(cNum + 7)
-            cel7.setCellValue(s.work_flow_status.getOrElse(""))
-
-            val cel8 = row.createCell(cNum + 8)
-            cel8.setCellValue(s.impact_type.getOrElse(""))
-
-            val cel9 = row.createCell(cNum + 9)
-            cel9.setCellValue(s.name_div.getOrElse(""))
-
-            val cel10 = row.createCell(cNum + 10)
-            cel10.setCellValue(s.name_man.getOrElse(""))
-
-            val cel11 = row.createCell(cNum + 11)
-            cel11.setCellValue(s.name_dep.getOrElse(""))
-
-            val cel12 = row.createCell(cNum + 12)
-            cel12.setCellValue(s.plan_start_date.getOrElse("").toString)
-
-            val cel13 = row.createCell(cNum + 13)
-            cel13.setCellValue(s.plan_end_date.getOrElse(0).toString())
-
-            val cel14 = row.createCell(cNum + 14)
-            cel14.setCellValue(s.release_date.getOrElse(0).toString())
-
-            val cel15 = row.createCell(cNum + 15)
-            cel15.setCellValue(s.spi.getOrElse(0).toString())
-
-            val cel16 = row.createCell(cNum + 16)
-            cel16.setCellValue(s.cpi.getOrElse(0).toString())
-
-            val cel17 = row.createCell(cNum + 17)
-            cel17.setCellValue(s.pai.getOrElse(0).toString)
-
-            val cel18 = row.createCell(cNum + 18)
-            cel18.setCellValue(s.pae.getOrElse(0).toString)
-
-            val cel19 = row.createCell(cNum + 19)
-            cel19.setCellValue(s.count_project.getOrElse(0).toString)
-
-            val cel20 = row.createCell(cNum + 20)
-            cel20.setCellValue(s.count_task.getOrElse(0).toString)
-
-            val cel21 = row.createCell(cNum + 21)
-            cel21.setCellValue(s.count_subtask.getOrElse(0).toString)
-
-            val cel22 = row.createCell(cNum + 22)
-            cel22.setCellValue(s.pmo.getOrElse(""))
-
-            val cel23 = row.createCell(cNum + 23)
-            cel23.setCellValue(s.hours.getOrElse(0).toString)
-
-            val cel24 = row.createCell(cNum + 24)
-            cel24.setCellValue(s.allocation.getOrElse(0).toString)
-
-            val cel25 = row.createCell(cNum + 25)
-            cel25.setCellValue(s.count_subtask_usr.getOrElse(0).toString)
-
-            rNum = rNum + 1
-            cNum = 0
-
-          }
-
-          for (a <- 0 to 25)
-            sheet.autoSizeColumn((a.toInt))
-
-          val time = new Date()
-
-          wb.write(fileOut)
-          fileOut.close()
-          val tempFile = TemporaryFile(file)
-          Ok.sendFile(content = file, fileName = _ => "report_" + time.getTime + ".xlsx",  onClose = () => { tempFile.clean })
-
-      }
-
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
-
-  def listAllDiv = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val div = DashboardService.findAllDivisionRRHH
-
-      Ok(Json.toJson(div)).withSession("username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
-  def listAllSubType = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val div = DashboardService.findAllSubType
-
-      Ok(Json.toJson(div)).withSession("username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
-  def listAllImpactType = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val imp = DashboardService.findAllImpactType
-
-      Ok(Json.toJson(imp)).withSession("username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
-  def listAllInternalState = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val div = DashboardService.findAllInternalState
-
-      Ok(Json.toJson(div)).withSession("username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
-  def listAllMan = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val man = DashboardService.findAllManagerRRHH()
-
-      Ok(Json.toJson(man)).withSession("username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
-  def listAllDep = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val dep = DashboardService.findAllDepartamentRRHH()
-
-      Ok(Json.toJson(dep)).withSession("username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
-  def listAllUserActiveProgram = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val users = DashboardService.findAllUserActiveProgram()
-
-      Ok(Json.toJson(users)).withSession("username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
-  def listAllProgramWorkflowStatus = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val types = DashboardService.findAllStatusProgram
-
-      Ok(Json.toJson(types)).withSession("username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
-  def listAllProgramType = Action { implicit request =>
-    request.session.get("username").map { user =>
-
-      val types = DashboardService.findAllTypeProgram()
-
-      Ok(Json.toJson(types)).withSession("username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
-  def reportFull = Action { implicit request =>
-    request.session.get("username").map { user =>
-      val file = new File("reporte.xlsx")
-      val time = new Date()
-      Ok.sendFile(content = file, fileName = _ => "report_" + time.getTime + ".xlsx")
-
-    }.getOrElse {
-      Redirect(routes.Login.loginUser()).withNewSession
-    }
-  }
-
 
 }
