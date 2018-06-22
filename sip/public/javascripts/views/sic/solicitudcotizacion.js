@@ -7,7 +7,7 @@ $(document).ready(function () {
         success: function (j) {
             $('#provee').append('<option value="0"> - Escoger Proveedor - </option>');
             $.each(j, function (i, item) {
-                $('#provee').append('<option value="' + item.id + '">' + item.razonsocial + '</option>');
+                $('#provee').append('<option value="' + item.idproveedor + '">' + item.razonsocial + '</option>');
             });
         },
         error: function (e) {
@@ -728,11 +728,15 @@ function showSolicitudCotizacion(provee) {
             }
         }
         ];
-    var previousRowId = 0;
     $grid.jqGrid({
         url: '/sic/grid_solicitudcotizacion',
         datatype: "json",
         mtype: "GET",
+        postData: {
+            prove: function () {
+                return provee;
+            }
+        },
         colModel: solicitudcotizacionModel,
         page: 1,
         rowNum: 20,
@@ -890,7 +894,7 @@ function showSolicitudCotizacion(provee) {
             addCaption: "Agrega Solicitud",
             closeAfterAdd: true,
             recreateForm: true,
-            mtype: 'POST',
+            // mtype: 'POST',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: t1,
@@ -975,7 +979,7 @@ function showSolicitudCotizacion(provee) {
         }, {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            mtype: 'POST',
+            // mtype: 'POST',
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -1114,7 +1118,7 @@ function showSolicitudCotizacion(provee) {
                         gridBitacora.renderGrid(loadurl, parentRowKey, targ)
                     } else if (targ === '#triada') {
                         gridTriada.renderGrid(loadurl, parentRowKey, targ)
-                    } 
+                    }
 
             $this.tab('show');
             return false;

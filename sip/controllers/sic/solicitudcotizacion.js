@@ -198,8 +198,8 @@ exports.list = function (req, res) {
     var filters = req.query.filters;
     var sidx = req.query.sidx || 'colorestado';
     var sord = req.query.sord || 'asc';
-    var provee = req.body.provee;
-
+    var provee = req.query.prove;
+    var provee = "0";
     var orden = "[solicitudcotizacion]." + sidx + " " + sord;
 
     var filter_one = []
@@ -265,7 +265,6 @@ exports.list = function (req, res) {
             borrado: 1
         })
     }
-
     utilSeq.buildConditionFilter(filters, function (err, data) {
         if (err) {
             logger.debug("->>> " + err)
@@ -304,6 +303,16 @@ exports.list = function (req, res) {
                 as: 'administrador',
                 foreignKey: 'idadministracion'
             });
+            // models.solicitudcotizacion.belongsToMany(models.solicitudcontrato, {
+            //     as: 'adjudicado',
+            //     through: 'solicitudcotizacion',
+            //     foreignKey: 'id',
+            //     otherKey: 'id'
+            // });
+            models.solicitudcotizacion.hasMany(models.solicitudcontrato, {
+                constraints: false,
+                foreignKey: 'idsolicitudcotizacion'
+            })
             models.solicitudcotizacion.count({
                 where: filter_one,
                 include: [{
@@ -319,9 +328,14 @@ exports.list = function (req, res) {
                     where: filter_four
                 }, {
                     model: models.user,
-                    as: 'administrador'
+                    as: 'administrador',
                     // where: filter_five
-                }]
+                }, {
+                    model: models.solicitudcontrato,
+                    attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
+                    where: { idproveedor: provee }
+                }
+                ]
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 models.solicitudcotizacion.findAll({
@@ -357,7 +371,12 @@ exports.list = function (req, res) {
                         model: models.user,
                         as: 'administrador',
                         // where: filter_five
-                    }]
+                    }, {
+                        model: models.solicitudcontrato,
+                        attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
+                        where: { idproveedor: provee }
+                    }
+                    ]
                 }).then(function (solicitudcotizacion) {
                     return res.json({
                         records: records,
@@ -473,7 +492,7 @@ exports.getUsuariosAdmin = function (req, res) {
 
 
 exports.proveeAdjudicado = function (req, res) {
-    sequelize.query('SELECT DISTINCT (a.id), c.razonsocial FROM sic.solicitudcotizacion a ' +
+    sequelize.query('SELECT DISTINCT (a.id), c.id as idproveedor, c.razonsocial FROM sic.solicitudcotizacion a ' +
         'JOIN sic.solicitudcontrato b ON b.idsolicitudcotizacion = a.id ' +
         'JOIN sip.proveedor c ON c.id = b.idproveedor ' +
         'WHERE EXISTS (SELECT idproveedor FROM sic.solicitudcontrato)',
