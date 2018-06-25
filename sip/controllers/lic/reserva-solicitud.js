@@ -391,6 +391,13 @@ function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idProducto', includes, mapper);
 }
 
+function buscaprod(req, res) {
+
+    models.sequelize.query("SELECT nombre label, id value FROM lic.producto WHERE nombre LIKE '%"+req.params.pId+"%'").spread(function (rows) {
+        return res.json(rows);
+    });
+}
+
 module.exports = {
     list: list,
     nombreJefe: nombreJefe,
@@ -400,5 +407,6 @@ module.exports = {
     listSolicitud: listSolicitud,
     cambioEstado: cambioEstado,
     solicitudReservaPDF: solicitudReservaPDF,
-    listChilds: listChilds
+    listChilds: listChilds,
+    buscaprod: buscaprod
 };

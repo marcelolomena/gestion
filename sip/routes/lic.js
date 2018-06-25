@@ -335,5 +335,9 @@ module.exports = function (passport) {
     router.route('/lic/existeRecepcion/:pId')
         .get(isAuthenticated, detalleCompraTramiteController.existeRecepcion);
 
+    router.route('/lic/buscaprod/:pId')
+    .get(isAuthenticated, reservaSolicitudController.buscaprod);
+        
+
     return router;
 };
