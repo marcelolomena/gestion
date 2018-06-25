@@ -1,4 +1,43 @@
 $(document).ready(function () {
+
+    $.ajax({
+        url: '/sic/proveeAdjudicado',
+        type: 'GET',
+        async: false,
+        success: function (j) {
+            $('#provee').append('<option value="0"> - Escoger Proveedor - </option>');
+            $.each(j, function (i, item) {
+                $('#provee').append('<option value="' + item.idproveedor + '">' + item.razonsocial + '</option>');
+            });
+        },
+        error: function (e) {
+
+        }
+    });
+
+    provee = $('#provee').val();
+    loadGrid(provee);
+
+    $("#buscar").click(function () {
+        provee = $('#provee').val();
+        loadGrid(provee);
+    });
+
+});
+
+var leida = false;
+function loadGrid(provee) {
+    var url = '/sic/grid_solicitudcotizacion';
+    if (leida) {
+        $("#gridMaster").setGridParam({ postData: { provee: provee, page: 1, rows: 10 } });
+        $("#gridMaster").jqGrid('setCaption', "Solicitud de Cotización").jqGrid('setGridParam', { url: url, page: 1 }).jqGrid("setGridParam", { datatype: "json" }).trigger("reloadGrid");
+    } else {
+        showSolicitudCotizacion(provee);
+    }
+}
+
+function showSolicitudCotizacion(provee) {
+
     var t1 = "<div id='responsive-form' class='clearfix'>";
 
     t1 += "<div class='form-row'>";
@@ -689,11 +728,15 @@ $(document).ready(function () {
             }
         }
         ];
-    var previousRowId = 0;
     $grid.jqGrid({
         url: '/sic/grid_solicitudcotizacion',
         datatype: "json",
         mtype: "GET",
+        postData: {
+            prove: function () {
+                return provee;
+            }
+        },
         colModel: solicitudcotizacionModel,
         page: 1,
         rowNum: 20,
@@ -851,7 +894,7 @@ $(document).ready(function () {
             addCaption: "Agrega Solicitud",
             closeAfterAdd: true,
             recreateForm: true,
-            mtype: 'POST',
+            // mtype: 'POST',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: t1,
@@ -936,7 +979,7 @@ $(document).ready(function () {
         }, {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
-            mtype: 'POST',
+            // mtype: 'POST',
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
                 var result = JSON.parse(json);
@@ -1075,11 +1118,11 @@ $(document).ready(function () {
                         gridBitacora.renderGrid(loadurl, parentRowKey, targ)
                     } else if (targ === '#triada') {
                         gridTriada.renderGrid(loadurl, parentRowKey, targ)
-                    } S
+                    }
 
             $this.tab('show');
             return false;
         });
-
     }
-})
+    leida = true;
+}

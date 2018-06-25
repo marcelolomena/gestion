@@ -7,8 +7,6 @@ var logger = require('../../utils/logger');
 var fs = require('fs');
 var path = require("path");
 var _ = require('lodash');
-var constants = require("../../utils/constants");
-var nodemailer = require('nodemailer');
 
 var entity = models.reserva;
 entity.belongsTo(models.producto, {
@@ -24,15 +22,15 @@ entity.belongsTo(models.user, {
 });
 
 var includes = [{
-    model: models.producto
-},
-{
-    model: models.user,
-    as: 'solicitante'
-}, {
-    model: models.user,
-    as: 'aprobador'
-}
+        model: models.producto
+    },
+    {
+        model: models.user,
+        as: 'solicitante'
+    },{
+        model: models.user,
+        as: 'aprobador'
+    }
 ];
 
 function map(req) {
@@ -73,9 +71,9 @@ function mapper(data) {
             idUsuario: item.idUsuario,
             solicitante: {
                 nombre: item.solicitante ? item.solicitante.first_name + ' ' + item.solicitante.last_name : ''
-            },
+            }, 
             aprobador: {
-                nombre: item.aprobador ? item.aprobador.first_name + ' ' + item.aprobador.last_name : ''
+                nombre: item.aprobador ? item.aprobador.first_name + ' ' + item.aprobador.last_name: ''
             }
         }
     });
@@ -149,60 +147,11 @@ function list(req, res) {
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
-            var sap = req.body.sap ? req.body.sap : 0;
-            var sql = "INSERT INTO lic.reserva (idproducto, numlicencia, fechauso, fechasolicitud, cui, sap, comentariosolicitud, estado, idusuario) " +
-                "VALUES (" + req.body.idProducto + ", " + req.body.numlicencia + ", '" + base.strToDateDB(req.body.fechaUso) +
-                "', getdate(), " + req.body.cui + ", " + sap + ", '" + req.body.comentarioSolicitud + "', 'A la Espera', " + req.session.passport.user + ")";
-            var sqlmail = "SELECT emailJefe FROM RecursosHumanos WHERE emailTrab IN (SELECT email FROM art_user WHERE uid="+req.session.passport.user+") "+
-                "AND periodo IN (SELECT max(periodo) FROM RecursosHumanos)";
-            
-            logger.debug("query:" + sql);
-            logger.debug("querymail:" + sqlmail);
-            sequelize.query(sql).then(function (ok) {
-                sequelize.query(sqlmail).then(function (mailto) {
-                    logger.debug("mailto:" + mailto[0][0].emailJefe + ", " + JSON.stringify(mailto));
-                    var htmltext = '<b>Estimado(a) <br><br> La solicitud de reserva del producto "' +
-                        req.body.idProducto + '" ha sido aprobada. <br>Por favor proceder con la instalación.';
-                    let transporter = nodemailer.createTransport({
-                        host: constants.CORREOIP,
-                        port: 25,
-                        secure: false, // true for 465, false for other ports
-                        auth: {
-                            user: constants.CORREOUSR,
-                            pass: constants.CORREOPWD
-                        },
-                        tls: { rejectUnauthorized: false }
-                    });
-                    // setup email data with unicode symbols
-                    let mailOptions = {
-                        from: constants.CORREOFROM, // sender address
-                        to: constants.CORREOTO + ',' + mailto[0][0].emailJefe, // list of receivers
-                        subject: 'Reserva de licencia de software APROBADA', // Subject line
-                        text: 'Aprueba reserva', // plain text body
-                        html: htmltext
-                    };
-                    logger.debug('Server:'+constants.CORREOIP);
-                    logger.debug('MailOPt'+JSON.stringify(mailOptions));
-                    logger.debug("TO:" + constants.CORREOTO + ',' + mailto[0][0].emailJefe);
-                    // send mail with defined transport object
-                    transporter.sendMail(mailOptions, (error, info) => {
-                        if (error) {
-                            return console.log(error);
-                        }
-                        console.log('Msg Reserva-Aprob Enviado: %s', info.messageId);
-                        // Preview only available when sending through an Ethereal account
-                        console.log('URL: %s', nodemailer.getTestMessageUrl(info));
-                    });
-                    return res.json({ error_code: 0 });
-                }).catch(function (err) {
-                    logger.error(err);
-                    return res.json({ error_code: 1 });
-                });
-            }).catch(function (err) {
-                logger.error(err);
-                return res.json({ error_code: 1 });
-            });
-            break;
+            var hoy = "" + new Date().toISOString();
+            req.body.estado = 'A la Espera'
+            req.body.idUsuario = req.session.passport.user;
+            req.body.fechaSolicitud = hoy;
+            return base.create(entity, map(req), res);
         case 'edit':
             req.body.idUsuario = req.session.passport.user;
             return base.update(entity, map(req), res);
@@ -233,11 +182,11 @@ function estado(req, res) {
                 var userJefe = rows[0].first_name + ' ' + rows[0].last_name;
 
                 base.listChilds(req, res, ntt, 'id', [{
-                    model: models.producto
-                },
-                {
-                    model: models.user
-                }
+                        model: models.producto
+                    },
+                    {
+                        model: models.user
+                    }
                 ], function (data) {
                     var result = [];
 
@@ -260,11 +209,11 @@ function estado(req, res) {
             } else {
                 var idUsuarioJe = null;
                 base.listChilds(req, res, ntt, 'id', [{
-                    model: models.producto
-                },
-                {
-                    model: models.user
-                }
+                        model: models.producto
+                    },
+                    {
+                        model: models.user
+                    }
                 ], function (data) {
                     var result = [];
 
@@ -293,8 +242,8 @@ function usuariocui(req, res) {
     models.sequelize.query("select b.cui from dbo.art_user a " +
         "join dbo.RecursosHumanos b on a.email = b.emailTrab " +
         "where a.uid = " + req.session.passport.user + " and periodo = (select max(periodo) from dbo.RecursosHumanos)").spread(function (rows) {
-            return res.json(rows);
-        });
+        return res.json(rows);
+    });
 }
 
 function cambioEstado(req, res) {

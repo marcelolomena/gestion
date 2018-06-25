@@ -119,9 +119,9 @@ module.exports = function (passport) {
 
     router.route('/lic/exportplanilla')
         .get(isAuthenticated, planillaController.excel);
-		
+
     router.route('/lic/downficha/:id')
-        .get(isAuthenticated, planillaController.downFicha);		
+        .get(isAuthenticated, planillaController.downFicha);
 
     router.route('/lic/traduccion')
         .get(isAuthenticated, traduccionController.list);
@@ -337,7 +337,18 @@ module.exports = function (passport) {
 
     router.route('/lic/buscaprod/:pId')
     .get(isAuthenticated, reservaSolicitudController.buscaprod);
-        
+
+    // router.route('/lic/getResulProd/:nombreProd')
+    //     .get(isAuthenticated, productoController.getResulProd);
+
+    // router.route('/lic/prodRenovar/:pId')
+    //     .get(isAuthenticated, compraController.prodRenovar);
+
+    router.route('/lic/prodRenovar/:pId')
+        .get(isAuthenticated, detalleRecepcionController.prodRenovar);
+
+    router.route('/lic/fichatecnica/upload')
+        .post(isAuthenticated, detalleRecepcionController.upload);
 
     return router;
 };

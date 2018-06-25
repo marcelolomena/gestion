@@ -130,9 +130,9 @@ function list(req, res) {
         }
     }
     var sqlcount = "With Lista As   ( SELECT DISTINCT(a.id)  AS count FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto ";
-    
+
     if (filters && condition != "") {
-        sqlcount += " where "+condition + " ";
+        sqlcount += " where " + condition + " ";
     }
     sqlcount += " ) SELECT count(*) AS count FROM lista  "
 
@@ -183,19 +183,19 @@ function list(req, res) {
 function getFabricante(req, res) {
     var idProducto = parseInt(req.params.idProducto);
     entity.findOne({
-            where: {
-                id: idProducto
-            },
-            attributes: ['idfabricante']
-        })
+        where: {
+            id: idProducto
+        },
+        attributes: ['idfabricante']
+    })
         .then(function (result) {
             var idFabric = result.dataValues.idfabricante;
             models.fabricante.findOne({
-                    where: {
-                        id: idFabric
-                    },
-                    attributes: ['nombre']
-                })
+                where: {
+                    id: idFabric
+                },
+                attributes: ['nombre']
+            })
                 .then(function (resulta) {
                     return res.json({
                         error: 0,
@@ -227,15 +227,33 @@ function getProducto(req, res) {
 };
 
 function getProductoCompra(req, res) {
-    var idFabricante = req.params.idFabricante;
-    var sql = 'select distinct a.id, a.nombre from lic.producto a ' +
-        'join lic.compra b on a.id = b.idproducto';
-    sequelize.query(sql)
-        .spread(function (rows) {
-            return res.json(rows);
-        });
+    var valor = 0;
+    var nombreProd = req.params.producto;
+    // var sql = 'SELECT DISTINCT a.id, a.nombre FROM lic.producto a ' +
+    //     'JOIN lic.compra b on a.id = b.idproducto ORDER BY a.nombre ASC';
+
+    var sql = 'SELECT DISTINCT a.id, a.nombre ' +
+        'FROM lic.producto a ' +
+        'JOIN lic.compra b ON a.id = b.idproducto ' +
+        'WHERE a.nombre LIKE %' + nombreProd + '% ' +
+        'ORDER BY a.nombre ASC ' +
+        sequelize.query(sql)
+            .spread(function (rows) {
+                return res.json(rows);
+            });
 
 };
+
+// function getResulProd(req, res) {
+//     var prod = req.params.nombreProd;
+//     var sql = 'SELECT id, nombre FROM ' +
+//         'lic.producto where nombre like %' + prod + '%';
+//     sequelize.query(sql)
+//         .spread(function (rows) {
+//             return res.json(rows);
+//         });
+
+// };
 
 function getProductoLicTramite(req, res) {
     var idProducto = parseInt(req.idProducto);
@@ -305,11 +323,11 @@ function listcompratramite(req, res) {
 function existeOtroProducto(req, res) {
     var nombre = req.params.otroProducto;
     entity.findOne({
-            where: {
-                nombre: nombre
-            },
-            attributes: ['nombre']
-        })
+        where: {
+            nombre: nombre
+        },
+        attributes: ['nombre']
+    })
         .then(function (result) {
             return res.json({
                 error_code: 0,
@@ -343,4 +361,5 @@ module.exports = {
     getProductoCompra: getProductoCompra,
     existeOtroProducto: existeOtroProducto,
     actualizarChubi: actualizarChubi
+    // getResulProd: getResulProd
 }

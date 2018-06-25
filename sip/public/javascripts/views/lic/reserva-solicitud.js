@@ -3,12 +3,8 @@ $(document).ready(function () {
     var tmpl = "<div id='responsive-form' class='clearfix'>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full' style='display: none;'>Producto {idProducto}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>*</span>Producto {idProducto}</div>";
     tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'><span style='color:red'>*</span>Producto {nombreProd}</div>";
-    tmpl += "</div>";    
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'><span style='color:red'>*</span>Cantidad {numlicencia}</div>";
@@ -56,23 +52,14 @@ $(document).ready(function () {
         search: false,
         formatter: returnTaskLink
     }, {
-        label: 'Nombre Producto',
-        name: 'idProducto',
-        width: 250,
-        align: 'center',
-        sortable: false,
-        editable: true,
-        hidden: true 
-    },
-    {
         label: 'Producto',
-        name: 'nombreProd',
+        name: 'idProducto',
         jsonmap: 'producto.nombre',
         width: 250,
         align: 'center',
         sortable: false,
         editable: true,
-        /*edittype: 'select',
+        edittype: 'select',
         editoptions: {
             fullRow: true,
             dataUrl: '/lic/getProductoCompra',
@@ -82,7 +69,7 @@ $(document).ready(function () {
                 var rowData = grid.getRowData(rowKey);
                 var thissid = rowData.nombre;
                 var data = JSON.parse(response);
-                var s = "<select>";
+                var s = "<select>";//el default
                 s += '<option value="0">--Escoger Producto--</option>';
                 $.each(data, function (i, item) {
                     if (data[i].id == thissid) {
@@ -96,51 +83,8 @@ $(document).ready(function () {
         },
         editrules: {
             required: true
-        },*/
-        edittype:"text",
-        search: false,
-        editrules: {
-            required: true
-        },        
-        editoptions: {
-            dataInit: function (element) {
-				$(element).width(170);
-				$(element).addClass("nombreProd");                
-                window.setTimeout(function () {
-                    $(element).autocomplete({
-                        id: 'AutoComplete',
-                        appendTo:"body",
-                        disabled:false,
-                        delay:500,
-                        minLength:4,                        
-                        source: function(request, response){
-                            this.xhr = $.ajax({
-                                type: "GET",
-                                url: '/lic/buscaprod/'+request.term,
-                                data: request,
-                                dataType: "json",
-                                success: function( data ) {
-                                    console.log("data:"+JSON.stringify(data))
-                                    response( data );
-                                },
-                                error: function(model, response, options) {
-                                    response([]);
-                                }
-                            });
-                            $(element).autocomplete('widget').css('font-size','11px');
-                            $(element).autocomplete('widget').css('z-index','1000');
-                        
-                        },
-                        autoFocus: true,
-                        select: function (event, ui) {
-                            $("input#nombreProd").val(ui.item.label); 
-                            $("input#idProducto").val(ui.item.value); 
-                            return false;
-                        },                        
-                    });
-                }, 100);
-            }
-        }
+        },
+        search: false
     }, {
         label: 'Cantidad Lic.',
         name: 'numlicencia',
@@ -328,7 +272,7 @@ $(document).ready(function () {
                 if (rowData.estado != 'A la Espera') {
                     return [false, "No puede editar asignación debe estar en estado A la Espera", ""];
                 } else if (!(postdata.numlicencia > 0)) {
-                    return [false, "Cantidad debe ser mayor que cero", ""];
+                    return [false, "CUI debe ser numérico", ""];
                 } else if (!(postdata.cui > 0)) {
                     return [false, "CUI debe ser numérico", ""];
                 } else if (!(postdata.sap >= 0)) {
@@ -354,7 +298,7 @@ $(document).ready(function () {
                     url: '/lic/usuariocui',
                     async: false,
                     success: function (data) {
-                        if (data.lenght > 0) {
+                        if (data) {
                             $("input#cui").val(data[0].cui);
                             $("#cui").attr('disabled', true);
                         } else {
@@ -362,16 +306,17 @@ $(document).ready(function () {
 
                         }
                     }
-                });    
-                           
+                });
             },
             beforeSubmit: function (postdata, formid) {
                 console.log("beforeSubmit");
                 var grid = $('#grid');
                 var rowKey = grid.getGridParam("selrow");
                 var rowData = grid.getRowData(rowKey);
-                if (!(postdata.numlicencia > 0)) {
-                    return [false, "Cantidad debe ser mayor que cero", ""];
+                if (rowData.estado != 'A la Espera') {
+                    return [false, "No puede editar asignación debe estar en estado A la Espera", ""];
+                } else if (!(postdata.numlicencia > 0)) {
+                    return [false, "CUI debe ser numérico", ""];
                 } else if (!(postdata.cui > 0)) {
                     return [false, "CUI debe ser numérico", ""];
                 } else if (!(postdata.sap >= 0)) {

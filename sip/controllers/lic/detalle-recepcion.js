@@ -71,6 +71,8 @@ function map(req) {
         comprador: req.body.comprador,
         mailComprador: req.body.mailComprador,
         idCompra: req.body.idCompra,
+        idRenovado: req.body.idRenovado ? parseInt(req.body.idRenovado) : 0,
+        fichaTecnica: req.body.fichaTecnica
     }
 }
 
@@ -125,7 +127,11 @@ function mapper(data) {
             numsolicitud: item.numsolicitud,
             ilimitado: item.ilimitado,
             factura: item.factura,
-            idCompra: item.idCompra
+            idCompra: item.idCompra,
+            compra: {
+                nombre: item.compra.idCompra
+            },
+            fichaTecnica: item.fichaTecnica
         };
     });
 }
@@ -176,7 +182,8 @@ function mapCompra(data) {
         idCompra: data.idCompra,
         alertaRenovacion: data.alertaRenovacion,
         comentario: data.comentario,
-        perpetua: 0
+        perpetua: 0,
+        idRenovado: data.idRenovado
     };
 }
 
@@ -428,9 +435,160 @@ function listDetalleCompras(req, res) {
         return result;
     })
 }
+
+function prodRenovar(req, res) {
+    if (req.params.pId == 0) {
+        models.compra.belongsTo(models.producto, {
+            foreignKey: 'idProducto'
+        });
+        models.compra.findAll({
+            attributes: ['id', 'fechaCompra', 'ordenCompra'],
+            order: 'id ASC',
+            where: {
+                idRenovado: 0
+            },
+            include: [{
+                model: models.producto
+            }]
+        }).then(function (com) {
+            return res.json(com);
+        }).catch(function (err) {
+            logger.error(err);
+            res.json({ error: 1 });
+        });
+    } else {
+        models.compra.belongsTo(models.producto, {
+            foreignKey: 'idProducto'
+        });
+        models.compra.findAll({
+            attributes: ['id', 'fechaCompra', 'ordenCompra'],
+            order: 'id ASC',
+            where: {
+                idProducto: req.params.pId,
+                idRenovado: 0
+            },
+            include: [{
+                model: models.producto
+            }]
+        }).then(function (com) {
+            return res.json(com);
+        }).catch(function (err) {
+            logger.error(err);
+            res.json({ error: 1 });
+        });
+    }
+}
+
+function upload(req, res) {
+    if (req.method === 'POST') {
+        var busboy = new Busboy({
+            headers: req.headers
+        });
+        var awaitId = new Promise(function (resolve, reject) {
+            busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+                if (fieldname === 'id') {
+                    try {
+                        resolve(val)
+                    } catch (err) {
+                        return reject(err);
+                    }
+                } else {
+                    return;
+                }
+            });
+        });
+
+        var awaitParent = new Promise(function (resolve, reject) {
+            busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {
+                if (fieldname === 'parent') {
+                    try {
+                        resolve(val)
+                    } catch (err) {
+                        return reject(err);
+                    }
+                } else {
+                    return;
+                }
+            });
+        });
+
+        function copyFile(source, target) {
+            return new Promise(function (resolve, reject) {
+                var rd = fs.createReadStream(source);
+                rd.on('error', rejectCleanup);
+                var wr = fs.createWriteStream(target);
+                wr.on('error', rejectCleanup);
+
+                function rejectCleanup(err) {
+                    rd.destroy();
+                    wr.end();
+                    reject(err);
+                }
+                wr.on('finish', resolve);
+                rd.pipe(wr);
+            });
+        }
+
+        function checkDirectorySync(directory) {
+            try {
+                fs.statSync(directory);
+            } catch (e) {
+                fs.mkdirSync(directory);
+            }
+        }
+
+        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+            var numero = Math.floor((Math.random() * 10000) + 1);
+            var saveTo = path.join(__dirname, '../../docs/lic/', 'fichas', numero + filename);
+            file.pipe(fs.createWriteStream(saveTo));
+            var dir = path.join(__dirname, '../../', 'public/docs/lic/fichas');
+            checkDirectorySync(dir);
+            var dest = path.join(__dirname, '../../', 'public/docs/lic/fichas', numero + filename);
+            copyFile(saveTo, dest)
+            awaitId.then(function (idDetail) {
+                models.detallerecepcion.update({
+                    fichaTecnica: numero + filename
+                }, {
+                        where: {
+                            id: idDetail
+                        }
+                    }).then(function (detallrecepcio) { }).catch(function (err) {
+                        logger.error(err)
+                        res.json({
+                            id: 0,
+                            message: err.message,
+                            success: false
+                        });
+                    });
+            }).catch(function (err) {
+                res.json({
+                    error_code: 1,
+                    message: err.message,
+                    success: false
+                });
+                logger.error(err)
+            });
+
+        });
+
+        busboy.on('finish', function () {
+            logger.debug("Finalizo la transferencia del archivo")
+            res.json({
+                error_code: 0,
+                message: 'Archivo guardado',
+                success: true
+            });
+        });
+
+        return req.pipe(busboy);
+    }
+}
+
 module.exports = {
     listChilds: listChilds,
     action: action,
     listProductChilds: listProductChilds,
-    listDetalleCompras: listDetalleCompras
+    listDetalleCompras: listDetalleCompras,
+    prodRenovar: prodRenovar,
+    upload: upload
 }

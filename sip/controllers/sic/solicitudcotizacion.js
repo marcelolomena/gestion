@@ -198,7 +198,8 @@ exports.list = function (req, res) {
     var filters = req.query.filters;
     var sidx = req.query.sidx || 'colorestado';
     var sord = req.query.sord || 'asc';
-
+    var provee = req.query.prove;
+    var provee = "0";
     var orden = "[solicitudcotizacion]." + sidx + " " + sord;
 
     var filter_one = []
@@ -206,6 +207,7 @@ exports.list = function (req, res) {
     var filter_three = []
     var filter_four = []
     var filter_five = []
+    var filter_six = []
 
     if (filters != undefined) {
         //logger.debug(filters)
@@ -222,6 +224,10 @@ exports.list = function (req, res) {
             } else if (item.field === "numerorfp") {
                 filter_one.push({
                     [item.field]: item.data
+                });
+            } else if (item.field === "provee") {
+                filter_six.push({
+                    [item.field]: provee
                 });
             } else if (item.field === "cui") {
                 filter_two.push({
@@ -259,7 +265,6 @@ exports.list = function (req, res) {
             borrado: 1
         })
     }
-
     utilSeq.buildConditionFilter(filters, function (err, data) {
         if (err) {
             logger.debug("->>> " + err)
@@ -294,11 +299,20 @@ exports.list = function (req, res) {
                 foreignKey: 'idestado'
             });
             // models.plantillaclausula.hasMany(models.cuerpoclausula, { constraints: false, foreignKey: 'idplantillaclausula' });
-            models.solicitudcotizacion.belongsTo(models.user,
-                {
-                    as: 'administrador',
-                    foreignKey: 'idadministracion'
-                });
+            models.solicitudcotizacion.belongsTo(models.user, {
+                as: 'administrador',
+                foreignKey: 'idadministracion'
+            });
+            // models.solicitudcotizacion.belongsToMany(models.solicitudcontrato, {
+            //     as: 'adjudicado',
+            //     through: 'solicitudcotizacion',
+            //     foreignKey: 'id',
+            //     otherKey: 'id'
+            // });
+            models.solicitudcotizacion.hasMany(models.solicitudcontrato, {
+                constraints: false,
+                foreignKey: 'idsolicitudcotizacion'
+            })
             models.solicitudcotizacion.count({
                 where: filter_one,
                 include: [{
@@ -314,9 +328,14 @@ exports.list = function (req, res) {
                     where: filter_four
                 }, {
                     model: models.user,
-                    as: 'administrador'
+                    as: 'administrador',
                     // where: filter_five
-                }]
+                }, {
+                    model: models.solicitudcontrato,
+                    attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
+                    where: { idproveedor: provee }
+                }
+                ]
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
                 models.solicitudcotizacion.findAll({
@@ -352,6 +371,10 @@ exports.list = function (req, res) {
                         model: models.user,
                         as: 'administrador',
                         // where: filter_five
+                    }, {
+                        model: models.solicitudcontrato,
+                        attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
+                        where: { idproveedor: provee }
                     }
                     ]
                 }).then(function (solicitudcotizacion) {
@@ -466,3 +489,19 @@ exports.getUsuariosAdmin = function (req, res) {
         res.json({ error: 1 });
     });
 }
+
+
+exports.proveeAdjudicado = function (req, res) {
+    sequelize.query('SELECT DISTINCT (a.id), c.id as idproveedor, c.razonsocial FROM sic.solicitudcotizacion a ' +
+        'JOIN sic.solicitudcontrato b ON b.idsolicitudcotizacion = a.id ' +
+        'JOIN sip.proveedor c ON c.id = b.idproveedor ' +
+        'WHERE EXISTS (SELECT idproveedor FROM sic.solicitudcontrato)',
+        { replacements: { user_profile: req.params.rol }, type: sequelize.QueryTypes.SELECT }
+    ).then(function (user) {
+        return res.json(user);
+    }).catch(function (err) {
+        logger.error(err)
+        res.json({ error_code: 1 });
+    });
+}
+
