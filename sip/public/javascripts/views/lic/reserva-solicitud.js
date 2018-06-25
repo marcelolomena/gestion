@@ -56,7 +56,7 @@ $(document).ready(function () {
         search: false,
         formatter: returnTaskLink
     }, {
-        label: 'Producto',
+        label: 'Productoo',
         label: 'Nombre Producto',
         name: 'idProducto',
         width: 250,
