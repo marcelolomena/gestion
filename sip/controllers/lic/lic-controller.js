@@ -18,7 +18,8 @@ function create(entity, data, res) {
             return res.json({
                 success: true,
                 error: 0,
-                glosa: ''
+                glosa: '',
+                id: created.id
             });
         }).catch(function (err) {
             logger.error(entity.name + ':create, ' + err);
@@ -43,7 +44,8 @@ function update(entity, data, res) {
             return res.json({
                 success: true,
                 error: 0,
-                glosa: ''
+                glosa: '',
+                id: data.idDetalleRecepcion
             });
         }).catch(function (err) {
             logger.error(entity.name + ':update, ' + err);

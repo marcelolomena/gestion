@@ -598,7 +598,7 @@ var detalleRecepcionGrid = {
             var thissid = rowData.fichaTecnica;
             if (thissid != "") {
                 var lol = jQuery(thissid).attr('href');
-                var numero = jQuery(thissid).attr('href').split("/", 3).join("/").length;
+                var numero = jQuery(thissid).attr('href').split("/", 4).join("/").length;
                 $('#elarchivo').html("<div class='column-full'>Archivo Actual: " + thissid + "</div>");
                 $('input#fichaTecnica', form).attr('readonly', 'readonly');
             } else {
@@ -655,7 +655,7 @@ var detalleRecepcionGrid = {
         grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.prmEdit.beforeSubmit = beforeSubmit;
         grid.prmAdd.afterSubmit = UploadDoc;
-        grid.prmEdit.afterSubmit = UploadDoc;
+        // grid.prmEdit.afterSubmit = UploadDoc;
 
         grid.prmAdd.beforeShowForm = beforeShowFormAdd;
         grid.prmEdit.beforeShowForm = beforeShowFormEdit;
@@ -725,7 +725,7 @@ var detalleRecepcionGrid = {
                         if (typeof (data.success) != 'undefined') {
                             if (data.success == true) {
                                 dialog.find('.bootbox-body').html(data.message);
-                                $("#grid").trigger('reloadGrid');
+                                $table.trigger('reloadGrid');
                             } else {
                                 dialog.find('.bootbox-body').html(data.message);
                             }
@@ -742,7 +742,7 @@ var detalleRecepcionGrid = {
 
         function returnDocLinkDoc(cellValue, options, rowdata) {
             if (rowdata.fichaTecnica != "") {
-                return "<a href='/docs/fichatecnica/" + rowdata.fichaTecnica + "' >" + rowdata.fichaTecnica + "</a>";
+                return "<a href='/docs/lic/fichatecnica/" + rowdata.fichaTecnica + "' >" + rowdata.fichaTecnica + "</a>";
             } else {
                 return "";
             }

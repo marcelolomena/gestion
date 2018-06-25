@@ -5,9 +5,9 @@ var utilSeq = require('../../utils/seq');
 var base = require('./lic-controller');
 var _ = require('lodash');
 var logger = require('../../utils/logger');
+var Busboy = require('busboy');
 var path = require('path');
 var fs = require('fs');
-var Busboy = require('busboy');
 
 var entity = models.instalacion;
 

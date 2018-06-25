@@ -1,9 +1,13 @@
 'use strict';
 var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
+var utilSeq = require('../../utils/seq');
 var base = require('./lic-controller');
 var _ = require('lodash');
 var logger = require('../../utils/logger');
+var Busboy = require('busboy');
+var path = require('path');
+var fs = require('fs');
 
 var entity = models.detalleRecepcion;
 entity.belongsTo(models.proveedor, {
@@ -156,7 +160,8 @@ function mapProducto(data) {
         idFabricante: data.idFabricante,
         idTipoInstalacion: data.idTipoInstalacion,
         idClasificacion: data.idClasificacion,
-        idTipoLicenciamiento: data.idTipoLicenciamiento
+        idTipoLicenciamiento: data.idTipoLicenciamiento,
+        idDetalleRecepcion: data.idDetalleRecepcion
     };
 }
 
@@ -226,6 +231,7 @@ function addDetalle(data, res) {
     } else {
         return base.createP(entity, data)
             .then(function (created) {
+                data.id = created.id;
                 return base.findById(models.producto, data.idProducto)
                     .then(function (item) {
                         var prdData = {
@@ -233,7 +239,8 @@ function addDetalle(data, res) {
                             ilimitado: data.ilimitado,
                             idClasificacion: data.idClasificacion,
                             idTipoInstalacion: data.idTipoInstalacion,
-                            idTipoLicenciamiento: data.idTipoLicenciamiento
+                            idTipoLicenciamiento: data.idTipoLicenciamiento,
+                            idDetalleRecepcion: data.id
                         };
                         if (!prdData.ilimitado) {
                             prdData.licStock = parseInt(item.licStock) + parseInt(data.cantidad);
@@ -546,7 +553,7 @@ function upload(req, res) {
             var dest = path.join(__dirname, '../../', 'public/docs/lic/fichas', numero + filename);
             copyFile(saveTo, dest)
             awaitId.then(function (idDetail) {
-                models.detallerecepcion.update({
+                models.detalleRecepcion.update({
                     fichaTecnica: numero + filename
                 }, {
                         where: {
