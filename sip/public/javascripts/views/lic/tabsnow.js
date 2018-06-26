@@ -24,18 +24,25 @@ var tabSnowGrid = {
         }, {
             label: 'Cantidad',
             name: 'snow',
-            width: 200,
+            width: 100,
+            editable: true,
+            search: false
+        },
+        {
+            label: 'Usuarios',
+            name: 'snow',
+            width: 100,
             editable: true,
             search: false
         }
         ];
-        
+
         var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'SNOW', 'Editar SNOW', 'Agregar SNOW', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         tabGrid.navParameters.edit = false;
         tabGrid.navParameters.add = false;
         tabGrid.navParameters.del = false;
         tabGrid.navParameters.view = false;
-        
+
         tabGrid.build();
     }
 };

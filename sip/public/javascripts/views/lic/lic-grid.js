@@ -95,7 +95,8 @@
         _.each(data, function (item, key) {
             if (item) {
                 selected = item.id == selectedId ? '" selected>' : '">';
-                s += '<option value="' + item.id + selected + item.id +'</option>';
+                // s += '<option value="' + item.id + selected + item.id + '</option>';
+                s += '<option value="' + item.id + selected + 'Contrato: ' + item.contrato + ' - OrdenCompra: ' + item.ordenCompra + ' - FechaCompra: ' + item.fechaCompra + ' - Factura: ' + item.factura + '</option>';
             }
         });
         this.template = s + '</select>';

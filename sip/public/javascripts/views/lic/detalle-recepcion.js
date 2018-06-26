@@ -57,13 +57,11 @@ var detalleRecepcionGrid = {
                             $('input#cantidad').val(fila.cantidad);
                             $('select#idMoneda').val(fila.idMoneda);
                             $('input#monto').val(fila.monto);
-                            // $('input#comprador').val(fila.comprador);
                             $('textarea#comentario').val(fila.comentario);
                             $('select#idCompra').val(fila.idCompra);
                             idproduc = fila.idProducto;
-
                         }
-
+                        $('select#idRenovado').attr('disabled', false);
                         $.ajax({
                             type: "GET",
                             url: '/lic/prodRenovar/' + fila.idProducto,
@@ -72,13 +70,9 @@ var detalleRecepcionGrid = {
                                 $('select#idRenovado').empty();
                                 $('#idRenovado').append('<option value="0"> - Seleccione - </option>');
                                 $.each(j, function (i, item) {
-                                    $('#idRenovado').append('<option value="' + item.id + '">' + item.fechaCompra + '</option>');
+
+                                    $('#idRenovado').append('<option value="' + item.id + '">'+ 'Contrato: ' + item.contrato + ' - OrdenCompra: '+ item.ordenCompra + ' - FechaCompra: '+ item.fechaCompra + ' - Factura: '+ item.factura +'</option>');
                                 });
-                                // var data = JSON.parse(j).rows;
-                                // var rowData = $table.getRowData($table.getGridParam('selrow'));
-                                // var thissid = rowData.idRenovado;
-                                // // var data = JSON.parse(response);
-                                return new zs.SelectTemplateIdCompra(j, 'Seleccione', thissid).template;
                             },
                             error: function (e) {
                             }
@@ -388,6 +382,7 @@ var detalleRecepcionGrid = {
             name: 'cantidad',
             hidden: false,
             editable: true,
+            align: 'center',
             editoptions: {
                 defaultValue: '0'
             },
@@ -402,6 +397,7 @@ var detalleRecepcionGrid = {
             editable: true,
             edittype: 'checkbox',
             editoptions: {
+                fullRow: true,
                 value: 'true:false',
                 defaultValue: false,
                 dataEvents: [{
@@ -420,7 +416,7 @@ var detalleRecepcionGrid = {
             },
             editrules: {
                 required: false
-            },
+            }
         }, {
             label: 'Moneda',
             name: 'idMoneda',
@@ -432,6 +428,7 @@ var detalleRecepcionGrid = {
             edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/moneda',
+                fullRow: false,
                 buildSelect: function (response) {
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.moneda;
@@ -447,6 +444,21 @@ var detalleRecepcionGrid = {
             label: 'Monto',
             name: 'monto',
             width: 80,
+            align: 'center',
+            sortable: true,
+            hidden: false,
+            editable: true,
+            editoptions: {
+                defaultValue: '0'
+            },
+            editrules: {
+                number: true
+            },
+            search: false
+        }, {
+            label: 'Valor Anual Neto',
+            name: 'valorAnualNeto',
+            width: 115,
             align: 'center',
             sortable: true,
             hidden: false,
@@ -476,6 +488,7 @@ var detalleRecepcionGrid = {
         }, {
             label: 'N° Factura',
             name: 'factura',
+            align: 'center',
             hidden: false,
             editable: true
         }, {
@@ -483,14 +496,16 @@ var detalleRecepcionGrid = {
             name: 'comprador',
             width: 170,
             hidden: false,
+            align: 'center',
             editable: true
         }, {
             label: 'Correo Comprador',
             name: 'mailComprador',
             hidden: false,
+            align: 'center',
             editable: true,
             editoptions: {
-                fullRow: true
+                fullRow: false
             }
         }, {
             label: 'Comentario',
@@ -519,12 +534,12 @@ var detalleRecepcionGrid = {
         {
             label: '¿Qué producto renueva?',
             name: 'idRenovado',
-            // jsonmap: 'compra.FechaInicio',
+            jsonmap: 'compra.idRenovado',
             width: 170,
             align: 'center',
             sortable: false,
             editable: true,
-            hidden: false,
+            hidden: true,
             edittype: 'select',
             editoptions: {
                 dataUrl: '/lic/prodRenovar/' + idproduc,
@@ -545,7 +560,6 @@ var detalleRecepcionGrid = {
                     var rowData = $table.getRowData($table.getGridParam('selrow'));
                     var thissid = rowData.idRenovado;
                     var data = JSON.parse(response);
-                    // compraData = JSON.parse(response);
                     return new zs.SelectTemplateIdCompra(data, 'Seleccione', thissid).template;
                 }
             }
@@ -570,10 +584,10 @@ var detalleRecepcionGrid = {
             label: 'Ficha Técnica',
             name: 'fichaTecnica',
             index: 'fichaTecnica',
-            id: 'elarchivo',
+            // id: 'elarchivo',
             hidden: false,
             width: 100,
-            align: "left",
+            align: 'center',
             editable: true,
             editoptions: {
                 custom_element: labelEditFunc,
@@ -590,7 +604,7 @@ var detalleRecepcionGrid = {
         var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'cantidad', '/lic/getsession', ['Administrador LIC']);
 
         function beforeShowFormAdd(form) {
-            $("#elarchivo").empty().html('');
+            $("#d_fichaTecnica").empty().html('');
         }
 
         function beforeShowFormEdit(form) {
@@ -599,10 +613,10 @@ var detalleRecepcionGrid = {
             if (thissid != "") {
                 var lol = jQuery(thissid).attr('href');
                 var numero = jQuery(thissid).attr('href').split("/", 4).join("/").length;
-                $('#elarchivo').html("<div class='column-full'>Archivo Actual: " + thissid + "</div>");
+                $('#d_fichaTecnica').html("<div class='column-full'>Archivo Actual: " + thissid + "</div>");
                 $('input#fichaTecnica', form).attr('readonly', 'readonly');
             } else {
-                $('#elarchivo').html("<div class='column-full'>Archivo Actual: </div>");
+                $('#d_fichaTecnica').html("<div class='column-full'>Archivo Actual: </div>");
                 $('input#fichaTecnica', form).attr('readonly', 'readonly');
             }
         }
@@ -655,7 +669,7 @@ var detalleRecepcionGrid = {
         grid.prmAdd.beforeSubmit = beforeSubmit;
         grid.prmEdit.beforeSubmit = beforeSubmit;
         grid.prmAdd.afterSubmit = UploadDoc;
-        // grid.prmEdit.afterSubmit = UploadDoc;
+        grid.prmEdit.afterSubmit = UploadDoc;
 
         grid.prmAdd.beforeShowForm = beforeShowFormAdd;
         grid.prmEdit.beforeShowForm = beforeShowFormEdit;
@@ -670,9 +684,18 @@ var detalleRecepcionGrid = {
                     $('select#idClasificacion').attr('readonly', 'readonly');
                     $('select#idTipoInstalacion').attr('readonly', 'readonly');
                     $('select#idTipoLicenciamiento').attr('readonly', 'readonly');
+                    $('select#idRenovado').attr('readonly', 'readonly');
                 }, 500);
             }
         };
+        grid.prmAdd.onInitializeForm = function (formid, action) {
+            if (action === 'add') {
+                setTimeout(function () {
+                    // $('select#idRenovado').attr('readonly', 'readonly');
+                    $('select#idRenovado').attr('disabled', true);
+                }, 900);
+            }
+        }
         grid.build();
         return grid;
 
@@ -694,9 +717,7 @@ var detalleRecepcionGrid = {
         }
 
         function UploadDoc(response, postdata) {
-
             var data = $.parseJSON(response.responseText);
-            //console.log(data)
             if (data.success) {
                 if ($("#fileToUpload").val() != "") {
                     ajaxDocUpload(data.id, data.parent);
@@ -706,7 +727,6 @@ var detalleRecepcionGrid = {
         }
 
         function ajaxDocUpload(id, parent) {
-            //console.log(id)
             var dialog = bootbox.dialog({
                 title: 'Se inicia la transferencia',
                 message: '<p><i class="fa fa-spin fa-spinner"></i> Esto puede durar varios minutos...</p>'
@@ -752,7 +772,6 @@ var detalleRecepcionGrid = {
         function returnDocLinkDoc2(cellValue, options, rowdata) {
             if (rowdata.fichaTecnica != "") {
                 return rowdata.fichaTecnica;
-                //return "<a href='/docs/" + parentRowKey + "/" + rowdata.nombrearchivo + "' >"+rowdata.nombrearchivo+"</a>";
             } else {
                 return "";
             }

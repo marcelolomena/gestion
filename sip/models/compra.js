@@ -120,10 +120,15 @@ module.exports = function (sequelize, DataTypes) {
       field: 'idrenovado',
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    valorAnualNeto: {
+      field: 'valoranualneto',
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true
     }
   }, {
-    schema: 'lic',
-    timestamps: false,
-    tableName: 'compra'
-  });
+      schema: 'lic',
+      timestamps: false,
+      tableName: 'compra'
+    });
 };

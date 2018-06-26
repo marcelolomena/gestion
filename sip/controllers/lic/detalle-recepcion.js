@@ -76,7 +76,8 @@ function map(req) {
         mailComprador: req.body.mailComprador,
         idCompra: req.body.idCompra,
         idRenovado: req.body.idRenovado ? parseInt(req.body.idRenovado) : 0,
-        fichaTecnica: req.body.fichaTecnica
+        fichaTecnica: req.body.fichaTecnica,
+        valorAnualNeto: parseInt(req.body.valorAnualNeto || 0)
     }
 }
 
@@ -133,9 +134,11 @@ function mapper(data) {
             factura: item.factura,
             idCompra: item.idCompra,
             compra: {
-                nombre: item.compra.idCompra
+                nombre: item.compra.idCompra,
+                idRenovado: item.compra.idRenovado
             },
-            fichaTecnica: item.fichaTecnica
+            fichaTecnica: item.fichaTecnica,
+            valorAnualNeto: item.valorAnualNeto
         };
     });
 }
@@ -188,7 +191,8 @@ function mapCompra(data) {
         alertaRenovacion: data.alertaRenovacion,
         comentario: data.comentario,
         perpetua: 0,
-        idRenovado: data.idRenovado
+        idRenovado: data.idRenovado,
+        valorAnualNeto: data.valorAnualNeto
     };
 }
 
@@ -306,7 +310,8 @@ function action(req, res) {
                                                 .then(function (items) {
                                                     var updcData = {
                                                         id: detalle.idCompra,
-                                                        alertarenovacion: null
+                                                        alertarenovacion: null,
+                                                        idRenovado: data.idRenovado
                                                     };
                                                     updcData.alertaRenovacion = 'bAl Dia';
                                                     updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
@@ -449,7 +454,7 @@ function prodRenovar(req, res) {
             foreignKey: 'idProducto'
         });
         models.compra.findAll({
-            attributes: ['id', 'fechaCompra', 'ordenCompra'],
+            attributes: ['id', 'fechaCompra', 'ordenCompra', 'contrato', 'factura'],
             order: 'id ASC',
             where: {
                 idRenovado: 0
@@ -458,7 +463,18 @@ function prodRenovar(req, res) {
                 model: models.producto
             }]
         }).then(function (com) {
-            return res.json(com);
+            var result = [];
+            _.each(com, function (item) {
+                var row = {
+                    id: item.id,
+                    fechaCompra: item.fechaCompra ? base.fromDate(item.fechaCompra) : '------------',
+                    ordenCompra: item.ordenCompra ? item.ordenCompra : '----------',
+                    contrato: item.contrato ? item.contrato : '----------',
+                    factura: item.factura ? item.factura : '----------'
+                };
+                result.push(row);
+            })
+            return res.json(result);
         }).catch(function (err) {
             logger.error(err);
             res.json({ error: 1 });
@@ -468,7 +484,7 @@ function prodRenovar(req, res) {
             foreignKey: 'idProducto'
         });
         models.compra.findAll({
-            attributes: ['id', 'fechaCompra', 'ordenCompra'],
+            attributes: ['id', 'fechaCompra', 'ordenCompra', 'contrato', 'factura'],
             order: 'id ASC',
             where: {
                 idProducto: req.params.pId,
@@ -478,7 +494,18 @@ function prodRenovar(req, res) {
                 model: models.producto
             }]
         }).then(function (com) {
-            return res.json(com);
+            var result = [];
+            _.each(com, function (item) {
+                var row = {
+                    id: item.id,
+                    fechaCompra: item.fechaCompra ? base.fromDate(item.fechaCompra) : '------------',
+                    ordenCompra: item.ordenCompra ? item.ordenCompra : '----------',
+                    contrato: item.contrato ? item.contrato : '----------',
+                    factura: item.factura ? item.factura : '----------'
+                };
+                result.push(row);
+            })
+            return res.json(result);
         }).catch(function (err) {
             logger.error(err);
             res.json({ error: 1 });

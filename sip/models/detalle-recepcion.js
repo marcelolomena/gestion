@@ -140,6 +140,11 @@ module.exports = function (sequelize, DataTypes) {
             field: 'fichatecnica',
             type: DataTypes.STRING,
             allowNull: true
+        },
+        valorAnualNeto: {
+            field: 'valoranualneto',
+            type: DataTypes.DECIMAL(10, 2),
+            allowNull: true
         }
     }, {
             schema: 'lic',
