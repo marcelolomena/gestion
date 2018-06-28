@@ -232,10 +232,10 @@ var compraGrid = {
             editable: false,
             search: false,
             formatter: function (rowObject) {
-                if (rowObject == '0') {
+                if (rowObject == '0'|| rowObject == undefined) {
                     return idRenovado = 'NO RENOVADO';
                 } else {
-                    return idRenovado;
+                    return idRenovado = rowObject;
                 }
             }
         }

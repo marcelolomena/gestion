@@ -762,7 +762,7 @@ var detalleRecepcionGrid = {
 
         function returnDocLinkDoc(cellValue, options, rowdata) {
             if (rowdata.fichaTecnica != "") {
-                return "<a href='/docs/lic/fichatecnica/" + rowdata.fichaTecnica + "' >" + rowdata.fichaTecnica + "</a>";
+                return "<a href='/docs/lic/fichas/" + rowdata.fichaTecnica + "' >" + rowdata.fichaTecnica + "</a>";
             } else {
                 return "";
             }
