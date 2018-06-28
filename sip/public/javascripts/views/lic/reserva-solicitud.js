@@ -30,6 +30,10 @@ $(document).ready(function () {
     tmpl += "<div class='column-full'>Comentario Solicitud {comentarioSolicitud}</div>";
     tmpl += "</div>";
 
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>NOTA: En caso de no encontrar el producto, por favor contactarse con el administrador(a) de licencias.</div>";
+    tmpl += "</div>";    
+
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
@@ -88,7 +92,7 @@ $(document).ready(function () {
                         appendTo:"body",
                         disabled:false,
                         delay:500,
-                        minLength:4,                        
+                        minLength:3,                        
                         source: function(request, response){
                             this.xhr = $.ajax({
                                 type: "GET",
@@ -305,10 +309,10 @@ $(document).ready(function () {
                     return [false, "No puede editar asignación debe estar en estado A la Espera", ""];
                 } else if (!(postdata.numlicencia > 0)) {
                     return [false, "Cantidad debe ser mayor que cero", ""];
-                } else if (!(postdata.cui > 0)) {
-                    return [false, "CUI debe ser numérico", ""];
-                } else if (!(postdata.sap >= 0)) {
-                    return [false, "SAP debe ser numérico", ""];
+                } else if (!(postdata.cui > 0) || postdata.cui.length > 4) {
+                    return [false, "CUI debe ser numérico y máximo 4 caracteres", ""];
+                } else if (!(postdata.sap >= 0) || postdata.sap.length > 5) {
+                    return [false, "SAP debe ser numérico y máximo 5 caracteres", ""];
                 } else {
                     return [true, "", ""]
                 }
@@ -330,7 +334,7 @@ $(document).ready(function () {
                     url: '/lic/usuariocui',
                     async: false,
                     success: function (data) {
-                        if (data.lenght > 0) {
+                        if (data.length > 0) {
                             $("input#cui").val(data[0].cui);
                             $("#cui").attr('disabled', true);
                         } else {
@@ -341,16 +345,12 @@ $(document).ready(function () {
                 });
             },
             beforeSubmit: function (postdata, formid) {
-                console.log("beforeSubmit");
-                var grid = $('#grid');
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
                 if (!(postdata.numlicencia > 0)) {
                     return [false, "Cantidad debe ser mayor que cero", ""];
-                } else if (!(postdata.cui > 0)) {
-                    return [false, "CUI debe ser numérico", ""];
-                } else if (!(postdata.sap >= 0)) {
-                    return [false, "SAP debe ser numérico", ""];
+                } else if (!(postdata.cui > 0) || postdata.cui.length > 4) {
+                    return [false, "CUI debe ser numérico y máximo 4 caracteres", ""];
+                } else if (!(postdata.sap >= 0) || postdata.sap.length > 5) {
+                    return [false, "SAP debe ser numérico y máximo 5 caracteres", ""];
                 } else {
                     return [true, "", ""]
                 }

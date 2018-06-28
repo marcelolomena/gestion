@@ -36,6 +36,7 @@ function update(data, res) {
   sql = sql + "idmoneda = " + data.idmoneda + ", ";
   sql = sql + "valorlicencia = " + data.valorlicencia + ", ";
   sql = sql + "valorsoporte = " + data.valorsoporte + ", ";
+  sql = sql + "valoranualneto = " + data.valoranualneto + ", ";
   sql = sql + "comentario ='" + data.comentario + "', ";
 
   if (data.factura.length > 0) {
