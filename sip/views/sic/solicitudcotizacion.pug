@@ -18,7 +18,7 @@ block jsgrilla
     vertical-align:text-top;
             padding-top:2px;
     }   
-  //- link(rel='stylesheet', href='/stylesheets/sic/datetimepicker.css', type='text/css', media='screen', charset='utf-8') 
+  link(rel='stylesheet', href='/stylesheets/sic/solicitudcotizacion.css', type='text/css', media='screen', charset='utf-8')
   script(type='text/javascript', src='/javascripts/moment.js')
   script(type='text/javascript', src='/javascripts/ajaxfileupload.js')
   script(type='text/javascript', src='/javascripts/tinymce/tinymce.min.js')
@@ -39,19 +39,22 @@ block jsgrilla
   script(type='text/javascript', src='/javascripts/views/sic/bitacora.js')
   script(type='text/javascript', src='/javascripts/views/sic/triada.js')
   script(type='text/javascript', src='/javascripts/views/sic/genrfc.js')
-
-block titulogrilla
-block grilla
- .gcontainer
- .cajaFormulario
-  .formProvee
-    | Proveedor: 
-    select#provee
-    #buscar.btn Buscar
  
- table#gridMaster
- #pagerMaster
- #docModal.modal.fade
-  .modal-dialog
-    .modal-content
-      // Content will be loaded here from file
+block titulogrilla
+  .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") PREPARACIÓN RFP
+block grilla
+  .gcontainer
+  .cajaFormulario
+    .formProvee
+      |Proveedor: 
+      select#provee
+      #buscar.btn Buscar
+  div(style='width: 100%')
+  #container(style='width: 100%; float: left; display: inline-block;')
+      table#gridMaster
+        #pagerMaster
+      #docModal.modal.fade
+        .modal-dialog
+          .modal-content
+          // Content will be loaded here from file

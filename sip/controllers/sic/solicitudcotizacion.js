@@ -198,8 +198,8 @@ exports.list = function (req, res) {
     var filters = req.query.filters;
     var sidx = req.query.sidx || 'colorestado';
     var sord = req.query.sord || 'asc';
-    var provee = req.query.prove;
-    var provee = "0";
+    var provee = req.query.provee;
+
     var orden = "[solicitudcotizacion]." + sidx + " " + sord;
 
     var filter_one = []
@@ -208,6 +208,8 @@ exports.list = function (req, res) {
     var filter_four = []
     var filter_five = []
     var filter_six = []
+
+
 
     if (filters != undefined) {
         //logger.debug(filters)
@@ -264,109 +266,183 @@ exports.list = function (req, res) {
         filter_one.push({
             borrado: 1
         })
+
     }
-    utilSeq.buildConditionFilter(filters, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
-            models.solicitudcotizacion.belongsTo(models.estructuracui, {
-                foreignKey: 'idcui'
-            });
-            models.solicitudcotizacion.belongsTo(models.programa, {
-                foreignKey: 'program_id'
-            });
-            models.solicitudcotizacion.belongsTo(models.user, {
-                as: 'tecnico',
-                foreignKey: 'idtecnico'
-            });
-            models.solicitudcotizacion.belongsTo(models.valores, {
-                as: 'clasificacion',
-                foreignKey: 'idclasificacionsolicitud'
-            });
-            models.solicitudcotizacion.belongsTo(models.user, {
-                as: 'negociador',
-                foreignKey: 'idnegociador'
-            });
-            models.solicitudcotizacion.belongsTo(models.tipoclausula, {
-                foreignKey: 'idtipo'
-            });
-            models.solicitudcotizacion.belongsTo(models.valores, {
-                as: 'grupo',
-                foreignKey: 'idgrupo'
-            });
-            models.solicitudcotizacion.belongsTo(models.valores, {
-                as: 'estado',
-                foreignKey: 'idestado'
-            });
-            // models.plantillaclausula.hasMany(models.cuerpoclausula, { constraints: false, foreignKey: 'idplantillaclausula' });
-            models.solicitudcotizacion.belongsTo(models.user, {
-                as: 'administrador',
-                foreignKey: 'idadministracion'
-            });
-            // models.solicitudcotizacion.belongsToMany(models.solicitudcontrato, {
-            //     as: 'adjudicado',
-            //     through: 'solicitudcotizacion',
-            //     foreignKey: 'id',
-            //     otherKey: 'id'
-            // });
-            models.solicitudcotizacion.hasMany(models.solicitudcontrato, {
-                constraints: false,
-                foreignKey: 'idsolicitudcotizacion'
-            })
-            models.solicitudcotizacion.count({
-                where: filter_one,
-                include: [{
-                    model: models.estructuracui,
-                    where: filter_two
-                }, {
-                    model: models.user,
+
+    if (provee == undefined || provee == '0') {
+        filter_six = filter_one;
+
+        utilSeq.buildConditionFilter(filters, function (err, data) {
+            if (err) {
+                logger.debug("->>> " + err)
+            } else {
+                models.solicitudcotizacion.belongsTo(models.estructuracui, {
+                    foreignKey: 'idcui'
+                });
+                models.solicitudcotizacion.belongsTo(models.programa, {
+                    foreignKey: 'program_id'
+                });
+                models.solicitudcotizacion.belongsTo(models.user, {
                     as: 'tecnico',
-                    where: filter_three
-                }, {
-                    model: models.user,
+                    foreignKey: 'idtecnico'
+                });
+                models.solicitudcotizacion.belongsTo(models.valores, {
+                    as: 'clasificacion',
+                    foreignKey: 'idclasificacionsolicitud'
+                });
+                models.solicitudcotizacion.belongsTo(models.user, {
                     as: 'negociador',
-                    where: filter_four
-                }, {
-                    model: models.user,
+                    foreignKey: 'idnegociador'
+                });
+                models.solicitudcotizacion.belongsTo(models.tipoclausula, {
+                    foreignKey: 'idtipo'
+                });
+                models.solicitudcotizacion.belongsTo(models.valores, {
+                    as: 'grupo',
+                    foreignKey: 'idgrupo'
+                });
+                models.solicitudcotizacion.belongsTo(models.valores, {
+                    as: 'estado',
+                    foreignKey: 'idestado'
+                });
+                models.solicitudcotizacion.belongsTo(models.user, {
                     as: 'administrador',
-                    // where: filter_five
-                }, {
-                    model: models.solicitudcontrato,
-                    attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
-                    where: { idproveedor: provee }
-                }
-                ]
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                models.solicitudcotizacion.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    order: orden,
+                    foreignKey: 'idadministracion'
+                });
+                models.solicitudcotizacion.count({
                     where: filter_one,
                     include: [{
                         model: models.estructuracui,
                         where: filter_two
                     }, {
-                        model: models.programa  //left
-                    }, {
                         model: models.user,
                         as: 'tecnico',
                         where: filter_three
-                    }, {
-                        model: models.valores,  //left
-                        as: 'clasificacion'
                     }, {
                         model: models.user,
                         as: 'negociador',
                         where: filter_four
                     }, {
-                        model: models.tipoclausula  //left
+                        model: models.user,
+                        as: 'administrador'
+                        // where: filter_five
+                    }
+                    ]
+                }).then(function (records) {
+                    var total = Math.ceil(records / rows);
+                    models.solicitudcotizacion.findAll({
+                        offset: parseInt(rows * (page - 1)),
+                        limit: parseInt(rows),
+                        order: orden,
+                        where: filter_one,
+                        include: [{
+                            model: models.estructuracui,
+                            where: filter_two
+                        }, {
+                            model: models.programa  //left
+                        }, {
+                            model: models.user,
+                            as: 'tecnico',
+                            where: filter_three
+                        }, {
+                            model: models.valores,  //left
+                            as: 'clasificacion'
+                        }, {
+                            model: models.user,
+                            as: 'negociador',
+                            where: filter_four
+                        }, {
+                            model: models.tipoclausula  //left
+                        }, {
+                            model: models.valores,      //left
+                            as: 'grupo'
+                        }, {
+                            model: models.valores,      //left
+                            as: 'estado'
+                        }, {
+                            model: models.user,
+                            as: 'administrador'
+                            // where: filter_five
+                        }
+                        ]
+                    }).then(function (solicitudcotizacion) {
+                        return res.json({
+                            records: records,
+                            total: total,
+                            page: page,
+                            rows: solicitudcotizacion
+                        });
+                    }).catch(function (err) {
+                        logger.error(err.message);
+                        res.json({
+                            error_code: 1
+                        });
+                    });
+                })
+            }
+        });
+
+
+
+    } else {
+        filter_six.push({
+            ['idproveedor']: provee
+        })
+
+        utilSeq.buildConditionFilter(filters, function (err, data) {
+            if (err) {
+                logger.debug("->>> " + err)
+            } else {
+                models.solicitudcotizacion.belongsTo(models.estructuracui, {
+                    foreignKey: 'idcui'
+                });
+                models.solicitudcotizacion.belongsTo(models.programa, {
+                    foreignKey: 'program_id'
+                });
+                models.solicitudcotizacion.belongsTo(models.user, {
+                    as: 'tecnico',
+                    foreignKey: 'idtecnico'
+                });
+                models.solicitudcotizacion.belongsTo(models.valores, {
+                    as: 'clasificacion',
+                    foreignKey: 'idclasificacionsolicitud'
+                });
+                models.solicitudcotizacion.belongsTo(models.user, {
+                    as: 'negociador',
+                    foreignKey: 'idnegociador'
+                });
+                models.solicitudcotizacion.belongsTo(models.tipoclausula, {
+                    foreignKey: 'idtipo'
+                });
+                models.solicitudcotizacion.belongsTo(models.valores, {
+                    as: 'grupo',
+                    foreignKey: 'idgrupo'
+                });
+                models.solicitudcotizacion.belongsTo(models.valores, {
+                    as: 'estado',
+                    foreignKey: 'idestado'
+                });
+                models.solicitudcotizacion.belongsTo(models.user, {
+                    as: 'administrador',
+                    foreignKey: 'idadministracion'
+                });
+                models.solicitudcotizacion.hasMany(models.solicitudcontrato, {
+                    constraints: false,
+                    foreignKey: 'idsolicitudcotizacion'
+                })
+                models.solicitudcotizacion.count({
+                    where: filter_one,
+                    include: [{
+                        model: models.estructuracui,
+                        where: filter_two
                     }, {
-                        model: models.valores,      //left
-                        as: 'grupo'
+                        model: models.user,
+                        as: 'tecnico',
+                        where: filter_three
                     }, {
-                        model: models.valores,      //left
-                        as: 'estado'
+                        model: models.user,
+                        as: 'negociador',
+                        where: filter_four
                     }, {
                         model: models.user,
                         as: 'administrador',
@@ -374,25 +450,73 @@ exports.list = function (req, res) {
                     }, {
                         model: models.solicitudcontrato,
                         attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
-                        where: { idproveedor: provee }
+                        where: filter_six
                     }
                     ]
-                }).then(function (solicitudcotizacion) {
-                    return res.json({
-                        records: records,
-                        total: total,
-                        page: page,
-                        rows: solicitudcotizacion
+                }).then(function (records) {
+                    var total = Math.ceil(records / rows);
+                    models.solicitudcotizacion.findAll({
+                        offset: parseInt(rows * (page - 1)),
+                        limit: parseInt(rows),
+                        order: orden,
+                        where: filter_one,
+                        include: [{
+                            model: models.estructuracui,
+                            where: filter_two
+                        }, {
+                            model: models.programa  //left
+                        }, {
+                            model: models.user,
+                            as: 'tecnico',
+                            where: filter_three
+                        }, {
+                            model: models.valores,  //left
+                            as: 'clasificacion'
+                        }, {
+                            model: models.user,
+                            as: 'negociador',
+                            where: filter_four
+                        }, {
+                            model: models.tipoclausula  //left
+                        }, {
+                            model: models.valores,      //left
+                            as: 'grupo'
+                        }, {
+                            model: models.valores,      //left
+                            as: 'estado'
+                        }, {
+                            model: models.user,
+                            as: 'administrador',
+                            // where: filter_five
+                        }, {
+                            model: models.solicitudcontrato,
+                            attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
+                            where: filter_six
+                        }
+                        ]
+                    }).then(function (solicitudcotizacion) {
+                        return res.json({
+                            records: records,
+                            total: total,
+                            page: page,
+                            rows: solicitudcotizacion
+                        });
+                    }).catch(function (err) {
+                        logger.error(err.message);
+                        res.json({
+                            error_code: 1
+                        });
                     });
-                }).catch(function (err) {
-                    logger.error(err.message);
-                    res.json({
-                        error_code: 1
-                    });
-                });
-            })
-        }
-    });
+                })
+            }
+        });
+
+
+
+
+    }
+
+
 
 }
 
