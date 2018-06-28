@@ -7,12 +7,6 @@ var compraGrid = {
         var $table = $(table);
 
         var viewModel = [{
-            label: 'ID',
-            name: 'id',
-            key: true,
-            hidden: true,
-            editable: false
-        }, {
             label: 'Id Producto',
             name: 'idProducto',
             hidden: true,
@@ -40,14 +34,24 @@ var compraGrid = {
                         if (rowObject.alertaRenovacion === 'Renovar') {
                             return amarillo
                         } else {
-                            if (rowObject.alertaRenovacion === 'bAl Dia'){
+                            if (rowObject.alertaRenovacion === 'bAl Dia') {
                                 return verde
                             }
-                            
+
                         }
                     }
                 }
             }
+        }, {
+            label: 'ID',
+            name: 'id',
+            width: 60,
+            align: 'center',
+            key: true,
+            hidden: false,
+            sortable: false,
+            editable: false,
+            search: false
         }, {
             label: 'Tipo',
             width: 100,
@@ -187,6 +191,14 @@ var compraGrid = {
             editable: true,
             search: false
         }, {
+            label: 'Valor Anual Neto',
+            name: 'valorAnualNeto',
+            width: 125,
+            align: 'center',
+            sortable: false,
+            editable: true,
+            search: false
+        }, {
             label: 'Valor Soporte',
             name: 'valorSoporte',
             width: 110,
@@ -211,7 +223,23 @@ var compraGrid = {
             sortable: false,
             editable: true,
             search: false
-        }];
+        }, {
+            label: 'ID Renovado',
+            name: 'idRenovado',
+            width: 90,
+            align: 'center',
+            sortable: false,
+            editable: false,
+            search: false,
+            formatter: function (rowObject) {
+                if (rowObject == '0') {
+                    return idRenovado = 'NO RENOVADO';
+                } else {
+                    return idRenovado;
+                }
+            }
+        }
+        ];
 
         var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Compras', 'Editar Compra', 'Agregar compra', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         tabGrid.navParameters.edit = false;
@@ -231,134 +259,136 @@ var recepcionGrid = {
         var $table = $(table);
 
         var viewModel = [{
-                label: 'ID',
-                name: 'id',
-                key: true,
-                hidden: true,
-                editable: false
-            }, {
-                label: 'SAP',
-                name: 'sap',
-                width: 80,
-                align: 'center',
-                sortable: true,
-                editable: false
-            }, {
-                label: 'CUI',
-                name: 'idCui',
-                width: 80,
-                align: 'center',
-                hidden: false,
-                editable: false
-            }, {
-                label: '# Contrato',
-                name: 'numContrato',
-                width: 80,
-                align: 'center',
-                hidden: false,
-                editable: false
-            }, {
-                label: 'O.C.',
-                name: 'ordenCompra',
-                width: 80,
-                align: 'center',
-                hidden: false,
-                editable: false
-            }, {
-                label: 'Proveedor',
-                name: 'idProveedor',
-                jsonmap: 'proveedor.nombre',
-                width: 500,
-                align: 'center',
-                sortable: true,
-                editable: false,
-                search: true,
-                stype: 'select',
-                searchoptions: {
-                    dataUrl: '/lic/proveedor',
-                    buildSelect: function (response) {
-                        var rowData = $table.getRowData($table.getGridParam('selrow'));
-                        var thissid = rowData.fabricante;
-                        var data = JSON.parse(response);
-                        return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
-                    }
+            label: 'ID',
+            name: 'id',
+            key: true,
+            hidden: true,
+            editable: false
+        }, {
+            label: 'SAP',
+            name: 'sap',
+            width: 80,
+            align: 'center',
+            sortable: true,
+            editable: false
+        }, {
+            label: 'CUI',
+            name: 'idCui',
+            width: 80,
+            align: 'center',
+            hidden: false,
+            editable: false
+        }, {
+            label: '# Contrato',
+            name: 'numContrato',
+            width: 80,
+            align: 'center',
+            hidden: false,
+            editable: false
+        }, {
+            label: 'O.C.',
+            name: 'ordenCompra',
+            width: 80,
+            align: 'center',
+            hidden: false,
+            editable: false
+        }, {
+            label: 'Proveedor',
+            name: 'idProveedor',
+            jsonmap: 'proveedor.nombre',
+            width: 500,
+            align: 'center',
+            sortable: true,
+            editable: false,
+            search: true,
+            stype: 'select',
+            searchoptions: {
+                dataUrl: '/lic/proveedor',
+                buildSelect: function (response) {
+                    var rowData = $table.getRowData($table.getGridParam('selrow'));
+                    var thissid = rowData.fabricante;
+                    var data = JSON.parse(response);
+                    return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
                 }
-            }, {
-                label: 'Comprador',
-                name: 'comprador',
-                width: 150,
-                align: 'center',
-                hidden: false,
-                editable: false,
-                search: true
-            }, {
-                label: 'Fecha Inicio',
-                name: 'fechaInicio',
-                width: 100,
-                align: 'center',
-                sortable: true,
-                editable: false,
-                search: false
-            }, {
-                label: 'Fecha Término',
-                name: 'fechaTermino',
-                width: 110,
-                align: 'center',
-                sortable: true,
-                editable: false,
-                search: false
-            }, {
-                label: 'Fecha Control',
-                name: 'fechaControl',
-                width: 100,
-                align: 'center',
-                sortable: true,
-                editable: false,
-                search: false
-            }, {
-                label: 'Cantidad',
-                name: 'cantidad',
-                hidden: false,
-                editable: false,
-                formatter: function (cellvalue, options, rowObject) {
-                    return rowObject.ilimitado ? 'Ilimitado' : cellvalue;
-                }
-            }, {
-                label: 'Ilimitado',
-                name: 'ilimitado',
-                hidden: true,
-            }, {
-                label: 'Moneda',
-                name: 'idMoneda',
-                jsonmap: 'moneda.nombre',
-                width: 100,
-                align: 'center',
-                sortable: true,
-                editable: false,
-                search: false
-            }, {
-                label: 'Monto',
-                name: 'monto',
-                width: 80,
-                align: 'center',
-                sortable: true,
-                hidden: false,
-                editable: false,
-                search: false
-            }, {
-                label: 'N° Factura',
-                name: 'factura',
-                hidden: false,
-                editable: false
             }
-
-
-
-
-
-
-
-
+        }, {
+            label: 'Comprador',
+            name: 'comprador',
+            width: 150,
+            align: 'center',
+            hidden: false,
+            editable: false,
+            search: true
+        }, {
+            label: 'Fecha Inicio',
+            name: 'fechaInicio',
+            width: 100,
+            align: 'center',
+            sortable: true,
+            editable: false,
+            search: false
+        }, {
+            label: 'Fecha Término',
+            name: 'fechaTermino',
+            width: 110,
+            align: 'center',
+            sortable: true,
+            editable: false,
+            search: false
+        }, {
+            label: 'Fecha Control',
+            name: 'fechaControl',
+            width: 100,
+            align: 'center',
+            sortable: true,
+            editable: false,
+            search: false
+        }, {
+            label: 'Cantidad',
+            name: 'cantidad',
+            hidden: false,
+            editable: false,
+            formatter: function (cellvalue, options, rowObject) {
+                return rowObject.ilimitado ? 'Ilimitado' : cellvalue;
+            }
+        }, {
+            label: 'Ilimitado',
+            name: 'ilimitado',
+            hidden: true,
+        }, {
+            label: 'Moneda',
+            name: 'idMoneda',
+            jsonmap: 'moneda.nombre',
+            width: 100,
+            align: 'center',
+            sortable: true,
+            editable: false,
+            search: false
+        }, {
+            label: 'Valor Licencia',
+            name: 'monto',
+            width: 80,
+            align: 'center',
+            sortable: true,
+            hidden: false,
+            editable: false,
+            search: false
+        },
+        {
+            label: 'Valor Anual Neto',
+            name: 'valorAnualNeto',
+            width: 80,
+            align: 'center',
+            sortable: true,
+            hidden: false,
+            editable: false,
+            search: false
+        }, {
+            label: 'N° Factura',
+            name: 'factura',
+            hidden: false,
+            editable: false
+        }
         ];
 
         var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Recepciones', 'Editar Recepción', 'Agregar Recepción', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);

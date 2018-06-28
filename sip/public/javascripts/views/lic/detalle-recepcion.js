@@ -441,7 +441,7 @@ var detalleRecepcionGrid = {
             },
             search: false
         }, {
-            label: 'Monto',
+            label: 'Valor Licencia',
             name: 'monto',
             width: 80,
             align: 'center',
