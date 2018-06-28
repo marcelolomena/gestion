@@ -46,6 +46,7 @@
 
         tmpl += "<div class='form-row' >";
         tmpl += "<div class='column-half'>Valor Soporte {valorsoporte}</div>";
+        tmpl += "<div class='column-half'>Valor Anual Neto {valoranualneto}</div>";
         tmpl += "<div class='column-half'>Fecha Renovación Soporte {fecharenovasoporte}</div>";
         tmpl += "</div>"; 
         
@@ -569,6 +570,22 @@
             formatter: 'integer',
             search: false,
         }, {
+            label: 'Valor Anual Neto',
+            name: 'valoranualneto',
+            width: 120,
+            align: 'center',
+            sortable: false,
+            editable: true,
+            editoptions: {
+                defaultValue: '0'
+            },
+            editoptions: {
+                defaultValue: '0'
+            },
+            formatter: 'integer',
+            search: false,
+        },
+        {
             label: 'Fecha Renovación Soporte',
             name: 'fecharenovasoporte',
             width: 125,
