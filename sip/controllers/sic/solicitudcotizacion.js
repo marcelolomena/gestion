@@ -8,9 +8,11 @@ var secuencia = require("../../utils/secuenciaSIC");
 
 exports.action = function (req, res) {
     var action = req.body.oper;
+    var hoy = "" + new Date().toISOString();
     if (action != "del") {
-        // if (req.body.fechaenviorfp != "")
-        //     fechaenviorfp = req.body.fechaenviorfp.split("-").reverse().join("-")
+        if (req.body.idadministracion != "") {
+            fechaasignacionadmin = hoy;
+        }
     }
     secuencia.getSecuencia(0, function (err, sec) {
         switch (action) {
@@ -38,7 +40,9 @@ exports.action = function (req, res) {
                         borrado: 1,
                         idtipo: req.body.idtipo,
                         idgrupo: req.body.idgrupo,
-                        idestado: req.body.idestado
+                        idestado: req.body.idestado,
+                        idadministracion: req.body.idadministracion ? req.body.idadministracion : null,
+                        fechaasignacionadmin: req.body.fechaasignacionadmin ? req.body.fechaasignacionadmin : null
                     }).then(function (solicitudcotizacion) {
                         res.json({
                             error: 0,
@@ -73,7 +77,9 @@ exports.action = function (req, res) {
                         borrado: 1,
                         idtipo: req.body.idtipo,
                         idgrupo: req.body.idgrupo,
-                        idestado: req.body.idestado
+                        idestado: req.body.idestado,
+                        idadministracion: req.body.idadministracion ? req.body.idadministracion : null,
+                        fechaasignacionadmin: req.body.fechaasignacionadmin ? req.body.fechaasignacionadmin : null
                     }).then(function (solicitudcotizacion) {
                         res.json({
                             error: 0,
@@ -106,7 +112,7 @@ exports.action = function (req, res) {
                         direccionnegociador: req.body.direccionnegociador,
                         numerorfp: req.body.numerorfp,
                         fechaenviorfp: req.body.fechaenviorfp,
-                        idestado: req.body.idestado
+                        idestado: req.body.idestado,
                     }, {
                             where: {
                                 id: req.body.id
@@ -209,7 +215,11 @@ exports.list = function (req, res) {
     var filter_five = []
     var filter_six = []
 
-
+    filter_five.push({
+        ['first_name']: {
+            $ne: null
+        }
+    });
 
     if (filters != undefined) {
         //logger.debug(filters)
@@ -226,10 +236,6 @@ exports.list = function (req, res) {
             } else if (item.field === "numerorfp") {
                 filter_one.push({
                     [item.field]: item.data
-                });
-            } else if (item.field === "provee") {
-                filter_six.push({
-                    [item.field]: provee
                 });
             } else if (item.field === "cui") {
                 filter_two.push({
@@ -266,12 +272,9 @@ exports.list = function (req, res) {
         filter_one.push({
             borrado: 1
         })
-
     }
-
     if (provee == undefined || provee == '0') {
         filter_six = filter_one;
-
         utilSeq.buildConditionFilter(filters, function (err, data) {
             if (err) {
                 logger.debug("->>> " + err)
@@ -324,8 +327,9 @@ exports.list = function (req, res) {
                         where: filter_four
                     }, {
                         model: models.user,
-                        as: 'administrador'
-                        // where: filter_five
+                        as: 'administrador',
+                        where: filter_five,
+                        required: false
                     }
                     ]
                 }).then(function (records) {
@@ -361,8 +365,9 @@ exports.list = function (req, res) {
                             as: 'estado'
                         }, {
                             model: models.user,
-                            as: 'administrador'
-                            // where: filter_five
+                            as: 'administrador',
+                            where: filter_five,
+                            required: false
                         }
                         ]
                     }).then(function (solicitudcotizacion) {
@@ -381,14 +386,10 @@ exports.list = function (req, res) {
                 })
             }
         });
-
-
-
     } else {
         filter_six.push({
             ['idproveedor']: provee
         })
-
         utilSeq.buildConditionFilter(filters, function (err, data) {
             if (err) {
                 logger.debug("->>> " + err)
@@ -446,7 +447,8 @@ exports.list = function (req, res) {
                     }, {
                         model: models.user,
                         as: 'administrador',
-                        // where: filter_five
+                        where: filter_five,
+                        required: false
                     }, {
                         model: models.solicitudcontrato,
                         attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
@@ -487,7 +489,8 @@ exports.list = function (req, res) {
                         }, {
                             model: models.user,
                             as: 'administrador',
-                            // where: filter_five
+                            where: filter_five,
+                            required: false
                         }, {
                             model: models.solicitudcontrato,
                             attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
@@ -607,7 +610,10 @@ exports.getUsuariosAdmin = function (req, res) {
         attributes: ['id', 'uid'],
         where: {
             idsistema: 2,
-            rid: [26, 27]
+            rid: [26, 27],
+            uid: {
+                $ne: req.session.passport.user
+            }
         },
         include: [{
             attributes: ['first_name', 'last_name'],
