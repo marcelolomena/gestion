@@ -598,14 +598,22 @@ exports.traerdatos = function (req, res) {
 
 
 exports.getUsuariosAdmin = function (req, res) {
-
+    models.usrrol.belongsTo(models.user, {
+        as: 'administrador',
+        foreignKey: 'uid'
+    });
     models.usrrol.findAll({
         order: 'id ASC',
         attributes: ['id', 'uid'],
         where: {
             idsistema: 2,
-            rid: 26
+            rid: [26, 27]
         },
+        include: [{
+            attributes: ['first_name', 'last_name'],
+            model: models.user,
+            as: 'administrador'
+        }]
     }).then(function (usrol) {
         return res.json(usrol);
     }).catch(function (err) {

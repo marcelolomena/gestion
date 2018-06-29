@@ -664,9 +664,9 @@ function showSolicitudCotizacion(provee) {
                     s += '<option value="0">--Escoger Ejecutivo Administración--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
-                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].administrador.first_name + ' ' + data[i].administrador.last_name + '</option>';
                         } else {
-                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            s += '<option value="' + data[i].uid + '">' + data[i].administrador.first_name + ' ' + data[i].administrador.last_name + '</option>';
                         }
                     });
                     return s + "</select>";
