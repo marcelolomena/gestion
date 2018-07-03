@@ -292,7 +292,7 @@ function showSolicitudCotizacion(provee) {
             }
         }, {
             label: 'CUI',
-            name: 'idcui',
+            name: 'cui',
             jsonmap: "estructuracui.cui",
             width: 90,
             align: 'center',
@@ -372,7 +372,7 @@ function showSolicitudCotizacion(provee) {
             }
         }, {
             label: 'Técnico Responsable',
-            name: 'idtecnico',
+            name: 'tecnico',
             width: 180,
             search: true,
             align: 'center',
@@ -541,7 +541,7 @@ function showSolicitudCotizacion(provee) {
             }
         }, {
             label: 'Negociador',
-            name: 'idnegociador',
+            name: 'negociador',
             width: 150,
             search: true,
             editable: false,
@@ -676,7 +676,7 @@ function showSolicitudCotizacion(provee) {
         {
 
             label: 'Administración',
-            name: 'idadministracion',
+            name: 'administrador',
             width: 150,
             search: true,
             editable: false,
@@ -887,7 +887,21 @@ function showSolicitudCotizacion(provee) {
                         }
                     });
 
+                    $.get('/sic/getsession', function (data) {
+                        $.each(data, function (i, item) {
+                            if (item.glosarol != 'Encargado Administracion SIC') {
+                                $("#idadministracion", form).attr('disabled', 'disabled');
+
+                            }
+                        });
+                    });
+
                 }, 550);
+
+                // setTimeout(function () {
+                    
+                // }, 500);
+
             }
 
         }, {
@@ -942,19 +956,10 @@ function showSolicitudCotizacion(provee) {
                     }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
-            },
-            beforeShowForm: function (form) {
-                setTimeout(function () {
-                    $.get('/sic/getsession', function (data) {
-                        $.each(data, function (i, item) {
-                            if (item.glosarol === 'Encargado Administracion SIC') {
-                                $("#idadministracion", form).attr('disabled', 'disabled');
-
-                            }
-                        });
-                    });
-                }, 500);
             }
+            // beforeShowForm: function (form) {
+                
+            // }
         }, {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
