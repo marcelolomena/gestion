@@ -292,7 +292,7 @@ function showSolicitudCotizacion(provee) {
             }
         }, {
             label: 'CUI',
-            name: 'idcui',
+            name: 'cui',
             jsonmap: "estructuracui.cui",
             width: 90,
             align: 'center',
@@ -372,7 +372,7 @@ function showSolicitudCotizacion(provee) {
             }
         }, {
             label: 'Técnico Responsable',
-            name: 'idtecnico',
+            name: 'tecnico',
             width: 180,
             search: true,
             align: 'center',
@@ -541,7 +541,7 @@ function showSolicitudCotizacion(provee) {
             }
         }, {
             label: 'Negociador',
-            name: 'idnegociador',
+            name: 'negociador',
             width: 150,
             search: true,
             editable: false,
@@ -664,9 +664,9 @@ function showSolicitudCotizacion(provee) {
                     s += '<option value="0">--Escoger Ejecutivo Administración--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].uid == thissid) {
-                            s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            s += '<option value="' + data[i].uid + '" selected>' + data[i].administrador.first_name + ' ' + data[i].administrador.last_name + '</option>';
                         } else {
-                            s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            s += '<option value="' + data[i].uid + '">' + data[i].administrador.first_name + ' ' + data[i].administrador.last_name + '</option>';
                         }
                     });
                     return s + "</select>";
@@ -676,7 +676,7 @@ function showSolicitudCotizacion(provee) {
         {
 
             label: 'Administración',
-            name: 'idadministracion',
+            name: 'administrador',
             width: 150,
             search: true,
             editable: false,
@@ -887,7 +887,21 @@ function showSolicitudCotizacion(provee) {
                         }
                     });
 
+                    $.get('/sic/getsession', function (data) {
+                        $.each(data, function (i, item) {
+                            if (item.glosarol != 'Encargado Administracion SIC') {
+                                $("#idadministracion", form).attr('disabled', 'disabled');
+
+                            }
+                        });
+                    });
+
                 }, 550);
+
+                // setTimeout(function () {
+                    
+                // }, 500);
+
             }
 
         }, {
@@ -942,40 +956,10 @@ function showSolicitudCotizacion(provee) {
                     }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
-            },
-            beforeShowForm: function (form) {
-                setTimeout(function () {
-
-                    /*
-                    $.get('/sic/getsession', function (data) {
-                        $.each(data, function (i, item) {
-                            if (item.glosarol === 'Negociador SIC') {
-                                //$("#d_idcui", form).hide();
-                                $("#d_idtecnico", form).hide();
-                                $("#d_tipocontrato", form).hide();
-                                $("#d_codigoart", form).hide();
-                                $("#d_sap", form).hide();
-                                $("#d_descripcion", form).hide();
-                                $("#d_idclasificacionsolicitud", form).hide();
-                            } else if (item.glosarol === 'Técnico SIC') {
-                                $("#d_codigosolicitud", form).hide();
-                                $("#d_idclasificacionsolicitud", form).hide();
-                                $("#d_idnegociador", form).hide();
-                                $("#d_correonegociador", form).hide();
-                                $("#d_direccionnegociador", form).hide();
-                                $("#d_fononegociador", form).hide();
-                                $("#d_numerorfp", form).hide();
-                                $("#d_fechaenviorfp", form).hide();
-                                $("#d_tipo", form).hide();
-                                $("#d_grupo", form).hide();
-                            }
-                        });
-                    });
-                    */
-                    // $("#idtipo", form).attr('disabled', 'disabled');
-                    //$("#idgrupo", form).attr('disabled', 'disabled');
-                }, 500);
             }
+            // beforeShowForm: function (form) {
+                
+            // }
         }, {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
