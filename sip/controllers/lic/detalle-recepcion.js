@@ -299,7 +299,8 @@ function action(req, res) {
                                 .then(function (item) {
                                     var updData = {
                                         id: detalle.idProducto,
-                                        ilimitado: data.ilimitado
+                                        ilimitado: data.ilimitado,
+                                        idDetalleRecepcion: data.id
                                     };
                                     if (!updData.ilimitado) {
                                         updData.licStock = item.licStock - detalle.cantidad + data.cantidad
@@ -315,7 +316,7 @@ function action(req, res) {
                                                     };
                                                     updcData.alertaRenovacion = 'bAl Dia';
                                                     updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
-                                                    base.update(models.compra, updcData, res);
+                                                    base.updateP(models.compra, updcData, res);
                                                     models.sequelize.query('EXECUTE lic.alertaRenoSoporteCON ' + updData.id + ';');
                                                     return base.update(models.producto, updData, res);
 
