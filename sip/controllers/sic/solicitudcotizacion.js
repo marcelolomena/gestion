@@ -8,12 +8,6 @@ var secuencia = require("../../utils/secuenciaSIC");
 
 exports.action = function (req, res) {
     var action = req.body.oper;
-    // var hoy = "" + new Date().toISOString();
-    // if (action != "del") {
-    //     if (req.body.idadministracion != 0 ) {
-    //         fechaasignacionadmin = hoy;
-    //     }
-    // }
     secuencia.getSecuencia(0, function (err, sec) {
         switch (action) {
             case "add":
@@ -96,7 +90,6 @@ exports.action = function (req, res) {
                 break;
             case "edit":
                 if (req.body.idadministracion != 0) {
-
                     req.body.fechaasignacionadmin = "" + new Date().toISOString();
                     models.solicitudcotizacion.update({
                         idcui: req.body.idcui,
@@ -118,24 +111,23 @@ exports.action = function (req, res) {
                         idadministracion: req.body.idadministracion,
                         fechaasignacionadmin: req.body.fechaasignacionadmin
                     }, {
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (solicitudcotizacion) {
-                            res.json({
-                                error: 0,
-                                glosa: ''
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({
-                                error: 1,
-                                glosa: err.message
-                            });
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (solicitudcotizacion) {
+                        res.json({
+                            error: 0,
+                            glosa: ''
                         });
-
-
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({
+                            error: 1,
+                            glosa: err.message
+                        });
+                    });
                 } else {
+                    req.body.fechaasignacionadmin = "" + new Date().toISOString();
                     models.solicitudcotizacion.update({
                         idcui: req.body.idcui,
                         idtecnico: req.body.idtecnico,
@@ -152,23 +144,25 @@ exports.action = function (req, res) {
                         direccionnegociador: req.body.direccionnegociador,
                         numerorfp: req.body.numerorfp,
                         fechaenviorfp: req.body.fechaenviorfp,
-                        idestado: req.body.idestado
+                        idestado: req.body.idestado,
+                        idadministracion: req.body.idadministracion,
+                        fechaasignacionadmin: req.body.fechaasignacionadmin
                     }, {
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (solicitudcotizacion) {
-                            res.json({
-                                error: 0,
-                                glosa: ''
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({
-                                error: 1,
-                                glosa: err.message
-                            });
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (solicitudcotizacion) {
+                        res.json({
+                            error: 0,
+                            glosa: ''
                         });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({
+                            error: 1,
+                            glosa: err.message
+                        });
+                    });
                 }
                 break;
             case "del":
@@ -176,7 +170,7 @@ exports.action = function (req, res) {
                     where: {
                         id: req.body.id
                     }
-                }).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+                }).then(function (rowDeleted) {
                     if (rowDeleted === 1) {
                         logger.debug('Deleted successfully');
                     }
@@ -191,9 +185,7 @@ exports.action = function (req, res) {
                         glosa: err.message
                     });
                 });
-
                 break;
-
         }
     });
 }
@@ -205,22 +197,15 @@ exports.list = function (req, res) {
     var sidx = req.query.sidx || 'colorestado';
     var sord = req.query.sord || 'asc';
     var provee = req.query.provee;
-
     var orden = "[solicitudcotizacion]." + sidx + " " + sord;
-
     var filter_one = []
     var filter_two = []
     var filter_three = []
     var filter_four = []
     var filter_five = []
     var filter_six = []
-
     var isrequired = false;
-
-
-
     if (filters != undefined) {
-        //logger.debug(filters)
         var item = {}
         var jsonObj = JSON.parse(filters);
         jsonObj.rules.forEach(function (item) {
@@ -329,8 +314,7 @@ exports.list = function (req, res) {
                         as: 'administrador',
                         where: filter_five,
                         required: isrequired
-                    }
-                    ]
+                    }]
                 }).then(function (records) {
                     var total = Math.ceil(records / rows);
                     models.solicitudcotizacion.findAll({
@@ -342,33 +326,32 @@ exports.list = function (req, res) {
                             model: models.estructuracui,
                             where: filter_two
                         }, {
-                            model: models.programa  //left
+                            model: models.programa //left
                         }, {
                             model: models.user,
                             as: 'tecnico',
                             where: filter_three
                         }, {
-                            model: models.valores,  //left
+                            model: models.valores, //left
                             as: 'clasificacion'
                         }, {
                             model: models.user,
                             as: 'negociador',
                             where: filter_four
                         }, {
-                            model: models.tipoclausula  //left
+                            model: models.tipoclausula //left
                         }, {
-                            model: models.valores,      //left
+                            model: models.valores, //left
                             as: 'grupo'
                         }, {
-                            model: models.valores,      //left
+                            model: models.valores, //left
                             as: 'estado'
                         }, {
                             model: models.user,
                             as: 'administrador',
                             where: filter_five,
                             required: isrequired
-                        }
-                        ]
+                        }]
                     }).then(function (solicitudcotizacion) {
                         return res.json({
                             records: records,
@@ -450,10 +433,11 @@ exports.list = function (req, res) {
                         required: isrequired
                     }, {
                         model: models.solicitudcontrato,
-                        attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
+                        attributes: [
+                            ['idsolicitudcotizacion', 'idsolicitudcotizacion']
+                        ],
                         where: filter_six
-                    }
-                    ]
+                    }]
                 }).then(function (records) {
                     var total = Math.ceil(records / rows);
                     models.solicitudcotizacion.findAll({
@@ -465,25 +449,25 @@ exports.list = function (req, res) {
                             model: models.estructuracui,
                             where: filter_two
                         }, {
-                            model: models.programa  //left
+                            model: models.programa
                         }, {
                             model: models.user,
                             as: 'tecnico',
                             where: filter_three
                         }, {
-                            model: models.valores,  //left
+                            model: models.valores,
                             as: 'clasificacion'
                         }, {
                             model: models.user,
                             as: 'negociador',
                             where: filter_four
                         }, {
-                            model: models.tipoclausula  //left
+                            model: models.tipoclausula
                         }, {
-                            model: models.valores,      //left
+                            model: models.valores,
                             as: 'grupo'
                         }, {
-                            model: models.valores,      //left
+                            model: models.valores,
                             as: 'estado'
                         }, {
                             model: models.user,
@@ -492,10 +476,11 @@ exports.list = function (req, res) {
                             required: isrequired
                         }, {
                             model: models.solicitudcontrato,
-                            attributes: [['idsolicitudcotizacion', 'idsolicitudcotizacion']],
+                            attributes: [
+                                ['idsolicitudcotizacion', 'idsolicitudcotizacion']
+                            ],
                             where: filter_six
-                        }
-                        ]
+                        }]
                     }).then(function (solicitudcotizacion) {
                         return res.json({
                             records: records,
@@ -516,7 +501,6 @@ exports.list = function (req, res) {
 }
 
 exports.tipoclausula = function (req, res) {
-
     models.tipoclausula.findAll({
         order: 'id ASC',
         attributes: ['id', 'nombre']
@@ -528,7 +512,6 @@ exports.tipoclausula = function (req, res) {
             error_code: 1
         });
     });
-
 }
 
 exports.getcolorservicios = function (req, res) {
@@ -548,19 +531,16 @@ exports.getcolorservicios = function (req, res) {
                     }
                 }
             }
-            //logger.debug("el color final= "+colorfinal)
             res.json(colorfinal);
         });
-
 };
+
 exports.tecnicosresponsablescui = function (req, res) {
     var id = req.params.idcui;
     var sql = "select max(periodo) as periodo from RecursosHumanos";
     sequelize.query(sql)
         .spread(function (rows) {
             var periodo = rows[0].periodo
-            //console.log("-----------AQUI VIENE")
-            //console.dir(periodo)
             var sql = "select distinct g.uid, f.nombre, f.apellido, f.numRut from sip.estructuracui a join dbo.art_user c on a.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.RecursosHumanos e on d.emailTrab = e.emailJefe join dbo.RecursosHumanos f on e.emailTrab = f.emailJefe join dbo.art_user g on f.emailTrab = g.email where a.id = " + id + " and d.periodo = " + periodo + " and e.periodo = " + periodo + " and f.periodo = " + periodo + "  UNION (select distinct g.uid, e.nombre, e.apellido, e.numRut from sip.estructuracui a join dbo.art_user c on a.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.RecursosHumanos e on d.emailTrab = e.emailJefe join dbo.art_user g on e.emailTrab = g.email where a.id = " + id + " and d.periodo = " + periodo + " and e.periodo = " + periodo + ") UNION (select distinct g.uid, d.nombre, d.apellido, d.numRut from sip.estructuracui a join dbo.art_user c on a.uid = c.uid join dbo.RecursosHumanos d on d.emailJefe = c.email join dbo.art_user g on d.emailTrab = g.email where a.id   =" + id + " and d.periodo = " + periodo + ") UNION (select distinct c.uid, c.first_name, c.last_name, '' from sip.estructuracui a join dbo.art_user c on a.uid = c.uid where a.id = " + id + ") order by  f.nombre, f.apellido, g.uid,f.numRut";
             sequelize.query(sql)
                 .spread(function (rows) {
@@ -575,13 +555,11 @@ exports.traerdatos = function (req, res) {
         'from dbo.art_user a ' +
         'join dbo.RecursosHumanos b on a.email = b.emailTrab ' +
         'where uid = ' + id + 'and periodo = (select max(periodo) from dbo.RecursosHumanos)'
-    //var sql = " select email, contact_number from art_user where uid=" + id + ";";
     sequelize.query(sql)
         .spread(function (rows) {
             return res.json(rows);
         });
 };
-
 
 exports.getUsuariosAdmin = function (req, res) {
     models.usrrol.belongsTo(models.user, {
@@ -607,22 +585,28 @@ exports.getUsuariosAdmin = function (req, res) {
         return res.json(usrol);
     }).catch(function (err) {
         logger.error(err);
-        res.json({ error: 1 });
+        res.json({
+            error: 1
+        });
     });
 }
-
 
 exports.proveeAdjudicado = function (req, res) {
     sequelize.query('SELECT DISTINCT (a.id), c.id as idproveedor, c.razonsocial FROM sic.solicitudcotizacion a ' +
         'JOIN sic.solicitudcontrato b ON b.idsolicitudcotizacion = a.id ' +
         'JOIN sip.proveedor c ON c.id = b.idproveedor ' +
-        'WHERE EXISTS (SELECT idproveedor FROM sic.solicitudcontrato)',
-        { replacements: { user_profile: req.params.rol }, type: sequelize.QueryTypes.SELECT }
+        'WHERE EXISTS (SELECT idproveedor FROM sic.solicitudcontrato)', {
+            replacements: {
+                user_profile: req.params.rol
+            },
+            type: sequelize.QueryTypes.SELECT
+        }
     ).then(function (user) {
         return res.json(user);
     }).catch(function (err) {
         logger.error(err)
-        res.json({ error_code: 1 });
+        res.json({
+            error_code: 1
+        });
     });
 }
-
