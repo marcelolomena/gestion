@@ -180,7 +180,7 @@ function showSolicitudCotizacion(provee) {
             name: 'fechaenviorfp',
             width: 120,
             align: 'center',
-            search: true,
+            search: false,
             editable: true,
             hidden: false,
             formatter: 'date',
@@ -725,7 +725,8 @@ function showSolicitudCotizacion(provee) {
                         autoclose: true
                     })
                 }
-            }
+            },
+            search: false
         }
         ];
     $grid.jqGrid({

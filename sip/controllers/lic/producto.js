@@ -342,13 +342,12 @@ function existeOtroProducto(req, res) {
 }
 
 function actualizarChubi(req, res) {
-    sequelize.query('EXEC lic.alertaRenoSoporteSIN ').then(function (response) {
+    sequelize.query('EXEC lic.alertaRenoSoporteSIN ').spread(function (response) {
         res.json(response)
     }).error(function (err) {
         res.json(err);
     });
 }
-
 
 module.exports = {
     list: list,
@@ -361,5 +360,4 @@ module.exports = {
     getProductoCompra: getProductoCompra,
     existeOtroProducto: existeOtroProducto,
     actualizarChubi: actualizarChubi
-    // getResulProd: getResulProd
 }
