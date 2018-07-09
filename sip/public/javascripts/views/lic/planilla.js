@@ -47,7 +47,7 @@
         tmpl += "<div class='form-row' >";
         tmpl += "<div class='column-half'>Valor Soporte {valorsoporte}</div>";
         tmpl += "<div class='column-half'>Valor Anual Neto {valoranualneto}</div>";
-        tmpl += "<div class='column-half'>Fecha Renovación Soporte {fecharenovasoporte}</div>";
+        tmpl += "<div class='column-half'>Fecha Control {fecharenovasoporte}</div>";
         tmpl += "</div>"; 
         
         tmpl += "<div class='form-row' >";
@@ -586,7 +586,7 @@
             search: false,
         },
         {
-            label: 'Fecha Renovación Soporte',
+            label: 'Fecha Control',
             name: 'fecharenovasoporte',
             width: 125,
             align: 'center',
@@ -703,7 +703,10 @@
             align: 'left',
             sortable: false,
             editable: true,
-            search: false
+            search: false,
+            editoptions: {
+                readonly: 'readonly'
+            }			
         },{
             label: 'Correo Comprador',
             name: 'correocomprador',

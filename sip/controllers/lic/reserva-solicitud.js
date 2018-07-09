@@ -162,7 +162,7 @@ function action(req, res) {
                 sequelize.query(sqlmail).then(function (mailto) {
                     logger.debug("mailto:" + mailto[0][0].emailJefe + ", " + JSON.stringify(mailto));
                     var htmltext = '<b>Estimado(a) <br><br> Se ha solicitado su aprobaci&oacute;n para reserva del producto "' +
-                        req.body.idProducto + '" para su instalaci&oacute;n. <br>Por favor revisar si procede su aprobaci&oacute;n.';
+                        req.body.nombreProd + '" para su instalaci&oacute;n. <br>Por favor revisar si procede su aprobaci&oacute;n.';
                     let transporter = nodemailer.createTransport({
                         host: constants.CORREOIP,
                         port: 25,

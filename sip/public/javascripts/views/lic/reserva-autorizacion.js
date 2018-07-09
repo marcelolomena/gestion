@@ -80,6 +80,18 @@
                 sortable: false
             },
             {
+                label: 'Nombre Producto',
+                name: 'nombreprod',
+				jsonmap: 'nombre',
+                align: 'center',
+                width: 120,
+                editable: true,
+				hidden:true,
+                search: false,
+                sortable: false,
+				zsHidden:true
+            },			
+            {
                 label: 'Número Licencias',
                 name: 'numlicencia',
                 align: 'center',

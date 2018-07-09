@@ -88,7 +88,8 @@ console.log("Ambiente:"+process.env.NODE_ENV);
 if (process.env.NODE_ENV == 'qadesarrollo' ){
     define("Servidor", 16);
     define("PC", 15); 
-    define("CORREOFROM","pnsilva@labchile.cl");
+    //define("CORREOFROM","pnsilva@labchile.cl");
+	define("CORREOFROM","'Sistema LIC' <no-reply@labchile.cl>");
     define("CORREOTO","pnsilva@labchile.cl");
     define("CORREOIP","200.14.165.153");
     define("CORREOUSR","pnsilva");
@@ -96,7 +97,8 @@ if (process.env.NODE_ENV == 'qadesarrollo' ){
 } else if (process.env.NODE_ENV == 'development') {
     define("Servidor", 14);
     define("PC", 13);
-    define("CORREOFROM","pnsilva@labchile.cl");
+    //define("CORREOFROM","pnsilva@labchile.cl");
+	define("CORREOFROM","'Sistema LIC' <no-reply@labchile.cl>");
     define("CORREOTO","pnsilva@labchile.cl");
     define("CORREOIP","200.14.165.153");
     define("CORREOUSR","pnsilva");
@@ -104,7 +106,8 @@ if (process.env.NODE_ENV == 'qadesarrollo' ){
 } else {
     define("Servidor", 4);
     define("PC", 3);
-    define("CORREOFROM","proyecto_art@bancochile.cl");
+    //define("CORREOFROM","proyecto_art@bancochile.cl");
+	define("CORREOFROM","'Sistema LIC' <proyecto_art@bancochile.cl>");
     define("CORREOTO","jareyesj.workmate@bancochile.cl");
     define("CORREOIP","mail.bancochile.cl");
     define("CORREOUSR","proyecto_art");

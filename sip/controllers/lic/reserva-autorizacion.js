@@ -138,11 +138,11 @@ function action(req, res) {
             var sql = "UPDATE lic.producto SET licReserva= ISNULL(licReserva,0)+" + req.body.numlicencia + " WHERE id IN (SELECT idproducto FROM lic.reserva WHERE id=" + req.body.id + ");" +
                 "UPDATE lic.reserva SET fechaautorizacion=getdate(), idusuarioautoriza=" + usr + ", estado='" + estado + "', comentarioautorizacion='" + comen + "' WHERE id=" + req.body.id;
             sequelize.query(sql).then(function (ok) {
-                var sqlmail = "select email from art_user where uid in (select idusuario from lic.reserva where id=" + usr + ")";
+                var sqlmail = "select email from art_user where uid in (select idusuario from lic.reserva where id=" + req.body.id + ")";
                 sequelize.query(sqlmail).then(function (mailto) {
                     logger.debug("mailto:" + mailto[0][0].email + ", " + JSON.stringify(mailto));
                     var htmltext = '<b>Estimado(a) <br><br> La solicitud de reserva del producto "' +
-                        req.body.idProducto + '" ha sido aprobada. <br>Por favor proceder con la instalación.';
+                        req.body.nombreprod + '" ha sido aprobada. <br>Por favor proceder con la instalación.';
                     let transporter = nodemailer.createTransport({
                         host: constants.CORREOIP,
                         port: 25,
