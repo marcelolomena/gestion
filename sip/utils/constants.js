@@ -84,6 +84,10 @@ define("FinExitoCargaDTE", 39);
 define("FinErrorCargaDTE", 40);
 
 //Tipos de instalación
+define("TIPO_INST_PC", 3);
+define("TIPO_INST_SRV", 4);
+
+//Tipo de ambiente
 console.log("Ambiente:"+process.env.NODE_ENV);
 if (process.env.NODE_ENV == 'qadesarrollo' ){
     define("Servidor", 16);
@@ -94,6 +98,8 @@ if (process.env.NODE_ENV == 'qadesarrollo' ){
     define("CORREOIP","200.14.165.153");
     define("CORREOUSR","pnsilva");
     define("CORREOPWD","Banco01");
+	define("MAIL_INST_PC", "pnsilva@labchile.cl");
+	define("MAIL_INST_SRV", "pnsilva@labchile.cl");	
 } else if (process.env.NODE_ENV == 'development') {
     define("Servidor", 14);
     define("PC", 13);
@@ -102,7 +108,9 @@ if (process.env.NODE_ENV == 'qadesarrollo' ){
     define("CORREOTO","pnsilva@labchile.cl");
     define("CORREOIP","200.14.165.153");
     define("CORREOUSR","pnsilva");
-    define("CORREOPWD","Banco01");         
+    define("CORREOPWD","Banco01"); 
+	define("MAIL_INST_PC", "pnsilva@labchile.cl");
+	define("MAIL_INST_SRV", "pnsilva@labchile.cl");	
 } else {
     define("Servidor", 4);
     define("PC", 3);
@@ -112,4 +120,6 @@ if (process.env.NODE_ENV == 'qadesarrollo' ){
     define("CORREOIP","mail.bancochile.cl");
     define("CORREOUSR","proyecto_art");
     define("CORREOPWD","Banco01"); 
+	define("MAIL_INST_PC", "pyanezs@bancochile.cl");
+	define("MAIL_INST_SRV", "jareyesj.workmate@bancochile.cl");	
 }

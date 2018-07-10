@@ -134,48 +134,49 @@ function action(req, res) {
             var usr = req.session.passport.user;
             var estado = req.body.estadoAutorizacion;
             var comen = req.body.comentarioAutorizacion;
+			secuencia.getSecuencia(0, function (err, sec) {
+				var sql = "UPDATE lic.producto SET licReserva= ISNULL(licReserva,0)+" + req.body.numlicencia + " WHERE id IN (SELECT idproducto FROM lic.reserva WHERE id=" + req.body.id + ");" +
+					"UPDATE lic.reserva SET fechaautorizacion=getdate(), idusuarioautoriza=" + usr + ", estado='" + estado + "', comentarioautorizacion='" + comen + "', codautoriza='"+sec+"' WHERE id=" + req.body.id;
+				sequelize.query(sql).then(function (ok) {
+					var sqlmail = "select email from art_user where uid in (select idusuario from lic.reserva where id=" + req.body.id + ")";
+					sequelize.query(sqlmail).then(function (mailto) {
+						logger.debug("mailto:" + mailto[0][0].email + ", " + JSON.stringify(mailto));
+						var htmltext = '<b>Estimado(a) <br><br> La solicitud de reserva del producto "' +
+							req.body.nombreprod + '" ha sido aprobada. <br>Por favor proceder con la instalación.';
+						let transporter = nodemailer.createTransport({
+							host: constants.CORREOIP,
+							port: 25,
+							secure: false, // true for 465, false for other ports
+							auth: {
+								user: constants.CORREOUSR,
+								pass: constants.CORREOPWD
+							},
+							tls: { rejectUnauthorized: false }
+						});
+						// setup email data with unicode symbols
+						let mailOptions = {
+							from: constants.CORREOFROM, // sender address
+							to: constants.CORREOTO + ',' + mailto[0][0].email, // list of receivers
+							subject: 'Reserva de licencia de software APROBADA', // Subject line
+							text: 'Aprueba reserva', // plain text body
+							html: htmltext
+						};
 
-            var sql = "UPDATE lic.producto SET licReserva= ISNULL(licReserva,0)+" + req.body.numlicencia + " WHERE id IN (SELECT idproducto FROM lic.reserva WHERE id=" + req.body.id + ");" +
-                "UPDATE lic.reserva SET fechaautorizacion=getdate(), idusuarioautoriza=" + usr + ", estado='" + estado + "', comentarioautorizacion='" + comen + "' WHERE id=" + req.body.id;
-            sequelize.query(sql).then(function (ok) {
-                var sqlmail = "select email from art_user where uid in (select idusuario from lic.reserva where id=" + req.body.id + ")";
-                sequelize.query(sqlmail).then(function (mailto) {
-                    logger.debug("mailto:" + mailto[0][0].email + ", " + JSON.stringify(mailto));
-                    var htmltext = '<b>Estimado(a) <br><br> La solicitud de reserva del producto "' +
-                        req.body.nombreprod + '" ha sido aprobada. <br>Por favor proceder con la instalación.';
-                    let transporter = nodemailer.createTransport({
-                        host: constants.CORREOIP,
-                        port: 25,
-                        secure: false, // true for 465, false for other ports
-                        auth: {
-                            user: constants.CORREOUSR,
-                            pass: constants.CORREOPWD
-                        },
-                        tls: { rejectUnauthorized: false }
-                    });
-                    // setup email data with unicode symbols
-                    let mailOptions = {
-                        from: constants.CORREOFROM, // sender address
-                        to: constants.CORREOTO + ',' + mailto[0][0].email, // list of receivers
-                        subject: 'Reserva de licencia de software APROBADA', // Subject line
-                        text: 'Aprueba reserva', // plain text body
-                        html: htmltext
-                    };
-
-                    //console.log('MailOPt'+JSON.stringify(mailOptions));
-                    console.log("TO:" + constants.CORREOTO + ',' + mailto[0][0].email);
-                    // send mail with defined transport object
-                    transporter.sendMail(mailOptions, (error, info) => {
-                        if (error) {
-                            return console.log(error);
-                        }
-                        console.log('Msg Reserva-Aprob Enviado: %s', info.messageId);
-                        // Preview only available when sending through an Ethereal account
-                        console.log('URL: %s', nodemailer.getTestMessageUrl(info));
-                    });
-                    return res.json({ error_code: 0 });
-                });
-            });
+						//console.log('MailOPt'+JSON.stringify(mailOptions));
+						console.log("TO:" + constants.CORREOTO + ',' + mailto[0][0].email);
+						// send mail with defined transport object
+						transporter.sendMail(mailOptions, (error, info) => {
+							if (error) {
+								return console.log(error);
+							}
+							console.log('Msg Reserva-Aprob Enviado: %s', info.messageId);
+							// Preview only available when sending through an Ethereal account
+							console.log('URL: %s', nodemailer.getTestMessageUrl(info));
+						});
+						return res.json({ error_code: 0 });
+					});
+				});
+			});
             break;
         case 'del':
             return base.destroy(entity, req.body.id, res);

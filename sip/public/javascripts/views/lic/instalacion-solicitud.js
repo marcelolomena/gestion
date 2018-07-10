@@ -7,6 +7,10 @@ $(document).ready(function () {
     t1 += "<div class='form-row'>";
     t1 += "<div class='column-full'>Producto  -  Código de Autorización<span style='color:red'>*</span>{idProducto}</div>";
     t1 += "</div>";
+	
+    t1 += "<div class='form-row'>";
+    t1 += "<div class='column-full' style='display: none;'>Producto {nombreProd}</div>";
+    t1 += "</div>"; 	
 
     t1 += "<div class='form-row'>";
     t1 += "<div class='form-row', id='laplantilla'>";
@@ -60,6 +64,15 @@ $(document).ready(function () {
                 editable: false,
                 search: false
             },
+            {
+                label: 'Nombre Producto',
+                name: 'nombreProd',
+                align: 'center',
+                width: 70,
+                editable: true,
+                search: false,
+				hidden: true
+            },			
             {
                 label: 'Producto',
                 name: 'idProducto',
@@ -117,6 +130,7 @@ $(document).ready(function () {
                                         codAutorizacion = data[0].codautoriza;
                                         idProducto = data[0].idproducto;
                                     }
+									$("input#nombreProd").val(data[0].nombre);
                                 }
                             });
                         }
@@ -200,7 +214,7 @@ $(document).ready(function () {
         mtype: "GET",
         colModel: instalacionModel,
         page: 1,
-        rowNum: 20,
+        rowNum: 10,
         regional: 'es',
         height: 'auto',
         width: 1200,

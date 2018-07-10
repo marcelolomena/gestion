@@ -8,14 +8,16 @@ var logger = require('../../utils/logger');
 var Busboy = require('busboy');
 var path = require('path');
 var fs = require('fs');
+var constants = require("../../utils/constants");
+var nodemailer = require('nodemailer');
 
 var entity = models.instalacion;
 
 function list(req, res) {
     var id = req.params.id;
     var usuario = req.session.passport.user;
-    var page = 1
-    var rows = 10
+    var page = req.query.page;
+    var rows = req.query.rows;
     var filters = req.params.filters
     utilSeq.buildCondition(filters, function (err, data) {
         if (err) {
@@ -39,7 +41,7 @@ function list(req, res) {
                 entity.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    order: ['estado'],
+                    order: [['codautorizacion', 'DESC']],
                     where: {
                         idUsuario: usuario
                     },
@@ -219,6 +221,45 @@ function action(req, res) {
                 idTipoInstalacion: numero,
                 numlicencia: req.body.numlicencia
             }).then(function (instal) {
+				var htmltext = '<b>Estimado(a) <br><br> Se ha solicitado la instalaci&oacute;n de '+req.body.numlicencia+' licencia(s) de producto "' +
+					req.body.nombreProd + '" . <br>Adicionalmente considerar el siguiente comentario: '+req.body.informacion+'.';			
+				var mailtorre=constants.CORREOTO;
+				if (numero == constants.TIPO_INST_PC) {
+					mailtorre=constants.MAIL_INST_PC;
+				} else {
+					mailtorre=constants.MAIL_INST_SRV;
+				}
+				  let transporter = nodemailer.createTransport({
+					host: constants.CORREOIP,
+					port: 25,
+					secure: false, // true for 465, false for other ports
+					auth: {
+					  user: constants.CORREOUSR,
+					  pass: constants.CORREOPWD
+					},
+					tls: {rejectUnauthorized: false}
+				  });
+				  // setup email data with unicode symbols
+				  let mailOptions = {
+					from: constants.CORREOFROM, // sender address
+					to: constants.CORREOTO + ',' + mailtorre, // list of receivers
+					subject: 'Visado de instalacion de software', // Subject line
+					text: 'Visado de instalacion', // plain text body
+					html: htmltext
+				  };
+
+				  //console.log('MailOPt'+JSON.stringify(mailOptions));
+				  console.log("TO:"+constants.CORREOTO + ',' + mailtorre);
+				  // send mail with defined transport object
+				  transporter.sendMail(mailOptions, (error, info) => {
+					if (error) {
+					  return console.log(error);
+					}
+					console.log('Message sent: %s', info.messageId);
+					// Preview only available when sending through an Ethereal account
+					console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+				  });
+				
                 return res.json({
                     id: instal.id,
                     message: 'Inicio carga',
@@ -284,9 +325,10 @@ function listInstalacion(req, res) {
     var idproduc = req.params.pId;
     var instal = 'Instalado'
     var histor = 'Historico'
-    var page = 1
-    var rows = 10
+    var page = req.query.page;
+    var rows = req.query.rows;
     var filters = req.params.filters
+	console.log("******** page:"+page+", row:"+rows);
     utilSeq.buildCondition(filters, function (err, data) {
         if (err) {
             logger.debug("->>> " + err)
