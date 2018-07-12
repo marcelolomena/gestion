@@ -92,7 +92,7 @@
             },{
                 label: 'Descripción',
                 name: 'nombre',
-                width: 250,
+                width: 350,
                 align: 'left',
                 hidden: false,
                 editable: true,
