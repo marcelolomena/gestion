@@ -15,13 +15,13 @@ exports.action = function (req, res) {
   switch (action) {
     case "edit":
       //Codigo de update
-      if (req.body.torre == '0') {
-        var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentarioinstalacion='" + req.body.comentarioinstalacion + "' " +
-          " WHERE id =" + req.body.id + ";";
-      } else {
+      //if (req.body.torre == '0') {
+        var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentarioinstalacion='" + req.body.comentarioinstalacion + "', " +
+          "fechainstalacion=getdate() WHERE id =" + req.body.id + ";";
+      /*} else {
         var sql = "UPDATE lic.instalacion SET estado='" + req.body.estado + "', comentarioinstalacion='" + req.body.comentarioinstalacion + "', " +
           " idtorre = " + req.body.torre + " WHERE id =" + req.body.id + ";";
-      }
+      }*/
 
       if (req.body.estado == constants.INSTALADO) {
         sql = sql + " UPDATE lic.producto SET licReserva=licReserva-1, licocupadas=licocupadas+1 WHERE id=" + req.body.producto;

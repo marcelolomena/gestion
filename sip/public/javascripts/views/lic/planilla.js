@@ -41,12 +41,12 @@
 
         tmpl += "<div class='form-row' >";
         tmpl += "<div class='column-half'>Moneda {idmoneda}</div>";
-        tmpl += "<div class='column-half'>Valor Licencias {valorlicencia}</div>";
+        tmpl += "<div class='column-half'>Valor Compra {valorlicencia}</div>";
         tmpl += "</div>";        
 
         tmpl += "<div class='form-row' >";
         tmpl += "<div class='column-half'>Valor Soporte {valorsoporte}</div>";
-        tmpl += "<div class='column-half'>Valor Anual Neto {valoranualneto}</div>";
+        tmpl += "<div class='column-half'>Valor Mensual {valoranualneto}</div>";
         tmpl += "<div class='column-half'>Fecha Control {fecharenovasoporte}</div>";
         tmpl += "</div>"; 
         
@@ -56,7 +56,7 @@
         tmpl += "</div>"; 
         
         tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Instalada {licocupadas}</div>";
+        tmpl += "<div class='column-half'>Licencias Utilizadas {licocupadas}</div>";
         tmpl += "<div class='column-half'>Comprador {comprador}</div>";
         tmpl += "</div>"; 
 
@@ -543,7 +543,7 @@
             },
             search: false
         }, {
-            label: 'Valor Licencias',
+            label: 'Valor Compra',
             name: 'valorlicencia',
             width: 110,
             align: 'center',
@@ -570,7 +570,7 @@
             formatter: 'integer',
             search: false,
         }, {
-            label: 'Valor Anual Neto',
+            label: 'Valor Mensual',
             name: 'valoranualneto',
             width: 120,
             align: 'center',
@@ -649,7 +649,7 @@
             },            
             search: false
         }, {
-            label: 'Instalada por Producto',
+            label: 'Licencias Utilizadas',
             name: 'licocupadas',
             width: 150,
             align: 'center',
@@ -703,10 +703,7 @@
             align: 'left',
             sortable: false,
             editable: true,
-            search: false,
-            editoptions: {
-                readonly: 'readonly'
-            }			
+            search: false			
         },{
             label: 'Correo Comprador',
             name: 'correocomprador',

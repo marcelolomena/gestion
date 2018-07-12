@@ -50,7 +50,8 @@ function update(data, res) {
     sql = sql + "fecharenovasoporte = NULL, ";
   }
   sql = sql + "comprador = '" + data.comprador + "', ";
-  sql = sql + "correocomprador ='" + data.correocomprador;
+  sql = sql + "correocomprador ='" + data.correocomprador+ "', ";
+  sql = sql + "responsable ='" + data.responsable;
   sql = sql + "' where id=" + data.id;
   console.log("sql:" + sql);
   sequelize.query(sql).then(function (updated) {
@@ -150,7 +151,7 @@ function list(req, res) {
     "DECLARE @PageNumber INT; " +
     "SELECT @PageNumber=" + page + "; " +
     "SELECT a.*, b.*, h.razonsocial, c.nombre nombreFab, d.nombre nombreClas, " +
-    "e.nombre nombreTipoLic, f.nombre nombreTipoInst, g.moneda, j.comprador responsable, i.fichatecnica " +
+    "e.nombre nombreTipoLic, f.nombre nombreTipoInst, g.moneda, i.fichatecnica " +
     "FROM lic.producto a JOIN lic.compra b ON a.id = b.idproducto " +
     "LEFT JOIN lic.fabricante c ON a.idfabricante=c.id " +
     "LEFT JOIN lic.clasificacion d ON a.idclasificacion=d.id " +

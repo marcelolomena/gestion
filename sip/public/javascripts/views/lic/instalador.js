@@ -11,7 +11,7 @@ $(document).ready(function () {
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Fecha {fechasolicitud}</div>";
-    tmpl += "<div class='column-half'>Torre {torre}</div>";
+    tmpl += "<div class='column-half' style='display: none;'>Torre {idtorre}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -226,39 +226,14 @@ $(document).ready(function () {
     },
     {
         label: 'Torre',
-        name: 'torre',
-        jsonmap: 'torre',
+        name: 'idtorre',
+        jsonmap: 'idtorre',
         width: 50,
         align: 'center',
         sortable: false,
         editable: true,
-        edittype: 'select', 
-        editrules: {
-            required: true
-        },
-        search: false,   
-        editoptions: {
-            readonly: 'readonly',
-            dataUrl: '/lic/torres',
-            buildSelect: function (response) {
-                var grid = $("#grid");
-                var rowKey = grid.getGridParam("selrow");
-                var rowData = grid.getRowData(rowKey);
-                var thissid = rowData.torre;
-                var data = JSON.parse(response);
-                var s = "<select>";
-                var sel=false;
-                s += '<option value="0">--Escoger Torre--</option>';
-                $.each(data, function (i, item) {
-                    if (data[i].id == thissid) {
-                        s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
-                    } else {
-                        s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
-                    }
-                });
-                return s + "</select>";
-            }
-        }, dataInit: function (elem) { $(elem).width(200); }        
+        search: false,
+        hidden: true        
     }, 
     {
         label: 'Comentario de Instalación',
