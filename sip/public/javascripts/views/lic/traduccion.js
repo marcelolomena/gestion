@@ -154,7 +154,7 @@ $(document).ready(function () {
                             dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
                         }
                     });
-                }, 4000);
+                }, 6000);
             });
         }
     });
@@ -182,7 +182,7 @@ $(document).ready(function () {
                             dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
                         }
                     });
-                }, 4000);
+                }, 6000);
             });
         }
     });
@@ -210,7 +210,7 @@ $(document).ready(function () {
                             dialog.find('.bootbox-body').html('Hubo un problema con la actualización!');
                         }
                     });
-                }, 4000);
+                }, 6000);
             });
         }
     });
