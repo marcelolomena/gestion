@@ -50,7 +50,7 @@ function update(data, res) {
     sql = sql + "fecharenovasoporte = NULL, ";
   }
   sql = sql + "comprador = '" + data.comprador + "', ";
-  sql = sql + "correocomprador ='" + data.correocomprador+ "', ";
+  sql = sql + "correocomprador ='" + data.correocomprador + "', ";
   sql = sql + "responsable ='" + data.responsable;
   sql = sql + "' where id=" + data.id;
   console.log("sql:" + sql);
@@ -65,10 +65,21 @@ function update(data, res) {
       "nombre ='" + data.nombre + "' " +
       "where id='" + data.idproducto + "'";
     console.log("sql2:" + sql2);
+
     sequelize.query(sql2).then(function (updated) {
-      return res.json({
-        error: 0,
-        glosa: ''
+      var sql3 = "UPDATE lic.recepcion SET comprador='" + data.responsable + "' WHERE id IN (" +
+        "SELECT idrecepcion FROM lic.detallerecepcion WHERE idcompra=" + data.id + ")";
+      sequelize.query(sql3).then(function (updated) {
+        return res.json({
+          error: 0,
+          glosa: ''
+        });
+      }).catch(function (err) {
+        logger.error(err);
+        return res.json({
+          error: 1,
+          glosa: err.message
+        });
       });
     }).catch(function (err) {
       logger.error(err);
@@ -128,14 +139,14 @@ function list(req, res) {
           if (item.field == 'nombre') {
             condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
           } else if (item.field == "contrato") {
-          condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
-        } else if (item.field == "ordencompra") {
-          condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
-        } else if (item.field == "idproveedor") {
-          condition += 'h.' + 'razonsocial' + " like '%" + item.data + "%' AND ";
-        } else{
-          condition += 'a.' + item.field + "=" + item.data + " AND ";
-        }
+            condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
+          } else if (item.field == "ordencompra") {
+            condition += 'b.' + item.field + " like '%" + item.data + "%' AND ";
+          } else if (item.field == "idproveedor") {
+            condition += 'h.' + 'razonsocial' + " like '%" + item.data + "%' AND ";
+          } else {
+            condition += 'a.' + item.field + "=" + item.data + " AND ";
+          }
       });
       condition = condition.substring(0, condition.length - 5);
       logger.debug("***CONDICION:" + condition);
@@ -160,7 +171,7 @@ function list(req, res) {
     "LEFT JOIN sip.moneda g on b.idmoneda = g.id " +
     "LEFT JOIN sip.proveedor h ON b.idproveedor=h.id " +
     "LEFT JOIN lic.detallerecepcion i ON b.id=i.idcompra " +
-    "LEFT JOIN lic.recepcion j ON i.idrecepcion=j.id " ;
+    "LEFT JOIN lic.recepcion j ON i.idrecepcion=j.id ";
   if (filters && condition != "") {
     sql += "WHERE " + condition + " ";
     // logger.debug("**" + sql + "**");
@@ -216,135 +227,135 @@ function excel(req, res) {
   var conf = {}
 
   conf.cols = [{
-      caption: 'id',
-      type: 'number',
-      width: 3
-    },
-    {
-      caption: 'Contrato',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'O.C.',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'CUI',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'SAP',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Fabricante',
-      type: 'string',
-      width: 80
-    },
-    {
-      caption: 'Proveedor',
-      type: 'string',
-      width: 80
-    },
-    {
-      caption: 'Software',
-      type: 'string',
-      width: 80
-    },
-    {
-      caption: '¿Donde está instalada?',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Clasificación',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Tipo de Licenciamiento',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Fecha Compra',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'Fecha Expiración',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'Tipo de Contrato',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'N° Lic Compradas',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'Moneda',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'Valor Licencias',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'Valor Soporte',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'Fecha Renovación Soporte',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'Factura',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'Cantidad Compradas por Producto',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'Instalada por Producto',
-      type: 'string',
-      width: 10
-    },
-    {
-      caption: 'Alerta Renovación',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Comprador',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Correo Comprador',
-      type: 'string',
-      width: 30
-    },
-    {
-      caption: 'Comentarios',
-      type: 'string',
-      width: 1000
-    }
+    caption: 'id',
+    type: 'number',
+    width: 3
+  },
+  {
+    caption: 'Contrato',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'O.C.',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'CUI',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'SAP',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Fabricante',
+    type: 'string',
+    width: 80
+  },
+  {
+    caption: 'Proveedor',
+    type: 'string',
+    width: 80
+  },
+  {
+    caption: 'Software',
+    type: 'string',
+    width: 80
+  },
+  {
+    caption: '¿Donde está instalada?',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Clasificación',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Tipo de Licenciamiento',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Fecha Compra',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'Fecha Expiración',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'Tipo de Contrato',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'N° Lic Compradas',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'Moneda',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'Valor Licencias',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'Valor Soporte',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'Fecha Renovación Soporte',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'Factura',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'Cantidad Compradas por Producto',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'Instalada por Producto',
+    type: 'string',
+    width: 10
+  },
+  {
+    caption: 'Alerta Renovación',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Comprador',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Correo Comprador',
+    type: 'string',
+    width: 30
+  },
+  {
+    caption: 'Comentarios',
+    type: 'string',
+    width: 1000
+  }
   ];
   var sql = "SELECT b.contrato, b.ordencompra, convert(VARCHAR(10), b.idcui) as idcui, convert(VARCHAR(10), b.sap) as sap, c.nombre as nombreFab, h.razonsocial, a.nombre, f.nombre as nombreTipoInst, d.nombre as nombreClas,  " +
     "e.nombre as nombreTipoLic, convert(VARCHAR(10), b.fechacompra,105) as fechacompra, convert(VARCHAR(10), b.fechaexpiracion,105) as fechaexpiracion,  b.perpetua,  " +
@@ -373,31 +384,31 @@ function excel(req, res) {
           var alerta = 'AL DIA'
         }
         var a = [i + 1,
-          (planilla[i].contrato == null) ? '' : planilla[i].contrato,
-          (planilla[i].ordencompra == null) ? '' : planilla[i].ordencompra,
-          (planilla[i].idcui == null) ? '' : planilla[i].idcui,
-          (planilla[i].sap == null) ? '' : planilla[i].sap,
-          (planilla[i].nombreFab == null) ? '' : planilla[i].nombreFab,
-          (planilla[i].razonsocial == null) ? '' : planilla[i].razonsocial,
-          (planilla[i].nombre == null) ? '' : planilla[i].nombre,
-          (planilla[i].nombreTipoInst == null) ? '' : planilla[i].nombreTipoInst,
-          (planilla[i].nombreClas == null) ? '' : planilla[i].nombreClas,
-          (planilla[i].nombreTipoLic == null) ? '' : planilla[i].nombreTipoLic,
-          (planilla[i].fechacompra == null) ? '' : planilla[i].fechacompra,
-          (planilla[i].fechaexpiracion == null) ? '' : planilla[i].fechaexpiracion,
-          (planilla[i].perpetua == 1) ? 'Perpetua' : 'Transitoria',
-          (planilla[i].liccompradas == null) ? '' : planilla[i].liccompradas,
-          (planilla[i].moneda == null) ? '' : planilla[i].moneda,
-          (planilla[i].valorlicencia == null) ? '' : planilla[i].valorlicencia,
-          (planilla[i].valorsoporte == null) ? '' : planilla[i].valorsoporte,
-          (planilla[i].fecharenovasoporte == null) ? '' : planilla[i].fecharenovasoporte,
-          (planilla[i].factura == null) ? '' : planilla[i].factura,
-          (planilla[i].licstock == null) ? '' : planilla[i].licstock,
-          (planilla[i].licocupadas == null) ? '' : planilla[i].licocupadas,
+        (planilla[i].contrato == null) ? '' : planilla[i].contrato,
+        (planilla[i].ordencompra == null) ? '' : planilla[i].ordencompra,
+        (planilla[i].idcui == null) ? '' : planilla[i].idcui,
+        (planilla[i].sap == null) ? '' : planilla[i].sap,
+        (planilla[i].nombreFab == null) ? '' : planilla[i].nombreFab,
+        (planilla[i].razonsocial == null) ? '' : planilla[i].razonsocial,
+        (planilla[i].nombre == null) ? '' : planilla[i].nombre,
+        (planilla[i].nombreTipoInst == null) ? '' : planilla[i].nombreTipoInst,
+        (planilla[i].nombreClas == null) ? '' : planilla[i].nombreClas,
+        (planilla[i].nombreTipoLic == null) ? '' : planilla[i].nombreTipoLic,
+        (planilla[i].fechacompra == null) ? '' : planilla[i].fechacompra,
+        (planilla[i].fechaexpiracion == null) ? '' : planilla[i].fechaexpiracion,
+        (planilla[i].perpetua == 1) ? 'Perpetua' : 'Transitoria',
+        (planilla[i].liccompradas == null) ? '' : planilla[i].liccompradas,
+        (planilla[i].moneda == null) ? '' : planilla[i].moneda,
+        (planilla[i].valorlicencia == null) ? '' : planilla[i].valorlicencia,
+        (planilla[i].valorsoporte == null) ? '' : planilla[i].valorsoporte,
+        (planilla[i].fecharenovasoporte == null) ? '' : planilla[i].fecharenovasoporte,
+        (planilla[i].factura == null) ? '' : planilla[i].factura,
+        (planilla[i].licstock == null) ? '' : planilla[i].licstock,
+        (planilla[i].licocupadas == null) ? '' : planilla[i].licocupadas,
           alerta,
-          (planilla[i].comprador == null) ? '' : planilla[i].comprador,
-          (planilla[i].correocomprador == null) ? '' : planilla[i].correocomprador,
-          (planilla[i].comentario == null) ? '' : planilla[i].comentario
+        (planilla[i].comprador == null) ? '' : planilla[i].comprador,
+        (planilla[i].correocomprador == null) ? '' : planilla[i].correocomprador,
+        (planilla[i].comentario == null) ? '' : planilla[i].comentario
         ];
         arr.push(a);
         // console.log(a);
@@ -421,13 +432,13 @@ function excel(req, res) {
 function downFicha(req, res) {
 
   var file = "Documento1.docx";
-  var filePath = "docs"+path.sep+"lic"+path.sep+"fichas";
+  var filePath = "docs" + path.sep + "lic" + path.sep + "fichas";
   var sql = "SELECT fichatecnica FROM lic.detallerecepcion WHERE idcompra=" + req.params.id;
   sequelize.query(sql)
     .spread(function (rows) {
       file = rows[0].fichatecnica;
-      console.log("Archivo:" + filePath+ path.sep +file);
-      fs.exists(filePath+ path.sep + file, function (exists) {
+      console.log("Archivo:" + filePath + path.sep + file);
+      fs.exists(filePath + path.sep + file, function (exists) {
         if (exists) {
           res.writeHead(200, {
             "Content-Type": "application/octet-stream",
