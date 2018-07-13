@@ -441,9 +441,9 @@ var detalleRecepcionGrid = {
             },
             search: false
         }, {
-            label: 'Valor Licencia',
+            label: 'Valor Compra',
             name: 'monto',
-            width: 80,
+            width: 100,
             align: 'center',
             sortable: true,
             hidden: false,
@@ -456,9 +456,9 @@ var detalleRecepcionGrid = {
             },
             search: false
         }, {
-            label: 'Valor Anual Neto',
+            label: 'Valor Mensual Neto',
             name: 'valorAnualNeto',
-            width: 115,
+            width: 135,
             align: 'center',
             sortable: true,
             hidden: false,
@@ -502,6 +502,7 @@ var detalleRecepcionGrid = {
             label: 'Correo Comprador',
             name: 'mailComprador',
             hidden: false,
+            width: 200,
             align: 'center',
             editable: true,
             editoptions: {
