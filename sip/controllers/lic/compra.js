@@ -35,7 +35,8 @@ function map(req) {
         comprador: req.body.comprador,
         correoComprador: req.body.correoComprador,
         idRenovado: req.body.idRenovado,
-        valorAnualNeto: req.body.valorAnualNeto
+        valorAnualNeto: req.body.valorAnualNeto,
+        responsable: req.body.responsable
     }
 }
 
@@ -68,7 +69,8 @@ function mapper(data) {
             alertaRenovacion: item.alertaRenovacion,
             perpetua: item.perpetua ? 'PERPETUA' : 'SUSCRIPCIÓN',
             idRenovado: item.idRenovado,
-            valorAnualNeto: item.valorAnualNeto
+            valorAnualNeto: item.valorAnualNeto,
+            responsable: item.responsable
         }
     });
 }

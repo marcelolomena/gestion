@@ -125,10 +125,14 @@ module.exports = function (sequelize, DataTypes) {
       field: 'valoranualneto',
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true
+    },
+    responsable: {
+      type: DataTypes.STRING(60),
+      allowNull: true
     }
   }, {
-      schema: 'lic',
-      timestamps: false,
-      tableName: 'compra'
-    });
+    schema: 'lic',
+    timestamps: false,
+    tableName: 'compra'
+  });
 };
