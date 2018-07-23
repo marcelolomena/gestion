@@ -46,7 +46,7 @@
 
         tmpl += "<div class='form-row' >";
         tmpl += "<div class='column-half'>Valor Soporte {valorsoporte}</div>";
-        tmpl += "<div class='column-half'>Valor Mensual {valoranualneto}</div>";
+        tmpl += "<div class='column-half'>Valor Mensual Neto {valoranualneto}</div>";
         tmpl += "<div class='column-half'>Fecha Control {fecharenovasoporte}</div>";
         tmpl += "</div>"; 
         
@@ -570,9 +570,9 @@
             formatter: 'integer',
             search: false,
         }, {
-            label: 'Valor Mensual',
+            label: 'Valor Mensual Neto',
             name: 'valoranualneto',
-            width: 120,
+            width: 140,
             align: 'center',
             sortable: false,
             editable: true,
