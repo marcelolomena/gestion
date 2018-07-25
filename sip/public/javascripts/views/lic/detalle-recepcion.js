@@ -441,9 +441,9 @@ var detalleRecepcionGrid = {
             },
             search: false
         }, {
-            label: 'Valor Compra',
+            label: 'Valor Total Compra',
             name: 'monto',
-            width: 100,
+            width: 150,
             align: 'center',
             sortable: true,
             hidden: false,
@@ -456,9 +456,9 @@ var detalleRecepcionGrid = {
             },
             search: false
         }, {
-            label: 'Valor Mensual Neto',
+            label: 'Valor Licencia Anual Neto',
             name: 'valorAnualNeto',
-            width: 135,
+            width: 180,
             align: 'center',
             sortable: true,
             hidden: false,
@@ -471,9 +471,9 @@ var detalleRecepcionGrid = {
             },
             search: false
         }, {
-            label: 'Soporte',
+            label: 'Valor Soporte Anual Neto',
             name: 'montoSoporte',
-            width: 80,
+            width: 180,
             align: 'center',
             sortable: true,
             hidden: false,
@@ -499,8 +499,8 @@ var detalleRecepcionGrid = {
             align: 'center',
             editable: true
         }, {
-            label: 'Correo Comprador',
-            name: 'mailComprador',
+            label: 'Correo Proveedor',
+            name: 'mail',
             hidden: false,
             width: 200,
             align: 'center',

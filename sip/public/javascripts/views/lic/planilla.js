@@ -41,12 +41,12 @@
 
         tmpl += "<div class='form-row' >";
         tmpl += "<div class='column-half'>Moneda {idmoneda}</div>";
-        tmpl += "<div class='column-half'>Valor Compra {valorlicencia}</div>";
+        tmpl += "<div class='column-half'>Valor Total Compra {valorlicencia}</div>";
         tmpl += "</div>";        
 
         tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Valor Soporte {valorsoporte}</div>";
-        tmpl += "<div class='column-half'>Valor Mensual {valoranualneto}</div>";
+        tmpl += "<div class='column-half'>Valor Soporte Anual Neto{valorsoporte}</div>";
+        tmpl += "<div class='column-half'>Valor Licencia Anual Neto {valoranualneto}</div>";
         tmpl += "<div class='column-half'>Fecha Control {fecharenovasoporte}</div>";
         tmpl += "</div>"; 
         
@@ -62,7 +62,7 @@
 
         tmpl += "<div class='form-row' >";
         tmpl += "<div class='column-half'>Responsable {responsable}</div>";
-        tmpl += "<div class='column-half'>Correo Comprador {correocomprador}</div>";
+        tmpl += "<div class='column-half'>Correo Proveedor {correocomprador}</div>";
         tmpl += "</div>";         
 
         tmpl += "<div class='form-row'>";
@@ -543,9 +543,9 @@
             },
             search: false
         }, {
-            label: 'Valor Compra',
+            label: 'Valor Total Compra',
             name: 'valorlicencia',
-            width: 110,
+            width: 130,
             align: 'center',
             sortable: false,
             editable: true,
@@ -555,9 +555,9 @@
             formatter: 'integer',
             search: false
         }, {
-            label: 'Valor Soporte',
+            label: 'Valor Soporte Anual Neto',
             name: 'valorsoporte',
-            width: 110,
+            width: 180,
             align: 'center',
             sortable: false,
             editable: true,
@@ -570,9 +570,9 @@
             formatter: 'integer',
             search: false,
         }, {
-            label: 'Valor Mensual',
+            label: 'Valor Licencia Anual Neto',
             name: 'valoranualneto',
-            width: 120,
+            width: 180,
             align: 'center',
             sortable: false,
             editable: true,
@@ -705,7 +705,7 @@
             editable: true,
             search: false			
         },{
-            label: 'Correo Comprador',
+            label: 'Correo Proveedor',
             name: 'correocomprador',
             align: 'left',
             sortable: false,
