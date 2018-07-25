@@ -183,7 +183,7 @@ var compraGrid = {
             },
             search: false
         }, {
-            label: 'Valor Licencias',
+            label: 'Valor Compra',
             name: 'valorLicencia',
             width: 110,
             align: 'center',
@@ -191,9 +191,9 @@ var compraGrid = {
             editable: true,
             search: false
         }, {
-            label: 'Valor Anual Neto',
+            label: 'Valor Mensual Neto',
             name: 'valorAnualNeto',
-            width: 125,
+            width: 135,
             align: 'center',
             sortable: false,
             editable: true,

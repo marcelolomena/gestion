@@ -146,7 +146,7 @@
                 editable: false,
                 search: false
             }, {
-                label: 'Instaladas',
+                label: 'Utilizadas',
                 name: 'licocupadas',
                 width: 75,
                 align: 'center',
@@ -338,7 +338,7 @@
             nom: 'Compra Trámite'
         }, {
             id: 'instalacion',
-            nom: 'Instalaciones'
+            nom: 'Utilizadas'
         }, {
             id: 'reserva',
             nom: 'Reserva'

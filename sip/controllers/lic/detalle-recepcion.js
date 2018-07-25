@@ -192,7 +192,8 @@ function mapCompra(data) {
         comentario: data.comentario,
         perpetua: 0,
         idRenovado: data.idRenovado,
-        valorAnualNeto: data.valorAnualNeto
+        valorAnualNeto: data.valorAnualNeto,
+        responsable: data.responsable
     };
 }
 
@@ -216,22 +217,34 @@ function saveProducto(data, res) {
 
 function addDetalle(data, res) {
     if (!data.idCompra) {
-        data.fechaInicio = base.strToDateDB(data.fechaInicio);
-        data.fechaTermino = base.strToDateDB(data.fechaTermino);
-        data.fechaControl = base.strToDateDB(data.fechaControl);
-        data.alertaRenovacion = 'bAl Dia';
-        return base.createP(models.compra, mapCompra(data))
-            .then(function (createdd) {
-                data.idCompra = createdd.id;
-                models.sequelize.query('EXECUTE lic.alertaRenoSoporteCON ' + data.idProducto + ';');
-                return addDetalle(data, res);
+        return base.findById(models.recepcion, data.idRecepcion)
+            .then(function (itemsrec) {
+                data.responsable = itemsrec.comprador
+                data.fechaInicio = base.strToDateDB(data.fechaInicio);
+                data.fechaTermino = base.strToDateDB(data.fechaTermino);
+                data.fechaControl = base.strToDateDB(data.fechaControl);
+                data.alertaRenovacion = 'bAl Dia';
+                return base.createP(models.compra, mapCompra(data))
+                    .then(function (createdd) {
+                        data.idCompra = createdd.id;
+                        models.sequelize.query('EXECUTE lic.alertaRenoSoporteCON ' + data.idProducto + ';');
+                        return addDetalle(data, res);
+                    }).catch(function (err) {
+                        logger.error('compra.Stock Upd, ' + err);
+                        return res.json({
+                            error: 1,
+                            glosa: err.message
+                        });
+                    })
             }).catch(function (err) {
-                logger.error('compra.Stock Upd, ' + err);
+                logger.error('producto.Stock Upd, ' + err);
                 return res.json({
                     error: 1,
                     glosa: err.message
                 });
             })
+
+
     } else {
         return base.createP(entity, data)
             .then(function (created) {
@@ -316,10 +329,19 @@ function action(req, res) {
                                                     };
                                                     updcData.alertaRenovacion = 'bAl Dia';
                                                     updcData.licCompradas = items.licCompradas - detalle.cantidad + data.cantidad
-                                                    base.updateP(models.compra, updcData, res);
-                                                    models.sequelize.query('EXECUTE lic.alertaRenoSoporteCON ' + updData.id + ';');
-                                                    return base.update(models.producto, updData, res);
-
+                                                    return base.findById(models.recepcion, detalle.idRecepcion)
+                                                        .then(function (itemcs) {
+                                                            updcData.responsable = itemcs.comprador
+                                                            base.updateP(models.compra, updcData, res);
+                                                            models.sequelize.query('EXECUTE lic.alertaRenoSoporteCON ' + updData.id + ';');
+                                                            return base.update(models.producto, updData, res);
+                                                        }).catch(function (err) {
+                                                            logger.error('producto.Stock Upd, ' + err);
+                                                            return res.json({
+                                                                error: 1,
+                                                                glosa: err.message
+                                                            });
+                                                        });
                                                 }).catch(function (err) {
                                                     logger.error('producto.Stock Upd, ' + err);
                                                     return res.json({
@@ -478,7 +500,9 @@ function prodRenovar(req, res) {
             return res.json(result);
         }).catch(function (err) {
             logger.error(err);
-            res.json({ error: 1 });
+            res.json({
+                error: 1
+            });
         });
     } else {
         models.compra.belongsTo(models.producto, {
@@ -509,7 +533,9 @@ function prodRenovar(req, res) {
             return res.json(result);
         }).catch(function (err) {
             logger.error(err);
-            res.json({ error: 1 });
+            res.json({
+                error: 1
+            });
         });
     }
 }
@@ -584,17 +610,17 @@ function upload(req, res) {
                 models.detalleRecepcion.update({
                     fichaTecnica: numero + filename
                 }, {
-                        where: {
-                            id: idDetail
-                        }
-                    }).then(function (detallrecepcio) { }).catch(function (err) {
-                        logger.error(err)
-                        res.json({
-                            id: 0,
-                            message: err.message,
-                            success: false
-                        });
+                    where: {
+                        id: idDetail
+                    }
+                }).then(function (detallrecepcio) {}).catch(function (err) {
+                    logger.error(err)
+                    res.json({
+                        id: 0,
+                        message: err.message,
+                        success: false
                     });
+                });
             }).catch(function (err) {
                 res.json({
                     error_code: 1,
