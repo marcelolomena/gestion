@@ -500,7 +500,7 @@ var detalleRecepcionGrid = {
             editable: true
         }, {
             label: 'Correo Proveedor',
-            name: 'mail',
+            name: 'mailComprador',
             hidden: false,
             width: 200,
             align: 'center',
