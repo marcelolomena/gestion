@@ -336,19 +336,19 @@ module.exports = function (passport) {
         .get(isAuthenticated, detalleCompraTramiteController.existeRecepcion);
 
     router.route('/lic/buscaprod/:pId')
-    .get(isAuthenticated, reservaSolicitudController.buscaprod);
-
-    // router.route('/lic/getResulProd/:nombreProd')
-    //     .get(isAuthenticated, productoController.getResulProd);
-
-    // router.route('/lic/prodRenovar/:pId')
-    //     .get(isAuthenticated, compraController.prodRenovar);
+        .get(isAuthenticated, reservaSolicitudController.buscaprod);
 
     router.route('/lic/prodRenovar/:pId')
         .get(isAuthenticated, detalleRecepcionController.prodRenovar);
 
     router.route('/lic/fichatecnica/upload')
         .post(isAuthenticated, detalleRecepcionController.upload);
+
+    router.route('/lic/listUbicacionInstaladas/:pId/:iProd')
+        .get(isAuthenticated, instConsultaController.listUbicacionInstaladas);
+
+    router.route('/lic/actionUbicacionInstalacion')
+        .post(isAuthenticated, instConsultaController.actionUbicacionInstalacion);
 
     return router;
 };

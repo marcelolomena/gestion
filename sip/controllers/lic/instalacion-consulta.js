@@ -2,6 +2,7 @@
 var models = require('../../models');
 var logger = require('../../utils/logger');
 var sequelize = require('../../models/index').sequelize;
+var utilSeq = require('../../utils/seq');
 var constants = require("../../utils/constants");
 var fs = require('fs');
 var path = require('path');
@@ -23,7 +24,7 @@ exports.list = function (req, res) {
       jsonObj.rules.forEach(function (item) {
         if (item.data != '0') {
           if (item.op === 'cn' || item.op === 'eq')
-            if (item.field == 'codautorizacion' ) {
+            if (item.field == 'codautorizacion') {
               condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
             } else {
               condition += 'a.' + item.field + "=" + item.data + " AND ";
@@ -46,8 +47,8 @@ exports.list = function (req, res) {
     "SELECT @PageSize=" + rowspp + "; " +
     "DECLARE @PageNumber INT; " +
     "SELECT @PageNumber=" + page + "; " +
-    "SELECT a.*, b.nombre, c.first_name+' '+ c.last_name AS usuario, d.nombre torre FROM lic.instalacion a JOIN lic.producto b ON a.idproducto=b.id " +
-    "JOIN art_user c ON c.uid = a.idusuario " +
+    "SELECT a.*, a.idproducto as idprod, b.nombre, c.first_name+' '+ c.last_name AS usuario, d.nombre torre FROM lic.instalacion a JOIN lic.producto b ON a.idproducto=b.id " +
+    "LEFT JOIN art_user c ON c.uid = a.idusuario " +
     "LEFT JOIN lic.torre d ON a.idtorre = d.id ";
   if (filters && condition != "") {
     sql += " WHERE " + condition + " ";
@@ -61,10 +62,17 @@ exports.list = function (req, res) {
     var records = recs[0].count;
     var total = Math.ceil(parseInt(recs[0].count) / rowspp);
     sequelize.query(sql2).spread(function (rows) {
-      return res.json({ records: records, total: total, page: page, rows: rows });
+      return res.json({
+        records: records,
+        total: total,
+        page: page,
+        rows: rows
+      });
     }).catch(function (err) {
       logger.error(err)
-      return res.json({ error_code: 1 });
+      return res.json({
+        error_code: 1
+      });
     });
   })
 }
@@ -72,13 +80,13 @@ exports.list = function (req, res) {
 exports.downFile = function (req, res) {
 
   var file = "Documento1.docx";
-  var filePath = "docs"+path.sep+"lic";
+  var filePath = "docs" + path.sep + "lic";
   var sql = "SELECT nombrearchivo FROM lic.instalacion WHERE id=" + req.params.id;
   sequelize.query(sql)
     .spread(function (rows) {
       file = rows[0].nombrearchivo;
-      console.log("Archivo:" + filePath+ path.sep +file);
-      fs.exists(filePath+ path.sep + file, function (exists) {
+      console.log("Archivo:" + filePath + path.sep + file);
+      fs.exists(filePath + path.sep + file, function (exists) {
         if (exists) {
           res.writeHead(200, {
             "Content-Type": "application/octet-stream",
@@ -86,7 +94,9 @@ exports.downFile = function (req, res) {
           });
           fs.createReadStream(filePath + path.sep + file).pipe(res);
         } else {
-          res.writeHead(400, { "Content-Type": "text/plain" });
+          res.writeHead(400, {
+            "Content-Type": "text/plain"
+          });
           res.end("ERROR Archivo no Existe");
         }
       });
@@ -97,7 +107,7 @@ exports.downFile = function (req, res) {
 exports.getProductoInstalacion = function (req, res) {
   var idFabricante = req.params.idFabricante;
   var sql = 'select distinct a.id, a.nombre from lic.producto a ' +
-    'join lic.instalacion b on a.id = b.idproducto AND b.idusuario IS NOT NULL';
+    'join lic.instalacion b on a.id = b.idproducto ';
   sequelize.query(sql)
     .spread(function (rows) {
       return res.json(rows);
@@ -116,6 +126,130 @@ exports.getUsuariosInstalacion = function (req, res) {
 
 };
 
+exports.listUbicacionInstaladas = function (req, res) {
+  var id = req.params.pId;
+  var idprd = req.params.iProd;
+  var page = req.query.page;
+  var rows = req.query.rows;
+  var filters = req.params.filters
+
+  utilSeq.buildCondition(filters, function (err, data) {
+    if (err) {
+      logger.debug("->>> " + err)
+    } else {
+      models.ubicacioninstalacion.belongsTo(models.instalacion, {
+        foreignKey: 'idinstalacion'
+      });
+      models.ubicacioninstalacion.count({
+        include: [{
+          model: models.instalacion,
+          where: {
+            idproducto: idprd
+          }
+        }]
+      }).then(function (records) {
+        var total = Math.ceil(records / rows);
+        models.ubicacioninstalacion.findAll({
+          offset: parseInt(rows * (page - 1)),
+          limit: parseInt(rows),
+          // order: [['codautorizacion', 'DESC']],
+          include: [{
+            model: models.instalacion,
+            where: {
+              idproducto: idprd
+            }
+          }]
+        }).then(function (ubiinstal) {
+
+
+          return res.json({
+            records: records,
+            total: total,
+            page: page,
+            rows: ubiinstal
+          });
+        }).catch(function (err) {
+          logger.error(err);
+          return res.json({
+            error_code: 1
+          });
+        });
+      })
+    }
+  });
 
 
 
+
+
+}
+
+exports.actionUbicacionInstalacion = function (req, res) {
+  var action = req.body.oper;
+  var idinstalacion = req.body.parent_id;
+  switch (action) {
+    case "add":
+      models.ubicacioninstalacion.create({
+        idinstalacion: idinstalacion,
+        nombre: req.body.nombre,
+        ubicacion: req.body.ubicacion,
+        codigoInterno: req.body.codigoInterno
+      }).then(function (ubicinsta) {
+        return res.json({
+          id: ubicinsta.id,
+          message: 'AGREGADO',
+          success: true
+        });
+      }).catch(function (err) {
+        logger.error(err);
+        res.json({
+          error_code: 1
+        });
+      });
+      break;
+    case "edit":
+      models.ubicacioninstalacion.update({
+        nombre: req.body.nombre,
+        ubicacion: req.body.ubicacion,
+        codigoInterno: req.body.codigoInterno
+      }, {
+        where: {
+          id: req.body.id
+        }
+      }).then(function (ubicinsta) {
+        return res.json({
+          id: ubicinsta.id,
+          error: 0,
+          message: 'EDITADO',
+          success: true
+        });
+      }).catch(function (err) {
+        logger.error(err);
+        res.json({
+          error_code: 1
+        });
+      });
+      break;
+    case "del":
+      models.ubicacioninstalacion.destroy({
+        where: {
+          id: req.body.id
+        }
+      }).then(function (rowDeleted) {
+        if (rowDeleted === 1) {
+          logger.debug('Deleted Successfully');
+        }
+        res.json({
+          error: 0,
+          glosa: 'ELIMINADO'
+        });
+      }).catch(function (err) {
+        logger.error(err)
+        res.json({
+          error: 1,
+          glosa: err.memesasaje
+        });
+      });
+      break;
+  }
+}
