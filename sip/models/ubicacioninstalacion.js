@@ -8,15 +8,15 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    idinstalacion: {
+    idproducto: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'instalacion',
+        model: 'producto',
         key: 'id'
       }
     },
-    nombre: {
+    usuario: {
       type: DataTypes.STRING,
       allowNull: true
     },
