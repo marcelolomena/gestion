@@ -8,14 +8,6 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    idproducto: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'producto',
-        key: 'id'
-      }
-    },
     usuario: {
       type: DataTypes.STRING,
       allowNull: true
@@ -25,6 +17,18 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true
     },
     codigoInterno: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    idproducto: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'producto',
+        key: 'id'
+      }
+    },
+    estado: {
       type: DataTypes.STRING,
       allowNull: true
     }
