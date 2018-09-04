@@ -81,6 +81,8 @@ function list(req, res) {
 //     });
 // }
 
+
+
 function misAutorizaciones(req, res) {
     models.sequelize.query("select distinct a.id, a.idproducto, b.nombre, a.numlicencia, b.idtipoinstalacion, a.codautoriza " +
         "from lic.reserva a " +
@@ -324,65 +326,148 @@ function action(req, res) {
     }
 }
 
+// function listInstalacion(req, res) {
+//     var id = req.params.id;
+//     var usuario = req.session.passport.user;
+//     var idproduc = req.params.pId;
+//     var instal = 'Instalado'
+//     var histor = 'Historico'
+//     var page = req.query.page;
+//     var rows = req.query.rows;
+//     var filters = req.params.filters
+//     // console.log("******** page:" + page + ", row:" + rows);
+//     utilSeq.buildCondition(filters, function (err, data) {
+//         if (err) {
+//             logger.debug("->>> " + err)
+//         } else {
+//             entity.belongsTo(models.producto, {
+//                 foreignKey: 'idProducto'
+//             });
+//             entity.belongsTo(models.user, {
+//                 foreignKey: 'idUsuario'
+//             });
+//             entity.belongsTo(models.tipoInstalacion, {
+//                 foreignKey: 'idTipoInstalacion'
+//             });
+//             entity.count({
+//                 where: {
+//                     idProducto: idproduc,
+//                     estado: [instal, histor]
+//                 }
+//             }).then(function (records) {
+//                 var total = Math.ceil(records / rows);
+//                 entity.findAll({
+//                     offset: parseInt(rows * (page - 1)),
+//                     limit: parseInt(rows),
+//                     // order: ['id'],
+//                     where: {
+//                         idProducto: idproduc,
+//                         estado: [instal, histor]
+//                     },
+//                     include: [{
+//                         model: models.producto
+//                     }, {
+//                         model: models.user
+//                     }]
+//                 }).then(function (instal) {
+//                     return res.json({
+//                         records: records,
+//                         total: total,
+//                         page: page,
+//                         rows: instal
+//                     });
+//                 }).catch(function (err) {
+//                     logger.error(err);
+//                     return res.json({
+//                         error_code: 1
+//                     });
+//                 });
+//             })
+//         }
+//     });
+// }
+
 function listInstalacion(req, res) {
-    var id = req.params.id;
-    var usuario = req.session.passport.user;
-    var idproduc = req.params.pId;
-    var instal = 'Instalado'
-    var histor = 'Historico'
+
     var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.params.filters
-    console.log("******** page:" + page + ", row:" + rows);
-    utilSeq.buildCondition(filters, function (err, data) {
-        if (err) {
-            logger.debug("->>> " + err)
-        } else {
-            entity.belongsTo(models.producto, {
-                foreignKey: 'idProducto'
+    var rowspp = req.query.rows;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var instal = 'Instalado';
+    var histor = 'Historico';
+    var filters = req.query.filters;
+    var condition = "";
+    var idproduc = req.params.pId;
+
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+        if (JSON.stringify(jsonObj.rules) != '[]') {
+            jsonObj.rules.forEach(function (item) {
+                if (item.op === 'cn' || item.op === 'eq')
+                    if (item.field == 'nombre') {
+                        condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
+                    } else {
+                        condition += 'a.' + item.field + "=" + item.data + " AND ";
+                    }
             });
-            entity.belongsTo(models.user, {
-                foreignKey: 'idUsuario'
-            });
-            entity.belongsTo(models.tipoInstalacion, {
-                foreignKey: 'idTipoInstalacion'
-            });
-            entity.count({
-                where: {
-                    idProducto: idproduc,
-                    estado: [instal, histor]
-                },
-            }).then(function (records) {
-                var total = Math.ceil(records / rows);
-                entity.findAll({
-                    offset: parseInt(rows * (page - 1)),
-                    limit: parseInt(rows),
-                    // order: ['id'],
-                    where: {
-                        idProducto: idproduc,
-                        estado: [instal, histor]
-                    },
-                    include: [{
-                        model: models.producto
-                    }, {
-                        model: models.user
-                    }]
-                }).then(function (instal) {
-                    return res.json({
-                        records: records,
-                        total: total,
-                        page: page,
-                        rows: instal
-                    });
-                }).catch(function (err) {
-                    logger.error(err);
-                    return res.json({
-                        error_code: 1
-                    });
-                });
-            })
+            condition = condition.substring(0, condition.length - 5);
+            // logger.debug("***CONDICION:" + condition);
         }
-    });
+    }
+    // var sqlcount = 'SELECT count(*) AS count FROM lic.reserva a JOIN lic.producto b ON a.idproducto=b.id ";
+    var sqlcount = "SELECT SUM(count) " +
+        "FROM (SELECT count(*) AS [count] " +
+        "FROM [lic]. [instalacion] AS[instalacion] " +
+        "WHERE [instalacion]. [estado] IN ( '"+ instal + "', '" + histor +"') AND [instalacion]. [idproducto] = " + idproduc +
+        "union " +
+        "SELECT count( * ) AS [count] " +
+        "FROM lic.ubicacioninstalacion " +
+        "WHERE idproducto = " + idproduc +
+        ') a '
+    if (filters && condition != "") {
+        sqlcount += " WHERE " + condition + " ";
+    }
+    var rol = req.session.passport.sidebar[0].rid; //req.user[0].rid;
+    var sqlok;
+    var sql = "DECLARE @PageSize INT; " +
+        "SELECT @PageSize=" + rowspp + "; " +
+        "DECLARE @PageNumber INT; " +
+        "SELECT @PageNumber=" + page + "; " +
+        "SELECT  [instalacion].id, [instalacion].estado, [instalacion].codautorizacion, [instalacion].instalador, fechainstalacion, null as usuario, null as ubicacion, null as codigoInterno " +
+        "FROM [lic].[instalacion] AS [instalacion] LEFT OUTER JOIN [lic].[producto] AS [producto] ON [instalacion].[idproducto] = [producto].[id] " +
+        "LEFT OUTER JOIN [dbo].[art_user] AS [user] ON [instalacion].[idusuario] = [user].[uid] " +
+        "WHERE [instalacion].[estado] IN ( '" + instal + "', '" + histor + "' ) AND [instalacion].[idproducto] = " + idproduc +
+        "union all " +
+        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno " +
+        "FROM lic.ubicacioninstalacion " +
+        "WHERE idproducto = " + idproduc
+    // "ORDER BY [id] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY "
+
+    if (filters && condition != "") {
+        sql += "AND " + condition + " ";
+        logger.debug("**" + sql + "**");
+    }
+    var sql2 = sql + "ORDER BY id OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+    var records;
+    // logger.debug("query:" + sql2);
+
+    sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        sequelize.query(sql2).spread(function (rows) {
+            res.json({
+                records: records,
+                total: total,
+                page: page,
+                rows: rows
+            });
+        }).catch(function (err) {
+            logger.error(err)
+            res.json({
+                error_code: 1
+            });
+        });
+    })
 }
 
 function listUbicacion(req, res) {
@@ -512,14 +597,16 @@ function actionUbicacion(req, res) {
                 return res.json({
                     id: instal.id,
                     message: 'CREADO',
-                    success: true
+                    success: true,
+                    error: 0
                 });
             }).catch(function (err) {
                 logger.error(err)
                 return res.json({
                     id: instal.id,
                     message: 'FALLA',
-                    success: false
+                    success: false,
+
                 });
             });
             break;
@@ -537,7 +624,8 @@ function actionUbicacion(req, res) {
                 res.json({
                     id: req.body.id,
                     message: 'EDITADO',
-                    success: true
+                    success: true,
+                    error: 0
                 });
             }).catch(function (err) {
                 logger.error(err)
@@ -606,7 +694,7 @@ function getExcel(req, res) {
     ];
     var sql = "SELECT b.nombre, a.usuario, a.ubicacion, a.codigoInterno FROM lic.ubicacioninstalacion a " +
         "JOIN lic.producto b ON b.id = a.idproducto " +
-        "ORDER BY a.idproducto ASC" ;
+        "ORDER BY a.idproducto ASC";
 
     // console.log("query:" + sql);
     sequelize.query(sql)
@@ -614,7 +702,7 @@ function getExcel(req, res) {
             var arr = [];
             var nombreprod = '';
             for (var i = 0; i < ubicacion.length; i++) {
-               
+
                 if (nombreprod != ubicacion[i].nombre) {
                     var a = [i + 1,
                         ubicacion[i].nombre,
@@ -623,7 +711,7 @@ function getExcel(req, res) {
                         ubicacion[i].codigoInterno
                     ];
                     nombreprod = ubicacion[i].nombre
-                }else{
+                } else {
                     var a = [i + 1,
                         null,
                         ubicacion[i].usuario,

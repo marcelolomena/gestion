@@ -131,9 +131,6 @@ $(document).ready(function () {
         rowList: [10, 20, 30, 40, 50],
         styleUI: "Bootstrap",
         editurl: '/lic/ubicacioninstalacion'
-        // ,
-        // subGrid: true,
-        // subGridRowExpanded: showChildGrid
     });
 
     $("#grid").jqGrid('filterToolbar', {
@@ -148,7 +145,7 @@ $(document).ready(function () {
             add: true,
             del: true,
             refresh: true,
-            search: false, // show search button on the toolbar        
+            search: false,
             cloneToTop: false
         },
 
@@ -178,44 +175,6 @@ $(document).ready(function () {
                     return [true, "", ""];
                 }
             }
-            // ,
-            // beforeShowForm: function (form) {
-            //     // var grid = $("#grid");
-            //     // var rowKey = grid.getGridParam("selrow");
-            //     // var rowData = grid.getRowData(rowKey);
-            //     // var estad = rowData.estado;
-            //     // if (estad != 'A la Espera') {
-            //     //     setTimeout(function () {
-            //     //         $("#idProducto").attr('disabled', true);
-            //     //         $("#numlicencia").attr('disabled', true);
-            //     //         $("#fechaUso").attr('disabled', true);
-            //     //         $("#cui").attr('disabled', true);
-            //     //         $("#sap").attr('disabled', true);
-            //     //         $("#comentarioSolicitud").attr('disabled', true);
-            //     //     }, 500);
-
-            //     // } else {
-            //     //     $("#cui").attr('disabled', true);
-            //     // }
-            // },
-            // beforeSubmit: function (postdata, formid) {
-            //     // console.log("beforeSubmit");
-            //     // var grid = $('#grid');
-            //     // var rowKey = grid.getGridParam("selrow");
-            //     // var rowData = grid.getRowData(rowKey);
-            //     // if (rowData.estado != 'A la Espera') {
-            //     //     return [false, "No puede editar asignación debe estar en estado A la Espera", ""];
-            //     // } else if (!(postdata.numlicencia > 0)) {
-            //     //     return [false, "Cantidad debe ser mayor que cero", ""];
-            //     // } else if (!(postdata.cui > 0) || postdata.cui.length > 4) {
-            //     //     return [false, "CUI debe ser numérico y máximo 4 caracteres", ""];
-            //     // } else if (!(postdata.sap >= 0) || postdata.sap.length > 5) {
-            //     //     return [false, "SAP debe ser numérico y máximo 5 caracteres", ""];
-            //     // } else {
-            //     //     return [true, "", ""]
-            //     // }
-            // }
-
         }, {
             addCaption: "Agrega Ubicación",
             closeAfterAdd: true,
@@ -225,7 +184,7 @@ $(document).ready(function () {
             serializeEditData: sipLibrary.createJSON,
             template: tmpl,
             errorTextFormat: function (data) {
-                return 'Error: ' + data.responseText
+                return [true, 'Error: ' + data.responseText, ""];
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
@@ -243,37 +202,6 @@ $(document).ready(function () {
                     return [true, "", ""];
                 }
             }
-            // ,
-
-            // beforeShowForm: function (form) {
-            //     // $.ajax({
-            //     //     type: "GET",
-            //     //     url: '/lic/usuariocui',
-            //     //     async: false,
-            //     //     success: function (data) {
-            //     //         if (data.length > 0) {
-            //     //             $("input#cui").val(data[0].cui);
-            //     //             $("#cui").attr('disabled', true);
-            //     //         } else {
-            //     //             alert("No existe CUI asociado al Usuario");
-
-            //     //         }
-            //     //     }
-            //     // });
-            // },
-            // beforeSubmit: function (postdata, formid) {
-            //     // if (!(postdata.numlicencia > 0)) {
-            //     //     return [false, "Cantidad debe ser mayor que cero", ""];
-            //     // } else if (!(postdata.cui > 0) || postdata.cui.length > 4) {
-            //     //     return [false, "CUI debe ser numérico y máximo 4 caracteres", ""];
-            //     // } else if (!(postdata.sap >= 0) || postdata.sap.length > 5) {
-            //     //     return [false, "SAP debe ser numérico y máximo 5 caracteres", ""];
-            //     // } else {
-            //     //     return [true, "", ""]
-            //     // }
-            // },
-        }, {
-
         }
     );
 
@@ -286,7 +214,9 @@ $(document).ready(function () {
             var grid = $('#grid');
             var rowKey = grid.getGridParam("selrow");
             var url = '/lic/ubicacionexcel';
-            $('#grid').jqGrid('excelExport', { "url": url });
+            $('#grid').jqGrid('excelExport', {
+                "url": url
+            });
         }
     });
     $("#pager_left").css("width", "");
