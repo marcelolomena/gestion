@@ -264,8 +264,8 @@ object Report {
   object Pie {
     val pie = {
       get[BigDecimal]("dId") ~
-        get[String]("name") ~
-        get[BigDecimal]("y") ~
+        get[String]("division") ~
+        get[BigDecimal]("cantidad") ~
         get[BigDecimal]("porcentaje")  map {
         case dId ~
           division ~

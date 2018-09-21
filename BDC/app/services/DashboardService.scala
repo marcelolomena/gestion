@@ -399,6 +399,14 @@ object DashboardService {
     }
   }
 
+  def countSubTaskCount(Json: String): Int = {
+
+    var sqlString = "EXEC art.count_subtasks {Json}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('Json -> Json).executeQuery() as (scalar[Int].single)
+    }
+  }
+
   def reportStateSubTask(pageSize: String, pageNumber: String, json: String): Seq[StateSubTarea] = {
 
     var sqlString = "EXEC art.estado_sub_tarea {PageSize},{PageNumber},{json}"

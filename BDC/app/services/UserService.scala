@@ -1433,4 +1433,17 @@ object UserService extends CustomColumns {
       SQL(sqlString).on('id -> id.toInt).executeQuery() as (DataRRHH.datarrhh *)
     }
   }
+
+  /**
+    * get user leader with program and rol
+    */
+  def findUserLeader(programId: String, rolId: Long ) = {
+    DB.withConnection { implicit connection =>
+      val sql = "SELECT b.* FROM art_program_members a JOIN art_user b ON a.member_id=b.uid "+
+        "WHERE  a.id IN (SELECT max(id) FROM art_program_members WHERE program_id="+programId+" AND role_id="+rolId+")";
+      val result = SQL(sql).as(Users.user.singleOpt)
+
+      result
+    }
+  }
 }

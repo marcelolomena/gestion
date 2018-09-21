@@ -546,19 +546,31 @@ object Dashboard extends Controller {
   def pieDepa = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      val data = DashboardService.reportDepa
-      val bubble = Bubble("Indicadores de Departamento",Json.toJson(data))
+      val pie = DashboardService.reportDepa
 
-      Ok(Json.toJson(bubble)).withSession(
-        "username" -> request.session.get("username").get,
-        "utype" -> request.session.get("utype").get,
-        "uId" -> request.session.get("uId").get,
-        "user_profile" -> request.session.get("user_profile").get)
+      var node = new JSONObject()
+
+      node.put("showInLegend", false)
+      node.put("titulo", "Programas por Departamento")
+      var puntos = new JSONArray()
+      for (p <- pie) {
+        var punto = new JSONObject()
+        punto.put("dId", p.dId)
+        punto.put("name", p.division + " (" + p.cantidad + ")")
+        punto.put("y", p.cantidad)
+        //punto.put("porcentaje", p.porcentaje)
+
+        puntos.put(punto)
+      }
+
+      node.put("data", puntos)
+
+      Ok(node.toString()).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser()).withNewSession
     }
-  }  
+  }
 
   /*
   def pieSubType = Action { implicit request =>
@@ -2753,6 +2765,7 @@ object Dashboard extends Controller {
   }
 
   def reportFull = Action { implicit request =>
+    DashboardService.createExcel()
     request.session.get("username").map { user =>
       val file = new File("reporte.xlsx")
       val time = new Date()

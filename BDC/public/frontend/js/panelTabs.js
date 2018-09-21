@@ -482,6 +482,23 @@ $(document).ready(function(){
 	            ]
 	        };
 	    });
+		
+	var modelPieDepa=[
+	              { label: 'pId', name: 'program_id', width: 50, key: true, hidden:true },  
+	              { label: 'Programa', name: 'programa', width: 250,formatter: returnProgramLink },
+	              { label: 'Departamento', name: 'division', hidden: true},
+	              { label: 'Estado', name: 'estado', width: 150 },
+	              { label: 'Responsable', name: 'responsable', width: 200 },
+	              { label: 'Fecha Inicio', name: 'fecini',width: 180,formatter: 'date',formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' } },
+	              { label: 'Fecha Comprometida',   name: 'feccom', width: 180, formatter: 'date', formatoptions: { srcformat: 'Y-m-d',newformat: 'Y-m-d' } },
+	              { label: '% Avance', name: 'pai', width: 150 },
+	              { label: '% Plan', name: 'pae', width: 150 },
+	              { label: 'SPI', name: 'spi', width: 150 },
+	              { label: 'CPI', name: 'cpi', width: 150 },
+	              { label: 'Inversión', name: 'inversion', width: 150 },  
+	              { label: 'Gasto', name: 'gasto', width: 150 }                      
+	          ];	
+			  
 
     var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + '/program-details/';
 	var optionsChart = {
@@ -1162,6 +1179,25 @@ $(document).ready(function(){
             { label: 'Asignadas', name: 'allocation', width: 150,
             }
         ];
+		
+	function grillaProgramaDepa(did,name){
+		var chuurl='/panelDepa?did=' + did;
+
+		$("#jqGridDepa").jqGrid({
+	        mtype: "GET",
+	        datatype: "json",
+	        page: 1,
+	        colModel: modelPieDepa,
+			viewrecords: true,
+			regional : "es",
+			height: 'auto',
+	        autowidth:true,
+	        rowNum: 20,
+	        pager: "#jqGridPagerDepa",
+	        ignoreCase: true
+	    });			
+		$("#jqGridDepa").jqGrid('setCaption', name).jqGrid('setGridParam', { url: chuurl, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
+	}		
 
 	function showProjectSubGrid(parentRowID, parentRowKey) {
               	    var childGridID = parentRowID + "_table";

@@ -25,11 +25,12 @@
      				@*<li><a href="@controllers.Frontend.routes.ApplicationController.kanban" id="kanban_id">Kanban</a></li>*@
 					@if(utils.UserAccess.checkAccess(req,"tab_program")){
 						<li><a id="programs" href="/programs" > @Messages("header.programs")</a></li>
+						<li><a id="portfolio" href="/portfolio" >Portfolio</a></li>
 					}
 					<input type="hidden" value="@utils.UserAccess.checkAccess(req,"tab_admin")" id="test-val">
 					@if(utils.UserAccess.checkAccess(req,"tab_admin")){
 					 	<li><a id="projects" href="/division-list">@Messages("header.admin")</a></li>
-					 	<li><a id="log" href="/logs/1">Registro</a></li>
+					 	<li><a id="log" href="/seguimientoHome">Seguimiento</a></li>
 					 }
 				
 				</ul>

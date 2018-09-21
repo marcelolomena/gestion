@@ -743,15 +743,16 @@ object ProgramUserCapacity {
   implicit val capacityWrites = Json.writes[ProgramUserCapacity]
 }
 
-case class Panels (id:Int, id_program:Int, name:String, description:String)
+case class Panels (id:Int, id_program:Int, tipo:String, name:String, description:String)
 object Panels {
 
   val panel = {
       get[Int]("id") ~
       get[Int]("id_program") ~
+      get[String]("tipo") ~
       get[String]("name") ~
       get[String]("description") map {
-      case id ~ id_program ~ name ~ description => Panels(id,id_program,name,description)
+      case id ~ id_program ~ tipo ~ name ~ description => Panels(id,id_program,tipo,name,description)
     }
   }
   implicit val panelList = Json.writes[Panels]
@@ -790,3 +791,4 @@ object ErrorPanel {
   }
   implicit val errorWrites = Json.writes[ErrorPanel]
 }
+

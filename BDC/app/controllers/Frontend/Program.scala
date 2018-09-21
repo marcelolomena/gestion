@@ -3561,23 +3561,27 @@ object Program extends Controller {
           } else if (oper.toString().replace("\"", "").equals("add")) {
             println("****Agregando")
             val id_program = (jsValue \ "id_program")
+            val tipo = (jsValue \ "tipo")
             val name = (jsValue \ "name")
             val description = (jsValue \ "description")
 
             incident = ProgramService.saveProgramPanel(
               id_program.toString().replace("\"", ""),
+              tipo.toString().replace("\"", ""),
               name.toString().replace("\"", ""),
               description.toString().replace("\"", ""))
 
             println(incident.get.error_code)
           } else if (oper.toString().replace("\"", "").equals("edit")) {
-            println("****Editaando")
+            println("****Editando")
             val name = (jsValue \ "name")
+            val tipo = (jsValue \ "tipo")
             val description = (jsValue \ "description")
             val id_panel = (jsValue \ "id")
 
             incident = ProgramService.updateProgramPanel(
               id_panel.toString().replace("\"", ""),
+              tipo.toString().replace("\"", ""),
               name.toString().replace("\"", ""),
               description.toString().replace("\"", ""))
 

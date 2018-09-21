@@ -1741,7 +1741,7 @@ ON A.sub_task_id=B.sub_task_id
   
   def listPanelByProgram(pid: String): Seq[Panels] = {
     DB.withConnection { implicit connection =>
-      SQL("select * from art_program_panel where id_program={panel_id}").on(
+      SQL("select id, id_program, name, description, isnull(tipo, ' ') tipo from art_program_panel where id_program={panel_id}").on(
         'panel_id -> pid.toInt).executeQuery().as(Panels.panel *)
     }
   }
@@ -1754,16 +1754,18 @@ ON A.sub_task_id=B.sub_task_id
   }
 
   def saveProgramPanel(id_program: String,
+                       tipo: String,
                         name: String,
                         description: String): Option[ErrorPanel] = {
 
     var sqlString = """
-      EXEC art.save_project_panel {id_program},{name},{description}
+      EXEC art.save_project_panel {id_program},{tipo},{name},{description}
       """
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).on(
         'id_program -> id_program.toInt,
+        'tipo -> tipo,
         'name -> name,
         'description -> description).executeQuery() as (ErrorPanel.error.singleOpt)
     }
@@ -1781,7 +1783,7 @@ ON A.sub_task_id=B.sub_task_id
     }
   }
 
-  def updateProgramPanel(id_panel: String, name: String,
+  def updateProgramPanel(id_panel: String, tipo:String, name: String,
                        description: String): Option[ErrorPanel] = {
 
     var sqlString = """
@@ -1791,6 +1793,7 @@ ON A.sub_task_id=B.sub_task_id
     DB.withConnection { implicit connection =>
       SQL(sqlString).on(
         'id_panel -> id_panel.toInt,
+        'tipo -> tipo,
         'name -> name,
         'description -> description).executeQuery() as (ErrorPanel.error.singleOpt)
     }

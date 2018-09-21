@@ -547,7 +547,7 @@ println(uname)
           """.stripMargin
     }
 
-
+    System.out.println("Query:"+sqlString)
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Pie.pie *)
     }
