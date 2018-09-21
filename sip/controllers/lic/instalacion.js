@@ -423,7 +423,7 @@ function listInstalacion(req, res) {
         "SELECT count( * ) AS [count] " +
         "FROM lic.ubicacioninstalacion " +
         "WHERE idproducto = " + idproduc +
-        ') a '
+        ") a "
     if (filters && condition != "") {
         sqlcount += " WHERE " + condition + " ";
     }
@@ -438,7 +438,7 @@ function listInstalacion(req, res) {
         "LEFT OUTER JOIN [dbo].[art_user] AS [user] ON [instalacion].[idusuario] = [user].[uid] " +
         "WHERE [instalacion].[estado] IN ( '" + instal + "', '" + histor + "' ) AND [instalacion].[idproducto] = " + idproduc +
         "union all " +
-        "SELECT [id], estado, null, null, null, nombre, ubicacion, codigoInterno " +
+        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno " +
         "FROM lic.ubicacioninstalacion " +
         "WHERE idproducto = " + idproduc
     // "ORDER BY [id] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY "
