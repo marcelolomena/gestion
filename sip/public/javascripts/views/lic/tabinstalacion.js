@@ -59,7 +59,7 @@ var tabInstalacionGrid = {
                 label: 'Usuario',
                 name: 'usuario',
                 align: 'center',
-                width: 150,
+                width: 250,
                 editable: false,
                 search: false
             },
@@ -67,7 +67,7 @@ var tabInstalacionGrid = {
                 label: 'Ubicación',
                 name: 'ubicacion',
                 align: 'center',
-                width: 250,
+                width: 150,
                 editable: false,
                 search: false
             },
@@ -75,7 +75,7 @@ var tabInstalacionGrid = {
                 label: 'Código Interno',
                 name: 'codigoInterno',
                 align: 'center',
-                width: 80,
+                width: 140,
                 editable: false,
                 search: false
             },
@@ -90,7 +90,7 @@ var tabInstalacionGrid = {
             {
                 label: 'Fecha de Instalación',
                 name: 'fechaInstalacion',
-                width: 100,
+                width: 110,
                 align: 'center',
                 sortable: false,
                 editable: true,
