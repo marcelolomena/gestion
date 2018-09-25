@@ -46,11 +46,11 @@ var tabInstalacionGrid = {
                     if (estado == 'Historico') {
                         return codauto = 'Historico'
                     } else {
-                        if(estado == 'ubicacion'){
+                        if (estado == 'ubicacion') {
                             return codauto = 'Ubicación'
                         } else {
                             return cellvalue;
-                        } 
+                        }
                     }
                 },
                 search: false,
@@ -109,6 +109,14 @@ var tabInstalacionGrid = {
                         return '';
                     }
                 },
+                search: false
+            },
+            {
+                label: 'Observación',
+                name: 'observacion',
+                align: 'center',
+                width: 200,
+                editable: false,
                 search: false
             }
         ];

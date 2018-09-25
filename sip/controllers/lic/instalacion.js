@@ -326,67 +326,6 @@ function action(req, res) {
     }
 }
 
-// function listInstalacion(req, res) {
-//     var id = req.params.id;
-//     var usuario = req.session.passport.user;
-//     var idproduc = req.params.pId;
-//     var instal = 'Instalado'
-//     var histor = 'Historico'
-//     var page = req.query.page;
-//     var rows = req.query.rows;
-//     var filters = req.params.filters
-//     // console.log("******** page:" + page + ", row:" + rows);
-//     utilSeq.buildCondition(filters, function (err, data) {
-//         if (err) {
-//             logger.debug("->>> " + err)
-//         } else {
-//             entity.belongsTo(models.producto, {
-//                 foreignKey: 'idProducto'
-//             });
-//             entity.belongsTo(models.user, {
-//                 foreignKey: 'idUsuario'
-//             });
-//             entity.belongsTo(models.tipoInstalacion, {
-//                 foreignKey: 'idTipoInstalacion'
-//             });
-//             entity.count({
-//                 where: {
-//                     idProducto: idproduc,
-//                     estado: [instal, histor]
-//                 }
-//             }).then(function (records) {
-//                 var total = Math.ceil(records / rows);
-//                 entity.findAll({
-//                     offset: parseInt(rows * (page - 1)),
-//                     limit: parseInt(rows),
-//                     // order: ['id'],
-//                     where: {
-//                         idProducto: idproduc,
-//                         estado: [instal, histor]
-//                     },
-//                     include: [{
-//                         model: models.producto
-//                     }, {
-//                         model: models.user
-//                     }]
-//                 }).then(function (instal) {
-//                     return res.json({
-//                         records: records,
-//                         total: total,
-//                         page: page,
-//                         rows: instal
-//                     });
-//                 }).catch(function (err) {
-//                     logger.error(err);
-//                     return res.json({
-//                         error_code: 1
-//                     });
-//                 });
-//             })
-//         }
-//     });
-// }
-
 function listInstalacion(req, res) {
 
     var page = req.query.page;
@@ -418,7 +357,7 @@ function listInstalacion(req, res) {
     var sqlcount = "SELECT SUM(count) " +
         "FROM (SELECT count(*) AS [count] " +
         "FROM [lic]. [instalacion] AS[instalacion] " +
-        "WHERE [instalacion]. [estado] IN ( '"+ instal + "', '" + histor +"') AND [instalacion]. [idproducto] = " + idproduc +
+        "WHERE [instalacion]. [estado] IN ( '" + instal + "', '" + histor + "') AND [instalacion]. [idproducto] = " + idproduc +
         "union " +
         "SELECT count( * ) AS [count] " +
         "FROM lic.ubicacioninstalacion " +
@@ -433,12 +372,12 @@ function listInstalacion(req, res) {
         "SELECT @PageSize=" + rowspp + "; " +
         "DECLARE @PageNumber INT; " +
         "SELECT @PageNumber=" + page + "; " +
-        "SELECT  [instalacion].id, [instalacion].estado, [instalacion].codautorizacion, [instalacion].instalador, fechainstalacion, null as usuario, null as ubicacion, null as codigoInterno " +
+        "SELECT  [instalacion].id, [instalacion].estado, [instalacion].codautorizacion, [instalacion].instalador, fechainstalacion, null as usuario, null as ubicacion, null as codigoInterno, null as observacion" +
         "FROM [lic].[instalacion] AS [instalacion] LEFT OUTER JOIN [lic].[producto] AS [producto] ON [instalacion].[idproducto] = [producto].[id] " +
         "LEFT OUTER JOIN [dbo].[art_user] AS [user] ON [instalacion].[idusuario] = [user].[uid] " +
         "WHERE [instalacion].[estado] IN ( '" + instal + "', '" + histor + "' ) AND [instalacion].[idproducto] = " + idproduc +
         "union all " +
-        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno " +
+        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno, observacion " +
         "FROM lic.ubicacioninstalacion " +
         "WHERE idproducto = " + idproduc
     // "ORDER BY [id] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY "
@@ -592,7 +531,8 @@ function actionUbicacion(req, res) {
                 idproducto: req.body.idproducto,
                 usuario: req.body.usuario,
                 ubicacion: req.body.ubicacion,
-                codigoInterno: req.body.codigoInterno
+                codigoInterno: req.body.codigoInterno,
+                observacion: req.body.observacion
             }).then(function (instal) {
                 return res.json({
                     id: instal.id,
@@ -615,7 +555,8 @@ function actionUbicacion(req, res) {
                 idproducto: req.body.idproducto,
                 usuario: req.body.usuario,
                 ubicacion: req.body.ubicacion,
-                codigoInterno: req.body.codigoInterno
+                codigoInterno: req.body.codigoInterno,
+                observacion: req.body.observacion
             }, {
                 where: {
                     id: req.body.id
@@ -690,9 +631,14 @@ function getExcel(req, res) {
             caption: 'CódigoInterno',
             type: 'string',
             width: 200
+        },
+        {
+            caption: 'Observación',
+            type: 'string',
+            width: 200
         }
     ];
-    var sql = "SELECT b.nombre, a.usuario, a.ubicacion, a.codigoInterno FROM lic.ubicacioninstalacion a " +
+    var sql = "SELECT b.nombre, a.usuario, a.ubicacion, a.codigoInterno, a.observacion FROM lic.ubicacioninstalacion a " +
         "JOIN lic.producto b ON b.id = a.idproducto " +
         "ORDER BY a.idproducto ASC";
 
@@ -708,7 +654,8 @@ function getExcel(req, res) {
                         ubicacion[i].nombre,
                         ubicacion[i].usuario,
                         ubicacion[i].ubicacion,
-                        ubicacion[i].codigoInterno
+                        ubicacion[i].codigoInterno,
+                        ubicacion[i].observacion
                     ];
                     nombreprod = ubicacion[i].nombre
                 } else {
@@ -716,7 +663,8 @@ function getExcel(req, res) {
                         null,
                         ubicacion[i].usuario,
                         ubicacion[i].ubicacion,
-                        ubicacion[i].codigoInterno
+                        ubicacion[i].codigoInterno,
+                        ubicacion[i].observacion
                     ];
                     nombreprod = ubicacion[i].nombre
                 }
@@ -727,7 +675,7 @@ function getExcel(req, res) {
 
             var result = nodeExcel.execute(conf);
             res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-            res.setHeader("Content-Disposition", "attachment;filename=" + "ReporteComparativo.xlsx");
+            res.setHeader("Content-Disposition", "attachment;filename=" + "ReporteUbicacionesLIC.xlsx");
             res.end(result, 'binary');
 
         }).catch(function (err) {

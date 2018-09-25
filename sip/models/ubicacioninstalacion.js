@@ -31,6 +31,10 @@ module.exports = function (sequelize, DataTypes) {
     estado: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    observacion: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     schema: 'lic',

@@ -15,6 +15,10 @@ $(document).ready(function () {
     tmpl += "<div class='column-half'>Código Interno {codigoInterno}</div>";
     tmpl += "</div>";
 
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Observación {observacion}</div>";
+    tmpl += "</div>";
+
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
@@ -108,6 +112,14 @@ $(document).ready(function () {
             name: 'codigoInterno',
             align: 'center',
             width: 100,
+            editable: true,
+            search: false
+        },
+        {
+            label: 'Observación',
+            name: 'observacion',
+            align: 'center',
+            width: 300,
             editable: true,
             search: false
         }
