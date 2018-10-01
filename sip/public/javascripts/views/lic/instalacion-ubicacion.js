@@ -6,17 +6,18 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Producto {nombreProd}</div>";
     tmpl += "<div class='column-half'>Usuario<span style='color:red'>*</span>{usuario}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Ubicación <span style='color:red'>*</span>{ubicacion}</div>";
-    tmpl += "<div class='column-half'>Código Interno {codigoInterno}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Observación {observacion}</div>";
+    tmpl += "<div class='column-half'>Código Interno {codigoInterno}</div>";    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Observación {observacion}</div>";
+    tmpl += "</div>";
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Producto {nombreProd}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
@@ -49,7 +50,7 @@ $(document).ready(function () {
             edittype: "text",
             search: true,
             editrules: {
-                required: true
+                required: false
             },
             editoptions: {
                 dataInit: function (element) {
@@ -121,6 +122,7 @@ $(document).ready(function () {
             align: 'center',
             width: 300,
             editable: true,
+            edittype: 'textarea',
             search: false
         }
     ];
@@ -186,10 +188,21 @@ $(document).ready(function () {
                     }).trigger("reloadGrid");
                     return [true, "", ""];
                 }
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (!(postdata.usuario)) {
+                    return [false, 'Debe seleccionar a un Usuario', ''];
+                } else if (!(postdata.ubicacion)) {
+                    return [false, 'Debe ingresar la Ubicación', ''];
+                } else if ((!postdata.nombreProd)) {
+                    return [false, 'Debe ingresar un Producto', ''];
+                } else {
+                    return [true, ', '];
+                }
             }
         }, {
             addCaption: "Agrega Ubicación",
-            closeAfterAdd: true,
+            closeAfterAdd: false,
             recreateForm: true,
             mtype: 'POST',
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -197,6 +210,17 @@ $(document).ready(function () {
             template: tmpl,
             errorTextFormat: function (data) {
                 return [true, 'Error: ' + data.responseText, ""];
+            },
+            beforeSubmit: function (postdata, formid) {
+                if (!(postdata.usuario)) {
+                    return [false, 'Debe agregar a un Usuario', ''];
+                } else if (!(postdata.ubicacion)) {
+                    return [false, 'Debe ingresar la Ubicación', ''];
+                } else if ((!postdata.nombreProd)) {
+                    return [false, 'Debe ingresar un Producto', ''];
+                } else {
+                    return [true, ', '];
+                }
             },
             afterSubmit: function (response, postdata) {
                 var json = response.responseText;
@@ -211,7 +235,9 @@ $(document).ready(function () {
                             filters
                         }
                     }).trigger("reloadGrid");
-                    return [true, "", ""];
+                    $('input#nombreProd').val('');
+                    $("input#nombreProd").val($('option:input', this).text());
+                    return [false, 'Agregue otro producto o simplemente cierre la ventana.', ""];
                 }
             }
         }
