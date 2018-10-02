@@ -30,8 +30,10 @@
 					<input type="hidden" value="@utils.UserAccess.checkAccess(req,"tab_admin")" id="test-val">
 					@if(utils.UserAccess.checkAccess(req,"tab_admin")){
 					 	<li><a id="projects" href="/division-list">@Messages("header.admin")</a></li>
+					}
+					@if(utils.UserAccess.checkAccess(req,"tab_seguimiento")){
 					 	<li><a id="log" href="/seguimientoHome">Seguimiento</a></li>
-					 }
+					}
 				
 				</ul>
 			</div>

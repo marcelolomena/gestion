@@ -264,6 +264,20 @@ object Report {
   object Pie {
     val pie = {
       get[BigDecimal]("dId") ~
+        get[String]("name") ~
+        get[BigDecimal]("y") ~
+        get[BigDecimal]("porcentaje")  map {
+        case dId ~
+          name ~
+          y ~
+          porcentaje  => Pie(dId, name, y, porcentaje)
+      }
+    }
+  }
+
+  object Pie2 {
+    val pie2 = {
+      get[BigDecimal]("dId") ~
         get[String]("division") ~
         get[BigDecimal]("cantidad") ~
         get[BigDecimal]("porcentaje")  map {
@@ -274,7 +288,6 @@ object Report {
       }
     }
   }
-
 
   implicit object PieFormat extends Format[Pie] {
     def writes(pie: Pie): JsValue = {

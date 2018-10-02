@@ -1335,9 +1335,13 @@ $(document).ready(function(){
 
        	}, activate: function( event, ui ) {
 
-        if(ui.newTab.index()===0){
+        if(ui.newTab.text()==='Reporte'){
+            var mytab=ui.newTab.text();
+            console.log('tab:'+mytab);
             $("#jqGrid").jqGrid('setCaption', name).jqGrid('setGridParam', { url: '/report/H/0/0', page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");
-        } else if(ui.newTab.index()===1) {
+        } else if(ui.newTab.text()==='Dashboard') {
+            var mytab=ui.newTab.text();
+            console.log('tab:'+mytab);
             $.ajax({
 				  url: '/burbujas/1',
 				  type: 'GET',
@@ -1429,7 +1433,7 @@ $(document).ready(function(){
 				  }
 			});
 
-        }else if(ui.newTab.index()===3) {
+        }else if(ui.newTab.text()==='Programas y Sub Tareas') {
 				if($('#jqGrid2').html() == "") {
 					$("#jqGrid2").jqGrid({
 				        url: '/reportProgram',
@@ -1620,7 +1624,7 @@ $(document).ready(function(){
 					});            		
 				}
 		
-		}else if(ui.newTab.index()===4) {
+		}else if(ui.newTab.text()==='Sub Tareas') {
 			if($('#jqGrid3').html() == "") {
 				$("#jqGrid3").jqGrid({
 					url: '/reportStateSubTask',
@@ -1743,7 +1747,7 @@ $(document).ready(function(){
 					   } 
 				});
 			}		
-		} else if(ui.newTab.index()===5) {
+		} else if(ui.newTab.text()==='Por Departamentos') {
 			if($('#containerDepa').html() == "") {	
 				$.ajax({
 					  url: '/pieDepa',
@@ -1792,6 +1796,9 @@ $(document).ready(function(){
 					  }
 				});
 			}		
+		}else if(ui.newTab.text()==='Por Departamentos') {
+
+
 		}
       }
     });
