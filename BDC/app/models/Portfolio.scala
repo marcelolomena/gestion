@@ -17,16 +17,41 @@ case class PortfolioMaster(
   name: String,
   description: String,
   state: String,
-  uidlider: Option[Int])
+  uidlider: Option[Int],
+  lider: String)
 
 object PortfolioMaster extends CustomColumns {
 
   val pMaster = {
     get[Option[Int]]("id") ~ get[String]("name") ~ get[String]("description") ~ get[String]("state") ~
-      get[Option[Int]]("uidlider") map {
-      case id ~ name ~ description ~ state ~ uidlider =>
-        PortfolioMaster(id, name, description, state, uidlider)
+      get[Option[Int]]("uidlider") ~ get[String]("lider") map {
+      case id ~ name ~ description ~ state ~ uidlider ~ lider =>
+        PortfolioMaster(id, name, description, state, uidlider, lider)
     }
   }
 
 }
+
+case class PortfolioPrograms(
+                            //id, name, description, state, uidlider
+                            proyectos: Option[Int],
+                            program_id: Option[Int],
+                            program_name: String,
+                            lider: String,
+                            workflow_status: String,
+                            demand_manager: Option[Int])
+
+object PortfolioPrograms extends CustomColumns {
+
+  val pPrograms = {
+    get[Option[Int]]("proyectos") ~ get[Option[Int]]("program_id") ~ get[String]("program_name") ~ get[String]("lider") ~ get[String]("workflow_status") ~
+      get[Option[Int]]("demand_manager") map {
+      case proyectos ~ program_id ~ program_name ~ lider ~ workflow_status ~ demand_manager =>
+        PortfolioPrograms(proyectos, program_id, program_name, lider, workflow_status, demand_manager)
+    }
+  }
+
+  implicit val pProgramsWrites = Json.writes[PortfolioPrograms]
+
+}
+

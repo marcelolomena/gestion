@@ -9,10 +9,7 @@ import art_forms.ARTForms
 import models._
 import play.api.mvc.Action
 import play.api.mvc.Controller
-import services.DepartmentService
-import services.DivisionService
-import services.GenrenciaService
-import services.PortfolioService
+import services._
 //import services.ProgramService
 import services.ProjectService
 import services.TimesheetService
@@ -82,24 +79,32 @@ object Portfolio extends Controller {
       val username = request.session.get("username").get
       val profile = request.session.get("user_profile").get
 
-      val programs = PortfolioService.countAllPortfolio(user_id.toInt)
+      val portfolio = PortfolioService.countAllPortfolio(user_id.toInt)
 
       val userSession = request.session + ("uId" -> user_id.toString()) + ("username" -> username) + ("utype" -> request.session.get("utype").get) + ("user_profile" -> request.session.get("user_profile").get)
-      Ok(views.html.frontend.program.programs(programs)).withSession(userSession)
+      Ok(views.html.frontend.portfolio.portfolio(portfolio)).withSession(userSession)
 
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
   }
 
-  def portfolioDetails(programId: String) = Action { implicit request =>
+  def portfolioDetails(portfolioId: String) = Action { implicit request =>
     request.session.get("username").map { user =>
 
-      Redirect(routes.Login.loginUser())
+        val uId = Integer.parseInt(request.session.get("uId").get)
+        val utype = Integer.parseInt(request.session.get("utype").get)
+        val portfolio = PortfolioService.findPorfolioDetailsById(portfolioId)
+        val programList = PortfolioService.findProgramsListForPortfolio(uId, portfolioId)
 
-    }.getOrElse {
-      Redirect(routes.Login.loginUser())
+          Ok(views.html.frontend.portfolio.portfolioDetails(
+            portfolio, programList)).withSession("username" -> request.session.get("username").get, "utype" -> request.session.get("utype").get, "uId" -> request.session.get("uId").get, "user_profile" -> request.session.get("user_profile").get)
+
+
+      }.getOrElse {
+        Redirect(routes.Login.loginUser())
+      }
+
     }
-  }
 
 }

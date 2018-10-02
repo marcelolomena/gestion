@@ -2149,6 +2149,18 @@ padding: 6px 20px 6px 8px;
 	width: 933px;
 }
 
+.project_list_3 {
+	color: #6B6B6B;
+	float: left;
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+	width: 411px;
+	 word-wrap: break-word;
+}
+
 
 #sap_list li:hover, #member_list li:hover{
 	background: #f9e796;

@@ -2403,9 +2403,10 @@ function getRenderGanttChart(itemsOnSinglePage) {
 
 }
 function renderProjectGanttChart() {
-	var url = "/project-gantt-chart?id=" + $("#program").val();
+	var url = "/project-gantt-chart?id=" + $("#program").val()+"288";
 	$(".loader").css("display", "block");
 	$.post(url, function(data) {
+	    console.log("post:"+data)
 		var mainString = ""
 		var obj = JSON.parse(data);
 		// console.log(obj);
@@ -6158,6 +6159,47 @@ function bindProgramPagination(pageNumber){
 		});
 	}else if(numItems === 0){
 		$('#program_pagination_div').css('display', 'none');
+	}
+}
+
+//RRM: Nuevo para porfolio
+function renderPortfolioList(){
+	$('.loader').css('display', 'block');
+	var url = "/portfolio-list/1?t="+Date.now()
+	$.get(url, function(data) {
+		$("#art_portfolios").html(data);
+		bindPortfolioPagination("1")
+	});
+	$('.loader').css('display', 'none');
+}
+
+function bindPortfolioPagination(pageNumber){
+	var items = $(".portfolio-row");
+	var numItems = parseInt($("#portfolio-count").val()) //items.length;
+	if(numItems > 0){
+		$('#portfolio_pagination_div').css('display', 'block');
+		var perPage = 10;
+		if(typeof pageNumber=="undefined"){
+			pageNumber =1;
+		}
+		items.slice(perPage).hide();
+		$("#portfolio_pagination_div").pagination({
+			items : numItems,
+			itemsOnPage : perPage,
+			cssStyle : "light-theme",
+			currentPage : pageNumber,
+			onPageClick : function(pageNumber) {
+				$(".loader").css("display", "block");
+				var url = "/portfolio-list/" + pageNumber+"?t="+Date.now();
+				$.get(url, function(data) {
+					$("#art_portfolios").html(data);
+					bindPortfolioPagination(pageNumber);
+				});
+				$(".loader").css("display", "none");
+			}
+		});
+	}else if(numItems === 0){
+		$('#portfolio_pagination_div').css('display', 'none');
 	}
 }
 

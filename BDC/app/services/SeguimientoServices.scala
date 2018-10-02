@@ -98,7 +98,7 @@ object SeguimientoService {
       val sqlstr =
         """
           |	SELECT a.id, b.file_name, a.title, a.updated_at fecha, b.version_no version, d.document_type tipo, a.parent_type, c.first_name+' '+c.last_name AS encargado,
-          |	a.extension
+          |	a.extension, b.version_notes, d.document_type
           |	FROM document_master a
           |	JOIN version_details b ON a.id=b.document_id
           |	JOIN art_user c ON b.user_id=c.uid

@@ -7,10 +7,9 @@
 <input type="hidden" value="@programCount" id="program-count"/>
 <h3 class="title">
 	<span style="margin-left:12px; width:25%; float:left;">Portfolio</span>
-	<span style=" width:20%; float:left;">Portfolio</span>
-	<span style=" width:25%; float:left;">Descripción</span>
-	<span style=" width:15%; float:left;">Estado</span>
-	<span style=" width:3%; float:left;">@Messages("program.action")</span>
+	<span style=" width:35%; float:left;">Descripción</span>
+	<span style=" width:25%; float:left;">Estado</span>
+	<span style=" width:5%; float:left;">@Messages("program.action")</span>
 </h3>
 <div class="project_list_1  padding-none">
 	<div class="design_team_left_detail_1_left width_full" id="program_container">
@@ -19,19 +18,15 @@
 			<li class="width_full program-row">  
 				<div class="@if( index%2==0 ){ program_list_1 }else{ program_list_2 } program_list ">
 		 			<a href="/portfolio-details/@p.id">
-		 				<span style="width: 25%" class="left width138px">p.name.toString</span>
-		  			<span style="width: 20%" class="left width270px">
-					p.name.toString
-		   		</span>
-		  			<span style="width: 25%" class="left width312px">@p.description </span>
-		  			<span style="width: 15%" class="left width312px">
-						p.state.toString
-		  			</span>
+		 				<span style="width: 25%" class="left width138px">@p.name.toString</span>
+						<span style="width: 35%" class="left width270px">@p.description.toString</span>
+						<span style="width: 25%" class="left width312px">@p.state.toString</span>
+						<span style="width: 5%" class="left width312px"></span>
 		 			</a>
-		    			@*<a href="/edit-portfolio/@p.id"><span class="edit-icon" ></span></a>*@
-		    			@if(utils.UserAccess.checkAccess(req,"delete_program")){
-		    				<span class="delete_icon delete-program" style="margin-left: 0px;" id="m_@p.id"></span>
-		    			}
+		    		@*<a href="/edit-portfolio/@p.id"><span class="edit-icon" ></span></a>*@
+					@if(utils.UserAccess.checkAccess(req,"delete_program")){
+						<span class="delete_icon delete-program" style="margin-left: 0px;" id="m_@p.id"></span>
+					}
 		   		</div>
 					
 			</li>	
@@ -41,7 +36,7 @@
 	</div>
 </div>
  
- <ul id="program_pagination_div">
+ <ul id="portfolio_pagination_div">
  </ul>
 <script type="text/javascript">
 $(document).ready(function() {
