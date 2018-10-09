@@ -35,6 +35,10 @@ module.exports = function (sequelize, DataTypes) {
     observacion: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    cui: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     schema: 'lic',

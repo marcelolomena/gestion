@@ -71,18 +71,6 @@ function list(req, res) {
     });
 }
 
-// function misAutorizaciones(req, res) {
-//     models.sequelize.query("select distinct a.id, a.idproducto, b.nombre, a.numlicencia, b.idtipoinstalacion, a.codautoriza " +
-//         "from lic.reserva a " +
-//         "join lic.producto b on a.idproducto = b.id " +
-//         "join lic.instalacion c on c.idproducto = b.id " +
-//         "where a.idusuario = " + req.session.passport.user + " AND a.estado = 'Autorizado' AND b.licReserva <> 0 AND c.estado!= 'Instalado' AND c.estado! = 'Historico'").spread(function (rows) {
-//         return res.json(rows);
-//     });
-// }
-
-
-
 function misAutorizaciones(req, res) {
     models.sequelize.query("select distinct a.id, a.idproducto, b.nombre, a.numlicencia, b.idtipoinstalacion, a.codautoriza " +
         "from lic.reserva a " +
@@ -372,12 +360,12 @@ function listInstalacion(req, res) {
         "SELECT @PageSize=" + rowspp + "; " +
         "DECLARE @PageNumber INT; " +
         "SELECT @PageNumber=" + page + "; " +
-        "SELECT  [instalacion].id, [instalacion].estado, [instalacion].codautorizacion, [instalacion].instalador, fechainstalacion, null as usuario, null as ubicacion, null as codigoInterno, null as observacion" +
+        "SELECT  [instalacion].id, [instalacion].estado, [instalacion].codautorizacion, [instalacion].instalador, fechainstalacion, null as usuario, null as ubicacion, null as codigoInterno, null as observacion, null as cui" +
         "FROM [lic].[instalacion] AS [instalacion] LEFT OUTER JOIN [lic].[producto] AS [producto] ON [instalacion].[idproducto] = [producto].[id] " +
         "LEFT OUTER JOIN [dbo].[art_user] AS [user] ON [instalacion].[idusuario] = [user].[uid] " +
         "WHERE [instalacion].[estado] IN ( '" + instal + "', '" + histor + "' ) AND [instalacion].[idproducto] = " + idproduc +
         "union all " +
-        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno, observacion " +
+        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno, observacion, cui " +
         "FROM lic.ubicacioninstalacion " +
         "WHERE idproducto = " + idproduc
     // "ORDER BY [id] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY "
@@ -483,46 +471,6 @@ function listUbicacion(req, res) {
     });
 }
 
-
-// function listUbicacion(req, res) {
-//     var id = req.params.id;
-//     var page = req.query.page;
-//     var rows = req.query.rows;
-//     var filters = req.params.filters
-//     utilSeq.buildCondition(filters, function (err, data) {
-//         if (err) {
-//             logger.debug("->>> " + err)
-//         } else {
-//             models.ubicacioninstalacion.belongsTo(models.producto, {
-//                 foreignKey: 'idproducto'
-//             });
-//             models.ubicacioninstalacion.count({}).then(function (records) {
-//                 var total = Math.ceil(records / rows);
-//                 models.ubicacioninstalacion.findAll({
-//                     offset: parseInt(rows * (page - 1)),
-//                     limit: parseInt(rows),
-//                     // order: [['codautorizacion', 'DESC']],
-//                     include: [{
-//                         model: models.producto
-//                     }]
-//                 }).then(function (ubicacion) {
-//                     return res.json({
-//                         records: records,
-//                         total: total,
-//                         page: page,
-//                         rows: ubicacion
-//                     });
-//                 }).catch(function (err) {
-//                     logger.error(err);
-//                     return res.json({
-//                         error_code: 1
-//                     });
-//                 });
-//             })
-//         }
-//     });
-// }
-
 function actionUbicacion(req, res) {
     var action = req.body.oper;
     switch (action) {
@@ -532,7 +480,8 @@ function actionUbicacion(req, res) {
                 usuario: req.body.usuario,
                 ubicacion: req.body.ubicacion,
                 codigoInterno: req.body.codigoInterno,
-                observacion: req.body.observacion
+                observacion: req.body.observacion,
+                cui: req.body.cui
             }).then(function (instal) {
                 return res.json({
                     id: instal.id,
@@ -556,7 +505,8 @@ function actionUbicacion(req, res) {
                 usuario: req.body.usuario,
                 ubicacion: req.body.ubicacion,
                 codigoInterno: req.body.codigoInterno,
-                observacion: req.body.observacion
+                observacion: req.body.observacion,
+                cui: req.body.cui
             }, {
                 where: {
                     id: req.body.id
@@ -633,12 +583,17 @@ function getExcel(req, res) {
             width: 200
         },
         {
+            caption: 'CUI',
+            type: 'string',
+            width: 200
+        },
+        {
             caption: 'Observación',
             type: 'string',
             width: 200
         }
     ];
-    var sql = "SELECT b.nombre, a.usuario, a.ubicacion, a.codigoInterno, a.observacion FROM lic.ubicacioninstalacion a " +
+    var sql = "SELECT b.nombre, a.usuario, a.ubicacion, a.codigoInterno, a.observacion, a.cui FROM lic.ubicacioninstalacion a " +
         "JOIN lic.producto b ON b.id = a.idproducto " +
         "ORDER BY a.idproducto ASC";
 
@@ -655,6 +610,7 @@ function getExcel(req, res) {
                         ubicacion[i].usuario,
                         ubicacion[i].ubicacion,
                         ubicacion[i].codigoInterno,
+                        ubicacion[i].cui,
                         ubicacion[i].observacion
                     ];
                     nombreprod = ubicacion[i].nombre
@@ -664,6 +620,7 @@ function getExcel(req, res) {
                         ubicacion[i].usuario,
                         ubicacion[i].ubicacion,
                         ubicacion[i].codigoInterno,
+                        ubicacion[i].cui,
                         ubicacion[i].observacion
                     ];
                     nombreprod = ubicacion[i].nombre

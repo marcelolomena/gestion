@@ -43,6 +43,7 @@ var torreController = require('../controllers/lic/torre');
 var reportecompController = require('../controllers/lic/reportecomparativo');
 var graficoVencimController = require('../controllers/lic/graficovencimientos');
 var instConsultaController = require('../controllers/lic/instalacion-consulta');
+var controlUbicacionController = require('../controllers/lic/controlusuario');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -357,5 +358,11 @@ module.exports = function (passport) {
     router.route('/lic/ubicacionexcel')
         .get(isAuthenticated, instalacionSolicitudController.getExcel);
 
+    router.route('/lic/listAllFabricante')
+        .get(isAuthenticated, fabricanteController.listAllFabricante);
+
+    router.route('/lic/controlusuario')
+        .post(isAuthenticated, controlUbicacionController.action)
+        .get(isAuthenticated, controlUbicacionController.list)
     return router;
 };

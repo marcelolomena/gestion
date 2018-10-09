@@ -6,20 +6,17 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Usuario<span style='color:red'>*</span>{usuario}</div>";
-    tmpl += "<div class='column-half'>Ubicación <span style='color:red'>*</span>{ubicacion}</div>";
+    tmpl += "<div class='column-half'>Producto<span style='color:red'>*</span>{nombreProd}</div>";
+    tmpl += "<div class='column-half'>Administrador<span style='color:red'>*</span>{administrador}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Código Interno<span style='color:red'>*</span>{codigoInterno}</div>";
-    tmpl += "<div class='column-half'>CUI <span style='color:red'>*</span>{cui}</div>";
+    tmpl += "<div class='column-half'>Fecha Actualizacion <span style='color:red'>*</span>{fechaactualizacion}</div>";
+    tmpl += "<div class='column-half'>Cantidad<span style='color:red'>*</span>{cantidad}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Observación {observacion}</div>";
-    tmpl += "</div>";
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Producto {nombreProd}</div>";
+    tmpl += "<div class='column-full'>Observaciones{observaciones}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
@@ -50,7 +47,7 @@ $(document).ready(function () {
             sortable: false,
             editable: true,
             edittype: "text",
-            search: true,
+            search: false,
             editrules: {
                 required: false
             },
@@ -95,58 +92,59 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Usuario',
-            name: 'usuario',
-            align: 'center',
-            width: 200,
-            editable: true,
-            search: true
-        },
-        {
-            label: 'Ubicación',
-            name: 'ubicacion',
+            label: 'Administrador',
+            name: 'administrador',
             align: 'center',
             width: 200,
             editable: true,
             search: false
         },
         {
-            label: 'Código Interno',
-            name: 'codigoInterno',
-            align: 'center',
+            label: 'Fecha Actualización',
+            name: 'fechaactualizacion',
             width: 100,
+            align: 'center',
+            sortable: true,
             editable: true,
+            editoptions: {
+                'data-provide': 'datepicker',
+                size: 10,
+                maxlengh: 10,
+                dataInit: function (element) {
+                    $(element).mask('00-00-0000', {
+                        placeholder: 'DD-MM-YYYY'
+                    });
+                }
+            },
+            editrules: {
+                required: true
+            },
             search: false
         },
         {
-            label: 'CUI',
-            name: 'cui',
+            label: 'Observaciones',
+            name: 'observaciones',
+            align: 'center',
+            width: 400,
+            editable: true,
+            edittype: 'textarea',
+            search: false
+        },
+        {
+            label: 'Cantidad',
+            name: 'cantidad',
             align: 'center',
             width: 100,
             editable: true,
             search: false,
             editrules: {
                 integer: true
-            },
-            editoptions: {
-                dataInit: function (element) {
-                    $(element).mask('0000');
-                }
             }
         },
-        {
-            label: 'Observación',
-            name: 'observacion',
-            align: 'center',
-            width: 300,
-            editable: true,
-            edittype: 'textarea',
-            search: false
-        }
     ];
 
     $("#grid").jqGrid({
-        url: '/lic/ubicacioninstalacion',
+        url: '/lic/controlusuario',
         mtype: "GET",
         datatype: "json",
         page: 1,
@@ -155,14 +153,14 @@ $(document).ready(function () {
         regional: 'es',
         height: 'auto',
         sortable: "true",
-        width: null,
+        // width: '''',
         shrinkToFit: false,
-        caption: 'Ubicación',
+        caption: 'Control de Usuario',
         pager: "#pager",
         viewrecords: true,
         rowList: [10, 20, 30, 40, 50],
         styleUI: "Bootstrap",
-        editurl: '/lic/ubicacioninstalacion'
+        editurl: '/lic/controlusuario'
     });
 
     $("#grid").jqGrid('filterToolbar', {
@@ -182,7 +180,7 @@ $(document).ready(function () {
         },
 
         {
-            editCaption: "Modifica Ubicación",
+            editCaption: "Modificar Control de Usuario",
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -223,7 +221,7 @@ $(document).ready(function () {
                 }
             }
         }, {
-            addCaption: "Agrega Ubicación",
+            addCaption: "Agrega Control de Usuario",
             closeAfterAdd: false,
             recreateForm: true,
             mtype: 'POST',
@@ -269,19 +267,19 @@ $(document).ready(function () {
         }
     );
 
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
-        caption: "",
-        buttonicon: "glyphicon glyphicon-download-alt",
-        title: "Excel",
-        position: "last",
-        onClickButton: function () {
-            var grid = $('#grid');
-            var rowKey = grid.getGridParam("selrow");
-            var url = '/lic/ubicacionexcel';
-            $('#grid').jqGrid('excelExport', {
-                "url": url
-            });
-        }
-    });
-    $("#pager_left").css("width", "");
+    // $('#grid').jqGrid('navButtonAdd', '#pager', {
+    //     caption: "",
+    //     buttonicon: "glyphicon glyphicon-download-alt",
+    //     title: "Excel",
+    //     position: "last",
+    //     onClickButton: function () {
+    //         var grid = $('#grid');
+    //         var rowKey = grid.getGridParam("selrow");
+    //         var url = '/lic/ubicacionexcel';
+    //         $('#grid').jqGrid('excelExport', {
+    //             "url": url
+    //         });
+    //     }
+    // });
+    // $("#pager_left").css("width", "");
 });
