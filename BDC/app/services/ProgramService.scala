@@ -1800,7 +1800,7 @@ ON A.sub_task_id=B.sub_task_id
   }
 
   def findPanelProjects(id_program: String, id_panel: String): Seq[models.PanelsProject] = {
-    var sqlString = "SELECT pId id, pId id_project, pId id_program_panel, project_name project FROM art_project_master WHERE program={id_program} AND pId NOT IN (SELECT id_project FROM art_program_panel_detail WHERE id_program_panel = {id_panel})"
+    var sqlString = "SELECT pId id, pId id_project, pId id_program_panel, project_name project FROM art_project_master WHERE program={id_program} AND pId NOT IN (SELECT id_project FROM art_program_panel_detail WHERE id_program_panel = {id_panel}) AND is_active=1"
     DB.withConnection { implicit connection =>
       SQL(sqlString).on(
         'id_program -> id_program.toInt,

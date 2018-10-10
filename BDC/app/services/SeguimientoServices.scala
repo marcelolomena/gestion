@@ -58,11 +58,11 @@ object SeguimientoService {
     }
   }
 
-  def documentsPMOs(): Seq[PMOList] = {
+  def documentsPMOs(rol: String): Seq[PMOList] = {
 
-    var sqlString = "EXEC art.documentos_pmo_list"
+    var sqlString = "EXEC art.documentos_pmo_list {Rol}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on().executeQuery() as (PMOList.rpt *)
+      SQL(sqlString).on('Rol -> rol.toInt).executeQuery() as (PMOList.rpt *)
     }
   }
 
@@ -104,7 +104,7 @@ object SeguimientoService {
           |	JOIN art_user c ON b.user_id=c.uid
           |	JOIN art_program_document_type d ON b.document_type=d.id
           |	LEFT JOIN art_program e ON a.parent_id=e.program_id
-          |	WHERE a.parent_id={Program_id} OR parent_id IN (
+          |	WHERE a.is_active = 1 and a.parent_id={Program_id} OR parent_id IN (
           |	SELECT pId FROM art_project_master WHERE program={Program_id}
           |	UNION
           |	SELECT tId FROM art_task WHERE pId IN (SELECT pId FROM art_project_master WHERE program={Program_id})

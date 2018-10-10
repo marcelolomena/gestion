@@ -869,6 +869,89 @@ object DashboardService {
     DB.withConnection { implicit connection =>
       SQL(sqlString).executeQuery() as (Pie.pie *)
     }
-  }  
+  }
+
+  def reporteExcel(): Seq[Report] = {
+    DB.withConnection { implicit connection =>
+
+      val sqlString =
+        """
+          |SELECT
+          |tipo,
+          |pcod 'número',
+          |program_id,
+          |ISNULL(project_id,0) project_id,
+          |ISNULL(task_id,0) task_id,
+          |ISNULL(subtask_id,0) subtask_id,
+          |program_name nombre,
+          |ISNULL(foco, '') foco,
+          |ISNULL(tamano,'') 'tamaño',
+          |ISNULL(nombre_lider,'') lider,
+          |ISNULL(program_type,'') 'tipo programa',
+          |ISNULL(work_flow_status,'') estado,
+          |ISNULL(impact_type,'') impacto,
+          |ISNULL(name_div,'') 'división',
+          |ISNULL(name_man,'') 'gerencia',
+          |ISNULL(name_dep,'') 'departamento',
+          |ISNULL(plan_start_date,'') 'inicio plan',
+          |ISNULL(plan_end_date,'') 'término plan',
+          |real_start_date 'inicio real',
+          |real_end_date 'término real',
+          |release_date 'liberación',
+          |ISNULL(spi,0) spi,
+          |ISNULL(cpi,0) cpi,
+          |ISNULL(pai,0) '% informado',
+          |ISNULL(pae,0) '% esperado',
+          |count_project 'N° proyectos',
+          |count_task 'N° tareas',
+          |count_subtask 'N° subtareas',
+          |ISNULL(pmo,'') pmo,
+          |ISNULL(hours,0) consumidas,
+          |ISNULL(allocation,0) asignadas,
+          |count_subtask_usr 'recursos sin horas'
+          |FROM art_program_management WHERE tipo IN ('PROGRAMA','PROYECTO', 'TAREA')
+          |--order by program_id,project_id,task_id,subtask_id)
+          |union
+          |SELECT
+          |tipo,
+          |pcod 'número',
+          |program_id,
+          |ISNULL(project_id,0) project_id,
+          |ISNULL(task_id,0) task_id,
+          |ISNULL(subtask_id,0) subtask_id,
+          |program_name nombre,
+          |ISNULL(foco, '') foco,
+          |ISNULL(tamano,'') 'tamaño',
+          |ISNULL(nombre_lider,'') lider,
+          |ISNULL(program_type,'') 'tipo programa',
+          |ISNULL(work_flow_status,'') estado,
+          |ISNULL(impact_type,'') impacto,
+          |ISNULL(name_div,'') 'división',
+          |ISNULL(name_man,'') 'gerencia',
+          |ISNULL(name_dep,'') 'departamento',
+          |ISNULL(plan_start_date,'') 'inicio plan',
+          |ISNULL(plan_end_date,'') 'término plan',
+          |min(real_start_date) 'inicio real',
+          |max(real_end_date) 'término real',
+          |release_date 'liberación',
+          |ISNULL(spi,0) spi,
+          |ISNULL(cpi,0) cpi,
+          |max(ISNULL(pai,0)) '% informado',
+          |max(ISNULL(pae,0)) '% esperado',
+          |count_project 'N° proyectos',
+          |count_task 'N° tareas',
+          |count_subtask 'N° subtareas',
+          |ISNULL(pmo,'') pmo,
+          |sum(ISNULL(hours,0)) consumidas,
+          |sum(ISNULL(allocation,0)) asignadas,
+          |count_subtask_usr 'recursos sin horas'
+          |FROM art_program_management WHERE tipo ='SUBTAREA'
+          |group by tipo, pcod, program_id, project_id, task_id, subtask_id, program_name, foco, tamano, nombre_lider, program_type, work_flow_status, impact_type, name_div, name_man, name_dep, plan_start_date, plan_end_date, release_date, spi, cpi, count_project, count_task, count_subtask, pmo, count_subtask_usr
+          |order by program_id,project_id,task_id,subtask_id
+        """.stripMargin
+
+      SQL(sqlString).as(Report.report * )
+    }
+  }
 
 }

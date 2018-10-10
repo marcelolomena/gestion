@@ -2475,7 +2475,8 @@ object Dashboard extends Controller {
           //Logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " +qrystr)
           qrystr += "tipo ='PROGRAMA' OR tipo='PROYECTO' OR tipo='TAREA' OR tipo ='SUBTAREA' "
           val odn = "order by program_id,project_id,task_id,subtask_id"
-          data = DashboardService.managerWwithoutPage(qrystr, odn)
+          //data = DashboardService.managerWwithoutPage(qrystr, odn)
+          data = DashboardService.reporteExcel();
           //Logger.debug(data.toString())
           val file = new File("eliminar.xlsx")
           val fileOut = new FileOutputStream(file)

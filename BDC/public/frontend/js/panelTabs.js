@@ -1335,7 +1335,7 @@ $(document).ready(function(){
 
        	}, activate: function( event, ui ) {
 
-        if(ui.newTab.text()==='Reporte'){
+        if(ui.newTab.text()==='Reporte Fabricas'){
             var mytab=ui.newTab.text();
             console.log('tab:'+mytab);
             $("#jqGrid").jqGrid('setCaption', name).jqGrid('setGridParam', { url: '/report/H/0/0', page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");

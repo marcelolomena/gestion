@@ -48,6 +48,17 @@
 	margin-left: 10px;
 }
 
+.formSap #lider {
+	color: #036;
+	padding-right: 25px;
+	padding-left: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: left;
+	border: 1px solid #7fb2cc;
+	background-color: #ecf4f7;
+	margin-left: 10px;
+}
 .formFactura #art {
 	color: #036;
 	padding-right: 25px;

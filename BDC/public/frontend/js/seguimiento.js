@@ -4,11 +4,20 @@ $(document).ready(function(){
 	var maingrid;
 	
 	//Llena combo con PMOs
-	$.getJSON("/documentPMOList", function (j) {
+	$.getJSON("/documentPMOList/8", function (j) {
 		$('#pmo option').remove();
 		$('#pmo').append('<option value="0" selected="selected">- Escoger PMO -</option>');
 		$.each(j.rows, function (i, item) {
 			$('#pmo').append('<option value="' + item.id + '">' + item.nombre +' '+ item.apellido+ '</option>');
+		});
+	});
+
+	//Llena combo con Lider
+	$.getJSON("/documentPMOList/7", function (j) {
+		$('#lider option').remove();
+		$('#lider').append('<option value="0" selected="selected">- Escoger Lider -</option>');
+		$.each(j.rows, function (i, item) {
+			$('#lider').append('<option value="' + item.id + '">' + item.nombre +' '+ item.apellido+ '</option>');
 		});
 	});
 	
@@ -17,13 +26,22 @@ $(document).ready(function(){
 		loadGrid();
 	
 	});
+
+	$("#lider").change(function () {
+        $("#pmo").val("0");
+	});
+
+	$("#pmo").change(function () {
+        $("#lider").val("0");
+	});
 	
 	function loadGrid() {
 		console.log("loadGrid");
 		var pmo= $("#pmo").val();
+		var lider= $("#lider").val();
 		var art = $("#art").val();
 		art = (art.length > 0) ? art : '0';
-		var url = "/seguimientoPrograms/" + pmo + "/"+ art;
+		var url = "/seguimientoPrograms/" + pmo + "/"+ lider + "/"+ art;
 		$("#jqGridIncident").jqGrid('setCaption', "Programas ").jqGrid('setGridParam', { url: url, page: 1}).jqGrid("setGridParam", {datatype: "json"}).trigger("reloadGrid");		
 	}	
 	
@@ -38,7 +56,7 @@ $(document).ready(function(){
 			{ label: 'Estado', name: 'workflow_status', width: 100, align: 'left', search: false, sortable: false, editable: true }
 		];		
 		$("#jqGridIncident").jqGrid({
-			url: '/seguimientoPrograms/0/0',
+			url: '/seguimientoPrograms/0/0/0',
 			mtype: "GET",
 			datatype: "json",
 			page: 1,
@@ -85,8 +103,8 @@ function showDocumentsTypes(parentRowID, parentRowKey, suffix) {
 	childGridPagerID += suffix;	
 	subgrid2=childGridID;
 	var modelDocs = [
-			{ label: 'programa', name: 'programa' , hidden: true },
-			{ label: 'id', name: 'id', key: true, align: 'left', hidden: true, search: false, sortable: false },
+			{ label: 'programa', name: 'programa' , hidden: true, key: true },
+			{ label: 'id', name: 'id', align: 'left', hidden: true, search: false, sortable: false },
 			{ label: 'Nombre', name: 'nombre', width: 300, align: 'left', search: false, sortable: false},
 			{ label: 'Cantidad', name: 'cantidad', width: 100, align: 'left', search: false, sortable: false },
 			{ label: 'Descripción', name: 'description', width: 500, align: 'left', search: false, sortable: false }
@@ -143,7 +161,7 @@ function showDocuments(parentRowID, parentRowKey) {
 	var rowData = $("#" + subgrid2).getRowData(parentRowKey);
 	console.log("row:"+JSON.stringify(rowData));
 						
-	var programa = rowData.programa;
+	var tipo = rowData.id;
 	var modelDocs = [
 			{ label: 'id', name: 'id', key: true, hidden: true },
 			{ label: 'file_name', name: 'file_name', hidden: true },
@@ -179,7 +197,7 @@ function showDocuments(parentRowID, parentRowKey) {
 			{ label: 'Detalle', name: 'version_notes', width: 200, align: 'left', search: false, sortable: false, editable: true }
 	];
 
-	var childGridURL = '/documentByProgram/'+ programa+ '/' +parentRowKey;
+	var childGridURL = '/documentByProgram/'+ parentRowKey+ '/' +tipo;
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
     $("#" + childGridID).jqGrid({

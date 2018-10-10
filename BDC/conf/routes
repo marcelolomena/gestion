@@ -753,13 +753,13 @@ GET          /assets/*file                  controllers.Assets.at(path="/public"
 
 #Seguimiento
 GET    /seguimientoHome						                                                  controllers.Frontend.Seguimiento.home
-GET    /seguimientoPrograms/:pmo/:art                                                         controllers.Frontend.Seguimiento.programas(pmo:String, art:String)
+GET    /seguimientoPrograms/:pmo/:lider/:art                                                  controllers.Frontend.Seguimiento.programas(pmo:String,lider:String, art:String)
 GET    /reportDocument                                                                        controllers.Frontend.Seguimiento.reportDocument
 GET    /documentByProgram/:parent_id/:type_id		                                          controllers.Frontend.Seguimiento.documentList(parent_id:String, type_id:String)
 GET    /documentByProgramAll/:parent_id				                                          controllers.Frontend.Seguimiento.documentListByProgram(parent_id:String)
 GET    /documentByProgramExcel/:parent_id				                                      controllers.Frontend.Seguimiento.reportExcelDocs(parent_id:String)
 GET    /documentByProgramType/:parent_id		                                              controllers.Frontend.Seguimiento.documentListByType(parent_id:String)
-GET    /documentPMOList                 		                                              controllers.Frontend.Seguimiento.documentPMOs
+GET    /documentPMOList/:rol               		                                              controllers.Frontend.Seguimiento.documentPMOs(rol:String)
 
 #Porfolios
 GET    /portfolio-list/:pagenumber                                                            controllers.Frontend.Portfolio.portfolioListing(pagenumber:Integer)

@@ -36,7 +36,7 @@ object Seguimiento extends Controller {
 
   }
 
-  def programas(pmo: String, art: String) = Action { implicit request =>
+  def programas(pmoi: String, lider: String, art: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var panel: Seq[ProgramList] = null
       var records: Int = 0
@@ -44,7 +44,13 @@ object Seguimiento extends Controller {
       val page = request.getQueryString("page").get.toString()
       val filters = request.getQueryString("filters").getOrElse("").toString()
       var node = new JSONObject()
-
+      var pmo = pmoi;
+      System.out.println("lider:"+lider+" , pmo:"+pmo)
+      //deja en variable uno de los dos lider o pmo
+      if (lider != '0' && pmo.equals("0")) {
+        System.out.println("entro")
+          pmo = lider
+      }
       if (!StringUtils.isEmpty(art) && pmo != '0') {
         records = SeguimientoService.programCountDocs(pmo,art)
         panel = SeguimientoService.documentsPrograms(pmo, art, rows, page)
@@ -331,12 +337,12 @@ object Seguimiento extends Controller {
     }
   }
 
-  def documentPMOs() = Action { implicit request =>
+  def documentPMOs(rol: String) = Action { implicit request =>
     request.session.get("username").map { user =>
       var panel: Seq[PMOList] = null
       var node = new JSONObject()
 
-      panel = SeguimientoService.documentsPMOs()
+      panel = SeguimientoService.documentsPMOs(rol)
 
       var registro = new JSONArray()
       for (p <- panel) {
