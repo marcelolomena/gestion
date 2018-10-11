@@ -493,10 +493,10 @@ object Program extends Controller {
       }
 
       var programType = new java.util.LinkedHashMap[String, String]()
-      //var programtype = ProgramTypeService.findAllProgramTypeList();
+      var programtype = ProgramTypeService.findAllProgramTypeList();
 	  //RRM:Agrega cambio de tipos de programas por perfil
 	  println("Profile:" + request.session.get("user_profile").get)
-	  var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);
+	  //var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);
       for (s <- programtype) {
         programType.put(s.id.get.toString, s.program_type)
       }
@@ -508,8 +508,8 @@ object Program extends Controller {
       }
 
 	  //RRM:Agrega cambio de tipos de impactos por perfil
-      //var impacttype = ImpactTypeService.findAllImpactTypeList();
-	  var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);
+      var impacttype = ImpactTypeService.findAllImpactTypeList();
+	  //var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);
       var impacttypeMap = new java.util.LinkedHashMap[String, String]()
       for (s <- impacttype) {
         impacttypeMap.put(s.id.get.toString, s.impact_type)
@@ -580,14 +580,14 @@ object Program extends Controller {
 
     val programType = new java.util.LinkedHashMap[String, String]()
 
-    //val programtype = ProgramTypeService.findAllProgramTypeList();
-	var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);	
+    val programtype = ProgramTypeService.findAllProgramTypeList();
+	//var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);
     for (s <- programtype) {
       programType.put(s.id.get.toString, s.program_type)
     }
 
-    //val impacttype = ImpactTypeService.findAllImpactTypeList();
-	var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);	
+  val impacttype = ImpactTypeService.findAllImpactTypeList();
+	//var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);
     val impacttypeMap = new java.util.LinkedHashMap[String, String]()
     for (s <- impacttype) {
       impacttypeMap.put(s.id.get.toString, s.impact_type)
@@ -1089,14 +1089,14 @@ object Program extends Controller {
       }
 
       var programType = new java.util.LinkedHashMap[String, String]()
-      //var programtype = ProgramTypeService.findAllProgramTypeList();
-	  var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);	  
+      var programtype = ProgramTypeService.findAllProgramTypeList();
+	  //var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);
       for (s <- programtype) {
         programType.put(s.id.get.toString, s.program_type)
       }
 
-      //var impacttype = ImpactTypeService.findAllImpactTypeList();
-	  var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);
+      var impacttype = ImpactTypeService.findAllImpactTypeList();
+	  //var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);
       var impacttypeMap = new java.util.LinkedHashMap[String, String]()
       for (s <- impacttype) {
         impacttypeMap.put(s.id.get.toString, s.impact_type)
@@ -1204,8 +1204,8 @@ object Program extends Controller {
 
     var programType = new java.util.HashMap[String, String]()
 
-    //var programtype = ProgramTypeService.findAllProgramTypeList();
-	var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);	  	
+    var programtype = ProgramTypeService.findAllProgramTypeList();
+	//var programtype = ProgramTypeService.findProgramTypeListByProfile(request.session.get("user_profile").get);
     for (s <- programtype) {
       programType.put(s.id.get.toString, s.program_type)
     }
@@ -1223,8 +1223,8 @@ object Program extends Controller {
       usersMap.put(u.uid.get.toString(), u.first_name + " " + u.last_name)
     }
 
-    //var impacttype = ImpactTypeService.findAllImpactTypeList();
-	var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);
+    var impacttype = ImpactTypeService.findAllImpactTypeList();
+	//var impacttype = ImpactTypeService.findImpactTypeListByProfile(request.session.get("user_profile").get);
     var impacttypeMap = new java.util.HashMap[String, String]()
     for (s <- impacttype) {
       impacttypeMap.put(s.id.get.toString, s.impact_type)

@@ -15,7 +15,9 @@ import models.SubTasks
 import models.Hours
 import models.IncidentSubTask
 import models.NameUsr
-import models.Report.Pie;
+
+import models.Report.Pie
+import models.Report.Pie2;
 import anorm._
 import anorm.SqlParser._
 import play.api.libs.json.JsObject
@@ -549,7 +551,7 @@ println(uname)
 
     System.out.println("Query:"+sqlString)
     DB.withConnection { implicit connection =>
-      SQL(sqlString).executeQuery() as (Pie.pie *)
+      SQL(sqlString).executeQuery() as (Pie2.pie2 *)
     }
   }
 
@@ -581,7 +583,7 @@ println(uname)
 
 
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('id->id).executeQuery() as (Pie.pie *)
+      SQL(sqlString).on('id->id).executeQuery() as (Pie2.pie2 *)
     }
   }
 

@@ -230,7 +230,7 @@ object Seguimiento extends Controller {
       var registro = new JSONArray()
       for (p <- panel) {
         var campo = new JSONObject()
-        campo.put("id", p.id)
+        campo.put("id", p.id+"_"+p.programa)
         campo.put("programa", p.programa)
         campo.put("nombre", p.nombre)
         campo.put("cantidad", p.cantidad)

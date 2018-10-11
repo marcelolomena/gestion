@@ -103,8 +103,8 @@ function showDocumentsTypes(parentRowID, parentRowKey, suffix) {
 	childGridPagerID += suffix;	
 	subgrid2=childGridID;
 	var modelDocs = [
-			{ label: 'programa', name: 'programa' , hidden: true, key: true },
-			{ label: 'id', name: 'id', align: 'left', hidden: true, search: false, sortable: false },
+			{ label: 'programa', name: 'programa' , hidden: true },
+			{ label: 'id', name: 'id', key: true, align: 'left', hidden: true, search: false, sortable: false},
 			{ label: 'Nombre', name: 'nombre', width: 300, align: 'left', search: false, sortable: false},
 			{ label: 'Cantidad', name: 'cantidad', width: 100, align: 'left', search: false, sortable: false },
 			{ label: 'Descripción', name: 'description', width: 500, align: 'left', search: false, sortable: false }
@@ -160,8 +160,10 @@ function showDocuments(parentRowID, parentRowKey) {
     var childGridPagerID = parentRowID + "_pager";
 	var rowData = $("#" + subgrid2).getRowData(parentRowKey);
 	console.log("row:"+JSON.stringify(rowData));
-						
-	var tipo = rowData.id;
+	console.log("rowK:"	+ parentRowKey);
+	var tipo = parentRowKey.substring(0,parentRowKey.indexOf('_'));
+	console.log("tipo:"+tipo);
+	var programa = rowData.programa;
 	var modelDocs = [
 			{ label: 'id', name: 'id', key: true, hidden: true },
 			{ label: 'file_name', name: 'file_name', hidden: true },
@@ -197,7 +199,7 @@ function showDocuments(parentRowID, parentRowKey) {
 			{ label: 'Detalle', name: 'version_notes', width: 200, align: 'left', search: false, sortable: false, editable: true }
 	];
 
-	var childGridURL = '/documentByProgram/'+ parentRowKey+ '/' +tipo;
+	var childGridURL = '/documentByProgram/'+ programa+ '/' +parentRowKey.substring(0,parentRowKey.indexOf('_'));
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
     $("#" + childGridID).jqGrid({
