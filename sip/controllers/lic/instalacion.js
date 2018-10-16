@@ -360,12 +360,12 @@ function listInstalacion(req, res) {
         "SELECT @PageSize=" + rowspp + "; " +
         "DECLARE @PageNumber INT; " +
         "SELECT @PageNumber=" + page + "; " +
-        "SELECT  [instalacion].id, [instalacion].estado, [instalacion].codautorizacion, [instalacion].instalador, fechainstalacion, null as usuario, null as ubicacion, null as codigoInterno, null as observacion, null as cui" +
+        "SELECT  [instalacion].id, [instalacion].estado, [instalacion].codautorizacion, [instalacion].instalador, fechainstalacion, null as usuario, null as ubicacion, null as codigoInterno, null as observacion, null as cui, null as nombre" +
         "FROM [lic].[instalacion] AS [instalacion] LEFT OUTER JOIN [lic].[producto] AS [producto] ON [instalacion].[idproducto] = [producto].[id] " +
         "LEFT OUTER JOIN [dbo].[art_user] AS [user] ON [instalacion].[idusuario] = [user].[uid] " +
         "WHERE [instalacion].[estado] IN ( '" + instal + "', '" + histor + "' ) AND [instalacion].[idproducto] = " + idproduc +
         "union all " +
-        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno, observacion, cui " +
+        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno, observacion, cui, nombre" +
         "FROM lic.ubicacioninstalacion " +
         "WHERE idproducto = " + idproduc
     // "ORDER BY [id] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY "
@@ -481,7 +481,8 @@ function actionUbicacion(req, res) {
                 ubicacion: req.body.ubicacion,
                 codigoInterno: req.body.codigoInterno,
                 observacion: req.body.observacion,
-                cui: req.body.cui
+                cui: req.body.cui,
+                nombre: req.body.nombre
             }).then(function (instal) {
                 return res.json({
                     id: instal.id,
@@ -506,7 +507,8 @@ function actionUbicacion(req, res) {
                 ubicacion: req.body.ubicacion,
                 codigoInterno: req.body.codigoInterno,
                 observacion: req.body.observacion,
-                cui: req.body.cui
+                cui: req.body.cui,
+                nombre: req.body.nombre
             }, {
                 where: {
                     id: req.body.id
@@ -558,7 +560,7 @@ function getExcel(req, res) {
     // logger.debug("En getExcel");
     var conf = {}
     conf.cols = [{
-            caption: 'id',
+            caption: 'N',
             type: 'number',
             width: 3
         },
@@ -568,7 +570,7 @@ function getExcel(req, res) {
             width: 200
         },
         {
-            caption: 'Usuario',
+            caption: 'Nombre',
             type: 'string',
             width: 200
         },
@@ -588,12 +590,17 @@ function getExcel(req, res) {
             width: 200
         },
         {
+            caption: 'Usuario',
+            type: 'string',
+            width: 200
+        },
+        {
             caption: 'Observación',
             type: 'string',
             width: 200
         }
     ];
-    var sql = "SELECT b.nombre, a.usuario, a.ubicacion, a.codigoInterno, a.observacion, a.cui FROM lic.ubicacioninstalacion a " +
+    var sql = "SELECT b.nombre as nombreProd, a.usuario, a.ubicacion, a.codigoInterno, a.observacion, a.cui, a.nombre FROM lic.ubicacioninstalacion a " +
         "JOIN lic.producto b ON b.id = a.idproducto " +
         "ORDER BY a.idproducto ASC";
 
@@ -604,26 +611,28 @@ function getExcel(req, res) {
             var nombreprod = '';
             for (var i = 0; i < ubicacion.length; i++) {
 
-                if (nombreprod != ubicacion[i].nombre) {
+                if (nombreprod != ubicacion[i].nombreProd) {
                     var a = [i + 1,
+                        ubicacion[i].nombreProd,
                         ubicacion[i].nombre,
-                        ubicacion[i].usuario,
                         ubicacion[i].ubicacion,
                         ubicacion[i].codigoInterno,
                         ubicacion[i].cui,
+                        ubicacion[i].usuario,
                         ubicacion[i].observacion
                     ];
-                    nombreprod = ubicacion[i].nombre
+                    nombreprod = ubicacion[i].nombreProd
                 } else {
                     var a = [i + 1,
                         null,
-                        ubicacion[i].usuario,
+                        ubicacion[i].nombre,
                         ubicacion[i].ubicacion,
                         ubicacion[i].codigoInterno,
                         ubicacion[i].cui,
+                        ubicacion[i].usuario,
                         ubicacion[i].observacion
                     ];
-                    nombreprod = ubicacion[i].nombre
+                    nombreprod = ubicacion[i].nombreProd
                 }
 
                 arr.push(a);

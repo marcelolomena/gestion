@@ -6,7 +6,8 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Usuario<span style='color:red'>*</span>{usuario}</div>";
+    tmpl += "<div class='column-half'>Nombre<span style='color:red'>*</span>{nombre}</div>";
+    
     tmpl += "<div class='column-half'>Ubicación <span style='color:red'>*</span>{ubicacion}</div>";
     tmpl += "</div>";
 
@@ -16,10 +17,12 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'>Observación {observacion}</div>";
+    tmpl += "<div class='column-half'>Observación {observacion}</div>";
+    tmpl += "<div class='column-half'>Usuario<span style='color:red'>*</span>{usuario}</div>";
     tmpl += "</div>";
+
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'><span style='color:red'>*</span>Producto {nombreProd}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>*</span>Producto {nombreProd}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
@@ -95,9 +98,8 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Usuario',
-            name: 'usuario',
-            align: 'center',
+            label: 'Nombre',
+            name: 'nombre',
             width: 200,
             editable: true,
             search: true
@@ -142,6 +144,13 @@ $(document).ready(function () {
             editable: true,
             edittype: 'textarea',
             search: false
+        },
+        {
+            label: 'Usuario',
+            name: 'usuario',
+            width: 200,
+            editable: true,
+            search: true
         }
     ];
 
@@ -208,14 +217,16 @@ $(document).ready(function () {
                 }
             },
             beforeSubmit: function (postdata, formid) {
-                if (!(postdata.usuario)) {
-                    return [false, 'Debe seleccionar a un Usuario', ''];
+                if (!(postdata.nombre)) {
+                    return [false, 'Debe seleccionar a un Nombre', ''];
                 } else if (!(postdata.ubicacion)) {
                     return [false, 'Debe ingresar la Ubicación', ''];
                 } else if ((!postdata.codigoInterno)) {
                     return [false, 'Debe ingresar su código interno', ''];
                 } else if (postdata.cui.trim().length == 0) {
                     return [false, 'Debe ingresar un CUI', ''];
+                } else if (!(postdata.usuario)) {
+                    return [false, 'Debe seleccionar a un Usuario', ''];
                 } else if ((!postdata.nombreProd)) {
                     return [false, 'Debe ingresar un Producto', ''];
                 } else {
@@ -234,14 +245,16 @@ $(document).ready(function () {
                 return [true, 'Error: ' + data.responseText, ""];
             },
             beforeSubmit: function (postdata, formid) {
-                if (!(postdata.usuario)) {
-                    return [false, 'Debe agregar a un Usuario', ''];
+                if (!(postdata.nombre)) {
+                    return [false, 'Debe agregar a un Nombre', ''];
                 } else if (!(postdata.ubicacion)) {
                     return [false, 'Debe ingresar la Ubicación', ''];
                 } else if ((!postdata.codigoInterno)) {
                     return [false, 'Debe ingresar su código interno', ''];
                 } else if (postdata.cui.trim().length == 0) {
                     return [false, 'Debe ingresar un CUI', ''];
+                } else if (!(postdata.usuario)) {
+                    return [false, 'Debe agregar a un Usuario', ''];
                 } else if ((!postdata.nombreProd)) {
                     return [false, 'Debe ingresar un Producto', ''];
                 } else {

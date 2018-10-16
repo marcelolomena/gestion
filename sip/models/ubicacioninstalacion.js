@@ -39,6 +39,10 @@ module.exports = function (sequelize, DataTypes) {
     cui: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     schema: 'lic',

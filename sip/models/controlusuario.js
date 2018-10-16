@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        administrador: {
+        contacto: {
             type: DataTypes.STRING,
             allowNull: true
         },
@@ -28,9 +28,12 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
-
         cantidad: {
             type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        codigointerno: {
+            type: DataTypes.STRING,
             allowNull: true
         }
     }, {

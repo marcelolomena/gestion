@@ -7,12 +7,16 @@ $(document).ready(function () {
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Producto<span style='color:red'>*</span>{nombreProd}</div>";
-    tmpl += "<div class='column-half'>Administrador<span style='color:red'>*</span>{administrador}</div>";
+    tmpl += "<div class='column-half'>Contacto<span style='color:red'>*</span>{contacto}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Cantidad<span style='color:red'>*</span>{cantidad}</div>";
+    tmpl += "<div class='column-half'>Código Interno<span style='color:red'>*</span>{codigointerno}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Fecha Actualizacion <span style='color:red'>*</span>{fechaactualizacion}</div>";
-    tmpl += "<div class='column-half'>Cantidad<span style='color:red'>*</span>{cantidad}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -32,17 +36,17 @@ $(document).ready(function () {
         }, {
             label: 'Nombre Producto',
             name: 'idproducto',
-            width: 250,
+            width: 150,
             align: 'center',
             sortable: false,
             editable: true,
-            hidden: true,
+            hidden: true
         },
         {
             label: 'Producto',
             name: 'nombreProd',
             jsonmap: 'producto.nombre',
-            width: 250,
+            width: 150,
             align: 'center',
             sortable: false,
             editable: true,
@@ -92,42 +96,62 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Administrador',
-            name: 'administrador',
+            label: 'Contacto',
+            name: 'contacto',
             align: 'center',
-            width: 200,
+            width: 180,
             editable: true,
             search: false
         },
         {
             label: 'Fecha Actualización',
             name: 'fechaactualizacion',
-            width: 100,
+            width: 135,
             align: 'center',
-            sortable: true,
+            search: false,
             editable: true,
+            hidden: false,
+            formatter: 'date',
+            formatoptions: {
+                srcformat: 'ISO8601Long',
+                newformat: 'd-m-Y'
+            },
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'dd-mm-yyyy',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                $('#' + subgrid_table_id)[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            },
             editoptions: {
-                'data-provide': 'datepicker',
                 size: 10,
                 maxlengh: 10,
                 dataInit: function (element) {
-                    $(element).mask('00-00-0000', {
-                        placeholder: 'DD-MM-YYYY'
+                    $(element).mask("00-00-0000", {
+                        placeholder: "__-__-____"
                     });
+                    $(element).datepicker({
+                        language: 'es',
+                        format: 'dd-mm-yyyy',
+                        autoclose: true
+                    })
                 }
-            },
-            editrules: {
-                required: true
-            },
-            search: false
+            }
         },
         {
-            label: 'Observaciones',
-            name: 'observaciones',
+            label: 'Código Interno',
+            name: 'codigointerno',
             align: 'center',
-            width: 400,
+            width: 100,
             editable: true,
-            edittype: 'textarea',
             search: false
         },
         {
@@ -141,6 +165,15 @@ $(document).ready(function () {
                 integer: true
             }
         },
+        {
+            label: 'Observaciones',
+            name: 'observaciones',
+            align: 'center',
+            width: 700,
+            editable: true,
+            edittype: 'textarea',
+            search: false
+        }
     ];
 
     $("#grid").jqGrid({
@@ -206,16 +239,14 @@ $(document).ready(function () {
                 }
             },
             beforeSubmit: function (postdata, formid) {
-                if (!(postdata.usuario)) {
-                    return [false, 'Debe seleccionar a un Usuario', ''];
-                } else if (!(postdata.ubicacion)) {
-                    return [false, 'Debe ingresar la Ubicación', ''];
-                } else if ((!postdata.codigoInterno)) {
-                    return [false, 'Debe ingresar su código interno', ''];
-                } else if (postdata.cui.trim().length == 0) {
-                    return [false, 'Debe ingresar un CUI', ''];
-                } else if ((!postdata.nombreProd)) {
+                if ((!postdata.nombreProd)) {
                     return [false, 'Debe ingresar un Producto', ''];
+                } else if (!(postdata.contacto)) {
+                    return [false, 'Debe seleccionar a un Usuario', ''];
+                } else if (postdata.cantidad.trim().length == 0) {
+                    return [false, 'Debe ingresar la cantidad', ''];
+                } else if ((!postdata.codigointerno)) {
+                    return [false, 'Debe ingresar su código interno', ''];
                 } else {
                     return [true, ', '];
                 }
@@ -232,16 +263,14 @@ $(document).ready(function () {
                 return [true, 'Error: ' + data.responseText, ""];
             },
             beforeSubmit: function (postdata, formid) {
-                if (!(postdata.usuario)) {
-                    return [false, 'Debe agregar a un Usuario', ''];
-                } else if (!(postdata.ubicacion)) {
-                    return [false, 'Debe ingresar la Ubicación', ''];
-                } else if ((!postdata.codigoInterno)) {
-                    return [false, 'Debe ingresar su código interno', ''];
-                } else if (postdata.cui.trim().length == 0) {
-                    return [false, 'Debe ingresar un CUI', ''];
-                } else if ((!postdata.nombreProd)) {
+                if ((!postdata.nombreProd)) {
                     return [false, 'Debe ingresar un Producto', ''];
+                } else if (!(postdata.contacto)) {
+                    return [false, 'Debe seleccionar a un Usuario', ''];
+                } else if (postdata.cantidad.trim().length == 0) {
+                    return [false, 'Debe ingresar la cantidad', ''];
+                } else if ((!postdata.codigointerno)) {
+                    return [false, 'Debe ingresar su código interno', ''];
                 } else {
                     return [true, ', '];
                 }
@@ -267,19 +296,19 @@ $(document).ready(function () {
         }
     );
 
-    // $('#grid').jqGrid('navButtonAdd', '#pager', {
-    //     caption: "",
-    //     buttonicon: "glyphicon glyphicon-download-alt",
-    //     title: "Excel",
-    //     position: "last",
-    //     onClickButton: function () {
-    //         var grid = $('#grid');
-    //         var rowKey = grid.getGridParam("selrow");
-    //         var url = '/lic/ubicacionexcel';
-    //         $('#grid').jqGrid('excelExport', {
-    //             "url": url
-    //         });
-    //     }
-    // });
-    // $("#pager_left").css("width", "");
+    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
+        title: "Excel",
+        position: "last",
+        onClickButton: function () {
+            var grid = $('#grid');
+            var rowKey = grid.getGridParam("selrow");
+            var url = '/lic//lic/controlexcel';
+            $('#grid').jqGrid('excelExport', {
+                "url": url
+            });
+        }
+    });
+    $("#pager_left").css("width", "");
 });

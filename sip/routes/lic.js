@@ -364,5 +364,9 @@ module.exports = function (passport) {
     router.route('/lic/controlusuario')
         .post(isAuthenticated, controlUbicacionController.action)
         .get(isAuthenticated, controlUbicacionController.list)
+
+    router.route('/lic/controlexcel')
+        .get(isAuthenticated, controlUbicacionController.getExcel);
+
     return router;
 };
