@@ -1,16 +1,16 @@
 'use strict';
 var models = require('../../models');
-// var sequelize = require('../../models/index').sequelize;
-// var nodeExcel = require('excel-export');
+var sequelize = require('../../models/index').sequelize;
+var nodeExcel = require('excel-export');
 var utilSeq = require('../../utils/seq');
-// var base = require('./lic-controller');
+var base = require('./lic-controller');
 var _ = require('lodash');
 var logger = require('../../utils/logger');
-// var Busboy = require('busboy');
-// var path = require('path');
-// var fs = require('fs');
-// var constants = require("../../utils/constants");
-// var nodemailer = require('nodemailer');
+var Busboy = require('busboy');
+var path = require('path');
+var fs = require('fs');
+var constants = require("../../utils/constants");
+var nodemailer = require('nodemailer');
 
 var entity = models.controlusuario;
 
@@ -203,9 +203,14 @@ function getExcel(req, res) {
             caption: 'Observaciones',
             type: 'string',
             width: 200
+        },
+        {
+            caption: 'Código Interno',
+            type: 'string',
+            width: 200
         }
     ];
-    var sql = "SELECT b.nombre as nombreProd, a.contacto, a.fechaactualizacion, a.observaciones, a.cantidad " +
+    var sql = "SELECT b.nombre as nombreProd, a.contacto, a.fechaactualizacion, a.observaciones, a.cantidad, a.codigointerno " +
         "FROM lic.controlusuario a " +
         "JOIN lic.producto b ON b.id = a.idproducto " +
         "ORDER BY a.idproducto ASC";
@@ -223,7 +228,8 @@ function getExcel(req, res) {
                         control[i].contacto,
                         control[i].fechaactualizacion,
                         control[i].cantidad,
-                        control[i].observaciones
+                        control[i].observaciones,
+                        control[i].codigointerno
                     ];
                     nombreprod = control[i].nombreProd
                 } else {
@@ -232,7 +238,8 @@ function getExcel(req, res) {
                         control[i].contacto,
                         control[i].fechaactualizacion,
                         control[i].cantidad,
-                        control[i].observaciones
+                        control[i].observaciones,
+                        control[i].codigointerno
                     ];
                     nombreprod = control[i].nombreProd
                 }
