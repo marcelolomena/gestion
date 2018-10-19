@@ -14,11 +14,11 @@ entity.belongsTo(models.producto, {
     foreignKey: 'idProducto'
 });
 entity.belongsTo(models.user, {
-    as: 'solicitante',
+    as: 'solicitante_A',
     foreignKey: 'idUsuario'
 });
 entity.belongsTo(models.user, {
-    as: 'aprobador',
+    as: 'aprobador_A',
     foreignKey: 'idUsuarioJefe'
 });
 entity.belongsTo(models.user, {
@@ -90,7 +90,7 @@ function listAuto(req, res) {
         "SELECT @PageSize=" + rowspp + "; " +
         "DECLARE @PageNumber INT; " +
         "SELECT @PageNumber=" + page + "; " +
-        "SELECT a.*, a.comentarioautorizacion AS comentarioAutorizacion, b.nombre, c.first_name+' '+c.last_name AS solicitante, d.first_name+' '+d.last_name AS aprobador  " +
+        "SELECT a.*, a.comentarioautorizacion AS comentarioAutorizacion, b.nombre, c.first_name+' '+c.last_name AS solicitante_A, d.first_name+' '+d.last_name AS aprobador_A  " +
         "FROM lic.reserva a " +
         "LEFT JOIN lic.producto b ON b.id = a.idproducto " +
         "LEFT JOIN art_user c ON c.uid=a.idusuario " +

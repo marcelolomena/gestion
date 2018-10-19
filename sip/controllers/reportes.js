@@ -915,9 +915,9 @@ ON P.cui = Q.cui
 # Cambio en paginación Toya
 */
 exports.testtroya = function (req, res) {
-    jsreport.use(require('jsreport-templates')())
-    jsreport.use(require('jsreport-xlsx')())
-    jsreport.use(require('jsreport-handlebars')())
+    //jsreport.use(require('jsreport-templates')())
+    //jsreport.use(require('jsreport-xlsx')())
+    //jsreport.use(require('jsreport-handlebars')())
     var start = new Date();
     var tml = fs.readFileSync(path.join(__dirname, '..', 'templates', 'pivot-template.xlsx'))
     var pre = new Date() - start
