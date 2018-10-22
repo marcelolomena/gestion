@@ -253,7 +253,7 @@ $(document).ready(function () {
             }
         }, {
             addCaption: "Agrega Control de Usuario",
-            closeAfterAdd: false,
+            closeAfterAdd: true,
             recreateForm: true,
             mtype: 'POST',
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -304,7 +304,7 @@ $(document).ready(function () {
         onClickButton: function () {
             var grid = $('#grid');
             var rowKey = grid.getGridParam("selrow");
-            var url = '/lic//lic/controlexcel';
+            var url = '/lic/controlexcel';
             $('#grid').jqGrid('excelExport', {
                 "url": url
             });
