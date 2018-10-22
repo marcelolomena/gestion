@@ -49,7 +49,7 @@ object Global extends GlobalSettings {
 
     val dailyBatch02 = akkaSystem.actorOf(Props[DailyBatch02])
 
-    //scheduler.schedule("Every1Hour", dailyBatch02, Message)
+    scheduler.schedule("Every1Hour", dailyBatch02, Message)
     Logger.info("Moe :: start()")
   }
 

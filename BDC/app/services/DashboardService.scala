@@ -722,7 +722,7 @@ object DashboardService {
 
       val data=SQL(sqlstr).as(Report.report *)
 
-      val file = new File("reporte.xlsx")
+      val file = new File("reporte.xls")
       val fileOut = new FileOutputStream(file);
       val wb = new XSSFWorkbook
       val sheet = wb.createSheet("ART")
@@ -883,7 +883,7 @@ object DashboardService {
           |ISNULL(project_id,0) project_id,
           |ISNULL(task_id,0) task_id,
           |ISNULL(subtask_id,0) subtask_id,
-          |program_name nombre,
+          |program_name ,
           |ISNULL(foco, '') foco,
           |ISNULL(tamano,'') 'tamaño',
           |ISNULL(nombre_lider,'') lider,
@@ -919,7 +919,7 @@ object DashboardService {
           |ISNULL(project_id,0) project_id,
           |ISNULL(task_id,0) task_id,
           |ISNULL(subtask_id,0) subtask_id,
-          |program_name nombre,
+          |program_name ,
           |ISNULL(foco, '') foco,
           |ISNULL(tamano,'') 'tamaño',
           |ISNULL(nombre_lider,'') lider,
@@ -953,5 +953,94 @@ object DashboardService {
       SQL(sqlString).as(Report.report * )
     }
   }
+
+
+  def createExcel2() = {
+    DB.withConnection { implicit connection =>
+      System.out.println("en createExcel")
+      val sqlstr =
+        """
+          |SELECT
+          |tipo,
+          |pcod,
+          |program_id,
+          |ISNULL(project_id,0) project_id,
+          |ISNULL(task_id,0) task_id,
+          |ISNULL(subtask_id,0) subtask_id,
+          |program_name,
+          |ISNULL(foco, '') foco,
+          |ISNULL(tamano,'') tamano,
+          |ISNULL(nombre_lider,'') nombre_lider,
+          |ISNULL(program_type,'') program_type,
+          |ISNULL(work_flow_status,'') work_flow_status,
+          |ISNULL(impact_type,'') impact_type,
+          |ISNULL(name_div,'') name_div,
+          |ISNULL(name_man,'') name_man,
+          |ISNULL(name_dep,'') name_dep,
+          |ISNULL(plan_start_date,'') plan_start_date,
+          |ISNULL(plan_end_date,'') plan_end_date,
+          |real_start_date,
+          |real_end_date,
+          |release_date,
+          |ISNULL(spi,0) spi,
+          |ISNULL(cpi,0) cpi,
+          |ISNULL(pai,0) pai,
+          |ISNULL(pae,0) pae,
+          |count_project,
+          |count_task,
+          |count_subtask,
+          |ISNULL(pmo,'') pmo,
+          |ISNULL(hours,0) hours,
+          |ISNULL(allocation,0) allocation,
+          |count_subtask_usr
+          |FROM art_program_management
+          |order by program_id,project_id,task_id,subtask_id
+        """.stripMargin
+
+      val data=SQL(sqlstr).as(Report.report *)
+      System.out.println("ejecuto query")
+
+      var fila1 ="Tipo	Número	Programa	Foco	Tamaño	Lider	Tipo programa	Estado	Impacto	División	Gerencia	Departamento	Inicio	Término	Liberación	Spi	Cpi	informado	Esperado	N° proyectos	N° tareas	N° subtareas	Pmo	Consumidas	Asignadas	recursos sin horas"
+      var cuerpo = ""
+      cuerpo = cuerpo + fila1
+      var i =0
+
+      for (s <- data) {
+          cuerpo += s.tipo.getOrElse("")+"\t"
+          cuerpo += s.pcod.getOrElse(0).toString+"\t"
+          cuerpo += s.program_name.getOrElse("")+"\t"
+          cuerpo += s.foco.getOrElse("")+"\t"
+          cuerpo += s.tamano.getOrElse("")+"\t"
+          cuerpo += s.nombre_lider.getOrElse("")+"\t"
+          cuerpo += s.program_type.getOrElse("")+"\t"
+          cuerpo += s.work_flow_status.getOrElse("")+"\t"
+          cuerpo += s.impact_type.getOrElse("")+"\t"
+          cuerpo += s.name_div.getOrElse("")+"\t"
+          cuerpo += s.name_man.getOrElse("")+"\t"
+          cuerpo += s.name_dep.getOrElse("")+"\t"
+          cuerpo += s.plan_start_date.getOrElse("").toString+"\t"
+          cuerpo += s.plan_end_date.getOrElse(0).toString()+"\t"
+          cuerpo += s.release_date.getOrElse(0).toString()+"\t"
+          cuerpo += s.spi.getOrElse(0).toString()+"\t"
+          cuerpo += s.cpi.getOrElse(0).toString()+"\t"
+          cuerpo += s.pai.getOrElse(0).toString+"\t"
+          cuerpo += s.pae.getOrElse(0).toString+"\t"
+          cuerpo += s.count_project.getOrElse(0).toString+"\t"
+          cuerpo += s.count_task.getOrElse(0).toString+"\t"
+          cuerpo += s.count_subtask.getOrElse(0).toString+"\t"
+          cuerpo += s.pmo.getOrElse("")+"\t"
+          cuerpo += s.hours.getOrElse(0).toString+"\t"
+          cuerpo += s.allocation.getOrElse(0).toString+"\t"
+          cuerpo += s.count_subtask_usr.getOrElse(0).toString+"\t"
+          cuerpo += "\n"
+          i = i +1
+          System.out.print(".")
+      }
+      cuerpo.toString
+
+    }
+  }
+
+
 
 }

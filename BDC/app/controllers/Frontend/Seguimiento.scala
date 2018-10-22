@@ -382,4 +382,17 @@ object Seguimiento extends Controller {
       Ok("File not found on the server. Its either deleted or removed from the server,")
     }
   }
+
+  def reportExcelAllDocs  = Action { implicit request =>
+    SeguimientoService.updateProgramsInDocs
+    SeguimientoService.reporteAllDocsExcel
+    request.session.get("username").map { user =>
+      val file = new File("reporteAllDocs.xlsx")
+      val time = new Date()
+      Ok.sendFile(content = file, fileName = _ => "report_" + time.getTime + ".xlsx")
+
+    }.getOrElse {
+      Redirect(routes.Login.loginUser()).withNewSession
+    }
+  }
 }

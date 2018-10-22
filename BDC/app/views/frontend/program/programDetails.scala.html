@@ -1075,6 +1075,15 @@
 								width: 'auto',
 								errorTextFormat: function (data) {
 									return 'Error: ' + data.responseText
+								},
+								afterSubmit : function(response,postdata){
+									var json   = response.responseText;
+									var result = JSON.parse(json);
+									if(result.error_code!=0)
+										return [false,result.error_text,""];
+									else
+										return [true,"",""]
+
 								}
 							}
 			);
@@ -1235,6 +1244,7 @@
 		              duration: 1000
 					},
 					close: function(event, ui){
+						console.log("Cerrando dialogo");
 						$.get("/get-program-panels/"+$("#program").val(), function(j){
 							$('#panelcombobox option').remove();
 							$('#panelcombobox').append(j);

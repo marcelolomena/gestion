@@ -69,8 +69,8 @@ $(document).ready(function(){
 			autowidth: true, 
 			shrinkToFit: true, 	
 			height: 'auto',
-			caption: 'Lista de Programas',
-			pager: "#jqGridIncidentPager2",
+			caption: 'Lista de Programas Disponibles',
+			pager: "#jqGridIncidentPager",
 			viewrecords: true,
 			rowList: [5, 10, 20, 50],
 			//styleUI: "Bootstrap",
@@ -87,6 +87,16 @@ $(document).ready(function(){
 			search: false, // show search button on the toolbar        
 			cloneToTop: false
 		});
+
+        $('#jqGridIncident').jqGrid('navButtonAdd',"#jqGridIncidentPager",{
+               caption:"",
+               buttonicon : "silk-icon-page-excel",
+               title: "Excel con Todos los Docs.",
+               onClickButton : function () {
+                   var url = 'allDocumentByProgramExcel';
+                   $('#jqGridIncident').jqGrid('excelExport',{"url":url});
+               }
+        });
 
 });
 
@@ -324,7 +334,7 @@ function showDocumentsAll(parentRowID, parentRowKey, suffix) {
 	$("#" + childGridID).jqGrid('navButtonAdd',"#" + childGridPagerID,{
 		   caption:"",
 		   buttonicon : "silk-icon-page-excel",
-		   title: "Exportar a Excel", 
+		   title: "Excel con Docs. de Programa",
 		   onClickButton : function () { 
 			   var url = 'documentByProgramExcel/' + programa;
 			   $("#" + childGridID).jqGrid('excelExport',{"url":url});

@@ -760,6 +760,8 @@ GET    /documentByProgramAll/:parent_id				                                     
 GET    /documentByProgramExcel/:parent_id				                                      controllers.Frontend.Seguimiento.reportExcelDocs(parent_id:String)
 GET    /documentByProgramType/:parent_id		                                              controllers.Frontend.Seguimiento.documentListByType(parent_id:String)
 GET    /documentPMOList/:rol               		                                              controllers.Frontend.Seguimiento.documentPMOs(rol:String)
+GET    /allDocumentByProgramExcel						                                      controllers.Frontend.Seguimiento.reportExcelAllDocs
+
 
 #Porfolios
 GET    /portfolio-list/:pagenumber                                                            controllers.Frontend.Portfolio.portfolioListing(pagenumber:Integer)

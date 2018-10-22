@@ -16,7 +16,6 @@ import models.ListDocuments.{ListTypes, PMOList, ProgramList}
 object SeguimientoService {
 
 
-
   def programCount(Json: String): Int = {
 
     var sqlString = "EXEC art.cantidad_programa {Json}"
@@ -38,7 +37,7 @@ object SeguimientoService {
 
     var sqlString = "EXEC art.documentos_por_programa {Program},{PageSize},{PageNumber}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on( 'Program -> program.toInt,'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ListDocuments.rpt *)
+      SQL(sqlString).on('Program -> program.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ListDocuments.rpt *)
     }
   }
 
@@ -46,7 +45,7 @@ object SeguimientoService {
 
     var sqlString = "EXEC art.documentos_por_programa_tipo {Tipo},{Program},{PageSize},{PageNumber}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('Tipo -> tipo.toInt, 'Program -> program.toInt,'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ListDocuments.rpt *)
+      SQL(sqlString).on('Tipo -> tipo.toInt, 'Program -> program.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ListDocuments.rpt *)
     }
   }
 
@@ -54,7 +53,7 @@ object SeguimientoService {
 
     var sqlString = "EXEC art.documentos_por_tipo {Program},{PageSize},{PageNumber}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('Program -> program.toInt,'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ListTypes.rpt *)
+      SQL(sqlString).on('Program -> program.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ListTypes.rpt *)
     }
   }
 
@@ -66,15 +65,15 @@ object SeguimientoService {
     }
   }
 
-  def documentsPrograms(pmo:String, art:String, pageSize: String, pageNumber: String): Seq[ProgramList] = {
+  def documentsPrograms(pmo: String, art: String, pageSize: String, pageNumber: String): Seq[ProgramList] = {
 
     var sqlString = "EXEC art.documentos_lista_programa {Pmo},{Art},{PageSize},{PageNumber}"
     DB.withConnection { implicit connection =>
-      SQL(sqlString).on('Pmo -> pmo.toInt, 'Art -> art.toInt,'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ProgramList.rpt *)
+      SQL(sqlString).on('Pmo -> pmo.toInt, 'Art -> art.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ProgramList.rpt *)
     }
   }
 
-  def programCountDocs(pmo:String, art:String): Int = {
+  def programCountDocs(pmo: String, art: String): Int = {
 
     var sqlString = "EXEC art.cantidad_programa_docs {Pmo}, {Art}"
 
@@ -83,7 +82,7 @@ object SeguimientoService {
     }
   }
 
-  def programCountDocsProgram(program_id:String): Int = {
+  def programCountDocsProgram(program_id: String): Int = {
 
     var sqlString = "EXEC art.cantidad_docs_program {Program}"
 
@@ -114,7 +113,7 @@ object SeguimientoService {
           |	ORDER BY a.updated_at DESC
         """.stripMargin
 
-      val data=SQL(sqlstr).on('Program_id -> program_id.toInt).as(ListDocuments.rpt *)
+      val data = SQL(sqlstr).on('Program_id -> program_id.toInt).as(ListDocuments.rpt *)
 
       val file = new File("reporte.xlsx")
       val fileOut = new FileOutputStream(file);
@@ -186,6 +185,83 @@ object SeguimientoService {
       }
       wb.write(fileOut)
       fileOut.close()
+    }
+  }
+
+
+  def reporteAllDocsExcel = {
+    DB.withConnection { implicit connection =>
+      val sqlString =
+        """
+          |SELECT b.program_code programa, b.program_id id, d.document_type nombre, count(*) cantidad, c.version_notes description
+          |FROM document_master a JOIN art_program b ON a.program_id=b.program_id
+          |JOIN version_details c ON c.document_id=a.id
+          |JOIN art_program_document_type d ON d.id=c.document_type
+          |JOIN art_doctype_progtype e ON e.document_type=c.document_type AND e.program_type=b.program_type
+          |GROUP BY b.program_code, b.program_id, d.document_type, c.version_notes
+          |ORDER BY b.program_code, d.document_type
+        """.stripMargin
+
+      val data = SQL(sqlString).as(ListTypes.rpt *)
+
+      val file = new File("reporteAllDocs.xlsx")
+      val fileOut = new FileOutputStream(file);
+      val wb = new XSSFWorkbook
+      val sheet = wb.createSheet("ART")
+
+      val rowHead = sheet.createRow(0)
+      val style = wb.createCellStyle()
+      val font = wb.createFont()
+
+      var rNum = 1
+      var cNum = 0
+
+      font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL)
+      font.setFontHeightInPoints(12)
+      font.setBold(true)
+      style.setFont(font)
+      rowHead.createCell(0).setCellValue("ART")
+      rowHead.createCell(1).setCellValue("Tipo Documento")
+      rowHead.createCell(2).setCellValue("Cantidad")
+      rowHead.createCell(3).setCellValue("Descripción")
+
+      for (j <- 0 to 3)
+        rowHead.getCell(j).setCellStyle(style)
+
+      for (s <- data) {
+        val row = sheet.createRow(rNum)
+
+        val cel0 = row.createCell(cNum)
+        cel0.setCellValue(s.programa)
+
+        val cel1 = row.createCell(cNum + 1)
+        cel1.setCellValue(s.nombre)
+
+        val cel2 = row.createCell(cNum + 2)
+        cel2.setCellValue(s.cantidad)
+
+        val cel3 = row.createCell(cNum + 3)
+        cel3.setCellValue(s.description)
+
+        rNum = rNum + 1
+        cNum = 0
+
+      }
+
+      for (a <- 0 to 3) {
+        sheet.autoSizeColumn((a.toInt));
+      }
+      wb.write(fileOut)
+      fileOut.close()
+    }
+  }
+
+  def updateProgramsInDocs {
+
+    var sqlString = "EXEC art.update_programs_indocs"
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString)
     }
   }
 
