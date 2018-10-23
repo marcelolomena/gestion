@@ -190,8 +190,8 @@ function getExcel(req, res) {
             width: 200
         },
         {
-            caption: 'Fecha Actualización',
-            type: 'date',
+            caption: 'FechaActualizacion',
+            type: 'datetime',
             width: 200
         },
         {
@@ -205,7 +205,7 @@ function getExcel(req, res) {
             width: 200
         },
         {
-            caption: 'Código Interno',
+            caption: 'CodigoInterno',
             type: 'string',
             width: 200
         }
