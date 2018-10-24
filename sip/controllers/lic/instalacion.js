@@ -420,6 +420,12 @@ function listUbicacion(req, res) {
                         $like: '%' + item.data + '%'
                     }
                 });
+            } else if (item.field === "nombre") {
+                filter_one.push({
+                    [item.field]: {
+                        $like: '%' + item.data + '%'
+                    }
+                });
             } else if (item.field === "usuario") {
                 filter_one.push({
                     [item.field]: {
@@ -565,6 +571,11 @@ function getExcel(req, res) {
             width: 3
         },
         {
+            caption: 'ID',
+            type: 'string',
+            width: 200
+        },
+        {
             caption: 'Producto',
             type: 'string',
             width: 200
@@ -575,23 +586,18 @@ function getExcel(req, res) {
             width: 200
         },
         {
-            caption: 'Ubicación',
+            caption: 'Usuario',
             type: 'string',
             width: 200
         },
         {
-            caption: 'CódigoInterno',
+            caption: 'Alias',
             type: 'string',
             width: 200
         },
         {
             caption: 'CUI',
-            type: 'string',
-            width: 200
-        },
-        {
-            caption: 'Usuario',
-            type: 'string',
+            type: 'number',
             width: 200
         },
         {
@@ -613,23 +619,23 @@ function getExcel(req, res) {
 
                 if (nombreprod != ubicacion[i].nombreProd) {
                     var a = [i + 1,
+                        ubicacion[i].codigoInterno,
                         ubicacion[i].nombreProd,
                         ubicacion[i].nombre,
-                        ubicacion[i].ubicacion,
-                        ubicacion[i].codigoInterno,
-                        ubicacion[i].cui,
                         ubicacion[i].usuario,
+                        ubicacion[i].ubicacion,
+                        ubicacion[i].cui,
                         ubicacion[i].observacion
                     ];
                     nombreprod = ubicacion[i].nombreProd
                 } else {
                     var a = [i + 1,
+                        ubicacion[i].codigoInterno,
                         null,
                         ubicacion[i].nombre,
-                        ubicacion[i].ubicacion,
-                        ubicacion[i].codigoInterno,
-                        ubicacion[i].cui,
                         ubicacion[i].usuario,
+                        ubicacion[i].ubicacion,
+                        ubicacion[i].cui,
                         ubicacion[i].observacion
                     ];
                     nombreprod = ubicacion[i].nombreProd
@@ -641,7 +647,7 @@ function getExcel(req, res) {
 
             var result = nodeExcel.execute(conf);
             res.setHeader('Content-Type', 'application/vnd.openxmlformates');
-            res.setHeader("Content-Disposition", "attachment;filename=" + "ReporteUbicacionesLIC.xlsx");
+            res.setHeader("Content-Disposition", "attachment;filename=" + "ReporteAutorizacionesLIC.xlsx");
             res.end(result, 'binary');
 
         }).catch(function (err) {

@@ -35,7 +35,16 @@ $(document).ready(function () {
             key: true,
             hidden: true,
             editable: false
-        }, {
+        }, 
+        {
+            label: 'Código Interno',
+            name: 'codigoInterno',
+            align: 'center',
+            width: 100,
+            editable: true,
+            search: false
+        },        
+        {
             label: 'Nombre Producto',
             name: 'idproducto',
             width: 250,
@@ -105,18 +114,18 @@ $(document).ready(function () {
             search: true
         },
         {
-            label: 'Ubicación',
-            name: 'ubicacion',
+            label: 'Usuario',
+            name: 'usuario',
             align: 'center',
-            width: 200,
+            width: 80,
             editable: true,
-            search: false
+            search: true
         },
         {
-            label: 'Código Interno',
-            name: 'codigoInterno',
+            label: 'Alias',
+            name: 'ubicacion',
             align: 'center',
-            width: 100,
+            width: 80,
             editable: true,
             search: false
         },
@@ -144,13 +153,6 @@ $(document).ready(function () {
             editable: true,
             edittype: 'textarea',
             search: false
-        },
-        {
-            label: 'Usuario',
-            name: 'usuario',
-            width: 200,
-            editable: true,
-            search: true
         }
     ];
 
@@ -166,7 +168,7 @@ $(document).ready(function () {
         sortable: "true",
         width: null,
         shrinkToFit: false,
-        caption: 'Ubicación',
+        caption: 'Autorizaciones de Estaciones de Trabajo',
         pager: "#pager",
         viewrecords: true,
         rowList: [10, 20, 30, 40, 50],
@@ -191,7 +193,7 @@ $(document).ready(function () {
         },
 
         {
-            editCaption: "Modifica Ubicación",
+            editCaption: "Modifica Autorización",
             closeAfterEdit: true,
             recreateForm: true,
             ajaxEditOptions: sipLibrary.jsonOptions,
@@ -234,7 +236,7 @@ $(document).ready(function () {
                 }
             }
         }, {
-            addCaption: "Agrega Ubicación",
+            addCaption: "Agrega Autorización",
             closeAfterAdd: false,
             recreateForm: true,
             mtype: 'POST',

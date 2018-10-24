@@ -761,20 +761,21 @@
             viewrecords: true,
             rowList: [10, 20, 30, 40, 50],
             styleUI: "Bootstrap",
-            editurl: '/lic/planilla',
-            loadComplete: function (data) {
-                var thisId = $.jgrid.jqID(this.id);
-                $.get('/sic/getsession', function (data) {
-                    $.each(data, function (i, item) {
-                        console.log("EL ROL ES: " + item.glosarol)
-                        if (item.glosarol != 'Administrador LIC') {
-                            $("#add_" + thisId).addClass('ui-disabled');
-                            $("#edit_" + thisId).addClass('ui-disabled');
-                            $("#del_" + thisId).addClass('ui-disabled');
-                        }
-                    });
-                });
-            }
+            editurl: '/lic/planilla'
+            // ,
+            // loadComplete: function (data) {
+            //     var thisId = $.jgrid.jqID(this.id);
+            //     $.get('/sic/getsession', function (data) {
+            //         $.each(data, function (i, item) {
+            //             console.log("EL ROL ES: " + item.glosarol)
+            //             if (item.glosarol != 'Administrador LIC') {
+            //                 $("#add_" + thisId).addClass('ui-disabled');
+            //                 $("#edit_" + thisId).addClass('ui-disabled');
+            //                 $("#del_" + thisId).addClass('ui-disabled');
+            //             }
+            //         });
+            //     });
+            // }
         });       
 
         $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
