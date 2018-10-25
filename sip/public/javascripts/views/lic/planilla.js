@@ -764,15 +764,20 @@
             editurl: '/lic/planilla',
             loadComplete: function (data) {
                 var thisId = $.jgrid.jqID(this.id);
-                $.get('/sic/getsession', function (data) {
+                $.get('/lic/getsession', function (data) {
+                    var admin = false;
                     $.each(data, function (i, item) {
                         console.log("EL ROL ES: " + item.glosarol)
-                        if (item.glosarol != 'Administrador LIC') {
-                            $("#add_" + thisId).addClass('ui-disabled');
-                            $("#edit_" + thisId).addClass('ui-disabled');
-                            $("#del_" + thisId).addClass('ui-disabled');
-                        }
+                        if (item.glosarol == 'Administrador LIC') 
+                           admin=true
                     });
+                    
+                    if (admin == false) {
+                        $("#add_" + thisId).addClass('ui-disabled');
+                        $("#edit_" + thisId).addClass('ui-disabled');
+                        $("#del_" + thisId).addClass('ui-disabled');
+                    }
+                   
                 });
             }
         });       
