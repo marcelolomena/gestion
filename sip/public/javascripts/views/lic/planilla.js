@@ -771,7 +771,7 @@
                         if (item.glosarol == 'Administrador LIC') 
                            admin=true
                     });
-                     
+                    
                     if (admin == false) {
                         $("#add_" + thisId).addClass('ui-disabled');
                         $("#edit_" + thisId).addClass('ui-disabled');
@@ -848,7 +848,4 @@
 
     $("#pager_left").css("width", "");
 });
-
-
-
 
