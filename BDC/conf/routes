@@ -767,3 +767,7 @@ GET    /allDocumentByProgramExcel						                                      con
 GET    /portfolio-list/:pagenumber                                                            controllers.Frontend.Portfolio.portfolioListing(pagenumber:Integer)
 GET    /portfolio                                                                             controllers.Frontend.Portfolio.portfolio								
 GET    /portfolio-details/$portfolioid<[A-Za-z0-9_-]+>                                        controllers.Frontend.Portfolio.portfolioDetails(portfolioid:String)
+
+#Reportes PMO
+GET     /healthgrid/$id<[A-Za-z0-9_-]+>             controllers.Frontend.HealthReport.gridReport(id:String)
+POST    /getReportSlowForPMO                        controllers.Frontend.HealthReport.getReportSlow

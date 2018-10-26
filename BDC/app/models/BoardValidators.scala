@@ -66,4 +66,15 @@ object BoardValidators {
   object MultipleIDValidator {
     implicit val reads = Json.reads[MultipleIDValidator]
   }
+
+  /**
+    * Simple case for id. More of a convenience class for
+    * de-serialization of json envelopes.
+    * @param id id to be validated
+    */
+  case class GridValidator(sidx : String, sord: String)
+  object GridValidator {
+    implicit val reads = Json.reads[GridValidator]
+  }
+
 }

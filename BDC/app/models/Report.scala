@@ -9,6 +9,72 @@ import play.api.libs.json._
   * @author marcelo
   */
 
+case class ResultHealth(
+                         nombre: String,
+                         programa: String,
+                         texto: String,
+                         id_programa: Int,
+                         id_proyecto: Option[Int],
+                         indicador_0: Int,
+                         indicador_1: Int,
+                         indicador_2: Int,
+                         indicador_3: Int,
+                         indicador_4: Int,
+                         indicador_5: Int,
+                         indicador_6: Int,
+                         indicador_7: Int
+                       )
+object ResultHealth {
+  implicit val reads = Json.reads[ResultHealth]
+  implicit val writes = Json.writes[ResultHealth]
+
+  implicit val parser: RowParser[ResultHealth] = {
+    get[String]("nombre")  ~
+      get[String]("programa")  ~
+      get[String]("texto")  ~
+      get[Int]("id_programa")  ~
+      get[Option[Int]]("id_proyecto")  ~
+      get[Int]("indicador_0") ~
+      get[Int]("indicador_1") ~
+      get[Int]("indicador_2") ~
+      get[Int]("indicador_3") ~
+      get[Int]("indicador_4") ~
+      get[Int]("indicador_5") ~
+      get[Int]("indicador_6") ~
+      get[Int]("indicador_7") map {
+      case nombre ~
+          programa ~
+          texto ~
+          id_programa ~
+          id_proyecto ~
+          indicador_0 ~
+          indicador_1 ~
+          indicador_2 ~
+          indicador_3 ~
+          indicador_4 ~
+          indicador_5 ~
+          indicador_6 ~
+          indicador_7 =>
+          ResultHealth(
+          nombre,
+          programa,
+          texto,
+          id_programa,
+          id_proyecto,
+          indicador_0,
+          indicador_1,
+          indicador_2,
+          indicador_3,
+          indicador_4,
+          indicador_5,
+          indicador_6,
+          indicador_7
+        )
+    }
+  }
+}
+
+
 case class Grid(x: Int, y: Int, z: Int, v: JsValue)
 
 object Grid {
