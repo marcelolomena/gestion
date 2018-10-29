@@ -43,6 +43,10 @@ module.exports = function (sequelize, DataTypes) {
     nombre: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    licencia: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     schema: 'lic',
