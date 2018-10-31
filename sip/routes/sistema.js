@@ -5,6 +5,7 @@ var logger = require("../utils/logger");
 var menu = require('../utils/menu');
 var models = require('../models');
 var pug = require('pug');
+var sequelize = require('../models/index').sequelize;
 
 module.exports = function (passport) {
 
@@ -25,60 +26,67 @@ module.exports = function (passport) {
 
             menu.builUserdMenu(req, function (err, data) {
                 if (data) {
-                    req.session.save(() => {
-                        req.session.passport.sidebar = data
-                        models.pagina.belongsTo(models.sistema, {
-                            foreignKey: 'idsistema'
-                        });
-                        models.pagina.belongsTo(models.contenido, {
-                            foreignKey: 'idcontenido'
-                        });
+          
+                   // console.log(data);
+                    req.session.save(function() {
+                        req.session.passport.sidebar = data;
+                        
 
-                        return models.sistema.findOne({
-                            where: {
-                                id: idsistema
+                        var sql = "SELECT pagina.id AS p_id, pagina.nombre AS p_nombre, pagina.title AS p_title, pagina.script AS p_script, "+
+                            " pagina.borrado AS borrado, sistema.id AS s_id, sistema.sistema AS s_sistema, sistema.glosasistema AS s_glosasistema, "+
+                            " sistema.pagina AS s_pagina, contenido.id AS c_id, contenido.nombre AS c_nombre, contenido.plantilla AS c_plantilla "+
+                            " FROM sip.pagina AS pagina LEFT OUTER JOIN sip.sistema AS sistema ON pagina.idsistema = sistema.id "+
+                            " LEFT OUTER JOIN sip.contenido AS contenido ON pagina.idcontenido = contenido.id "+
+                            " WHERE sistema.id =" + idsistema +" "+
+                            " ORDER BY p_id OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY; ";
+                      
+                        sequelize.query(sql)
+                          .spread(function (proyecto) {            
+                            for (var i = 0; i < proyecto.length; i++) {
+                      
+                              a = { p_id : proyecto[i].p_id,
+                                p_nombre :proyecto[i].p_nombre,
+                                p_title: proyecto[i].p_title,
+                                p_script: proyecto[i].p_script,
+                                borrado: proyecto[i].borrado,
+                                s_id:proyecto[i].s_id,
+                                s_sistema:proyecto[i].s_sistema,
+                                s_glosasistema: proyecto[i].s_glosasistema,
+                                s_pagina: proyecto[i].s_pagina,
+                                c_id: proyecto[i].c_id,
+                                c_nombre: proyecto[i].c_nombre,
+                                c_plantilla:proyecto[i].c_plantilla
+                              };
                             }
-                        }).then(function (home) {
+                            return a;
+                            }).then(function () {
 
-                            return models.pagina.findOne({
-                                where: {
-                                    nombre: home.pagina
-                                },
-                                include: [{
-                                        model: models.sistema
-                                    },
-                                    {
-                                        model: models.contenido
-                                    }
-                                ]
-                            }).then(function (pagina) {
-                                var tmpl = pug.renderFile(pagina.contenido.plantilla, {
-                                    title: pagina.title
+                                //console.log(a);
+                                var tmpl = pug.renderFile(a.c_plantilla, {
+                                    title: a.p_title
                                 });
-                                var script = ""
-                                if (pagina.script)
-                                    script = pug.render(pagina.script);
 
-                                return res.render(home.pagina, {
+                                var script = "";
+                                if (a.p_script)
+                                    script = pug.render(a.p_script);
+
+                                return res.render(a.s_pagina, {
                                     user: req.user,
                                     data: data,
-                                    page: home.pagina,
-                                    title: pagina.title,
-                                    type: pagina.contenido.nombre,
-                                    idtype: pagina.contenido.id,
+                                    page: a.s_pagina,
+                                    title: a.p_title,
+                                    type: a.c_nombre,
+                                    idtype: a.c_id,
                                     html: tmpl,
                                     script: script
                                 });
-                            }).catch(function (err) {
+                            })
+                            .catch(function (err) {
                                 logger.error(err);
                             });
-
-                        }).catch(function (err) {
-                            logger.error(err);
                         });
-                    })
-                } else {
-                    res.render('index', {
+                    } else {
+                        res.render('index', {
                         message: err
                     });
                 }
@@ -97,51 +105,49 @@ module.exports = function (passport) {
                 }
             });
         } else {
-            models.pagina.belongsTo(models.sistema, {
-                foreignKey: 'idsistema'
-            });
-            models.pagina.belongsTo(models.contenido, {
-                foreignKey: 'idcontenido'
-            });
 
-            return models.sistema.findOne({
-                where: {
-                    id: idsistema
-                }
-            })
-            .then(function (home) {
-
-                return models.pagina.findOne({
-                    where: {
-                        nombre: req.params.opt
-                    },
-                    include: [{
-                            model: models.sistema
-                        },
-                        {
-                            model: models.contenido
-                        }
-                    ]
-                })
+            var sql = "SELECT pagina.id AS p_id, pagina.nombre AS p_nombre, pagina.title AS p_title, pagina.script AS p_script, "+
+                            " pagina.borrado AS borrado, sistema.id AS s_id, sistema.sistema AS s_sistema, sistema.glosasistema AS s_glosasistema, "+
+                            " sistema.pagina AS s_pagina, contenido.id AS c_id, contenido.nombre AS c_nombre, contenido.plantilla AS c_plantilla "+
+                            " FROM sip.pagina AS pagina LEFT OUTER JOIN sip.sistema AS sistema ON pagina.idsistema = sistema.id "+
+                            " LEFT OUTER JOIN sip.contenido AS contenido ON pagina.idcontenido = contenido.id "+
+                            " WHERE sistema.id =" + idsistema +" "+
+                            " ORDER BY p_id OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY; ";
+                      
+                        sequelize.query(sql)
+                          .spread(function (proyecto) {            
+                            for (var i = 0; i < proyecto.length; i++) {
+                      
+                              a = { p_id : proyecto[i].p_id,
+                                p_nombre :proyecto[i].p_nombre,
+                                p_title: proyecto[i].p_title,
+                                p_script: proyecto[i].p_script,
+                                borrado: proyecto[i].borrado,
+                                s_id:proyecto[i].s_id,
+                                s_sistema:proyecto[i].s_sistema,
+                                s_glosasistema: proyecto[i].s_glosasistema,
+                                s_pagina: proyecto[i].s_pagina,
+                                c_id: proyecto[i].c_id,
+                                c_nombre: proyecto[i].c_nombre,
+                                c_plantilla:proyecto[i].c_plantilla
+                              };
+                            }
+                            return a })
                 .then(function (pagina) {
-                    var tmpl = pug.renderFile(pagina.contenido.plantilla, {
-                        title: pagina.title
+                    var tmpl = pug.renderFile(c_plantilla, {
+                        title: p_title
                     });
                     var script = pug.render(pagina.script);
-                    return res.render(home.pagina, {
+                    return res.render(a.s_pagina, {
                         user: req.user,
                         data: req.session.passport.sidebar,
                         page: req.params.opt,
-                        title: pagina.title,
-                        type: pagina.contenido.nombre,
-                        idtype: pagina.contenido.id,
+                        title: p_title,
+                        type: c_nombre,
+                        idtype: c_id,
                         html: tmpl,
                         script: script
                     });
-
-                }).catch(function (err) {
-                    throw err;
-                });
 
             }).catch(function (err) {
                 logger.error(err);
