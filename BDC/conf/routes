@@ -768,3 +768,8 @@ GET    /portfolio-list/:pagenumber                                              
 GET    /portfolio                                                                             controllers.Frontend.Portfolio.portfolio								
 GET    /portfolio-details/$portfolioid<[A-Za-z0-9_-]+>                                        controllers.Frontend.Portfolio.portfolioDetails(portfolioid:String)
 GET    /reportHoras                                                                           controllers.Frontend.Seguimiento.executeHoras
+
+#Reportes PMO
+GET     /healthgrid/$id<[A-Za-z0-9_-]+>             controllers.Frontend.HealthReport.gridReport(id:String)
+POST    /getReportSlowForPMO                        controllers.Frontend.HealthReport.getReportSlow
+
