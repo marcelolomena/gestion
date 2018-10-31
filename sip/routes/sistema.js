@@ -4,10 +4,37 @@ var isAuthenticated = require('../policies/isAuthenticated')
 var logger = require("../utils/logger");
 var menu = require('../utils/menu');
 var models = require('../models');
+var path = require("path");
+var uid = require('../models/index');
+var env = process.env.NODE_ENV;
+var config = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
 var pug = require('pug');
 var sequelize = require('../models/index').sequelize;
 
+
+
+
 module.exports = function (passport) {
+
+    // config.logging = function(sql){
+
+    //     console.log
+ 
+    //     var sqlchico = sql.toLowerCase();
+    //     var resultado;
+      
+    //     if(sql.indexOf('[Session].[sid]') != -1)
+    //     {
+    //       resultado = sqlchico.split('executing (default): select [sid], [expires], [data], [createdat], [updatedat] from [sessions] as [session] where [session].[sid] = n');
+    //       resultado = resultado[1].split("'");
+      
+    //       secuelizador.query("UPDATE art_live.dbo.Sessions SET expires=CURRENT_TIMESTAMP,updatedAt=CURRENT_TIMESTAMP OUTPUT INSERTED.* WHERE sid = "+ resultado[1])
+    //       .spread(function (proyecto) {      
+    //         console.log("update result:", proyecto);
+    //       });
+          
+    //     }
+    // }
 
     router.get('/', function (req, res) {
         res.render('index', {
@@ -26,10 +53,17 @@ module.exports = function (passport) {
 
             menu.builUserdMenu(req, function (err, data) {
                 if (data) {
+
+                    console.log(req.sid);
+                    
           
-                   // console.log(data);
+                    
                     req.session.save(function() {
                         req.session.passport.sidebar = data;
+
+                        //console.log(data.sid);
+
+                        
                         
 
                         var sql = "SELECT pagina.id AS p_id, pagina.nombre AS p_nombre, pagina.title AS p_title, pagina.script AS p_script, "+
@@ -39,6 +73,11 @@ module.exports = function (passport) {
                             " LEFT OUTER JOIN sip.contenido AS contenido ON pagina.idcontenido = contenido.id "+
                             " WHERE sistema.id =" + idsistema +" "+
                             " ORDER BY p_id OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY; ";
+
+
+                        
+
+                        //sql+= "UPDATE Sessions SET expires='2018-11-01 12:42:17.063',updatedAt='2018-10-31 12:42:17.000' OUTPUT INSERTED.* WHERE sid = N'Af-wAL-0YlxkxRnUDC6fcD3c-Ilylzu2'"
                       
                         sequelize.query(sql)
                           .spread(function (proyecto) {            
@@ -114,8 +153,9 @@ module.exports = function (passport) {
                             " WHERE sistema.id =" + idsistema +" "+
                             " ORDER BY p_id OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY; ";
                       
-                        sequelize.query(sql)
-                          .spread(function (proyecto) {            
+                            return  sequelize.query(sql)
+                          .spread(function (proyecto) {
+                              //console.log(proyecto.length);            
                             for (var i = 0; i < proyecto.length; i++) {
                       
                               a = { p_id : proyecto[i].p_id,
@@ -132,7 +172,7 @@ module.exports = function (passport) {
                                 c_plantilla:proyecto[i].c_plantilla
                               };
                             }
-                            return a })
+                             })
                 .then(function (pagina) {
                     var tmpl = pug.renderFile(c_plantilla, {
                         title: p_title
