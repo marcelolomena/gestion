@@ -4,12 +4,13 @@ import play.api.db.DB
 import anorm.SqlParser._
 import models._
 import anorm._
-import play.Logger
+import play.{Logger, Play}
 import org.apache.poi.xssf.usermodel._
 import java.io.File
 import java.io.PrintWriter
 import java.io.FileOutputStream
 import java.util.Date
+
 
 object DashboardService {
 
@@ -679,6 +680,88 @@ object DashboardService {
     }
   }
 
+  def createReportFabricas(): Seq[Report] = {
+
+    var sqlString =
+      """
+        |SELECT
+        |tipo,
+        |pcod,
+        |program_id,
+        |ISNULL(project_id,0) project_id,
+        |ISNULL(task_id,0) task_id,
+        |ISNULL(subtask_id,0) subtask_id,
+        |program_name,
+        |ISNULL(foco, '') foco,
+        |ISNULL(tamano,'') tamano,
+        |ISNULL(nombre_lider,'') nombre_lider,
+        |ISNULL(program_type,'') program_type,
+        |ISNULL(work_flow_status,'') work_flow_status,
+        |ISNULL(impact_type,'') impact_type,
+        |ISNULL(name_div,'') name_div,
+        |ISNULL(name_man,'') name_man,
+        |ISNULL(name_dep,'') name_dep,
+        |ISNULL(plan_start_date,'') plan_start_date,
+        |ISNULL(plan_end_date,'') plan_end_date,
+        |real_start_date ,
+        |real_end_date ,
+        |release_date ,
+        |ISNULL(spi,0) spi,
+        |ISNULL(cpi,0) cpi,
+        |ISNULL(pai,0) pai,
+        |ISNULL(pae,0) pae,
+        |count_project ,
+        |count_task ,
+        |count_subtask ,
+        |ISNULL(pmo,'') pmo,
+        |ISNULL(hours,0) hours,
+        |ISNULL(allocation,0) allocation,
+        |count_subtask_usr
+        |FROM art_program_management WHERE tipo IN ('PROGRAMA','PROYECTO', 'TAREA')
+        |UNION
+        |SELECT
+        |tipo,
+        |pcod ,
+        |program_id,
+        |ISNULL(project_id,0) project_id,
+        |ISNULL(task_id,0) task_id,
+        |ISNULL(subtask_id,0) subtask_id,
+        |program_name ,
+        |ISNULL(foco, '') foco,
+        |ISNULL(tamano,'') tamano,
+        |ISNULL(nombre_lider,'') nombre_lider,
+        |ISNULL(program_type,'') program_type,
+        |ISNULL(work_flow_status,'') work_flow_status,
+        |ISNULL(impact_type,'') impact_type,
+        |ISNULL(name_div,'') name_div,
+        |ISNULL(name_man,'') name_man,
+        |ISNULL(name_dep,'') name_dep,
+        |ISNULL(plan_start_date,'') plan_start_date,
+        |ISNULL(plan_end_date,'') plan_end_date,
+        |min(real_start_date) real_start_date,
+        |max(real_end_date) real_end_date,
+        |release_date ,
+        |ISNULL(spi,0) spi,
+        |ISNULL(cpi,0) cpi,
+        |max(ISNULL(pai,0)) pai,
+        |max(ISNULL(pae,0)) pae,
+        |count_project ,
+        |count_task ,
+        |count_subtask ,
+        |ISNULL(pmo,'') pmo,
+        |sum(ISNULL(hours,0)) hours,
+        |sum(ISNULL(allocation,0)) allocation,
+        |count_subtask_usr
+        |FROM art_program_management WHERE tipo ='SUBTAREA'
+        |group by tipo, pcod, program_id, project_id, task_id, subtask_id, program_name, foco, tamano, nombre_lider, program_type, work_flow_status, impact_type, name_div, name_man, name_dep, plan_start_date, plan_end_date, release_date, spi, cpi, count_project, count_task, count_subtask, pmo, count_subtask_usr
+        |order by program_id,project_id,task_id,subtask_id
+      """.stripMargin
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).executeQuery() as (Report.report *)
+    }
+  }
+
   def createExcel() = {
     DB.withConnection { implicit connection =>
       val sqlstr =
@@ -721,9 +804,11 @@ object DashboardService {
         """.stripMargin
 
       val data=SQL(sqlstr).as(Report.report *)
+      System.out.println("filas query:"+data.length)
 
-      val file = new File("reporte.xls")
+      val file = new File("reporte.xlsx")
       val fileOut = new FileOutputStream(file);
+
       val wb = new XSSFWorkbook
       val sheet = wb.createSheet("ART")
 
@@ -733,6 +818,7 @@ object DashboardService {
 
       var rNum = 1
       var cNum = 0
+      var counter = 0
 
       font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL)
       font.setFontHeightInPoints(26)
@@ -852,9 +938,9 @@ object DashboardService {
 
         rNum = rNum + 1
         cNum = 0
-
+        counter = counter + 1
       }
-
+      System.out.println("counter:"+counter)
       for (a <- 0 to 25) {
         sheet.autoSizeColumn((a.toInt));
       }
@@ -1041,6 +1127,98 @@ object DashboardService {
     }
   }
 
+  def generaReporteHorasFabrica() {
+
+    var sqlString = "EXEC art.reporte_horas_automatico 2418"
+    System.out.println("generaReporteHorasFabrica")
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).execute
+    }
+  }
+
+  def reportHorasFabrica() = {
+    DB.withConnection { implicit connection =>
+      val sqlstr ="select * from art_reporte_horas".stripMargin
+
+      //SQL("EXEC art.reporte_horas_automatico 1234").executeQuery() as (scalar[Int].single)
+
+      System.out.println("reportHorasFabrica")
+      val data=SQL(sqlstr).as(ReportHoras.reporthoras *)
 
 
+      val file = new File(Play.application().configuration().getString("bdc.documents.location") + "/alldocuments/reportehorasfabrica.xlsx")
+      val fileOut = new FileOutputStream(file)
+      val wb = new XSSFWorkbook
+      val sheet = wb.createSheet("ART")
+
+      val rowHead = sheet.createRow(0)
+      val style = wb.createCellStyle()
+      val font = wb.createFont()
+
+      var rNum = 1
+      var cNum = 0
+
+      font.setFontName(org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL)
+      font.setFontHeightInPoints(12)
+      font.setBold(true)
+      style.setFont(font)
+
+
+      rowHead.createCell(0).setCellValue("Nombre")
+      rowHead.createCell(1).setCellValue("Mes")
+      rowHead.createCell(2).setCellValue("Programa")
+      rowHead.createCell(3).setCellValue("Proyecto")
+      rowHead.createCell(4).setCellValue("Tarea")
+      rowHead.createCell(5).setCellValue("Subtarea")
+      rowHead.createCell(6).setCellValue("Horas")
+      rowHead.createCell(7).setCellValue("Area")
+      rowHead.createCell(8).setCellValue("Departamento")
+
+
+      for (j <- 0 to 8)
+        rowHead.getCell(j).setCellStyle(style)
+      //nombre	mes	programa	proyecto	tarea	subtarea	horas
+      for (s <- data) {
+        val row = sheet.createRow(rNum)
+
+        val cel0 = row.createCell(cNum)
+        cel0.setCellValue(s.nombre)
+
+        val cel1 = row.createCell(cNum + 1)
+        cel1.setCellValue(s.mes)
+
+        val cel2 = row.createCell(cNum + 2)
+        cel2.setCellValue(s.programa)
+
+        val cel3 = row.createCell(cNum + 3)
+        cel3.setCellValue(s.proyecto)
+
+        val cel4 = row.createCell(cNum + 4)
+        cel4.setCellValue(s.tarea)
+
+        val cel5 = row.createCell(cNum + 5)
+        cel5.setCellValue(s.subtarea)
+
+        val cel6 = row.createCell(cNum + 6)
+        cel6.setCellValue(s.horas)
+
+        val cel7 = row.createCell(cNum + 7)
+        cel7.setCellValue(s.area)
+
+        val cel8 = row.createCell(cNum + 8)
+        cel8.setCellValue(s.departamento)
+
+        rNum = rNum + 1
+        cNum = 0
+
+      }
+
+      for (a <- 0 to 8) {
+        sheet.autoSizeColumn((a.toInt));
+      }
+      wb.write(fileOut)
+      fileOut.close()
+
+    }
+  }
 }

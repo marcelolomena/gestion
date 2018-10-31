@@ -395,4 +395,18 @@ object Seguimiento extends Controller {
       Redirect(routes.Login.loginUser()).withNewSession
     }
   }
+
+  def executeHoras(): Action[AnyContent] = Action {
+    System.out.println("executeHoras")
+    //DashboardService.generaReporteHorasFabrica()
+    //DashboardService.reportHorasFabrica()
+
+    var docFile = new File(Play.application().configuration().getString("bdc.documents.location") + "/alldocuments/reportehorasfabrica.xlsx")
+    if(docFile != null && docFile.exists()){
+      Ok.sendFile(docFile)
+    }else{
+      Ok("File not found on the server. Its either deleted or removed from the server,")
+    }
+  }
+
 }
