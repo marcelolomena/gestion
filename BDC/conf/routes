@@ -769,5 +769,5 @@ GET    /portfolio                                                               
 GET    /portfolio-details/$portfolioid<[A-Za-z0-9_-]+>                                        controllers.Frontend.Portfolio.portfolioDetails(portfolioid:String)
 
 #Reportes PMO
-GET     /healthgrid/$id<[A-Za-z0-9_-]+>             controllers.Frontend.HealthReport.gridReport(id:String)
+GET     /healthgrid/$id<[A-Za-z0-9_-]+>             controllers.Frontend.HealthReport.gridReport(id:Int)
 POST    /getReportSlowForPMO                        controllers.Frontend.HealthReport.getReportSlow

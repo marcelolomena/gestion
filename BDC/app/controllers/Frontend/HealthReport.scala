@@ -7,7 +7,7 @@ import services.HealthService
 
 object HealthReport extends CoreController {
 
-  def gridReport(id: String) = Action { implicit request =>
+  def gridReport(id: Int) = Action { implicit request =>
     request.session.get("username").map { user =>
 
       val userSession = request.session +
@@ -16,13 +16,17 @@ object HealthReport extends CoreController {
         ("utype" -> request.session.get("utype").get) +
         ("user_profile" -> request.session.get("user_profile").get)
 
-      Ok(views.html.frontend.seguimiento.healthGrid()).withSession(userSession)
+      Ok(views.html.frontend.seguimiento.healthGrid(id)).withSession(userSession)
     }.getOrElse {
       Redirect(routes.Login.loginUser())
     }
   }
 
   def getReportSlow() = Action(parse.json) { implicit request =>
+    gridDispatch[GridValidator,Seq[ResultHealth]](HealthService.listSlow)
+  }
+
+  def getReportLeader() = Action(parse.json) { implicit request =>
     gridDispatch[GridValidator,Seq[ResultHealth]](HealthService.listSlow)
   }
 }
