@@ -437,3 +437,51 @@ object Pie {
   }
   implicit val pieWrites = Json.writes[Pie]
 }
+
+case class ReportHoras(
+                        nombre: String,
+                        mes: Int,
+                        programa: String,
+                        proyecto: String,
+                        tarea: String,
+                        subtarea: String,
+                        horas: String,
+                        area: String,
+                        departamento: String
+                      )
+
+object ReportHoras {
+
+  val reporthoras = {
+    get[String]("nombre") ~
+      get[Int]("mes") ~
+      get[String]("programa") ~
+      get[String]("proyecto") ~
+      get[String]("tarea") ~
+      get[String]("subtarea") ~
+      get[String]("horas") ~
+      get[String]("area") ~
+      get[String]("departamento")  map {
+      case nombre ~
+          mes ~
+          programa ~
+          proyecto ~
+          tarea ~
+          subtarea ~
+          horas ~
+          area ~
+          departamento => ReportHoras(
+        nombre,
+        mes,
+        programa,
+        proyecto,
+        tarea,
+        subtarea,
+        horas,
+        area,
+        departamento
+      )
+    }
+
+  }
+}

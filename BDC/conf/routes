@@ -637,7 +637,7 @@ GET    /reportStateSubTask                                                      
 GET    /burbujas/$id<[A-Za-z0-9_-]+>                                                                  controllers.Frontend.Dashboard.burbujas(id:Int)
 GET    /pie/$id<[A-Za-z0-9_-]+>                                                                       controllers.Frontend.Dashboard.pie(id:Int)
 GET    /report/$view<[A-Za-z0-9_-]+>/$level<[A-Za-z0-9_-]+>/$parent<[A-Za-z0-9_-]+>                   controllers.Frontend.Dashboard.report(view: String,level: Int,parent: Int)
-GET    /report_full                                                                                   controllers.Frontend.Dashboard.reportFull
+GET    /report_full                                                                                   controllers.Frontend.Dashboard.reportFull2
 #GET    /pieType                                                                                       controllers.Frontend.Dashboard.pieType
 #GET    /pieSubType                                                                                    controllers.Frontend.Dashboard.pieSubType
 #GET    /pieState                                                                                      controllers.Frontend.Dashboard.pieState
@@ -767,6 +767,7 @@ GET    /allDocumentByProgramExcel						                                      con
 GET    /portfolio-list/:pagenumber                                                            controllers.Frontend.Portfolio.portfolioListing(pagenumber:Integer)
 GET    /portfolio                                                                             controllers.Frontend.Portfolio.portfolio								
 GET    /portfolio-details/$portfolioid<[A-Za-z0-9_-]+>                                        controllers.Frontend.Portfolio.portfolioDetails(portfolioid:String)
+GET    /reportHoras                                                                           controllers.Frontend.Seguimiento.executeHoras
 
 #Reportes PMO
 GET     /healthgrid/$id<[A-Za-z0-9_-]+>             controllers.Frontend.HealthReport.gridReport(id:Int)
