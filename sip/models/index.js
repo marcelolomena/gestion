@@ -6,11 +6,13 @@ var Sequelize = require("sequelize");
 var env = process.env.NODE_ENV
 var config = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
 var logger = require("../utils/logger");
+var secuelizador = require('../models/index').sequelize;
+
+
 config.logging = function(sql){
 
   //  logger.debug(sql);
   //  console.log(sql);
-  
   var sqlchico = sql.toLowerCase();
 
   if(sqlchico.indexOf('[sip].[registro]') == -1 && sqlchico.indexOf('[sessions]') == -1 && 
@@ -24,6 +26,26 @@ config.logging = function(sql){
   }
 
 };
+
+
+config.uid = function(sql){
+
+  //  logger.debug(sql);
+  //  console.log(sql);
+  var sqlchico = sql.toLowerCase();
+
+ 
+ 
+    var resultado;
+
+    if(sql.indexOf('[Session].[sid]') != -1)
+    {
+      resultado = sqlchico.split('executing (default): select [sid], [expires], [data], [createdat], [updatedat] from [sessions] as [session] where [session].[sid] = n');
+      resultado = resultado[1].split("'");   
+      return (resultado[1]);    
+    }
+};
+console.log(config.uid);
 var sequelize = new Sequelize(config.database, config.username, config.password, config);
 var db = {};
 
