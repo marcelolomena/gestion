@@ -3744,9 +3744,9 @@ a.text-box:hover, a.text-box:focus {
   opacity: 1;
 }
 
-.stacked-menu > .menu > .menu-item {
+/* .stacked-menu > .menu > .menu-item { */
   /* level 1 */
-}
+/* } */
 
 .stacked-menu > .menu > .menu-item > .menu-link {
   color: #28313B;
@@ -3772,17 +3772,17 @@ a.text-box:hover, a.text-box:focus {
   color: #346CB0;
 }
 
-.stacked-menu > .menu > .menu-item > .menu {
+/* .stacked-menu > .menu > .menu-item > .menu {
   /* level 2 */
-}
+/* }  */
 
 .stacked-menu > .menu > .menu-item > .menu .menu-link {
   padding-left: 3rem;
 }
 
-.stacked-menu > .menu > .menu-item > .menu .menu {
+/* .stacked-menu > .menu > .menu-item > .menu .menu { */
   /* level 3 */
-}
+/* } */
 
 .stacked-menu > .menu > .menu-item > .menu .menu .menu-link {
   padding-left: 4rem;
@@ -3913,9 +3913,9 @@ a.text-box:hover, a.text-box:focus {
 }
 
 /* Behavior */
-.stacked-menu-has-collapsible {
+/* .stacked-menu-has-collapsible { */
   /** caret angle, Only show on collapsible mode */
-}
+/* } */
 
 .stacked-menu-has-collapsible .has-child > .menu-link::after {
   display: inline-block;
@@ -3947,10 +3947,10 @@ a.text-box:hover, a.text-box:focus {
 }
 
 /** collapsible on compact mode */
-.stacked-menu-has-collapsible.stacked-menu-has-compact {
+/* .stacked-menu-has-collapsible.stacked-menu-has-compact { */
   /** hide caret on level 1 */
   /** child level 2 up */
-}
+/* } */
 
 .stacked-menu-has-collapsible.stacked-menu-has-compact > .menu > .has-child > .menu {
   -webkit-transform-origin: 0 0;
@@ -4003,9 +4003,9 @@ a.text-box:hover, a.text-box:focus {
 }
 
 /* Give a transition */
-.stacked-menu-has-hoverable {
+/* .stacked-menu-has-hoverable { */
   /** except level 1 .has-active */
-}
+/* } */
 
 .stacked-menu-has-hoverable .has-child > .menu {
   -webkit-transform-origin: 0 0;
@@ -4021,10 +4021,10 @@ a.text-box:hover, a.text-box:focus {
           transform: scale(0.6);
 }
 
-.stacked-menu-has-hoverable.stacked-menu-has-compact {
+/* .stacked-menu-has-hoverable.stacked-menu-has-compact { */
   /** level 1 */
   /** overwrite for all */
-}
+/* } */
 
 .stacked-menu-has-hoverable.stacked-menu-has-compact > .menu > .has-child > .menu {
   -webkit-transition: opacity 150ms linear, -webkit-transform 150ms linear;
@@ -4038,16 +4038,16 @@ a.text-box:hover, a.text-box:focus {
           transform: scale(0.6);
 }
 
-/* Behavior */
+/* Behavior
 .stacked-menu-has-hoverable,
-.stacked-menu-has-compact {
+.stacked-menu-has-compact { */
   /** except level 1 .has-active */
-}
+/* } */
 
-.stacked-menu-has-hoverable .has-child,
-.stacked-menu-has-compact .has-child {
+/* .stacked-menu-has-hoverable .has-child, */
+/* .stacked-menu-has-compact .has-child { */
   /** caret */
-}
+/* } */
 
 .stacked-menu-has-hoverable .has-child.has-open:not(.has-active) > .menu,
 .stacked-menu-has-compact .has-child.has-open:not(.has-active) > .menu {
@@ -4086,9 +4086,9 @@ a.text-box:hover, a.text-box:focus {
 }
 
 /** hoverable on compact mode */
-.stacked-menu-has-hoverable.stacked-menu-has-compact {
+/* .stacked-menu-has-hoverable.stacked-menu-has-compact { */
   /** overwrite for all */
-}
+/* } */
 
 .stacked-menu-has-hoverable.stacked-menu-has-compact .has-child.has-open > .menu {
   position: absolute;
@@ -4109,9 +4109,9 @@ a.text-box:hover, a.text-box:focus {
 
 /** open menu to left direction */
 /** Core */
-.stacked-menu-has-left {
+/* .stacked-menu-has-left { */
   /** compact */
-}
+/* } */
 
 .stacked-menu-has-left.stacked-menu-has-compact > .menu > .menu-item > .menu-link > .badge {
   right: auto;
@@ -4126,9 +4126,9 @@ a.text-box:hover, a.text-box:focus {
 }
 
 /** Behavior */
-.stacked-menu-has-left {
+/* .stacked-menu-has-left { */
   /** both hoverable & collapsible on compact mode */
-}
+/* } */
 
 .stacked-menu-has-left.stacked-menu-has-hoverable .has-child > .menu {
   -webkit-transform-origin: 100% 0;
@@ -7538,7 +7538,7 @@ iframe {
 }
 
 .rating > label {
-  margin-bottom: 0;
+  /* margin-bottom: 0; */
   display: inline;
   color: #E9EAEB;
   line-height: 1;
@@ -8622,7 +8622,7 @@ a.user-avatar:focus {
           backface-visibility: hidden;
   -webkit-transform: rotate(0deg);
           transform: rotate(0deg);
-  -webkit-transform-style: preserve-3d;
+  /* -webkit-transform-style: preserve-3d; */
   -webkit-animation: loader 700ms linear infinite;
           animation: loader 700ms linear infinite;
 }
