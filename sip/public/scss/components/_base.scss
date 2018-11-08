@@ -1,0 +1,137 @@
+* {
+  &:focus {
+    outline-color: $primary;
+  }
+
+  &::selection {
+    background: $yellow;
+    color: color-yiq($yellow);
+    text-shadow: none;
+  }
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: gray("100");
+}
+
+body {
+  @include media-breakpoint-up(md) {
+    font-size: $font-size-sm;
+  }
+}
+
+iframe {
+  margin-bottom: 1rem;
+}
+
+.app {
+  width: 100%;
+  min-height: 100%;
+
+  &.has-clipped-header {
+    .app-header {
+      @include media-breakpoint-up(md) {
+        left: $app-aside-width;
+      }
+    }
+
+    .top-bar-brand {
+      width: auto;
+      background-color: transparent;
+    }
+
+    .app-aside {
+      top: 0;
+    }
+  }
+
+  &.has-fullwidth {
+    .app-main {
+      padding-left: 0;
+    }
+
+    .top-bar-brand {
+      background-color: transparent;
+    }
+
+    .app-aside {
+      top: 0;
+      transform: translate3d(-100%, 0, 0);
+      z-index: $zindex-modal;
+      border-right: 0;
+
+      &.has-open {
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    .app-backdrop {
+      &.show {
+        display: block;
+        animation: fadeInBackdrop 260ms ease forwards;
+      }
+    }
+  }
+}
+
+.app-main {
+  position: relative;
+  padding-top: $app-header-height;
+  padding-right: 0;
+  padding-left: 0;
+  overflow: hidden;
+
+  @include media-breakpoint-up(md) {
+    padding-left: $app-aside-width;
+  }
+}
+
+.wrapper {
+  position: relative;
+  margin: 0 auto;
+}
+
+
+.app-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba($dark, .86);
+  z-index: $zindex-modal-backdrop;
+
+  &.show {
+    @include media-breakpoint-down(sm) {
+      display: block;
+      animation: fadeInBackdrop 260ms ease forwards;
+    }
+  }
+}
+
+@keyframes fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+// Demo
+// ==================================================
+
+.el-example {
+  > .btn,
+  > .btn-group {
+    margin: 4px 2px;
+  }
+}

@@ -1,0 +1,220 @@
+@include media-breakpoint-up(md) {
+  .custom-select,
+  .custom-control-label,
+  .custom-file-label,
+  .custom-file-label::after {
+    // line-height: 1.6;
+  }
+
+  .custom-select,
+  .custom-file,
+  .custom-file-input,
+  .custom-file-label,
+  .custom-file-label::after {
+    height: 2.188rem;
+  }
+
+  .custom-control-label:empty {
+    &::before,
+    &::after {
+      top: .125rem;
+    }
+  }
+
+  .custom-control-nolabel {
+    top: -.125rem;
+  }
+}
+
+
+// custom checkbox + radio
+
+.custom-control-input {
+  left: 0;
+  backface-visibility: hidden; // avoid webkit bug render
+
+  &:checked ~ .custom-control-label::before {
+    border-color: $input-focus-border-color;
+  }
+
+  &:checked ~ .custom-control-label::after {
+    transform: scale(1);
+  }
+
+  &:focus ~ .custom-control-label::before {
+    border-color: $input-focus-border-color;
+  }
+
+  &:disabled ~ .custom-control-label::before {
+    background: $custom-control-indicator-disabled-bg;
+  }
+}
+
+.custom-control-label {
+  &::before,
+  &::after {
+    top: .125rem;
+
+    @include media-breakpoint-up(md) {
+      top: 0;
+    }
+  }
+
+  &::before {
+    background: linear-gradient(to bottom, $white, $secondary);
+    border: 1px solid $input-border-color;
+    box-shadow: $custom-control-indicator-box-shadow;
+    pointer-events: auto;
+    user-select: auto;
+  }
+
+  &::after {
+    transform: scale(0);
+    transition: transform 200ms ease;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+.custom-control-nolabel {
+  margin: 0 0 0 -.125rem;
+  padding-left: 0;
+
+  > .custom-control-label {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: transparent;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+
+    &::before,
+    &::after {
+      top: .125rem;
+      left: .125rem;
+    }
+  }
+}
+
+// checkbox
+.custom-checkbox {
+  .custom-control-label::after {
+    background-image: $custom-checkbox-indicator-icon-checked;
+  }
+
+  .custom-control-input:indeterminate ~ .custom-control-label {
+    &::after {
+      transform: scale(1);
+    }
+  }
+}
+
+// radio
+.custom-radio {
+  .custom-control-label::after {
+    background-image: $custom-radio-indicator-icon-checked;
+  }
+}
+
+
+// custom select
+
+.custom-select {
+  background: $custom-select-indicator no-repeat right $custom-select-padding-x center, $custom-select-bg;
+  backface-visibility: hidden; // avoid webkit bug render
+  @include transition(all 200ms ease-in-out);
+
+  &-reflow {
+    color: $text-muted;
+
+    &,
+    &:focus {
+      background: $custom-select-indicator no-repeat right $custom-select-padding-x center;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $input-color;
+    }
+  }
+}
+
+.custom-select-sm {
+  padding: $input-padding-y-sm $input-padding-x-sm;
+  height: auto;
+  font-size: $font-size-sm;
+  line-height: 1.6;
+
+  @include media-breakpoint-up(md) {
+    font-size: .8125rem;
+  }
+}
+
+.custom-select-lg {
+  padding: $input-padding-y-lg $input-padding-x-lg;
+  height: auto;
+  font-size: $font-size-lg;
+
+  @include media-breakpoint-up(md) {
+    font-size: 1rem;
+  }
+}
+
+
+// custom file input
+
+.custom-file-sm {
+  &,
+  .custom-file-input,
+  .custom-file-label,
+  .custom-file-label::after {
+    padding: $input-padding-y-sm $input-padding-x-sm;
+    height: auto;
+    font-size: $font-size-sm;
+    line-height: 1.6;
+
+    @include media-breakpoint-up(md) {
+      font-size: .8125rem;
+    }
+  }
+}
+
+.custom-file-lg {
+  &,
+  .custom-file-input,
+  .custom-file-label,
+  .custom-file-label::after {
+    padding: $input-padding-y-lg $input-padding-x-lg;
+    height: auto;
+    font-size: $font-size-lg;
+
+    @include media-breakpoint-up(md) {
+      font-size: 1rem;
+    }
+  }
+}
+
+.custom-file-input {
+  backface-visibility: hidden; // avoid webkit bug render
+
+  &:focus ~ .custom-file-label {
+    border-color: $custom-file-focus-border-color;
+    box-shadow: $custom-file-focus-box-shadow;
+
+    &::after {
+      border-color: $custom-file-focus-border-color;
+    }
+  }
+}
+
+.custom-file-label {
+  box-shadow: $input-box-shadow;
+  @include text-truncate;
+
+  &::after {
+    background: $custom-select-bg;
+  }
+}

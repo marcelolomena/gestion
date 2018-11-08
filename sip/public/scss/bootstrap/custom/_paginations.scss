@@ -1,0 +1,17 @@
+.page-item {
+  // box-shadow: 0 1px 0 0 rgba($dark, .05);
+
+  &.disabled .page-link {
+    &:focus {
+      // border-color: $pagination-active-border-color;
+    }
+  }
+}
+
+.page-link {
+  font-weight: 600;
+  &:focus {
+    color: $pagination-active-color;
+    // border-color: $pagination-active-border-color;
+  }
+}

@@ -1,0 +1,353 @@
+.page {
+  min-height: 646px;
+  min-height: calc(100vh - #{$app-header-height});
+
+  &.has-sidebar .page-inner {
+    @include media-breakpoint-up(xl) {
+      margin-right: $page-sidebar-width;
+    }
+  }
+}
+
+.page-navs {
+  position: relative;
+  display: block;
+  padding-right: $page-inner-padding/2;
+  padding-left: $page-inner-padding/2;
+  box-shadow: 0 1px 0 $border-color;
+  z-index: 1;
+
+  &.has-shadow {
+    box-shadow: 0 1px 3px 0 rgba($dark,.15);
+  }
+
+  @include media-breakpoint-up(lg) {
+    padding-right: $page-inner-padding;
+    padding-left: $page-inner-padding;
+  }
+
+  > .navbar {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  > .nav-scroller,
+  > .nav {
+    flex-grow: 1;
+  }
+
+  > .nav-scroller .nav-tabs,
+  > .nav-tabs {
+    border-bottom: 0;
+  }
+}
+
+.page-cover {
+  position: relative;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  background-color: $gray-200;
+  background-size: cover;
+  box-shadow: 0 1px 0 $border-color;
+
+  @include media-breakpoint-up(sm) {
+    padding-right: $page-inner-padding/2;
+    padding-left: $page-inner-padding/2;
+  }
+
+  @include media-breakpoint-up(lg) {
+    padding-right: $page-inner-padding;
+    padding-left: $page-inner-padding;
+  }
+
+  .cover-controls {
+    margin-bottom: 1.25rem;
+    display: flex;
+
+    &:last-child {
+      margin-bottom: 0px;
+    }
+
+    .btn {
+      flex: 1;
+
+      + .btn {
+        margin-left: .5rem;
+      }
+    }
+
+    @include media-breakpoint-up(md) {
+      margin-bottom: 0;
+      display: block;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+
+      &-bottom {
+        top: auto;
+        bottom: .5rem;
+      }
+
+      .btn + .btn {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.page-message {
+  padding: 2rem 1rem;
+  text-align: center;
+  background-color: $gray-200;
+  border-bottom: 1px solid rgba($dark, .05);
+
+  @include media-breakpoint-up(sm) {
+    padding-right: $page-inner-padding/2;
+    padding-left: $page-inner-padding/2;
+  }
+
+  @include media-breakpoint-up(lg) {
+    padding-right: $page-inner-padding;
+    padding-left: $page-inner-padding;
+  }
+
+  a:not(.btn) {
+    text-decoration: underline;
+  }
+}
+
+.page-inner {
+  padding: 1.5rem 0;
+
+  @include media-breakpoint-up(sm) {
+    padding-right: $page-inner-padding/2;
+    padding-left: $page-inner-padding/2;
+  }
+
+  @include media-breakpoint-up(lg) {
+    padding-right: $page-inner-padding;
+    padding-left: $page-inner-padding;
+  }
+
+  &-fill {
+    display: flex;
+    padding: 0;
+    flex-direction: column;
+    height: calc(100vh - 3.5rem);
+  }
+}
+
+.page-title-bar,
+.page-section {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+
+  @each $breakpoint, $container-max-width in $container-max-widths {
+    @if $breakpoint != sm {
+      @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+        max-width: $container-max-width;
+      }
+    }
+  }
+}
+
+
+.page-title-bar {
+  margin-bottom: 1.5rem;
+  padding: 0 ($page-inner-padding/2);
+
+  @include media-breakpoint-up(sm) {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .btn-toolbar {
+    margin-left: -.75rem;
+  }
+}
+
+.page-title {
+  margin-top: 0;
+  font-size: $h3-font-size;
+
+  > small {
+    font-size: $font-size-base;
+    color: $text-muted;
+
+    @include media-breakpoint-up("md") {
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+.page-section {
+  padding-right: 0;
+  padding-left: 0;
+
+  > .card {
+    @include media-breakpoint-down(xs) {
+      border-radius: 0;
+      border-width: 1px 0;
+    }
+  }
+}
+
+.section-title {
+  margin-top: 0;
+  padding: 1rem 0px;
+  font-size: $h6-font-size;
+}
+
+.section-block {
+  margin: $spacer 0;
+
+  @include media-breakpoint-down(xs) {
+    padding-right: $page-inner-padding/2;
+    padding-left: $page-inner-padding/2;
+  }
+}
+
+.section-deck {
+  display: flex;
+  flex-direction: column;
+
+  @include media-breakpoint-up(xl) {
+    flex-flow: row wrap;
+    margin-right: -$card-deck-margin;
+    margin-left: -$card-deck-margin;
+
+    .card {
+      display: flex;
+      // Flexbugs #4: https://github.com/philipwalton/flexbugs#4-flex-shorthand-declarations-with-unitless-flex-basis-values-are-ignored
+      flex: 1 0 0%;
+      flex-direction: column;
+      margin-right: $card-deck-margin;
+      margin-left: $card-deck-margin;
+    }
+  }
+}
+
+// NOTE: css multi columns are not recomended for complex UI
+// Please use masonry layout if you've any bug with your workflow
+.section-columns {
+  @include media-breakpoint-up(lg) {
+    column-count: 2;
+    column-gap: $grid-gutter-width;
+
+    > .section-item {
+      display: inline-block;
+      width: 100%;
+      transform: translate3d(0, 0, 0); /* fix animations */
+      -webkit-column-break-inside: avoid; /* fix columns */
+    }
+  }
+}
+
+
+.page-sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  max-width: $page-sidebar-width;
+  box-shadow: $page-sidebar-shadow;
+  background-color: $page-sidebar-bg;
+  transform: translate3d(100%, 0, 0);
+  overflow: auto;
+  z-index: ($zindex-fixed - 1);
+  @include transition(transform 200ms ease-in-out);
+
+  @include media-breakpoint-up(xl) {
+    transform: translate3d(0, 0, 0);
+
+    .has-sidebar-open & {
+      position: absolute;
+      top: 0;
+      transform: translate3d(100%, 0, 0);
+    }
+  }
+
+  @include media-breakpoint-down(xs) {
+    max-width: 100%;
+  }
+
+  .has-sidebar-open & {
+    position: fixed;
+    top: $app-header-height;
+    transform: translate3d(0, 0, 0);
+  }
+
+  &-fixed {
+    position: fixed;
+    top: $app-header-height;
+    overflow: auto;
+  }
+}
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: $app-header-height;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba($dark, .26);
+  z-index: ($zindex-fixed - 2);
+
+  .has-sidebar-open & {
+    @include media-breakpoint-down(lg) {
+      display: block;
+      animation: fadeInBackdrop 260ms ease forwards;
+    }
+  }
+}
+
+.sidebar-header {
+  position: relative;
+  padding: .5rem 1rem;
+  display: flex;
+  align-items: center;
+  height: 3.5rem;
+  background-color: $white;
+  box-shadow: 0 0 0 1px rgba($dark,.05), 0 1px 3px 0 rgba($dark,.15);
+  z-index: 1;
+
+  .breadcrumb {
+    margin-bottom: 0;
+  }
+}
+
+.sidebar-title {
+  margin: 1rem 0;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.sidebar-section {
+  padding: $grid-gutter-width;
+}
+
+.sidebar-section-fill {
+  flex: 1;
+  overflow-y: auto;
+
+  &:not(.sidebar-section) {
+    > .sidebar-title {
+      margin-left: 1rem;
+    }
+  }
+}
+
+.sidebar-footer {
+  position: relative;
+  padding: .5rem;
+  background-color: $white;
+  box-shadow: 0 0 0 1px rgba($dark,.05), 0 -1px 3px 0 rgba($dark,.15);
+  z-index: 1;
+}

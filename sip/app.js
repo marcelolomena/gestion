@@ -50,6 +50,7 @@ var initPassport = require('./passport/init');
 initPassport(passport);
 var routes = require('./routes')(app, passport);
 
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Página no encontrada');

@@ -1,0 +1,60 @@
+main.auth
+  header#auth-header.auth-header(style="background-image: url(assets/images/img-fondo-login.jpg);")
+    h1
+      img(src="assets/images/header_chico.png" width="290" height="110")
+      span.sr-only Sign In
+  // form
+  form.auth-form
+    // .form-group
+    .form-group
+      .form-label-group
+        input#inputUser.form-control(type="text" placeholder="Username" required="" autofocus="")
+        label(for="inputUser") Usuario
+    // /.form-group
+    // .form-group
+    .form-group
+      .form-label-group
+        input#inputPassword.form-control(type="password" placeholder="Password" required="")
+        label(for="inputPassword") Clave
+    // /.form-group
+    // .form-group
+    .form-group
+      .form-label-group
+        select#sistema.custom-select(name="sistema" required="")
+          option(value="1") Presupuesto
+          option(value="2") Contratos
+          option(value="4") Licencias de Software
+          option(value="5") Maqueta Limites
+    // /.form-group
+    // .form-group
+    .form-group
+      button.btn.btn-lg.btn-primary.btn-block(type="submit") Ingresar
+    // /.form-group
+    // .form-group
+    .form-group.text-center
+      .custom-control.custom-control-inline.custom-checkbox
+        input#remember-me.custom-control-input(type="checkbox")
+        label.custom-control-label(for="remember-me") Mantener la sesión iniciada
+    // /.form-group
+    // recovery links
+    //
+      <div class="text-center pt-3">
+      <a href="auth-recovery-username.html" class="link">Forgot Username?</a>
+      <span class="mx-2">&middot;</span>
+      <a href="auth-recovery-password.html" class="link">Forgot Password?</a>
+      </div>
+    // /recovery links
+  // /.auth-form
+  // copyright
+  footer.auth-footer
+    | © 2018 Todos los derechos reservados.
+    // <a href="#">Privacidad</a> and <a href="#">Terminos</a>
+// /.auth
+// BEGIN PLUGINS JS
+// <script src="assets/vendor/particles.js/particles.min.js"></script>
+script.
+  /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+  particlesJS.load('auth-header', 'assets/javascript/particles.json');
+// END PLUGINS JS
+
+                           

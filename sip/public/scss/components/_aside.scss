@@ -1,0 +1,132 @@
+.app-aside {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 0;
+  color: $app-aside-color;
+  background-color: $app-aside-bg;
+  z-index: $zindex-fixed;
+  backface-visibility: hidden; // avoid webkit bug render
+  @include transition(transform 200ms ease-in-out);
+
+  &.has-open .aside-header > .hamburger {
+    display: block;
+  }
+
+  @include media-breakpoint-down(sm) {
+    top: 0;
+    width: calc(100vw - 3.5rem);
+    min-width: 15rem;
+    max-width: 16.5rem;
+    transform: translate3d(-100%, 0, 0);
+    z-index: $zindex-modal;
+    border-right: 0;
+
+    &.has-open {
+      transform: translate3d(0, 0, 0);
+
+      // use overflow:auto if you want to turn off perfect-scrollbar
+      // .aside-menu {
+      //   overflow: auto;
+      // }
+    }
+  }
+
+  @include media-breakpoint-up(md) {
+    top: $app-header-height;
+    width: $app-aside-width;
+    border-right: $border-width solid $app-aside-border-color;
+    z-index: 1;
+  }
+}
+
+
+.aside-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+
+.aside-header {
+  position: relative;
+  display: block;
+  background-color: $white;
+  box-shadow: $app-header-shadow;
+  z-index: 3;
+
+  > .hamburger {
+    display: none;
+    position: absolute;
+    top: .75rem;
+    right: -3rem;
+  }
+
+  .btn-account {
+    padding: 1rem;
+    width: 100%;
+    justify-content: flex-start;
+
+    &:focus,
+    &.focus {
+      background-color: inherit;
+    }
+
+    &:active {
+      background-color: lighten($primary, 47%);
+    }
+
+    &[aria-expanded="true"]::before {
+      content: '';
+      height: 1px;
+      background-color: #ffffff;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+    }
+
+    .account-name {
+      font-size: 1.125rem;
+      line-height: 1.5rem;
+    }
+    .account-description {
+      font-size: .875em;
+    }
+  }
+}
+
+.dropdown-aside {
+  position: absolute;
+  width: 100%;
+  background-color: $dropdown-bg;
+  box-shadow: $app-header-shadow;
+  z-index: 1;
+
+  &.show {
+    max-height: calc(100vh - 4.5rem);
+    overflow: auto;
+  }
+
+  .dropdown-icon {
+    text-align: center;
+    width: 1.5rem;
+    margin-right: .5em;
+  }
+}
+
+
+.aside-menu {
+  position: relative;
+  flex: 1;
+
+  &:not(.has-scrollable) {
+    overflow-y: auto;
+  }
+
+  // use overflow:auto if you want to turn off perfect-scrollbar
+  // @include media-breakpoint-up(md) {
+  //   overflow: auto;
+  // }
+}

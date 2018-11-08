@@ -1,0 +1,90 @@
+// Switcher
+
+@mixin switcher-variant($color) {
+  .switcher-input:checked {
+    + .switcher-indicator,
+    + .switcher-indicator:before {
+      border-color: $color;
+    }
+    + .switcher-indicator {
+      background-color: $color;
+    }
+  }
+}
+
+.switcher-control {
+  margin-bottom: 0;
+  position: relative;
+  width: 36px;
+  vertical-align: middle;
+  user-select:none;
+}
+
+.switcher-input {
+  display: none;
+}
+
+.switcher-indicator {
+  margin-bottom: 0;
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  height: 16px;
+  padding: 0;
+  line-height: 16px;
+  border: 2px solid $gray-200;
+  border-radius: 16px;
+  background-color: $gray-200;
+  transition: background-color 150ms linear;
+}
+
+.switcher-indicator:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: block;
+  width: 16px;
+  margin: 0px;
+  background: $white;
+  right: 20px;
+  border: 2px solid $gray-200;
+  border-radius: 16px;
+  transition: all 150ms ease-in-out;
+}
+
+.switcher-input:checked {
+  + .switcher-indicator,
+  + .switcher-indicator:before {
+    border-color: $primary;
+  }
+
+  + .switcher-indicator {
+    background-color: $primary;
+  }
+
+  + .switcher-indicator:before {
+    right: 0px;
+    box-shadow: none;
+  }
+}
+
+.disabled > .switcher-input,
+.switcher-input:disabled {
+  pointer-events: none;
+  + .switcher-indicator {
+    opacity: .65;
+    cursor: default;
+  }
+}
+
+
+// Alternate ratings (only success and danger)
+
+@each $color, $value in $theme-colors {
+  @if ($color == "success") or ($color == "danger") {
+    .switcher-control-#{$color} {
+      @include switcher-variant($value);
+    }
+  }
+}

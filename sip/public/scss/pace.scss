@@ -1,0 +1,63 @@
+// Include parts of Bootstrap
+//
+// Required
+
+@import "bootstrap/variable-overrides";
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+@import "components/variables";
+
+
+.pace {
+  pointer-events: none;
+  user-select: none;
+
+  .pace-progress {
+    background: $teal;
+    position: fixed;
+    z-index: $zindex-fixed;
+    top: $app-header-height;
+    right: 100%;
+    width: 100%;
+    height: 4px;
+  }
+
+  .pace-progress-inner {
+    display: block;
+    position: absolute;
+    right: 0px;
+    width: 6px;
+    height: 100%;
+    box-shadow: 0 0 10px $teal, 0 0 5px $teal;
+    opacity: 1;
+  }
+
+  .pace-activity {
+    display: block;
+    position: fixed;
+    z-index: $zindex-fixed;
+    top: ($app-header-height + 1rem);
+    right: 1rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: solid 3px transparent;
+    border-top-color: $teal;
+    border-left-color: $teal;
+    border-radius: 1rem;
+    animation: pace-spinner 400ms linear infinite;
+  }
+}
+
+.pace-inactive {
+  display: none;
+}
+
+@keyframes pace-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

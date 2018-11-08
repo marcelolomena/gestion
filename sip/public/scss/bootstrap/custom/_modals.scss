@@ -1,0 +1,72 @@
+.modal.modal-alert {
+  .modal-dialog {
+    opacity: 0;
+    transform: scale(1.2);
+    transition: transform 150ms ease-in-out, opacity 150ms ease-in-out;
+  }
+
+  &.show .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-dialog {
+  margin-top: ($modal-dialog-margin + 3.5rem);
+}
+
+.modal-dialog-centered {
+  margin: 0 auto;
+}
+
+.modal-header,
+.modal-footer {
+  flex: 0 0 auto;
+}
+
+.modal-body {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+// Scale up the modal
+@include media-breakpoint-up(sm) {
+  // Automatically set modal's width for larger viewports
+  .modal-dialog:not(.modal-dialog-centered) {
+    margin-top: ($modal-dialog-margin-y-sm-up + 3.5rem);
+  }
+}
+
+
+// Modal Overflow
+// ==================================================
+
+$modal-overflow-cap: $modal-dialog-margin + (3.5rem * 2);
+$modal-overflow-height: calc(100vh - #{$modal-overflow-cap});
+
+.modal-dialog-overflow {
+  .modal-content {
+    max-height: $modal-overflow-height;
+  }
+
+  .modal-body {
+    overflow-y: auto;
+  }
+
+  .modal-header,
+  .modal-footer {
+    z-index: 2;
+  }
+
+  .modal-header {
+    box-shadow: 0 2px 0 0 rgba($dark, .125);
+  }
+
+  .modal-footer {
+    box-shadow: 0 -2px 0 0 rgba($dark, .125);
+  }
+
+  .modal-body-scrolled {
+    box-shadow: none;
+  }
+}

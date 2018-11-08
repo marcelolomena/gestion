@@ -40,6 +40,11 @@
         "csv": "latest",
         "elementtree": "latest",
         "adm-zip": "0.4.7",
-        "file-type": "4.1.0"
+        "file-type": "4.1.0",
+        "bootstrap": "^4.1.1",
+        "bootstrap-colorpicker": "^2.5.2",
+        "bootstrap-session-timeout": "github:orangehill/bootstrap-session-timeout",
+        "bootstrap-touchspin": "^4.2.5",
+        "bootstrap-treeview": "^1.2.0"
     }
 }

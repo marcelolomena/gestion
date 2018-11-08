@@ -1,0 +1,729 @@
+// Include parts of Bootstrap
+//
+// Required
+
+@import "bootstrap/variable-overrides";
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+@import "components/variables";
+
+
+.ql-container {
+  box-sizing: border-box;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  height: 100%;
+  margin: 0px;
+  position: relative;
+
+  &.ql-disabled {
+    .ql-tooltip {
+      visibility: hidden;
+    }
+
+    .ql-editor ul[data-checked] > li::before {
+      pointer-events: none;
+    }
+  }
+}
+
+.ql-clipboard {
+  left: -100000px;
+  height: 1px;
+  overflow-y: hidden;
+  position: absolute;
+  top: 50%;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.ql-editor {
+  box-sizing: border-box;
+  line-height: 1.42;
+  height: 100%;
+  outline: none;
+  overflow-y: auto;
+  padding: 12px 15px;
+  tab-size: 4;
+  text-align: left;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+
+  &.ql-blank::before {
+    content: attr(data-placeholder);
+    position: absolute;
+    right: 15px;
+    left: 15px;
+    color: rgba(0, 0, 0, 0.6);
+    font-style: italic;
+    pointer-events: none;
+  }
+
+  > * {
+    cursor: text;
+  }
+
+  ul {
+    &[data-checked=true], &[data-checked=false] {
+      pointer-events: none;
+    }
+    &[data-checked=true] > li *, &[data-checked=false] > li * {
+      pointer-events: all;
+    }
+    &[data-checked=true] > li::before, &[data-checked=false] > li::before {
+      color: #777;
+      cursor: pointer;
+      pointer-events: all;
+    }
+    &[data-checked=true] > li::before {
+      content: '\2611';
+    }
+    &[data-checked=false] > li::before {
+      content: '\2610';
+    }
+  }
+
+  ol li:not(.ql-direction-rtl),
+  ul li:not(.ql-direction-rtl) {
+    padding-left: 1.5em;
+  }
+
+  ol li.ql-direction-rtl,
+  ul li.ql-direction-rtl {
+    padding-right: 1.5em;
+  }
+
+  .ql-indent-1:not(.ql-direction-rtl) {
+    padding-left: 3em;
+  }
+  li.ql-indent-1:not(.ql-direction-rtl) {
+    padding-left: 4.5em;
+  }
+
+  .ql-indent-1.ql-direction-rtl.ql-align-right {
+    padding-right: 3em;
+  }
+  li.ql-indent-1.ql-direction-rtl.ql-align-right {
+    padding-right: 4.5em;
+  }
+
+  .ql-indent-2:not(.ql-direction-rtl) {
+    padding-left: 6em;
+  }
+  li.ql-indent-2:not(.ql-direction-rtl) {
+    padding-left: 7.5em;
+  }
+
+  .ql-indent-2.ql-direction-rtl.ql-align-right {
+    padding-right: 6em;
+  }
+  li.ql-indent-2.ql-direction-rtl.ql-align-right {
+    padding-right: 7.5em;
+  }
+
+  .ql-indent-3:not(.ql-direction-rtl) {
+    padding-left: 9em;
+  }
+  li.ql-indent-3:not(.ql-direction-rtl) {
+    padding-left: 10.5em;
+  }
+
+  .ql-indent-3.ql-direction-rtl.ql-align-right {
+    padding-right: 9em;
+  }
+  li.ql-indent-3.ql-direction-rtl.ql-align-right {
+    padding-right: 10.5em;
+  }
+
+  .ql-indent-4:not(.ql-direction-rtl) {
+    padding-left: 12em;
+  }
+  li.ql-indent-4:not(.ql-direction-rtl) {
+    padding-left: 13.5em;
+  }
+
+  .ql-indent-4.ql-direction-rtl.ql-align-right {
+    padding-right: 12em;
+  }
+  li.ql-indent-4.ql-direction-rtl.ql-align-right {
+    padding-right: 13.5em;
+  }
+
+  .ql-indent-5:not(.ql-direction-rtl) {
+    padding-left: 15em;
+  }
+  li.ql-indent-5:not(.ql-direction-rtl) {
+    padding-left: 16.5em;
+  }
+
+  .ql-indent-5.ql-direction-rtl.ql-align-right {
+    padding-right: 15em;
+  }
+  li.ql-indent-5.ql-direction-rtl.ql-align-right {
+    padding-right: 16.5em;
+  }
+
+  .ql-indent-6:not(.ql-direction-rtl) {
+    padding-left: 18em;
+  }
+  li.ql-indent-6:not(.ql-direction-rtl) {
+    padding-left: 19.5em;
+  }
+
+  .ql-indent-6.ql-direction-rtl.ql-align-right {
+    padding-right: 18em;
+  }
+  li.ql-indent-6.ql-direction-rtl.ql-align-right {
+    padding-right: 19.5em;
+  }
+
+  .ql-indent-7:not(.ql-direction-rtl) {
+    padding-left: 21em;
+  }
+  li.ql-indent-7:not(.ql-direction-rtl) {
+    padding-left: 22.5em;
+  }
+
+  .ql-indent-7.ql-direction-rtl.ql-align-right {
+    padding-right: 21em;
+  }
+  li.ql-indent-7.ql-direction-rtl.ql-align-right {
+    padding-right: 22.5em;
+  }
+
+  .ql-indent-8:not(.ql-direction-rtl) {
+    padding-left: 24em;
+  }
+  li.ql-indent-8:not(.ql-direction-rtl) {
+    padding-left: 25.5em;
+  }
+
+  .ql-indent-8.ql-direction-rtl.ql-align-right {
+    padding-right: 24em;
+  }
+  li.ql-indent-8.ql-direction-rtl.ql-align-right {
+    padding-right: 25.5em;
+  }
+
+  .ql-indent-9:not(.ql-direction-rtl) {
+    padding-left: 27em;
+  }
+  li.ql-indent-9:not(.ql-direction-rtl) {
+    padding-left: 28.5em;
+  }
+
+  .ql-indent-9.ql-direction-rtl.ql-align-right {
+    padding-right: 27em;
+  }
+  li.ql-indent-9.ql-direction-rtl.ql-align-right {
+    padding-right: 28.5em;
+  }
+
+  .ql-video {
+    display: block;
+    max-width: 100%;
+
+    &.ql-align-center {
+      margin: 0 auto;
+    }
+
+    &.ql-align-right {
+      margin: 0 0 0 auto;
+    }
+  }
+
+  .ql-bg-black { background-color: $black; }
+  .ql-bg-red { background-color: $red; }
+  .ql-bg-orange { background-color: $orange; }
+  .ql-bg-yellow { background-color: $yellow; }
+  .ql-bg-green { background-color: $teal; }
+  .ql-bg-blue { background-color: $indigo; }
+  .ql-bg-purple { background-color: $purple; }
+
+  .ql-color-white { color: $white; }
+  .ql-color-red { color: $red; }
+  .ql-color-orange { color: $orange; }
+  .ql-color-yellow { color: $yellow; }
+  .ql-color-green { color: $teal; }
+  .ql-color-blue { color: $indigo; }
+  .ql-color-purple { color: $purple; }
+
+  .ql-font-serif { font-family: Georgia, Times New Roman, serif; }
+  .ql-font-monospace { font-family: Monaco, Courier New, monospace; }
+
+  .ql-size-small { font-size: 0.75em; }
+  .ql-size-large { font-size: 1.5em; }
+  .ql-size-huge { font-size: 2.5em; }
+
+  .ql-direction-rtl {
+    direction: rtl;
+    text-align: inherit;
+  }
+  .ql-align-center { text-align: center; }
+  .ql-align-justify { text-align: justify; }
+  .ql-align-right { text-align: right; }
+}
+
+.ql-snow {
+  &.ql-toolbar,
+  .ql-toolbar {
+    &:after {
+      clear: both;
+      content: '';
+      display: table;
+    }
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+      float: left;
+      height: 24px;
+      padding: 3px 5px;
+      width: 28px;
+
+      &:active:hover {
+        outline: none;
+      }
+
+      svg {
+        float: left;
+        height: 100%;
+      }
+    }
+
+    input.ql-image[type=file],
+    input.ql-image[type=file] {
+      display: none;
+    }
+
+    button:hover,
+    button:focus,
+    button.ql-active,
+    .ql-picker-label:hover,
+    .ql-picker-label.ql-active,
+    .ql-picker-label:hover,
+    .ql-picker-label.ql-selected {
+      color: $indigo;
+
+      .ql-fill,
+      .ql-stroke.ql-fill {
+        fill: $indigo;
+      }
+
+      .ql-stroke,
+      .ql-stroke-miter {
+        stroke: $indigo;
+      }
+    }
+  }
+
+  .ql-hidden {
+    display: none;
+  }
+
+  .ql-out-bottom,
+  .ql-out-top {
+    visibility: hidden;
+  }
+
+  .ql-tooltip {
+    position: absolute;
+    transform: translateY(10px);
+    a {
+      cursor: pointer;
+      text-decoration: none;
+    }
+    &.ql-flip {
+      transform: translateY(-10px);
+    }
+  }
+
+  .ql-formats {
+    display: inline-block;
+    vertical-align: middle;
+    &:after {
+      clear: both;
+      content: '';
+      display: table;
+    }
+  }
+
+  .ql-stroke {
+    fill: none;
+    stroke: $body-color;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+  }
+
+  .ql-stroke-miter {
+    fill: none;
+    stroke: $body-color;
+    stroke-miterlimit: 10;
+    stroke-width: 2;
+  }
+
+  .ql-fill,
+  .ql-stroke.ql-fill {
+    fill: $body-color;
+  }
+
+  .ql-empty {
+    fill: none;
+  }
+
+  .ql-even {
+    fill-rule: evenodd;
+  }
+
+  .ql-thin,
+  .ql-stroke.ql-thin {
+    stroke-width: 1;
+  }
+
+  .ql-transparent {
+    opacity: 0.4;
+  }
+
+  .ql-direction {
+    svg:last-child {
+      display: none;
+    }
+
+    &.ql-active svg {
+      &:last-child {
+        display: inline;
+      }
+
+      &:first-child {
+        display: none;
+      }
+    }
+  }
+
+  .ql-picker {
+    color: $body-color;
+    display: inline-block;
+    float: left;
+    font-size: 14px;
+    font-weight: 500;
+    height: 24px;
+    position: relative;
+    vertical-align: middle;
+  }
+
+  .ql-picker-label {
+    cursor: pointer;
+    display: inline-block;
+    height: 100%;
+    padding-left: 8px;
+    padding-right: 2px;
+    position: relative;
+    width: 100%;
+
+    &::before {
+      display: inline-block;
+      line-height: 22px;
+    }
+  }
+
+  .ql-picker-options {
+    background-color: $white;
+    display: none;
+    min-width: 100%;
+    padding: 4px 8px;
+    position: absolute;
+    white-space: nowrap;
+
+    .ql-picker-item {
+      cursor: pointer;
+      display: block;
+      padding-bottom: 5px;
+      padding-top: 5px;
+    }
+  }
+
+  .ql-picker.ql-expanded {
+    .ql-picker-label {
+      color: $text-muted;
+      z-index: 2;
+
+      .ql-fill {
+        fill: $text-muted;
+      }
+
+      .ql-stroke {
+        stroke: $text-muted;
+      }
+    }
+
+    .ql-picker-options {
+      display: block;
+      margin-top: -1px;
+      top: 100%;
+      z-index: 1;
+    }
+  }
+
+  .ql-color-picker,
+  .ql-icon-picker {
+    width: 28px;
+
+    .ql-picker-label {
+      padding: 2px 4px;
+
+      svg {
+        right: 4px;
+      }
+    }
+  }
+
+  .ql-icon-picker {
+    .ql-picker-options {
+      padding: 4px 0px;
+    }
+
+    .ql-picker-item {
+      height: 24px;
+      width: 24px;
+      padding: 2px 4px;
+    }
+  }
+
+  .ql-color-picker {
+    .ql-picker-options {
+      padding: 3px 5px;
+      width: 152px;
+    }
+
+    .ql-picker-item {
+      border: 1px solid transparent;
+      float: left;
+      height: 16px;
+      margin: 2px;
+      padding: 0px;
+      width: 16px;
+    }
+  }
+
+  .ql-picker {
+    &:not(.ql-color-picker):not(.ql-icon-picker) svg {
+      position: absolute;
+      margin-top: -9px;
+      right: 0;
+      top: 50%;
+      width: 18px;
+    }
+
+    &.ql-header .ql-picker-label[data-label]:not([data-label=''])::before,
+    &.ql-font .ql-picker-label[data-label]:not([data-label=''])::before,
+    &.ql-size .ql-picker-label[data-label]:not([data-label=''])::before,
+    &.ql-header .ql-picker-item[data-label]:not([data-label=''])::before,
+    &.ql-font .ql-picker-item[data-label]:not([data-label=''])::before,
+    &.ql-size .ql-picker-item[data-label]:not([data-label=''])::before {
+      content: attr(data-label);
+    }
+
+    &.ql-header {
+      width: 98px;
+
+      .ql-picker-label,
+      .ql-picker-item {
+        &::before { content: 'Normal'; }
+        &[data-value="1"]::before { content: 'Heading 1'; }
+        &[data-value="2"]::before { content: 'Heading 2'; }
+        &[data-value="3"]::before { content: 'Heading 3'; }
+        &[data-value="4"]::before { content: 'Heading 4'; }
+        &[data-value="5"]::before { content: 'Heading 5'; }
+        &[data-value="6"]::before { content: 'Heading 6'; }
+      }
+
+      .ql-picker-item {
+        &[data-value="1"]::before { font-size: 2em; }
+        &[data-value="2"]::before { font-size: 1.5em; }
+        &[data-value="3"]::before { font-size: 1.17em; }
+        &[data-value="4"]::before { font-size: 1em; }
+        &[data-value="5"]::before { font-size: 0.83em; }
+        &[data-value="6"]::before { font-size: 0.67em; }
+      }
+    }
+
+    &.ql-font {
+      width: 108px;
+
+      .ql-picker-label,
+      .ql-picker-item {
+        &:before { content: 'Sans Serif'; }
+        &[data-value=serif]::before { content: 'Serif'; }
+        &[data-value=monospace]::before { content: 'Monospace'; }
+      }
+
+      .ql-picker-item {
+        &[data-value=serif]::before { font-family: Georgia, Times New Roman, serif; }
+        &[data-value=monospace]::before { font-family: Monaco, Courier New, monospace; }
+      }
+    }
+
+    &.ql-size {
+      width: 98px;
+
+      .ql-picker-label,
+      .ql-picker-item {
+        &::before { content: 'Normal'; }
+        &[data-value=small]::before { content: 'Small'; }
+        &[data-value=large]::before { content: 'Large'; }
+        &[data-value=huge]::before { content: 'Huge'; }
+      }
+
+      .ql-picker-item {
+        &[data-value=small]::before { font-size: 10px; }
+        &[data-value=large]::before { font-size: 18px; }
+        &[data-value=huge]::before { font-size: 32px; }
+      }
+    }
+  }
+
+  .ql-color-picker {
+    &.ql-background .ql-picker-item {
+      background-color: $white;
+    }
+    &.ql-color .ql-picker-item {
+      background-color: $black;
+    }
+  }
+}
+
+@media (pointer: coarse) {
+  .ql-snow {
+    &.ql-toolbar button:hover:not(.ql-active),
+    .ql-toolbar button:hover:not(.ql-active) {
+      color: $body-color;
+
+      .ql-fill,
+      .ql-stroke.ql-fill,
+      .ql-stroke,
+      .ql-stroke-miter {
+        fill: $body-color;
+      }
+    }
+  }
+}
+
+.ql-toolbar.ql-snow {
+  border: 1px solid $border-color;
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  padding: 8px;
+
+  .ql-formats { margin-right: 15px; }
+
+  .ql-picker-label { border: 1px solid transparent; }
+
+  .ql-picker-options {
+    border: 1px solid transparent;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 2px 8px;
+  }
+
+  .ql-picker.ql-expanded {
+    .ql-picker-label,
+    .ql-picker-options {
+      border-color: $border-color;
+    }
+  }
+
+  .ql-color-picker .ql-picker-item {
+    &.ql-selected,
+    &:hover {
+      border-color: $black;
+    }
+  }
+
+  + .ql-container.ql-snow {
+    border-top: 0px;
+  }
+}
+
+.ql-snow {
+  .ql-tooltip {
+    background-color: $white;
+    box-shadow: $dropdown-box-shadow;
+    color: $body-color;
+    padding: 5px 12px;
+    white-space: nowrap;
+
+    &::before {
+      content: "Visit URL:";
+      line-height: 26px;
+      margin-right: 8px;
+    }
+
+    input[type=text] {
+      display: none;
+      border: 1px solid $border-color;
+      font-size: 13px;
+      height: 26px;
+      margin: 0px;
+      padding: 3px 5px;
+      width: 170px;
+    }
+
+    a {
+      line-height: 26px;
+
+      &.ql-preview {
+        display: inline-block;
+        max-width: 200px;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        vertical-align: top;
+      }
+
+      &.ql-action::after {
+        border-right: 1px solid $border-color;
+        content: 'Edit';
+        margin-left: 16px;
+        padding-right: 8px;
+      }
+
+      &.ql-remove::before {
+        content: 'Remove';
+        margin-left: 8px;
+      }
+    }
+
+    &.ql-editing {
+      a {
+        &.ql-preview,
+        &.ql-remove {
+          display: none;
+        }
+
+        &.ql-action::after {
+          border-right: 0px;
+          content: 'Save';
+          padding-right: 0px;
+        }
+      }
+
+      input[type=text] {
+        display: inline-block;
+      }
+    }
+
+    &[data-mode=link]::before { content: "Enter link:"; }
+    &[data-mode=formula]::before { content: "Enter formula:"; }
+    &[data-mode=video]::before { content: "Enter video:"; }
+  }
+
+  a { color: $indigo; }
+}
+
+.ql-container.ql-snow {
+  border: 1px solid $border-color;
+}

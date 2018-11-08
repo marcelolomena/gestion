@@ -1,0 +1,23 @@
+.todo-header {
+  margin-bottom: 1rem;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: $text-muted;
+}
+
+.todo {
+  margin-bottom: .5rem;
+
+  + .todo-header {
+    margin-top: 1.25rem;
+  }
+
+  .custom-control {
+    padding-left: 2rem;
+  }
+
+  .custom-control-input:checked + .custom-control-label {
+    color: $text-muted;
+    text-decoration: line-through;
+  }
+}

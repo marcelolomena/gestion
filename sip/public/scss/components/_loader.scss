@@ -1,0 +1,52 @@
+.loading {
+  padding: 1rem;
+  text-align: center;
+  color: $text-muted;
+  cursor: wait;
+  user-select: none;
+  pointer-events: none;
+}
+
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  display: inline-block;
+  width: 1.75rem;
+  height: 1.75rem;
+  vertical-align: middle;
+  border: solid 3px transparent;
+  border-top-color: $primary;
+  border-left-color: $primary;
+  border-radius: 2rem;
+  user-select: none;
+  pointer-events: none;
+  backface-visibility: hidden; // avoid webkit bug render
+  transform: rotate(0deg);
+  -webkit-transform-style: preserve-3d;
+  animation: loader 700ms linear infinite;
+
+  &-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 2px;
+  }
+
+  &-lg {
+    width: 3rem;
+    height: 3rem;
+    border-width: 4px;
+  }
+
+  &-light {
+    border-top-color: $white;
+    border-left-color: $white;
+  }
+}

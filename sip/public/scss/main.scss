@@ -1,0 +1,20 @@
+/*
+The main SCSS file for everything, yep
+*/
+
+// Include parts of Bootstrap
+//
+// Required
+
+@import "bootstrap/variable-overrides";
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+
+// bootstrap custom
+
+@import "bootstrap/custom";
+
+// app components
+
+@import "components/components";
