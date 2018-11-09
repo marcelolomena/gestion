@@ -473,6 +473,7 @@ function listUbicacion(req, res) {
 
 function actionUbicacion(req, res) {
     var action = req.body.oper;
+    var hoy = "" + new Date().toISOString();
     switch (action) {
         case "add":
             models.ubicacioninstalacion.create({
@@ -480,9 +481,11 @@ function actionUbicacion(req, res) {
                 usuario: req.body.usuario,
                 ubicacion: req.body.ubicacion,
                 codigoInterno: req.body.codigoInterno,
+                estado: 'ubicacion',
                 observacion: req.body.observacion,
                 cui: req.body.cui,
-                nombre: req.body.nombre
+                nombre: req.body.nombre,
+                fecha: hoy
             }).then(function (instal) {
                 return res.json({
                     id: instal.id,
@@ -598,9 +601,14 @@ function getExcel(req, res) {
             caption: 'Observación',
             type: 'string',
             width: 200
+        },
+        {
+            caption: 'FechaInscripcion',
+            type: 'string',
+            width: 200
         }
     ];
-    var sql = "SELECT b.nombre as nombreProd, a.usuario, a.ubicacion, a.codigoInterno, a.observacion, a.cui, a.nombre FROM lic.ubicacioninstalacion a " +
+    var sql = "SELECT b.nombre as nombreProd, a.usuario, a.ubicacion, a.codigoInterno, a.observacion, a.cui, a.nombre, a.fecha FROM lic.ubicacioninstalacion a " +
         "JOIN lic.producto b ON b.id = a.idproducto " +
         "ORDER BY a.idproducto ASC";
 
@@ -619,7 +627,9 @@ function getExcel(req, res) {
                         ubicacion[i].codigoInterno,
                         ubicacion[i].cui,
                         ubicacion[i].usuario,
-                        ubicacion[i].observacion
+                        ubicacion[i].observacion,
+                        ubicacion[i].fecha
+
                     ];
                     nombreprod = ubicacion[i].nombreProd
                 } else {
@@ -630,7 +640,8 @@ function getExcel(req, res) {
                         ubicacion[i].codigoInterno,
                         ubicacion[i].cui,
                         ubicacion[i].usuario,
-                        ubicacion[i].observacion
+                        ubicacion[i].observacion,
+                        ubicacion[i].fecha
                     ];
                     nombreprod = ubicacion[i].nombreProd
                 }

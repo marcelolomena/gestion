@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Nombre<span style='color:red'>*</span>{nombre}</div>";
-    
+
     tmpl += "<div class='column-half'>Ubicación <span style='color:red'>*</span>{ubicacion}</div>";
     tmpl += "</div>";
 
@@ -38,7 +38,7 @@ $(document).ready(function () {
         }, {
             label: 'Nombre Producto',
             name: 'idproducto',
-            width: 250,
+            width: 200,
             align: 'center',
             sortable: false,
             editable: true,
@@ -48,8 +48,8 @@ $(document).ready(function () {
             label: 'Producto',
             name: 'nombreProd',
             jsonmap: 'producto.nombre',
-            width: 250,
-            align: 'center',
+            width: 200,
+            // align: 'center',
             sortable: false,
             editable: true,
             edittype: "text",
@@ -108,7 +108,7 @@ $(document).ready(function () {
             label: 'Ubicación',
             name: 'ubicacion',
             align: 'center',
-            width: 200,
+            width: 120,
             editable: true,
             search: false
         },
@@ -139,7 +139,6 @@ $(document).ready(function () {
         {
             label: 'Observación',
             name: 'observacion',
-            align: 'center',
             width: 300,
             editable: true,
             edittype: 'textarea',
@@ -148,9 +147,38 @@ $(document).ready(function () {
         {
             label: 'Usuario',
             name: 'usuario',
-            width: 200,
+            width: 100,
             editable: true,
             search: true
+        },
+        {
+            label: 'Fecha Inscripción ',
+            name: 'fecha',
+            width: 120,
+            align: 'center',
+            search: true,
+            editable: true,
+            hidden: false,
+            formatter: 'date',
+            formatoptions: {
+                srcformat: 'ISO8601Long',
+                newformat: 'd-m-Y'
+            },
+            searchoptions: {
+                dataInit: function (el) {
+                    $(el).datepicker({
+                        language: 'es',
+                        format: 'dd-mm-yyyy',
+                        autoclose: true,
+                        onSelect: function (dateText, inst) {
+                            setTimeout(function () {
+                                $('#' + subgrid_table_id)[0].triggerToolbar();
+                            }, 100);
+                        }
+                    });
+                },
+                sopt: ["eq", "le", "ge"]
+            }
         }
     ];
 
