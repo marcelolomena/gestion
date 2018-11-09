@@ -4,7 +4,7 @@
  * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
-:root {
+ :root {
   --blue: #0179A8;
   --indigo: #346CB0;
   --purple: #5F4B8B;
@@ -1671,9 +1671,9 @@ pre code {
 
 .table th,
 .table td {
-  padding: 0.75rem;
-  vertical-align: top;
-  border-top: 1px solid #e8e8e9;
+  /* padding: 0.75rem; */
+  /* vertical-align: top; */
+  /* border-top: 1px solid #e8e8e9; */
 }
 
 .table thead th {
@@ -1705,7 +1705,7 @@ pre code {
 
 .table-bordered thead th,
 .table-bordered thead td {
-  border-bottom-width: 2px;
+  /* border-bottom-width: 2px; */
 }
 
 .table-borderless th,

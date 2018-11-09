@@ -483,6 +483,7 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
+        responsive:true,
         caption: 'Compromisos por SAP',
         //width: null,
         //shrinkToFit: false,

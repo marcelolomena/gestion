@@ -119,19 +119,6 @@ body .wrap-body{
 #sidebar ul li {
     margin: 0;
 }
-#sidebar ul li a {
-	font-size: 16px;
-	font-weight: 100;
-	color: white;
-	text-decoration: none;
-	display: block;
-	border-bottom: 1px solid #133a80;
-	-webkit-transition:  background 0.3s ease-in-out;
-	-moz-transition:  background 0.3s ease-in-out;
-	-ms-transition:  background 0.3s ease-in-out;
-	-o-transition:  background 0.3s ease-in-out;
-	transition:  background 0.3s ease-in-out;
-}
 #sidebar ul li:hover a {
     background: #2f579e;
 }
@@ -186,15 +173,7 @@ body .wrap-body{
 .header {
 	background-color: #FFF;
 }
-.header .headMain {
-	height: 106px;
-	width: 1172px;
-	margin-right: auto;
-	margin-left: auto;
-	background-image: url(../images/header.png);
-	background-repeat: no-repeat;
-	background-position: center center;
-}
+
 .header .headUnderline {
 	height: 4px;
 	background-color: #234e85;
@@ -391,7 +370,6 @@ aside {
 	max-width:960px;
 	min-height:95px;
 	padding:0.5em;
-	text-align:center;
 	vertical-align:top;
 	width:45%;
 	background-color:#00FFCC;
@@ -540,7 +518,6 @@ images{
 }
 img {
 	max-width: 100%;
-    height: auto;
 }
 .row {
 	margin-right: 0px;
@@ -602,4 +579,8 @@ img {
 }
 .ui-droppable ui-sortable{
 	font-size:12px;
+}
+.ui-search-input{
+	font-size:12px;
+
 }
