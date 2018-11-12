@@ -321,7 +321,7 @@
 	margin: -1px; 
 	font-weight: normal; 
 }
-.ui-jqgrid .ui-search-table { padding: 0; border: 0 none; height:20px; width:105%;}
+.ui-jqgrid .ui-search-table { padding: 0; border: 0 none; height:20px; width:102%;}
 .ui-jqgrid .ui-search-table .ui-search-oper { width:5px; }
 a.g-menu-item, a.soptclass, a.clearsearchclass { cursor: pointer; } 
 .ui-jqgrid .ui-jqgrid-view input,

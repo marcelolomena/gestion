@@ -1,50 +1,442 @@
-doctype transitional
 html(xmlns='http://www.w3.org/1999/xhtml')
-  head
-    meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
-    block titulo
-        title SIP Banco de Chile - Sistema Integrado de Presupuesto
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')            
-    link(rel='stylesheet', href='/stylesheets/ui.jqgrid-bootstrap.css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='/stylesheets/bootstrap-datepicker.css', type='text/css', media='screen', charset='utf-8')        
-    link(rel='stylesheet', href='stylesheets/test.css', type='text/css', media='screen', charset='utf-8')         
-    link(rel='stylesheet', href='stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')
-    link(rel='stylesheet', href='stylesheets/tmpl.css', type='text/css', media='screen', charset='utf-8')
-    script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
-    script(type='text/javascript', src='/javascripts/grid.locale-es.js')  
-    script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')
-    script(type='text/javascript', src='/javascripts/jquery.mask.min.js')
-    script(type='text/javascript', src='/javascripts/bootstrap-datepicker.js') 
-    script(type="text/javascript", src="/javascripts/locales/bootstrap-datepicker.es.js", charset="UTF-8")   
-    script(type='text/javascript', src='/javascripts/bootstrap3-typeahead.js')     
-    script(type='text/javascript', src='/javascripts/script.js') 
-    script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')      
-    script(type='text/javascript', src='/javascripts/jsplug.js')      
-    script(type='text/javascript', src='/javascripts/sip.js')
-    script(type='text/javascript', src='/resources/socket.io/socket.io.js')  
-    script(type='text/javascript', src='/javascripts/bootstrap.min.js')       
-    script(type='text/javascript', src='/javascripts/bootbox.min.js')   
-    block jsgrilla       
-  body
-    .container
-      include sidebar.pug
-      .main-content
-        .swipe-area
-        a#sidebar-toggle(href='#', data-toggle='.container')
-          span.bar
-          span.bar
-          span.bar
-        .content
-          header.bg-theme
-            .wrap-header
-              .row
-                a(href='/home')
-                  img(src='../../images/header.png', width='384', height='95') 
-                img(src='../images/vacio.png', width='300', height='4', border='0')
-                img(src='../images/header_titulo.png', width='384', height='95', border='0')
+ head
+  meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+  meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+  block titulo
+      title SIP Banco de Chile - Sistema Integrado de Presupuesto
+
+  meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+  link(rel='stylesheet', href='sourcemaps/bootstrap.min.css.map', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='sourcemaps/main.min.css.map', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='stylesheets/main.css', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='stylesheets/main.min.css', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='vendor/bootstrap/css/bootstrap.css', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='vendor/bootstrap/css/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='stylesheets/stylesheet.css', type='text/css', media='screen', charset='utf-8')    
+  meta(property='og:title', content='Fullwidth Page Layout')
+  meta(name='author', content='')
+  meta(property='og:locale', content='en_US')
+  meta(name='description', content='Responsive admin theme build on top of Bootstrap 4')
+  meta(property='og:description', content='Responsive admin theme build on top of Bootstrap 4')
+  link(rel='canonical', href='http://uselooper.com')
+  meta(property='og:url', content='http://uselooper.com')
+  meta(property='og:site_name', content='Looper - Bootstrap 4 Admin Theme')
+  script(type='application/ld+json').
+   {
+   "name": "Looper - Bootstrap 4 Admin Theme",
+   "description": "Responsive admin theme build on top of Bootstrap 4",
+   "author":
+   {
+   "@type": "Person",
+   "name": ""
+   },
+   "@type": "WebSite",
+   "url": "",
+   "headline": "Fullwidth Page Layout",
+   "@context": "http://schema.org"
+   }
+  link(rel='shortcut icon', href='favicon.ico')
+  meta(name='theme-color', content='#3063A0')
+  script(src='vendor/pace/pace.min.js')
+  link(rel='stylesheet', href='vendor/pace/pace.min.css')
+  link(rel='stylesheet', href='vendor/bootstrap/css/bootstrap.min.css')
+  link(rel='stylesheet', href='vendor/open-iconic/css/open-iconic-bootstrap.min.css')
+  link(rel='stylesheet', href='vendor/fontawesome/css/fontawesome.all.css')
+  link(rel='stylesheet', href='vendor/flatpickr/flatpickr.min.css')
+  link(rel='stylesheet', href='stylesheets/main.min.css')
+  link(rel='stylesheet', href='stylesheets/custom.css')
+  script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
+  script(type='text/javascript', src='/javascripts/grid.locale-es.js')  
+  script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')
+  script(type='text/javascript', src='/javascripts/jquery.mask.min.js')
+  script(type='text/javascript', src='/javascripts/bootstrap-datepicker.js') 
+  script(type="text/javascript", src="/javascripts/locales/bootstrap-datepicker.es.js", charset="UTF-8")   
+  script(type='text/javascript', src='/javascripts/bootstrap3-typeahead.js')      
+  script(type='text/javascript', src='/javascripts/sip.js')  
+  block jsgrilla       
+body
+  .app.has-fullwidth
+   header.app-header
+    .top-bar
+     .top-bar-brand
+      button.hamburger.hamburger-squeeze.mr-2(type='button', data-toggle='aside', aria-label='Menu', aria-controls='navigation')
+       span.hamburger-box
+        span.hamburger-inner
+      a(href='/login#')
+       img(src='images/header_chico.png', weight='5', height='55', alt='')
+     .top-bar-list
+      .top-bar-item.px-2.d-md-none.d-lg-none.d-xl-none
+       button.hamburger.hamburger-squeeze(type='button', data-toggle='aside', aria-label='Menu', aria-controls='navigation')
+        span.hamburger-box
+         span.hamburger-inner
+      .top-bar-item.top-bar-item-right.px-0.d-none.d-sm-flex
+       ul.header-nav.nav
+        li.nav-item.dropdown.header-nav-dropdown.has-notified
+         a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+          span.oi.oi-pulse
+         .dropdown-arrow
+         .dropdown-menu.dropdown-menu-rich.dropdown-menu-right
+          h6.dropdown-header.stop-propagation
+           span
+            | Activities
+            span.badge (2)
+          .dropdown-scroll.has-scrollable
+           a.dropdown-item.unread(href='#')
+            .user-avatar
+             img(src='images/avatars/uifaces15.jpg', alt='')
+            .dropdown-item-body
+             p.text  Jeffrey Wells created a schedule 
+             span.date Just now
+           a.dropdown-item.unread(href='#')
+            .user-avatar
+             img(src='images/avatars/uifaces16.jpg', alt='')
+            .dropdown-item-body
+             p.text  Anna Vargas logged a chat 
+             span.date 3 hours ago
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='images/avatars/uifaces17.jpg', alt='')
+            .dropdown-item-body
+             p.text  Sara Carr invited to Stilearn Admin 
+             span.date 5 hours ago
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='images/avatars/uifaces18.jpg', alt='')
+            .dropdown-item-body
+             p.text  Sara Carr updated a project 
+             span.date 1 day ago
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='images/avatars/uifaces19.jpg', alt='')
+            .dropdown-item-body
+             p.text  Arthur Carroll created a task 
+             span.date 1 day ago
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='images/avatars/uifaces20.jpg', alt='')
+            .dropdown-item-body
+             p.text  Angela Peterson assign a task to you 
+             span.date 2 days ago
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='images/avatars/uifaces21.jpg', alt='')
+            .dropdown-item-body
+             p.text  Willie Dixon and 3 others followed you 
+             span.date 2 days ago
+          a.dropdown-footer(href='user-activities.html')
+           | All activities
+           i.fa.fa-fw.fa-long-arrow-alt-right
+        li.nav-item.dropdown.header-nav-dropdown.has-notified
+         a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+          span.oi.oi-envelope-open
+         .dropdown-arrow
+         .dropdown-menu.dropdown-menu-rich.dropdown-menu-right
+          h6.dropdown-header.stop-propagation
+           span Messages
+           a(href='#') Mark all as read
+          .dropdown-scroll.has-scrollable
+           a.dropdown-item.unread(href='#')
+            .user-avatar
+             img(src='images/avatars/team1.jpg', alt='')
+            .dropdown-item-body
+             p.subject  Stilearning 
+             p.text.text-truncate  Invitation: Joe's Dinner @ Fri Aug 22 
+             span.date 2 hours ago
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='images/avatars/team3.png', alt='')
+            .dropdown-item-body
+             p.subject  Openlane 
+             p.text.text-truncate  Final reminder: Upgrade to Pro 
+             span.date 23 hours ago
+           a.dropdown-item(href='#')
+            .tile.tile-circle.bg-green  GZ 
+            .dropdown-item-body
+             p.subject  Gogo Zoom 
+             p.text.text-truncate  Live healthy with this wireless sensor. 
+             span.date 1 day ago
+           a.dropdown-item(href='#')
+            .tile.tile-circle.bg-teal  GD 
+            .dropdown-item-body
+             p.subject  Gold Dex 
+             p.text.text-truncate  Invitation: Design Review @ Mon Jul 7 
+             span.date 1 day ago
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='images/avatars/team2.png', alt='')
+            .dropdown-item-body
+             p.subject  Creative Division 
+             p.text.text-truncate  Need some feedback on this please 
+             span.date 2 days ago
+           a.dropdown-item(href='#')
+            .tile.tile-circle.bg-pink  LD 
+            .dropdown-item-body
+             p.subject  Lab Drill 
+             p.text.text-truncate  Our UX exercise is ready 
+             span.date 6 days ago
+          a.dropdown-footer(href='app-messages.html')
+           | All messages
+           i.fa.fa-fw.fa-long-arrow-alt-right
+        li.nav-item.dropdown.header-nav-dropdown
+         a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+          span.oi.oi-grid-three-up
+         .dropdown-arrow
+         .dropdown-menu.dropdown-menu-rich.dropdown-menu-right
+          .dropdown-sheets
+           .dropdown-sheet-item
+            a.tile-wrapper(href='#')
+             span.tile.tile-lg.bg-indigo
+              i.oi.oi-people
+             span.tile-peek Teams
+           .dropdown-sheet-item
+            a.tile-wrapper(href='#')
+             span.tile.tile-lg.bg-teal
+              i.oi.oi-fork
+             span.tile-peek Projects
+           .dropdown-sheet-item
+            a.tile-wrapper(href='#')
+             span.tile.tile-lg.bg-pink
+              i.fa.fa-tasks
+             span.tile-peek Tasks
+           .dropdown-sheet-item
+            a.tile-wrapper(href='#')
+             span.tile.tile-lg.bg-yellow
+              i.oi.oi-fire
+             span.tile-peek Feeds
+           .dropdown-sheet-item
+            a.tile-wrapper(href='#')
+             span.tile.tile-lg.bg-cyan
+              i.oi.oi-document
+             span.tile-peek Files
+       .dropdown
+        button.btn-account.d-none.d-md-flex(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+         span.user-avatar
+          img(src='images/avatars/profile.jpg', alt='')
+         span.account-summary.pr-lg-4.d-none.d-lg-block
+          span.account-name Beni Arisandi
+          span.account-description Marketing Manager
+        .dropdown-arrow.dropdown-arrow-left
+        .dropdown-menu
+         h6.dropdown-header.d-none.d-md-block.d-lg-none  Beni Arisandi 
+         a.dropdown-item(href='user-profile.html')
+          span.dropdown-icon.oi.oi-person
+          |  Profile
+         a.dropdown-item(href='#')
+          span.dropdown-icon.oi.oi-account-logout
+          |  Logout
+         .dropdown-divider
+         a.dropdown-item(href='#') Help Center
+         a.dropdown-item(href='#') Ask Forum
+         a.dropdown-item(href='#') Keyboard Shortcuts
+   aside.app-aside
+    .aside-content
+     header.aside-header
+      button.hamburger.hamburger-squeeze(type='button', data-toggle='aside', aria-label='Menu', aria-controls='navigation')
+       span.hamburger-box
+        span.hamburger-inner
+      button.btn-account.d-flex.d-md-none(type='button', data-toggle='collapse', data-target='#dropdown-aside')
+       span.user-avatar.user-avatar-lg
+        img(src='images/avatars/profile.jpg', alt='')
+       span.account-icon
+        span.fa.fa-caret-down.fa-lg
+       span.account-summary
+        span.account-name Beni Arisandi
+        span.account-description Marketing Manager
+      #dropdown-aside.dropdown-aside.collapse
+       .pb-3
+        a.dropdown-item(href='user-profile.html')
+         span.dropdown-icon.oi.oi-person
+         |  Profile
+        a.dropdown-item(href='auth-signin-v1.html')
+         span.dropdown-icon.oi.oi-account-logout
+         |  Logout
+        .dropdown-divider
+        a.dropdown-item(href='#') Help Center
+        a.dropdown-item(href='#') Ask Forum
+        a.dropdown-item(href='#') Keyboard Shortcuts
+      .top-bar-brand
+       a(href='/login#')
+        img(src='images/logoRound.png',height='100%', alt='')
+     section.aside-menu.has-scrollable
+      nav#stacked-menu.stacked-menu
+       ul.menu
+        li.menu-header Interfaces 
+        li.menu-item.has-child
+         a.menu-link(href='#')
+          span.menu-icon.oi.oi-puzzle-piece
+          span.menu-text Contrato
+          span.badge.badge-warning New
+         ul.menu
+          li.menu-item
+           a.menu-link(href='/contratos') Contratos
+        li.menu-item.has-child
+         a.menu-link(href='#')
+          span.menu-icon.oi.oi-pencil
+          span.menu-text Continuidad
+         ul.menu
+          li.menu-item
+           a.menu-link(href='/presupuestocontinuidad') Presupuesto
+          li.menu-item
+           a.menu-link(href='/hyperion') Hyperion
+          li.menu-item
+           a.menu-link(href='/compromisosporcui') Compromisos por CUI
+          li.menu-item
+           a.menu-link(href='/presupuestoeditcosto') EdicionCostos
+        li.menu-item.has-child
+         a.menu-link(href='#')
+          span.menu-icon.oi.oi-grid-two-up
+          span.menu-text Proyectos
+         ul.menu
+          li.menu-item
+           a.menu-link(href='/iniciativas') Iniciativas
+          li.menu-item
+           a.menu-link(href='/graficotest') Estado SAP
+          li.menu-item
+           a.menu-link(href='/presupuestoenvuelo') Compromisos por SAP
+        li.menu-item.has-child
+         a.menu-link(href='#')
+          span.menu-icon.oi.oi-bar-chart
+          span.menu-text Dashboard
+         ul.menu
+          li.menu-item
+           a.menu-link(href='/graficotest') Estado SAP
+          li.menu-item
+           a.menu-link(href='/graficotroyaproveedor') Seguimiento Por Proveedor
+          li.menu-item
+           a.menu-link(href='/reporte') Reporte
+          li.menu-item
+           a.menu-link(href='/reportetroya') Real Estimado
+          li.menu-item
+           a.menu-link(href='/menu/dash1') Gráficos
+        li.menu-item.has-child
+         a.menu-link(href='#')
+          span.menu-icon.oi.oi-list-rich
+          span.menu-text Facturas
+         ul.menu
+          li.menu-item
+           a.menu-link(href='/consultatroya') Seguimiento Gasto
+        li.menu-item.has-child
+         a.menu-link(href='#')
+          span.menu-icon.oi.oi-wrench
+          span.menu-text Conferencia
+         ul.menu
+          li.menu-item
+           a.menu-link(href='https://152.139.147.41:3001/conferencia') Sala PMO
+        li.menu-item.has-child
+         a.menu-link(href='#')
+          span.menu-icon.oi.oi-wrench
+          span.menu-text Administrador DIVOT
+         ul.menu
+          li.menu-item
+           a.menu-link(href='/parametros') Otros Parametros
+          li.menu-item
+           a.menu-link(href='/serviciosext') Servicios Externos
+          li.menu-item
+           a.menu-link(href='/plantilla') Plantilla CUI-SERVICIO-PROVEEDOR
+          li.menu-item
+           a.menu-link(href='/proveedores') Proveedores
+          li.menu-item
+           a.menu-link(href='/conceptos') Conceptos Presupuestarios
+          li.menu-item
+           a.menu-link(href='/estructuracui') Estructura de CUIs
+          li.menu-item
+           a.menu-link(href='/cuentascontables') Cuentas Contables
+          li.menu-item
+           a.menu-link(href='/presupuestoaprobacion') Aprobación Presupuesto
+          li.menu-item
+           a.menu-link(href='/roles') Roles por usuario
+          li.menu-item
+           a.menu-link(href='/permisos') Permisos por Rol
+          li.menu-item
+           a.menu-link(href='/monedasconversion') Monedas
+          li.menu-item
+           a.menu-link(href='/cargas') Cargas Masicas
+          li.menu-item
+           a.menu-link(href='/factorrecuperacion') Factor de Recuperación
+          li.menu-item
+           a.menu-link(href='/rolnegocio') Rol de Negocio
+        li.menu-item.has-child
+         a.menu-link(href='#')
+          span.menu-icon.oi.oi-people
+          span.menu-text Administración
+         ul.menu
+          li.menu-item
+           a.menu-link(href='/inscripcionsap') Inscripción SAP
+        li.menu-item.has-child
+         a.menu-link(href='#')
+          span.menu-icon.oi.oi-infinity
+          span.menu-text Prefactura
+         ul.menu
+          li.menu-item
+           a.menu-link(href='/solicitud') Generar Solicitudes
+          li.menu-item
+           a.menu-link(href='/prefacturasolicitud') Aprobar/Rechazar Solicitudes
+          li.menu-item
+           a.menu-link(href='/genprefacturas') Generar Prefacturas
+          li.menu-item
+           a.menu-link(href='/prefacturas') Prefacturas
+          li.menu-item
+           a.menu-link(href='/facturas') Ingresar Facturas
+          li.menu-item
+           a.menu-link(href='/cargadte') Carga DTE
+          li.menu-item
+           a.menu-link(href='/menu/solicitudProyectos') Generar Solicitudes Proyectos
+          li.menu-item
+           a.menu-link(href='/menu/genprefacturasproy') Generar Prefacturas Proyectos
+   main.app-main
+    .wrapper
+     .page
+      .page-inner
+          script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
+          script(type='text/javascript', src='/javascripts/guriddo/src/i18n/grid.locale-es.js')  
+          script(type='text/javascript', src='/javascripts/guriddo/src/jquery.jqGrid.js')
+          script(type='text/javascript', src='/javascripts/jquery.mask.min.js')
+          script(type='text/javascript', src='/javascripts/bootstrap-datepicker.js') 
+          script(type="text/javascript", src="/javascripts/locales/bootstrap-datepicker.es.js", charset="UTF-8")    
+          script(type='text/javascript', src='/javascripts/script.js') 
+          script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')      
+          script(type='text/javascript', src='/javascripts/jsplug.js')      
+          script(type='text/javascript', src='/javascripts/sip.js')
+          script(type='text/javascript', src='/javascripts/bootstrap.min.js')       
+          script(type='text/javascript', src='/javascripts/bootbox.min.js')   
+          script(type='text/javascript', src='/javascripts/views/presupuestoenvuelo.js')
+          script(type='text/javascript', src='/javascripts/views/tareaenvuelo.js')
+          script(type='text/javascript', src='/javascripts/views/fechaenvuelo.js')
+          script(type='text/javascript', src='/javascripts/views/conversionenvuelo.js')
+          script(type='text/javascript', src='/javascripts/views/flujopagoenvuelo.js')
+          script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js')
+          //- link(rel='stylesheet', href='/stylesheets/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')            
+          link(rel='stylesheet', href='/javascripts/guriddo/src/css/ui.jqgrid-bootstrap4.css', type='text/css', media='screen', charset='utf-8')
+          link(rel='stylesheet', href='/javascripts/guriddo/src/css/ui.jqgrid-bootstrap-ui.css', type='text/css', media='screen', charset='utf-8')
+          link(rel='stylesheet', href='/javascripts/guriddo/src/css/ui.jqgrid.css', type='text/css', media='screen', charset='utf-8')
+          link(rel='stylesheet', href='/javascripts/guriddo/src/css/ui.multiselect.css', type='text/css', media='screen', charset='utf-8')
+          link(rel='stylesheet', href='/stylesheets/bootstrap-datepicker.css', type='text/css', media='screen', charset='utf-8')  
+          //- link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")       
+          link(rel='stylesheet', href='stylesheets/test.css', type='text/css', media='screen', charset='utf-8')         
+          link(rel='stylesheet', href='stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')
+          link(rel='stylesheet', href='stylesheets/tmpl.css', type='text/css', media='screen', charset='utf-8') 
+    
           .zerogrid_b
             block titulogrilla              
           .zerogrid_b
-          block grilla
-            
+          block grilla   
+    footer.app-footer
+     ul.list-inline
+      li.list-inline-item
+       a.text-muted(href='#') Support
+      li.list-inline-item
+       a.text-muted(href='#') Help Center
+      li.list-inline-item
+       a.text-muted(href='#') Privacy
+      li.list-inline-item
+       a.text-muted(href='#') Terms of Service
+     .copyright  Copyright © 2018. All right reserved. 
+  script(src='vendor/bootstrap/js/popper.min.js')
+  script(src='vendor/bootstrap/js/bootstrap.min.js')
+  script(src='vendor/stacked-menu/stacked-menu.min.js')
+  script(src='vendor/perfect-scrollbar/perfect-scrollbar.min.js')
+  script(src='vendor/flatpickr/flatpickr.min.js')
+  script(src='vendor/easy-pie-chart/jquery.easypiechart.min.js')
+  script(src='vendor/chart.js/Chart.min.js')
+  script(src='javascript/main.min.js')
+  script(src='javascript/pages/easypiechart-demo.js')
