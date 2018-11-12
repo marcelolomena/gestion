@@ -156,7 +156,7 @@ $(document).ready(function () {
             name: 'fecha',
             width: 120,
             align: 'center',
-            search: true,
+            search: false,
             editable: true,
             hidden: false,
             formatter: 'date',

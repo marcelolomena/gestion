@@ -401,10 +401,10 @@ function listUbicacion(req, res) {
     var page = req.query.page;
     var rows = req.query.rows;
     var filters = req.query.filters;
-    var sidx = req.query.sidx
-    var sord = req.query.sord
+    var sidx = req.query.sidx || 'fecha';
+    var sord = 'desc';
     // var provee = req.query.provee;
-    // var orden = "[solicitudcotizacion]." + sidx + " " + sord;
+    var orden = "[ubicacioninstalacion]." + sidx + " " + sord;
     var filter_one = []
     var filter_two = []
     var filter_tres = []
@@ -447,7 +447,7 @@ function listUbicacion(req, res) {
                 models.ubicacioninstalacion.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    // order: orden,
+                    order: orden,
                     where: filter_one,
                     include: [{
                         model: models.producto,
@@ -611,7 +611,7 @@ function getExcel(req, res) {
     ];
     var sql = "SELECT b.nombre as nombreProd, a.usuario, a.ubicacion, a.codigoInterno, a.observacion, a.cui, a.nombre, a.fecha FROM lic.ubicacioninstalacion a " +
         "JOIN lic.producto b ON b.id = a.idproducto " +
-        "ORDER BY a.idproducto ASC";
+        "ORDER BY a.fecha DESC";
 
     // console.log("query:" + sql);
     sequelize.query(sql)
@@ -629,7 +629,7 @@ function getExcel(req, res) {
                         ubicacion[i].ubicacion,
                         ubicacion[i].cui,
                         ubicacion[i].observacion,
-                        ubicacion[i].fecha
+                        ubicacion[i].fecha.toISOString().slice(0,10)
 
                     ];
                     nombreprod = ubicacion[i].nombreProd
@@ -642,7 +642,7 @@ function getExcel(req, res) {
                         ubicacion[i].ubicacion,
                         ubicacion[i].cui,
                         ubicacion[i].observacion,
-                        ubicacion[i].fecha
+                        ubicacion[i].fecha.toISOString().slice(0,10)
                     ];
                     nombreprod = ubicacion[i].nombreProd
                 }
