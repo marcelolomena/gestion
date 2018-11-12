@@ -36,6 +36,13 @@ $(document).ready(function () {
             hidden: true,
             editable: false
         }, {
+            label: 'Código Interno',
+            name: 'codigoInterno',
+            align: 'center',
+            width: 100,
+            editable: true,
+            search: false
+        }, {
             label: 'Nombre Producto',
             name: 'idproducto',
             width: 200,
@@ -105,18 +112,17 @@ $(document).ready(function () {
             search: true
         },
         {
-            label: 'Ubicación',
+            label: 'Usuario',
+            name: 'usuario',
+            width: 100,
+            editable: true,
+            search: true
+        },
+        {
+            label: 'Alias',
             name: 'ubicacion',
             align: 'center',
             width: 120,
-            editable: true,
-            search: false
-        },
-        {
-            label: 'Código Interno',
-            name: 'codigoInterno',
-            align: 'center',
-            width: 100,
             editable: true,
             search: false
         },
@@ -144,15 +150,9 @@ $(document).ready(function () {
             edittype: 'textarea',
             search: false
         },
+
         {
-            label: 'Usuario',
-            name: 'usuario',
-            width: 100,
-            editable: true,
-            search: true
-        },
-        {
-            label: 'Fecha Inscripción ',
+            label: 'Fecha',
             name: 'fecha',
             width: 120,
             align: 'center',

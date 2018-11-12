@@ -553,22 +553,28 @@ function actionUbicacion(req, res) {
 }
 
 function getExcel(req, res) {
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-    var condition = "";
-    var gris = "WHERE a.alertarenovacion <> 'aGris'"
-    // logger.debug("En getExcel");
+    // var page = req.query.page;
+    // var rows = req.query.rows;
+    // var filters = req.query.filters;
+    // var sidx = req.query.sidx;
+    // var sord = req.query.sord;
+    // var condition = "";
+    // var gris = "WHERE a.alertarenovacion <> 'aGris'"
+   
     var conf = {}
-    conf.cols = [{
-            caption: 'N',
+    conf.cols = [
+        {
+            caption: 'N°',
             type: 'number',
             width: 3
         },
         {
-            caption: 'Producto',
+            caption: 'ID',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'Software',
             type: 'string',
             width: 200
         },
@@ -578,12 +584,12 @@ function getExcel(req, res) {
             width: 200
         },
         {
-            caption: 'Ubicación',
+            caption: 'Usuario',
             type: 'string',
             width: 200
         },
         {
-            caption: 'CódigoInterno',
+            caption: 'Ubicación',
             type: 'string',
             width: 200
         },
@@ -593,17 +599,12 @@ function getExcel(req, res) {
             width: 200
         },
         {
-            caption: 'Usuario',
-            type: 'string',
-            width: 200
-        },
-        {
             caption: 'Observación',
             type: 'string',
             width: 200
         },
         {
-            caption: 'FechaInscripcion',
+            caption: 'Fecha',
             type: 'string',
             width: 200
         }
@@ -621,12 +622,12 @@ function getExcel(req, res) {
 
                 if (nombreprod != ubicacion[i].nombreProd) {
                     var a = [i + 1,
+                        ubicacion[i].codigoInterno,
                         ubicacion[i].nombreProd,
                         ubicacion[i].nombre,
-                        ubicacion[i].ubicacion,
-                        ubicacion[i].codigoInterno,
-                        ubicacion[i].cui,
                         ubicacion[i].usuario,
+                        ubicacion[i].ubicacion,
+                        ubicacion[i].cui,
                         ubicacion[i].observacion,
                         ubicacion[i].fecha
 
@@ -634,12 +635,12 @@ function getExcel(req, res) {
                     nombreprod = ubicacion[i].nombreProd
                 } else {
                     var a = [i + 1,
+                        ubicacion[i].codigoInterno,
                         null,
                         ubicacion[i].nombre,
-                        ubicacion[i].ubicacion,
-                        ubicacion[i].codigoInterno,
-                        ubicacion[i].cui,
                         ubicacion[i].usuario,
+                        ubicacion[i].ubicacion,
+                        ubicacion[i].cui,
                         ubicacion[i].observacion,
                         ubicacion[i].fecha
                     ];
