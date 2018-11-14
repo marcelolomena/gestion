@@ -1,0 +1,115 @@
+# This is the main configuration file for the application.
+# ~~~~~
+# Secret key
+# ~~~~~
+# The secret key is used to secure cryptographics functions.
+# If you deploy your application to several instances be sure to use the same key!
+application.secret="7R82CU/suZLvK[3O:ltbG^7:Pj:>C7:tIdd^h<MDySu69G>y=9]ZFK2KiDvaeJ_7"
+# The application languages
+
+# ~~~~~
+
+#application.langs="en"
+application.langs="es-ES"
+# Global object class
+
+# ~~~~~
+# Define the Global object class for this application.
+# Default to Global in the root package.
+application.global=Global
+# Router
+
+# ~~~~~
+# Define the Router object to use for this application.
+# This router will be looked up first when the application is starting up,
+# so make sure this is the entry point.
+# Furthermore, it's assumed your route file is named properly.
+# So for an application router like `my.application.Router`,
+# you may need to define a router file `conf/my.application.routes`.
+# Default to Routes in the root package (and conf/routes)
+# application.router=my.application.Routes
+# Database configuration
+
+# ~~~~~
+
+#Desarrollo localhost LENOVO
+#db.default.driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+#db.default.url="jdbc:sqlserver://LENOVO-PC\\SQLEXPRESS;database=art_live"
+#db.default.user="ftsx9"
+#db.default.pass="ftsx9"
+#db.default.logStatements=true
+#logger.com.jolbox=DEBUG // for EBean
+
+#db.default.driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+#db.default.url="jdbc:sqlserver://DESKTOP-4J59JRP\\SQLEXPRESS;database=art_live"
+#db.default.user="pi"
+#db.default.pass="123momiaes"
+
+#Desarrollo
+db.default.driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+db.default.url="jdbc:sqlserver://200.14.147.235:1433;database=art_live"
+db.default.user="art"
+db.default.pass="Art2015"
+db.default.logStatements=true
+logger.com.jolbox=DEBUG // for EBean
+
+#Desarrollo localhost ASUS
+#db.default.driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+#db.default.url="jdbc:sqlserver://DESKTOP-4J59JRP\\SQLEXPRESS;database=art_live"
+#db.default.user="pi"
+#db.default.pass="123momia"
+#db.default.logStatements=true
+#logger.com.jolbox=DEBUG // for EBean
+
+#Testing BCH ART EVOLUTIVO
+#db.default.driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+#db.default.url="jdbc:sqlserver://200.14.147.235:1433;database=art_live"
+#db.default.user="art"
+#db.default.pass="Art2015"
+
+
+bdc.documents.location="C:/java/workspace/bdc-docs"
+#bdc.documents.location=/home/art/bdc-docs/
+#bdc.documents.location=/home/bdc-dev/bdc-docs/
+#bdc.global.aclfile="C:/java/workspace/art/json-file.txt"
+#bdc.global.aclfile="/home/art/json-file.txt"
+app.version="ART 2.0.9"
+
+
+# You can declare as many datasources as you want.
+# By convention, the default datasource is named `default`
+#
+
+
+# db.default.driver=org.h2.Driver
+# db.default.url="jdbc:h2:mem:play"
+# db.default.user=sa
+# db.default.password=""
+# Evolutions
+# ~~~~~
+# You can disable evolutions if needed
+evolutionplugin=disabled
+# The mail BCH
+#smtp.host="200.14.165.153"
+#smtp.port=25
+#smtp.user="proyecto_art@labchile.cl"
+#smtp.password="Banco01"
+#mail.from="proyecto_art@labchile.cl"
+
+# The mail GOOGLE
+smtp.host=smtp.gmail.com
+smtp.port=465
+smtp.ssl=yes
+smtp.user="marcelo.mlomena@gmail.com"
+smtp.password="123momiaes"
+
+# Logger
+logger.root=ERROR
+
+# Logger used by the framework:
+logger.play=INFO
+
+# Logger provided to your application:
+logger.application=DEBUG
+
+session.httpOnly=false

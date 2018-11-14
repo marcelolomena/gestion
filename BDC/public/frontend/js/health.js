@@ -69,6 +69,7 @@ $(document).ready(function () {
         shrinkToFit: false,
         rowNum: 5000,
         scroll: 1,
+        forceFit:true,
         height: "auto",
         //width:800,
         pager: "#jqGridPager",

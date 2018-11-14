@@ -47,21 +47,31 @@ object Seguimiento extends Controller {
       var pmo = pmoi;
       System.out.println("lider:"+lider+" , pmo:"+pmo)
       //deja en variable uno de los dos lider o pmo
-      if (lider != '0' && pmo.equals("0")) {
+      if (lider != '0' && pmo.equals("0")) { //Tiene lider
         System.out.println("entro")
-          pmo = lider
+        //pmo = lider
+        if (!StringUtils.isEmpty(art) && lider != '0') {
+          records = SeguimientoService.programCountDocsLider(lider, art)
+          panel = SeguimientoService.documentsProgramsLider(lider, art, rows, page)
+        } else if (lider != '0') {
+          records = SeguimientoService.programCountDocsLider(lider, art)
+          panel = SeguimientoService.documentsProgramsLider(lider, art, rows, page)
+        } else {
+          records = SeguimientoService.programCountDocsLider(lider, art)
+          panel = SeguimientoService.documentsProgramsLider(lider, "0", rows, page)
+        }
+      } else { //Tiene PMO
+        if (!StringUtils.isEmpty(art) && pmo != '0') {
+          records = SeguimientoService.programCountDocs(pmo, art)
+          panel = SeguimientoService.documentsProgramsPMO(pmo, art, rows, page)
+        } else if (pmo != '0') {
+          records = SeguimientoService.programCountDocs(pmo, art)
+          panel = SeguimientoService.documentsProgramsPMO(pmo, art, rows, page)
+        } else {
+          records = SeguimientoService.programCountDocs(pmo, art)
+          panel = SeguimientoService.documentsProgramsPMO(pmo, "0", rows, page)
+        }
       }
-      if (!StringUtils.isEmpty(art) && pmo != '0') {
-        records = SeguimientoService.programCountDocs(pmo,art)
-        panel = SeguimientoService.documentsPrograms(pmo, art, rows, page)
-      } else  if (pmo != '0') {
-        records = SeguimientoService.programCountDocs(pmo,art)
-        panel = SeguimientoService.documentsPrograms(pmo, art, rows, page)
-      } else {
-        records = SeguimientoService.programCountDocs(pmo,art)
-        panel = SeguimientoService.documentsPrograms(pmo, "0", rows, page)
-      }
-
       //program_id, program_code, program_name, responsable, workflow_status
       var registro = new JSONArray()
       for (p <- panel) {

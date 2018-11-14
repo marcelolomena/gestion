@@ -52,7 +52,7 @@
 						<div id="tabs">
 							<ul>
 								<li><a href="#/incidentPie/1">Documentaci&oacute;n</a></li>
-								<!--<li><a href="#/incidentPie/2">Cambios en Programas</a></li>-->
+								<!--<li><a href="#/incidentPie/2">Cambios en Programas</a></li> -->
 								<li><a href="#/incidentPie/3">Sanidad</a></li>
 							</ul>
 							<div id="/incidentPie/1">
@@ -84,7 +84,8 @@
 								</div>
 							  </div>								
 							</div>
-							<!--<div id="/incidentPie/2">
+							<!--
+							<div id="/incidentPie/2">
 								<div class="cajaFormulario" id="div_sel_type" >
 									<div class="formSap">Nivel :
 									  <select id="nivel">
@@ -121,10 +122,13 @@
 							</div>
 							-->
 							<div id="/incidentPie/3">
-								<h1>Reporte de Sanidad de PMO</h1>
-								<table id="jqGridIncident3"></table>
-								<div id="jqGridIncidentPager3"></div>
+								<!-- <section class="slider" id="panel_page"> -->
+									<table id="jqGrid"></table>
+									<div id="jqGridPager"></div>
+
+								<!-- </section> -->
 							</div>
+
 						</div>
 					</div>
 	  	
@@ -158,5 +162,6 @@
 <script src="@routes.Assets.at("frontend/highcharts/modules/exporting.js")"></script>
 <script src="@routes.Assets.at("frontend/js/dashboard.js")" type="text/javascript"></script>
 <script src="@routes.Assets.at("frontend/js/seguimiento.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("frontend/js/health.js")" type="text/javascript"></script>
 </body>
 </html>

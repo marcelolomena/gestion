@@ -1288,6 +1288,7 @@ $(document).ready(function(){
                     url: "/report/H/0/0",
                     datatype: "json",
                     page: 1,
+                    scroll: 1,
                     colModel: modelProgramGrid,
                     viewrecords: true,
                     regional : "es",
@@ -1311,24 +1312,13 @@ $(document).ready(function(){
             grid.navButtonAdd('#jqGridPager', {
                 buttonicon: "ui-icon-circle-triangle-e",
                 title: "Excel",
-                caption: "Excel",
+                caption: "Excel Reporte Fabricas",
                 position: "last",
                 onClickButton: function() {
-                    var postData = grid.jqGrid("getGridParam", "postData")
-                    if(postData._search)
-                    {
-                        var query = "";
-                        for (key in postData) {
-                            query += encodeURIComponent(key)+"="+encodeURIComponent(postData[key])+"&";
-                        }
-                        //console.log(query)
-                        var url = '/report/X/0/0?'+query;
-                        grid.jqGrid('excelExport',{"url":url});
 
-                    }else{
-                        //archivo generado
+                        //genera reporte fabricas
                         grid.jqGrid('excelExport',{"url":'/report_full'});
-                    }
+
 
                 }
             });

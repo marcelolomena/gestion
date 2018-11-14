@@ -2777,6 +2777,7 @@ object Dashboard extends Controller {
     }
   }
 
+  //Reporte de fabricas
   def reportFull2 = Action {
     implicit request =>
       request.session.get("username").map { user =>

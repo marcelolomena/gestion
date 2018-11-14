@@ -65,7 +65,7 @@ object SeguimientoService {
     }
   }
 
-  def documentsPrograms(pmo: String, art: String, pageSize: String, pageNumber: String): Seq[ProgramList] = {
+  def documentsProgramsPMO(pmo: String, art: String, pageSize: String, pageNumber: String): Seq[ProgramList] = {
 
     var sqlString = "EXEC art.documentos_lista_programa {Pmo},{Art},{PageSize},{PageNumber}"
     DB.withConnection { implicit connection =>
@@ -73,9 +73,26 @@ object SeguimientoService {
     }
   }
 
+  def documentsProgramsLider(lider: String, art: String, pageSize: String, pageNumber: String): Seq[ProgramList] = {
+
+    var sqlString = "EXEC art.documentos_lista_programa_lider {Lider},{Art},{PageSize},{PageNumber}"
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('Lider -> lider.toInt, 'Art -> art.toInt, 'PageSize -> pageSize.toInt, 'PageNumber -> pageNumber.toInt).executeQuery() as (ProgramList.rpt *)
+    }
+  }
+
   def programCountDocs(pmo: String, art: String): Int = {
 
     var sqlString = "EXEC art.cantidad_programa_docs {Pmo}, {Art}"
+
+    DB.withConnection { implicit connection =>
+      SQL(sqlString).on('Pmo -> pmo.toInt, 'Art -> art.toInt).executeQuery() as (scalar[Int].single)
+    }
+  }
+
+  def programCountDocsLider(pmo: String, art: String): Int = {
+
+    var sqlString = "EXEC art.cantidad_programa_docs_lider {Pmo}, {Art}"
 
     DB.withConnection { implicit connection =>
       SQL(sqlString).on('Pmo -> pmo.toInt, 'Art -> art.toInt).executeQuery() as (scalar[Int].single)
