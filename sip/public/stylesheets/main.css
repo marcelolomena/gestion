@@ -6670,7 +6670,7 @@ iframe {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  background-color: #012464;
+  background-color: #0B2161;
   width: 100%;
   height: 3.5rem;
   -webkit-box-align: stretch;
@@ -8742,6 +8742,7 @@ iframe {
     background-color: transparent;
   }
   
+  
   caption {
     padding-top: 8px;
     padding-bottom: 8px;
@@ -8770,7 +8771,11 @@ iframe {
     vertical-align: bottom;
     border-bottom: 2px solid #ddd;
   }
-  
+  td 
+  {
+    /* text-align: center; */
+  }
+
   .table>caption+thead>tr:first-child>td,.table>caption+thead>tr:first-child>th,.table>colgroup+thead>tr:first-child>td,.table>colgroup+thead>tr:first-child>th,.table>thead:first-child>tr:first-child>td,.table>thead:first-child>tr:first-child>th {
     border-top: 0;
   }

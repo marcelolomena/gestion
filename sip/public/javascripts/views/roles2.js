@@ -79,7 +79,7 @@ function gridRoles2(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Roles',
+        // caption: 'Roles',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

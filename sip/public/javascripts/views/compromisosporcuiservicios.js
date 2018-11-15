@@ -91,7 +91,7 @@ function gridServicios(parentRowID, parentRowKey) {
         datatype: "json",
         page: 1,
         rowNum: 1000,
-        caption: 'Servicios ',
+        // caption: 'Servicios ',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

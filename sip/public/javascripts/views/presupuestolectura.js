@@ -54,11 +54,11 @@ $(document).ready(function () {
         { label: 'Nombre CUI', name: 'nombre', width: 250, align: 'left', search: true, sortable: false, editable: true },
         { label: 'Responsable CUI', name: 'nombreresponsable', width: 200, align: 'left', search: true, sortable: false, editable: true },
         {
-            label: 'Ejercicio', name: 'ejercicio', width: 80, align: 'left', sortable: false, search: true, editable: true,
+            label: 'Ejercicio', name: 'ejercicio', width: 120, align: 'left', sortable: false, search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Ejercicio', name: 'idejercicio', width: 50, align: 'left', search: false,sortable: false, editable: true, hidden: true,
+            label: 'Ejercicio', name: 'idejercicio', width: 120, align: 'left', search: false,sortable: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/ejercicios',

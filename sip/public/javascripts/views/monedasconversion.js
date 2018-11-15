@@ -201,7 +201,7 @@ function showChildGrid(parentRowID, parentRowKey) {
             datatype: "json",
             page: 1,
             colModel: modelConversion,
-            caption: 'Monedas de Conversión a Pesos',
+            // caption: 'Monedas de Conversión a Pesos',
             autowidth: true,  // set 'true' here
             shrinkToFit: true, // well, it's 'true' by default
             rowNum: 10,

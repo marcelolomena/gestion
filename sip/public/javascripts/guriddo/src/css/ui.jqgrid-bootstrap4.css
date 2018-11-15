@@ -53,10 +53,6 @@
 	padding: 0; 
 	overflow: hidden;
 }
-.ui-jqgrid .ui-jqgrid-hbox {
-	float: left; 
-	padding-right: 20px;
-}
 .ui-jqgrid .ui-jqgrid-htable { 
 	margin-bottom: 0; 
 	table-layout: fixed; 
@@ -166,6 +162,7 @@
 .ui-jqgrid .table-bordered th.ui-th-ltr
 {
 	border-left:0px none !important;
+	border-top:0px none !important;
 }
 .ui-jqgrid .table-bordered th.ui-th-rtl
 {
@@ -405,7 +402,7 @@ div.tablediv > .table-bordered {
 	height:auto; 
 	margin-top:3px;
 	margin-right:4px;
-	display: inline;
+	/* display: inline; */
 }
 .ui-jqgrid .ui-jqgrid-pager .ui-paging-pager,
 .ui-jqgrid .ui-jqgrid-toppager .ui-paging-pager
@@ -1079,6 +1076,8 @@ div[id^='searchcnt'] .fm-button .octicon
 	padding: 0 0;
 	vertical-align: middle;
 }
+
+
 
 .ui-jqgrid .jqgrid-caption-menu 
 { 

@@ -138,10 +138,10 @@ function gridDesglose(parentRowID, parentRowKey) {
         mtype: "POST",
         datatype: "json",
         page: 1,
-        caption: 'Desglose contable',
+        // caption: 'Desglose contable',
         //width: null,
         //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
+        width: null,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         colModel: modelDesglose,
         viewrecords: true,

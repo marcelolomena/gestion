@@ -182,7 +182,7 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        width: 600,
+        width: null,
         shrinkToFit: true,
         viewrecords: true,
         //multiselect: true,
@@ -226,6 +226,8 @@ $(document).ready(function () {
         tmplNames: myFilterTemplateNames,
         tmplFilters: myFilterTemplates
     });
+
+    
 
     $grid.jqGrid('navGrid', '#pagerMaster', { edit: false, add: false, del: false, search: false }, {}, {}, {}, {});
     $grid.jqGrid('navButtonAdd', '#pagerMaster', {
@@ -326,7 +328,8 @@ $(document).ready(function () {
             $('#gridDetail').jqGrid('excelExport', { "url": url });
         }
     });
-*/
+*/         
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 
 });

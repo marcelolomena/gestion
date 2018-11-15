@@ -84,7 +84,7 @@ function gridPermisos2(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Menus',
+        // caption: 'Menus',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

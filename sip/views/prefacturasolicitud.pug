@@ -5,8 +5,8 @@ block titulo
 block jsgrilla
     script(type='text/javascript', src='/javascripts/views/prefacturasolicitud.js')
 block titulogrilla
-  .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Solicitud de Aprobación
+  //- .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+  //-   h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Solicitud de Aprobación
 block grilla
   .cajaFormulario
     .formSap
@@ -16,7 +16,8 @@ block grilla
       select#cui(style='margin-right: 10px') 
       | Proveedor:
       select#proveedor
-      #buscar.btn Mostrar Todos       
+      #buscar.btn Mostrar Todos   
+  br        
   div(style='width: 100%')
     #container2(style='width: 100%; display: inline-block;')
       table#grid

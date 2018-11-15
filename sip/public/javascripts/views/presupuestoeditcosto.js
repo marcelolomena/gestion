@@ -355,7 +355,7 @@ $(document).ready(function () {
             }
         }
     });
-
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 });
 
@@ -756,7 +756,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
     });
 
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
-
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true,
         add: true,
@@ -1253,6 +1253,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         //colMenu:true
     });
 
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false,
         add: false,

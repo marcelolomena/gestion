@@ -77,7 +77,7 @@ function gridSolicitudes(parentRowID, parentRowKey) {
         mtype: "POST",
         datatype: "json",
         page: 1,
-        caption: 'Items',
+        // caption: 'Items',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

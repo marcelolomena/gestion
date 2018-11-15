@@ -125,7 +125,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
         page: 1,
         colModel: [
             { label: 'id', name: 'id', key: true, hidden: true },
-            { label: 'Codigo ART', name: 'codigoart', width: 100, align: 'left', search: true, editable: true,
+            { label: 'Cod ART', name: 'codigoart', width: 80, align: 'left', search: true, editable: true,
                 editoptions: { size: 10,
                     dataEvents: [{
                         type: 'change', fn: function (e) {
@@ -154,7 +154,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                     }],
                 }                    
             }, 
-            { label: 'SAP', name: 'sap', width: 100, align: 'left', search: true, editable: true,
+            { label: 'SAP', name: 'sap', width: 90, align: 'left', search: true, editable: true,
                 edittype: "select",
                 editoptions: {
                     dataUrl: '/getlistasap/0/0',
@@ -166,8 +166,8 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                     }             
                 }         
             },                                   
-            { label: 'Anexo', name: 'anexo', width: 100, align: 'left', search: true, editable: true },          
-            { label: 'Solicitud', name: 'numerosolicitud', width: 100, align: 'left', search: true, editable: true, hidden: false },            
+            { label: 'Anexo', name: 'anexo', width: 70, align: 'left', search: true, editable: true },          
+            { label: 'Solicitud', name: 'numerosolicitud', width: 90, align: 'left', search: true, editable: true, hidden: false },            
             {
                 label: 'idcui', name: 'idcui', search: false, editable: true, hidden: true,
                 edittype: "select",
@@ -219,7 +219,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                 }
             },
             {
-                label: 'CUI Responsable Divot', name: 'estructuracui.cui', width: 50, align: 'left', search: true, editable: false, hidden: false,
+                label: 'CUI Respon. Divot', name: 'estructuracui.cui', width: 92, align: 'left', search: true, editable: false, hidden: false,
                 //jsonmap: "EstructuraCui.nombre"
             },
             {
@@ -262,11 +262,11 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                 }
             },
             {
-                label: 'Servicio', name: 'servicio.nombre', width: 300, align: 'left', search: true, editable: true,
+                label: 'Servicio', name: 'servicio.nombre', width: 160, align: 'left', search: true, editable: true,
                 editrules: { edithidden: false }, hidedlg: true
             },  
             {            
-                label: 'Tarea', name: 'tarea', search: false, editable: true, hidden: false,
+                label: 'Tarea', name: 'tarea', search: false,width: 90,  editable: true, hidden: false,
                 edittype: "select",
                 editoptions: {                   
                     dataUrl: '/getlistatareas/0/0',
@@ -300,10 +300,10 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                 label: 'idcuenta', name: 'idcuenta', search: false, editable: false, hidden: true,
             },
             {
-                label: 'Cuenta', name: 'servicio.cuentascontable.cuentacontable', width: 100, align: 'left', search: true, editable: false, hidden: false,
+                label: 'Cuenta', name: 'servicio.cuentascontable.cuentacontable', width: 80, align: 'left', search: true, editable: false, hidden: false,
             },
             {
-                label: 'Fecha Inicio', name: 'fechainicio', width: 150, align: 'center', search: true, editable: true, hidden: false,
+                label: 'Fecha Inicio', name: 'fechainicio', width: 110, align: 'center', search: true, editable: true, hidden: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                 searchoptions: {
                     dataInit: function (el) {
@@ -328,7 +328,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                     }
                 }
             }, {
-                label: 'Fecha Término', name: 'fechatermino', width: 160, align: 'center', search: true, editable: true, hidden: false,
+                label: 'Fecha Término', name: 'fechatermino', width: 110, align: 'center', search: true, editable: true, hidden: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                 searchoptions: {
                     dataInit: function (el) {
@@ -353,7 +353,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                     }
                 }
             }, {
-                label: 'Fecha Control', name: 'fechacontrol', width: 150, align: 'center', search: true, editable: true, hidden: false,
+                label: 'Fecha Control', name: 'fechacontrol', width: 110, align: 'center', search: true, editable: true, hidden: false,
                 formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                 searchoptions: {
                     dataInit: function (el) {
@@ -379,17 +379,17 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                 }
             },
             {
-                label: 'Cuota', name: 'valorcuota', width: 100, align: 'right',
-                search: true, editable: true, hidden: false,
+                label: 'Cuota', name: 'valorcuota', width: 80, align: 'right',
+                search: false, editable: true, hidden: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: {
                     dataInit: function (el) {
                         $(el).mask('000.000.000.000.000,00', { reverse: true });
                     }
                 }                
-            },
+            },  
             {
-                label: 'Monto Contrato', name: 'montocontrato', width: 100, align: 'right',
+                label: 'Monto Contrato', name: 'montocontrato', width: 120, align: 'right',
                 search: false, editable: true, hidden: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: {
@@ -495,7 +495,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                 }
             },
             {
-                label: 'Plazo', name: 'parametro.nombre', align: 'center', search: true, editable: true, hidden: false,
+                label: 'Plazo', name: 'parametro.nombre', align: 'center', width: 128, search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
@@ -613,7 +613,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
                 }
             },
             {
-                label: 'Estado', name: 'estadocontrato', width: 150, align: 'left', search: true, editable: true, hidden: false,
+                label: 'Estado', name: 'estadocontrato', width: 105, align: 'left', search: true, editable: true, hidden: false,
                 editrules: { edithidden: false }, hidedlg: true
             },
             {
@@ -706,7 +706,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
         ],
         shrinkToFit: true,
         autowidth: true,
-        caption: 'Servicios',
+        // caption: 'Servicios',
         viewrecords: true,
         rowNum: 10,
         rowList: [10, 20, 30],
@@ -996,6 +996,7 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
     );
 
     $('#' + subgrid_table_id).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").css("background-color", "#08298A");
+
 
     $("#" + pager_id + "_left").css("width", "");
 

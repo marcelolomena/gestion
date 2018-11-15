@@ -180,8 +180,8 @@ function showChildGrid(parentRowID, parentRowKey) {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         shrinkToFit: true,
-        width: 1300,
-        caption: 'Plantilla por CUI-SERVICIO-PROVEEDOR',
+        width: null,
+        // caption: 'Plantilla por CUI-SERVICIO-PROVEEDOR',
         styleUI: "Bootstrap",
         subGrid: false,
         subGridOptions: {

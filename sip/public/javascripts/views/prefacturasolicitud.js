@@ -487,6 +487,7 @@ function showDocumentos(cui, periodo, proveedor) {
         rowNum: 10,
         rowList: [5, 10, 20, 50],
         sortname: 'id',
+        width:null,
         sortorder: 'asc',
         viewrecords: true,
         editurl: '/prefacturasolicitud/action',
@@ -566,6 +567,10 @@ function showDocumentos(cui, periodo, proveedor) {
         }, {}
 
     );
+
+    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
+
 
     leida = true;
 }

@@ -78,53 +78,53 @@ body
          .dropdown-menu.dropdown-menu-rich.dropdown-menu-right
           h6.dropdown-header.stop-propagation
            span
-            | Activities
+            | Actividades
             span.badge (2)
           .dropdown-scroll.has-scrollable
            a.dropdown-item.unread(href='#')
             .user-avatar
              img(src='images/avatars/uifaces15.jpg', alt='')
             .dropdown-item-body
-             p.text  Jeffrey Wells created a schedule 
-             span.date Just now
+             p.text  Jeffrey Wells creó un horario 
+             span.date Justo ahora
            a.dropdown-item.unread(href='#')
             .user-avatar
              img(src='images/avatars/uifaces16.jpg', alt='')
             .dropdown-item-body
-             p.text  Anna Vargas logged a chat 
-             span.date 3 hours ago
+             p.text  Anna Vargas ha iniciado sesión en un chat.
+             span.date hace 3 horas
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/uifaces17.jpg', alt='')
             .dropdown-item-body
-             p.text  Sara Carr invited to Stilearn Admin 
-             span.date 5 hours ago
+             p.text  Sara Carr invitó a Stilearn Admin 
+             span.date hace 5 ahoras
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/uifaces18.jpg', alt='')
             .dropdown-item-body
-             p.text  Sara Carr updated a project 
-             span.date 1 day ago
+             p.text  Sara Carr actualizó un proyecto 
+             span.date hace 1 día
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/uifaces19.jpg', alt='')
             .dropdown-item-body
-             p.text  Arthur Carroll created a task 
-             span.date 1 day ago
+             p.text  Arthur Carroll creó una tarea 
+             span.date hace 1 día
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/uifaces20.jpg', alt='')
             .dropdown-item-body
-             p.text  Angela Peterson assign a task to you 
-             span.date 2 days ago
+             p.text  Angela Peterson te asignó una tarea 
+             span.date hace 2 día
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/uifaces21.jpg', alt='')
             .dropdown-item-body
-             p.text  Willie Dixon and 3 others followed you 
-             span.date 2 days ago
+             p.text  Willie Dixon y otros 3 te siguieron 
+             span.date hace 2 día
           a.dropdown-footer(href='user-activities.html')
-           | All activities
+           | Todas las actividades
            i.fa.fa-fw.fa-long-arrow-alt-right
         li.nav-item.dropdown.header-nav-dropdown.has-notified
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
@@ -132,23 +132,23 @@ body
          .dropdown-arrow
          .dropdown-menu.dropdown-menu-rich.dropdown-menu-right
           h6.dropdown-header.stop-propagation
-           span Messages
-           a(href='#') Mark all as read
+           span Mensajes
+           a(href='#') Marcar todo como leido
           .dropdown-scroll.has-scrollable
            a.dropdown-item.unread(href='#')
             .user-avatar
              img(src='images/avatars/team1.jpg', alt='')
             .dropdown-item-body
              p.subject  Stilearning 
-             p.text.text-truncate  Invitation: Joe's Dinner @ Fri Aug 22 
-             span.date 2 hours ago
+             p.text.text-truncate  Invitación: Joe's Dinner @ Vier 22 Ago 
+             span.date hace 2 día
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/team3.png', alt='')
             .dropdown-item-body
              p.subject  Openlane 
              p.text.text-truncate  Final reminder: Upgrade to Pro 
-             span.date 23 hours ago
+             span.date hace 23 horas
            a.dropdown-item(href='#')
             .tile.tile-circle.bg-green  GZ 
             .dropdown-item-body
@@ -175,7 +175,7 @@ body
              p.text.text-truncate  Our UX exercise is ready 
              span.date 6 days ago
           a.dropdown-footer(href='app-messages.html')
-           | All messages
+           | Todos los mensajes
            i.fa.fa-fw.fa-long-arrow-alt-right
         li.nav-item.dropdown.header-nav-dropdown
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
@@ -187,17 +187,17 @@ body
             a.tile-wrapper(href='#')
              span.tile.tile-lg.bg-indigo
               i.oi.oi-people
-             span.tile-peek Teams
+             span.tile-peek Equipos
            .dropdown-sheet-item
             a.tile-wrapper(href='#')
              span.tile.tile-lg.bg-teal
               i.oi.oi-fork
-             span.tile-peek Projects
+             span.tile-peek Proyectos
            .dropdown-sheet-item
             a.tile-wrapper(href='#')
              span.tile.tile-lg.bg-pink
               i.fa.fa-tasks
-             span.tile-peek Tasks
+             span.tile-peek Tareas
            .dropdown-sheet-item
             a.tile-wrapper(href='#')
              span.tile.tile-lg.bg-yellow
@@ -207,27 +207,28 @@ body
             a.tile-wrapper(href='#')
              span.tile.tile-lg.bg-cyan
               i.oi.oi-document
-             span.tile-peek Files
+             span.tile-peek Archivos
        .dropdown
         button.btn-account.d-none.d-md-flex(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
          span.user-avatar
           img(src='images/avatars/profile.jpg', alt='')
          span.account-summary.pr-lg-4.d-none.d-lg-block
-          span.account-name Beni Arisandi
-          span.account-description Marketing Manager
+          .perfil_sesion
+            .user
+             span.account-name #{data[0].nombre}
+             span.account-description #{data[0].rid}
         .dropdown-arrow.dropdown-arrow-left
         .dropdown-menu
-         h6.dropdown-header.d-none.d-md-block.d-lg-none  Beni Arisandi 
+         h6.dropdown-header.d-none.d-md-block.d-lg-none  #{data[0].nombre}
          a.dropdown-item(href='user-profile.html')
           span.dropdown-icon.oi.oi-person
-          |  Profile
-         a.dropdown-item(href='#')
+          |  Perfil
+         a.dropdown-item(href='/menu/signout')
           span.dropdown-icon.oi.oi-account-logout
-          |  Logout
+          |  Cerrar Sesión
          .dropdown-divider
-         a.dropdown-item(href='#') Help Center
-         a.dropdown-item(href='#') Ask Forum
-         a.dropdown-item(href='#') Keyboard Shortcuts
+         a.dropdown-item(href='#') Centro de Ayuda
+         a.dropdown-item(href='#') Preguntar Foro
    aside.app-aside
     .aside-content
      header.aside-header
@@ -240,20 +241,19 @@ body
        span.account-icon
         span.fa.fa-caret-down.fa-lg
        span.account-summary
-        span.account-name Beni Arisandi
-        span.account-description Marketing Manager
+        span.account-name #{data[0].nombre}
+        span.account-description #{data[0].rid}
       #dropdown-aside.dropdown-aside.collapse
        .pb-3
         a.dropdown-item(href='user-profile.html')
          span.dropdown-icon.oi.oi-person
-         |  Profile
-        a.dropdown-item(href='auth-signin-v1.html')
+         |  Perfil
+        a.dropdown-item(href='/menu/signout')
          span.dropdown-icon.oi.oi-account-logout
-         |  Logout
+         |  Cerrar Sesión
         .dropdown-divider
-        a.dropdown-item(href='#') Help Center
-        a.dropdown-item(href='#') Ask Forum
-        a.dropdown-item(href='#') Keyboard Shortcuts
+        a.dropdown-item(href='#') Centro de Ayuda
+        a.dropdown-item(href='#') Preguntar Foro
       .top-bar-brand
        a(href='/login#')
         img(src='images/logoRound.png',height='100%', alt='')
@@ -379,10 +379,10 @@ body
            a.menu-link(href='/facturas') Ingresar Facturas
           li.menu-item
            a.menu-link(href='/cargadte') Carga DTE
-          li.menu-item
-           a.menu-link(href='/menu/solicitudProyectos') Generar Solicitudes Proyectos
-          li.menu-item
-           a.menu-link(href='/menu/genprefacturasproy') Generar Prefacturas Proyectos
+          //- li.menu-item
+          //-  a.menu-link(href='/menu/solicitudProyectos') Generar Solicitudes Proyectos
+          //- li.menu-item
+          //-  a.menu-link(href='/menu/genprefacturasproy') Generar Prefacturas Proyectos
    main.app-main
     .wrapper
      .page
@@ -415,7 +415,6 @@ body
           link(rel='stylesheet', href='stylesheets/test.css', type='text/css', media='screen', charset='utf-8')         
           link(rel='stylesheet', href='stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')
           link(rel='stylesheet', href='stylesheets/tmpl.css', type='text/css', media='screen', charset='utf-8') 
-    
           .zerogrid_b
             block titulogrilla              
           .zerogrid_b
@@ -423,14 +422,14 @@ body
     footer.app-footer
      ul.list-inline
       li.list-inline-item
-       a.text-muted(href='#') Support
+       a.text-muted(href='#') Soporte
       li.list-inline-item
-       a.text-muted(href='#') Help Center
+       a.text-muted(href='#') Centro de Ayuda
       li.list-inline-item
-       a.text-muted(href='#') Privacy
+       a.text-muted(href='#') Privacidad
       li.list-inline-item
-       a.text-muted(href='#') Terms of Service
-     .copyright  Copyright © 2018. All right reserved. 
+       a.text-muted(href='#') Terminos de servicio
+     .copyright  © 2018 Todos los derechos reservados.
   script(src='vendor/bootstrap/js/popper.min.js')
   script(src='vendor/bootstrap/js/bootstrap.min.js')
   script(src='vendor/stacked-menu/stacked-menu.min.js')

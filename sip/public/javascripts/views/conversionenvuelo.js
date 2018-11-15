@@ -105,14 +105,14 @@ function gridConversionEnVuelo(parentRowID, parentRowKey, suffix) {
         
     ];
 
-    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+    $('#' + parentRowID).append('<br><table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
 
     $("#" + childGridID).jqGrid({
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Tabla de Conversion',
+        // caption: 'Tabla de Conversion',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

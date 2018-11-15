@@ -6,14 +6,15 @@ block jsgrilla
     script(src='/javascripts/highcharts/highcharts.js')
     script(type='text/javascript', src='/javascripts/views/troyaproveedor.js')
 block titulogrilla
-  .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Seguimiento de Proveedor
+  //- .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+  //-   h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Seguimiento de Proveedor
 block grilla
   .cajaFormulario
     .formSap
       | Proveedor :  
       select#proveedor
         option(value='0', selected='selected') - Escoger Proveedor -
+  br
   div(style='width: 100%')
     #container(style='width: 50%; float: left; display: inline-block;')
     #container2(style='width: 50%; display: inline-block;')

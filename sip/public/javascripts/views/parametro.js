@@ -14,18 +14,18 @@ $(document).ready(function () {
     tmpl += "<div class='column-full'>Valor {valor}</div>";
     tmpl += "</div>";
 
-    tmpl += "<div class='form-row' style='display: none;'>";
+    tmpl += "<div class='form-row';>";
     tmpl += "<div class='column-half'>tipo {tipo}</div>";
     tmpl += "</div>";
 
-    tmpl += "<hr style='width:100%;'/>";
+    tmpl += "<hr/>";
     tmpl += "<div> {sData} {cData}  </div>";
     tmpl += "</div>";
 
     var modelParametro = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {   
-            label: 'Tipo', name: 'tipo', width: 300, align: 'left', search: true, editable: true,
+            label: 'Tipo', name: 'tipo', align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true,
             stype: 'select',
             searchoptions: {
@@ -81,11 +81,11 @@ $(document).ready(function () {
         },
 
         {
-            label: 'Nombre', name: 'nombre', width: 300, align: 'left',
+            label: 'Nombre', name: 'nombre',  align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
         {
-            label: 'Valor', name: 'valor', width: 300, align: 'left',
+            label: 'Valor', name: 'valor', align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
 
@@ -190,6 +190,9 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
+
+     $("table.ui-jqgrid-htable").css('width','100%');
+     $("table.ui-jqgrid-btable").css('width','100%');
 
     $("#pager_parametro_left").css("width", "");
 });

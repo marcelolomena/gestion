@@ -12,7 +12,13 @@
 	top: 0; 
 	padding: 0;
 }
-.ui-jqgrid .ui-common-table {}
+.ui-common-table{ 
+    width: 100% !important; 
+} 
+
+.ui-jqgrid .ui-jqgrid-hbox{ 
+    padding-right: 0px !important; 
+} 
 
 /* Caption*/
 .ui-jqgrid .ui-jqgrid-titlebar {

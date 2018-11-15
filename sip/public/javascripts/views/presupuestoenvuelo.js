@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var template = "<div id='responsive-form' class='clearfix'>";
+    var template = "<div id='responsive-form' class='clearfix' height='10%'>";
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'><span style='color: red'>*</span>Nombre Proyecto {nombreproyecto}</div>";

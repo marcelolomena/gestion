@@ -259,6 +259,9 @@ $(document).ready(function () {
         }, {}
     );
 
+    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
+
     $("#pager_left").css("width", "");
 });
 
@@ -576,7 +579,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
 
         ],
         height: 'auto',
-        caption: 'Detalle de Factura',
+        // caption: 'Detalle de Factura',
         styleUI: "Bootstrap",
         sortable: "true",
         pager: "#" + childGridPagerID,
@@ -586,6 +589,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
         rowList: [5, 10, 20, 50],
         sortname: 'id',
         sortorder: 'asc',
+        width:null,
         viewrecords: true,
         editurl: '/facturas/actionDetalle/' + parentRowKey,
         regional: "es",
@@ -727,6 +731,8 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
         {}
 
     );
+
+    $("table.ui-jqgrid-htable").css('width','100%'); $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 }
 
@@ -740,7 +746,7 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
     }
     var childGridURL = "/getresumencontable/" + parentRowKey;
 
-    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+    $('#' + parentRowID).append('<br><table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
     $("#" + childGridID).jqGrid({
         url: childGridURL,
@@ -819,7 +825,7 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
             }
 
         ],
-        caption: 'Resumen Contable Factura',
+        // caption: 'Resumen Contable Factura',
         height: 'auto',
         styleUI: "Bootstrap",
         sortable: "true",
@@ -827,6 +833,7 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
         page: 1,
         shrinkToFit: false,
         rowNum: 10,
+        width:null,
         rowList: [5, 10, 20, 50],
         sortname: 'id',
         sortorder: 'asc',
@@ -846,7 +853,9 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
     });
 
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
-
+    $("table.ui-jqgrid-htable").css('width','100%'); 
+    $("table.ui-jqgrid-btable").css('width','100%');
+    $("table.ui-jqgrid-ftable").css('width','100%');
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false,
         add: false,

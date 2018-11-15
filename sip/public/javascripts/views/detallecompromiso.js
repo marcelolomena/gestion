@@ -25,7 +25,7 @@ function gridDetail(parentRowID, parentRowKey) {
         height: 'auto',
         autowidth: true,
         shrinkToFit: false,
-        caption: 'Compromisos',
+        // caption: 'Compromisos',
         colModel: [
             { label: 'id', name: 'id', key: true, hidden: true },
             {
@@ -198,6 +198,8 @@ function gridDetail(parentRowID, parentRowKey) {
             recreateFilter: true
         }
     );
+    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
 
     $('#' + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").css("background-color", "#0431B4");
 

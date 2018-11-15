@@ -19,20 +19,6 @@ html(lang='en')
   link(rel='canonical', href='http://uselooper.com')
   meta(property='og:url', content='http://uselooper.com')
   meta(property='og:site_name', content='Looper - Bootstrap 4 Admin Theme')
-  script(type='application/ld+json').
-   {
-   "name": "Looper - Bootstrap 4 Admin Theme",
-   "description": "Responsive admin theme build on top of Bootstrap 4",
-   "author":
-   {
-   "@type": "Person",
-   "name": ""
-   },
-   "@type": "WebSite",
-   "url": "",
-   "headline": "Fullwidth Page Layout",
-   "@context": "http://schema.org"
-   }
   link(rel='apple-touch-icon-precomposed', sizes='144x144', href='apple-touch-icon.png')
   link(rel='shortcut icon', href='favicon.ico')
   meta(name='theme-color', content='#3063A0')
@@ -68,53 +54,53 @@ html(lang='en')
          .dropdown-menu.dropdown-menu-rich.dropdown-menu-right
           h6.dropdown-header.stop-propagation
            span
-            | Activities
+            | Actividades
             span.badge (2)
           .dropdown-scroll.has-scrollable
            a.dropdown-item.unread(href='#')
             .user-avatar
              img(src='images/avatars/uifaces15.jpg', alt='')
             .dropdown-item-body
-             p.text  Jeffrey Wells created a schedule 
-             span.date Just now
+             p.text  Jeffrey Wells creó un horario 
+             span.date Justo ahora
            a.dropdown-item.unread(href='#')
             .user-avatar
              img(src='images/avatars/uifaces16.jpg', alt='')
             .dropdown-item-body
-             p.text  Anna Vargas logged a chat 
-             span.date 3 hours ago
+             p.text  Anna Vargas ha iniciado sesión en un chat.
+             span.date hace 3 horas
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/uifaces17.jpg', alt='')
             .dropdown-item-body
-             p.text  Sara Carr invited to Stilearn Admin 
-             span.date 5 hours ago
+             p.text  Sara Carr invitó a Stilearn Admin 
+             span.date hace 5 ahoras
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/uifaces18.jpg', alt='')
             .dropdown-item-body
-             p.text  Sara Carr updated a project 
-             span.date 1 day ago
+             p.text  Sara Carr actualizó un proyecto 
+             span.date hace 1 día
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/uifaces19.jpg', alt='')
             .dropdown-item-body
-             p.text  Arthur Carroll created a task 
-             span.date 1 day ago
+             p.text  Arthur Carroll creó una tarea 
+             span.date hace 1 día
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/uifaces20.jpg', alt='')
             .dropdown-item-body
-             p.text  Angela Peterson assign a task to you 
-             span.date 2 days ago
+             p.text  Angela Peterson te asignó una tarea 
+             span.date hace 2 día
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/uifaces21.jpg', alt='')
             .dropdown-item-body
-             p.text  Willie Dixon and 3 others followed you 
-             span.date 2 days ago
+             p.text  Willie Dixon y otros 3 te siguieron 
+             span.date hace 2 día
           a.dropdown-footer(href='user-activities.html')
-           | All activities
+           | Todas las actividades
            i.fa.fa-fw.fa-long-arrow-alt-right
         li.nav-item.dropdown.header-nav-dropdown.has-notified
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
@@ -122,23 +108,23 @@ html(lang='en')
          .dropdown-arrow
          .dropdown-menu.dropdown-menu-rich.dropdown-menu-right
           h6.dropdown-header.stop-propagation
-           span Messages
-           a(href='#') Mark all as read
+           span Mensajes
+           a(href='#') Marcar todo como leido
           .dropdown-scroll.has-scrollable
            a.dropdown-item.unread(href='#')
             .user-avatar
              img(src='images/avatars/team1.jpg', alt='')
             .dropdown-item-body
              p.subject  Stilearning 
-             p.text.text-truncate  Invitation: Joe's Dinner @ Fri Aug 22 
-             span.date 2 hours ago
+             p.text.text-truncate  Invitación: Joe's Dinner @ Vier 22 Ago 
+             span.date hace 2 día
            a.dropdown-item(href='#')
             .user-avatar
              img(src='images/avatars/team3.png', alt='')
             .dropdown-item-body
              p.subject  Openlane 
              p.text.text-truncate  Final reminder: Upgrade to Pro 
-             span.date 23 hours ago
+             span.date hace 23 horas
            a.dropdown-item(href='#')
             .tile.tile-circle.bg-green  GZ 
             .dropdown-item-body
@@ -165,7 +151,7 @@ html(lang='en')
              p.text.text-truncate  Our UX exercise is ready 
              span.date 6 days ago
           a.dropdown-footer(href='app-messages.html')
-           | All messages
+           | Todos los mensajes
            i.fa.fa-fw.fa-long-arrow-alt-right
         li.nav-item.dropdown.header-nav-dropdown
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
@@ -177,17 +163,17 @@ html(lang='en')
             a.tile-wrapper(href='#')
              span.tile.tile-lg.bg-indigo
               i.oi.oi-people
-             span.tile-peek Teams
+             span.tile-peek Equipos
            .dropdown-sheet-item
             a.tile-wrapper(href='#')
              span.tile.tile-lg.bg-teal
               i.oi.oi-fork
-             span.tile-peek Projects
+             span.tile-peek Proyectos
            .dropdown-sheet-item
             a.tile-wrapper(href='#')
              span.tile.tile-lg.bg-pink
               i.fa.fa-tasks
-             span.tile-peek Tasks
+             span.tile-peek Tareas
            .dropdown-sheet-item
             a.tile-wrapper(href='#')
              span.tile.tile-lg.bg-yellow
@@ -197,27 +183,28 @@ html(lang='en')
             a.tile-wrapper(href='#')
              span.tile.tile-lg.bg-cyan
               i.oi.oi-document
-             span.tile-peek Files
+             span.tile-peek Archivos
        .dropdown
         button.btn-account.d-none.d-md-flex(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
          span.user-avatar
           img(src='images/avatars/profile.jpg', alt='')
          span.account-summary.pr-lg-4.d-none.d-lg-block
-          span.account-name Beni Arisandi
-          span.account-description Marketing Manager
+          .perfil_sesion
+            .user
+             span.account-name #{data[0].nombre}
+             span.account-description #{data[0].rid}
         .dropdown-arrow.dropdown-arrow-left
         .dropdown-menu
-         h6.dropdown-header.d-none.d-md-block.d-lg-none  Beni Arisandi 
+         h6.dropdown-header.d-none.d-md-block.d-lg-none  #{data[0].nombre}
          a.dropdown-item(href='user-profile.html')
           span.dropdown-icon.oi.oi-person
-          |  Profile
-         a.dropdown-item(href='../')
+          |  Perfil
+         a.dropdown-item(href='/menu/signout')
           span.dropdown-icon.oi.oi-account-logout
-          |  Logout
+          |  Cerrar Sesión
          .dropdown-divider
-         a.dropdown-item(href='#') Help Center
-         a.dropdown-item(href='#') Ask Forum
-         a.dropdown-item(href='#') Keyboard Shortcuts
+         a.dropdown-item(href='#') Centro de Ayuda
+         a.dropdown-item(href='#') Preguntar Foro
    aside.app-aside
     .aside-content
      header.aside-header
@@ -230,20 +217,19 @@ html(lang='en')
        span.account-icon
         span.fa.fa-caret-down.fa-lg
        span.account-summary
-        span.account-name Beni Arisandi
-        span.account-description Marketing Manager
+        span.account-name #{data[0].nombre}
+        span.account-description #{data[0].rid}
       #dropdown-aside.dropdown-aside.collapse
        .pb-3
         a.dropdown-item(href='user-profile.html')
          span.dropdown-icon.oi.oi-person
-         |  Profile
-        a.dropdown-item(href='auth-signin-v1.html')
+         |  Perfil
+        a.dropdown-item(href='/menu/signout')
          span.dropdown-icon.oi.oi-account-logout
-         |  Logout
+         |  Cerrar Sesión
         .dropdown-divider
-        a.dropdown-item(href='#') Help Center
-        a.dropdown-item(href='#') Ask Forum
-        a.dropdown-item(href='#') Keyboard Shortcuts
+        a.dropdown-item(href='#') Centro de Ayuda
+        a.dropdown-item(href='#') Preguntar Foro
       .top-bar-brand
        a(href='/login#')
         img(src='images/logoRound.png',height='100%', alt='')
@@ -369,18 +355,18 @@ html(lang='en')
            a.menu-link(href='/facturas') Ingresar Facturas
           li.menu-item
            a.menu-link(href='/cargadte') Carga DTE
-          li.menu-item
-           a.menu-link(href='/menu/solicitudProyectos') Generar Solicitudes Proyectos
-          li.menu-item
-           a.menu-link(href='/menu/genprefacturasproy') Generar Prefacturas Proyectos
+          //- li.menu-item
+          //-  a.menu-link(href='/menu/solicitudProyectos') Generar Solicitudes Proyectos
+          //- li.menu-item
+          //-  a.menu-link(href='/menu/genprefacturasproy') Generar Prefacturas Proyectos
    main.app-main
     .wrapper
      .page
       .page-inner
        header.page-title-bar
         p.lead
-         span.font-weight-bold Hi, Beni.
-         span.d-block.text-muted Here’s what’s happening with your business today.
+         span.font-weight-bold Hola, #{data[0].nombre}.
+         span.d-block.text-muted Esto es lo que está sucediendo con su negocio hoy.
        .page-section
         .section-block
          .metric-row
@@ -388,7 +374,7 @@ html(lang='en')
            .metric-row.metric-flush
             .col
              a.metric.metric-bordered.align-items-center(href='user-teams.html')
-              h2.metric-label  Teams 
+              h2.metric-label  Equipos 
               p.metric-value.h3
                sub
                 i.oi.oi-people
@@ -402,7 +388,7 @@ html(lang='en')
                span.value 12
             .col
              a.metric.metric-bordered.align-items-center(href='user-tasks.html')
-              h2.metric-label  Active Tasks 
+              h2.metric-label  Tareas Activas 
               p.metric-value.h3
                sub
                 i.fa.fa-tasks
@@ -412,7 +398,7 @@ html(lang='en')
             .metric-badge
              span.badge.badge-lg.badge-success
               span.oi.oi-media-record.pulse.mr-1
-              |  ONGOING TASKS
+              |  TAREAS EN CURSO
             p.metric-value.h3
              sub
               i.oi.oi-timer
@@ -422,37 +408,44 @@ html(lang='en')
           section.card.card-fluid
            .card-body
             .d-flex.align-items-center.mb-3
-             h3.card-title.mr-auto  Completion Tasks 
+             h3.card-title.mr-auto  Tareas Completadas 
              .card-title-control
               .form-group.dropdown
                button.btn.btn-light(data-toggle='dropdown')
-                span This Week
+                span Esta Semana
                 i.fa.fa-fw.fa-caret-down
                .dropdown-arrow.dropdown-arrow-right
                .dropdown-menu.dropdown-menu-right
                 .list-group.list-group-flush
                  a.list-group-item.justify-content-between(href='#')
-                  span Today
-                  span.text-muted Mar 27
+                  span Hoy
+                  -var days = ["Dom","Lun","Mar","Mier","Jue","Vie","Sab"];
+                  -var meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+                  -var fecha = new Date();
+                  -var inicioSemana = fecha.getDate() - fecha.getDay() + (fecha.getDay() === 0 ? -6 : 1);
+                  -var finSemana = fecha.getDate() - fecha.getDay() + (fecha.getDay() === 6 ?  1: 7);
+                  -var primerDia = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
+                  -var ultimoDia = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
+                  span.text-muted #{(days[fecha.getDay()])} #{(fecha.getDate())}
                  a.list-group-item.justify-content-between(href='#')
-                  span Yesterday
-                  span.text-muted Mar 26
+                  span Ayer
+                  span.text-muted #{(days[fecha.getDay()-1])} #{(fecha.getDate()-1)}
                  a.list-group-item.justify-content-between(href='#')
-                  span This Week
-                  span.text-muted Mar 21-27
+                  span Esta Semana
+                  span.text-muted #{meses[fecha.getMonth()]} #{(inicioSemana)} - #{(finSemana)}
                  a.list-group-item.justify-content-between(href='#')
-                  span This Month
-                  span.text-muted Mar 1-31
+                  span Este Mes
+                  span.text-muted #{meses[fecha.getMonth()]} #{(primerDia.getDate())} - #{(ultimoDia.getDate())}
                  a.list-group-item.justify-content-between(href='#')
-                  span This Year
-                  span.text-muted 2018
+                  span Este Año
+                  span.text-muted #{fecha.getYear()+1900}
                  input#flatpickr.form-control.d-none(type='hidden')
             .chartjs(style='height: 283px')
              canvas#completion-tasks
          .col-12.col-lg-6.col-xl-4
           section.card.card-fluid
            .card-body
-            h3.card-title  Tasks Performance 
+            h3.card-title  Tareas de Rendimiento
             .text-center.pt-3
              .chart-inline-group(style='height:214px')
               .easyPieChart(data-percent='60', data-size='214', data-barcolor='#346CB0', data-trackcolor='false', data-scalecolor='false', data-rotate='225')
@@ -462,32 +455,32 @@ html(lang='en')
             .card-footer-item
              i.fa.fa-fw.fa-circle.text-indigo
              |  100%
-             .text-muted.small  Assigned 
+             .text-muted.small  Asignado 
             .card-footer-item
              i.fa.fa-fw.fa-circle.text-purple
              |  75%
-             .text-muted.small  Completed 
+             .text-muted.small  Completado 
             .card-footer-item
              i.fa.fa-fw.fa-circle.text-teal
              |  60%
-             .text-muted.small  Active 
+             .text-muted.small  Activo 
          .col-12.col-lg-6.col-xl-4
           section.card.card-fluid
            .card-body.pb-0
-            h3.card-title  Leaderboard 
+            h3.card-title  Tabla de Líderes 
             ul.list-inline.small
              li.list-inline-item
               i.fa.fa-fw.fa-circle.text-light
-              |  Tasks
+              |  Tarea
              li.list-inline-item
               i.fa.fa-fw.fa-circle.text-purple
-              |  Completed
+              |  Completado
              li.list-inline-item
               i.fa.fa-fw.fa-circle.text-teal
-              |  Active
+              |  Activo
              li.list-inline-item
               i.fa.fa-fw.fa-circle.text-red
-              |  Overdue
+              |  Atrasado
            .list-group.list-group-flush
             .list-group-item
              .list-group-item-figure
@@ -496,11 +489,11 @@ html(lang='en')
              .list-group-item-body
               .progress.bg-white.rounded-0(data-toggle='tooltip', data-html='true', title='<div class="text-left small"><i class="fa fa-fw fa-circle text-purple"></i> 2065<br><i class="fa fa-fw fa-circle text-teal"></i> 231<br><i class="fa fa-fw fa-circle text-red"></i> 54</div>')
                .progress-bar.bg-purple(role='progressbar', aria-valuenow='73.46140163642832', aria-valuemin='0', aria-valuemax='100', style='width: 73.46140163642832%')
-                span.sr-only 73.46140163642832% Complete
+                span.sr-only 73.46140163642832% Completado
                .progress-bar.bg-teal(role='progressbar', aria-valuenow='8.217716115261473', aria-valuemin='0', aria-valuemax='100', style='width: 8.217716115261473%')
-                span.sr-only 8.217716115261473% Complete
+                span.sr-only 8.217716115261473% Completado
                .progress-bar.bg-red(role='progressbar', aria-valuenow='1.92102454642476', aria-valuemin='0', aria-valuemax='100', style='width: 1.92102454642476%')
-                span.sr-only 1.92102454642476% Complete
+                span.sr-only 1.92102454642476% Completado
             .list-group-item
              .list-group-item-figure
               a.user-avatar(href='user-profile.html', data-toggle='tooltip', title='Tammy Beck')
@@ -551,7 +544,7 @@ html(lang='en')
                 span.sr-only 7.286288009179575% Complete
         .section-deck
          .card.card-fluid
-          header.card-header  Active Projects 
+          header.card-header  Proyectos Activos 
           .lits-group.list-group-flush
            .list-group-item
             .list-group-item-figure
@@ -562,10 +555,10 @@ html(lang='en')
             .list-group-item-body
              h5.card-title.mb-2
               a(href='app-tasks.html') Looper Admin Theme
-             p.card-subtitle.text-muted  Progress in 74% - Last update 1d 
+             p.card-subtitle.text-muted  Progreso en el 74% - Última actualización 1d
              .progress.progress-xs.bg-white
               .progress-bar.bg-blue(role='progressbar', aria-valuenow='2181', aria-valuemin='0', aria-valuemax='100', style='width: 74%')
-               span.sr-only 74% Complete
+               span.sr-only 74% Completado
            .list-group-item
             .list-group-item-figure
              .has-badge
@@ -575,10 +568,10 @@ html(lang='en')
             .list-group-item-body
              h5.card-title.mb-2
               a(href='app-tasks.html') Smart Paper
-             p.card-subtitle.text-muted  Progress in 22% - Last update 2h 
+             p.card-subtitle.text-muted  Progreso en un 22% - Última actualización 2h 
              .progress.progress-xs.bg-white
               .progress-bar.bg-indigo(role='progressbar', aria-valuenow='867', aria-valuemin='0', aria-valuemax='100', style='width: 22%')
-               span.sr-only 22% Complete
+               span.sr-only 22% Completado
            .list-group-item
             .list-group-item-figure
              .has-badge
@@ -588,10 +581,10 @@ html(lang='en')
             .list-group-item-body
              h5.card-title.mb-2
               a(href='app-tasks.html') Online Store
-             p.card-subtitle.text-muted  Progress in 99% - Last update 2d 
+             p.card-subtitle.text-muted  Progreso en un 99% - Última actualización 2d 
              .progress.progress-xs.bg-white
               .progress-bar.bg-yellow(role='progressbar', aria-valuenow='6683', aria-valuemin='0', aria-valuemax='100', style='width: 99%')
-               span.sr-only 99% Complete
+               span.sr-only 99% Completado
            .list-group-item
             .list-group-item-figure
              .has-badge
@@ -601,10 +594,10 @@ html(lang='en')
             .list-group-item-body
              h5.card-title.mb-2
               a(href='app-tasks.html') Booking App
-             p.card-subtitle.text-muted  Progress in 35% - Last update 4h 
+             p.card-subtitle.text-muted  Progreso en un 35% - Última actualización 4h 
              .progress.progress-xs.bg-white
               .progress-bar.bg-purple(role='progressbar', aria-valuenow='112', aria-valuemin='0', aria-valuemax='100', style='width: 35%')
-               span.sr-only 35% Complete
+               span.sr-only 35% Completado
            .list-group-item
             .list-group-item-figure
              .has-badge
@@ -614,10 +607,10 @@ html(lang='en')
             .list-group-item-body
              h5.card-title.mb-2
               a(href='app-tasks.html') SVG Icon Bundle
-             p.card-subtitle.text-muted  Progress in 32% - Last update 1d 
+             p.card-subtitle.text-muted  Progreso en un 32% - Última actualización 1d 
              .progress.progress-xs.bg-white
               .progress-bar.bg-teal(role='progressbar', aria-valuenow='461', aria-valuemin='0', aria-valuemax='100', style='width: 32%')
-               span.sr-only 32% Complete
+               span.sr-only 32% Completado
            .list-group-item
             .list-group-item-figure
              .has-badge
@@ -627,12 +620,12 @@ html(lang='en')
             .list-group-item-body
              h5.card-title.mb-2
               a(href='app-tasks.html') Syrena Project
-             p.card-subtitle.text-muted  Progress in 93% - Last update 8h 
+             p.card-subtitle.text-muted  Progreso en un 93% - Última actualización 8h 
              .progress.progress-xs.bg-white
               .progress-bar.bg-pink(role='progressbar', aria-valuenow='3981', aria-valuemin='0', aria-valuemax='100', style='width: 93%')
-               span.sr-only 93% Complete
+               span.sr-only 93% Completado
          .card.card-fluid
-          header.card-header  Active Tasks:To-Dos 
+          header.card-header  Tareas Activas: Por hacer 
           .card-body
            .todo-list
             .todo-header  Looper Admin Theme (1/3) 
@@ -669,27 +662,29 @@ html(lang='en')
               label.custom-control-label(for='todo7') Swim in a lake
           footer.card-footer
            a.card-footer-item(href='#')
-            | View all
+            | Ver todo
             i.fa.fa-fw.fa-angle-right
     footer.app-footer
      ul.list-inline
       li.list-inline-item
-       a.text-muted(href='#') Support
+       a.text-muted(href='#') Soporte
       li.list-inline-item
-       a.text-muted(href='#') Help Center
+       a.text-muted(href='#') Centro de Ayuda
       li.list-inline-item
-       a.text-muted(href='#') Privacy
+       a.text-muted(href='#') Privacidad
       li.list-inline-item
-       a.text-muted(href='#') Terms of Service
-     .copyright  Copyright © 2018. All right reserved. 
+       a.text-muted(href='#') Terminos de servicio
+     .copyright  © 2018 Todos los derechos reservados.
   script(src='vendor/jquery/jquery.min.js')
   script(src='vendor/bootstrap/js/popper.min.js')
   script(src='vendor/bootstrap/js/bootstrap.min.js')
   script(src='vendor/stacked-menu/stacked-menu.min.js')
   script(src='vendor/perfect-scrollbar/perfect-scrollbar.min.js')
-  script(src='vendor/flatpickr/flatpickr.min.js')
+  script(src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js")
+  script(src="https://npmcdn.com/flatpickr/dist/l10n/es.js")
   script(src='vendor/easy-pie-chart/jquery.easypiechart.min.js')
   script(src='vendor/chart.js/Chart.min.js')
   script(src='javascript/main.min.js')
   script(src='javascript/pages/easypiechart-demo.js')
   script(src='javascript/pages/dashboard-demo.js')
+  

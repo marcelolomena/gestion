@@ -26,6 +26,6 @@ and open the template in the editor.
 }
 
 .fm-button {
-    height:30px;
+    /* height:30px; */
 }
 #nData, #pData { height:20px; width:18px; }

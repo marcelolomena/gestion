@@ -582,5 +582,16 @@ img {
 }
 .ui-search-input{
 	font-size:12px;
-
 }
+#table.ui-jqgrid-htable{
+  width:'100%'};
+#table.ui-jqgrid-btable{
+  width:'100%'};
+.table.ui-jqgrid-htable{
+  width:'100%'};
+.table.ui-jqgrid-btable{
+  width:'100%'};
+table.ui-jqgrid-htable{
+  width:'100%'};
+table.ui-jqgrid-btable{
+  width:'100%'};

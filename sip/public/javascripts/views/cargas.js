@@ -205,8 +205,8 @@ function showChildGrid(parentRowID, parentRowKey) {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         shrinkToFit: true,
-        width: 1300,
-        caption: 'Detalle de Cargas Realizadas',
+        width: null,
+        // caption: 'Detalle de Cargas Realizadas',
         styleUI: "Bootstrap",
         subGrid: false,
         subGridOptions: {

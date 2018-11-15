@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var tmpl = "<div id='responsive-form' class='clearfix'>";
+    var tmpl = "<div id='responsive-form' class='clearfix height='10%'>";
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'><span style='color:red'>*</span>CUI {idcui}</div>";
@@ -384,6 +384,7 @@ $(document).ready(function () {
         }
     });
 
+         $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 });
 
@@ -762,7 +763,6 @@ function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
 
     // add a table and pager HTML elements to the parent grid row - we will render the child grid here
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-
     $("#" + childGridID).jqGrid({
         url: childGridURL,
         mtype: "GET",
@@ -784,7 +784,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
     });
 
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
-
+         $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true,
         add: true,
@@ -1280,6 +1280,7 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         pager: "#" + childGridPagerID       
         //colMenu:true
     });
+         $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true,

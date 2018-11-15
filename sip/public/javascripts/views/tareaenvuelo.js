@@ -550,7 +550,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Detalle Tarea/Servicio',
+        // caption: 'Detalle Tarea/Servicio',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

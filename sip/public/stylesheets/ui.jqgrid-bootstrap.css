@@ -721,9 +721,7 @@ div.ui-jqgrid .selected-row td {
 	height:20px; 
 	width:100%;
 }
-.ui-jqgrid .ui-search-table .ui-search-oper { 
-	width:20px; 
-}
+
 a.g-menu-item, a.soptclass, a.clearsearchclass { 
 	cursor: pointer; 
 } 

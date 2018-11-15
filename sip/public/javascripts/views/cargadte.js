@@ -179,11 +179,11 @@ function showChildGrid(parentRowID, parentRowKey) {
         page: 1,
         colModel: modelDetalle,
         rowNum: 10,
+        width:null,
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         shrinkToFit: false,
-        width: 1300,
-        caption: 'Lista de Facturas Cargadas',
+        // caption: 'Lista de Facturas Cargadas',
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
@@ -200,8 +200,10 @@ function showChildGrid(parentRowID, parentRowKey) {
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
-    }
-    );
+    });
+
+    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
 
     $("#" + childGridID).jqGrid('navButtonAdd', "#" + childGridPagerID, {
         caption: "",
@@ -329,13 +331,14 @@ function showThirdGrid(parentRowID, parentRowKey) {
         viewrecords: true,
         rowList: [5, 10, 20, 50],
         shrinkToFit: false,
-        width: 1300,
-        caption: 'Detalle de Factura',
+        width: null,
+        // caption: 'Detalle de Factura',
         styleUI: "Bootstrap",
         regional: 'es',
         height: 'auto',
         pager: "#" + childGridPagerID
     });
+
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
@@ -348,5 +351,9 @@ function showThirdGrid(parentRowID, parentRowKey) {
         $("#" + childGridID).setGridWidth($(".gcontainer").width(), true);
         $("#" + childGridPagerID).setGridWidth($(".gcontainer").width(), true);
     });
+
+    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
+
 
 }

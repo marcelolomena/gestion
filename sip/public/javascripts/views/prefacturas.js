@@ -182,7 +182,7 @@ $(document).ready(function () {
         regional: 'es',
         height: 'auto',
         caption: 'Lista de prefacturas',
-        autowidth: null,  // set 'true' here
+        width: null,  // set 'true' here
         shrinkToFit: false, // well, it's 'true' by default
         pager: "#pager_prefacturas",
         viewrecords: true,
@@ -240,6 +240,9 @@ $(document).ready(function () {
             $('#table_prefacturas').jqGrid('excelExport', { "url": url });
         }
     });
+
+    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
 
     $("#pager_left").css("width", "");
 });

@@ -505,4 +505,6 @@ function serviceFromConceptSubGrid(parentRowID, parentRowKey) {
         footerrow: true,
         userDataOnFooter: true
     });
+    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
 }

@@ -45,7 +45,7 @@ function gridcompromisosporcuiflujos(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Flujo',
+        // caption: 'Flujo',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

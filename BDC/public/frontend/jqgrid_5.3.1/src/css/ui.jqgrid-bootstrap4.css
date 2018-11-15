@@ -81,6 +81,10 @@
 	overflow: hidden;
 	white-space: nowrap;
 }
+
+.ui-jqgrid-htable .ui-common-table table .table-bordered{
+	width:'auto';
+}
 .ui-th-ltr, .ui-jqgrid .ui-jqgrid-htable th.ui-th-ltr {}
 .ui-th-rtl, .ui-jqgrid .ui-jqgrid-htable th.ui-th-rtl {text-align: center; }
 .ui-first-th-ltr { }

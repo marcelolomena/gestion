@@ -78,37 +78,37 @@ $(document).ready(function () {
     tmpl += "</div>";
     
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Rut Representante Legal {rutrepresentante}</div>";
+    tmpl += "<div class='column-half'>Rut Rep. Legal {rutrepresentante}</div>";
     tmpl += "</div>";
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Nombre Representante Legal {nombrerepresentante}</div>";
+    tmpl += "<div class='column-half'>Nom. Rep. Legal {nombrerepresentante}</div>";
     tmpl += "</div>";
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Telefono Representante Legal {fonorepresentante}</div>";
+    tmpl += "<div class='column-half'>Fono Rep. Legal {fonorepresentante}</div>";
     tmpl += "</div>";
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Correo Representante Legal {correorepresentante}</div>";
+    tmpl += "<div class='column-half'>Correo Rep. Legal {correorepresentante}</div>";
     tmpl += "</div>";
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Razon Social Contractual {razonsocialcontractual}</div>";
     tmpl += "</div>";       
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Fecha Escritura Publica {fechaescritura}</div>";
+    tmpl += "<div class='column-half'>Fec. Escritura Publica {fechaescritura}</div>";
     tmpl += "</div>";          
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Notaria Escritura Publica {notariaescritura}</div>";
     tmpl += "</div>";            
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Rut Apoderado 1 {rutapoderado1}</div>";
+    tmpl += "<div class='column-half'>Rut Apdro. 1 {rutapoderado1}</div>";
     tmpl += "</div>";   
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Nombre Primer Apoderado {nombreapoderado1}</div>";
+    tmpl += "<div class='column-half'>Nom. 1° Apdro. {nombreapoderado1}</div>";
     tmpl += "</div>";   
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Rut Apoderado 2 {rutapoderado2}</div>";
+    tmpl += "<div class='column-half'>Rut Apdro. 2 {rutapoderado2}</div>";
     tmpl += "</div>";   
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Nombre Segundo Apoderado {nombreapoderado2}</div>";
+    tmpl += "<div class='column-half'>Nom. 2° Apdro. {nombreapoderado2}</div>";
     tmpl += "</div>";             
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
@@ -116,14 +116,14 @@ $(document).ready(function () {
 
     var modelProveedor = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'RUT', name: 'numrut', width: 150, align: 'right', search: true, editable: true,
+        { label: 'RUT', name: 'numrut', width: 86, align: 'right', search: true, editable: true,
             editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
             editrules: { required: true, custom: true, custom_func: validaRut }, 
             formoptions: { elmsuffix: '<span class="required">*</span>' },
             formatter: function (cellvalue, options, rowObject) {var rut = formatearut(rowObject.numrut) + "-" + rowObject.dvrut;  return rut},                                   
         },
         { label: 'DV', name: 'dvrut', search: false, editable: false, hidden: true },
-        { label: 'Razón Social', name: 'razonsocial', width: 500, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
+        { label: 'Razón Social', name: 'razonsocial', width: 185, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
         { label: 'Negociador DIVOT uid', name: 'uid', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
@@ -153,35 +153,35 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Negociador Divot', name: 'negociadordivot', width: 200, align: 'left', search: true, editable: true,
+            label: 'Negociador Divot', name: 'negociadordivot', width: 126, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
-        { label: 'Rut Representante Legal', name: 'rutrepresentante', width: 150, align: 'right', search: true, editable: true,
+        { label: 'Rut Rep. Legal', name: 'rutrepresentante', width: 102, align: 'right', search: true, editable: true,
             editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
             editrules: { custom: true, custom_func: validaRut }                                   
         },
         {
-            label: 'Nombre Representante Legal', name: 'nombrerepresentante', width: 223, align: 'left', search: true, editable: true,
+            label: 'Nom. Rep. Legal', name: 'nombrerepresentante', width: 116, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Telefono Representante Legal', name: 'fonorepresentante', width: 220, align: 'center', search: false, editable: true,
+            label: 'Fono Rep. Legal', name: 'fonorepresentante', width: 116, align: 'center', search: false, editable: true,
                 editoptions: {
                          dataInit: function (element) {
                         $(element).mask("00000000000", { placeholder: "___________" });
                     }
                 }
         },
-        { label: 'Correo Representante Legal', name: 'correorepresentante',index: "email", width: 200, align: 'left', search: false, editable: true,                   
+        { label: 'Correo Rep. Legal', name: 'correorepresentante',index: "email", width: 126, align: 'left', search: false, editable: true,                   
                  editoptions: { maxlength: 80, size: 32 }, 
                  editrules: { email: true, required: false} 
         },
         {
-            label: 'Razon Social Contractual', name: 'razonsocialcontractual', width: 200, align: 'left', search: true, editable: true,
+            label: 'Razon Social Contractual', name: 'razonsocialcontractual', width: 172, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Fecha Escritura Publica', name: 'fechaescritura', width: 130, align: 'right', search: false, sortable: false, 
+            label: 'Fec. Escritura Publica', name: 'fechaescritura', width: 147, align: 'right', search: false, sortable: false, 
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 2, colpos: 1 },
             editoptions: {
@@ -192,23 +192,23 @@ $(document).ready(function () {
             }
         },      
         {
-            label: 'Notaria Escritura Publica', name: 'notariaescritura', width: 200, align: 'left', search: true, editable: true,
+            label: 'Notaria Escritura Publica', name: 'notariaescritura', width: 174, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         }, 
-        { label: 'Rut Apoderado 1', name: 'rutapoderado1', width: 150, align: 'right', search: true, editable: true,
+        { label: 'Rut Apdro. 1', name: 'rutapoderado1', width: 119.5, align: 'right', search: true, editable: true,
             editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
             editrules: { custom: true, custom_func: validaRut }                                   
         },
         {
-            label: 'Nombre Primer Apoderado', name: 'nombreapoderado1', width: 200, align: 'left', search: true, editable: true,
+            label: 'Nom. 1° Apdro.', name: 'nombreapoderado1', width: 120, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
-        { label: 'Rut Apoderado 2', name: 'rutapoderado2', width: 150, align: 'right', search: true, editable: true,
+        { label: 'Rut Apdro. 2', name: 'rutapoderado2', width: 119.5, align: 'right', search: true, editable: true,
             editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
             editrules: { custom: true, custom_func: validaRut }                                   
         },
         {
-            label: 'Nombre Segundo Apoderado', name: 'nombreapoderado2', width: 210, align: 'left', search: true, editable: true,
+            label: 'Nom. 2° Apdro.', name: 'nombreapoderado2', width: 120, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         }        
     ];
@@ -220,7 +220,7 @@ $(document).ready(function () {
     tmpc += "</div>";
 
     tmpc += "<div class='form-row'>";
-    tmpc += "<div class='column-full'><span style='color:red'>* </span>Telefono {fono}</div>";
+    tmpc += "<div class='column-full'><span style='color:red'>* </span>Fono {fono}</div>";
     tmpc += "</div>";
 
     tmpc += "<div class='form-row'>";
@@ -244,7 +244,7 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        width: 1300,
+        width: null,
         shrinkToFit: false,
         caption: 'Lista de proveedores',
         pager: "#pager_proveedor",
@@ -363,7 +363,7 @@ $(document).ready(function () {
         var modelContacto = [
             { label: 'Contacto', name: 'contacto', width: 300, align: 'center', search: true, editable: true, },
             {
-                label: 'Telefono', name: 'fono', width: 100, align: 'center', search: false, editable: true,
+                label: 'Fono', name: 'fono', width: 100, align: 'center', search: false, editable: true,
                 editoptions: {
                          dataInit: function (element) {
                         $(element).mask("00000000000", { placeholder: "___________" });
@@ -422,7 +422,7 @@ $(document).ready(function () {
             styleUI: "Bootstrap",
             regional: 'es',
             height: 'auto',
-            width: 850,
+            width: null,
             pager: "#" + childGridPagerID,
             editurl: '/contactos/action',
             gridComplete: function () {
@@ -473,7 +473,7 @@ $(document).ready(function () {
                     if (postdata.contacto == 0) {
                         return [false, "Contacto: Debe escoger un valor", ""];
                     } if (postdata.fono == 0) {
-                        return [false, "Telefono: Debe escoger un valor", ""];
+                        return [false, "Fono: Debe escoger un valor", ""];
                     } if (postdata.correo == 0) {
                         return [false, "Correo: Debe escoger un valor", ""];
                     } else {

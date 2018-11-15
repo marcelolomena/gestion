@@ -6,17 +6,19 @@ block jsgrilla
     script(src='/javascripts/highcharts/highcharts.js')
     script(type='text/javascript', src='/javascripts/views/grafico2.js')
 block titulogrilla
-  .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") SAP ACTIVAS
+  //- .header(style='height:50px; background-image:url(../images/dash_ch.jpg); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+  //-   h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") SAP ACTIVAS
 block grilla
   .cajaFormulario
     .formSap
       | SAP :  
       select#sap
         option(value='0', selected='selected') - Escoger SAP -
+  br
   div(style='width: 100%')
     #container(style='width: 50%; float: left; display: inline-block;')
     #container2(style='width: 50%; display: inline-block;')
+  br
   div(style='width: 100%')
     #container(style='width: 50%; float: left; display: inline-block;')
       table#grid

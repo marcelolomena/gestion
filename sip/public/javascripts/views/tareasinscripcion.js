@@ -433,7 +433,7 @@ function gridTareasInscripcion(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Tareas',
+        // caption: 'Tareas',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
