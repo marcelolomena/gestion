@@ -53,6 +53,7 @@ html(xmlns='http://www.w3.org/1999/xhtml')
   script(type="text/javascript", src="/javascripts/locales/bootstrap-datepicker.es.js", charset="UTF-8")   
   script(type='text/javascript', src='/javascripts/bootstrap3-typeahead.js')      
   script(type='text/javascript', src='/javascripts/sip.js')  
+  -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software","Maqueta Limites"];
   block jsgrilla       
 body
   .app.has-fullwidth
@@ -216,7 +217,7 @@ body
           .perfil_sesion
             .user
              span.account-name #{data[0].nombre}
-             span.account-description #{data[0].rid}
+             span.account-description #{data[0].glosarol}
         .dropdown-arrow.dropdown-arrow-left
         .dropdown-menu
          h6.dropdown-header.d-none.d-md-block.d-lg-none  #{data[0].nombre}
@@ -242,7 +243,7 @@ body
         span.fa.fa-caret-down.fa-lg
        span.account-summary
         span.account-name #{data[0].nombre}
-        span.account-description #{data[0].rid}
+        span.account-description #{data[0].glosarol}
       #dropdown-aside.dropdown-aside.collapse
        .pb-3
         a.dropdown-item(href='user-profile.html')
@@ -256,133 +257,25 @@ body
         a.dropdown-item(href='#') Preguntar Foro
       .top-bar-brand
        a(href='/login#')
-        img(src='images/logoRound.png',height='100%', alt='')
+        img(src='images/logoRound.png',height='100%', alt='') 
+        span.font-weight-bold(style='color: #234875;') &nbsp #{sistemas[data[0].sistema]}
      section.aside-menu.has-scrollable
       nav#stacked-menu.stacked-menu
        ul.menu
         li.menu-header Interfaces 
-        li.menu-item.has-child
-         a.menu-link(href='#')
-          span.menu-icon.oi.oi-puzzle-piece
-          span.menu-text Contrato
-          span.badge.badge-warning New
-         ul.menu
-          li.menu-item
-           a.menu-link(href='/contratos') Contratos
-        li.menu-item.has-child
-         a.menu-link(href='#')
-          span.menu-icon.oi.oi-pencil
-          span.menu-text Continuidad
-         ul.menu
-          li.menu-item
-           a.menu-link(href='/presupuestocontinuidad') Presupuesto
-          li.menu-item
-           a.menu-link(href='/hyperion') Hyperion
-          li.menu-item
-           a.menu-link(href='/compromisosporcui') Compromisos por CUI
-          li.menu-item
-           a.menu-link(href='/presupuestoeditcosto') EdicionCostos
-        li.menu-item.has-child
-         a.menu-link(href='#')
-          span.menu-icon.oi.oi-grid-two-up
-          span.menu-text Proyectos
-         ul.menu
-          li.menu-item
-           a.menu-link(href='/iniciativas') Iniciativas
-          li.menu-item
-           a.menu-link(href='/graficotest') Estado SAP
-          li.menu-item
-           a.menu-link(href='/presupuestoenvuelo') Compromisos por SAP
-        li.menu-item.has-child
-         a.menu-link(href='#')
-          span.menu-icon.oi.oi-bar-chart
-          span.menu-text Dashboard
-         ul.menu
-          li.menu-item
-           a.menu-link(href='/graficotest') Estado SAP
-          li.menu-item
-           a.menu-link(href='/graficotroyaproveedor') Seguimiento Por Proveedor
-          li.menu-item
-           a.menu-link(href='/reporte') Reporte
-          li.menu-item
-           a.menu-link(href='/reportetroya') Real Estimado
-          li.menu-item
-           a.menu-link(href='/menu/dash1') Gráficos
-        li.menu-item.has-child
-         a.menu-link(href='#')
-          span.menu-icon.oi.oi-list-rich
-          span.menu-text Facturas
-         ul.menu
-          li.menu-item
-           a.menu-link(href='/consultatroya') Seguimiento Gasto
-        li.menu-item.has-child
-         a.menu-link(href='#')
-          span.menu-icon.oi.oi-wrench
-          span.menu-text Conferencia
-         ul.menu
-          li.menu-item
-           a.menu-link(href='https://152.139.147.41:3001/conferencia') Sala PMO
-        li.menu-item.has-child
-         a.menu-link(href='#')
-          span.menu-icon.oi.oi-wrench
-          span.menu-text Administrador DIVOT
-         ul.menu
-          li.menu-item
-           a.menu-link(href='/parametros') Otros Parametros
-          li.menu-item
-           a.menu-link(href='/serviciosext') Servicios Externos
-          li.menu-item
-           a.menu-link(href='/plantilla') Plantilla CUI-SERVICIO-PROVEEDOR
-          li.menu-item
-           a.menu-link(href='/proveedores') Proveedores
-          li.menu-item
-           a.menu-link(href='/conceptos') Conceptos Presupuestarios
-          li.menu-item
-           a.menu-link(href='/estructuracui') Estructura de CUIs
-          li.menu-item
-           a.menu-link(href='/cuentascontables') Cuentas Contables
-          li.menu-item
-           a.menu-link(href='/presupuestoaprobacion') Aprobación Presupuesto
-          li.menu-item
-           a.menu-link(href='/roles') Roles por usuario
-          li.menu-item
-           a.menu-link(href='/permisos') Permisos por Rol
-          li.menu-item
-           a.menu-link(href='/monedasconversion') Monedas
-          li.menu-item
-           a.menu-link(href='/cargas') Cargas Masicas
-          li.menu-item
-           a.menu-link(href='/factorrecuperacion') Factor de Recuperación
-          li.menu-item
-           a.menu-link(href='/rolnegocio') Rol de Negocio
-        li.menu-item.has-child
-         a.menu-link(href='#')
-          span.menu-icon.oi.oi-people
-          span.menu-text Administración
-         ul.menu
-          li.menu-item
-           a.menu-link(href='/inscripcionsap') Inscripción SAP
-        li.menu-item.has-child
-         a.menu-link(href='#')
-          span.menu-icon.oi.oi-infinity
-          span.menu-text Prefactura
-         ul.menu
-          li.menu-item
-           a.menu-link(href='/solicitud') Generar Solicitudes
-          li.menu-item
-           a.menu-link(href='/prefacturasolicitud') Aprobar/Rechazar Solicitudes
-          li.menu-item
-           a.menu-link(href='/genprefacturas') Generar Prefacturas
-          li.menu-item
-           a.menu-link(href='/prefacturas') Prefacturas
-          li.menu-item
-           a.menu-link(href='/facturas') Ingresar Facturas
-          li.menu-item
-           a.menu-link(href='/cargadte') Carga DTE
-          //- li.menu-item
-          //-  a.menu-link(href='/menu/solicitudProyectos') Generar Solicitudes Proyectos
-          //- li.menu-item
-          //-  a.menu-link(href='/menu/genprefacturasproy') Generar Prefacturas Proyectos
+          each val in data[1].menus
+            li.menu-item.has-child
+              a.menu-link(href='#')
+                span.menu-text=val.menu.menu
+              ul.menu
+                each vol in val.submenu
+                  li.menu-item
+                    if(vol.url!='conferencia')
+                      a.menu-link(href='/'+vol.url)
+                        span.menu-text=vol.opt
+                    else                    
+                      a.menu-link(href='https://152.139.147.41:3001/'+vol.url)
+                        span.menu-text=vol.opt        
    main.app-main
     .wrapper
      .page

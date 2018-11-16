@@ -6690,7 +6690,7 @@ iframe {
 }
 
 .top-bar-brand > a {
-  color: rgba(255, 255, 255, 0.87);
+  /* color: rgba(255, 255, 255, 0.87); */
 }
 
 .top-bar-brand > a:focus {

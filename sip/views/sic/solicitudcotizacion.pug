@@ -19,12 +19,8 @@ block jsgrilla
             padding-top:2px;
     }   
   link(rel='stylesheet', href='/stylesheets/sic/solicitudcotizacion.css', type='text/css', media='screen', charset='utf-8')
-  script(type='text/javascript', src='/javascripts/moment.js')
-  script(type='text/javascript', src='/javascripts/ajaxfileupload.js')
-  script(type='text/javascript', src='/javascripts/tinymce/tinymce.min.js')
-  script(type='text/javascript', src='/javascripts/tinymce/jquery.tinymce.min.js')
-  script(type='text/javascript', src='/javascripts/views/sic/bootstrap.js')
-  script(type='text/javascript', src='/javascripts/bootstrap-datetimepicker.js')
+  link(href='/stylesheets/sip/public/vendor/bootstrap.min.css', type='text/css', media='screen', charset='utf-8') 
+  link(href='/stylesheets/sip/public/vendor/bootstrap.css', type='text/css', media='screen', charset='utf-8') 
   script(type='text/javascript', src='/javascripts/views/sic/solicitudcotizacion.js')
   script(type='text/javascript', src='/javascripts/views/sic/estadosolicitud.js')  
   script(type='text/javascript', src='/javascripts/views/sic/doc.js')  
@@ -41,8 +37,8 @@ block jsgrilla
   script(type='text/javascript', src='/javascripts/views/sic/genrfc.js')
  
 block titulogrilla
-  .header(style='height:50px; background-image:url(../images/r1.png); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-    h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") PREPARACIÓN RFP
+  //- .header(style='height:50px; background-image:url(../images/r1.png); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
+  //-   h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") PREPARACIÓN RFP
 block grilla
   .gcontainer
   .cajaFormulario
@@ -50,6 +46,7 @@ block grilla
       |Proveedor: 
       select#provee
       #buscar.btn Buscar
+  br
   div(style='width: 100%')
   #container(style='width: 100%; float: left; display: inline-block;')
       table#gridMaster

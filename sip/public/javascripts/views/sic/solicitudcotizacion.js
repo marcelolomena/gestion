@@ -121,7 +121,7 @@ function showSolicitudCotizacion(provee) {
             label: 'Tipo',
             name: 'idtipo',
             jsonmap: "tipoclausula.nombre",
-            width: 60,
+            width: 50,
             align: 'center',
             search: false,
             editable: false,
@@ -169,16 +169,16 @@ function showSolicitudCotizacion(provee) {
             label: 'Grupo',
             name: 'idgrupo',
             jsonmap: "grupo.nombre",
-            width: 120,
+            width: 100,
             align: 'center',
             search: false,
             editable: false,
             hidden: false
         },
         {
-            label: 'Fecha Solicitud',
+            label: 'Fecha Soli.',
             name: 'fechaenviorfp',
-            width: 120,
+            width: 90,
             align: 'center',
             search: false,
             editable: true,
@@ -221,7 +221,7 @@ function showSolicitudCotizacion(provee) {
         {
             label: 'CUI',
             name: 'idcui',
-            width: 80,
+            width: 70,
             align: 'left',
             search: false,
             sortable: false,
@@ -303,7 +303,7 @@ function showSolicitudCotizacion(provee) {
         }, {
             label: 'SAP',
             name: 'sap',
-            width: 90,
+            width: 55,
             align: 'center',
             search: false,
             sortable: false,
@@ -317,9 +317,9 @@ function showSolicitudCotizacion(provee) {
                 }
             }
         }, {
-            label: 'Código ART',
+            label: 'Cód. ART',
             name: 'codigoart',
-            width: 90,
+            width: 75,
             align: 'center',
             search: false,
             editable: true,
@@ -373,7 +373,7 @@ function showSolicitudCotizacion(provee) {
         }, {
             label: 'Técnico Responsable',
             name: 'tecnico',
-            width: 180,
+            width: 170,
             search: true,
             align: 'center',
             editable: false,
@@ -431,7 +431,7 @@ function showSolicitudCotizacion(provee) {
         {
             label: 'Descripción',
             name: 'descripcion',
-            width: 250,
+            width: 200,
             align: 'left',
             search: true,
             editable: true,
@@ -542,7 +542,7 @@ function showSolicitudCotizacion(provee) {
         }, {
             label: 'Negociador',
             name: 'negociador',
-            width: 150,
+            width: 120,
             search: true,
             editable: false,
             formatter: returnNegociador,
@@ -685,7 +685,7 @@ function showSolicitudCotizacion(provee) {
 
         },
         {
-            label: 'Fecha Asignación Administración',
+            label: 'Fec. Asig. Admin.',
             name: 'fechaasignacionadmin',
             width: 120,
             align: 'center',
@@ -743,7 +743,7 @@ function showSolicitudCotizacion(provee) {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
+        width: null,
         sortname: 'colorestado',
         sortorder: "desc",
         shrinkToFit: false,
@@ -766,6 +766,7 @@ function showSolicitudCotizacion(provee) {
         loadComplete: function (data) {
             var thisId = $.jgrid.jqID(this.id);
             $.get('/sic/getsession', function (data) {
+                console.log(data[0].glosarol);
                 $.each(data, function (i, item) {
                     console.log("EL ROL ES: " + item.glosarol)
                     if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC' && item.glosarol != 'Encargado Administracion SIC') {
@@ -787,6 +788,9 @@ function showSolicitudCotizacion(provee) {
         searchOnEnter: false,
         defaultSearch: 'cn'
     });
+
+    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
 
     $grid.jqGrid('navGrid', '#pagerMaster', {
         edit: true,
@@ -1001,21 +1005,22 @@ function showSolicitudCotizacion(provee) {
     }
 
     function showChildGrid(parentRowID, parentRowKey) {
-        var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
-        tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
-        // tabs += "<li><a href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
-        tabs += "<li><a href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
-        tabs += "<li><a href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"
-        tabs += "<li><a href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Servicios</a></li>"
-        // tabs += "<li><a href='/sic/foro/" + parentRowKey + "' data-target='#foro' id='foro_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Foro</a></li>"
-        tabs += "<li><a href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
-        tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#criterios' id='criterios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Criterios</a></li>"
-        tabs += "<li><a href='/sic/anexos/" + parentRowKey + "' data-target='#anexos' id='anexos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Anexos</a></li>"
-        tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#preguntasrfp' id='preguntasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas al Proveedor</a></li>"
-        tabs += "<li><a href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
-        tabs += "<li><a href='/sic/triada/" + parentRowKey + "' data-target='#triada' id='triada_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Triada</a></li>"
+        var tabs = "<br><ul class='nav nav-tabs card-header-tabs'>"
+        tabs += "&nbsp&nbsp&nbsp&nbsp<li class='nav-item' data-toggle='tab'><a class='nav-link active show' href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
+        // tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/servicios/" + parentRowKey + "' data-target='#servicios' id='servicios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Servicios</a></li>"
+        // tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/foro/" + parentRowKey + "' data-target='#foro' id='foro_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Foro</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/clausulas/" + parentRowKey + "' data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Cláusulas</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/criterios/" + parentRowKey + "' data-target='#criterios' id='criterios_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Criterios</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/anexos/" + parentRowKey + "' data-target='#anexos' id='anexos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Anexos</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#preguntasrfp' id='preguntasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas al Proveedor</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/triada/" + parentRowKey + "' data-target='#triada' id='triada_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Triada</a></li>"
         tabs += "</ul>"
 
+        tabs += "<br>"
         tabs += "<div class='tab-content'>"
         tabs += "<div class='tab-pane active' id='estadosolicitud'><div class='container-fluid'><table id='estadosolicitud_t_" + parentRowKey + "'></table><div id='navGridEst'></div></div></div>"
         // tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"

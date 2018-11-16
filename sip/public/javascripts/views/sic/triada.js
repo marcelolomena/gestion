@@ -37,6 +37,7 @@ var gridTriada = {
             sortorder: "asc",
             regional: 'es',
             shrinkToFit: true,
+            width: null,
             height: "auto",
             viewrecords: true,
             caption: "Triada",

@@ -319,6 +319,7 @@ var gridEstado = {
             styleUI: "Bootstrap",
             sortname: 'fechaestadoesperada',
             sortorder: "asc",
+            width:null,
             height: "auto",
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
@@ -345,6 +346,11 @@ var gridEstado = {
             }
 
         });
+
+        $("table.ui-jqgrid-htable").css('width','100%');
+        $("table.ui-jqgrid-btable").css('width','100%');
+        // $("td.#navGridEst_left").css('width','50%')
+        
 
         $gridTab.jqGrid('navGrid', '#navGridEst', {
             edit: true,
@@ -475,7 +481,7 @@ var gridEstado = {
             }
         });
         $gridTab.jqGrid('navButtonAdd', '#navGridEst', {
-            caption: "Generar Documento",
+            caption: "",
             id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
             buttonicon: "glyphicon glyphicon-download-alt",
             title: "Generar Documento",
@@ -494,5 +500,6 @@ var gridEstado = {
 
             }
         });
+        
     }
 }

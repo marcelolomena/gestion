@@ -150,12 +150,13 @@ module.exports = (function () {
                             var usuario = []
                             var nombre = {}
                             nombre["contadorPreguntas"] = 0;
-                            nombre["nombre"] = usr[0].first_name + " " + usr[0].last_name
-                            nombre["uid"] = user.uid
+                            nombre["nombre"] = usr[0].first_name + " " + usr[0].last_name;
+                            nombre["uid"] = user.uid;
                             nombre["sistema"] = req.body.sistema;
+                            nombre["glosarol"] = usr[0].glosarol;
                             logger.debug('ROL ------>> ' + usr[0].glosarol);
                             nombre["rol"] = _roles//[ { id: 12, glosarol: 'Técnico SIC' } ]
-                            nombre["rid"] = _rolnegocio.rolnegocio
+                            nombre["rid"] = _rolnegocio.rolnegocio;
                             usuario.push(nombre)
                             logger.debug('ROLNEGOCIO ------>> ' + _rolnegocio.rolnegocio);
 

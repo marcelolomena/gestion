@@ -95,6 +95,7 @@ var gridBitacora = {
             sortorder: "asc",
             shrinkToFit: false,
             height: "auto",
+            width: null,
             //editurl: '/bitacora/action',
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
@@ -160,6 +161,9 @@ var gridBitacora = {
                 }
             }
         );
+
+        $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
 
 
 
