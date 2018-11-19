@@ -22,7 +22,6 @@ var gridEstado = {
         tmpl += "<div class='column-full'>{estado}</div>";
         tmpl += "</div>";
 
-        tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
 
@@ -349,7 +348,14 @@ var gridEstado = {
 
         $("table.ui-jqgrid-htable").css('width','100%');
         $("table.ui-jqgrid-btable").css('width','100%');
+        // $("td.#navGridEst_left").css('width','50%');
+        $("#pagerMaster_left").css('width','50%');
+
+
+        
         // $("td.#navGridEst_left").css('width','50%')
+
+        // $("td.#navGridEst_center").css('width','50%')
         
 
         $gridTab.jqGrid('navGrid', '#navGridEst', {

@@ -791,6 +791,9 @@ function showSolicitudCotizacion(provee) {
 
     $("table.ui-jqgrid-htable").css('width','100%');
     $("table.ui-jqgrid-btable").css('width','100%');
+    $("table.ui-pager-table").css('width',null);
+    // ui-pg-table ui-common-table ui-pager-table table
+    // ui-pager-table.element.style.width = null;
 
     $grid.jqGrid('navGrid', '#pagerMaster', {
         edit: true,
