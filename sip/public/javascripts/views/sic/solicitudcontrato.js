@@ -635,13 +635,12 @@ $(document).ready(function () {
         height: 'auto',
         sortname: 'colorestado',
         sortorder: "desc",
-        shrinkToFit: false,
+        // shrinkToFit: false,
         width: '100%',
         forceFit: true,
         hidegrid: false,
         responsive: true,
         autowidth: true,
-        responsive: true,
         viewrecords: true,
 		restoreCellonFail : true,
         editurl: '/sic/grid_solicitudcotizacion',
@@ -745,7 +744,7 @@ $(document).ready(function () {
     function showChildGrid(parentRowID, parentRowKey) {
         var tabs = "<br><ul class='nav nav-tabs tabs-up' id='myTab'>"
         //tabs += "<li><a href='/sic/proveedores/" + parentRowKey + "' data-target='#proveedores' id='proveedores_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Proveedores</a></li>"
-        tabs += "&nbsp&nbsp&nbsp&nbsp<li class='nav-item' data-toggle='tab'><a class='nav-link active show'  href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link active show'  href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
         tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/preguntas/" + parentRowKey + "' data-target='#preguntas' id='preguntas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas del Proveedor</a></li>"
         tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#respuestasrfp' id='respuestasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Respuestas del Proveedor</a></li>"
         tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/participantesproveedor/" + parentRowKey + "' data-target='#participantesproveedor' id='participantesproveedor_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Participantes Proveedor</a></li>"

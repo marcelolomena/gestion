@@ -48,15 +48,15 @@ var gridPreguntas = {
                         }
                     }
                 },
-                { name: 'proveedor', width: 250, search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
-                { name: 'tipo', width: 100, search: false, editable: false, hidden: false },
+                { name: 'proveedor', search: false, editable: false, hidden: false, jsonmap: "proveedor.razonsocial" },
+                { name: 'tipo',  search: false, editable: false, hidden: false },
 
 
 
 
 
-                { name: 'responsable', width: 100, search: false, editable: true, hidden: false, },
-                { name: 'pregunta', width: 350, search: false, editable: false, hidden: false },
+                { name: 'responsable',  search: false, editable: true, hidden: false, },
+                { name: 'pregunta',  search: false, editable: false, hidden: false },
                 {
                     name: 'fileToUpload',
                     hidden: true,
@@ -68,7 +68,7 @@ var gridPreguntas = {
                     },
                     search: false
                 },
-                { name: 'respuesta', width: 350, search: false, editable: false, hidden: false },
+                { name: 'respuesta', search: false, editable: false, hidden: false },
             ],
             rowNum: 20,
             pager: '#navGridPre',
@@ -83,11 +83,11 @@ var gridPreguntas = {
             sortorder: "asc",
             height: "auto",
             shrinkToFit: false,
-            width: '100%',
+            width: null,
             forceFit: true,
             hidegrid: false,
-            responsive: true,
-            autowidth: true,
+            // responsive: true,
+            // autowidth: true,
             //loadonce: true,
             //onSelectRow: editRow,
             //width: 1000,
@@ -98,6 +98,9 @@ var gridPreguntas = {
             viewrecords: true,
             caption: "Preguntas"
         });
+
+        $("table.ui-jqgrid-htable").css('width','100%');
+        $("table.ui-jqgrid-btable").css('width','100%');
 
         /*
         var lastSelection;

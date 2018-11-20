@@ -268,7 +268,7 @@ div.tablediv > .table-bordered {
 	border-bottom: 0px none;
 }
 .ui-jqgrid .ui-jqgrid-ftable {
-	border: 0px none;
+	/* border: 0px none; */
 }
 .ui-jqgrid tr.footrow-ltr td {
 	text-align:left;

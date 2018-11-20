@@ -18,7 +18,7 @@ var gridRespuestasRFP = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Preguntas', 'pregunta'],
+            colNames: ['id', 'Respuesta', 'pregunta'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
                 { name: 'pregunta', width: 1100, search: false, editable: false, hidden: false },
@@ -50,12 +50,12 @@ var gridRespuestasRFP = {
             sortorder: "asc",
             shrinkToFit: false,
             height: "auto",
-            width: "auto",
+            width: null,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
-            caption: "Preguntas al Proveedor",
+            caption: "Respuesta del Proveedor",
             loadComplete: function (data) {
                 var thisId = $.jgrid.jqID(this.id);
                 $.get('/sic/getsession', function (data) {
@@ -74,6 +74,9 @@ var gridRespuestasRFP = {
                 });
             }
         });
+
+        $("table.ui-jqgrid-htable").css('width','100%');
+        $("table.ui-jqgrid-btable").css('width','100%');
         $gridTab.jqGrid('navGrid', '#navGridPreg', { edit: false, add: true, del: true, search: false },
             {
                 editCaption: "Modifica",
@@ -295,7 +298,7 @@ console.log("la parentSolicitud : " + parentSolicitud)
         url: childGridURL,
         mtype: "GET",
         datatype: "json",
-        caption: 'Respuestas',
+        // caption: 'Respuestas',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

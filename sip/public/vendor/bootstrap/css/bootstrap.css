@@ -217,7 +217,7 @@ svg:not(:root) {
 }
 
 table {
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
 }
 
 caption {
@@ -4087,8 +4087,8 @@ input[type="button"].btn-block {
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  padding-left: 0;
-  margin-bottom: 0;
+  padding-left: 13;
+  margin-bottom: -17;
   list-style: none;
 }
 

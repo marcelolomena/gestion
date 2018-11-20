@@ -52,7 +52,7 @@ function gridEva1E(parentRowID, parentRowKey, suffix) {
             mtype: "GET",
             rowNum: 20,
             datatype: "json",
-            caption: 'Evaluación Económica',
+            // caption: 'Evaluación Económica',
             //width: null,
             //shrinkToFit: false,
             autowidth: true,  // set 'true' here

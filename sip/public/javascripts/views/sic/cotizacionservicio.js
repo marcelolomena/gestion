@@ -212,7 +212,7 @@ function gridCotizaciones(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Cotización',
+        // caption: 'Cotización',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

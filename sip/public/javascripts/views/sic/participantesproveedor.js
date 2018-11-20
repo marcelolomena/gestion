@@ -59,13 +59,13 @@ var gridParticipantesPro = {
                 },
 
                 {
-                    label: 'Nombre Proveedor', name: 'proveedor.razonsocial', width: 250, align: 'left', search: true, editable: true,
+                    label: 'Nombre Proveedor', name: 'proveedor.razonsocial', align: 'left', search: true, editable: true,
                     editrules: { edithidden: false, required: true }, hidedlg: true
                 },
-                { label: 'Nombre', name: 'nombre', width: 350, align: 'left', search: false, editable: true, editrules: { required: true } },
-                { label: 'Cargo', name: 'cargo', width: 100, align: 'left', search: false, editable: true, editrules: { required: true } },
-                { label: 'Correo', name: 'correo', width: 300, align: 'left', search: false, editable: true, editrules: { required: true } },
-                { label: 'Teléfono', name: 'telefono', width: 100, align: 'left', search: false, editable: true, editrules: { required: true } },
+                { label: 'Nombre', name: 'nombre', align: 'left', search: false, editable: true, editrules: { required: true } },
+                { label: 'Cargo', name: 'cargo',  align: 'left', search: false, editable: true, editrules: { required: true } },
+                { label: 'Correo', name: 'correo', align: 'left', search: false, editable: true, editrules: { required: true } },
+                { label: 'Teléfono', name: 'telefono', align: 'left', search: false, editable: true, editrules: { required: true } },
 
             ],
             rowNum: 10,
@@ -74,8 +74,17 @@ var gridParticipantesPro = {
             styleUI: "Bootstrap",
             sortname: 'id',
             sortorder: "asc",
-            shrinkToFit: false,
             height: "auto",
+            shrinkToFit: false,
+            width: null,
+            forceFit: true,
+            hidegrid: false,
+            // responsive: true,
+            // autowidth: true,
+            //loadonce: true,
+            //onSelectRow: editRow,
+            //width: 1000,
+            //rownumbers: true,
             editurl: '/sic/participantesproveedor/' + parentRowKey,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
@@ -99,6 +108,9 @@ var gridParticipantesPro = {
                 });
             }
         });
+        
+        $("table.ui-jqgrid-htable").css('width','100%');
+        $("table.ui-jqgrid-btable").css('width','100%');
         $gridTab.jqGrid('navGrid', '#navGridPartPro', { edit: true, add: true, del: true, search: false },
             {
                 closeAfterEdit: true,
