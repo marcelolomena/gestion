@@ -12331,6 +12331,7 @@ a.metric:hover,
   pointer-events: none;
 }
 
+
 .auth-form {
   position: relative;
   padding: 2rem 1.25rem 0;
@@ -12384,6 +12385,7 @@ a.metric:hover,
     max-width: 33.333333%;
   }
 }
+
 
 .auth-floated .auth-announcement {
   display: none;
