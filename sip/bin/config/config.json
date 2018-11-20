@@ -1,4 +1,21 @@
 {
+    "aws": {
+        "username": "art",
+        "password": "biometria123",
+        "database": "art_live",
+        "host": "aa1v3kuq2ptogkv.co6kh0nzxutb.us-west-2.rds.amazonaws.com",
+        "dialect": "mssql",
+        "port": "1433",
+        "dialectOptions": {
+            "requestTimeout": 1200000 
+        },
+        "pool": {
+            "min": 5,
+            "max": 100,
+            "idle": 500000
+        },
+        "logging": false
+    },
     "development": {
         "username": "biometria",
         "password": "biometria123",
