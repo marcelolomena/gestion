@@ -245,7 +245,11 @@ var gridCriterios = {
             styleUI: "Bootstrap",
             sortname: 'id',
             sortorder: "asc",
-            shrinkToFit: false,
+            width: null,
+            forceFit: true,
+            hidegrid: true,
+            viewrecords: true,
+            restoreCellonFail : true,
             height: "auto",
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');

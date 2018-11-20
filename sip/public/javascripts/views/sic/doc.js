@@ -185,9 +185,11 @@ var gridDoc = {
             sortname: 'id',
             sortorder: "asc",
             height: "auto",
-            //shrinkToFit: true,
-            //autowidth: true,
-            width: 1200,
+            width: null,
+            forceFit: true,
+            hidegrid: true,
+            viewrecords: true,
+            restoreCellonFail : true,
             rownumbers: true,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
@@ -405,10 +407,10 @@ function gridabrobaciondoc(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Aprobaciones',
-        //width: null,
+        // caption: 'Aprobaciones',
+        width: null,
         //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
+        // autowidth: true,  // set 'true' here
         shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelSubcriterios,

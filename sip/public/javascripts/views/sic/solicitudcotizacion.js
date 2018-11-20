@@ -743,12 +743,17 @@ function showSolicitudCotizacion(provee) {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        width: null,
         sortname: 'colorestado',
         sortorder: "desc",
         shrinkToFit: false,
+        width: '100%',
         forceFit: true,
+        hidegrid: false,
+        responsive: true,
+        autowidth: true,
+        responsive: true,
         viewrecords: true,
+		restoreCellonFail : true,
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
@@ -791,9 +796,6 @@ function showSolicitudCotizacion(provee) {
 
     $("table.ui-jqgrid-htable").css('width','100%');
     $("table.ui-jqgrid-btable").css('width','100%');
-    $("table.ui-pager-table").css('width',null);
-    // ui-pg-table ui-common-table ui-pager-table table
-    // ui-pager-table.element.style.width = null;
 
     $grid.jqGrid('navGrid', '#pagerMaster', {
         edit: true,

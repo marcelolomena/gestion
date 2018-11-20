@@ -68,7 +68,7 @@ var gridCalendario = {
                     }
                 },
                 {
-                    name: 'horaesperada', width: 100, align: 'center', search: false,
+                    name: 'horaesperada', align: 'center', search: false,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'ShortTime' },
                     editable: true, editrules: { required: false },
                     editoptions: {
@@ -106,7 +106,7 @@ var gridCalendario = {
                     }
                 },
                 {
-                    name: 'horareal', width: 100, align: 'center', search: false, editable: true,
+                    name: 'horareal',  align: 'center', search: false, editable: true,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'ShortTime' },
                     editable: true, editrules: { required: false },
                     editoptions: {
@@ -117,7 +117,7 @@ var gridCalendario = {
                         },
                     },
                 },
-                { name: 'observacion', width: 300, editable: true, editoptions: { size: 25 }, editrules: { required: false } },
+                { name: 'observacion', editable: true, editoptions: { size: 25 }, editrules: { required: false } },
                 {
                     name: 'idtiporesponsable', search: false, editable: true, hidden: true,
                     edittype: "select",
@@ -142,11 +142,7 @@ var gridCalendario = {
                         }
                     }
                 },
-                { name: 'valore.nombre', width: 150, editable: true, editoptions: { size: 10 } },
-
-
-
-
+                { name: 'valore.nombre', editable: true, editoptions: { size: 10 } },
             ],
             rowNum: 10,
             rowList: [3, 6],
@@ -154,13 +150,18 @@ var gridCalendario = {
             styleUI: "Bootstrap",
             sortname: 'id',
             sortorder: "asc",
-            shrinkToFit: false,
+            // autowidth: true,
             height: "auto",
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
             viewrecords: true,
             caption: "Calendario",
+            width: null,
+            forceFit: true,
+            hidegrid: true,
+            viewrecords: true,
+            restoreCellonFail : true,
             loadComplete: function (data) {
                 var thisId = $.jgrid.jqID(this.id);
                 $.get('/sic/getsession', function (data) {

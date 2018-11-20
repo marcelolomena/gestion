@@ -211,7 +211,7 @@ function gridServicioProveedor(parentRowID, parentRowKey, suffix) {
         rowList: [5, 10, 20, 50],
         shrinkToFit: true,
         autowidth: true,
-        caption: 'SERVICIO - PROVEEDOR',
+        // caption: 'SERVICIO - PROVEEDOR',
         styleUI: "Bootstrap",
         subGrid: false,
         subGridOptions: {

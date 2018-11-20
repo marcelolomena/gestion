@@ -38,14 +38,15 @@ block jsgrilla
  
 block titulogrilla
   //- .header(style='height:50px; background-image:url(../images/r1.png); background-repeat:no-repeat; background-position: left center; margin-top:5px; margin-bottom:5px')
-  //-   h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") PREPARACIÓN RFP
+  //- -   h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") PREPARACIÓN RFP
 block grilla
   .gcontainer
   .cajaFormulario
     .formProvee
       |Proveedor: 
-      select#provee
-      #buscar.btn Buscar
+      select#provee(class='custom-select' style="width:auto")
+      #buscar.btn(class='btn btn-primary' style="background-color:#346cb0") Buscar
+        #span(class='oi ml-2 oi-magnifying-glass')
   br
   div(style='width: 100%')
   #container(style='width: 100%; float: left; display: inline-block;')

@@ -335,7 +335,13 @@ var gridServ = {
             styleUI: "Bootstrap",
             sortname: 'id',
             sortorder: "asc",
-            shrinkToFit: false,
+
+            width: null,
+            forceFit: true,
+            hidegrid: true,
+            viewrecords: true,
+            restoreCellonFail : true,
+
             height: "auto",
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
@@ -929,7 +935,7 @@ console.log("la parentSolicitud : " + parentSolicitud)
         url: childGridURL,
         mtype: "GET",
         datatype: "json",
-        caption: 'Proveedores Sugeridos',
+        // caption: 'Proveedores Sugeridos',
         //width: null,
         //shrinkToFit: false,
         autowidth: true, // set 'true' here

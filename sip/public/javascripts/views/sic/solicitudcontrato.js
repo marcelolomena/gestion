@@ -63,7 +63,7 @@ $(document).ready(function () {
                 label: 'Tipo',
                 name: 'tipo',
                 jsonmap: "tipoclausula.nombre",
-                width: 60,
+                width: 50,
                 align: 'center',
                 search: false,
                 editable: false,
@@ -104,7 +104,7 @@ $(document).ready(function () {
                 label: 'Etapa',
                 name: 'clasificacion',
                 jsonmap: "clasificacion.nombre",
-                width: 100,
+                width: 120,
                 align: 'center',
                 search: false,
                 editable: true,
@@ -114,7 +114,7 @@ $(document).ready(function () {
                 label: 'Grupo',
                 name: 'grupo',
                 jsonmap: "grupo.nombre",
-                width: 120,
+                width: 100,
                 align: 'center',
                 search: false,
                 editable: false,
@@ -123,7 +123,7 @@ $(document).ready(function () {
             {
                 label: 'Fecha Solicitud',
                 name: 'fechaenviorfp',
-                width: 120,
+                width: 90,
                 align: 'center',
                 search: false,
                 formatter: 'date',
@@ -168,7 +168,7 @@ $(document).ready(function () {
             {
                 label: 'N° RFP',
                 name: 'numerorfp',
-                width: 60,
+                width: 70,
                 hidden: true,
                 search: false,
                 editable: true,
@@ -180,7 +180,7 @@ $(document).ready(function () {
             {
                 label: 'CUI',
                 name: 'idcui',
-                width: 80,
+                width: 90,
                 align: 'left',
                 search: false,
                 sortable: false,
@@ -264,7 +264,7 @@ $(document).ready(function () {
             {
                 label: 'SAP',
                 name: 'sap',
-                width: 90,
+                width: 55,
                 align: 'center',
                 search: false,
                 editable: true,
@@ -280,7 +280,7 @@ $(document).ready(function () {
             {
                 label: 'Código ART',
                 name: 'codigoart',
-                width: 90,
+                width: 75,
                 align: 'center',
                 search: false,
                 editable: true,
@@ -335,7 +335,7 @@ $(document).ready(function () {
             {
                 label: 'Técnico Responsable',
                 name: 'first_name',
-                width: 180,
+                width: 170,
                 align: 'center',
                 search: true,
                 editable: false,
@@ -394,7 +394,7 @@ $(document).ready(function () {
             {
                 label: 'Descripción',
                 name: 'descripcion',
-                width: 250,
+                width: 200,
                 align: 'left',
                 search: true,
                 editable: true,
@@ -535,7 +535,7 @@ $(document).ready(function () {
             {
                 label: 'Negociador',
                 name: 'negociador',
-                width: 150,
+                width: 120,
                 search: true,
                 editable: false,
                 formatter: returnNegociador,
@@ -633,15 +633,19 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
-        //width: 1500,
         sortname: 'colorestado',
         sortorder: "desc",
         shrinkToFit: false,
+        width: '100%',
         forceFit: true,
+        hidegrid: false,
+        responsive: true,
+        autowidth: true,
+        responsive: true,
         viewrecords: true,
+		restoreCellonFail : true,
         editurl: '/sic/grid_solicitudcotizacion',
-        caption: 'Solicitud de Contrato',
+        caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
         pager: "#pagerMaster",
         subGrid: true,
@@ -671,6 +675,9 @@ $(document).ready(function () {
             });
         }
     });
+
+    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
 
     $grid.jqGrid('filterToolbar', {
         stringResult: true,
@@ -736,18 +743,19 @@ $(document).ready(function () {
 
 
     function showChildGrid(parentRowID, parentRowKey) {
-        var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
+        var tabs = "<br><ul class='nav nav-tabs tabs-up' id='myTab'>"
         //tabs += "<li><a href='/sic/proveedores/" + parentRowKey + "' data-target='#proveedores' id='proveedores_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Proveedores</a></li>"
-        tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
-        tabs += "<li><a href='/sic/preguntas/" + parentRowKey + "' data-target='#preguntas' id='preguntas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas del Proveedor</a></li>"
-        tabs += "<li><a href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#respuestasrfp' id='respuestasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Respuestas del Proveedor</a></li>"
-        tabs += "<li><a href='/sic/participantesproveedor/" + parentRowKey + "' data-target='#participantesproveedor' id='participantesproveedor_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Participantes Proveedor</a></li>"
-        tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#evaluacioneconomica' id='evaluacioneconomica_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Evaluación Económica</a></li>"
-        tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#evaluaciontecnica' id='evaluaciontecnica_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Evaluación Técnica</a></li>"
-        tabs += "<li><a href='/sic/criterios/" + parentRowKey + "' data-target='#matrizevaluacion' id='matrizevaluacion_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Matriz de Evaluación</a></li>"
-        tabs += "<li><a href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
+        tabs += "&nbsp&nbsp&nbsp&nbsp<li class='nav-item' data-toggle='tab'><a class='nav-link active show'  href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/preguntas/" + parentRowKey + "' data-target='#preguntas' id='preguntas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Preguntas del Proveedor</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/preguntasrfp/" + parentRowKey + "' data-target='#respuestasrfp' id='respuestasrfp_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Respuestas del Proveedor</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/participantesproveedor/" + parentRowKey + "' data-target='#participantesproveedor' id='participantesproveedor_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Participantes Proveedor</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/criterios/" + parentRowKey + "' data-target='#evaluacioneconomica' id='evaluacioneconomica_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Evaluación Económica</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/criterios/" + parentRowKey + "' data-target='#evaluaciontecnica' id='evaluaciontecnica_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Evaluación Técnica</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/criterios/" + parentRowKey + "' data-target='#matrizevaluacion' id='matrizevaluacion_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Matriz de Evaluación</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
         tabs += "</ul>"
 
+        tabs += "<br>"
         tabs += "<div class='tab-content'>"
         //tabs += "<div class='tab-pane active' id='proveedores'><div class='container-fluid'><table id='proveedores_t_" + parentRowKey + "'></table><div id='navGridPro'></div></div></div>"
         tabs += "<div class='tab-pane active' id='estadosolicitud'><div class='container-fluid'><table id='estadosolicitud_t_" + parentRowKey + "'></table><div id='navGridEst'></div></div></div>"

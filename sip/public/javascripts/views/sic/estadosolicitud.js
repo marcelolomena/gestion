@@ -22,6 +22,7 @@ var gridEstado = {
         tmpl += "<div class='column-full'>{estado}</div>";
         tmpl += "</div>";
 
+        tmpl += "<hr style='width:100%;'/>";
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
 
@@ -318,7 +319,14 @@ var gridEstado = {
             styleUI: "Bootstrap",
             sortname: 'fechaestadoesperada',
             sortorder: "asc",
-            width:null,
+            width: '100%',
+            forceFit: true,
+            hidegrid: false,
+            responsive: true,
+            autowidth: true,
+            responsive: true,
+            viewrecords: true,
+            restoreCellonFail : true,
             height: "auto",
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
@@ -345,18 +353,6 @@ var gridEstado = {
             }
 
         });
-
-        $("table.ui-jqgrid-htable").css('width','100%');
-        $("table.ui-jqgrid-btable").css('width','100%');
-        // $("td.#navGridEst_left").css('width','50%');
-        $("#pagerMaster_left").css('width','50%');
-
-
-        
-        // $("td.#navGridEst_left").css('width','50%')
-
-        // $("td.#navGridEst_center").css('width','50%')
-        
 
         $gridTab.jqGrid('navGrid', '#navGridEst', {
             edit: true,

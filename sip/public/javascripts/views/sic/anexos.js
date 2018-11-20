@@ -257,7 +257,11 @@ var gridAnexos = {
             height: "auto",
             rownumbers: true,
             width: 1200,
-            shrinkToFit: true,
+            width: null,
+            forceFit: true,
+            hidegrid: true,
+            viewrecords: true,
+            restoreCellonFail : true,
             //autowidth: true,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
