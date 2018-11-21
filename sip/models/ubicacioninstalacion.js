@@ -36,8 +36,8 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    cui: {
-      type: DataTypes.INTEGER,
+    nombrecui: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     nombre: {

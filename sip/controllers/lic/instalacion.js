@@ -12,6 +12,7 @@ var fs = require('fs');
 var constants = require("../../utils/constants");
 var nodemailer = require('nodemailer');
 
+
 var entity = models.instalacion;
 
 function list(req, res) {
@@ -426,6 +427,12 @@ function listUbicacion(req, res) {
                         $like: '%' + item.data + '%'
                     }
                 });
+            } else if (item.field === "nombre") {
+                filter_one.push({
+                    [item.field]: {
+                        $like: '%' + item.data + '%'
+                    }
+                });
             }
         })
     }
@@ -474,102 +481,346 @@ function listUbicacion(req, res) {
 function actionUbicacion(req, res) {
     var action = req.body.oper;
     var hoy = "" + new Date().toISOString();
-    switch (action) {
-        case "add":
-            models.ubicacioninstalacion.create({
-                idproducto: req.body.idproducto,
-                usuario: req.body.usuario,
-                ubicacion: req.body.ubicacion,
-                codigoInterno: req.body.codigoInterno,
-                estado: 'ubicacion',
-                observacion: req.body.observacion,
-                cui: req.body.cui,
-                nombre: req.body.nombre,
-                fecha: hoy
-            }).then(function (instal) {
-                return res.json({
-                    id: instal.id,
-                    message: 'CREADO',
-                    success: true,
-                    error: 0
-                });
-            }).catch(function (err) {
-                logger.error(err)
-                return res.json({
-                    id: instal.id,
-                    message: 'FALLA',
-                    success: false,
+    var opcion = req.body.codigoInterno
+    var codigosecuencie;
+    switch (opcion) {
+        case 'Asignación':
+            sequelize.query("execute lic.seqAsigna").spread(function (numero) {
+                codigosecuencie = numero[0].secuencia
+                switch (action) {
+                    case "add":
+                        models.ubicacioninstalacion.create({
+                            idproducto: req.body.idproducto,
+                            usuario: req.body.usuario,
+                            ubicacion: req.body.ubicacion,
+                            codigoInterno: codigosecuencie,
+                            estado: 'ubicacion',
+                            observacion: req.body.observacion,
+                            cui: req.body.cui,
+                            nombre: req.body.nombre,
+                            fecha: hoy
+                        }).then(function (instal) {
+                            return res.json({
+                                id: instal.id,
+                                message: 'CREADO',
+                                success: true,
+                                error: 0
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            return res.json({
+                                id: instal.id,
+                                message: 'FALLA',
+                                success: false,
 
-                });
+                            });
+                        });
+                        break;
+                    case "edit":
+                        models.ubicacioninstalacion.update({
+                            idproducto: req.body.idproducto,
+                            usuario: req.body.usuario,
+                            ubicacion: req.body.ubicacion,
+                            // codigoInterno: req.body.codigoInterno,
+                            observacion: req.body.observacion,
+                            cui: req.body.cui,
+                            nombre: req.body.nombre
+                        }, {
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (clase) {
+                            res.json({
+                                id: req.body.id,
+                                message: 'EDITADO',
+                                success: true,
+                                error: 0
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({
+                                message: 'FALLA',
+                                success: false
+                            });
+                        });
+                        break;
+                    case "del":
+                        models.ubicacioninstalacion.destroy({
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (rowDeleted) {
+                            res.json({
+                                error: 0,
+                                glosa: 'BORRADO'
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({
+                                error: 1,
+                                glosa: 'FALLA'
+                            });
+                        });
+                        break;
+                }
             });
             break;
-        case "edit":
-            models.ubicacioninstalacion.update({
-                idproducto: req.body.idproducto,
-                usuario: req.body.usuario,
-                ubicacion: req.body.ubicacion,
-                codigoInterno: req.body.codigoInterno,
-                observacion: req.body.observacion,
-                cui: req.body.cui,
-                nombre: req.body.nombre
-            }, {
-                where: {
-                    id: req.body.id
+        case 'Asignación Masiva':
+            sequelize.query("execute lic.seqAsigMasi").spread(function (numero) {
+                codigosecuencie = numero[0].secuencia
+                switch (action) {
+                    case "add":
+                        models.ubicacioninstalacion.create({
+                            idproducto: req.body.idproducto,
+                            usuario: req.body.usuario,
+                            ubicacion: req.body.ubicacion,
+                            codigoInterno: codigosecuencie,
+                            estado: 'ubicacion',
+                            observacion: req.body.observacion,
+                            cui: req.body.cui,
+                            nombre: req.body.nombre,
+                            fecha: hoy
+                        }).then(function (instal) {
+                            return res.json({
+                                id: instal.id,
+                                message: 'CREADO',
+                                success: true,
+                                error: 0
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            return res.json({
+                                id: instal.id,
+                                message: 'FALLA',
+                                success: false,
+
+                            });
+                        });
+                        break;
+                    case "edit":
+                        models.ubicacioninstalacion.update({
+                            idproducto: req.body.idproducto,
+                            usuario: req.body.usuario,
+                            ubicacion: req.body.ubicacion,
+                            // codigoInterno: req.body.codigoInterno,
+                            observacion: req.body.observacion,
+                            cui: req.body.cui,
+                            nombre: req.body.nombre
+                        }, {
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (clase) {
+                            res.json({
+                                id: req.body.id,
+                                message: 'EDITADO',
+                                success: true,
+                                error: 0
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({
+                                message: 'FALLA',
+                                success: false
+                            });
+                        });
+                        break;
+                    case "del":
+                        models.ubicacioninstalacion.destroy({
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (rowDeleted) {
+                            res.json({
+                                error: 0,
+                                glosa: 'BORRADO'
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({
+                                error: 1,
+                                glosa: 'FALLA'
+                            });
+                        });
+                        break;
                 }
-            }).then(function (clase) {
-                res.json({
-                    id: req.body.id,
-                    message: 'EDITADO',
-                    success: true,
-                    error: 0
-                });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({
-                    message: 'FALLA',
-                    success: false
-                });
             });
             break;
-        case "del":
-            models.ubicacioninstalacion.destroy({
-                where: {
-                    id: req.body.id
+        case 'Desintalación':
+            sequelize.query("execute lic.seqDesinta").spread(function (numero) {
+                codigosecuencie = numero[0].secuencia
+                switch (action) {
+                    case "add":
+                        models.ubicacioninstalacion.create({
+                            idproducto: req.body.idproducto,
+                            usuario: req.body.usuario,
+                            ubicacion: req.body.ubicacion,
+                            codigoInterno: codigosecuencie,
+                            estado: 'ubicacion',
+                            observacion: req.body.observacion,
+                            cui: req.body.cui,
+                            nombre: req.body.nombre,
+                            fecha: hoy
+                        }).then(function (instal) {
+                            return res.json({
+                                id: instal.id,
+                                message: 'CREADO',
+                                success: true,
+                                error: 0
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            return res.json({
+                                id: instal.id,
+                                message: 'FALLA',
+                                success: false,
+
+                            });
+                        });
+                        break;
+                    case "edit":
+                        models.ubicacioninstalacion.update({
+                            idproducto: req.body.idproducto,
+                            usuario: req.body.usuario,
+                            ubicacion: req.body.ubicacion,
+                            // codigoInterno: req.body.codigoInterno,
+                            observacion: req.body.observacion,
+                            cui: req.body.cui,
+                            nombre: req.body.nombre
+                        }, {
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (clase) {
+                            res.json({
+                                id: req.body.id,
+                                message: 'EDITADO',
+                                success: true,
+                                error: 0
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({
+                                message: 'FALLA',
+                                success: false
+                            });
+                        });
+                        break;
+                    case "del":
+                        models.ubicacioninstalacion.destroy({
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (rowDeleted) {
+                            res.json({
+                                error: 0,
+                                glosa: 'BORRADO'
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({
+                                error: 1,
+                                glosa: 'FALLA'
+                            });
+                        });
+                        break;
                 }
-            }).then(function (rowDeleted) {
-                res.json({
-                    error: 0,
-                    glosa: 'BORRADO'
-                });
-            }).catch(function (err) {
-                logger.error(err)
-                res.json({
-                    error: 1,
-                    glosa: 'FALLA'
-                });
+            });
+            break;
+        case 'Reasignación':
+            sequelize.query("execute lic.seqReasig").spread(function (numero) {
+                codigosecuencie = numero[0].secuencia
+                switch (action) {
+                    case "add":
+                        models.ubicacioninstalacion.create({
+                            idproducto: req.body.idproducto,
+                            usuario: req.body.usuario,
+                            ubicacion: req.body.ubicacion,
+                            codigoInterno: codigosecuencie,
+                            estado: 'ubicacion',
+                            observacion: req.body.observacion,
+                            cui: req.body.cui,
+                            nombre: req.body.nombre,
+                            fecha: hoy
+                        }).then(function (instal) {
+                            return res.json({
+                                id: instal.id,
+                                message: 'CREADO',
+                                success: true,
+                                error: 0
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            return res.json({
+                                id: instal.id,
+                                message: 'FALLA',
+                                success: false,
+
+                            });
+                        });
+                        break;
+                    case "edit":
+                        models.ubicacioninstalacion.update({
+                            idproducto: req.body.idproducto,
+                            usuario: req.body.usuario,
+                            ubicacion: req.body.ubicacion,
+                            // codigoInterno: req.body.codigoInterno,
+                            observacion: req.body.observacion,
+                            cui: req.body.cui,
+                            nombre: req.body.nombre
+                        }, {
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (clase) {
+                            res.json({
+                                id: req.body.id,
+                                message: 'EDITADO',
+                                success: true,
+                                error: 0
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({
+                                message: 'FALLA',
+                                success: false
+                            });
+                        });
+                        break;
+                    case "del":
+                        models.ubicacioninstalacion.destroy({
+                            where: {
+                                id: req.body.id
+                            }
+                        }).then(function (rowDeleted) {
+                            res.json({
+                                error: 0,
+                                glosa: 'BORRADO'
+                            });
+                        }).catch(function (err) {
+                            logger.error(err)
+                            res.json({
+                                error: 1,
+                                glosa: 'FALLA'
+                            });
+                        });
+                        break;
+                }
             });
             break;
     }
 }
 
 function getExcel(req, res) {
-    // var page = req.query.page;
-    // var rows = req.query.rows;
-    // var filters = req.query.filters;
-    // var sidx = req.query.sidx;
-    // var sord = req.query.sord;
-    // var condition = "";
-    // var gris = "WHERE a.alertarenovacion <> 'aGris'"
-   
+
     var conf = {}
-    conf.cols = [
-        {
-            caption: 'N°',
+    conf.cols = [{
+            caption: 'N',
             type: 'number',
             width: 3
         },
         {
-            caption: 'ID',
+            caption: 'codigoInterno',
             type: 'string',
             width: 200
         },
@@ -609,7 +860,7 @@ function getExcel(req, res) {
             width: 200
         }
     ];
-    var sql = "SELECT b.nombre as nombreProd, a.usuario, a.ubicacion, a.codigoInterno, a.observacion, a.cui, a.nombre, a.fecha FROM lic.ubicacioninstalacion a " +
+    var sql = "SELECT b.nombre as nombreProd, a.usuario, a.ubicacion, a.codigoInterno, a.observacion, a.nombrecui, a.nombre, a.fecha FROM lic.ubicacioninstalacion a " +
         "JOIN lic.producto b ON b.id = a.idproducto " +
         "ORDER BY a.fecha DESC";
 
@@ -619,7 +870,6 @@ function getExcel(req, res) {
             var arr = [];
             var nombreprod = '';
             for (var i = 0; i < ubicacion.length; i++) {
-
                 if (nombreprod != ubicacion[i].nombreProd) {
                     var a = [i + 1,
                         ubicacion[i].codigoInterno,
@@ -627,10 +877,9 @@ function getExcel(req, res) {
                         ubicacion[i].nombre,
                         ubicacion[i].usuario,
                         ubicacion[i].ubicacion,
-                        ubicacion[i].cui,
+                        ubicacion[i].nombrecui,
                         ubicacion[i].observacion,
-                        ubicacion[i].fecha.toISOString().slice(0,10)
-
+                        ubicacion[i].fecha ? ubicacion[i].fecha.toISOString().slice(0, 10) : 'sin fecha'
                     ];
                     nombreprod = ubicacion[i].nombreProd
                 } else {
@@ -640,9 +889,9 @@ function getExcel(req, res) {
                         ubicacion[i].nombre,
                         ubicacion[i].usuario,
                         ubicacion[i].ubicacion,
-                        ubicacion[i].cui,
+                        ubicacion[i].nombrecui,
                         ubicacion[i].observacion,
-                        ubicacion[i].fecha.toISOString().slice(0,10)
+                        ubicacion[i].fecha ? ubicacion[i].fecha.toISOString().slice(0, 10) : 'sin fecha'
                     ];
                     nombreprod = ubicacion[i].nombreProd
                 }
