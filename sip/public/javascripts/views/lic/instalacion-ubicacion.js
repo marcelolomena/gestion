@@ -6,23 +6,19 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Nombre<span style='color:red'>*</span>{nombre}</div>";
-
-    tmpl += "<div class='column-half'>Ubicación <span style='color:red'>*</span>{ubicacion}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Código Interno<span style='color:red'>*</span>{codigoInterno}</div>";
-    tmpl += "<div class='column-half'>CUI <span style='color:red'>*</span>{cui}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Observación {observacion}</div>";
-    tmpl += "<div class='column-half'>Usuario<span style='color:red'>*</span>{usuario}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'><span style='color:red'>*</span>Producto {nombreProd}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'>Nombre<span style='color:red'>*</span>{nombre}</div>";
+    tmpl += "<div class='column-half'>Usuario<span style='color:red'>*</span>{usuario}</div>";
+    tmpl += "<div class='column-half'>CUI <span style='color:red'>*</span>{nombrecui}</div>";
+    tmpl += "<div class='column-half'>Alias <span style='color:red'>*</span>{ubicacion}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Observación {observacion}</div>";
+    tmpl += "<div class='column-full'>Código Interno {codigoInterno}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
@@ -35,21 +31,45 @@ $(document).ready(function () {
             key: true,
             hidden: true,
             editable: false
-        }, {
+        },
+        {
             label: 'Código Interno',
             name: 'codigoInterno',
-            align: 'center',
-            width: 100,
+            search: false,
             editable: true,
-            search: false
-        }, {
+            width: 92,
+            hidden: false,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/lic/getParametroUbicacion',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.codigoInterno;
+                    var data = JSON.parse(response);
+                    var s = "<select>";
+                    s += '<option value="0">--Escoger una Código Interno--</option>';
+                    $.each(data, function (i, item) {
+
+                        if (data[i].id == thissid) {
+                            s += '<option value="' + data[i].nombre + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].nombre + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                }
+            }
+        },
+        {
             label: 'Nombre Producto',
             name: 'idproducto',
             width: 200,
             align: 'center',
             sortable: false,
             editable: true,
-            hidden: true,
+            hidden: true
         },
         {
             label: 'Producto',
@@ -128,19 +148,11 @@ $(document).ready(function () {
         },
         {
             label: 'CUI',
-            name: 'cui',
+            name: 'nombrecui',
             align: 'center',
             width: 100,
             editable: true,
-            search: false,
-            editrules: {
-                integer: true
-            },
-            editoptions: {
-                dataInit: function (element) {
-                    $(element).mask('0000');
-                }
-            }
+            search: false
         },
         {
             label: 'Observación',
@@ -150,7 +162,6 @@ $(document).ready(function () {
             edittype: 'textarea',
             search: false
         },
-
         {
             label: 'Fecha',
             name: 'fecha',
@@ -245,21 +256,24 @@ $(document).ready(function () {
                 }
             },
             beforeSubmit: function (postdata, formid) {
-                if (!(postdata.nombre)) {
+                if ((!postdata.nombreProd)) {
+                    return [false, 'Debe ingresar un Producto', ''];
+                } else if (!(postdata.nombre)) {
                     return [false, 'Debe seleccionar a un Nombre', ''];
-                } else if (!(postdata.ubicacion)) {
-                    return [false, 'Debe ingresar la Ubicación', ''];
-                } else if ((!postdata.codigoInterno)) {
-                    return [false, 'Debe ingresar su código interno', ''];
-                } else if (postdata.cui.trim().length == 0) {
-                    return [false, 'Debe ingresar un CUI', ''];
                 } else if (!(postdata.usuario)) {
                     return [false, 'Debe seleccionar a un Usuario', ''];
-                } else if ((!postdata.nombreProd)) {
-                    return [false, 'Debe ingresar un Producto', ''];
+                } else if (!(postdata.ubicacion)) {
+                    return [false, 'Debe ingresar un Alias', ''];
+                } else if (!(postdata.nombrecui)) {
+                    return [false, 'Debe ingresar un CUI o una referencia', ''];
                 } else {
                     return [true, ', '];
                 }
+            },
+            beforeShowForm: function (form) {
+                setTimeout(function () {
+                    $("#codigoInterno", form).attr('disabled', 'disabled');
+                }, 550);
             }
         }, {
             addCaption: "Agrega Ubicación",
@@ -273,18 +287,18 @@ $(document).ready(function () {
                 return [true, 'Error: ' + data.responseText, ""];
             },
             beforeSubmit: function (postdata, formid) {
-                if (!(postdata.nombre)) {
-                    return [false, 'Debe agregar a un Nombre', ''];
-                } else if (!(postdata.ubicacion)) {
-                    return [false, 'Debe ingresar la Ubicación', ''];
-                } else if ((!postdata.codigoInterno)) {
-                    return [false, 'Debe ingresar su código interno', ''];
-                } else if (postdata.cui.trim().length == 0) {
-                    return [false, 'Debe ingresar un CUI', ''];
-                } else if (!(postdata.usuario)) {
-                    return [false, 'Debe agregar a un Usuario', ''];
-                } else if ((!postdata.nombreProd)) {
+                if ((!postdata.nombreProd)) {
                     return [false, 'Debe ingresar un Producto', ''];
+                } else if (!(postdata.nombre)) {
+                    return [false, 'Debe seleccionar a un Nombre', ''];
+                } else if (!(postdata.usuario)) {
+                    return [false, 'Debe seleccionar a un Usuario', ''];
+                } else if (!(postdata.ubicacion)) {
+                    return [false, 'Debe ingresar un Alias', ''];
+                } else if (!(postdata.nombrecui)) {
+                    return [false, 'Debe ingresar un CUI o una referencia', ''];
+                } else if (parseInt(postdata.codigoInterno) == 0) {
+                    return [false, "Código Interno: Debe escoger un valor", ""];
                 } else {
                     return [true, ', '];
                 }
