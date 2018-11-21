@@ -24,15 +24,15 @@ entity.belongsTo(models.user, {
 });
 
 var includes = [{
-    model: models.producto
-},
-{
-    model: models.user,
-    as: 'solicitante'
-}, {
-    model: models.user,
-    as: 'aprobador'
-}
+        model: models.producto
+    },
+    {
+        model: models.user,
+        as: 'solicitante'
+    }, {
+        model: models.user,
+        as: 'aprobador'
+    }
 ];
 
 function map(req) {
@@ -153,9 +153,9 @@ function action(req, res) {
             var sql = "INSERT INTO lic.reserva (idproducto, numlicencia, fechauso, fechasolicitud, cui, sap, comentariosolicitud, estado, idusuario) " +
                 "VALUES (" + req.body.idProducto + ", " + req.body.numlicencia + ", '" + base.strToDateDB(req.body.fechaUso) +
                 "', getdate(), " + req.body.cui + ", " + sap + ", '" + req.body.comentarioSolicitud + "', 'A la Espera', " + req.session.passport.user + ")";
-            var sqlmail = "SELECT emailJefe FROM RecursosHumanos WHERE emailTrab IN (SELECT email FROM art_user WHERE uid="+req.session.passport.user+") "+
+            var sqlmail = "SELECT emailJefe FROM RecursosHumanos WHERE emailTrab IN (SELECT email FROM art_user WHERE uid=" + req.session.passport.user + ") " +
                 "AND periodo IN (SELECT max(periodo) FROM RecursosHumanos)";
-            
+
             logger.debug("query:" + sql);
             logger.debug("querymail:" + sqlmail);
             sequelize.query(sql).then(function (ok) {
@@ -171,7 +171,9 @@ function action(req, res) {
                             user: constants.CORREOUSR,
                             pass: constants.CORREOPWD
                         },
-                        tls: { rejectUnauthorized: false }
+                        tls: {
+                            rejectUnauthorized: false
+                        }
                     });
                     // setup email data with unicode symbols
                     let mailOptions = {
@@ -181,8 +183,8 @@ function action(req, res) {
                         text: 'Solicitud de aprobacion', // plain text body
                         html: htmltext
                     };
-                    logger.debug('Server:'+constants.CORREOIP);
-                    logger.debug('MailOPt'+JSON.stringify(mailOptions));
+                    logger.debug('Server:' + constants.CORREOIP);
+                    logger.debug('MailOPt' + JSON.stringify(mailOptions));
                     logger.debug("TO:" + constants.CORREOTO + ',' + mailto[0][0].emailJefe);
                     // send mail with defined transport object
                     transporter.sendMail(mailOptions, (error, info) => {
@@ -193,14 +195,20 @@ function action(req, res) {
                         // Preview only available when sending through an Ethereal account
                         console.log('URL: %s', nodemailer.getTestMessageUrl(info));
                     });
-                    return res.json({ error_code: 0 });
+                    return res.json({
+                        error_code: 0
+                    });
                 }).catch(function (err) {
                     logger.error(err);
-                    return res.json({ error_code: 1 });
+                    return res.json({
+                        error_code: 1
+                    });
                 });
             }).catch(function (err) {
                 logger.error(err);
-                return res.json({ error_code: 1 });
+                return res.json({
+                    error_code: 1
+                });
             });
             break;
         case 'edit':
@@ -233,11 +241,11 @@ function estado(req, res) {
                 var userJefe = rows[0].first_name + ' ' + rows[0].last_name;
 
                 base.listChilds(req, res, ntt, 'id', [{
-                    model: models.producto
-                },
-                {
-                    model: models.user
-                }
+                        model: models.producto
+                    },
+                    {
+                        model: models.user
+                    }
                 ], function (data) {
                     var result = [];
 
@@ -260,11 +268,11 @@ function estado(req, res) {
             } else {
                 var idUsuarioJe = null;
                 base.listChilds(req, res, ntt, 'id', [{
-                    model: models.producto
-                },
-                {
-                    model: models.user
-                }
+                        model: models.producto
+                    },
+                    {
+                        model: models.user
+                    }
                 ], function (data) {
                     var result = [];
 
@@ -293,8 +301,8 @@ function usuariocui(req, res) {
     models.sequelize.query("select b.cui from dbo.art_user a " +
         "join dbo.RecursosHumanos b on a.email = b.emailTrab " +
         "where a.uid = " + req.session.passport.user + " and periodo = (select max(periodo) from dbo.RecursosHumanos)").spread(function (rows) {
-            return res.json(rows);
-        });
+        return res.json(rows);
+    });
 }
 
 function cambioEstado(req, res) {
@@ -393,7 +401,8 @@ function listChilds(req, res) {
 
 function buscaprod(req, res) {
 
-    models.sequelize.query("SELECT nombre label, id value FROM lic.producto WHERE nombre LIKE '%"+req.params.pId+"%'").spread(function (rows) {
+    models.sequelize.query("SELECT a.nombre label, a.id value FROM lic.producto a " +
+        "join lic.compra b on a.id = b.idproducto WHERE nombre LIKE '%" + req.params.pId + "%'").spread(function (rows) {
         return res.json(rows);
     });
 }
