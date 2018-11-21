@@ -361,12 +361,12 @@ function listInstalacion(req, res) {
         "SELECT @PageSize=" + rowspp + "; " +
         "DECLARE @PageNumber INT; " +
         "SELECT @PageNumber=" + page + "; " +
-        "SELECT  [instalacion].id, [instalacion].estado, [instalacion].codautorizacion, [instalacion].instalador, fechainstalacion, null as usuario, null as ubicacion, null as codigoInterno, null as observacion, null as cui, null as nombre, null as licencia" +
+        "SELECT  [instalacion].id, [instalacion].estado, [instalacion].codautorizacion, [instalacion].instalador, fechainstalacion, null as usuario, null as ubicacion, null as codigoInterno, null as observacion, null as nombrecui, null as nombre, null as licencia" +
         "FROM [lic].[instalacion] AS [instalacion] LEFT OUTER JOIN [lic].[producto] AS [producto] ON [instalacion].[idproducto] = [producto].[id] " +
         "LEFT OUTER JOIN [dbo].[art_user] AS [user] ON [instalacion].[idusuario] = [user].[uid] " +
         "WHERE [instalacion].[estado] IN ( '" + instal + "', '" + histor + "' ) AND [instalacion].[idproducto] = " + idproduc +
         "union all " +
-        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno, observacion, cui, nombre, licencia" +
+        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno, observacion, nombrecui, nombre, licencia" +
         "FROM lic.ubicacioninstalacion " +
         "WHERE idproducto = " + idproduc
     // "ORDER BY [id] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY "
@@ -496,7 +496,7 @@ function actionUbicacion(req, res) {
                             codigoInterno: codigosecuencie,
                             estado: 'ubicacion',
                             observacion: req.body.observacion,
-                            cui: req.body.cui,
+                            nombrecui: req.body.nombrecui,
                             nombre: req.body.nombre,
                             fecha: hoy
                         }).then(function (instal) {
@@ -523,7 +523,7 @@ function actionUbicacion(req, res) {
                             ubicacion: req.body.ubicacion,
                             // codigoInterno: req.body.codigoInterno,
                             observacion: req.body.observacion,
-                            cui: req.body.cui,
+                            nombrecui: req.body.nombrecui,
                             nombre: req.body.nombre
                         }, {
                             where: {
@@ -577,7 +577,7 @@ function actionUbicacion(req, res) {
                             codigoInterno: codigosecuencie,
                             estado: 'ubicacion',
                             observacion: req.body.observacion,
-                            cui: req.body.cui,
+                            nombrecui: req.body.nombrecui,
                             nombre: req.body.nombre,
                             fecha: hoy
                         }).then(function (instal) {
@@ -604,7 +604,7 @@ function actionUbicacion(req, res) {
                             ubicacion: req.body.ubicacion,
                             // codigoInterno: req.body.codigoInterno,
                             observacion: req.body.observacion,
-                            cui: req.body.cui,
+                            nombrecui: req.body.nombrecui,
                             nombre: req.body.nombre
                         }, {
                             where: {
@@ -658,7 +658,7 @@ function actionUbicacion(req, res) {
                             codigoInterno: codigosecuencie,
                             estado: 'ubicacion',
                             observacion: req.body.observacion,
-                            cui: req.body.cui,
+                            nombrecui: req.body.nombrecui,
                             nombre: req.body.nombre,
                             fecha: hoy
                         }).then(function (instal) {
@@ -685,7 +685,7 @@ function actionUbicacion(req, res) {
                             ubicacion: req.body.ubicacion,
                             // codigoInterno: req.body.codigoInterno,
                             observacion: req.body.observacion,
-                            cui: req.body.cui,
+                            nombrecui: req.body.nombrecui,
                             nombre: req.body.nombre
                         }, {
                             where: {
@@ -739,7 +739,7 @@ function actionUbicacion(req, res) {
                             codigoInterno: codigosecuencie,
                             estado: 'ubicacion',
                             observacion: req.body.observacion,
-                            cui: req.body.cui,
+                            nombrecui: req.body.nombrecui,
                             nombre: req.body.nombre,
                             fecha: hoy
                         }).then(function (instal) {
@@ -766,7 +766,7 @@ function actionUbicacion(req, res) {
                             ubicacion: req.body.ubicacion,
                             // codigoInterno: req.body.codigoInterno,
                             observacion: req.body.observacion,
-                            cui: req.body.cui,
+                            nombrecui: req.body.nombrecui,
                             nombre: req.body.nombre
                         }, {
                             where: {
