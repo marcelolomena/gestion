@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'>Observación {observacion}</div>";
-    tmpl += "<div class='column-full'>Código Interno {codigoInterno}</div>";
+    tmpl += "<div class='column-full'>Código Interno <span style='color:red'>*</span>{codigoInterno}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
