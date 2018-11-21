@@ -487,327 +487,177 @@ function actionUbicacion(req, res) {
         case 'Asignación':
             sequelize.query("execute lic.seqAsigna").spread(function (numero) {
                 codigosecuencie = numero[0].secuencia
-                switch (action) {
-                    case "add":
-                        models.ubicacioninstalacion.create({
-                            idproducto: req.body.idproducto,
-                            usuario: req.body.usuario,
-                            ubicacion: req.body.ubicacion,
-                            codigoInterno: codigosecuencie,
-                            estado: 'ubicacion',
-                            observacion: req.body.observacion,
-                            nombrecui: req.body.nombrecui,
-                            nombre: req.body.nombre,
-                            fecha: hoy
-                        }).then(function (instal) {
-                            return res.json({
-                                id: instal.id,
-                                message: 'CREADO',
-                                success: true,
-                                error: 0
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            return res.json({
-                                id: instal.id,
-                                message: 'FALLA',
-                                success: false,
+                models.ubicacioninstalacion.create({
+                    idproducto: req.body.idproducto,
+                    usuario: req.body.usuario,
+                    ubicacion: req.body.ubicacion,
+                    codigoInterno: codigosecuencie,
+                    estado: 'ubicacion',
+                    observacion: req.body.observacion,
+                    nombrecui: req.body.nombrecui,
+                    nombre: req.body.nombre,
+                    fecha: hoy
+                }).then(function (instal) {
+                    return res.json({
+                        id: instal.id,
+                        message: 'CREADO',
+                        success: true,
+                        error: 0
+                    });
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({
+                        id: instal.id,
+                        message: 'FALLA',
+                        success: false,
 
-                            });
-                        });
-                        break;
-                    case "edit":
-                        models.ubicacioninstalacion.update({
-                            idproducto: req.body.idproducto,
-                            usuario: req.body.usuario,
-                            ubicacion: req.body.ubicacion,
-                            // codigoInterno: req.body.codigoInterno,
-                            observacion: req.body.observacion,
-                            nombrecui: req.body.nombrecui,
-                            nombre: req.body.nombre
-                        }, {
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (clase) {
-                            res.json({
-                                id: req.body.id,
-                                message: 'EDITADO',
-                                success: true,
-                                error: 0
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({
-                                message: 'FALLA',
-                                success: false
-                            });
-                        });
-                        break;
-                    case "del":
-                        models.ubicacioninstalacion.destroy({
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (rowDeleted) {
-                            res.json({
-                                error: 0,
-                                glosa: 'BORRADO'
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({
-                                error: 1,
-                                glosa: 'FALLA'
-                            });
-                        });
-                        break;
-                }
+                    });
+                });
             });
             break;
         case 'Asignación Masiva':
             sequelize.query("execute lic.seqAsigMasi").spread(function (numero) {
                 codigosecuencie = numero[0].secuencia
-                switch (action) {
-                    case "add":
-                        models.ubicacioninstalacion.create({
-                            idproducto: req.body.idproducto,
-                            usuario: req.body.usuario,
-                            ubicacion: req.body.ubicacion,
-                            codigoInterno: codigosecuencie,
-                            estado: 'ubicacion',
-                            observacion: req.body.observacion,
-                            nombrecui: req.body.nombrecui,
-                            nombre: req.body.nombre,
-                            fecha: hoy
-                        }).then(function (instal) {
-                            return res.json({
-                                id: instal.id,
-                                message: 'CREADO',
-                                success: true,
-                                error: 0
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            return res.json({
-                                id: instal.id,
-                                message: 'FALLA',
-                                success: false,
+                models.ubicacioninstalacion.create({
+                    idproducto: req.body.idproducto,
+                    usuario: req.body.usuario,
+                    ubicacion: req.body.ubicacion,
+                    codigoInterno: codigosecuencie,
+                    estado: 'ubicacion',
+                    observacion: req.body.observacion,
+                    nombrecui: req.body.nombrecui,
+                    nombre: req.body.nombre,
+                    fecha: hoy
+                }).then(function (instal) {
+                    return res.json({
+                        id: instal.id,
+                        message: 'CREADO',
+                        success: true,
+                        error: 0
+                    });
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({
+                        id: instal.id,
+                        message: 'FALLA',
+                        success: false,
 
-                            });
-                        });
-                        break;
-                    case "edit":
-                        models.ubicacioninstalacion.update({
-                            idproducto: req.body.idproducto,
-                            usuario: req.body.usuario,
-                            ubicacion: req.body.ubicacion,
-                            // codigoInterno: req.body.codigoInterno,
-                            observacion: req.body.observacion,
-                            nombrecui: req.body.nombrecui,
-                            nombre: req.body.nombre
-                        }, {
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (clase) {
-                            res.json({
-                                id: req.body.id,
-                                message: 'EDITADO',
-                                success: true,
-                                error: 0
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({
-                                message: 'FALLA',
-                                success: false
-                            });
-                        });
-                        break;
-                    case "del":
-                        models.ubicacioninstalacion.destroy({
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (rowDeleted) {
-                            res.json({
-                                error: 0,
-                                glosa: 'BORRADO'
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({
-                                error: 1,
-                                glosa: 'FALLA'
-                            });
-                        });
-                        break;
-                }
+                    });
+                });
             });
             break;
         case 'Desintalación':
             sequelize.query("execute lic.seqDesinta").spread(function (numero) {
                 codigosecuencie = numero[0].secuencia
-                switch (action) {
-                    case "add":
-                        models.ubicacioninstalacion.create({
-                            idproducto: req.body.idproducto,
-                            usuario: req.body.usuario,
-                            ubicacion: req.body.ubicacion,
-                            codigoInterno: codigosecuencie,
-                            estado: 'ubicacion',
-                            observacion: req.body.observacion,
-                            nombrecui: req.body.nombrecui,
-                            nombre: req.body.nombre,
-                            fecha: hoy
-                        }).then(function (instal) {
-                            return res.json({
-                                id: instal.id,
-                                message: 'CREADO',
-                                success: true,
-                                error: 0
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            return res.json({
-                                id: instal.id,
-                                message: 'FALLA',
-                                success: false,
+                models.ubicacioninstalacion.create({
+                    idproducto: req.body.idproducto,
+                    usuario: req.body.usuario,
+                    ubicacion: req.body.ubicacion,
+                    codigoInterno: codigosecuencie,
+                    estado: 'ubicacion',
+                    observacion: req.body.observacion,
+                    nombrecui: req.body.nombrecui,
+                    nombre: req.body.nombre,
+                    fecha: hoy
+                }).then(function (instal) {
+                    return res.json({
+                        id: instal.id,
+                        message: 'CREADO',
+                        success: true,
+                        error: 0
+                    });
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({
+                        id: instal.id,
+                        message: 'FALLA',
+                        success: false,
 
-                            });
-                        });
-                        break;
-                    case "edit":
-                        models.ubicacioninstalacion.update({
-                            idproducto: req.body.idproducto,
-                            usuario: req.body.usuario,
-                            ubicacion: req.body.ubicacion,
-                            // codigoInterno: req.body.codigoInterno,
-                            observacion: req.body.observacion,
-                            nombrecui: req.body.nombrecui,
-                            nombre: req.body.nombre
-                        }, {
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (clase) {
-                            res.json({
-                                id: req.body.id,
-                                message: 'EDITADO',
-                                success: true,
-                                error: 0
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({
-                                message: 'FALLA',
-                                success: false
-                            });
-                        });
-                        break;
-                    case "del":
-                        models.ubicacioninstalacion.destroy({
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (rowDeleted) {
-                            res.json({
-                                error: 0,
-                                glosa: 'BORRADO'
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({
-                                error: 1,
-                                glosa: 'FALLA'
-                            });
-                        });
-                        break;
-                }
+                    });
+                });
+
+
             });
             break;
         case 'Reasignación':
             sequelize.query("execute lic.seqReasig").spread(function (numero) {
                 codigosecuencie = numero[0].secuencia
-                switch (action) {
-                    case "add":
-                        models.ubicacioninstalacion.create({
-                            idproducto: req.body.idproducto,
-                            usuario: req.body.usuario,
-                            ubicacion: req.body.ubicacion,
-                            codigoInterno: codigosecuencie,
-                            estado: 'ubicacion',
-                            observacion: req.body.observacion,
-                            nombrecui: req.body.nombrecui,
-                            nombre: req.body.nombre,
-                            fecha: hoy
-                        }).then(function (instal) {
-                            return res.json({
-                                id: instal.id,
-                                message: 'CREADO',
-                                success: true,
-                                error: 0
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            return res.json({
-                                id: instal.id,
-                                message: 'FALLA',
-                                success: false,
+                models.ubicacioninstalacion.create({
+                    idproducto: req.body.idproducto,
+                    usuario: req.body.usuario,
+                    ubicacion: req.body.ubicacion,
+                    codigoInterno: codigosecuencie,
+                    estado: 'ubicacion',
+                    observacion: req.body.observacion,
+                    nombrecui: req.body.nombrecui,
+                    nombre: req.body.nombre,
+                    fecha: hoy
+                }).then(function (instal) {
+                    return res.json({
+                        id: instal.id,
+                        message: 'CREADO',
+                        success: true,
+                        error: 0
+                    });
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({
+                        id: instal.id,
+                        message: 'FALLA',
+                        success: false,
 
-                            });
-                        });
-                        break;
-                    case "edit":
-                        models.ubicacioninstalacion.update({
-                            idproducto: req.body.idproducto,
-                            usuario: req.body.usuario,
-                            ubicacion: req.body.ubicacion,
-                            // codigoInterno: req.body.codigoInterno,
-                            observacion: req.body.observacion,
-                            nombrecui: req.body.nombrecui,
-                            nombre: req.body.nombre
-                        }, {
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (clase) {
-                            res.json({
-                                id: req.body.id,
-                                message: 'EDITADO',
-                                success: true,
-                                error: 0
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({
-                                message: 'FALLA',
-                                success: false
-                            });
-                        });
-                        break;
-                    case "del":
-                        models.ubicacioninstalacion.destroy({
-                            where: {
-                                id: req.body.id
-                            }
-                        }).then(function (rowDeleted) {
-                            res.json({
-                                error: 0,
-                                glosa: 'BORRADO'
-                            });
-                        }).catch(function (err) {
-                            logger.error(err)
-                            res.json({
-                                error: 1,
-                                glosa: 'FALLA'
-                            });
-                        });
-                        break;
-                }
+                    });
+                });
             });
             break;
+        default:
+            switch (action) {
+                case "edit":
+                    models.ubicacioninstalacion.update({
+                        idproducto: req.body.idproducto,
+                        usuario: req.body.usuario,
+                        ubicacion: req.body.ubicacion,
+                        observacion: req.body.observacion,
+                        nombrecui: req.body.nombrecui,
+                        nombre: req.body.nombre
+                    }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (clase) {
+                        res.json({
+                            id: req.body.id,
+                            message: 'EDITADO',
+                            success: true,
+                            error: 0
+                        });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({
+                            message: 'FALLA',
+                            success: false
+                        });
+                    });
+                    break;
+                case "del":
+                    models.ubicacioninstalacion.destroy({
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (rowDeleted) {
+                        res.json({
+                            error: 0,
+                            glosa: 'BORRADO'
+                        });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({
+                            error: 1,
+                            glosa: 'FALLA'
+                        });
+                    });
+                    break;
+            }
     }
 }
 
