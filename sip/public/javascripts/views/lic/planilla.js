@@ -304,7 +304,6 @@
             label: 'Clasificación',
             name: 'idclasificacion',
             jsonmap: 'nombreClas',
-            width: 150,
             align: 'center',
             sortable: false,
             editable: true,
@@ -356,7 +355,6 @@
             label: 'Tipo de Licenciamiento',
             name: 'idtipolicenciamiento',
             jsonmap: 'nombreTipoLic',
-            width: 170,
             align: 'center',
             sortable: false,
             editable: true,
@@ -409,7 +407,6 @@
         }, {
             label: 'Fecha Compra',
             name: 'fechacompra',
-            width: 125,
             align: 'center',
             sortable: false,
             editable: true,
@@ -442,7 +439,6 @@
             label: 'Fecha Expiración',
             name: 'fechaexpiracion',
             align: 'center',
-            width: 125,
             sortable: false,
             editable: true,
             formatter: function (cellvalue, options, rowObject) {
@@ -474,7 +470,6 @@
             label: 'Tipo de Contrato',
             name: 'perpetua',
             align: 'center',
-            width: 120,
             sortable: false,
             editable: true,
             search: false,
@@ -499,7 +494,6 @@
         {
             label: 'N° Lic Compradas',
             name: 'liccompradas',
-            width: 125,
             align: 'center',
             formatter: 'integer',
             sortable: false,
@@ -516,7 +510,6 @@
             label: 'Moneda',
             name: 'idmoneda',
             jsonmap: 'moneda',
-            width: 70,
             align: 'center',
             sortable: false,
             editable: true,
@@ -545,7 +538,6 @@
         }, {
             label: 'Valor Total Compra',
             name: 'valorlicencia',
-            width: 130,
             align: 'center',
             sortable: false,
             editable: true,
@@ -557,7 +549,6 @@
         }, {
             label: 'Valor Soporte Anual Neto',
             name: 'valorsoporte',
-            width: 180,
             align: 'center',
             sortable: false,
             editable: true,
@@ -572,7 +563,6 @@
         }, {
             label: 'Valor Licencia Anual Neto',
             name: 'valoranualneto',
-            width: 180,
             align: 'center',
             sortable: false,
             editable: true,
@@ -588,7 +578,6 @@
         {
             label: 'Fecha Control',
             name: 'fecharenovasoporte',
-            width: 125,
             align: 'center',
             sortable: false,
             editable: true,
@@ -620,7 +609,6 @@
         }, {
             label: 'Factura',
             name: 'factura',
-            width: 80,
             align: 'center',
             sortable: false,
             editable: true,
@@ -636,7 +624,6 @@
         {
             label: 'Cant. Compradas por Producto',
             name: 'licstock',
-            width: 200,
             align: 'center',
             sortable: false,
             editable: true,
@@ -651,7 +638,6 @@
         }, {
             label: 'Licencias Utilizadas',
             name: 'licocupadas',
-            width: 150,
             align: 'center',
             sortable: false,
             editable: true,
@@ -719,7 +705,6 @@
             editable: true,
             edittype: 'textarea',
             search: false,
-            width: 1000,
             editoptions: {
                 fullRow: true
             },            
@@ -743,6 +728,8 @@
             sortable: false       
         }        
         ];
+
+        // console.log(data);
 
         $("#grid").jqGrid({
             url: '/lic/planilla',

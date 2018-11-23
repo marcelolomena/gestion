@@ -139,7 +139,7 @@ function gridCriterios3(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Preguntas de Evaluación',
+        // caption: 'Preguntas de Evaluación',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

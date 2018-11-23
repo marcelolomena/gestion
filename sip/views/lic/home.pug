@@ -1,22 +1,15 @@
 extends layout.pug
 block append head
+    //- -console.log(data[0].nombre)
+
     script var page = "#{page}"
+    -var nombre = data[0].nombre
+    -var sistema = data[0].sistema
     p!= script
+    if page ==='lic/home'
+      include home_licencias.pug
 block content
-    #contenedor.contenedor
-      include sidebar.pug
-      .main-content
-        .swipe-area
-        a#sidebar-toggle(href='#', data-toggle='.contenedor')
-          span.bar
-          span.bar
-          span.bar
-        .content
-          header.bg-theme
-            .wrap-header
-              .row
-                a(href='lic/home')
-                  img(src='/images/header.png',width='300', height='80')
-              h2(style="font-family:'robotolight', sans-serif; color: #FFFFFF; font-weight:300; text-align:center") SISTEMA DE LICENCIAS
-          p(style='color: #f1563a')
-          p!= html
+  #contenedor.contenedor
+    //- include sidebar.pug
+    .content
+      p!= html

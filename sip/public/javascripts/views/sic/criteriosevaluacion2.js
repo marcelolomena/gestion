@@ -120,7 +120,7 @@ function gridCriterios2(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'SubCriterios de Evaluación',
+        // caption: 'SubCriterios de Evaluación',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

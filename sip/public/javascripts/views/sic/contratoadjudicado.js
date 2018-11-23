@@ -310,7 +310,7 @@ var gridSolicitudContrato = {
             }
         });
         $gridTab.jqGrid('navButtonAdd', '#navGridEst', {
-            caption: "Generar Documento RFC",
+            caption: "",
             id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
             buttonicon: "glyphicon glyphicon-download-alt",
             title: "Generar Documento RFC",

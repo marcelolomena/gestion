@@ -6528,7 +6528,7 @@ iframe {
 
 .app {
   width: 100%;
-  min-height: 100%;
+  /* min-height: 100%; */
 }
 
 @media (min-width: 768px) {

@@ -745,13 +745,11 @@ function showSolicitudCotizacion(provee) {
         height: 'auto',
         sortname: 'colorestado',
         sortorder: "desc",
-        shrinkToFit: false,
         width: '100%',
         forceFit: true,
         hidegrid: false,
         responsive: true,
         autowidth: true,
-        responsive: true,
         viewrecords: true,
 		restoreCellonFail : true,
         editurl: '/sic/grid_solicitudcotizacion',
@@ -1010,8 +1008,8 @@ function showSolicitudCotizacion(provee) {
     }
 
     function showChildGrid(parentRowID, parentRowKey) {
-        var tabs = "<br><ul class='nav nav-tabs card-header-tabs'>"
-        tabs += "&nbsp&nbsp&nbsp&nbsp<li class='nav-item' data-toggle='tab'><a class='nav-link active show' href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
+        var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link active show' href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
         // tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/responsables/" + parentRowKey + "' data-target='#responsables' id='responsables_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Responsables</a></li>"
         tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/calendario/" + parentRowKey + "'data-target='#calendario' id='calendario_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Calendario</a></li>"
         tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/documentos/" + parentRowKey + "' data-target='#documentos' id='documentos_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Documentos</a></li>"
@@ -1025,7 +1023,7 @@ function showSolicitudCotizacion(provee) {
         tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link' href='/sic/triada/" + parentRowKey + "' data-target='#triada' id='triada_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Triada</a></li>"
         tabs += "</ul>"
 
-        tabs += "<br>"
+
         tabs += "<div class='tab-content'>"
         tabs += "<div class='tab-pane active' id='estadosolicitud'><div class='container-fluid'><table id='estadosolicitud_t_" + parentRowKey + "'></table><div id='navGridEst'></div></div></div>"
         // tabs += "<div class='tab-pane' id='responsables'><table id='responsables_t_" + parentRowKey + "'></table><div id='navGridResp'></div></div>"

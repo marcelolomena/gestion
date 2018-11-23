@@ -139,7 +139,7 @@ function gridClases(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Clases de Secciones del Documento',
+        // caption: 'Clases de Secciones del Documento',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here

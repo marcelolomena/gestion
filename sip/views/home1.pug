@@ -20,9 +20,8 @@ html(lang='en')
   meta(property='og:url', content='http://uselooper.com')
   meta(property='og:site_name', content='Looper - Bootstrap 4 Admin Theme')
   link(rel='apple-touch-icon-precomposed', sizes='144x144', href='apple-touch-icon.png')
-  link(rel='shortcut icon', href='favicon.ico')
   meta(name='theme-color', content='#3063A0')
-  script(src='vendor/pace/pace.min.js')
+  //- script(src='vendor/pace/pace.min.js')
   link(rel='stylesheet', href='vendor/pace/pace.min.css')
   link(rel='stylesheet', href='vendor/bootstrap/css/bootstrap.min.css')
   link(rel='stylesheet', href='vendor/open-iconic/css/open-iconic-bootstrap.min.css')
@@ -193,7 +192,6 @@ html(lang='en')
           .perfil_sesion
             .user
              span.account-name #{data[0].nombre}
-             -console.log(data)
              span.account-description #{data[0].glosarol}
         .dropdown-arrow.dropdown-arrow-left
         .dropdown-menu

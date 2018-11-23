@@ -5867,8 +5867,8 @@
   }
   
   .app {
-    width: 100%;
-    min-height: 100%;
+    /* width: 100%; */
+    /* min-height: 100%; */
   }
   
   @media (min-width:768px) {
@@ -5915,7 +5915,7 @@
   
   .app-main {
     position: relative;
-    padding-top: 3.5rem;
+    /* padding-top: 3.5rem; */
     padding-right: 0;
     padding-left: 0;
     overflow: hidden;
@@ -5925,11 +5925,6 @@
     .app-main {
       padding-left: 15rem;
     }
-  }
-  
-  .wrapper {
-    position: relative;
-    margin: 0 auto;
   }
   
   .app-backdrop {
@@ -6355,7 +6350,7 @@
   }
   
   .page {
-    min-height: 646px;
+    /* min-height: 646px; */
     /* min-height: calc(100vh - 3.5rem); */
   }
   
@@ -9275,11 +9270,13 @@
     margin-bottom: 0;
   }
   
-  .metric-value {
-    margin-bottom: 0;
-    line-height: 1;
-    white-space: nowrap;
-  }
+ 
+.metric-value {
+  margin-bottom: -5px;
+  line-height: 2;
+  white-space: nowrap;
+}
+
   
   .metric-value .value {
     vertical-align: middle;
@@ -15547,11 +15544,6 @@
     margin-bottom: 1rem;
   }
   
-  .app {
-    width: 100%;
-    min-height: 100%;
-  }
-  
   @media (min-width:768px) {
     .app.has-clipped-header .app-header {
       left: 15rem;
@@ -16036,7 +16028,7 @@
   }
   
   .page {
-    min-height: 646px;
+    /* min-height: 646px; */
     /* min-height: calc(100vh - 3.5rem); */
   }
   
@@ -18954,12 +18946,6 @@
   .metric-label:last-child {
     margin-top: .5rem;
     margin-bottom: 0;
-  }
-  
-  .metric-value {
-    margin-bottom: 0;
-    line-height: 1;
-    white-space: nowrap;
   }
   
   .metric-value .value {

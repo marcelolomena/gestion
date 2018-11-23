@@ -521,7 +521,7 @@ $(document).ready(function () {
     jQuery.extend(jQuery.jgrid.edit, { recreateForm: true });
     $("#table_iniciativa").jqGrid('filterToolbar', {
         stringResult: true, searchOperators: true,
-        searchOnEnter: true, defaultSearch: 'cn'
+        searchOnEnter: true, defaultSearch: 'cn', regional: 'p'
     });
 
     $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {
@@ -662,7 +662,7 @@ $(document).ready(function () {
                 if (result.error_code != 0) {
                     return [false, result.error_text, ""];
                 } else {
-                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombreproyecto\",\"op\":\"cn\",\"data\":\"" + postdata.nombreproyecto + "\"}]}";
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombreproyecto\",\"op\":\"cn\",\"regional\":\"p\",\"data\":\"" + postdata.nombreproyecto + "\"}]}";
                     $("#table_iniciativa").jqGrid('setGridParam', { search: true, postData: { filters } }).trigger("reloadGrid");
                     return [true, "", ""];
                 }

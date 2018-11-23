@@ -62,7 +62,7 @@
                 targ = $this.attr('data-target'),
                 tabGrid = selectTabGrid(targ);
             tabGrid.renderGrid(loadurl, parentRowKey, targ);
-            $this.tab('show');
+            // $this.tab('show');
             return false;
         });
         $('[data-toggle="tab_' + parentRowKey + '"]').click(function (e) {
@@ -71,7 +71,7 @@
                 targ = $this.attr('data-target'),
                 tabGrid = selectTabGrid(targ);
             tabGrid.renderGrid(loadurl, parentRowKey, targ);
-            $this.tab('show');
+            // $this.tab('show');
             return false;
         });
     }
@@ -89,7 +89,7 @@
                 label: 'Fabricante',
                 name: 'idFabricante',
                 jsonmap: 'nombreFab',
-                width: 280,
+                width: 180,
                 align: 'center',
                 sortable: false,
                 editable: true,

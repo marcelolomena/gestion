@@ -754,7 +754,6 @@ $(document).ready(function () {
         tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
         tabs += "</ul>"
 
-        tabs += "<br>"
         tabs += "<div class='tab-content'>"
         //tabs += "<div class='tab-pane active' id='proveedores'><div class='container-fluid'><table id='proveedores_t_" + parentRowKey + "'></table><div id='navGridPro'></div></div></div>"
         tabs += "<div class='tab-pane active' id='estadosolicitud'><div class='container-fluid'><table id='estadosolicitud_t_" + parentRowKey + "'></table><div id='navGridEst'></div></div></div>"

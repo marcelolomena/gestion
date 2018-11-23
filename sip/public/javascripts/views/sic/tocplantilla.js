@@ -149,7 +149,7 @@ function gridPlantillas(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Cláusulas',
+        // caption: 'Cláusulas',
         //width: null,
         //shrinkToFit: false,
         autowidth: true,  // set 'true' here
