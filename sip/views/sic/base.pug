@@ -51,7 +51,7 @@ html(xmlns='http://www.w3.org/1999/xhtml')
   script(type="text/javascript", src="../javascripts/locales/bootstrap-datepicker.es.js", charset="UTF-8")   
   script(type='text/javascript', src='../javascripts/bootstrap3-typeahead.js')      
   script(type='text/javascript', src='../javascripts/sip.js')  
-  -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software","Maqueta Limites"];
+  -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software"];
   block jsgrilla       
 body
   .app.has-fullwidth
@@ -255,7 +255,7 @@ body
         a.dropdown-item(href='#') Preguntar Foro
       .top-bar-brand
        a(href='/login#')
-        img(src='../images/logoRound.png',height='100%', alt='') 
+        img(src='/images/logoRound.png',height='60px', alt='') 
         span.font-weight-bold(style='color: #234875;') &nbsp #{sistemas[data[0].sistema]}
      section.aside-menu.has-scrollable
       nav#stacked-menu.stacked-menu
@@ -329,4 +329,5 @@ body
   script(src='../vendor/easy-pie-chart/jquery.easypiechart.min.js')
   script(src='../vendor/chart.js/Chart.min.js')
   script(src='../javascript/main.min.js')
+  script(src='../javascripts/highcharts/highcharts.js')
   script(src='../javascript/pages/easypiechart-demo.js')

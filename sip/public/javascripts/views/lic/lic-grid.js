@@ -62,13 +62,17 @@
     }
 
     function TabTemplate(parentRowID, parentRowKey, tabs) {
-        var nav = '<ul class="nav nav-tabs tabs-up" id="myTab">';
-        var pane = '<div class="tab-content">';
+        var nav = "<br><ul class='nav nav-tabs tabs-up' id='myTab'>";
+        var pane = "<div class='tab-content'>";
         var paneClass, navClass;
         _.each(tabs, function (item, key) {
+            // console.log (item,key)
             paneClass = key ? 'tab-pane' : 'tab-pane active';
-            nav += '<li><a href="/lic/' + item.id + '/' + parentRowKey + '" data-target="#' + item.id + '" id="' + item.id + '_tab_' + parentRowKey + '" data-toggle="tab_' + parentRowKey + '">' + item.nom + '</a></li>';
-            pane += '<div class="' + paneClass + '" id="' + item.id + '"><div class="container-fluid"><table id="' + item.id + '_t_' + parentRowKey + '"></table><div id="navGrid' + item.id + '"></div></div></div>';
+            if(key === 0)
+                {nav += '<li class="nav-item" data-toggle="tab"><a class="nav-link active show" href="/lic/' + item.id + '/' + parentRowKey + '" data-target="#' + item.id + '" id="' + item.id + '_tab_' + parentRowKey + '" data-toggle="tab_' + parentRowKey + '">' + item.nom + '</a></li>';}
+            else
+                {nav += '<li class="nav-item" data-toggle="tab"><a class="nav-link" href="/lic/' + item.id + '/' + parentRowKey + '" data-target="#' + item.id + '" id="' + item.id + '_tab_' + parentRowKey + '" data-toggle="tab_' + parentRowKey + '">' + item.nom + '</a></li>';}
+            pane += '<div class="tab-pane ' + paneClass + '" id="' + item.id + '"><div class="container-fluid"><table id="' + item.id + '_t_' + parentRowKey + '"></table><div id="navGrid' + item.id + '"></div></div></div>';
         });
         nav += '</ul>';
         pane += '</div>';
@@ -131,12 +135,10 @@
             rowList: [10, 20, 30, 40, 50],
             sortname: sortField,
             viewrecords: true,
-            hidegrid: false,
             caption: caption,
-            // autowidth: true,
+            autowidth: true,
             page: 1,
             forceFit: true,
-            width: null,
             height: 'auto',
             regional: 'es',
             sortorder: 'desc',
@@ -194,6 +196,7 @@
         };
         this.deleteAfterSubmit = function (response, postdata) {
             var result = JSON.parse(response.responseText);
+            // console.log(result);
             if (!result.success)
                 return [false, result.message, ""];
             else

@@ -40,12 +40,12 @@ $(document).ready(function () {
                 'errorThrown: ' + errorThrown);
         }
     });
-    $("#table_iniciativa").jqGrid('filterToolbar', {
+    $("#table_iniciativa").jqGrid({regional: 'es'},'filterToolbar', {
         stringResult: true, searchOperators: true,
         searchOnEnter: false, defaultSearch: 'cn'
     });
 
-    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {
+    $('#table_iniciativa').jqGrid({regional: 'es'},'navGrid', "#pager_iniciativa", {
         edit: true, add: true, del: true, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },

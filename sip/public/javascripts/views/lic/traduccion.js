@@ -95,16 +95,12 @@ $(document).ready(function () {
         styleUI: "Bootstrap",
         editurl: '/lic/traduccion',
         subGrid: false // set the subGrid property to true to show expand buttons for each row
-    });
-
-    $("#grid").jqGrid('filterToolbar', {
+    },'filterToolbar', {
         stringResult: true,
         searchOperators: true,
         searchOnEnter: false,
         defaultSearch: 'cn'
-    });
-
-    $('#grid').jqGrid('navGrid', "#pager", {
+    },'navGrid', "#pager", {
             edit: true,
             add: true,
             del: true,
@@ -128,10 +124,7 @@ $(document).ready(function () {
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: tmpl
-        }
-    );
-
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        },'navButtonAdd', '#pager', {
         caption: "",
         buttonicon: "glyphicon glyphicon-hdd",
         title: "Refrescar SNOW",
@@ -156,10 +149,7 @@ $(document).ready(function () {
                     });
                 }, 6000);
             });
-        }
-    });
-
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        }},'navButtonAdd', '#pager', {
         caption: "",
         buttonicon: "glyphicon glyphicon-tasks",
         title: "Refrescar ADDM",
@@ -184,10 +174,7 @@ $(document).ready(function () {
                     });
                 }, 6000);
             });
-        }
-    });
-
-    $('#grid').jqGrid('navButtonAdd', '#pager', {
+        }},'navButtonAdd', '#pager', {
         caption: "",
         buttonicon: "glyphicon glyphicon-repeat",
         title: "Refrescar Chubi",

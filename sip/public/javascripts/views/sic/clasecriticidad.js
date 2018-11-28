@@ -24,7 +24,7 @@ $(document).ready(function () {
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
-                custom_element: sicLibrary.radioElemCalculado, 
+                // custom_element: sicLibrary.radioElemCalculado, 
                 dataEvents: [{
 
                     type: 'change', fn: function (e) {

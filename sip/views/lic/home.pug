@@ -1,4 +1,4 @@
-extends layout.pug
+extends ../layout.pug
 block append head
     //- -console.log(data[0].nombre)
 
@@ -7,7 +7,7 @@ block append head
     -var sistema = data[0].sistema
     p!= script
     if page ==='lic/home'
-      include home_licencias.pug
+      include ../home_generico.pug
 block content
   #contenedor.contenedor
     //- include sidebar.pug

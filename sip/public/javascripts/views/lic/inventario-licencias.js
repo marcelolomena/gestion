@@ -27,6 +27,57 @@
         grid.build();
     };
 
+    var tabs = [{
+        id: 'compra',
+        nom: 'Compra'
+    }, {
+        id: 'recepcion',
+        nom: 'Recepciones'
+    }, {
+        id: 'tramite',
+        nom: 'Compra Trámite'
+    }, {
+        id: 'instalacion',
+        nom: 'Utilizadas'
+    }, {
+        id: 'reserva',
+        nom: 'Reserva'
+    }, {
+        id: 'snow',
+        nom: 'SNOW'
+    }, {
+        id: 'addm',
+        nom: 'ADDM'
+    }, {
+        id: 'traduccion',
+        nom: 'Traducciones'
+    }];
+
+    function showChildGrid(parentRowID, parentRowKey, tabs) {
+        var tabTemplate = new zs.TabTemplate(parentRowID, parentRowKey, tabs).template;
+        $('#' + parentRowID).append(tabTemplate);
+        $('#' + tabs[0].id + '_tab_' + parentRowKey).addClass('media_node active span')
+        console.log(tabs[0].id)
+        $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function (item) {
+            var $this = $(this),
+                loadurl = $this.attr('href'),
+                targ = $this.attr('data-target'),
+                tabGrid = selectTabGrid(targ);
+            tabGrid.renderGrid(loadurl, parentRowKey, targ);
+            $this.tab('show');
+            return false;
+        });
+        $('[data-toggle="tab_' + parentRowKey + '"]').click(function (e) {
+            var $this = $(this),
+                loadurl = $this.attr('href'),
+                targ = $this.attr('data-target'),
+                tabGrid = selectTabGrid(targ);
+            tabGrid.renderGrid(loadurl, parentRowKey, targ);
+            $this.tab('show');
+            return false;
+        });
+        console.log(tabs[0].id)
+    };
     function selectTabGrid(targ) {
         switch (targ) {
             case '#compra':
@@ -52,30 +103,6 @@
         }
     };
 
-    function showChildGrid(parentRowID, parentRowKey, tabs) {
-        var tabTemplate = new zs.TabTemplate(parentRowID, parentRowKey, tabs).template;
-        $('#' + parentRowID).append(tabTemplate);
-        $('#' + tabs[0].id + '_tab_' + parentRowKey).addClass('media_node active span')
-        $('.active[data-toggle="tab_' + parentRowKey + '"]').each(function (item) {
-            var $this = $(this),
-                loadurl = $this.attr('href'),
-                targ = $this.attr('data-target'),
-                tabGrid = selectTabGrid(targ);
-            tabGrid.renderGrid(loadurl, parentRowKey, targ);
-            // $this.tab('show');
-            return false;
-        });
-        $('[data-toggle="tab_' + parentRowKey + '"]').click(function (e) {
-            var $this = $(this),
-                loadurl = $this.attr('href'),
-                targ = $this.attr('data-target'),
-                tabGrid = selectTabGrid(targ);
-            tabGrid.renderGrid(loadurl, parentRowKey, targ);
-            // $this.tab('show');
-            return false;
-        });
-    }
-
     $(function () {
 
         var $table = $('#gridMaster');
@@ -89,7 +116,7 @@
                 label: 'Fabricante',
                 name: 'idFabricante',
                 jsonmap: 'nombreFab',
-                width: 180,
+                width: 280,
                 align: 'center',
                 sortable: false,
                 editable: true,
@@ -326,32 +353,6 @@
                 edittype: 'textarea'
             }
         ];
-
-        var tabs = [{
-            id: 'compra',
-            nom: 'Compra'
-        }, {
-            id: 'recepcion',
-            nom: 'Recepciones'
-        }, {
-            id: 'tramite',
-            nom: 'Compra Trámite'
-        }, {
-            id: 'instalacion',
-            nom: 'Utilizadas'
-        }, {
-            id: 'reserva',
-            nom: 'Reserva'
-        }, {
-            id: 'snow',
-            nom: 'SNOW'
-        }, {
-            id: 'addm',
-            nom: 'ADDM'
-        }, {
-            id: 'traduccion',
-            nom: 'Traducciones'
-        }];
 
         initMainGrid('/lic/grid_inventario', viewModel, 'nombre', tabs);
     });

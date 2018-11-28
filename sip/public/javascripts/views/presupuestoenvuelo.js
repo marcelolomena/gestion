@@ -519,12 +519,12 @@ $(document).ready(function () {
         },
     });
     jQuery.extend(jQuery.jgrid.edit, { recreateForm: true });
-    $("#table_iniciativa").jqGrid('filterToolbar', {
+    $("#table_iniciativa").jqGrid({regional: 'es'},'filterToolbar', {
         stringResult: true, searchOperators: true,
-        searchOnEnter: true, defaultSearch: 'cn', regional: 'p'
+        searchOnEnter: true, defaultSearch: 'cn'
     });
 
-    $('#table_iniciativa').jqGrid('navGrid', "#pager_iniciativa", {
+    $('#table_iniciativa').jqGrid({regional: 'es'},'navGrid', "#pager_iniciativa", {
         edit: true, add: true, del: true, search: false, refresh: true,
         view: false, position: "left", cloneToTop: false
     },
@@ -692,7 +692,7 @@ $(document).ready(function () {
         }
     );
 
-    $('#table_iniciativa').jqGrid('navButtonAdd', '#pager_iniciativa_left', {
+    $('#table_iniciativa').jqGrid({regional: 'es'},'navButtonAdd', '#pager_iniciativa_left', {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
         title: "Exporta Excel",

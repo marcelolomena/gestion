@@ -243,7 +243,7 @@ function showDocumentos(dias, tipo) {
 		}		
     },
 	{
-        label: 'Fecha Renovación',
+        label: 'Fecha Renovaciï¿½n',
         name: 'fecharenovasoporte',
         width: 100,
         hidden: false,
@@ -262,7 +262,7 @@ function showDocumentos(dias, tipo) {
 		}		
     },
     {
-        label: 'Fecha Expiración',
+        label: 'Fecha Expiraciï¿½n',
         name: 'fechaexpiracion',
         width: 100,
         hidden: false,

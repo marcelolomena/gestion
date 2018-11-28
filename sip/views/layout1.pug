@@ -1,31 +1,322 @@
 doctype transitional
 html(xmlns='http://www.w3.org/1999/xhtml')
-  head
-    title SIP Banco de Chile - Sistema Integrado de Presupuesto
-    block head
-     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')                                
-     link(rel='stylesheet', href='/stylesheets/ui.jqgrid-bootstrap.css', type='text/css', media='screen', charset='utf-8')
-     link(rel='stylesheet', href='/stylesheets/bootstrap-datepicker.css', type='text/css', media='screen', charset='utf-8')        
-     link(rel='stylesheet', href='/stylesheets/test.css', type='text/css', media='screen', charset='utf-8')         
-     //link(rel='stylesheet', href='/javascripts/highcharts/css/highcharts.css', type='text/css', media='screen', charset='utf-8')
-     link(rel='stylesheet', href='/stylesheets/style.css', type='text/css', media='screen', charset='utf-8')    
-     link(rel='stylesheet', href='/stylesheets/menu.css', type='text/css', media='screen', charset='utf-8') 
-     script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
-     script(type='text/javascript', src='/javascripts/highcharts/highcharts.js')
-     script(type='text/javascript', src='/javascripts/highcharts/highcharts-more.js')
-     script(type='text/javascript', src='/javascripts/grid.locale-es.js')
-     script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')
-     script(type='text/javascript', src='/javascripts/jquery.mask.min.js')
-     script(type='text/javascript', src='/javascripts/bootstrap-datepicker.js')
-     script(type="text/javascript", src="/javascripts/locales/bootstrap-datepicker.es.js", charset="UTF-8")
-     script(type='text/javascript', src='/javascripts/bootstrap3-typeahead.js')
-     script(type='text/javascript', src='/javascripts/script.js')
-     script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')
-     script(type='text/javascript', src='/javascripts/jsplug.js')
-     script(type='text/javascript', src='/javascripts/sip.js')
-     script(type='text/javascript', src='/resources/socket.io/socket.io.js')
-     script(type='text/javascript', src='/javascripts/bootstrap.min.js')
-     script(type='text/javascript', src='/javascripts/bootbox.min.js')
-     script(type='text/javascript', src='/javascripts/views/home.js')
-  body
-     block content
+block head
+  title SIP Banco de Chile - Sistema Integrado de Presupuesto
+  meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+  link(rel='stylesheet', href='/sourcemaps/bootstrap.min.css.map', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='/sourcemaps/main.min.css.map', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='/stylesheets/main.css', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='/stylesheets/main.min.css', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='/vendor/bootstrap/css/bootstrap.css', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='/vendor/bootstrap/css/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')
+  link(rel='stylesheet', href='/stylesheets/stylesheet.css', type='text/css', media='screen', charset='utf-8')    
+  meta(property='og:title', content='Fullwidth Page Layout')
+  
+  meta(name='author', content='')
+  meta(property='og:locale', content='en_US')
+  meta(name='description', content='Responsive admin theme build on top of Bootstrap 4')
+  meta(property='og:description', content='Responsive admin theme build on top of Bootstrap 4')
+  link(rel='canonical', href='http://uselooper.com')
+  meta(property='og:url', content='http://uselooper.com')
+  meta(property='og:site_name', content='Looper - Bootstrap 4 Admin Theme')
+  script(type='application/ld+json').
+  meta(name='theme-color', content='#3063A0')
+  //-  script(src='vendor/pace/pace.min.js')
+  link(rel='stylesheet', href='/vendor/pace/pace.min.css')
+  link(rel='stylesheet', href='/vendor/bootstrap/css/bootstrap.min.css')
+  link(rel='stylesheet', href='/vendor/open-iconic/css/open-iconic-bootstrap.min.css')
+  link(rel='stylesheet', href='/vendor/fontawesome/css/fontawesome.all.css')
+  link(rel='stylesheet', href='/vendor/flatpickr/flatpickr.min.css')
+  link(rel='stylesheet', href='/stylesheets/main.min.css')
+  link(rel='stylesheet', href='/stylesheets/custom.css')
+  script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
+  script(type='text/javascript', src='/javascripts/grid.locale-es.js')  
+  script(type='text/javascript', src='/javascripts/jquery.jqGrid.min.js')
+  script(type='text/javascript', src='/javascripts/jquery.mask.min.js')
+  script(type='text/javascript', src='/javascripts/bootstrap-datepicker.js') 
+  script(type="text/javascript", src="/javascripts/locales/bootstrap-datepicker.es.js", charset="UTF-8")   
+  script(type='text/javascript', src='/javascripts/bootstrap3-typeahead.js')      
+  script(type='text/javascript', src='/javascripts/sip.js')  
+  script(type='text/javascript', src='/javascripts/sic.js')  
+  script(type='text/javascript', src='/javascripts/moment.js')
+  script(type='text/javascript', src='/javascripts/bootstrap.min.js')
+  -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software"];   
+body
+  block content
+  .app.has-fullwidth
+   header.app-header
+    .top-bar
+     .top-bar-brand
+      button.hamburger.hamburger-squeeze.mr-2(type='button', data-toggle='aside', aria-label='Menu', aria-controls='navigation')
+       span.hamburger-box
+        span.hamburger-inner
+      a(href='/login#')
+       img(src='/images/header_chico.png', weight='5', height='55', alt='')
+     .top-bar-list
+      .top-bar-item.px-2.d-md-none.d-lg-none.d-xl-none
+       button.hamburger.hamburger-squeeze(type='button', data-toggle='aside', aria-label='Menu', aria-controls='navigation')
+        span.hamburger-box
+         span.hamburger-inner
+      .top-bar-item.top-bar-item-right.px-0.d-none.d-sm-flex
+       ul.header-nav.nav
+        li.nav-item.dropdown.header-nav-dropdown.has-notified
+         a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+          span.oi.oi-pulse
+         .dropdown-arrow
+         .dropdown-menu.dropdown-menu-rich.dropdown-menu-right
+          h6.dropdown-header.stop-propagation
+           span
+            | Actividades
+            span.badge (2)
+          .dropdown-scroll.has-scrollable
+           a.dropdown-item.unread(href='#')
+            .user-avatar
+             img(src='/images/avatars/uifaces15.jpg', alt='')
+            .dropdown-item-body
+             p.text  Jeffrey Wells creó un horario 
+             span.date Justo ahora
+           a.dropdown-item.unread(href='#')
+            .user-avatar
+             img(src='/images/avatars/uifaces16.jpg', alt='')
+            .dropdown-item-body
+             p.text  Anna Vargas ha iniciado sesión en un chat.
+             span.date hace 3 horas
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='/images/avatars/uifaces17.jpg', alt='')
+            .dropdown-item-body
+             p.text  Sara Carr invitó a Stilearn Admin 
+             span.date hace 5 ahoras
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='/images/avatars/uifaces18.jpg', alt='')
+            .dropdown-item-body
+             p.text  Sara Carr actualizó un proyecto 
+             span.date hace 1 día
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='/images/avatars/uifaces19.jpg', alt='')
+            .dropdown-item-body
+             p.text  Arthur Carroll creó una tarea 
+             span.date hace 1 día
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='/images/avatars/uifaces20.jpg', alt='')
+            .dropdown-item-body
+             p.text  Angela Peterson te asignó una tarea 
+             span.date hace 2 día
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='/images/avatars/uifaces21.jpg', alt='')
+            .dropdown-item-body
+             p.text  Willie Dixon y otros 3 te siguieron 
+             span.date hace 2 día
+          a.dropdown-footer(href='user-activities.html')
+           | Todas las actividades
+           i.fa.fa-fw.fa-long-arrow-alt-right
+        li.nav-item.dropdown.header-nav-dropdown.has-notified
+         a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+          span.oi.oi-envelope-open
+         .dropdown-arrow
+         .dropdown-menu.dropdown-menu-rich.dropdown-menu-right
+          h6.dropdown-header.stop-propagation
+           span Mensajes
+           a(href='#') Marcar todo como leido
+          .dropdown-scroll.has-scrollable
+           a.dropdown-item.unread(href='#')
+            .user-avatar
+             img(src='/images/avatars/team1.jpg', alt='')
+            .dropdown-item-body
+             p.subject  Stilearning 
+             p.text.text-truncate  Invitación: Joe's Dinner @ Vier 22 Ago 
+             span.date hace 2 día
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='/images/avatars/team3.png', alt='')
+            .dropdown-item-body
+             p.subject  Openlane 
+             p.text.text-truncate  Final reminder: Upgrade to Pro 
+             span.date hace 23 horas
+           a.dropdown-item(href='#')
+            .tile.tile-circle.bg-green  GZ 
+            .dropdown-item-body
+             p.subject  Gogo Zoom 
+             p.text.text-truncate  Live healthy with this wireless sensor. 
+             span.date 1 day ago
+           a.dropdown-item(href='#')
+            .tile.tile-circle.bg-teal  GD 
+            .dropdown-item-body
+             p.subject  Gold Dex 
+             p.text.text-truncate  Invitation: Design Review @ Mon Jul 7 
+             span.date 1 day ago
+           a.dropdown-item(href='#')
+            .user-avatar
+             img(src='/images/avatars/team2.png', alt='')
+            .dropdown-item-body
+             p.subject  Creative Division 
+             p.text.text-truncate  Need some feedback on this please 
+             span.date 2 days ago
+           a.dropdown-item(href='#')
+            .tile.tile-circle.bg-pink  LD 
+            .dropdown-item-body
+             p.subject  Lab Drill 
+             p.text.text-truncate  Our UX exercise is ready 
+             span.date 6 days ago
+          a.dropdown-footer(href='app-messages.html')
+           | Todos los mensajes
+           i.fa.fa-fw.fa-long-arrow-alt-right
+        li.nav-item.dropdown.header-nav-dropdown
+         a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+          span.oi.oi-grid-three-up
+         .dropdown-arrow
+         .dropdown-menu.dropdown-menu-rich.dropdown-menu-right
+          .dropdown-sheets
+           .dropdown-sheet-item
+            a.tile-wrapper(href='#')
+             span.tile.tile-lg.bg-indigo
+              i.oi.oi-people
+             span.tile-peek Equipos
+           .dropdown-sheet-item
+            a.tile-wrapper(href='#')
+             span.tile.tile-lg.bg-teal
+              i.oi.oi-fork
+             span.tile-peek Proyectos
+           .dropdown-sheet-item
+            a.tile-wrapper(href='#')
+             span.tile.tile-lg.bg-pink
+              i.fa.fa-tasks
+             span.tile-peek Tareas
+           .dropdown-sheet-item
+            a.tile-wrapper(href='#')
+             span.tile.tile-lg.bg-yellow
+              i.oi.oi-fire
+             span.tile-peek Feeds
+           .dropdown-sheet-item
+            a.tile-wrapper(href='#')
+             span.tile.tile-lg.bg-cyan
+              i.oi.oi-document
+             span.tile-peek Archivos
+       .dropdown
+        button.btn-account.d-none.d-md-flex(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+         span.user-avatar
+          img(src='/images/avatars/profile.jpg', alt='')
+         span.account-summary.pr-lg-4.d-none.d-lg-block
+          .perfil_sesion
+            .user
+             span.account-name #{data[0].nombre}
+             span.account-description #{data[0].glosarol}
+        .dropdown-arrow.dropdown-arrow-left
+        .dropdown-menu
+         h6.dropdown-header.d-none.d-md-block.d-lg-none  #{data[0].nombre}
+         a.dropdown-item(href='user-profile.html')
+          span.dropdown-icon.oi.oi-person
+          |  Perfil
+         a.dropdown-item(href='/menu/signout')
+          span.dropdown-icon.oi.oi-account-logout
+          |  Cerrar Sesión
+         .dropdown-divider
+         a.dropdown-item(href='#') Centro de Ayuda
+         a.dropdown-item(href='#') Preguntar Foro
+   aside.app-aside
+    .aside-content
+     header.aside-header
+      button.hamburger.hamburger-squeeze(type='button', data-toggle='aside', aria-label='Menu', aria-controls='navigation')
+       span.hamburger-box
+        span.hamburger-inner
+      button.btn-account.d-flex.d-md-none(type='button', data-toggle='collapse', data-target='#dropdown-aside')
+       span.user-avatar.user-avatar-lg
+        img(src='/images/avatars/profile.jpg', alt='')
+       span.account-icon
+        span.fa.fa-caret-down.fa-lg
+       span.account-summary
+        span.account-name #{data[0].nombre}
+        span.account-description #{data[0].glosarol}
+      #dropdown-aside.dropdown-aside.collapse
+       .pb-3
+        a.dropdown-item(href='user-profile.html')
+         span.dropdown-icon.oi.oi-person
+         |  Perfil
+        a.dropdown-item(href='/menu/signout')
+         span.dropdown-icon.oi.oi-account-logout
+         |  Cerrar Sesión
+        .dropdown-divider
+        a.dropdown-item(href='#') Centro de Ayuda
+        a.dropdown-item(href='#') Preguntar Foro
+      .top-bar-brand
+       a(href='/login#')
+        img(src='/images/logoRound.png',height='60px', alt='') 
+        span.font-weight-bold(style='color: #234875;') &nbsp #{sistemas[data[0].sistema]}
+     section.aside-menu.has-scrollable
+      nav#stacked-menu.stacked-menu
+       ul.menu
+        li.menu-header Interfaces 
+          each val in data[1].menus
+            li.menu-item.has-child
+              a.menu-link(href='#')
+                span.menu-text=val.menu.menu
+              ul.menu
+                each vol in val.submenu
+                  li.menu-item
+                    if(vol.url!='conferencia')
+                      a.menu-link(href='/'+vol.url)
+                        span.menu-text=vol.opt
+                    else                    
+                      a.menu-link(href='https://152.139.147.41:3001/'+vol.url)
+                        span.menu-text=vol.opt        
+   main.app-main
+    .wrapper
+     .page
+      .page-inner
+          script(type='text/javascript', src='/javascripts/jquery-1.12.3.js')
+          script(type='text/javascript', src='/javascripts/guriddo/src/i18n/grid.locale-es.js')  
+          script(type='text/javascript', src='/javascripts/guriddo/src/jquery.jqGrid.js')
+          script(type='text/javascript', src='/javascripts/jquery.mask.min.js')
+          script(type='text/javascript', src='/javascripts/bootstrap-datepicker.js') 
+          script(type="text/javascript", src="/javascripts/locales/bootstrap-datepicker.es.js", charset="UTF-8")    
+          script(type='text/javascript', src='/javascripts/script.js') 
+          script(type='text/javascript', src='/javascripts/jquery.touchSwipe.min.js')      
+          script(type='text/javascript', src='/javascripts/jsplug.js')      
+          script(type='text/javascript', src='/javascripts/sip.js')
+          script(type='text/javascript', src='/javascripts/bootstrap.min.js')       
+          script(type='text/javascript', src='/javascripts/bootbox.min.js')   
+          script(type='text/javascript', src='/javascripts/views/presupuestoenvuelo.js')
+          script(type='text/javascript', src='/javascripts/views/tareaenvuelo.js')
+          script(type='text/javascript', src='/javascripts/views/fechaenvuelo.js')
+          script(type='text/javascript', src='/javascripts/views/conversionenvuelo.js')
+          script(type='text/javascript', src='/javascripts/views/flujopagoenvuelo.js')
+          script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js')
+          //- link(rel='stylesheet', href='/stylesheets/bootstrap.min.css', type='text/css', media='screen', charset='utf-8')            
+          link(rel='stylesheet', href='/javascripts/guriddo/src/css/ui.jqgrid-bootstrap4.css', type='text/css', media='screen', charset='utf-8')
+          link(rel='stylesheet', href='/javascripts/guriddo/src/css/ui.jqgrid-bootstrap-ui.css', type='text/css', media='screen', charset='utf-8')
+          link(rel='stylesheet', href='/javascripts/guriddo/src/css/ui.jqgrid.css', type='text/css', media='screen', charset='utf-8')
+          link(rel='stylesheet', href='/javascripts/guriddo/src/css/ui.multiselect.css', type='text/css', media='screen', charset='utf-8')
+          link(rel='stylesheet', href='/stylesheets/bootstrap-datepicker.css', type='text/css', media='screen', charset='utf-8')  
+          //- link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")       
+          link(rel='stylesheet', href='/stylesheets/test.css', type='text/css', media='screen', charset='utf-8')         
+          link(rel='stylesheet', href='/stylesheets/zerogrid.css', type='text/css', media='screen', charset='utf-8')
+          link(rel='stylesheet', href='/stylesheets/tmpl.css', type='text/css', media='screen', charset='utf-8') 
+          .zerogrid_b
+            block titulogrilla              
+          .zerogrid_b
+          block grilla   
+    footer.app-footer
+     ul.list-inline
+      li.list-inline-item
+       a.text-muted(href='#') Soporte
+      li.list-inline-item
+       a.text-muted(href='#') Centro de Ayuda
+      li.list-inline-item
+       a.text-muted(href='#') Privacidad
+      li.list-inline-item
+       a.text-muted(href='#') Terminos de servicio
+     .copyright  © 2018 Todos los derechos reservados.
+  script(src='/vendor/bootstrap/js/popper.min.js')
+  script(src='/vendor/bootstrap/js/bootstrap.min.js')
+  script(src='/vendor/stacked-menu/stacked-menu.min.js')
+  script(src='/vendor/perfect-scrollbar/perfect-scrollbar.min.js')
+  script(src='/vendor/flatpickr/flatpickr.min.js')
+  script(src='/vendor/easy-pie-chart/jquery.easypiechart.min.js')
+  script(src='/vendor/chart.js/Chart.min.js')
+  script(src='/javascripts/highcharts/highcharts.js')
+  script(src='/javascript/main.min.js')
+  script(src='/javascript/pages/easypiechart-demo.js')

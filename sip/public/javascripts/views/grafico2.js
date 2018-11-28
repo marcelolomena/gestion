@@ -125,7 +125,7 @@ $(document).ready(function () {
 		//showProyectoErogaciones(idsap);
 		loadGrid(idsap);
 		$("#grid2").jqGrid('setGridState', 'hidden');
-		$("#grid2").jqGrid('setCaption', ' ');
+		// $("#grid2").jqGrid('setCaption', ' ');
 		
 	});
 	

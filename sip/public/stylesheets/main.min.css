@@ -6507,6 +6507,7 @@
     .page-inner {
       padding-right: 2rem;
       padding-left: 2rem;
+      padding-top: 3rem;
     }
   }
   
@@ -15602,7 +15603,7 @@
   
   .wrapper {
     position: relative;
-    margin: 0 auto;
+    margin: -24px auto;
   }
   
   .app-backdrop {
@@ -16185,6 +16186,7 @@
     .page-inner {
       padding-right: 2rem;
       padding-left: 2rem;
+      padding-top: 3rem;
     }
   }
   
