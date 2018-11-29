@@ -14,7 +14,7 @@ var dashboardDemo = {
 
     // event handlers
     this.handleTasksChart();
-    this.handleFlatpickr();
+    // this.handleFlatpickr();
   },
   colors: function colors() {
     return {
@@ -87,7 +87,7 @@ var dashboardDemo = {
       inline: true,
       disableMobile: true,
       mode: 'range',
-      dateFormat: 'Y-m-d'
+      dateFormat: 'd-m-Y'
     });
 
     $('#flatpickr').next().on('click', function (e) {

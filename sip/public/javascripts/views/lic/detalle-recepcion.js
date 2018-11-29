@@ -87,7 +87,7 @@ var detalleRecepcionGrid = {
             label: 'Fabricante',
             name: 'idFabricante',
             jsonmap: 'fabricante.nombre',
-            width: 180,
+            width: 124,
             align: 'center',
             sortable: true,
             editable: true,
@@ -140,7 +140,7 @@ var detalleRecepcionGrid = {
         }, {
             label: 'Otro Fabricante',
             name: 'otroFabricante',
-            width: 250,
+            width: 124,
             hidden: true,
             editable: true,
             search: false,
@@ -151,7 +151,7 @@ var detalleRecepcionGrid = {
             label: 'Producto',
             name: 'idProducto',
             jsonmap: 'producto.nombre',
-            width: 250,
+            width: 124,
             align: 'center',
             sortable: true,
             editable: true,
@@ -217,7 +217,7 @@ var detalleRecepcionGrid = {
         }, {
             label: 'Otro Producto',
             name: 'otroProducto',
-            width: 250,
+            width: 124,
             hidden: true,
             editable: true,
             search: false,
@@ -228,7 +228,7 @@ var detalleRecepcionGrid = {
             label: '¿Donde está instalada?',
             name: 'idTipoInstalacion',
             jsonmap: 'tipoInstalacion.nombre',
-            width: 160,
+            width: 124,
             align: 'center',
             sortable: false,
             editable: true,
@@ -258,7 +258,7 @@ var detalleRecepcionGrid = {
             label: 'Clasificación',
             name: 'idClasificacion',
             jsonmap: 'clasificacion.nombre',
-            width: 150,
+            width: 124,
             align: 'center',
             sortable: false,
             editable: true,
@@ -288,7 +288,7 @@ var detalleRecepcionGrid = {
             label: 'Tipo de Licenciamiento',
             name: 'idTipoLicenciamiento',
             jsonmap: 'tipoLicenciamiento.nombre',
-            width: 170,
+            width: 124,
             align: 'center',
             sortable: false,
             editable: true,
@@ -317,7 +317,7 @@ var detalleRecepcionGrid = {
         }, {
             label: 'Fecha Inicio',
             name: 'fechaInicio',
-            width: 100,
+            width: 124,
             align: 'center',
             sortable: true,
             editable: true,
@@ -338,7 +338,7 @@ var detalleRecepcionGrid = {
         }, {
             label: 'Fecha Término',
             name: 'fechaTermino',
-            width: 110,
+            width: 124,
             align: 'center',
             sortable: true,
             editable: true,
@@ -359,7 +359,7 @@ var detalleRecepcionGrid = {
         }, {
             label: 'Fecha Control',
             name: 'fechaControl',
-            width: 100,
+            width: 124,
             align: 'center',
             sortable: true,
             editable: true,
@@ -421,7 +421,7 @@ var detalleRecepcionGrid = {
             label: 'Moneda',
             name: 'idMoneda',
             jsonmap: 'moneda.nombre',
-            width: 100,
+            width: 124,
             align: 'center',
             sortable: true,
             editable: true,
@@ -443,7 +443,7 @@ var detalleRecepcionGrid = {
         }, {
             label: 'Valor Total Compra',
             name: 'monto',
-            width: 150,
+            width: 124,
             align: 'center',
             sortable: true,
             hidden: false,
@@ -458,7 +458,7 @@ var detalleRecepcionGrid = {
         }, {
             label: 'Valor Licencia Anual Neto',
             name: 'valorAnualNeto',
-            width: 180,
+            width: 124,
             align: 'center',
             sortable: true,
             hidden: false,
@@ -473,7 +473,7 @@ var detalleRecepcionGrid = {
         }, {
             label: 'Valor Soporte Anual Neto',
             name: 'montoSoporte',
-            width: 180,
+            width: 124,
             align: 'center',
             sortable: true,
             hidden: false,
@@ -489,12 +489,13 @@ var detalleRecepcionGrid = {
             label: 'N° Factura',
             name: 'factura',
             align: 'center',
+            width: 124,
             hidden: false,
             editable: true
         }, {
             label: 'Responsable Negociador',
             name: 'comprador',
-            width: 170,
+            width: 124,
             hidden: false,
             align: 'center',
             editable: true
@@ -502,7 +503,7 @@ var detalleRecepcionGrid = {
             label: 'Correo Proveedor',
             name: 'mailComprador',
             hidden: false,
-            width: 200,
+            width: 124,
             align: 'center',
             editable: true,
             editoptions: {
@@ -512,6 +513,7 @@ var detalleRecepcionGrid = {
             label: 'Comentario',
             name: 'comentario',
             hidden: true,
+            width: 124,
             editable: true,
             edittype: 'textarea',
             editoptions: {
@@ -536,7 +538,7 @@ var detalleRecepcionGrid = {
             label: '¿Qué producto renueva?',
             name: 'idRenovado',
             jsonmap: 'compra.idRenovado',
-            width: 170,
+            width: 124,
             align: 'center',
             sortable: false,
             editable: true,
@@ -587,7 +589,7 @@ var detalleRecepcionGrid = {
             index: 'fichaTecnica',
             // id: 'elarchivo',
             hidden: false,
-            width: 100,
+            width: 124,
             align: 'center',
             editable: true,
             editoptions: {
@@ -602,7 +604,7 @@ var detalleRecepcionGrid = {
             }
         }
         ];
-        var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle de Recepción', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'cantidad', '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, '',/*'Detalle de Recepción',*/ 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'cantidad', '/lic/getsession', ['Administrador LIC']);
 
         function beforeShowFormAdd(form) {
             $("#d_fichaTecnica").empty().html('');

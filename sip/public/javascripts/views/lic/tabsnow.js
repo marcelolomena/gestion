@@ -19,19 +19,19 @@ var tabSnowGrid = {
         }, {
             label: 'Nombre',
             name: 'nombre',
-            width: 500,
+            width: 586,
             editable: true
         }, {
             label: 'Cantidad',
             name: 'snow',
-            width: 100,
+            width: 586,
             editable: true,
             search: false
         },
         {
             label: 'Usuarios',
             name: 'snow',
-            width: 100,
+            width: 586,
             editable: true,
             search: false
         }

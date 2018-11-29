@@ -1,7 +1,7 @@
 .cajaFormulario {
 	padding-top: 7px;
 	padding-bottom: 7px;
-	border: 1px solid #a3cbe0;
+	border: 1px solid #D4D5D7;
 	margin-left: 5px;
 	margin-right: 15px;
 }
@@ -20,8 +20,8 @@
 	padding-top: 5px;
 	padding-bottom: 5px;
 	text-align: left;
-	border: 1px solid #7fb2cc;
-	background-color: #ecf4f7;
+	border: 1px solid #D4D5D7;
+	background-color: #ffffff;
 	margin-left: 30px;
 }
 .formSap .titForm {
@@ -36,8 +36,8 @@
 	padding-top: 5px;
 	padding-bottom: 5px;
 	text-align: left;
-	border: 1px solid #7fb2cc;
-	background-color: #ecf4f7;
+	border: 1px solid #D4D5D7;
+	background-color: #ffffff;
 	margin-left: 10px;
 }
 .formFactura {
@@ -50,7 +50,7 @@
 }
 .formFactura #factura {
 	margin-left: 20px;
-	border: 1px solid #7fb2cc;
+	border: 1px solid #D4D5D7;
 	color: #036;
 	width: 139px;
 	height: 27px;
@@ -61,14 +61,14 @@
 	margin-left: 10px;
 }
 .formFactura #fechaini {
-	border: 1px solid #7fb2cc;
+	border: 1px solid #D4D5D7;
 	color: #036;
 	width: 124px;
 	height: 27px;
 	line-height: 24px;
 }
 .formFactura #fechafin {
-	border: 1px solid #7fb2cc;
+	border: 1px solid #D4D5D7;
 	color: #036;
 	width: 124px;
 	height: 27px;
@@ -110,12 +110,12 @@
 }
 
 .btn:hover {
-	background: #78ad28;
-	background-image: -webkit-linear-gradient(top, #78ad28, #659419);
-	background-image: -moz-linear-gradient(top, #78ad28, #659419);
-	background-image: -ms-linear-gradient(top, #78ad28, #659419);
-	background-image: -o-linear-gradient(top, #78ad28, #659419);
-	background-image: linear-gradient(to bottom, #78ad28, #659419);
+	background-color: #036;
+	background-image: -webkit-linear-gradient(top, #036, #036);
+	background-image: -moz-linear-gradient(top, #036, #036);
+	background-image: -ms-linear-gradient(top, #036, #036);
+	background-image: -o-linear-gradient(top, #036, #036);
+	background-image: linear-gradient(to bottom, #036, #036);
 	text-decoration: none;
 	cursor: default;
 }

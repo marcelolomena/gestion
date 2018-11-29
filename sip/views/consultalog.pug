@@ -12,13 +12,13 @@ block grilla
   .cajaFormulario
     .formSap
       | Funcionalidad :  
-      select#funcionalidad
+      select#funcionalidad(class='custom-select' style="width:auto; margin-right: 10px")
         option(value='0', selected='selected') - Escoger Función -
-      select#transaccion
+      select#transaccion(class='custom-select' style="width:auto; margin-right: 10px")
         option(value='0', selected='selected') - Escoger Transacción - 
     .formFactura
       | Usuario:
-      select#usuario(type='text', name='factura')
+      select#usuario(type='text', name='factura' class='custom-select' style="width:auto; margin-right: 10px")
         option(value='0', selected='selected') - Escoger Usuario - 
       span.titCajaPeriodo Periodo:
       input#fechaini(type='text', name='fechaini')

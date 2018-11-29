@@ -142,7 +142,7 @@ $(document).ready(function () {
                 callback(json);
             });
         },
-        myFilterTemplateLabel = 'Ejercicios:&nbsp;',
+        myFilterTemplateLabel = 'Ejercicios:',
         myFilterTemplateNames = ['Cerrado', 'Última semana', 'Último mes'],
         myFilterTemplates = [templateClosed, templateLastWeek, templateLastMonth],
         myDynamicFilterTemplates = function (id) {
@@ -249,9 +249,9 @@ $(document).ready(function () {
                 retorno[i].glosaejercicio + '</option>';
         });
 
-        $('#t_' + $.jgrid.jqID($grid[0].id)).append('<label for="filterTemplates">' +
+        $('#t_' + $.jgrid.jqID($grid[0].id)).append('<label for="filterTemplates" style="margin-left: 10px; transform: translateY(10%);">' +
             myFilterTemplateLabel + '</label>' +
-            '<select id="filterTemplates"><option value="0">Sin filtro</option>' +
+            '<select class="custom-select" id="filterTemplates" style="font-size: 14px; font-family: Arial, Helvetica, sans-serif;width:auto; margin-right: 10px"><option value="0">Sin filtro</option>' +
             templateOptions + '</select>');
         $('#filterTemplates').change(reloadWithNewFilterTemplate).keyup(function (e) {
             var keyCode = e.keyCode || e.which;

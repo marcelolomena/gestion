@@ -119,9 +119,12 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default        
         sortable: "true",
         width: null,
-        shrinkToFit: false,
         caption: 'Reporte Comparativo',
         pager: "#pager",
         viewrecords: true,
@@ -194,5 +197,11 @@ $(document).ready(function () {
     });
 
     $("#pager_left").css("width", "");
+
+    $(window).bind('resize', function () {
+        $("#grid").setGridWidth($(".gcontainer").width(), true);
+        //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
+        $("#pager").setGridWidth($(".gcontainer").width(), true);
+    });
 });
 

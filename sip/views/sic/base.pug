@@ -35,7 +35,6 @@ html(xmlns='http://www.w3.org/1999/xhtml')
    "headline": "Fullwidth Page Layout",
    "@context": "http://schema.org"
    }
-  link(rel='shortcut icon', href='../favicon.ico')
   meta(name='theme-color', content='#3063A0')
   link(rel='stylesheet', href='../vendor/pace/pace.min.css')
   link(rel='stylesheet', href='../vendor/bootstrap/css/bootstrap.min.css')
@@ -52,7 +51,7 @@ html(xmlns='http://www.w3.org/1999/xhtml')
   script(type="text/javascript", src="../javascripts/locales/bootstrap-datepicker.es.js", charset="UTF-8")   
   script(type='text/javascript', src='../javascripts/bootstrap3-typeahead.js')      
   script(type='text/javascript', src='../javascripts/sip.js')  
-  -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software","Maqueta Limites"];
+  -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software"];
   block jsgrilla       
 body
   .app.has-fullwidth
@@ -62,7 +61,7 @@ body
       button.hamburger.hamburger-squeeze.mr-2(type='button', data-toggle='aside', aria-label='Menu', aria-controls='navigation')
        span.hamburger-box
         span.hamburger-inner
-      a(href='/login')
+      a(href='')
        img(src='images/header_chico.png', weight='5', height='55', alt='')
      .top-bar-list
       .top-bar-item.px-2.d-md-none.d-lg-none.d-xl-none
@@ -220,7 +219,7 @@ body
         .dropdown-arrow.dropdown-arrow-left
         .dropdown-menu
          h6.dropdown-header.d-none.d-md-block.d-lg-none  #{data[0].nombre}
-         a.dropdown-item(href='../user-profile.html')
+         a.dropdown-item(href='#')
           span.dropdown-icon.oi.oi-person
           |  Perfil
          a.dropdown-item(href='../menu/signout')
@@ -245,7 +244,7 @@ body
         span.account-description #{data[0].glosarol}
       #dropdown-aside.dropdown-aside.collapse
        .pb-3
-        a.dropdown-item(href='../user-profile.html')
+        a.dropdown-item(href='#')
          span.dropdown-icon.oi.oi-person
          |  Perfil
         a.dropdown-item(href='../menu/signout')
@@ -255,8 +254,8 @@ body
         a.dropdown-item(href='#') Centro de Ayuda
         a.dropdown-item(href='#') Preguntar Foro
       .top-bar-brand
-       a(href='/login#')
-        img(src='../images/logoRound.png',height='100%', alt='') 
+       a(href='#')
+        img(src='/images/logoRound.png',height='60px', alt='') 
         span.font-weight-bold(style='color: #234875;') &nbsp #{sistemas[data[0].sistema]}
      section.aside-menu.has-scrollable
       nav#stacked-menu.stacked-menu
@@ -330,4 +329,5 @@ body
   script(src='../vendor/easy-pie-chart/jquery.easypiechart.min.js')
   script(src='../vendor/chart.js/Chart.min.js')
   script(src='../javascript/main.min.js')
+  script(src='../javascripts/highcharts/highcharts.js')
   script(src='../javascript/pages/easypiechart-demo.js')

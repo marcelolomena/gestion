@@ -47,7 +47,7 @@ $(document).ready(function () {
     , {
         label: 'Estado',
         name: 'estado',
-        width: 90,
+        width: 225,
         align: 'center',
         editable: true,
         edittype: "custom",
@@ -62,7 +62,7 @@ $(document).ready(function () {
         name: 'idProducto',
         jsonmap: 'nombre',
         align: 'center',
-        width: 200,
+        width: 225,
         editable: true,
         editoptions: {
             fullRow: true,
@@ -78,7 +78,7 @@ $(document).ready(function () {
         label: 'Usuario',
         name: 'usuario',
         align: 'center',
-        width: 100,
+        width: 225,
         editable: true,
         search: false,
         editoptions: {
@@ -89,7 +89,7 @@ $(document).ready(function () {
     {
         label: 'Fecha',
         name: 'fechasolicitud',
-        width: 110,
+        width: 225,
         align: 'center',
         sortable: false,
         editable: true,
@@ -113,7 +113,7 @@ $(document).ready(function () {
     {
         label: 'Comentario de Solicitud',
         name: 'informacion',
-        width: 200,
+        width: 225,
         hidden: false,
         editable: true,
         edittype: 'textarea',
@@ -130,7 +130,7 @@ $(document).ready(function () {
     {
         label: 'Tipo Instalación',
         name: 'idtipoinstalacion',
-        width: 200,
+        width: 225,
         hidden: true,
         editable: false,
         search: false
@@ -138,7 +138,7 @@ $(document).ready(function () {
     {
         label: 'Adjunto',
         name: 'nombrearchivo',
-        width: 200,
+        width: 225,
         hidden: false,
         editable: true,
         search: false,
@@ -156,7 +156,7 @@ $(document).ready(function () {
         label: 'Nombre2',
         name: 'nombrearchivo2',
         jsonmap: 'nombrearchivo',
-        width: 200,
+        width: 225,
         hidden: true,
         editable: true,
         search: false
@@ -164,7 +164,7 @@ $(document).ready(function () {
     {
         label: 'Comentario de Visación',
         name: 'comentariovisacion',
-        width: 200,
+        width: 225,
         hidden: false,
         editable: true,
         edittype: 'textarea',
@@ -177,7 +177,7 @@ $(document).ready(function () {
         label: 'Torre',
         name: 'torre',
         jsonmap: 'torre',
-        width: 50,
+        width: 225,
         align: 'center',
         sortable: false,
         editable: true,
@@ -217,13 +217,14 @@ $(document).ready(function () {
         colModel: viewModel,
         rowNum: 10,
         regional: 'es',
-        height: 'auto',
         sortable: "true",
-        width: null,
+        height: 'auto',
+        autowidth: true,
         shrinkToFit: false,
+        forceFit: true,
+        viewrecords: true,
         caption: 'Visación Instalación',
         pager: "#pager",
-        viewrecords: true,
         rowList: [10, 20, 30, 40, 50],
         styleUI: "Bootstrap",
         editurl: '/lic/instalacion-visacion',

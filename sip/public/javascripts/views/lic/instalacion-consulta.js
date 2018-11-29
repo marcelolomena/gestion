@@ -47,7 +47,7 @@ $(document).ready(function () {
     , {
         label: 'Estado',
         name: 'estado',
-        width: 90,
+        width: 200,
         align: 'center',
         editable: true,
         edittype: "custom",
@@ -94,7 +94,7 @@ $(document).ready(function () {
         name: 'idusuario',
         jsonmap: 'usuario',
         align: 'center',
-        width: 100,
+        width: 200,
         editable: true,
         search: true,
         editoptions: {
@@ -119,7 +119,7 @@ $(document).ready(function () {
     {
         label: 'Fecha',
         name: 'fechasolicitud',
-        width: 110,
+        width: 200,
         align: 'center',
         sortable: false,
         editable: true,
@@ -146,6 +146,7 @@ $(document).ready(function () {
         width: 200,
         hidden: false,
         editable: true,
+        align: 'center',
         edittype: 'textarea',
         editoptions: {
             fullRow: true,
@@ -173,6 +174,7 @@ $(document).ready(function () {
         width: 200,
         hidden: false,
         editable: true,
+        align: 'center',
         search: false,
         formatter: function (cellvalue, options, rowObject) {
             var nombre = rowObject.nombrearchivo;
@@ -201,6 +203,7 @@ $(document).ready(function () {
         width: 200,
         hidden: false,
         editable: true,
+        align: 'center',
         edittype: 'textarea',
         editrules: {
             required: true
@@ -212,7 +215,7 @@ $(document).ready(function () {
         label: 'Torre',
         name: 'torre',
         jsonmap: 'torre',
-        width: 50,
+        width: 200,
         align: 'center',
         sortable: false,
         editable: true,
@@ -249,6 +252,7 @@ $(document).ready(function () {
         width: 200,
         hidden: false,
         editable: false,
+        align: 'center',
         search: true,
         sortable: false
     }      

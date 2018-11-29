@@ -13,7 +13,7 @@ $(document).ready(function () {
                 label: 'Estado',
                 name: 'Estado',
                 jsonmap: "estado.nombre",
-                width: 80,
+                width: 70,
                 align: 'center',
                 search: false,
                 editable: false,
@@ -49,7 +49,7 @@ $(document).ready(function () {
             {
                 label: 'N° RFP',
                 name: 'numerorfp',
-                width: 60,
+                width: 58,
                 hidden: true,
                 search: false,
                 editable: true,
@@ -147,7 +147,7 @@ $(document).ready(function () {
                 label: 'Tipo',
                 name: 'tipo',
                 jsonmap: "tipoclausula.nombre",
-                width: 60,
+                width: 50,
                 align: 'center',
                 search: false,
                 editable: false,
@@ -155,7 +155,7 @@ $(document).ready(function () {
             },
             {
                 label: '.',
-                width: 40,
+                width: 30,
                 hidden: false,
                 search: false,
                 editable: true,
@@ -187,7 +187,7 @@ $(document).ready(function () {
                 label: 'Etapa',
                 name: 'clasificacion',
                 jsonmap: "clasificacion.nombre",
-                width: 100,
+                width: 90,
                 align: 'center',
                 search: false,
                 editable: true,
@@ -197,7 +197,7 @@ $(document).ready(function () {
                 label: 'Grupo',
                 name: 'grupo',
                 jsonmap: "grupo.nombre",
-                width: 120,
+                width: 105,
                 align: 'center',
                 search: false,
                 editable: false,
@@ -206,7 +206,7 @@ $(document).ready(function () {
             {
                 label: 'Fecha Solicitud',
                 name: 'fechaenviorfp',
-                width: 120,
+                width: 110,
                 align: 'center',
                 search: false,
                 formatter: 'date',
@@ -252,7 +252,7 @@ $(document).ready(function () {
                 label: 'CUI',
                 name: 'cui',
                 jsonmap: "estructuracui.cui",
-                width: 90,
+                width: 80,
                 align: 'center',
                 search: true,
                 sortable: false,
@@ -262,7 +262,7 @@ $(document).ready(function () {
             {
                 label: 'SAP',
                 name: 'sap',
-                width: 90,
+                width: 80,
                 align: 'center',
                 search: false,
                 editable: true,
@@ -438,7 +438,7 @@ $(document).ready(function () {
                 label: 'Criticidad',
                 name: 'colornota',
                 index: 'colornota',
-                width: 80,
+                width: 75,
                 align: "left",
                 editable: true,
                 search: false,
@@ -531,7 +531,7 @@ $(document).ready(function () {
             {
                 label: 'Negociador',
                 name: 'negociador',
-                width: 150,
+                width: 130,
                 search: true,
                 editable: false,
                 formatter: returnNegociador,
@@ -626,13 +626,13 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
-        //width: 1500,
-        sortname: 'colorestado',
-        sortorder: "desc",
-        shrinkToFit: false,
+        width: '100%',
         forceFit: true,
+        hidegrid: false,
+        responsive: true,
+        autowidth: true,
         viewrecords: true,
+		restoreCellonFail : true,
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Contrato',
         styleUI: "Bootstrap",
@@ -664,6 +664,9 @@ $(document).ready(function () {
             });
         }
     });
+
+    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-btable").css('width','100%');
 
     $grid.jqGrid('filterToolbar', {
         stringResult: true,
@@ -731,11 +734,11 @@ $(document).ready(function () {
     function showChildGrid(parentRowID, parentRowKey) {
         var tabs = "<ul class='nav nav-tabs tabs-up' id='myTab'>"
         //tabs += "<li><a href='/sic/proveedores/" + parentRowKey + "' data-target='#proveedores' id='proveedores_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Proveedores</a></li>"
-        tabs += "<li><a href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
-        tabs += "<li><a href='/sic/adjudicacion/" + parentRowKey + "' data-target='#adjudicacion' id='adjudicacion_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Adjudicación</a></li>"
-        tabs += "<li><a href='/sic/solicitudcontrato/" + parentRowKey + "' data-target='#contratoadjudicado' id='contratoadjudicado_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Solicitudes de Contrato</a></li>"
-        tabs += "<li><a href=/sic/solicitudcontrato/" + parentRowKey + " data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>TOC</a></li>"
-        tabs += "<li><a href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link active show' href='/sic/estadosolicitud/" + parentRowKey + "' data-target='#estadosolicitud' id='estadosolicitud_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Etapa</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/adjudicacion/" + parentRowKey + "' data-target='#adjudicacion' id='adjudicacion_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Adjudicación</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/solicitudcontrato/" + parentRowKey + "' data-target='#contratoadjudicado' id='contratoadjudicado_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Solicitudes de Contrato</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href=/sic/solicitudcontrato/" + parentRowKey + " data-target='#clausulas' id='clausulas_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>TOC</a></li>"
+        tabs += "<li class='nav-item' data-toggle='tab'><a class='nav-link'  href='/sic/bitacora/" + parentRowKey + "' data-target='#bitacora' id='bitacora_tab_" + parentRowKey + "' data-toggle='tab_" + parentRowKey + "'>Bitacora</a></li>"
         tabs += "</ul>"
 
         tabs += "<div class='tab-content'>"

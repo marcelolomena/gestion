@@ -48,14 +48,14 @@ $(document).ready(function () {
         label: 'Estado',
         name: 'estado',
         align: 'center',
-        width: 100,
+        width: 222,
         editable: false,
         search: false
     }, {
         label: 'Código Autorización',
         name: 'codAutoriza',
         align: 'center',
-        width: 140,
+        width: 222,
         editable: false,
         search: false,
         formatter: returnTaskLink
@@ -63,7 +63,7 @@ $(document).ready(function () {
         label: 'Producto',
         label: 'Nombre Producto',
         name: 'idProducto',
-        width: 250,
+        width: 222,
         align: 'center',
         sortable: false,
         editable: true,
@@ -73,7 +73,7 @@ $(document).ready(function () {
         label: 'Producto',
         name: 'nombreProd',    
         jsonmap: 'producto.nombre',
-        width: 250,
+        width: 222,
         align: 'center',
         sortable: false,
         editable: true,         
@@ -125,7 +125,7 @@ $(document).ready(function () {
         label: 'Cantidad Lic.',
         name: 'numlicencia',
         align: 'center',
-        width: 100,
+        width: 222,
         editable: true,
         editrules: {
             required: true
@@ -135,7 +135,7 @@ $(document).ready(function () {
     {
         label: 'Fecha de Uso',
         name: 'fechaUso',
-        width: 100,
+        width: 222,
         align: 'center',
         search: false,
         formatter: function (cellvalue, options, rowObject) {
@@ -190,7 +190,7 @@ $(document).ready(function () {
         label: 'CUI',
         name: 'cui',
         align: 'center',
-        width: 60,
+        width: 222,
         editable: true,
         editrules: {
             required: true
@@ -200,13 +200,13 @@ $(document).ready(function () {
         label: 'SAP',
         name: 'sap',
         align: 'center',
-        width: 60,
+        width: 222,
         editable: true,
         search: false
     }, {
         label: 'Comentario',
         name: 'comentarioSolicitud',
-        width: 400,
+        width: 222,
         hidden: false,
         editable: true,
         edittype: 'textarea',
@@ -222,7 +222,7 @@ $(document).ready(function () {
         name: 'idUsuario',
         jsonmap: 'user.first_name' + 'user.last_name',
         align: 'center',
-        width: 100,
+        width: 222,
         hidden: true,
         editable: false,
         search: false
@@ -231,7 +231,7 @@ $(document).ready(function () {
         name: 'idUsuarioJefe',
         jsonmap: 'userJefe.first_name' + 'user.last_name',
         align: 'center',
-        width: 100,
+        width: 222,
         hidden: true,
         editable: false,
         search: false

@@ -25,7 +25,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Estado',
             name: 'estado',
-            width: 90,
+            width: 158,
             align: 'center',
             editable: false,
             edittype: "custom",
@@ -51,7 +51,7 @@ function renderGrid(loadurl, tableId) {
             label: 'Fabricante',
             name: 'idFabricante',
             jsonmap: 'fabricante.nombre',
-            width: 180,
+            width: 158,
             align: 'center',
             sortable: false,
             editable: true,
@@ -146,7 +146,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Otro Fabricante',
             name: 'otroFabricante',
-            width: 250,
+            width: 158,
             hidden: true,
             editable: true,
             search: false,
@@ -179,7 +179,7 @@ function renderGrid(loadurl, tableId) {
             label: 'Producto',
             name: 'idProducto',
             jsonmap: 'producto.nombre',
-            width: 250,
+            width: 158,
             align: 'center',
             sortable: false,
             editable: true,
@@ -267,7 +267,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Otro Producto',
             name: 'otroProducto',
-            width: 250,
+            width: 158,
             hidden: true,
             editable: true,
             search: false,
@@ -299,7 +299,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Fecha Inicio',
             name: 'fechaInicio',
-            width: 100,
+            width: 158,
             align: 'center',
             sortable: false,
             editable: true,
@@ -325,7 +325,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Fecha Termino',
             name: 'fechaTermino',
-            width: 110,
+            width: 158,
             align: 'center',
             sortable: false,
             editable: true,
@@ -362,7 +362,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Fecha Control',
             name: 'fechaControl',
-            width: 100,
+            width: 158,
             align: 'center',
             sortable: false,
             editable: true,
@@ -388,7 +388,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Número Licencias',
             name: 'numero',
-            width: 80,
+            width: 158,
             align: 'center',
             hidden: false,
             editrules: {
@@ -402,7 +402,7 @@ function renderGrid(loadurl, tableId) {
             label: 'Moneda',
             name: 'idMoneda',
             jsonmap: 'moneda.nombre',
-            width: 100,
+            width: 158,
             align: 'center',
             sortable: false,
             editable: true,
@@ -424,7 +424,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Monto',
             name: 'monto',
-            width: 80,
+            width: 158,
             align: 'center',
             hidden: false,
             editrules: {
@@ -439,7 +439,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Comentario',
             name: 'comentario',
-            width: 400,
+            width: 158,
             hidden: false,
             editable: true,
             edittype: 'textarea',
@@ -451,7 +451,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Estado',
             name: 'estado',
-            width: 90,
+            width: 156,
             align: 'center',
             editable: true,
             edittype: "custom",
@@ -474,7 +474,7 @@ function renderGrid(loadurl, tableId) {
             search: false
         }
     ];
-    var grid = new zs.StackGrid(tableId, 'p_' + tableId, 'Detalle de Compra en Trámite', 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC'], showChildGrid);
+    var grid = new zs.StackGrid(tableId, 'p_' + tableId,'',/* 'Detalle de Compra en Trámite',*/ 'Editar Detalle', 'Agregar Detalle', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC'], showChildGrid);
 
 
     function editar_fecha(fecha, intervalo, dma, simbolo) {

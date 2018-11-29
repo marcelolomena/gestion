@@ -38,7 +38,7 @@ $(document).ready(function () {
         }, {
             label: 'Nombre Producto',
             name: 'idproducto',
-            width: 250,
+            width: 257,
             align: 'center',
             sortable: false,
             editable: true,
@@ -48,7 +48,7 @@ $(document).ready(function () {
             label: 'Producto',
             name: 'nombreProd',
             jsonmap: 'producto.nombre',
-            width: 250,
+            width: 257,
             align: 'center',
             sortable: false,
             editable: true,
@@ -100,7 +100,7 @@ $(document).ready(function () {
         {
             label: 'Nombre',
             name: 'nombre',
-            width: 200,
+            width: 257,
             editable: true,
             search: true
         },
@@ -108,7 +108,7 @@ $(document).ready(function () {
             label: 'Ubicación',
             name: 'ubicacion',
             align: 'center',
-            width: 200,
+            width: 257,
             editable: true,
             search: false
         },
@@ -116,7 +116,7 @@ $(document).ready(function () {
             label: 'Código Interno',
             name: 'codigoInterno',
             align: 'center',
-            width: 100,
+            width: 257,
             editable: true,
             search: false
         },
@@ -124,7 +124,7 @@ $(document).ready(function () {
             label: 'CUI',
             name: 'cui',
             align: 'center',
-            width: 100,
+            width: 257,
             editable: true,
             search: false,
             editrules: {
@@ -140,7 +140,7 @@ $(document).ready(function () {
             label: 'Observación',
             name: 'observacion',
             align: 'center',
-            width: 300,
+            width: 257,
             editable: true,
             edittype: 'textarea',
             search: false
@@ -148,7 +148,7 @@ $(document).ready(function () {
         {
             label: 'Usuario',
             name: 'usuario',
-            width: 200,
+            width: 257,
             editable: true,
             search: true
         }

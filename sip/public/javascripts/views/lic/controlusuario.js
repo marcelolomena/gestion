@@ -36,7 +36,7 @@ $(document).ready(function () {
         }, {
             label: 'Nombre Producto',
             name: 'idproducto',
-            width: 150,
+            width: 300,
             align: 'center',
             sortable: false,
             editable: true,
@@ -46,7 +46,7 @@ $(document).ready(function () {
             label: 'Producto',
             name: 'nombreProd',
             jsonmap: 'producto.nombre',
-            width: 150,
+            width: 300,
             align: 'center',
             sortable: false,
             editable: true,
@@ -99,14 +99,14 @@ $(document).ready(function () {
             label: 'Contacto',
             name: 'contacto',
             align: 'center',
-            width: 180,
+            width: 300,
             editable: true,
             search: false
         },
         {
             label: 'Fecha Actualización',
             name: 'fechaactualizacion',
-            width: 135,
+            width: 300,
             align: 'center',
             search: false,
             editable: true,
@@ -150,7 +150,7 @@ $(document).ready(function () {
             label: 'Código Interno',
             name: 'codigointerno',
             align: 'center',
-            width: 100,
+            width: 300,
             editable: true,
             search: false
         },
@@ -158,7 +158,7 @@ $(document).ready(function () {
             label: 'Cantidad',
             name: 'cantidad',
             align: 'center',
-            width: 100,
+            width: 300,
             editable: true,
             search: false,
             editrules: {
@@ -169,7 +169,7 @@ $(document).ready(function () {
             label: 'Observaciones',
             name: 'observaciones',
             align: 'center',
-            width: 700,
+            width: 300,
             editable: true,
             edittype: 'textarea',
             search: false

@@ -150,6 +150,9 @@ var gridMatrizEvaluacion = {
             sortorder: "asc",
             shrinkToFit: false,
             height: "auto",
+            width: null,
+            forceFit: true,
+            hidegrid: false,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
@@ -172,6 +175,8 @@ var gridMatrizEvaluacion = {
                 });
             }
         });
+        $("table.ui-jqgrid-htable").css('width','100%');
+        $("table.ui-jqgrid-btable").css('width','100%');
         $gridTab.jqGrid('navGrid', '#navGridMatriz', { edit: false, add: false, del: false, search: false },
             {
                 editCaption: "Modifica Servicio",

@@ -84,7 +84,7 @@
             },{
                 label: 'Fecha de Recepcion',
                 name: 'fecha',
-                width: 140,
+                width: 222,
                 align: 'center',
                 sortable: false,
                 editable: false,
@@ -92,7 +92,7 @@
             },{
                 label: 'Descripción',
                 name: 'nombre',
-                width: 350,
+                width: 222,
                 align: 'left',
                 hidden: false,
                 editable: true,
@@ -106,7 +106,7 @@
             }, {
                 label: 'SAP',
                 name: 'sap',
-                width: 80,
+                width: 222,
                 align: 'center',
                 sortable: true,
                 editable: true,
@@ -139,7 +139,7 @@
             }, {
                 label: 'Nombre Proyecto',
                 name: 'nombreSap',
-                width: 80,
+                width: 222,
                 align: 'center',
                 hidden: true,
                 editable: true,
@@ -154,7 +154,7 @@
             }, {
                 label: 'CUI',
                 name: 'idCui',
-                width: 80,
+                width: 222,
                 align: 'center',
                 hidden: false,
                 editable: true,
@@ -184,7 +184,7 @@
             }, {
                 label: 'Unidad CUI',
                 name: 'nombreCui',
-                width: 80,
+                width: 222,
                 align: 'center',
                 hidden: true,
                 editable: true,
@@ -199,7 +199,7 @@
             }, {
                 label: '# Contrato',
                 name: 'numContrato',
-                width: 80,
+                width: 222,
                 align: 'center',
                 hidden: false,
                 editable: true,
@@ -210,7 +210,7 @@
             }, {
                 label: 'O.C.',
                 name: 'ordenCompra',
-                width: 80,
+                width: 222,
                 align: 'center',
                 hidden: false,
                 editable: true,
@@ -219,7 +219,7 @@
                 label: 'Proveedor',
                 name: 'idProveedor',
                 jsonmap: 'proveedor.nombre',
-                width: 400,
+                width: 222,
                 align: 'left',
                 sortable: true,
                 editable: true,
@@ -250,7 +250,7 @@
             }, {
                 label: 'Responsable Servicio',
                 name: 'comprador',
-                width: 150,
+                width: 222,
                 align: 'left',
                 hidden: false,
                 editable: true,

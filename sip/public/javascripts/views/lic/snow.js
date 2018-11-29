@@ -15,50 +15,51 @@
             name: 'aplicacion',
             editable: false,
             search: true,
-            width: 300
+            width: 225
         }, {
             label: 'Fabricante',
             name: 'fabricante',
             editable: false,
             search: true,
-            width: 300
+            width: 225
         }, {
             label: 'Categoria',
             name: 'categoria',
             editable: false,
             search: true,
-            width: 100
+            width: 225
         }, {
             label: 'Instalaciones',
             name: 'instalaciones',
             editable: false,
             align: 'center',
-            width: 95,
+            width: 225,
             search: false
         }, {
             label: 'Usuarios',
             name: 'usuarios',
             editable: false,
             align: 'center',
-            width: 70,
+            width: 225,
             search: false
         }, {
             label: 'Formulario de Licencia',
             name: 'formulariolicencia',
             editable: false,
+            width: 225,
             search: true
         }, {
             label: 'Licencia Requerida',
             name: 'licencia',
             editable: false,
             align: 'center',
-            width: 70,
+            width: 225,
             search: true
         }, {
             label: 'Paquete',
             name: 'paquete',
             editable: false,
-            width: 70,
+            width: 225,
             align: 'center',
             search: true
         }];

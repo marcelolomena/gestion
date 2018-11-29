@@ -47,7 +47,7 @@ function gridEva1(parentRowID, parentRowKey, suffix) {
     console.dir(colmodel);
 
 
-    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+    $('#' + parentRowID).append('<br><table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
     setTimeout(function () {
         $("#" + childGridID).jqGrid({
@@ -55,7 +55,7 @@ function gridEva1(parentRowID, parentRowKey, suffix) {
             mtype: "GET",
             rowNum: 20,
             datatype: "json",
-            caption: 'Evaluación Técnica (Nivel 1)',
+            // caption: 'Evaluación Técnica (Nivel 1)',
             //width: null,
             //shrinkToFit: false,
             autowidth: true,  // set 'true' here

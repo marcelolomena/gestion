@@ -171,6 +171,9 @@ var gridEvaluacionEco = {
             sortorder: "asc",
             shrinkToFit: false,
             height: "auto",
+            width: null,
+            forceFit: true,
+            hidegrid: false,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
@@ -193,6 +196,8 @@ var gridEvaluacionEco = {
                 });
             }
         });
+        $("table.ui-jqgrid-htable").css('width','100%');
+        $("table.ui-jqgrid-btable").css('width','100%');
         $gridTab.jqGrid('navGrid', '#navGridEvEco', { edit: false, add: false, del: false, search: false },
             {
                 editCaption: "Modifica Servicio",

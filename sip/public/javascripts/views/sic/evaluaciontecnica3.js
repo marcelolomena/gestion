@@ -257,7 +257,7 @@ function gridCotizaciones3(parentRowID, parentRowKey, suffix) {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Nota Evaluación Técnica (Nivel 2)',
+        // caption: 'Nota Evaluación Técnica (Nivel 2)',
         //width: null,
         //shrinkToFit: false,
         autowidth: true, // set 'true' here

@@ -12,7 +12,7 @@ function renderGrid(loadurl, tableId) {
             label: 'Producto',
             name: 'idProducto',
             jsonmap: 'producto',
-            width: 250,
+            width: 246,
             align: 'center',
             sortable: false,
             editable: true,
@@ -35,7 +35,7 @@ function renderGrid(loadurl, tableId) {
             label: 'Fabricante',
             name: 'idFabricante',
             // jsonmap: 'fabricante',
-            width: 180,
+            width: 246,
             align: 'center',
             sortable: true,
             hidden: true,
@@ -48,7 +48,7 @@ function renderGrid(loadurl, tableId) {
         {
             label: 'Fecha Inicio',
             name: 'fechaInicio',
-            width: 100,
+            width: 246,
             align: 'center',
             sortable: true,
             editable: true,
@@ -69,7 +69,7 @@ function renderGrid(loadurl, tableId) {
         }, {
             label: 'Fecha Término',
             name: 'fechaTermino',
-            width: 110,
+            width: 246,
             align: 'center',
             sortable: true,
             editable: true,
@@ -90,7 +90,7 @@ function renderGrid(loadurl, tableId) {
         }, {
             label: 'Fecha Control',
             name: 'fechaControl',
-            width: 100,
+            width: 246,
             align: 'center',
             sortable: true,
             editable: true,
@@ -112,20 +112,22 @@ function renderGrid(loadurl, tableId) {
             label: 'Cantidad',
             name: 'cantidad',
             hidden: false,
+            align: 'center',
+            width: 246,
             editable: true,
             search: false
         }, {
             label: 'Moneda',
             name: 'idMoneda',
             // jsonmap: 'moneda.nombre',
-            width: 100,
+            width: 246,
             align: 'center',
             editable: true,
             search: false
         }, {
             label: 'Monto',
             name: 'monto',
-            width: 80,
+            width: 246,
             align: 'center',
             sortable: true,
             hidden: false,
@@ -149,7 +151,7 @@ function renderGrid(loadurl, tableId) {
         }
 
     ];
-    var grid = new zs.SimpleGrid(tableId, 'p_' + tableId, 'Detalle Recepcionado', 'Editar Recepcionado', 'Agregar Recepcionado', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+    var grid = new zs.SimpleGrid(tableId, 'p_' + tableId,''/*, 'Detalle Recepcionado'*/, 'Editar Recepcionado', 'Agregar Recepcionado', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
     grid.navParameters.add = false;
     grid.navParameters.edit = false;
     grid.navParameters.del = false;

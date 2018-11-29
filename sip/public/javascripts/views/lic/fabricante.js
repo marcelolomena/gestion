@@ -12,7 +12,7 @@
         }, {
             label: 'Nombre',
             name: 'nombre',
-            width: 200,
+            width: 1803,
             align: 'center',
             editable: true,
             editrules: {

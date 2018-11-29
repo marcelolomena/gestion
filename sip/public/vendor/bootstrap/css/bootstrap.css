@@ -204,7 +204,7 @@ pre {
 }
 
 figure {
-  margin: 0 0 1rem;
+  /* margin: 0 0 1rem; */
 }
 
 img {
@@ -217,7 +217,7 @@ svg:not(:root) {
 }
 
 table {
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
 }
 
 caption {
