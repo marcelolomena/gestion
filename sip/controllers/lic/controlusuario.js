@@ -18,34 +18,10 @@ function list(req, res) {
     var page = req.query.page;
     var rows = req.query.rows;
     var filters = req.query.filters;
-    var sidx = req.query.sidx
-    var sord = req.query.sord
-    // var provee = req.query.provee;
-    // var orden = "[solicitudcotizacion]." + sidx + " " + sord;
+    var sidx = req.query.sidx || 'fechaactualizacion';
+    var sord = 'desc';
+    var orden = "[controlusuario]." + sidx + " " + sord;
     var filter_one = []
-    var filter_two = []
-    var filter_tres = []
-
-    var isrequired = false;
-    if (filters != undefined) {
-        var item = {}
-        var jsonObj = JSON.parse(filters);
-        jsonObj.rules.forEach(function (item) {
-            if (item.field === "nombreProd") {
-                filter_two.push({
-                    ['nombre']: {
-                        $like: '%' + item.data + '%'
-                    }
-                });
-            } else if (item.field === "usuario") {
-                filter_one.push({
-                    [item.field]: {
-                        $like: '%' + item.data + '%'
-                    }
-                });
-            }
-        })
-    }
     utilSeq.buildConditionFilter(filters, function (err, data) {
         if (err) {
             logger.debug("->>> " + err)
@@ -63,7 +39,7 @@ function list(req, res) {
                 models.controlusuario.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    // order: orden,
+                    order: orden,
                     where: filter_one,
                     include: [{
                         model: models.producto
@@ -89,31 +65,32 @@ function list(req, res) {
 function action(req, res) {
     var action = req.body.oper;
     var hoy = "" + new Date().toISOString();
-
-
+    var codigosecuencie;
     switch (action) {
         case "add":
-            models.controlusuario.create({
-                idproducto: req.body.idproducto,
-                contacto: req.body.contacto,
-                fechaactualizacion: hoy,
-                observaciones: req.body.observaciones,
-                cantidad: req.body.cantidad,
-                codigointerno: req.body.codigointerno
-            }).then(function (instal) {
-                return res.json({
-                    id: instal.id,
-                    message: 'CREADO',
-                    success: true,
-                    error: 0
-                });
-            }).catch(function (err) {
-                logger.error(err)
-                return res.json({
-                    id: instal.id,
-                    message: 'FALLA',
-                    success: false,
-
+            sequelize.query("execute lic.seqControlUs").spread(function (numero) {
+                codigosecuencie = numero[0].secuencia
+                models.controlusuario.create({
+                    idproducto: req.body.idproducto,
+                    contacto: req.body.contacto,
+                    fechaactualizacion: hoy,
+                    observaciones: req.body.observaciones,
+                    cantidad: req.body.cantidad,
+                    codigointerno: codigosecuencie
+                }).then(function (instal) {
+                    return res.json({
+                        id: instal.id,
+                        message: 'CREADO',
+                        success: true,
+                        error: 0
+                    });
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({
+                        id: instal.id,
+                        message: 'FALLA',
+                        success: false
+                    });
                 });
             });
             break;
@@ -122,8 +99,7 @@ function action(req, res) {
                 idproducto: req.body.idproducto,
                 contacto: req.body.contacto,
                 observaciones: req.body.observaciones,
-                cantidad: req.body.cantidad,
-                codigointerno: req.body.codigointerno
+                cantidad: req.body.cantidad
             }, {
                 where: {
                     id: req.body.id
@@ -165,19 +141,16 @@ function action(req, res) {
 }
 
 function getExcel(req, res) {
-    var page = req.query.page;
-    var rows = req.query.rows;
-    var filters = req.query.filters;
-    var sidx = req.query.sidx;
-    var sord = req.query.sord;
-    var condition = "";
-    var gris = "WHERE a.alertarenovacion <> 'aGris'"
-    // logger.debug("En getExcel");
     var conf = {}
     conf.cols = [{
             caption: 'N',
             type: 'number',
             width: 3
+        },
+        {
+            caption: 'ID',
+            type: 'string',
+            width: 200
         },
         {
             caption: 'Producto',
@@ -191,12 +164,7 @@ function getExcel(req, res) {
         },
         {
             caption: 'FechaActualizacion',
-            type: 'datetime',
-            width: 200
-        },
-        {
-            caption: 'Cantidad',
-            type: 'number',
+            type: 'String',
             width: 200
         },
         {
@@ -205,15 +173,15 @@ function getExcel(req, res) {
             width: 200
         },
         {
-            caption: 'CodigoInterno',
-            type: 'string',
+            caption: 'Cantidad',
+            type: 'number',
             width: 200
         }
     ];
     var sql = "SELECT b.nombre as nombreProd, a.contacto, a.fechaactualizacion, a.observaciones, a.cantidad, a.codigointerno " +
         "FROM lic.controlusuario a " +
         "JOIN lic.producto b ON b.id = a.idproducto " +
-        "ORDER BY a.idproducto ASC";
+        "ORDER BY a.fechaactualizacion desc";
 
     // console.log("query:" + sql);
     sequelize.query(sql)
@@ -224,22 +192,22 @@ function getExcel(req, res) {
 
                 if (nombreprod != control[i].nombreProd) {
                     var a = [i + 1,
+                        control[i].codigointerno,
                         control[i].nombreProd,
                         control[i].contacto,
-                        control[i].fechaactualizacion,
-                        control[i].cantidad,
+                        control[i].fechaactualizacion ? control[i].fechaactualizacion.toISOString().slice(0, 10) : 'sin fecha',
                         control[i].observaciones,
-                        control[i].codigointerno
+                        control[i].cantidad
                     ];
                     nombreprod = control[i].nombreProd
                 } else {
                     var a = [i + 1,
+                        control[i].codigointerno,
                         null,
                         control[i].contacto,
-                        control[i].fechaactualizacion,
-                        control[i].cantidad,
+                        control[i].fechaactualizacion ? control[i].fechaactualizacion.toISOString().slice(0, 10) : 'sin fecha',
                         control[i].observaciones,
-                        control[i].codigointerno
+                        control[i].cantidad
                     ];
                     nombreprod = control[i].nombreProd
                 }

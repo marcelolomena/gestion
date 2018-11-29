@@ -6,21 +6,13 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Producto<span style='color:red'>*</span>{nombreProd}</div>";
+    tmpl += "<div class='column-half'>Software<span style='color:red'>*</span>{nombreProd}</div>";
     tmpl += "<div class='column-half'>Contacto<span style='color:red'>*</span>{contacto}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Cantidad<span style='color:red'>*</span>{cantidad}</div>";
-    tmpl += "<div class='column-half'>Código Interno<span style='color:red'>*</span>{codigointerno}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Fecha Actualizacion <span style='color:red'>*</span>{fechaactualizacion}</div>";
-    tmpl += "</div>";
-
-    tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-full'>Observaciones{observaciones}</div>";
+    tmpl += "<div class='column-half'>Cantidad<span style='color:red'>*</span>{cantidad}</div>";
     tmpl += "</div>";
 
     tmpl += "<hr style='width:100%;'/>";
@@ -34,7 +26,14 @@ $(document).ready(function () {
             hidden: true,
             editable: false
         }, {
-            label: 'Nombre Producto',
+            label: 'Código Interno',
+            name: 'codigointerno',
+            align: 'center',
+            width: 100,
+            editable: true,
+            search: false
+        }, {
+            label: 'Software',
             name: 'idproducto',
             width: 150,
             align: 'center',
@@ -43,11 +42,11 @@ $(document).ready(function () {
             hidden: true
         },
         {
-            label: 'Producto',
+            label: 'Software',
             name: 'nombreProd',
             jsonmap: 'producto.nombre',
             width: 150,
-            align: 'center',
+            align: 'left',
             sortable: false,
             editable: true,
             edittype: "text",
@@ -98,7 +97,7 @@ $(document).ready(function () {
         {
             label: 'Contacto',
             name: 'contacto',
-            align: 'center',
+            align: 'left',
             width: 180,
             editable: true,
             search: false
@@ -109,49 +108,21 @@ $(document).ready(function () {
             width: 135,
             align: 'center',
             search: false,
-            editable: true,
+            editable: false,
             hidden: false,
             formatter: 'date',
             formatoptions: {
                 srcformat: 'ISO8601Long',
                 newformat: 'd-m-Y'
-            },
-            searchoptions: {
-                dataInit: function (el) {
-                    $(el).datepicker({
-                        language: 'es',
-                        format: 'dd-mm-yyyy',
-                        autoclose: true,
-                        onSelect: function (dateText, inst) {
-                            setTimeout(function () {
-                                $('#' + subgrid_table_id)[0].triggerToolbar();
-                            }, 100);
-                        }
-                    });
-                },
-                sopt: ["eq", "le", "ge"]
-            },
-            editoptions: {
-                size: 10,
-                maxlengh: 10,
-                dataInit: function (element) {
-                    $(element).mask("00-00-0000", {
-                        placeholder: "__-__-____"
-                    });
-                    $(element).datepicker({
-                        language: 'es',
-                        format: 'dd-mm-yyyy',
-                        autoclose: true
-                    })
-                }
             }
         },
         {
-            label: 'Código Interno',
-            name: 'codigointerno',
-            align: 'center',
-            width: 100,
+            label: 'Observaciones',
+            name: 'observaciones',
+            align: 'left',
+            width: 700,
             editable: true,
+            edittype: 'textarea',
             search: false
         },
         {
@@ -165,15 +136,6 @@ $(document).ready(function () {
                 integer: true
             }
         },
-        {
-            label: 'Observaciones',
-            name: 'observaciones',
-            align: 'center',
-            width: 700,
-            editable: true,
-            edittype: 'textarea',
-            search: false
-        }
     ];
 
     $("#grid").jqGrid({
@@ -245,8 +207,6 @@ $(document).ready(function () {
                     return [false, 'Debe seleccionar a un Usuario', ''];
                 } else if (postdata.cantidad.trim().length == 0) {
                     return [false, 'Debe ingresar la cantidad', ''];
-                } else if ((!postdata.codigointerno)) {
-                    return [false, 'Debe ingresar su código interno', ''];
                 } else {
                     return [true, ', '];
                 }
@@ -269,8 +229,6 @@ $(document).ready(function () {
                     return [false, 'Debe seleccionar a un Usuario', ''];
                 } else if (postdata.cantidad.trim().length == 0) {
                     return [false, 'Debe ingresar la cantidad', ''];
-                } else if ((!postdata.codigointerno)) {
-                    return [false, 'Debe ingresar su código interno', ''];
                 } else {
                     return [true, ', '];
                 }
