@@ -47,7 +47,7 @@ $(document).ready(function () {
                 name: 'id',
                 key: true,
                 hidden: true,
-                width: 50,
+                width: 293,
                 editable: true,
                 hidedlg: true,
                 sortable: false,
@@ -60,7 +60,7 @@ $(document).ready(function () {
                 label: 'Estado',
                 name: 'estado',
                 align: 'center',
-                width: 70,
+                width: 293,
                 editable: false,
                 search: false
             },
@@ -68,7 +68,7 @@ $(document).ready(function () {
                 label: 'Nombre Producto',
                 name: 'nombreProd',
                 align: 'center',
-                width: 70,
+                width: 293,
                 editable: true,
                 search: false,
 				hidden: true
@@ -77,7 +77,7 @@ $(document).ready(function () {
                 label: 'Producto',
                 name: 'idProducto',
                 jsonmap: 'producto.nombre',
-                width: 150,
+                width: 293,
                 align: 'center',
                 sortable: false,
                 editable: true,
@@ -142,7 +142,7 @@ $(document).ready(function () {
                 label: 'Cantidad Lic.',
                 name: 'numlicencia',
                 align: 'center',
-                width: 70,
+                width: 293,
                 editable: true,
                 hidden: false,
                 search: false
@@ -151,7 +151,7 @@ $(document).ready(function () {
                 label: 'Código de Autorización',
                 name: 'codAutorizacion',
                 align: 'center',
-                width: 120,
+                width: 293,
                 editable: false,
                 editrules: {
                     required: true
@@ -162,7 +162,7 @@ $(document).ready(function () {
                 name: 'nombrearchivo',
                 index: 'nombrearchivo',
                 hidden: false,
-                width: 100,
+                width: 293,
                 align: "left",
                 editable: true,
                 editoptions: {
@@ -194,7 +194,7 @@ $(document).ready(function () {
             {
                 label: 'Comentario',
                 name: 'informacion',
-                width: 400,
+                width: 293,
                 hidden: false,
                 editable: true,
                 edittype: 'textarea',
@@ -217,7 +217,7 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        width: 1200,
+        width: '100%',
         shrinkToFit: true,
         viewrecords: true,
         editurl: '/lic/instalacionSolicitud',

@@ -19,12 +19,12 @@ var tabAddmGrid = {
             }, {
                 label: 'Nombre',
                 name: 'nombre',
-                width: 500,
+                width: 879,
                 editable: true
             }, {
                 label: 'Cantidad',
                 name: 'addm',
-                width: 200,
+                width: 879,
                 editable: true,
                 search: false
             }

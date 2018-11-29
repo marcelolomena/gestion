@@ -25,7 +25,7 @@ $(document).ready(function () {
                 name: 'id',
                 key: true,
                 hidden: true,
-                width: 50,
+                // width: 50,
                 editable: true,
                 hidedlg: true,
                 sortable: false,
@@ -40,7 +40,7 @@ $(document).ready(function () {
             {
                 label: 'Nombre',
                 name: 'nombre',
-                width: 100,
+                width: 902,
                 align: "left",
                 editable: true
             },
@@ -48,7 +48,7 @@ $(document).ready(function () {
                 label: 'nombrearchivo',
                 name: 'nombrearchivo',
                 hidden: false,
-                width: 100,
+                width: 902,
                 align: "left",
                 editable: true,
                 editoptions: {
@@ -80,16 +80,18 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        width: 1200,
-        shrinkToFit: true,
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default     
         viewrecords: true,
+        pager: "#pager",
         editurl: '/lic/tipoInstalacion',
         caption: 'Tipos de Instalaciones',
         styleUI: "Bootstrap",
         onSelectRow: function (id) {
             var getID = $(this).jqGrid('getCell', id, 'id');
         },
-        pager: "#pager",
     });
 
     //$grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
@@ -215,6 +217,13 @@ function ajaxDocUpload(id) {
         })
     });
 }
+$("#pager_left").css("width", "");
+
+    $(window).bind('resize', function () {
+        $("#grid").setGridWidth($(".gcontainer").width(), true);
+        //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
+        $("#pager").setGridWidth($(".gcontainer").width(), true);
+    });
 
 function returnDocLink(cellValue, options, rowdata) {
     return "<a href='/docs/tipoinstalacion/" + rowdata.nombrearchivo + "' ><img border='0'  src='../images/file.gif' width='16' height='16'></a>";

@@ -66,7 +66,7 @@ $(document).ready(function () {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-full'><span style='color:red'>* </span>Razon Social {razonsocial}</div>";
+    tmpl += "<div class='column-full'><span style='color:red'>* </span>Razón Social {razonsocial}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -90,13 +90,13 @@ $(document).ready(function () {
     tmpl += "<div class='column-half'>Correo Rep. Legal {correorepresentante}</div>";
     tmpl += "</div>";
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Razon Social Contractual {razonsocialcontractual}</div>";
+    tmpl += "<div class='column-half'>Razón Social Contractual {razonsocialcontractual}</div>";
     tmpl += "</div>";       
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Fec. Escritura Publica {fechaescritura}</div>";
+    tmpl += "<div class='column-half'>Fec. Escr. Publica {fechaescritura}</div>";
     tmpl += "</div>";          
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Notaria Escritura Publica {notariaescritura}</div>";
+    tmpl += "<div class='column-half'>Notaria Escr. Publica {notariaescritura}</div>";
     tmpl += "</div>";            
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Rut Apdro. 1 {rutapoderado1}</div>";
@@ -116,14 +116,14 @@ $(document).ready(function () {
 
     var modelProveedor = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'RUT', name: 'numrut', width: 86, align: 'right', search: true, editable: true,
+        { label: 'RUT', name: 'numrut', width: 83, align: 'right', search: true, editable: true,
             editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
             editrules: { required: true, custom: true, custom_func: validaRut }, 
             formoptions: { elmsuffix: '<span class="required">*</span>' },
             formatter: function (cellvalue, options, rowObject) {var rut = formatearut(rowObject.numrut) + "-" + rowObject.dvrut;  return rut},                                   
         },
         { label: 'DV', name: 'dvrut', search: false, editable: false, hidden: true },
-        { label: 'Razón Social', name: 'razonsocial', width: 185, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
+        { label: 'Razón Social', name: 'razonsocial', width: 165, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
         { label: 'Negociador DIVOT uid', name: 'uid', search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
@@ -177,11 +177,11 @@ $(document).ready(function () {
                  editrules: { email: true, required: false} 
         },
         {
-            label: 'Razon Social Contractual', name: 'razonsocialcontractual', width: 172, align: 'left', search: true, editable: true,
+            label: 'Razón Social Contractual', name: 'razonsocialcontractual', width: 172, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Fec. Escritura Publica', name: 'fechaescritura', width: 147, align: 'right', search: false, sortable: false, 
+            label: 'Fec. Escr. Publica', name: 'fechaescritura', width: 140, align: 'right', search: false, sortable: false, 
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 2, colpos: 1 },
             editoptions: {
@@ -192,10 +192,10 @@ $(document).ready(function () {
             }
         },      
         {
-            label: 'Notaria Escritura Publica', name: 'notariaescritura', width: 174, align: 'left', search: true, editable: true,
+            label: 'Notaria Escr. Publica', name: 'notariaescritura', width: 166, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         }, 
-        { label: 'Rut Apdro. 1', name: 'rutapoderado1', width: 119.5, align: 'right', search: true, editable: true,
+        { label: 'Rut Apdro. 1', name: 'rutapoderado1', width: 90, align: 'right', search: true, editable: true,
             editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
             editrules: { custom: true, custom_func: validaRut }                                   
         },
@@ -203,7 +203,7 @@ $(document).ready(function () {
             label: 'Nom. 1° Apdro.', name: 'nombreapoderado1', width: 120, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
-        { label: 'Rut Apdro. 2', name: 'rutapoderado2', width: 119.5, align: 'right', search: true, editable: true,
+        { label: 'Rut Apdro. 2', name: 'rutapoderado2', width: 90, align: 'right', search: true, editable: true,
             editoptions: { maxlength: 20, size: 17, dataInit: function (el) { $(el).mask("00.000.000-A",{reverse: true}); } },
             editrules: { custom: true, custom_func: validaRut }                                   
         },
@@ -301,7 +301,7 @@ $(document).ready(function () {
                 if (postdata.numrut == 0) {
                     return [false, "Rut: Debe escoger un valor", ""];
                 } if (postdata.razonsocial == 0) {
-                    return [false, "Razon Social: Debe escoger un valor", ""];
+                    return [false, "Razón Social: Debe escoger un valor", ""];
             //    } if (postdata.negociadordivot == 0) {
             //        return [false, "Negociador DIVOT: Debe escoger un valor", ""];
                 } else {

@@ -21,13 +21,13 @@
                 name: 'aplicacion',
                 editable: false,
                 search: false,
-                width: 200
+                width: 300
             }, {
                 label: 'Host',
                 name: 'hostname',
                 editable: false,
                 search: true,
-                width: 150
+                width: 300
             }, {
                 label: 'SO',
                 name: 'hostOS',
@@ -39,13 +39,13 @@
                 name: 'publishers',
                 editable: false,
                 search: true,
-                width: 150
+                width: 300
             }, {
                 label: 'Vendedor',
                 name: 'vendor',
                 editable: false,
                 search: true,
-                width: 150
+                width: 300
             }
         ];
 

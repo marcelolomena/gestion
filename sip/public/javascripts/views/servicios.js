@@ -41,7 +41,7 @@ $(document).ready(function () {
         {   label: 'id', name: 'id', key: true, hidden: true },
         {   label: 'idcuenta', name: 'idcuenta', hidden: true },
         {
-            label: 'Nombre', name: 'nombre', width: 500, align: 'left',
+            label: 'Nombre', name: 'nombre', width: 250, align: 'left',
             search: true, editable: true, editrules: { required: true }, hidden: false
         },
         {
@@ -75,7 +75,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Cuenta Contable', name: 'cuentacontable', width: 200, align: 'left', search: true,
+            label: 'Cuenta Contable', name: 'cuentacontable', width: 250, align: 'left', search: true,
             editable: true, jsonmap: "cuentascontable.cuentacontable",
             stype: 'select',
             searchoptions: {
@@ -92,19 +92,19 @@ $(document).ready(function () {
             },
         },
         {
-            label: 'NombreCuenta', name: 'nombrecuenta', width: 500, align: 'left',
+            label: 'NombreCuenta', name: 'nombrecuenta', width: 250, align: 'left',
             search: false, editable: true,jsonmap: "cuentascontable.nombrecuenta", editrules: { required: false }, hidden: false
         },
         {
-            label: 'Tarea', name: 'tarea', width: 150, align: 'left',
+            label: 'Tarea', name: 'tarea', width: 250, align: 'left',
             search: true, editable: true, editrules: { required: false }, hidden: false
         },
         {
-            label: 'Agrupacion SAP', name: 'agrupacionsap', width: 300, align: 'left',
+            label: 'Agrupacion SAP', name: 'agrupacionsap', width: 250, align: 'left',
             search: true, editable: true, editrules: { required: false }, hidden: false
         },
         {
-            label: 'Secuencia SAP', name: 'secuenciasap', width: 200, align: 'left',
+            label: 'Secuencia SAP', name: 'secuenciasap', width: 250, align: 'left',
             search: true, editable: true, editoptions: {
                 dataInit: function (element) {
                     $(element).mask("000000", { placeholder: "_________" });
@@ -146,7 +146,7 @@ $(document).ready(function () {
                     }
                 }],
             },
-            dataInit: function (elem) { $(elem).width(200); }
+            // dataInit: function (elem) { $(elem).width(200); }
         },
         {
             label: 'Tipo Servicio', name: 'tiposervicio', width: 250, align: 'left',
@@ -164,9 +164,10 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        width: 1600,
-        autowidth: true,
-        shrinkToFit: true,
+        //width: null,
+        //shrinkToFit: false,
+        autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default   
         caption: 'Lista de servicios',
         pager: "#pager_servicio",
         viewrecords: true,
@@ -290,4 +291,12 @@ $(document).ready(function () {
     });
     
     $("#pager_servicio_left").css("width", "");
+
+    // $("#pager_left").css("width", "");
+
+    $(window).bind('resize', function () {
+        $("#table_servicio").setGridWidth($(".gcontainer").width(), true);
+        //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
+        $("#pager_servicio").setGridWidth($(".gcontainer").width(), true);
+    });
 });

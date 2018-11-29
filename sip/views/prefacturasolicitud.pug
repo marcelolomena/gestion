@@ -9,14 +9,14 @@ block titulogrilla
   //-   h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Solicitud de Aprobación
 block grilla
   .cajaFormulario
-    .formSap
-      | Periodo:
-      input#periodo(type='text', name='periodo', disabled, style='line-height: 20px; width: 80px; margin-right: 10px') 
-      | CUI :
-      select#cui(style='margin-right: 10px') 
-      | Proveedor:
-      select#proveedor
-      #buscar.btn Mostrar Todos   
+    .form-row
+      span.titCajaPeriodo(style="line-height: 35px;")  Periodo:
+      input#periodo(type='text', name='periodo',  disabled, class='form-control' style='transform: translateY(20%); line-height: 20px; height:35px; width: 150px; margin-right: 10px') 
+      span.titCajaPeriodo(style="line-height: 35px;")  CUI :
+      select#cui(class='custom-select' style="transform: translateY(20%); width:auto; margin-right: 10px")
+      span.titCajaPeriodo(style="line-height: 35px;")  Proveedor:
+      select#proveedor(class='custom-select' style="transform: translateY(20%); width:auto; margin-right: 10px;")
+      #buscar.btn(class='btn btn-primary ml-auto' style="background-color:#346cb0; ") Mostrar Todos   
   br        
   div(style='width: 100%')
     #container2(style='width: 100%; display: inline-block;')

@@ -635,14 +635,6 @@ $(document).ready(function () {
         height: 'auto',
         sortname: 'colorestado',
         sortorder: "desc",
-        // shrinkToFit: false,
-        width: '100%',
-        forceFit: true,
-        hidegrid: false,
-        responsive: true,
-        autowidth: true,
-        viewrecords: true,
-		restoreCellonFail : true,
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
@@ -675,8 +667,6 @@ $(document).ready(function () {
         }
     });
 
-    $("table.ui-jqgrid-htable").css('width','100%');
-    $("table.ui-jqgrid-btable").css('width','100%');
 
     $grid.jqGrid('filterToolbar', {
         stringResult: true,

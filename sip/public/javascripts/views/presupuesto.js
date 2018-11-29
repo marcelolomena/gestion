@@ -384,7 +384,7 @@ $(document).ready(function () {
         }
     });
 
-         $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 });
 

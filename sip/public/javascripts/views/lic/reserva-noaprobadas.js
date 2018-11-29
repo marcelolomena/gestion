@@ -51,7 +51,7 @@ $(document).ready(function () {
     , {
         label: 'Estado',
         name: 'estado',
-        width: 90,
+        width: 180,
         align: 'center',
         editable: true,
         edittype: "custom",
@@ -67,7 +67,7 @@ $(document).ready(function () {
         name: 'idProducto',
         jsonmap: 'nombre',
         align: 'center',
-        width: 200,
+        width: 180,
         editable: true,
         editoptions: {
             fullRow: true,
@@ -84,7 +84,7 @@ $(document).ready(function () {
         label: 'Cantidad',
         name: 'numlicencia',
         align: 'center',
-        width: 70,
+        width: 180,
         editable: true,
         editoptions: {
             readonly: 'readonly'
@@ -100,7 +100,7 @@ $(document).ready(function () {
         label: 'Solicitante',
         name: 'usuario',
         align: 'center',
-        width: 100,
+        width: 180,
         editable: true,
         search: false,
         sortable: false,
@@ -112,7 +112,7 @@ $(document).ready(function () {
     {
         label: 'Fecha de Uso',
         name: 'fechauso',
-        width: 110,
+        width: 180,
         align: 'center',
         sortable: false,
         editable: true,
@@ -138,7 +138,7 @@ $(document).ready(function () {
         label: 'CUI',
         name: 'cui',
         jsonmap: 'cui',
-        width: 50,
+        width: 180,
         align: 'center',
         sortable: false,
         editable: true,
@@ -174,14 +174,14 @@ $(document).ready(function () {
         label: 'SAP',
         name: 'sap',
         align: 'center',
-        width: 50,
+        width: 180,
         editable: true,
         search: false,
         sortable: false
     }, {
         label: 'Comentario de Solicitud',
         name: 'comentariosolicitud',
-        width: 300,
+        width: 180,
         hidden: false,
         editable: true,
         edittype: 'textarea',
@@ -200,7 +200,7 @@ $(document).ready(function () {
         label: 'Aprobador',
         name: 'usuariojefe',
         align: 'center',
-        width: 100,
+        width: 180,
         editable: true,
         search: false,
         editoptions: {
@@ -212,7 +212,7 @@ $(document).ready(function () {
     {
         label: 'Comentario de Aprobación',
         name: 'comentarioaprobacion',
-        width: 300,
+        width: 180,
         hidden: false,
         editable: true,
         edittype: 'textarea',

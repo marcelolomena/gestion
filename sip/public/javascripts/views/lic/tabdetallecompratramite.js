@@ -22,7 +22,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Cantidad',
             name: 'numero',
-            width: 80,
+            width: 250,
             align: 'center',
             hidden: false,
             editrules: {
@@ -35,7 +35,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Monto',
             name: 'monto',
-            width: 80,
+            width: 250,
             align: 'center',
             hidden: false,
             editrules: {
@@ -50,7 +50,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Fecha Inicio',
             name: 'fechaInicio',
-            width: 100,
+            width: 250,
             align: 'center',
             sortable: false,
             editable: true,
@@ -76,7 +76,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Fecha Termino',
             name: 'fechaTermino',
-            width: 110,
+             width: 250,
             align: 'center',
             sortable: false,
             editable: true,
@@ -108,7 +108,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Fecha Control',
             name: 'fechaControl',
-            width: 100,
+             width: 250,
             align: 'center',
             sortable: false,
             editable: true,
@@ -159,7 +159,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Estado',
             name: 'estado',
-            width: 90,
+            width: 250,
             align: 'center',
             editable: true,
             edittype: "custom",
@@ -184,7 +184,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Comentario',
             name: 'comentario',
-            width: 400,
+            width: 250,
             hidden: false,
             editable: true,
             edittype: 'textarea',
@@ -195,7 +195,6 @@ var tabdetalleCompraTramiteGrid = {
         },
         
     ];
-
         var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Detalle Compra Trámite', 'Editar Compra en Trámite', 'Agregar Compra en Trámite', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         tabGrid.navParameters.edit = false;
         tabGrid.navParameters.add = false;

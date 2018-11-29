@@ -23,103 +23,103 @@ var tabInstalacionGrid = {
             }
         }
         var viewModel = [{
-                label: 'Plantilla',
-                name: 'id',
-                key: true,
-                hidden: true,
-                width: 50,
-                editable: true,
-                hidedlg: true,
-                sortable: false,
-                editrules: {
-                    edithidden: false
+            label: 'Plantilla',
+            name: 'id',
+            key: true,
+            hidden: true,
+            width: 50,
+            editable: true,
+            hidedlg: true,
+            sortable: false,
+            editrules: {
+                edithidden: false
+            }
+        },
+        {
+            label: 'Código de Autorización',
+            name: 'codautorizacion',
+            align: 'center',
+            width: 251,
+            editable: false,
+            formatter: function (cellvalue, options, rowObject) {
+                var estado = rowObject.estado;
+                if (estado == 'Historico') {
+                    return codauto = 'Historico'
+                } else {
+                    if (estado == 'ubicacion') {
+                        return codauto = 'Ubicación'
+                    } else {
+                        return cellvalue;
+                    }
                 }
             },
-            {
-                label: 'Código de Autorización',
-                name: 'codautorizacion',
-                align: 'center',
-                width: 155,
-                editable: false,
-                formatter: function (cellvalue, options, rowObject) {
-                    var estado = rowObject.estado;
-                    if (estado == 'Historico') {
-                        return codauto = 'Historico'
-                    } else {
-                        if (estado == 'ubicacion') {
-                            return codauto = 'Ubicación'
-                        } else {
-                            return cellvalue;
-                        }
-                    }
-                },
-                search: false,
+            search: false,
+        },
+        {
+            label: 'Usuario',
+            name: 'usuario',
+            align: 'center',
+            width: 251,
+            editable: false,
+            search: false
+        },
+        {
+            label: 'Ubicación',
+            name: 'ubicacion',
+            align: 'center',
+            width: 251,
+            editable: false,
+            search: false
+        },
+        {
+            label: 'Código Interno',
+            name: 'codigoInterno',
+            align: 'center',
+            width: 251,
+            editable: false,
+            search: false
+        },
+        {
+            label: 'Instalador',
+            name: 'instalador',
+            align: 'center',
+            width: 251,
+            editable: false,
+            search: false
+        },
+        {
+            label: 'Fecha de Instalación',
+            name: 'fechaInstalacion',
+            width: 251,
+            align: 'center',
+            sortable: false,
+            editable: true,
+            editoptions: {
+                fullRow: true,
+                readonly: 'readonly'
             },
-            {
-                label: 'Usuario',
-                name: 'usuario',
-                align: 'center',
-                width: 250,
-                editable: false,
-                search: false
+            formatter: function (cellvalue, options, rowObject) {
+                //2017-12-31T00:00:00.000Z
+                var val = rowObject.fechaInstalacion;
+                if (val != null) {
+                    val = val.substring(0, 10);
+                    var fechaok = val.substring(8) + '-' + val.substring(5, 7) + '-' + val.substring(0, 4);
+                    return fechaok;
+                } else {
+                    return '';
+                }
             },
-            {
-                label: 'Ubicación',
-                name: 'ubicacion',
-                align: 'center',
-                width: 150,
-                editable: false,
-                search: false
-            },
-            {
-                label: 'Código Interno',
-                name: 'codigoInterno',
-                align: 'center',
-                width: 140,
-                editable: false,
-                search: false
-            },
-            {
-                label: 'Instalador',
-                name: 'instalador',
-                align: 'center',
-                width: 150,
-                editable: false,
-                search: false
-            },
-            {
-                label: 'Fecha de Instalación',
-                name: 'fechaInstalacion',
-                width: 110,
-                align: 'center',
-                sortable: false,
-                editable: true,
-                editoptions: {
-                    fullRow: true,
-                    readonly: 'readonly'
-                },
-                formatter: function (cellvalue, options, rowObject) {
-                    //2017-12-31T00:00:00.000Z
-                    var val = rowObject.fechaInstalacion;
-                    if (val != null) {
-                        val = val.substring(0, 10);
-                        var fechaok = val.substring(8) + '-' + val.substring(5, 7) + '-' + val.substring(0, 4);
-                        return fechaok;
-                    } else {
-                        return '';
-                    }
-                },
-                search: false
-            },
-            {
-                label: 'Observación',
-                name: 'observacion',
-                align: 'center',
-                width: 200,
-                editable: false,
-                search: false
-            }
-        ];
+            search: false
+        },
+        {
+            label: 'Observación',
+            name: 'observacion',
+            align: 'center',
+            width: 251,
+            editable: false,
+            search: false
+        }
+    ];
 
         function returnDocLinkDoc(cellValue, options, rowdata) {
             if (rowdata.nombrearchivo != "") {

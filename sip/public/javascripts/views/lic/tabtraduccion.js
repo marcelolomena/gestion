@@ -19,7 +19,7 @@ var tabtraduccionGrid = {
         }, {
             label: 'Nombre',
             name: 'nombre',
-            width: 1000,
+            width: 1758,
             editable: true
         }
         ];

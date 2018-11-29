@@ -76,6 +76,7 @@
         });
         nav += '</ul>';
         pane += '</div>';
+    
         this.template = nav + pane;
     }
 
@@ -134,18 +135,24 @@
             rowNum: 10,
             rowList: [10, 20, 30, 40, 50],
             sortname: sortField,
-            viewrecords: true,
             caption: caption,
-            autowidth: true,
+            regional: 'es',
+            height: 'auto',
+            width: null,
             page: 1,
             forceFit: true,
-            height: 'auto',
-            regional: 'es',
+            hidegrid: false,
+            responsive: true,
+            autowidth: true,
+            viewrecords: true,
+            restoreCellonFail : true,
             sortorder: 'desc',
             shrinkToFit: false,
             styleUI: 'Bootstrap',
             loadComplete: this.loadComplete
         };
+
+
         this.filterOptions = {
             stringResult: true,
             searchOperators: true,

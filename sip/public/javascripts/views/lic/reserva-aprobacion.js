@@ -51,7 +51,7 @@ $(document).ready(function () {
     , {
         label: 'Estado',
         name: 'estado',
-        width: 90,
+        width: 200,
         align: 'center',
         editable: true,
         edittype: "custom",
@@ -82,7 +82,7 @@ $(document).ready(function () {
         label: 'Cantidad',
         name: 'numlicencia',
         align: 'center',
-        width: 70,
+        width: 200,
         editable: true,
         editoptions: {
             readonly: 'readonly'
@@ -97,7 +97,7 @@ $(document).ready(function () {
         label: 'Usuario',
         name: 'usuario',
         align: 'center',
-        width: 100,
+        width: 200,
         editable: true,
         search: false,
         editoptions: {
@@ -108,7 +108,7 @@ $(document).ready(function () {
     {
         label: 'Fecha de Uso',
         name: 'fechauso',
-        width: 110,
+        width: 200,
         align: 'center',
         sortable: false,
         editable: true,
@@ -134,7 +134,7 @@ $(document).ready(function () {
         label: 'CUI',
         name: 'cui',
         jsonmap: 'cui',
-        width: 50,
+        width: 200,
         align: 'center',
         sortable: false,
         editable: true,
@@ -169,13 +169,13 @@ $(document).ready(function () {
         label: 'SAP',
         name: 'sap',
         align: 'center',
-        width: 50,
+        width: 200,
         editable: true,
         search: false
     }, {
         label: 'Comentario de Solicitud',
         name: 'comentariosolicitud',
-        width: 300,
+        width: 200,
         hidden: false,
         editable: true,
         edittype: 'textarea',
@@ -192,7 +192,7 @@ $(document).ready(function () {
     {
         label: 'Comentario de Aprobación',
         name: 'comentarioaprobacion',
-        width: 300,
+        width: 200,
         hidden: false,
         editable: true,
         edittype: 'textarea',

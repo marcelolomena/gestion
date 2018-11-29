@@ -213,6 +213,10 @@
   label {
     display: inline-block;
     margin-bottom: .5rem;
+    margin-right: 10px;
+    /* margin-left: 10px; */
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
   }
   
   button {
