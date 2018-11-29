@@ -120,7 +120,7 @@ $(document).ready(function () {
             label: 'Observaciones',
             name: 'observaciones',
             align: 'left',
-            width: 700,
+            width: 500,
             editable: true,
             edittype: 'textarea',
             search: false
