@@ -401,7 +401,7 @@ function listChilds(req, res) {
 
 function buscaprod(req, res) {
 
-    models.sequelize.query("SELECT a.nombre label, a.id value FROM lic.producto a " +
+    models.sequelize.query("SELECT distinct a.nombre label, a.id value FROM lic.producto a " +
         "join lic.compra b on a.id = b.idproducto WHERE nombre LIKE '%" + req.params.pId + "%'").spread(function (rows) {
         return res.json(rows);
     });
