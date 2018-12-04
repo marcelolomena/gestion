@@ -169,7 +169,9 @@ function showDocumentos(proveedor, totalfact) {
         height: 'auto',
         styleUI: "Bootstrap",
         autowidth: false,
+        shrinkToFit: true, // well, it's 'true' by default 
         sortable: "true",
+        width: null,
         pager: "#pager",
         jsonReader: { cell: "" },
         page: 1,
@@ -200,7 +202,15 @@ function showDocumentos(proveedor, totalfact) {
     });
 
     leida = true;
+    $("#pager_left").css("width", "");
+
+    $(window).bind('resize', function () {
+        $("#grid").setGridWidth($(".gcontainer").width(), true);
+        //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
+        $("#pager").setGridWidth($(".gcontainer").width(), true);
+    });
 }
+
 
 var leida2 = false;
 
@@ -216,6 +226,7 @@ function loadGrid2(cui, proveedor) {
         showDetalleCUI(cui, proveedor);
     }
 }
+
 
 var proveedorcui;
 

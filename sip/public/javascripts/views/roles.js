@@ -31,10 +31,10 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         subGrid: true,
         subGridRowExpanded: showSubGrids,
         subGridOptions: {
@@ -76,6 +76,8 @@ $(document).ready(function () {
     );
 
     $("#pager_roles_left").css("width", "");
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+
 
     function showSubGrids(subgrid_id, row_id) {
         gridRoles2(subgrid_id, row_id, 'roles2');

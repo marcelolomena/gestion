@@ -176,6 +176,7 @@ $(document).ready(function () {
 
     $grid.jqGrid({
         url: '/hyperion/presupuesto',
+        mtype: "GET",
         datatype: "json",
         colModel: newColModel,
         page: 1,
@@ -183,7 +184,7 @@ $(document).ready(function () {
         regional: 'es',
         height: 'auto',
         width: null,
-        shrinkToFit: true,
+        shrinkToFit: false,
         viewrecords: true,
         //multiselect: true,
         caption: 'Presupuestos para Hyperion',
@@ -215,6 +216,8 @@ $(document).ready(function () {
         }
     });
 
+
+
     $.extend($.jgrid.search, {
         multipleSearch: true,
         multipleGroup: true,
@@ -226,8 +229,6 @@ $(document).ready(function () {
         tmplNames: myFilterTemplateNames,
         tmplFilters: myFilterTemplates
     });
-
-    
 
     $grid.jqGrid('navGrid', '#pagerMaster', { edit: false, add: false, del: false, search: false }, {}, {}, {}, {});
     $grid.jqGrid('navButtonAdd', '#pagerMaster', {
@@ -266,6 +267,9 @@ $(document).ready(function () {
         });
     });
 
+    $(".ui-jqgrid-htable").css('width','100%');      $(".ui-jqgrid-btable").css('width','100%');
+    $("#pagerMaster_left").css("width", "");
+
     $("#gridDetail").jqGrid({
         url: '/hyperion/list',
         mtype: "POST",
@@ -273,11 +277,15 @@ $(document).ready(function () {
         page: 1,
         colNames: listOfColumnNames,
         colModel: listOfColumnModels,
-        rowNum: 50,
+        rowNum: 10,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
-        shrinkToFit: true,
+        width: null,
+        shrinkToFit: false,
+        viewrecords: true,
+        sortable: "true",
+        // autowidth: true,
+
         caption: "CUI :: ",
         pager: "#pagerDetail",
         viewrecords: true,
@@ -300,8 +308,11 @@ $(document).ready(function () {
             groupSummary: [true],
             groupCollapse: false
         }, loadComplete: function () {
-            gridParentWidth = $(".gcontainer").width();
-            $("#gridDetail").jqGrid('setGridWidth', gridParentWidth, true);
+            // gridParentWidth = $(".gcontainer").width();
+            // $("#gridDetail").jqGrid('setGridWidth', gridParentWidth, true);
+            // $("table.ui-jqgrid-htable").css('width','100%');      
+            $("table.ui-jqgrid-btable").css('width','100%');
+
         },
     });
 
@@ -311,10 +322,9 @@ $(document).ready(function () {
         del: false,
         search: false
     },
-        {},
-        {},
-        {},
-        { closeAfterSearch: true });
+    { closeAfterSearch: true });
+    
+    $("#pagerDetail_left").css("width", "");
 /*
     $('#gridDetail').jqGrid('navButtonAdd', '#pagerDetail', {
         caption: "",
@@ -329,10 +339,10 @@ $(document).ready(function () {
         }
     });
 */         
-    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
-    $("#pager_left").css("width", "");
+
 
 });
+
 
 function clearSelection() {
     var wsParams = { idcui: 0 }
@@ -343,7 +353,7 @@ function listColumnModels(data) {
     var _listOfColumnModels = [];
     _listOfColumnModels.push({
         name: 'cuentacontable',
-        width: 100,
+        width: 60,
         sortable: true,
         hidden: false,
         search: true,
@@ -352,7 +362,7 @@ function listColumnModels(data) {
 
     _listOfColumnModels.push({
         name: 'gerencia',
-        width: 100,
+        width: 71,
         sortable: true,
         hidden: false,
         search: true,
@@ -372,10 +382,11 @@ function listColumnModels(data) {
         },
 
     });
+    
 
     _listOfColumnModels.push({
         name: 'departamento',
-        width: 100,
+        width: 89,
         sortable: true,
         hidden: false,
         search: false,
@@ -384,7 +395,7 @@ function listColumnModels(data) {
 
     _listOfColumnModels.push({
         name: 'seccion',
-        width: 100,
+        width: 89,
         sortable: true,
         hidden: false,
         search: false,
@@ -393,7 +404,7 @@ function listColumnModels(data) {
 
     _listOfColumnModels.push({
         name: 'ano',
-        width: 100,
+        width: 89,
         sortable: true,
         hidden: true,
         searchoptions: { searchhidden: true, sopt: ["eq", "le", "ge"] }
@@ -401,7 +412,7 @@ function listColumnModels(data) {
     $.each(data, function (i, item) {
         _listOfColumnModels.push({
             name: data[i].toString(),
-            width: 100,
+            width: 89,
             sortable: true,
             hidden: false,
             align: 'right',

@@ -10,20 +10,34 @@ block titulogrilla
   //-   h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") Seguimiento de Gasto
 block grilla
   .cajaFormulario
-    .form-row
-      span.titCajaPeriodo(style="line-height: 35px;") CUI :  
-      select#cui(class='custom-select' style="width:auto; margin-right: 10px")
-        option(value='0', selected='selected') - Escoger CUI -  
-      select#proveedor(class='custom-select' style="width:auto; margin-right: 10px")
-        option(value='0', selected='selected') - Escoger Proveedor - 
-      span.titCajaPeriodo(style="line-height: 35px;") Factura:  
-      input#factura(type='text', name='factura' class='form-control' style='line-height: 20px; height:35px; width: 150px; margin-right: 10px')
-      span.titCajaPeriodo(style="line-height: 35px;") Periodo:  
-      input#fechaini(type='text', name='fechaini' class='form-control' style='line-height: 20px; height:35px; width: 150px; margin-right: 10px')
-      span(style="line-height: 35px;") -  
-      input#fechafin(type='text', name='fechafin' class='form-control' style='line-height: 20px; height:35px; width: 150px; margin-right: 10px')
-    #buscar.btn(class='btn btn-primary ml-auto' style="background-color:#346cb0; ") Buscar
-      #span(class='oi ml-2 oi-magnifying-glass') 
+    .div(class='row')
+      .div(class='col-md-2')
+        .div(class="form-group")
+          span.titCajaPeriodo(style="line-height: 35px;") CUI :  
+          select#cui(class='custom-select' )
+            option(value='0', selected='selected') - Escoger CUI -  
+      .div(class='col-md-2')
+        .div(class="form-group")
+          span.titCajaPeriodo(style="line-height: 35px;")  
+          select#proveedor(class='custom-select' )
+            option(value='0', selected='selected') - Escoger Proveedor - 
+      .div(class='col-md-1')
+        .div(class="form-group")      
+          span.titCajaPeriodo(style="line-height: 35px;") Factura:  
+          input#factura(type='text', name='factura' class='form-control' style='line-height: 20px; height:35px; width: 120px; margin-left: 10px')
+      .div(class='col-md-1.2')
+        .div(class="form-group")
+          span.titCajaPeriodo(style="line-height: 35px;") Inicio:  
+          input#fechaini(type='text', name='fechaini' class='form-control' style='line-height: 20px; height:35px; width: 120px; margin-left: 20px')
+      .div(class='col-md-')
+        .div(class="form-group")
+          span.titCajaPeriodo(style="line-height: 35px; margin-left:-6px") Fin:  
+          input#fechafin(type='text', name='fechafin' class='form-control' style='line-height: 20px; height:35px; width: 120px; margin-right: 20px')
+      .div(class='col-md-1')
+        .div(class="form-group")  
+          span.titCajaPeriodo(style="line-height: 35px;")   
+          #buscar.btn(class='btn btn-primary ml-auto' style="background-color:#346cb0; ") Buscar
+            #span(class='oi ml-2 oi-magnifying-glass') 
   br  
   div(style='width: 100%')
     table#grid

@@ -99,7 +99,8 @@ $(document).ready(function () {
         colModel: modelGerencias,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
+        width: null,
+        shrinkToFit: false,
         caption: 'Gerencias',
         viewrecords: false,
         footerrow: true,
@@ -117,6 +118,8 @@ $(document).ready(function () {
         },
         loadError: sipLibrary.jqGrid_loadErrorHandler
     });
+    $("table.ui-jqgrid-ftable").css('width','100%'); $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    
 
     $grid.jqGrid('navGrid', '#pager', { edit: false, add: false, del: false, search: false }, {}, {}, {}, {});
     $grid.jqGrid('navButtonAdd', '#pager', {
@@ -207,7 +210,7 @@ $(document).ready(function () {
                 callback(json);
             });
         },
-        myFilterTemplateLabel = 'Gerencias:&nbsp;',
+        myFilterTemplateLabel = 'Gerencias:',
         myDynamicFilterTemplates = function (id) {
 
             var rule = {
@@ -244,7 +247,8 @@ $(document).ready(function () {
         colModel: modelConceptoGasto,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
+        width: null,
+        shrinkToFit: false,
         footerrow: true,
         userDataOnFooter: true,
         caption: 'Concepto Gasto',
@@ -284,9 +288,10 @@ $(document).ready(function () {
                 retorno[i].nombre + '</option>';
         });
 
-        $('#t_' + $.jgrid.jqID($gridConceptoGasto[0].id)).append('<label for="filterTemplates">' +
+        $('#t_' + $.jgrid.jqID($gridConceptoGasto[0].id)).append('<label for="filterTemplates" style="margin-left: 10px;">' +
             myFilterTemplateLabel + '</label>' +
-            '<select id="filterTemplates"><option value="0">Sin filtro</option>' +
+
+            '<select class="custom-select" id="filterTemplates" style="font-size: 14px; font-family: Arial, Helvetica, sans-serif;width:auto; margin-right: 10px"><option value="0">Sin filtro</option>' +
             templateOptions + '</select>');
         $('#filterTemplates').change(reloadWithNewFilterTemplate).keyup(function (e) {
             var keyCode = e.keyCode || e.which;
@@ -505,6 +510,6 @@ function serviceFromConceptSubGrid(parentRowID, parentRowKey) {
         footerrow: true,
         userDataOnFooter: true
     });
-    $("table.ui-jqgrid-htable").css('width','100%');
-    $("table.ui-jqgrid-btable").css('width','100%');
+    $("table.ui-jqgrid-ftable").css('width','100%'); $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+
 }

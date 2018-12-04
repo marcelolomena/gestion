@@ -18,7 +18,7 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
+        width: null,
         shrinkToFit: true,
         caption: 'Lista de plantillas Por CUI',
         pager: "#pager",
@@ -41,6 +41,9 @@ $(document).ready(function () {
             minusicon: "glyphicon-hand-down"
         },
     });
+
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#pager_left").css("width", "");
 
     $("#grid").jqGrid('filterToolbar', {  stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
@@ -309,7 +312,8 @@ function showChildGrid(parentRowID, parentRowKey) {
             recreateFilter: true
         }
     );
-    $("#" + childGridPagerID).css("width", "");
+
+    $("#" + childGridPagerID+"_left").css("width", "");
 
     $(window).bind('resize', function () {
         $("#" + childGridID).setGridWidth($(".gcontainer").width(), true);

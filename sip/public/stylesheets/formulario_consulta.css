@@ -1,11 +1,12 @@
 .cajaFormulario {
 	padding-top: 7px;
 	padding-bottom: 7px;
-	border: 1px solid #D4D5D7;
+	/* border: 1px solid #D4D5D7; */
 	margin-left: 5px;
 	margin-right: 15px;
+    position: relative;
 }
-.formSap {
+.form-row {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	color: #036;
@@ -13,34 +14,26 @@
 	height: 48px;
 	padding-left: 15px;
 }
-.formSap #cui {
+.custom-select
+{
+	margin-left: 22px;
+}
+.form-row #cui {
 	color: #036;
 	padding-right: 25px;
 	padding-left: 5px;
 	padding-top: 5px;
+	margin-left: 5px;
 	padding-bottom: 5px;
+	line-height: 20px; 
+	height:35px; 
+	
 	text-align: left;
 	border: 1px solid #D4D5D7;
 	background-color: #ffffff;
 	margin-left: 30px;
 }
-.formSap #funcionalidad {
-	color: #036;
-	padding-right: 25px;
-	padding-left: 5px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	text-align: left;
-	border: 1px solid #D4D5D7;
-	background-color: #ffffff;
-	margin-left: 30px;
-}
-.formSap .titForm {
-	width: 50px;
-	float: left;
-}
-
-.formSap #proveedor {
+.form-row #funcionalidad {
 	color: #036;
 	padding-right: 25px;
 	padding-left: 5px;
@@ -51,7 +44,27 @@
 	background-color: #ffffff;
 	margin-left: 10px;
 }
-.formSap #transaccion {
+.form-row .titForm {
+	width: 50px;
+	float: left;
+}
+
+.form-row #proveedor {
+	color: #036;
+	padding-right: 25px;
+	padding-left: 5px;
+	padding-top: 5px;
+	margin-left: 5px;
+	padding-bottom: 5px;
+	line-height: 20px; 
+	height:35px; 
+	width: 100px;
+	text-align: left;
+	border: 1px solid #D4D5D7;
+	background-color: #ffffff;
+	margin-left: 30px;
+}
+.form-row #transaccion {
 	color: #036;
 	padding-right: 25px;
 	padding-left: 5px;
@@ -99,11 +112,13 @@
 }
 
 .titCajaPeriodo {
-	margin-left: 10px;
+	margin-left: 15px;
+	padding: 5px;
 }
 
 .titCajaRegistro {
-	margin-left: 10px;
+	margin-left: 15px;
+    padding: 5px;
 }
 
 .formFactura #fechaini {
@@ -126,10 +141,12 @@
 	width: 100px;
 	color: #FFF;
 	border-top-style: none;
-	border-right-style: none;
+	border-right-style: 10px;
 	border-bottom-style: none;
 	border-left-style: none;
 	margin-left:10px;
+    margin-right:10px;
+    padding-right: 20px;
 }
 .btn {
 	background: #047ac9;
@@ -151,8 +168,7 @@
 	padding-left: 20px;
 	float: right;
 	position: relative;
-	left: -10px;
-	bottom: 37px;
+    margin-right:10px;
 }
 
 .btn:hover {

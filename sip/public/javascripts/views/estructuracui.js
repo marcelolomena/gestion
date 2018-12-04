@@ -83,8 +83,8 @@ $(document).ready(function () {
         colModel: modelEstructura,
         rowNum: 10,
         height: 'auto',
-        autowidth: true,
-        shrinkToFit: true,
+        width: null,
+        shrinkToFit: false,
         caption: 'Estructura de Centros',
         onSelectRow: function (rowid, selected) {
             if (rowid != null) {
@@ -397,8 +397,8 @@ function loadGrid(idestructura, cuipadre) {
         colModel: modelCui,
         rowNum: 10,
         height: 'auto',
-        autowidth: true,
-        shrinkToFit: true,
+        width: null,
+        shrinkToFit: false,
         caption: 'Estructura Cui Gerencia',
         pager: "#pager",
         viewrecords: true,
@@ -542,6 +542,7 @@ function loadGrid(idestructura, cuipadre) {
         }
     );
 
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 
     $(window).bind('resize', function () {
@@ -850,7 +851,7 @@ function showChildGrid(parentRowID, parentRowKey) {
         }
     );
 
-    $("#" + childGridPagerID).css("width", "");
+    $("#" + childGridPagerID+"_left").css("width", "");
 
     $(window).bind('resize', function () {
         $("#" + childGridID).setGridWidth($(".gcontainer").width(), true);
@@ -1146,7 +1147,7 @@ function gridDetail(parentRowID, parentRowKey) {
         }
     );
 
-    $("#" + childGridPagerID).css("width", "");
+    $("#" + childGridPagerID+"_left").css("width", "");
 
     $(window).bind('resize', function () {
         $("#" + childGridID).setGridWidth($(".gcontainer").width(), true);

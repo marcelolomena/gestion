@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
+    // $.jgrid.styleUI.Bootstrap.base.rowTable = "table table-bordered table-striped";
 
     idproveedor = 0;
 
@@ -133,7 +133,7 @@ $(document).ready(function () {
                         } 
                     }
                 }],
-            }
+            }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
             label: 'Origen', name: 'tipocontrato', search: false, editable: true, hidden: false,
@@ -153,7 +153,7 @@ $(document).ready(function () {
                         } 
                     }
                 }],                
-            },
+            }, dataInit: function (elem) { $(elem).width(200); },
             formatter: function (cellvalue, options, rowObject) {
                 var dato = '';
                 var val = rowObject.tipocontrato;
@@ -230,7 +230,7 @@ $(document).ready(function () {
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
                 custom_element: sipLibrary.radioElemDocumento
-            }
+            }, dataInit: function (elem) { $(elem).width(200); }
         },*/
 
         {
@@ -261,7 +261,7 @@ $(document).ready(function () {
                         $("input#tipodocumento").val($('option:selected', this).text());
                     }
                 }],
-            }
+            }, dataInit: function (elem) { $(elem).width(200); }
         },        
         {
             label: 'Tipo Contrato', name: 'tiposolicitud', width: 200, align: 'left', search: true, editable: true,
@@ -308,7 +308,7 @@ $(document).ready(function () {
                         $("input#tiposolicitud").val($('option:selected', this).text());
                     }
                 }],
-            }
+            }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
             label: 'Negociador', name: 'uidpmo', search: false, editable: true, hidden: true,
@@ -343,7 +343,7 @@ $(document).ready(function () {
                         $("input#pmoresponsable").val($('option:selected', this).text());
                     }
                 }],
-            }
+            }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
             label: 'Negociador', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
@@ -359,10 +359,11 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default        
+        sortable: "true",
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default        
         caption: 'Lista de contratos',
         pager: "#pager",
         viewrecords: true,
@@ -531,6 +532,7 @@ $(document).ready(function () {
         }
     });
 
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 
     $(window).bind('resize', function () {
@@ -539,3 +541,7 @@ $(document).ready(function () {
         $("#pager").setGridWidth($(".gcontainer").width(), true);
     });
 });
+function loadGrid(parentID) {
+    var url = '/contratos/list';
+    $("#grid").jqGrid('setCaption', "Lista de contratos").jqGrid('setGridParam', { url: url, page: 1 }).jqGrid("setGridParam", { datatype: "json" }).trigger("reloadGrid");
+}

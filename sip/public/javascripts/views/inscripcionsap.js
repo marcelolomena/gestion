@@ -170,10 +170,10 @@ $(document).ready(function () {
         regional: 'es',
         height: 'auto',
         caption: 'Inscripción SAP',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: true,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
@@ -314,7 +314,8 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
-    $("#pager_iniciativa_left").css("width", "");
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#pager_left").css("width", "");
     
     function showSubGrids(subgrid_id, row_id) {
         gridTareasInscripcion(subgrid_id, row_id, 'tareasinscripcion');

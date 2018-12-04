@@ -24,8 +24,8 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
-        shrinkToFit: true,
+        width: null,
+        shrinkToFit: false,
         caption: 'Solicitudes de Aprobación',
         pager: "#pager",
         viewrecords: true,
@@ -39,6 +39,7 @@ $(document).ready(function () {
             }
         }
     });
+    
 
     $grid.jqGrid('navGrid', '#pager', { edit: false, add: false, del: false, search: false }, {}, {}, {}, {});
     $grid.jqGrid('navButtonAdd', '#pager', {
@@ -74,4 +75,7 @@ $(document).ready(function () {
             });
         }
     });
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+
+    $("#pager_left").css("width", "");
 });

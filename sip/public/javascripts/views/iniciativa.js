@@ -91,14 +91,14 @@ function showIniciativas(nombreini, numart, pmo, estado) {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Fecha Último Comité {fechacomite}</div>";
+    tmpl += "<div class='column-half'>Fec Último Comité {fechacomite}</div>";
     tmpl += "<div class='column-half'><span style='color: red'>*</span>Año {ano}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-three'>Gasto Estimado {pptoestimadogasto}</div>";
-    tmpl += "<div class='column-three'>Inversión Estimada {pptoestimadoinversion}</div>";
-    tmpl += "<div class='column-three'>Presupuesto Estimado {pptoestimadoprevisto}</div>";
+    tmpl += "<div class='column-three'>Gasto Est {pptoestimadogasto}</div>";
+    tmpl += "<div class='column-three'>Inv. Est {pptoestimadoinversion}</div>";
+    tmpl += "<div class='column-three'>Ppto Est {pptoestimadoprevisto}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
@@ -106,8 +106,8 @@ function showIniciativas(nombreini, numart, pmo, estado) {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-three'>Gasto Aprobado {pptoaprobadogasto}</div>";
-    tmpl += "<div class='column-three'>Inversión Aprobada {pptoaprobadoinversion}</div>";
+    tmpl += "<div class='column-three'>Gasto Apr {pptoaprobadogasto}</div>";
+    tmpl += "<div class='column-three'>Inv. Apr {pptoaprobadoinversion}</div>";
     tmpl += "<div class='column-three'>PresupuestoAprobado{pptoaprobadoprevisto}</div>";
     tmpl += "</div>";
 
@@ -116,7 +116,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
     tmpl += "</div>";
 
     tmpl += "<div class='form-row'>";
-    tmpl += "<div class='column-half'>Presupuesto Aprobado en Dolares {pptoaprobadodolares}</div>";
+    tmpl += "<div class='column-half'>Ppto Apr en Dolares {pptoaprobadodolares}</div>";
     tmpl += "</div>";
 
     tmpl += "<div class='form-row' style='display: none;'>";
@@ -134,7 +134,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
     var modelIniciativa = [
         { label: 'id', name: 'id', key: true, hidden: true },
         {
-            label: 'Proyecto', name: 'nombre', width: 400, align: 'left',
+            label: 'Proyecto', name: 'nombre', width: 280, align: 'left',
             search: false, editable: true, hidden: false,
             editrules: { required: true },
             editoptions: {placeholder: "Nombre del proyecto" }
@@ -176,7 +176,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'División', name: 'divisionsponsor', width: 200, align: 'left',
+            label: 'División', name: 'divisionsponsor', width: 160, align: 'left',
             search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true },
             stype: 'select',
@@ -202,7 +202,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             },
         },
         {
-            label: 'Sponsor', name: 'sponsor1', width: 150, align: 'left',
+            label: 'Sponsor', name: 'sponsor1', width: 90, align: 'left',
             search: false, editable: true, hidden: false,
             editoptions: {placeholder: "Nombre y apellido Sponsor 1" }
         },
@@ -243,7 +243,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left',
+            label: 'Gerente', name: 'gerenteresponsable', width: 110, align: 'left',
             search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
@@ -329,7 +329,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Estado', name: 'estado', width: 150, align: 'left',
+            label: 'Estado', name: 'estado', width: 120, align: 'left',
             search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
@@ -367,7 +367,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             editoptions: {placeholder: "Q4 o vacío" }
         },
         {
-            label: 'Fecha Último Comite', name: 'fechacomite', width: 130, align: 'left',
+            label: 'Fec Último Comite', name: 'fechacomite', width: 130, align: 'left',
             search: false, editable: true, formatter: 'date',
             formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
@@ -394,7 +394,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             }
         },
         {
-            label: 'Gasto Estimado (US$)', name: 'pptoestimadogasto', width: 150, align: 'right',
+            label: 'Gasto Est (US$)', name: 'pptoestimadogasto', width: 108, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -404,7 +404,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             }
         },
         {
-            label: 'Inversión Estimada (US$)', name: 'pptoestimadoinversion', width: 150, align: 'right',
+            label: 'Inv. Est (US$)', name: 'pptoestimadoinversion', width: 105, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -414,7 +414,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             }
         },
         {
-            label: 'Presupuesto Estimado (US$)', name: 'pptoestimadoprevisto', width: 150, align: 'right',
+            label: 'Ppto Est (US$)', name: 'pptoestimadoprevisto', width: 105, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -424,7 +424,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             }
         },
         {
-            label: 'Gasto Aprobado (CLP)', name: 'pptoaprobadogasto', width: 150, align: 'right',
+            label: 'Gasto Apr (CLP)', name: 'pptoaprobadogasto', width: 110, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
@@ -434,7 +434,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             }
         },
         {
-            label: 'Inversión Aprobada (CLP)', name: 'pptoaprobadoinversion', width: 150, align: 'right',
+            label: 'Inv. Apr (CLP)', name: 'pptoaprobadoinversion', width: 105, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
@@ -444,7 +444,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             }
         },
         {
-            label: 'Presupuesto Aprobado (CLP)', name: 'pptoaprobadoprevisto', width: 150, align: 'right',
+            label: 'Ppto Apr (CLP)', name: 'pptoaprobadoprevisto', width: 105, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
@@ -454,7 +454,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             }
         },
         {
-            label: 'Presupuesto Aprobado (US$)', name: 'pptoaprobadodolares', width: 150, align: 'right',
+            label: 'Ppto Apr (US$)', name: 'pptoaprobadodolares', width: 105, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -524,10 +524,10 @@ function showIniciativas(nombreini, numart, pmo, estado) {
         regional: 'es',
         height: 'auto',
         caption: 'Lista de iniciativas',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         pager: "#pager",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
@@ -641,8 +641,8 @@ function showIniciativas(nombreini, numart, pmo, estado) {
     );
 
     $('#grid').jqGrid('navButtonAdd', '#pager', {
-        caption: "Excel",
-        buttonicon: "silk-icon-page-excel",
+        caption: "",
+        buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",
         position: "last",
         onClickButton: function () {
@@ -653,6 +653,12 @@ function showIniciativas(nombreini, numart, pmo, estado) {
         }
     });
     $("#pager_left").css("width", "");
+
+    $(window).bind('resize', function () {
+        $("#grid").setGridWidth($(".gcontainer").width(), true);
+        //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
+        $("#pager").setGridWidth($(".gcontainer").width(), true);
+    });
     
 
 	leida = true;    

@@ -184,7 +184,7 @@ function gridTareasInscripcion(parentRowID, parentRowKey, suffix) {
 
         },
         {
-            label: 'Servicio', name: 'servicio.nombre', width: 200, align: 'left',
+            label: 'Servicio', name: 'servicio.nombre', width: 150, align: 'left',
             search: true, editable: false, hidden: false,
             editrules: { required: true },
         },
@@ -204,13 +204,13 @@ function gridTareasInscripcion(parentRowID, parentRowKey, suffix) {
             search: true, editable: false, hidden: false,
         },
         {
-            label: 'Tarea', name: 'tarea', width: 150, align: 'left',
+            label: 'Tarea', name: 'tarea', width: 40, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
             editoptions: {placeholder: "X.X.X de acuerdo a formato de tarea" }
         },
         {
-            label: 'Glosa', name: 'glosa', width: 150, align: 'left',
+            label: 'Glosa', name: 'glosa', width: 110, align: 'left',
             search: true, editable: true, hidden: false,
             edittype: "textarea", editrules: { required: false },
             editoptions: {placeholder: "Glosa de la tarea" }
@@ -303,7 +303,7 @@ function gridTareasInscripcion(parentRowID, parentRowKey, suffix) {
             }
         },
         {
-            label: 'Requiere Contrato', name: 'reqcontrato',
+            label: 'Requiere Contrato', width: 90, name: 'reqcontrato',
             search: false, editable: true, hidden: false,
             //editrules: { required: true },
             edittype: "custom",
@@ -389,7 +389,7 @@ function gridTareasInscripcion(parentRowID, parentRowKey, suffix) {
             search: true, editable: true, hidden: false,
         },
         {
-            label: 'Con IVA', name: 'coniva', search: false, editable: true, hidden: false,
+            label: 'Con IVA', name: 'coniva', width: 50, search: false, editable: true, hidden: false,
             edittype: "custom",
             //editrules: { required: true },
             editoptions: {
@@ -620,7 +620,11 @@ function gridTareasInscripcion(parentRowID, parentRowKey, suffix) {
         {
             recreateFilter: true
         }
+        
     );
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    
+    $("#" + childGridPagerID+"_left").css("width", "");
 }
 function showSubGrids3(subgrid_id, row_id) {
     gridFlujoNuevaTarea(subgrid_id, row_id, 'flujo');

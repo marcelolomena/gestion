@@ -127,6 +127,13 @@ $(document).ready(function () {
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
         editurl: '/presupuesto/action',
+        gridComplete: function () {
+            var recs = $("#grid").getGridParam("reccount");
+            if (isNaN(recs) || recs == 0) {
+
+                $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
+            }
+        },
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
         subGridRowExpanded: showPresupuestoServicios, // javascript function that will take care of showing the child grid        
         loadError: function (jqXHR, textStatus, errorThrown) {
@@ -784,7 +791,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
     });
 
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
-         $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true,
         add: true,

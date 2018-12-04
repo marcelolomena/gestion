@@ -400,6 +400,7 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         }
     ];
 
+
     // add a table and pager HTML elements to the parent grid row - we will render the child grid here
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -433,7 +434,11 @@ function showPresupuestoServicios(parentRowID, parentRowKey) {
         search: false
     });
 
+    $("#" + childGridPagerID+"_left").css("width", "");
+
 }
+
+
 
 function showPresupuestoPeriodos(parentRowID, parentRowKey) {
     var childGridID = parentRowID + "_table";
@@ -502,7 +507,11 @@ function showPresupuestoPeriodos(parentRowID, parentRowKey) {
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         pager: "#" + childGridPagerID
     });
-    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    
+    $(window).bind('resize', function () {
+        $("#" + childGridID).setGridWidth($(".gcontainer").width(), true);
+        $("#" + childGridPagerID).setGridWidth($(".gcontainer").width(), true);
+    });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false,

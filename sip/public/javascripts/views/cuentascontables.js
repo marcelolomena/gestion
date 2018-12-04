@@ -34,26 +34,26 @@ $(document).ready(function () {
 
     var modelCuentas = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Cuenta Contable', name: 'cuentacontable', width: 220, align: 'left', search: true, editable: true,
+        { label: 'Cuenta Contable', name: 'cuentacontable', width: 120, align: 'left', search: true, editable: true,
                   editrules: { required: true} },
-        { label: 'Nombre', name: 'nombrecuenta', width: 400, align: 'left', search: true, editable: true, hidden: false, 
+        { label: 'Nombre', name: 'nombrecuenta', width: 320, align: 'left', search: true, editable: true, hidden: false, 
                   editrules: { required: true}},
-        { label: 'Inversión/Gasto', name: 'glosatipo', width: 170, align: 'left', search: false, editable: false, hidden: false },
+        { label: 'Inversión/Gasto', name: 'glosatipo', width: 120, align: 'left', search: false, editable: false, hidden: false },
 
         {
-            label: 'Inversion/Gasto', name: 'invgasto',width: 100, search: false, editable: true, hidden: true,
+            label: 'Inversion/Gasto', name: 'invgasto',width: 120, search: false, editable: true, hidden: true,
             edittype: "custom", editrules: { required: true},
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
                 custom_element: sipLibrary.radioElemInvgasto
             }
         },
-        { label: 'Agrupación 1', name: 'agrupacion1', width: 220, align: 'left', search: true, editable: true, hidden: false },
-        { label: 'Agrupación 2', name: 'agrupacion2', width: 220, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Agrupación 1', name: 'agrupacion1', width: 120, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Agrupación 2', name: 'agrupacion2', width: 150, align: 'left', search: true, editable: true, hidden: false },
         { label: 'Tipo Cuenta', name: 'tipocuenta', width: 150, align: 'left', search: true, editable: true, hidden: false },
-        { label: 'Concepto Gasto', name: 'conceptogasto', width: 200, align: 'left', search: true, editable: true, hidden: false },
-        { label: 'Cuenta Origen', name: 'cuentaorigen', width: 150, align: 'left', search: true, editable: true, hidden: false },
-        { label: 'Quien Presupuesta', name: 'quienpresupuesta', width: 300, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Concepto Gasto', name: 'conceptogasto', width: 150, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Cuenta Origen', name: 'cuentaorigen', width: 120, align: 'left', search: true, editable: true, hidden: false },
+        { label: 'Quien Presupuesta', name: 'quienpresupuesta', width: 280, align: 'left', search: true, editable: true, hidden: false },
     ];
     $("#grid").jqGrid({
         url: '/cuentascontables/list',
@@ -64,8 +64,8 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
-        shrinkToFit: true,
+        width: null,
+        shrinkToFit: false,
         caption: 'Lista de Cuentas Contables',
         pager: "#pager",
         viewrecords: true,
@@ -193,6 +193,7 @@ $(document).ready(function () {
         }
     });
 
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 
     $(window).bind('resize', function () {

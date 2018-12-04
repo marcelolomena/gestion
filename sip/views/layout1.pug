@@ -59,7 +59,7 @@ body
          span.hamburger-inner
       .top-bar-item.top-bar-item-right.px-0.d-none.d-sm-flex
        ul.header-nav.nav
-        li.nav-item.dropdown.header-nav-dropdown.has-notified
+        //- li.nav-item.dropdown.header-nav-dropdown.has-notified
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
           span.oi.oi-pulse
          .dropdown-arrow
@@ -114,7 +114,7 @@ body
           a.dropdown-footer(href='user-activities.html')
            | Todas las actividades
            i.fa.fa-fw.fa-long-arrow-alt-right
-        li.nav-item.dropdown.header-nav-dropdown.has-notified
+        //- li.nav-item.dropdown.header-nav-dropdown.has-notified
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
           span.oi.oi-envelope-open
          .dropdown-arrow
@@ -165,7 +165,7 @@ body
           a.dropdown-footer(href='app-messages.html')
            | Todos los mensajes
            i.fa.fa-fw.fa-long-arrow-alt-right
-        li.nav-item.dropdown.header-nav-dropdown
+        //- li.nav-item.dropdown.header-nav-dropdown
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
           span.oi.oi-grid-three-up
          .dropdown-arrow
@@ -199,7 +199,7 @@ body
        .dropdown
         button.btn-account.d-none.d-md-flex(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
          span.user-avatar
-          img(src='/images/avatars/profile.jpg', alt='')
+          img(src='/images/pic_user.png', alt='')
          span.account-summary.pr-lg-4.d-none.d-lg-block
           .perfil_sesion
             .user
@@ -208,15 +208,15 @@ body
         .dropdown-arrow.dropdown-arrow-left
         .dropdown-menu
          h6.dropdown-header.d-none.d-md-block.d-lg-none  #{data[0].nombre}
-         a.dropdown-item(href='#')
+         //a.dropdown-item(href='#')
           span.dropdown-icon.oi.oi-person
           |  Perfil
          a.dropdown-item(href='/menu/signout')
           span.dropdown-icon.oi.oi-account-logout
           |  Cerrar Sesión
-         .dropdown-divider
-         a.dropdown-item(href='#') Centro de Ayuda
-         a.dropdown-item(href='#') Preguntar Foro
+         //.dropdown-divider
+         //a.dropdown-item(href='#') Centro de Ayuda
+         //a.dropdown-item(href='#') Preguntar Foro
    aside.app-aside
     .aside-content
      header.aside-header
@@ -225,7 +225,7 @@ body
         span.hamburger-inner
       button.btn-account.d-flex.d-md-none(type='button', data-toggle='collapse', data-target='#dropdown-aside')
        span.user-avatar.user-avatar-lg
-        img(src='/images/avatars/profile.jpg', alt='')
+        img(src='/images/pic_user.png', alt='')
        span.account-icon
         span.fa.fa-caret-down.fa-lg
        span.account-summary
@@ -233,15 +233,15 @@ body
         span.account-description #{data[0].glosarol}
       #dropdown-aside.dropdown-aside.collapse
        .pb-3
-        a.dropdown-item(href='#')
-         span.dropdown-icon.oi.oi-person
-         |  Perfil
+        //- a.dropdown-item(href='#')
+        //-  span.dropdown-icon.oi.oi-person
+        //-  |  Perfil
         a.dropdown-item(href='/menu/signout')
          span.dropdown-icon.oi.oi-account-logout
          |  Cerrar Sesión
-        .dropdown-divider
-        a.dropdown-item(href='#') Centro de Ayuda
-        a.dropdown-item(href='#') Preguntar Foro
+        //- .dropdown-divider
+        //- a.dropdown-item(href='#') Centro de Ayuda
+        //- a.dropdown-item(href='#') Preguntar Foro
       .top-bar-brand
        a(href='#')
         img(src='/images/logoRound.png',height='60px', alt='') 
@@ -299,7 +299,7 @@ body
             block titulogrilla              
           .zerogrid_b
           block grilla   
-    footer.app-footer
+    //- footer.app-footer
      ul.list-inline
       li.list-inline-item
        a.text-muted(href='#') Soporte

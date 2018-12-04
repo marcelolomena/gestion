@@ -35,8 +35,8 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
-        shrinkToFit: true,
+        width: null,
+        shrinkToFit: false,
         caption: 'Factores de Recuperación por Periodo',
         pager: "#pager",
         viewrecords: true,
@@ -154,6 +154,7 @@ $(document).ready(function () {
         }
     });
 
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 
     $(window).bind('resize', function () {

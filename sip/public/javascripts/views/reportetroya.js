@@ -86,7 +86,7 @@ $(document).ready(function () {
 
     var modelGerencias = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Gerencia', name: 'nombre', width: 250, align: 'left', search: false, editable: false },
+        { label: 'Gerencia', name: 'nombre', width: 100, align: 'left', search: false, editable: false },
         { label: 'Real 2016', name: 'ejerciciouno', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
         { label: 'Plan 2017', name: 'ejerciciodos', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
         { label: 'Diferencia', name: 'diferencia', width: 100, align: 'right', search: false, editable: false, sorttype: 'number', formatter: 'number' },
@@ -98,7 +98,8 @@ $(document).ready(function () {
         colModel: modelGerencias,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
+        width: null,
+        shrinkToFit: false,
         caption: 'Gerencias',
         viewrecords: false,
         footerrow: true,
@@ -180,8 +181,13 @@ $(document).ready(function () {
                 }
             }
         });
+        $("table.ui-jqgrid-htable").css('width','100%');      
+        $("table.ui-jqgrid-btable").css('width','100%');
+        $("table.ui-jqgrid-ftable").css('width','100%');
 
     }
+    
+
 
 });
 
@@ -217,4 +223,6 @@ function departamentTroyaSubGrid(parentRowID, parentRowKey) {
         //    minusicon: "glyphicon-hand-down"
         //},
     });
+
+
 }

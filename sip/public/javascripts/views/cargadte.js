@@ -231,7 +231,7 @@ function showChildGrid(parentRowID, parentRowKey) {
     });
 
 
-    $("#" + childGridPagerID).css("width", "");
+    $("#" + childGridPagerID+"_left").css("width", "");
 
     $(window).bind('resize', function () {
         $("#" + childGridID).setGridWidth($(".gcontainer").width(), true);
@@ -345,7 +345,7 @@ function showThirdGrid(parentRowID, parentRowKey) {
     }
     );
 
-    $("#" + childGridPagerID).css("width", "");
+    $("#" + childGridPagerID+"_left").css("width", "");
 
     $(window).bind('resize', function () {
         $("#" + childGridID).setGridWidth($(".gcontainer").width(), true);

@@ -1,13 +1,20 @@
 -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software"];
+-var days = ["Dom","Lun","Mar","Mier","Jue","Vie","Sab"];
+-var meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+-var fecha = new Date();
+-var inicioSemana = fecha.getDate() - fecha.getDay() + (fecha.getDay() === 0 ? -6 : 1);
+-var finSemana = fecha.getDate() - fecha.getDay() + (fecha.getDay() === 6 ?  1: 7);
+-var primerDia = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
+-var ultimoDia = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
     .wrapper
      .page
       .page-inner
        header.page-title-bar
         p.lead
-         -console.log(page)
+
          span.font-weight-bold Hola, #{data[0].nombre}.
-         span.d-block.text-muted Esto es lo que está sucediendo en #{sistemas[data[0].sistema]} hoy.
-       .page-section
+         span.d-block.text-muted Esto es lo que está sucediendo en #{sistemas[data[0].sistema]} hoy #{days[fecha.getDay()]}  #{fecha.getDate()} de #{meses[fecha.getMonth()]}.
+    //-    .page-section
         .section-block
          .metric-row
           .col-lg-9
@@ -305,5 +312,5 @@
             | Ver todo
             i.fa.fa-fw.fa-angle-right
 script(src='vendor/chart.js/Chart.min.js')
-script(src='javascript/pages/dashboard-demo.js')
+//- script(src='javascript/pages/dashboard-demo.js')
 

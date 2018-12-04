@@ -54,7 +54,7 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
+        width: null,
         shrinkToFit: true,
         caption: 'Lista de Monedas',
         pager: "#pager",
@@ -201,16 +201,17 @@ function showChildGrid(parentRowID, parentRowKey) {
             datatype: "json",
             page: 1,
             colModel: modelConversion,
+            width: null,
+            shrinkToFit: true,
             // caption: 'Monedas de Conversión a Pesos',
-            autowidth: true,  // set 'true' here
-            shrinkToFit: true, // well, it's 'true' by default
-            rowNum: 10,
+            // autowidth: true,  // set 'true' here
+            // shrinkToFit: true, // well, it's 'true' by default
+            // rowNum: 10,
             rowList: [5, 10, 20, 50],
             viewrecords: true,
             styleUI: "Bootstrap",
             regional: 'es',
             height: 'auto',
-            width: 850,
             pager: "#" + childGridPagerID,
             editurl: '/monedasconversion/action',
             gridComplete: function () {
@@ -224,7 +225,8 @@ function showChildGrid(parentRowID, parentRowKey) {
          stringResult: true, 
          searchOnEnter: false,
          defaultSearch: 'cn',         
-         searchOperators: true });;
+         searchOperators: true });
+
 
         $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
             edit: true, add: true, del: true, search: false, refresh: true, view: true, position: "left", cloneToTop: false
@@ -335,10 +337,15 @@ function showChildGrid(parentRowID, parentRowKey) {
                 recreateFilter: true
             }
         );
+        $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+
+        console.log(childGridPagerID);
+        $("#" + childGridPagerID+"_left").css("width", "");
+        
 
     }
-
-        $("#pager_left").css("width", "");
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#pager_left").css("width", "");
 
     $(window).bind('resize', function () {
         $("#grid").setGridWidth($(".gcontainer").width(), true);
