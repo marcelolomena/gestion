@@ -267,7 +267,7 @@ function excel(req, res) {
       width: 80
     },
     {
-      caption: '¿Donde está instalada?',
+      caption: '¿DondeEstáInstalada?',
       type: 'string',
       width: 30
     },
@@ -277,27 +277,27 @@ function excel(req, res) {
       width: 30
     },
     {
-      caption: 'Tipo de Licenciamiento',
+      caption: 'TipodeLicenciamiento',
       type: 'string',
       width: 30
     },
     {
-      caption: 'Fecha Compra',
+      caption: 'FechaCompra',
       type: 'string',
       width: 10
     },
     {
-      caption: 'Fecha Expiración',
+      caption: 'FechaExpiración',
       type: 'string',
       width: 10
     },
     {
-      caption: 'Tipo de Contrato',
+      caption: 'TipodeContrato',
       type: 'string',
       width: 10
     },
     {
-      caption: 'N° Lic Compradas',
+      caption: 'N°LicCompradas',
       type: 'string',
       width: 10
     },
@@ -307,22 +307,22 @@ function excel(req, res) {
       width: 10
     },
     {
-      caption: 'Valor Total Compra',
+      caption: 'ValorTotalCompra',
       type: 'string',
       width: 10
     },
     {
-      caption: 'Valor Soporte Anual Neto',
+      caption: 'ValorSoporteAnualNeto',
       type: 'string',
       width: 10
     },
     {
-      caption: 'Valor Licencia Anual Neto',
+      caption: 'ValorLicenciaAnualNeto',
       type: 'string',
       width: 10
     },
     {
-      caption: 'Fecha Control',
+      caption: 'FechaControl',
       type: 'string',
       width: 10
     },
@@ -332,17 +332,17 @@ function excel(req, res) {
       width: 10
     },
     {
-      caption: 'Cantidad Compradas por Producto',
+      caption: 'Cant.CompradasPorProducto',
       type: 'string',
       width: 10
     },
     {
-      caption: 'Instalada por Producto',
+      caption: 'LicenciasUtilizadas',
       type: 'string',
       width: 10
     },
     {
-      caption: 'Alerta Renovación',
+      caption: 'AlertaRenovación',
       type: 'string',
       width: 30
     },
@@ -357,7 +357,7 @@ function excel(req, res) {
       width: 30
     },
     {
-      caption: 'Correo Proveedor',
+      caption: 'CorreoProveedor',
       type: 'string',
       width: 30
     },
