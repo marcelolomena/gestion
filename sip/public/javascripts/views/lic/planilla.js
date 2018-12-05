@@ -1,80 +1,79 @@
+$(document).ready(function () {
+    var tmpl = "<div id='responsive-form' class='clearfix'>";
 
-    $(document).ready(function () {
-        var tmpl = "<div id='responsive-form' class='clearfix'>";
-        
-        tmpl += "<div style='display: none;'>Producto {idproducto}</div>";
+    tmpl += "<div style='display: none;'>Producto {idproducto}</div>";
 
-        tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-half'><span style='color:red'>*</span>Contrato {contrato}</div>";
-        tmpl += "<div class='column-half'><span style='color:red'>*</span>O. C. {ordencompra}</div>";
-        tmpl += "</div>";
-    
-        tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-half'><span style='color:red'>*</span>CUI {idcui}</div>";
-        tmpl += "<div class='column-half'><span style='color:red'>*</span>SAP {sap}</div>";
-        tmpl += "</div>";
-    
-        tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-half'><span style='color:red'>*</span>Fabricante {idfabricante}</div>";
-        tmpl += "<div class='column-half'><span style='color:red'>*</span>Proveedor {idproveedor}</div>";
-        tmpl += "</div>";
-    
-        tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Software {nombre}</div>";
-        tmpl += "<div class='column-half'>¿Donde esta instalada? {idtipoinstalacion}</div>";
-        tmpl += "</div>";
-    
-        tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Clasificación {idclasificacion}</div>";
-        tmpl += "<div class='column-half'>Tipo de Licenciamiento {idtipolicenciamiento}</div>";
-        tmpl += "</div>";
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Contrato {contrato}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>O. C. {ordencompra}</div>";
+    tmpl += "</div>";
 
-        tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Fecha Compra {fechacompra}</div>";
-        tmpl += "<div class='column-half'>Fecha Expiración {fechaexpiracion}</div>";
-        tmpl += "</div>";        
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>CUI {idcui}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>SAP {sap}</div>";
+    tmpl += "</div>";
 
-        tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Tipo de Contrato {perpetua}</div>";
-        tmpl += "<div class='column-half'>N° Lic Compradas {liccompradas}</div>";
-        tmpl += "</div>"; 
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Fabricante {idfabricante}</div>";
+    tmpl += "<div class='column-half'><span style='color:red'>*</span>Proveedor {idproveedor}</div>";
+    tmpl += "</div>";
 
-        tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Moneda {idmoneda}</div>";
-        tmpl += "<div class='column-half'>Valor Total Compra {valorlicencia}</div>";
-        tmpl += "</div>";        
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Software {nombre}</div>";
+    tmpl += "<div class='column-half'>¿Donde esta instalada? {idtipoinstalacion}</div>";
+    tmpl += "</div>";
 
-        tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Valor Soporte Anual Neto{valorsoporte}</div>";
-        tmpl += "<div class='column-half'>Valor Licencia Anual Neto {valoranualneto}</div>";
-        tmpl += "<div class='column-half'>Fecha Control {fecharenovasoporte}</div>";
-        tmpl += "</div>"; 
-        
-        tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Factura {factura}</div>";
-        tmpl += "<div class='column-half'>Cant. Compradas {licstock}</div>";
-        tmpl += "</div>"; 
-        
-        tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Licencias Utilizadas {licocupadas}</div>";
-        tmpl += "<div class='column-half'>Comprador {comprador}</div>";
-        tmpl += "</div>"; 
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Clasificación {idclasificacion}</div>";
+    tmpl += "<div class='column-half'>Tipo de Licenciamiento {idtipolicenciamiento}</div>";
+    tmpl += "</div>";
 
-        tmpl += "<div class='form-row' >";
-        tmpl += "<div class='column-half'>Responsable {responsable}</div>";
-        tmpl += "<div class='column-half'>Correo Proveedor {correocomprador}</div>";
-        tmpl += "</div>";         
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Fecha Compra {fechacompra}</div>";
+    tmpl += "<div class='column-half'>Fecha Expiración {fechaexpiracion}</div>";
+    tmpl += "</div>";
 
-        tmpl += "<div class='form-row'>";
-        tmpl += "<div class='column-full'>Comentario {comentario}</div>";
-        tmpl += "</div>";
-    
-        tmpl += "<hr style='width:100%;'/>";
-        tmpl += "<div> {sData} {cData}  </div>";
-        tmpl += "</div>";
-            
-        var $table = $('#grid');
-        var viewModel = [{
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Tipo de Contrato {perpetua}</div>";
+    tmpl += "<div class='column-half'>N° Lic Compradas {liccompradas}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Moneda {idmoneda}</div>";
+    tmpl += "<div class='column-half'>Valor Total Compra {valorlicencia}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Valor Soporte Anual Neto{valorsoporte}</div>";
+    tmpl += "<div class='column-half'>Valor Licencia Anual Neto {valoranualneto}</div>";
+    tmpl += "<div class='column-half'>Fecha Control {fecharenovasoporte}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Factura {factura}</div>";
+    tmpl += "<div class='column-half'>Cant. Compradas por Producto{licstock}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Licencias Utilizadas {licocupadas}</div>";
+    tmpl += "<div class='column-half'>Comprador {comprador}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row' >";
+    tmpl += "<div class='column-half'>Responsable {responsable}</div>";
+    tmpl += "<div class='column-half'>Correo Proveedor {correocomprador}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<div class='form-row'>";
+    tmpl += "<div class='column-full'>Comentario {comentario}</div>";
+    tmpl += "</div>";
+
+    tmpl += "<hr style='width:100%;'/>";
+    tmpl += "<div> {sData} {cData}  </div>";
+    tmpl += "</div>";
+
+    var $table = $('#grid');
+    var viewModel = [{
             label: 'ID',
             name: 'id',
             key: true,
@@ -134,7 +133,7 @@
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
                     });
-                    return s + "</select>";                    
+                    return s + "</select>";
                 }
             },
             search: false
@@ -178,7 +177,7 @@
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
                     });
-                    return s + "</select>";                    
+                    return s + "</select>";
                 }
             },
             editrules: {
@@ -193,7 +192,7 @@
                     var thissid = rowData.fabricante;
                     var data = JSON.parse(response);
                     //return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
-                    var s = "<select>";//el default
+                    var s = "<select>"; //el default
                     s += '<option value="">--Seleccione Fabricante--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
@@ -202,7 +201,7 @@
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
                     });
-                    return s + "</select>";                    
+                    return s + "</select>";
                 }
             }
         }, {
@@ -221,7 +220,7 @@
                     var thissid = rowData.proveedor;
                     var data = JSON.parse(response);
                     //return new zs.SelectTemplate(data, 'Seleccione Proveedor', thissid).template;
-                    var s = "<select>";//el default
+                    var s = "<select>"; //el default
                     s += '<option value="">--Seleccione Proveedor--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
@@ -230,7 +229,7 @@
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
                     });
-                    return s + "</select>";                    
+                    return s + "</select>";
                 }
             },
             editrules: {
@@ -263,7 +262,7 @@
                     var thissid = rowData.tipoInstalacion;
                     var data = JSON.parse(response);
                     //return new zs.SelectTemplate(data, 'Seleccione', thissid).template;
-                    var s = "<select>";//el default
+                    var s = "<select>"; //el default
                     s += '<option value="">--Seleccione--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
@@ -272,7 +271,7 @@
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
                     });
-                    return s + "</select>";                    
+                    return s + "</select>";
                 }
             },
             editrules: {
@@ -297,7 +296,7 @@
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
                     });
-                    return s + "</select>";                    
+                    return s + "</select>";
                 }
             }
         }, {
@@ -316,7 +315,7 @@
                     var thissid = rowData.clasificacion;
                     var data = JSON.parse(response);
                     //return new zs.SelectTemplate(data, 'Seleccione Clasificación', thissid).template;
-                    var s = "<select>";//el default
+                    var s = "<select>"; //el default
                     s += '<option value="">--Seleccione Clasificación--</option>';
                     $.each(data, function (i, item) {
                         if (data[i].id == thissid) {
@@ -325,7 +324,7 @@
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
                     });
-                    return s + "</select>";                    
+                    return s + "</select>";
                 }
             },
             editrules: {
@@ -349,7 +348,7 @@
                             s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
                         }
                     });
-                    return s + "</select>";                    
+                    return s + "</select>";
                 }
             }
         }, {
@@ -378,7 +377,7 @@
                         }
                     });
                     return s + "</select>";
-                        
+
                 }
             },
             editrules: {
@@ -403,7 +402,7 @@
                         }
                     });
                     return s + "</select>";
-                        
+
                 }
             }
         }, {
@@ -416,8 +415,8 @@
             formatter: function (cellvalue, options, rowObject) {
                 var val = rowObject.fechacompra;
                 if (val != null) {
-                    val = val.substring(0,10);
-                    var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                    val = val.substring(0, 10);
+                    var fechaok = val.substring(8) + '-' + val.substring(5, 7) + '-' + val.substring(0, 4);
                     return fechaok;
                 } else {
                     return '';
@@ -448,8 +447,8 @@
             formatter: function (cellvalue, options, rowObject) {
                 var val = rowObject.fechaexpiracion;
                 if (val != null) {
-                    val = val.substring(0,10);
-                    var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                    val = val.substring(0, 10);
+                    var fechaok = val.substring(8) + '-' + val.substring(5, 7) + '-' + val.substring(0, 4);
                     return fechaok;
                 } else {
                     return '';
@@ -481,20 +480,20 @@
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
-                custom_element: sipLibrary.radioElemPerpetua               
-            },            
+                custom_element: sipLibrary.radioElemPerpetua
+            },
             formatter: function (cellvalue, options, rowObject) {
                 var val = rowObject.perpetua;
                 if (val != null) {
                     if (val == 1)
                         return 'Perpetua';
-                    else 
+                    else
                         return 'Suscripción';
                 } else {
                     return '';
                 }
             },
-        
+
         },
         {
             label: 'N° Lic Compradas',
@@ -538,7 +537,7 @@
                         }
                     });
                     return s + "</select>";
-                        
+
                 }
             },
             search: false
@@ -595,8 +594,8 @@
             formatter: function (cellvalue, options, rowObject) {
                 var val = rowObject.fecharenovasoporte;
                 if (val != null) {
-                    val = val.substring(0,10);
-                    var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                    val = val.substring(0, 10);
+                    var fechaok = val.substring(8) + '-' + val.substring(5, 7) + '-' + val.substring(0, 4);
                     return fechaok;
                 } else {
                     return '';
@@ -646,7 +645,7 @@
             },
             formatter: function (cellvalue, options, rowObject) {
                 return rowObject.ilimitado ? 'Ilimitado' : cellvalue;
-            },            
+            },
             search: false
         }, {
             label: 'Licencias Utilizadas',
@@ -673,9 +672,9 @@
                 var amarillo = '<span><img src="../../../../images/yellowcircle.png" width="19px"/></span>';
                 var verde = '<span><img src="../../../../images/greencircle.png" width="19px"/></span>';
                 var gris = '<span><img src="../../../../images/greycircle.png" width="19px"/></span>';
-                if(rowObject.alertarenovacion === 'aGris'){
+                if (rowObject.alertarenovacion === 'aGris') {
                     return gris;
-                }else{
+                } else {
                     if (rowObject.alertarenovacion === 'Vencida') {
                         return rojo;
                     } else {
@@ -683,13 +682,13 @@
                             return amarillo;
                         } else {
                             if (rowObject.alertarenovacion === 'bAl Dia')
-                            
-                            
-                            return verde;
+
+
+                                return verde;
                         }
-                    }    
-                }   
-            }            
+                    }
+                }
+            }
         }, {
             label: 'Comprador',
             name: 'comprador',
@@ -703,8 +702,8 @@
             align: 'left',
             sortable: false,
             editable: true,
-            search: false			
-        },{
+            search: false
+        }, {
             label: 'Correo Proveedor',
             name: 'correocomprador',
             align: 'left',
@@ -722,7 +721,7 @@
             width: 1000,
             editoptions: {
                 fullRow: true
-            },            
+            },
         },
         {
             label: 'Ficha Técnica',
@@ -735,68 +734,106 @@
                 var nombre = rowObject.fichatecnica;
                 var id = rowObject.id;
                 if (nombre != null) {
-                    return "<a href='/lic/downficha/"+id+"'>"+nombre+"</a>" ;
+                    return "<a href='/lic/downficha/" + id + "'>" + nombre + "</a>";
                 } else {
                     return "Sin Adjunto";
                 }
-            }, 
-            sortable: false       
-        }        
-        ];
+            },
+            sortable: false
+        }
+    ];
 
-        $("#grid").jqGrid({
-            url: '/lic/planilla',
-            mtype: "GET",
-            datatype: "json",
-            page: 1,
-            colModel: viewModel,
-            rowNum: 10,
-            regional: 'es',
-            height: 'auto',
-            sortable: "true",
-            width: null,
-            shrinkToFit: false,
-            caption: 'Compras',
-            pager: "#pager",
-            viewrecords: true,
-            rowList: [10, 20, 30, 40, 50],
-            styleUI: "Bootstrap",
-            editurl: '/lic/planilla',
-            loadComplete: function (data) {
-                var thisId = $.jgrid.jqID(this.id);
-                $.get('/lic/getsession', function (data) {
-                    var admin = false;
-                    $.each(data, function (i, item) {
-                        console.log("EL ROL ES: " + item.glosarol)
-                        if (item.glosarol == 'Administrador LIC') 
-                           admin=true
-                    });
-                    
-                    if (admin == false) {
-                        $("#add_" + thisId).addClass('ui-disabled');
-                        $("#edit_" + thisId).addClass('ui-disabled');
-                        $("#del_" + thisId).addClass('ui-disabled');
-                    }
-                   
+    $("#grid").jqGrid({
+        url: '/lic/planilla',
+        mtype: "GET",
+        datatype: "json",
+        page: 1,
+        colModel: viewModel,
+        rowNum: 10,
+        regional: 'es',
+        height: 'auto',
+        sortable: "true",
+        width: null,
+        shrinkToFit: false,
+        caption: 'Compras',
+        pager: "#pager",
+        viewrecords: true,
+        rowList: [10, 20, 30, 40, 50],
+        styleUI: "Bootstrap",
+        editurl: '/lic/planilla',
+        loadComplete: function (data) {
+            var thisId = $.jgrid.jqID(this.id);
+            $.get('/lic/getsession', function (data) {
+                var admin = false;
+                $.each(data, function (i, item) {
+                    console.log("EL ROL ES: " + item.glosarol)
+                    if (item.glosarol == 'Administrador LIC')
+                        admin = true
                 });
-            }
-        });       
 
-        $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
+                if (admin == false) {
+                    $("#add_" + thisId).addClass('ui-disabled');
+                    $("#edit_" + thisId).addClass('ui-disabled');
+                    $("#del_" + thisId).addClass('ui-disabled');
+                }
+
+            });
+        }
+    });
+
+    $("#grid").jqGrid('filterToolbar', {
+        stringResult: true,
+        searchOperators: true,
+        searchOnEnter: false,
+        defaultSearch: 'cn'
+    });
 
 
-        $('#grid').jqGrid('navGrid', "#pager", {
-            edit: true,
-            add: true,
-            del: true,
-            refresh: true,
-            search: false, // show search button on the toolbar        
-            cloneToTop: false
+    $('#grid').jqGrid('navGrid', "#pager", {
+        edit: true,
+        add: false,
+        del: true,
+        refresh: true,
+        search: false, // show search button on the toolbar        
+        cloneToTop: false
+    }, {
+        editCaption: "Modifica Compra",
+        closeAfterEdit: true,
+        recreateForm: true,
+        ajaxEditOptions: sipLibrary.jsonOptions,
+        serializeEditData: sipLibrary.createJSON,
+        template: tmpl,
+        errorTextFormat: function (data) {
+            return [true, 'Error: ' + data.responseText, ""];
         },
-        {
-            editCaption: "Modifica Compra",
-            closeAfterEdit: true,
+        beforeSubmit: function (postdata, formid) {
+            if (!postdata.idfabricante) {
+                return [false, "Fabricante: Debe escoger un valor.", ""];
+            } else if (!postdata.idproveedor) {
+                return [false, "Proveedor: Debe escoger un valor.", ""];
+            } else if (postdata.nombre.trim().length == 0) {
+                return [false, "Software: Debe ingresar un software.", ""];
+            } else if (!postdata.idtipoinstalacion) {
+                return [false, "¿Donde está instalada?: Debe escoger un valor.", ""];
+            } else if (!postdata.idclasificacion) {
+                return [false, "Clasificación: Debe escoger un valor.", ""];
+            } else if (!postdata.idtipolicenciamiento) {
+                return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
+            } else if (postdata.liccompradas.trim().length == 0) {
+                return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
+            } else if (!postdata.idmoneda) {
+                return [false, "Moneda: Debe escoger un valor.", ""];
+            } else if (postdata.valorsoporte.trim().length == 0) {
+                return [false, "Valor Soportes: Debe ingresar un valor.", ""];
+            } else {
+                return [true, "", ""];
+            }
+        }
+    }, {
+            addCaption: "Agrega Control de Usuario",
+            closeAfterAdd: true,
             recreateForm: true,
+            mtype: 'POST',
             ajaxEditOptions: sipLibrary.jsonOptions,
             serializeEditData: sipLibrary.createJSON,
             template: tmpl,
@@ -804,34 +841,35 @@
                 return [true, 'Error: ' + data.responseText, ""];
             },
             beforeSubmit: function (postdata, formid) {
-                if (!postdata.idfabricante) {
-                    return [false, "Fabricante: Debe escoger un valor.", ""];
-                } else if (!postdata.idproveedor) {
-                    return [false, "Proveedor: Debe escoger un valor.", ""];
-                } else if (postdata.nombre.trim().length == 0) {
-                    return [false, "Software: Debe ingresar un software.", ""];
-                } else if (!postdata.idtipoinstalacion) {
-                    return [false, "¿Donde está instalada?: Debe escoger un valor.", ""];
-                } else if (!postdata.idclasificacion) {
-                    return [false, "Clasificación: Debe escoger un valor.", ""];
-                } else if (!postdata.idtipolicenciamiento) {
-                    return [false, "Tipo de Licenciamiento: Debe escoger un valor.", ""];
-                } else if (postdata.liccompradas.trim().length == 0) {
-                    return [false, "N° Lic Compradas: Debe ingresar un cantidad.", ""];
-                } else if (!postdata.idmoneda) {
-                    return [false, "Moneda: Debe escoger un valor.", ""];
-                } else if (postdata.valorsoporte.trim().length == 0) {
-                    return [false, "Valor Soportes: Debe ingresar un valor.", ""];
+                if ((!postdata.nombreProd)) {
+                    return [false, 'Debe ingresar un Producto', ''];
+                } else if (!(postdata.contacto)) {
+                    return [false, 'Debe seleccionar a un Usuario', ''];
+                } else if (postdata.cantidad.trim().length == 0) {
+                    return [false, 'Debe ingresar la cantidad', ''];
                 } else {
-                    return [true, "", ""];
+                    return [true, ', '];
+                }
+            },
+            afterSubmit: function (response, postdata) {
+                var json = response.responseText;
+                var result = JSON.parse(json);
+                if (result.error != 0) {
+                    return [false, result.glosa, ""];
+                } else {
+                    var filters = "{\"groupOp\":\"AND\",\"rules\":[{\"field\":\"nombre\",\"op\":\"cn\",\"data\":\"" + postdata.nombre + "\"}]}";
+                    $("#grid").jqGrid('setGridParam', {
+                        search: true,
+                        postData: {
+                            filters
+                        }
+                    }).trigger("reloadGrid");
+                    $('input#nombreProd').val('');
+                    $("input#nombreProd").val($('option:input', this).text());
+                    return [false, 'Agregue otro producto o simplemente cierre la ventana.', ""];
                 }
             }
-        },
-        {
-        }, {
-
-        }
-    );
+        });
 
     $('#grid').jqGrid('navButtonAdd', 'pager', {
         caption: "",
@@ -842,10 +880,11 @@
             var grid = $('#grid');
             var rowKey = grid.getGridParam("selrow");
             var url = '/lic/exportplanilla';
-            $('#grid').jqGrid('excelExport', { "url": url });
+            $('#grid').jqGrid('excelExport', {
+                "url": url
+            });
         }
     });
 
     $("#pager_left").css("width", "");
 });
-
