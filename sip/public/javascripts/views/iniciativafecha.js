@@ -106,18 +106,18 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
         },
     ];
 
-    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+    $('#' + parentRowID).append('<br><table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
 
     $("#" + childGridID).jqGrid({
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Fechas Clave',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        // caption: 'Fechas Clave',
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelIniciativaFecha,
         viewrecords: true,
@@ -234,4 +234,7 @@ function gridIniciativaFecha(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#" + pager_id + "_left").css("width", "");  
 }

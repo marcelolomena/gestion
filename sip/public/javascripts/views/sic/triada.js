@@ -18,9 +18,9 @@ var gridTriada = {
             colModel: [
                 { label: 'id', name: 'id', width: 70, key: true, hidden: true },
                 { label: 'CUI', name: 'cui', width: 50, align: 'left', search: true, editable: false, hidden: false },
-                { label: 'Nombre', name: 'nombre', width: 700, align: 'left', search: true, editable: false, hidden: false },
-                { label: 'Nombre Responsable', name: 'nombreresponsable', width: 150, align: 'left', search: true, editable: true },
-                { label: 'Nombre Gerente', name: 'nombregerente', width: 150, align: 'left', search: true, editable: true },
+                { label: 'Nombre', name: 'nombre', width: 100, align: 'left', search: true, editable: false, hidden: false },
+                { label: 'Nombre Responsable', name: 'nombreresponsable', width: 100, align: 'left', search: true, editable: true },
+                { label: 'Nombre Gerente', name: 'nombregerente', width: 100, align: 'left', search: true, editable: true },
 
             ],
             rowNum: 10,
@@ -36,10 +36,14 @@ var gridTriada = {
             sortname: 'id',
             sortorder: "asc",
             regional: 'es',
-            shrinkToFit: true,
+            height: 'auto',
+            sortable: "true",
             width: null,
-            height: "auto",
+            forceFit: true,
+            hidegrid: true,
             viewrecords: true,
+            restoreCellonFail : true,
+            shrinkToFit: true,
             caption: "Triada",
             editurl: '/sic/triada/action',
             gridComplete: function () {
@@ -48,18 +52,23 @@ var gridTriada = {
 
                     $gridTab.addRowData("blankRow", { "nombre": "No hay datos" });
                 }
+                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                $("#navGridTriada_left").css("width", "");
             },
 
         });
 
         $gridTab.jqGrid('navGrid', '#navGridTriada', { edit: false, add: false, del: false, search: false });
-        $(window).bind('resize', function () {
-            $gridTab.setGridWidth($(".gcontainer").width(), true);
-            $("#navGridTriada").setGridWidth($(".gcontainer").width(), true);
-        });
+        // $(window).bind('resize', function () {
+        //     $gridTab.setGridWidth($(".gcontainer").width(), true);
+        //     $("#navGridTriada").setGridWidth($(".gcontainer").width(), true);
+        // });
 
-    }
+    }   
 }
+
+
+
 function gridServicioProveedor(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
     var row_id = parentRowKey;
@@ -135,12 +144,12 @@ function gridServicioProveedor(parentRowID, parentRowKey, suffix) {
         { label: 'CUI', name: 'cui', search: true, editable: true, width: 100, hidden: true, jsonmap: "estructuracui.cui", editrules: { edithidden: false }, hidedlg: false },
         { label: 'Nombre', name: 'nombrecui', search: true, editable: true, hidden: true, jsonmap: "estructuracui.nombre", editrules: { edithidden: false }, hidedlg: true },
         {
-            label: 'Servicio', name: 'nombre', search: true, width: 300,
+            label: 'Servicio', name: 'nombre', search: true, width: 100,
             editable: true, //jsonmap: "servicio.nombre",
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Servicio', name: 'idservicio', search: false, width: 300,
+            label: 'Servicio', name: 'idservicio', search: false, width: 100,
             editable: true, hidden: true,
             edittype: "select",
             editoptions: {
@@ -185,7 +194,7 @@ function gridServicioProveedor(parentRowID, parentRowKey, suffix) {
             }, dataInit: function (elem) { $(elem).width(100); }
 
         },
-        { label: 'Cuenta', name: 'cuentacontable', editable: true, width: 300, editrules: { edithidden: false }, hidedlg: true },
+        { label: 'Cuenta', name: 'cuentacontable', editable: true, width: 100, editrules: { edithidden: false }, hidedlg: true },
         { label: 'Tarea', name: 'tarea', editable: true, width: 80, editrules: { edithidden: false }, hidedlg: true },
         {
             label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left',
@@ -209,8 +218,10 @@ function gridServicioProveedor(parentRowID, parentRowKey, suffix) {
         rowNum: 10,
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        shrinkToFit: true,
-        autowidth: true,
+        width: null,
+        //shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        shrinkToFit: true, // well, it's 'true' by default
         // caption: 'SERVICIO - PROVEEDOR',
         styleUI: "Bootstrap",
         subGrid: false,
@@ -228,8 +239,13 @@ function gridServicioProveedor(parentRowID, parentRowKey, suffix) {
 
                 $("#" + childGridID).addRowData("blankRow", { "nombre": "No hay datos" });
             }
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#" + childGridPagerID+"_left").css("width", "");
         }
     });
+
+    
+
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {

@@ -483,12 +483,11 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        responsive:true,
         caption: 'Compromisos por SAP',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         pager: "#pager_iniciativa",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
@@ -704,6 +703,8 @@ $(document).ready(function () {
             $('#table_iniciativa').jqGrid('excelExport', { "url": url });
         }
     });
+    
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
 
     $("#pager_iniciativa_left").css("width", "");
     function showSubGrids(subgrid_id, row_id) {

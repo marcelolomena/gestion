@@ -291,4 +291,7 @@ function gridDesglose(parentRowID, parentRowKey) {
         }
     );
 
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#" + childGridPagerID+"_left").css("width", "");
+
 }

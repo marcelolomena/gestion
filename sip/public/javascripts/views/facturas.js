@@ -733,7 +733,7 @@ function showItemsFacturas(parentRowID, parentRowKey, suffix) {
     );
 
     $("table.ui-jqgrid-htable").css('width','100%'); $("table.ui-jqgrid-btable").css('width','100%');
-    $("#pager_left").css("width", "");
+    $("#" + childGridPagerID+"_left").css("width", "");
 }
 
 function showResumenContable(parentRowID, parentRowKey, suffix) {
@@ -856,6 +856,7 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
     $("table.ui-jqgrid-htable").css('width','100%'); 
     $("table.ui-jqgrid-btable").css('width','100%');
     $("table.ui-jqgrid-ftable").css('width','100%');
+
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false,
         add: false,
@@ -866,6 +867,7 @@ function showResumenContable(parentRowID, parentRowKey, suffix) {
         {}
 
     );
+    $("#" + childGridPagerID+"_left").css("width", "");
 }
 
 
@@ -876,7 +878,7 @@ function showDesgloseContable(parentRowID, parentRowKey) {
     var childGridURL = "/getdesglosecontable/" + parentRowKey;
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
-
+$("#" + childGridPagerID+"_left").css("width", "");
     $("#" + childGridID).jqGrid({
         url: childGridURL,
         mtype: "GET",
@@ -1034,9 +1036,10 @@ function showDesgloseContable(parentRowID, parentRowKey) {
         subGrid: false
 
     });
+    
 
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
-
+$("#" + childGridPagerID+"_left").css("width", "");
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false,
         add: false,
@@ -1047,5 +1050,6 @@ function showDesgloseContable(parentRowID, parentRowKey) {
         {}
 
     );
+    
 }
 

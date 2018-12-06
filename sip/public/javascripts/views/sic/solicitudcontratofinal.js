@@ -626,13 +626,9 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        width: '100%',
-        forceFit: true,
-        hidegrid: false,
-        responsive: true,
-        autowidth: true,
+        width: null,
+        shrinkToFit: false,
         viewrecords: true,
-		restoreCellonFail : true,
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Contrato',
         styleUI: "Bootstrap",
@@ -662,11 +658,14 @@ $(document).ready(function () {
                     }
                 });
             });
+            
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pagerMaster_left").css("width", "");
         }
+        
     });
 
-    $("table.ui-jqgrid-htable").css('width','100%');
-    $("table.ui-jqgrid-btable").css('width','100%');
+
 
     $grid.jqGrid('filterToolbar', {
         stringResult: true,

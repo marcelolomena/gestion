@@ -42,7 +42,7 @@ $(document).ready(function () {
 
     var modelContrato = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: 'Contrato', name: 'nombre', width: 250, align: 'left', search: true, editable: true },
+        { label: 'Contrato', name: 'nombre', width: 200, align: 'left', search: true, editable: true },
         {
             label: 'Proveedor', name: 'idproveedor', search: false, editable: true, hidden: true, 
             edittype: "select",
@@ -136,7 +136,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Origen', name: 'tipocontrato', search: false, editable: true, hidden: false,
+            label: 'Origen', name: 'tipocontrato',width: 70, search: false, editable: true, hidden: false,
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
@@ -167,7 +167,7 @@ $(document).ready(function () {
         },        
         { label: 'Solicitud', name: 'solicitudcontrato', width: 150, align: 'left', search: true, editable: true, hidden:true },
         {
-            label: 'Proveedor', name: 'razonsocial', width: 300, align: 'left', search: true,
+            label: 'Proveedor', name: 'razonsocial', width: 200, align: 'left', search: true,
             editable: true, jsonmap: "razonsocial",
             stype: 'select',
             searchoptions: {
@@ -184,7 +184,7 @@ $(document).ready(function () {
             },
         },
         {
-            label: 'Estado Contrato', name: 'idestadosol', hidden: true, search: true, editable: true,
+            label: 'Estado Contrato', width: 80,name: 'idestadosol', hidden: true, search: true, editable: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/parameters/estadosolicitud',
@@ -214,11 +214,11 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Estado Contrato', name: 'estadosolicitud', width: 150, align: 'left', search: true, editable: true,
+            label: 'Estado Contrato', name: 'estadosolicitud', width: 80, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
         {
-            label: 'Número Contrato', name: 'numero', width: 150, align: 'left', search: true, editable: true,
+            label: 'Número Contrato', name: 'numero', width: 80, align: 'left', search: true, editable: true,
             searchoptions: {
                 sopt: ["eq", "ge", "le"] // ge = greater or equal to, le = less or equal to, eq = equal to
             }
@@ -264,7 +264,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },        
         {
-            label: 'Tipo Contrato', name: 'tiposolicitud', width: 200, align: 'left', search: true, editable: true,
+            label: 'Tipo Contrato', name: 'tiposolicitud', width: 150, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true,
             stype: 'select',
             searchoptions: {
@@ -311,7 +311,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Negociador', name: 'uidpmo', search: false, editable: true, hidden: true,
+            label: 'Negociador', name: 'uidpmo', width: 80,search: false, editable: true, hidden: true,
             edittype: "select",
             editoptions: {
                 dataUrl: '/usuarios_por_rol/Negociador',
@@ -346,7 +346,7 @@ $(document).ready(function () {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Negociador', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
+            label: 'Negociador', name: 'pmoresponsable', width: 100, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         }                
     ];
@@ -362,8 +362,6 @@ $(document).ready(function () {
         sortable: "true",
         width: null,
         shrinkToFit: false,
-        // autowidth: true,  // set 'true' here
-        // shrinkToFit: true, // well, it's 'true' by default        
         caption: 'Lista de contratos',
         pager: "#pager",
         viewrecords: true,
@@ -535,11 +533,11 @@ $(document).ready(function () {
     $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 
-    $(window).bind('resize', function () {
-        $("#grid").setGridWidth($(".gcontainer").width(), true);
-        //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
-        $("#pager").setGridWidth($(".gcontainer").width(), true);
-    });
+    // $(window).bind('resize', function () {
+    //     $("#grid").setGridWidth($(".gcontainer").width(), true);
+    //     //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
+    //     $("#pager").setGridWidth($(".gcontainer").width(), true);
+    // });
 });
 function loadGrid(parentID) {
     var url = '/contratos/list';

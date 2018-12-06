@@ -68,26 +68,29 @@ $(document).ready(function () {
         url: '/sic/grid_tipodocumento',
         datatype: "json",
         mtype: "GET",
+        pager: "#pager",
         colModel: catalogoclausulasModel,
         page: 1,
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        width: '100%',
-        forceFit: true,
-        hidegrid: false,
-        responsive: true,
-        autowidth: true,
-        viewrecords: true,
+        width: null,
+        shrinkToFit: false,
 		restoreCellonFail : true,
         editurl: '/sic/grid_tipodocumento',
         caption: 'Tipos de Documento',
         styleUI: "Bootstrap",
+        gridComplete: function () {
+
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pager_left").css("width", "");
+        },
         onSelectRow: function (id) {
             var getID = $(this).jqGrid('getCell', id, 'id');
         },
-        pager: "#pager",
+        
     });
+
 
     //$grid.jqGrid('filterToolbar', { stringResult: true, searchOperators: false, searchOnEnter: false, defaultSearch: 'cn' });
 
@@ -134,10 +137,6 @@ $(document).ready(function () {
                 return 'Error: ' + data.responseText
 
             }, afterSubmit: UploadDoc
-        }, {
-
-        }, {
-
         });
 
 })
@@ -200,6 +199,7 @@ function ajaxDocUpload(id) {
             }
         })
     });
+    
 }
 function returnDocLink(cellValue, options, rowdata) {
     return "<a href='/docs/tipodocumento/" + rowdata.nombrearchivo + "' ><img border='0'  src='../images/file.gif' width='16' height='16'></a>";

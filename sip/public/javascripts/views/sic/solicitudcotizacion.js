@@ -156,16 +156,35 @@ function showSolicitudCotizacion(provee) {
                     }
                 }
             }
-        }, {
+        }, 
+        // {
+        //     label: 'Etapa',
+        //     name: 'idclasificacionsolicitud',
+        //     jsonmap: "clasificacion.nombre",
+        //     width: 120,
+        //     align: 'center',
+        //     search: false,
+        //     editable: true,
+        //     hidden: false
+        // },
+        {
             label: 'Etapa',
             name: 'idclasificacionsolicitud',
             jsonmap: "clasificacion.nombre",
-            width: 120,
+            width: 70,
             align: 'center',
             search: false,
             editable: true,
-            hidden: false
-        }, {
+            hidden: false,
+            editoptions: {
+                rows: "2",
+                cols: "50"
+            },
+            editrules: {
+                required: true
+            },
+            edittype: "textarea"
+        },{
             label: 'Grupo',
             name: 'idgrupo',
             jsonmap: "grupo.nombre",
@@ -380,13 +399,13 @@ function showSolicitudCotizacion(provee) {
             formatter: returnTecnico,
             hidden: false
         }, {
-            label: 'Tipo de Contrato',
+            label: 'Tipo Contrato',
             name: 'tipocontrato',
             search: false,
             editable: true,
             hidden: false,
             align: 'center',
-            width: 130,
+            width: 100,
             edittype: "custom",
             editoptions: {
                 custom_value: sipLibrary.getRadioElementValue,
@@ -687,7 +706,7 @@ function showSolicitudCotizacion(provee) {
         {
             label: 'Fec. Asig. Admin.',
             name: 'fechaasignacionadmin',
-            width: 120,
+            width: 90,
             align: 'center',
             search: true,
             editable: false,
@@ -745,13 +764,10 @@ function showSolicitudCotizacion(provee) {
         height: 'auto',
         sortname: 'colorestado',
         sortorder: "desc",
-        width: '100%',
-        forceFit: true,
-        hidegrid: false,
-        responsive: true,
-        autowidth: true,
+        width: null,
+        shrinkToFit: false,
         viewrecords: true,
-		restoreCellonFail : true,
+		// restoreCellonFail : true,
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
@@ -769,7 +785,7 @@ function showSolicitudCotizacion(provee) {
         loadComplete: function (data) {
             var thisId = $.jgrid.jqID(this.id);
             $.get('/sic/getsession', function (data) {
-                console.log(data[0].glosarol);
+                // console.log(data[0].glosarol);
                 $.each(data, function (i, item) {
                     console.log("EL ROL ES: " + item.glosarol)
                     if (item.glosarol != 'Administrador SIC' && item.glosarol != 'Negociador SIC' && item.glosarol != 'Encargado Administracion SIC') {
@@ -782,6 +798,9 @@ function showSolicitudCotizacion(provee) {
                     }
                 });
             });
+
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pagerMaster_left").css("width", "");
         }
     });
 
@@ -792,8 +811,8 @@ function showSolicitudCotizacion(provee) {
         defaultSearch: 'cn'
     });
 
-    $("table.ui-jqgrid-htable").css('width','100%');
-    $("table.ui-jqgrid-btable").css('width','100%');
+    // $("table.ui-jqgrid-htable").css('width','100%');
+    // $("table.ui-jqgrid-btable").css('width','100%');
 
     $grid.jqGrid('navGrid', '#pagerMaster', {
         edit: true,

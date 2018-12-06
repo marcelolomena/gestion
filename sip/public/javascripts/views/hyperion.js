@@ -412,7 +412,7 @@ function listColumnModels(data) {
     $.each(data, function (i, item) {
         _listOfColumnModels.push({
             name: data[i].toString(),
-            width: 89,
+            width: 85,
             sortable: true,
             hidden: false,
             align: 'right',

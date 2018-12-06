@@ -99,8 +99,7 @@ var gridPreguntas = {
             caption: "Preguntas"
         });
 
-        $("table.ui-jqgrid-htable").css('width','100%');
-        $("table.ui-jqgrid-btable").css('width','100%');
+        
 
         /*
         var lastSelection;
@@ -157,6 +156,9 @@ var gridPreguntas = {
                         return [true, "", ""]
                 }
             });
+
+        $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+        $("#navGridPre_left").css("width", "");
 
         $gridTab.jqGrid('navButtonAdd', '#navGridPre', {
             caption: "",

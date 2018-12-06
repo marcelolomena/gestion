@@ -790,8 +790,8 @@ function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
         pager: "#" + childGridPagerID
     });
 
-    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
-    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });    
+
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true,
         add: true,
@@ -916,6 +916,8 @@ function showPresupuestoServicios(parentRowID, parentRowKey, titulo) {
         }, {}
 
     );
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#" + childGridPagerID+"_left").css("width", "");
 
 }
 

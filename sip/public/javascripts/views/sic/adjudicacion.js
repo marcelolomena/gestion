@@ -120,6 +120,7 @@ var gridAdjudicacion = {
                 styleUI: "Bootstrap",
                 sortname: 'id',
                 sortorder: "asc",
+                width: null,
                 shrinkToFit: false,
                 height: "auto",
                 onSelectRow: function (id) {
@@ -142,6 +143,8 @@ var gridAdjudicacion = {
                             }
                         });
                     });
+                    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                    $("#navGridAdj_left").css("width", "");
                 }
             });
             $gridTab.jqGrid('navGrid', '#navGridAdj', { edit: false, add: false, del: false, search: false },

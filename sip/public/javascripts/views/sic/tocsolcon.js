@@ -133,9 +133,9 @@ var gridTOC = {
             sortname: 'fecha',
             sortorder: "desc",
             height: "auto",
-            //shrinkToFit: true,
-            //autowidth: true,
-            width: 850,
+            shrinkToFit: false,
+            // autowidth: true,
+            width: null,
             rownumbers: true,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
@@ -158,6 +158,8 @@ var gridTOC = {
                         }
                     });
                 });
+                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                $("#navGridClau_left").css("width", "");
             }
 
         });

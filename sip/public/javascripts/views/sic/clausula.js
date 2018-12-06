@@ -230,7 +230,7 @@ var gridClausula = {
                     name: 'glosa',
                     index: 'glosa',
                     editable: true,
-                    width: 1280,
+                    width: 380,
                     hidden: false,
                     edittype: 'custom',
                     editoptions: {
@@ -330,8 +330,8 @@ var gridClausula = {
             sortorder: "asc",
             height: "auto",
             rownumbers: true,
-            
             width: null,
+            shrinkToFit: true,
             forceFit: true,
             hidegrid: true,
             viewrecords: true,
@@ -447,6 +447,9 @@ var gridClausula = {
                         }
                     });
                 });
+
+                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                $("#navGridClau_left").css("width", "");
             }
         });
 

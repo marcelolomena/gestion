@@ -35,11 +35,11 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
+        width: null,
         shrinkToFit: true,
+        viewrecords: true,
         caption: 'Lista de Segmentos de Proveedor',
         pager: "#pager",
-        viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
         editurl: '/sic/segmentoproveedor/action',
@@ -50,6 +50,8 @@ $(document).ready(function () {
 
                 $("#grid").addRowData("blankRow", { "nombre": "No hay datos" });
             }
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pager_left").css("width", "");
         },
         // subGrid: true,
         // subGridRowExpanded: showChildGrid,

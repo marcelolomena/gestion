@@ -363,6 +363,9 @@ var gridServ = {
                         }
                     });
                 });
+
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#navGridServ_left").css("width", "");
             }
         });
         $gridTab.jqGrid('navGrid', '#navGridServ', {
@@ -463,11 +466,10 @@ var gridServ = {
             }
 
         );
-
-
-
     }
+    
 }
+
 
 function showSubGridsServ(subgrid_id, row_id) {
     gridProveedores(subgrid_id, row_id, 'proveedores');
@@ -488,6 +490,8 @@ function showSubGridsServ(subgrid_id, row_id) {
     });
 
 }
+
+
 
 function gridCriticidad(parentRowID, parentRowKey, suffix) {
     var subgrid_id = parentRowID;
@@ -715,6 +719,8 @@ function gridCriticidad(parentRowID, parentRowKey, suffix) {
                     }
                 });
             });
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#" + childGridPagerID+"_left").css("width", "");
         }
     });
 
@@ -936,10 +942,10 @@ console.log("la parentSolicitud : " + parentSolicitud)
         mtype: "GET",
         datatype: "json",
         // caption: 'Proveedores Sugeridos',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true, // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true, // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelIniciativaFecha,
         viewrecords: true,
@@ -959,8 +965,11 @@ console.log("la parentSolicitud : " + parentSolicitud)
                     "fecha": ""
                 });
             }
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#" + childGridPagerID+"_left").css("width", "");
         }
     });
+    
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false,

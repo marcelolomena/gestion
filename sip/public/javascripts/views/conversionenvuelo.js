@@ -107,16 +107,17 @@ function gridConversionEnVuelo(parentRowID, parentRowKey, suffix) {
 
     $('#' + parentRowID).append('<br><table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
+ 
 
     $("#" + childGridID).jqGrid({
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
         // caption: 'Tabla de Conversion',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelConversionEnVuelo,
         viewrecords: true,
@@ -217,4 +218,6 @@ function gridConversionEnVuelo(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#" + pager_id + "_left").css("width", ""); 
 }

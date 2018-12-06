@@ -181,9 +181,7 @@ $(document).ready(function () {
                 }
             }
         });
-        $("table.ui-jqgrid-htable").css('width','100%');      
-        $("table.ui-jqgrid-btable").css('width','100%');
-        $("table.ui-jqgrid-ftable").css('width','100%');
+
 
     }
     
@@ -223,6 +221,10 @@ function departamentTroyaSubGrid(parentRowID, parentRowKey) {
         //    minusicon: "glyphicon-hand-down"
         //},
     });
+
+    $("table.ui-jqgrid-htable").css('width','100%');      
+    $("table.ui-jqgrid-btable").css('width','100%');
+    $("table.ui-jqgrid-ftable").css('width','100%');
 
 
 }

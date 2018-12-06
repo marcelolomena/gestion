@@ -194,10 +194,11 @@ var gridEvaluacionTec = {
                         }
                     });
                 });
+                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                $("#navGridEvTec_left").css("width", "");
             }
         });
-        $("table.ui-jqgrid-htable").css('width','100%');
-        $("table.ui-jqgrid-btable").css('width','100%');
+        
         $gridTab.jqGrid('navGrid', '#navGridEvTec', { edit: false, add: false, del: false, search: false },
             {
                 editCaption: "Modifica Servicio",

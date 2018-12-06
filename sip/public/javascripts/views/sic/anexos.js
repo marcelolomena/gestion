@@ -284,8 +284,11 @@ var gridAnexos = {
                             $("#borrar_" + thisId).addClass('ui-disabled');
                         }
                     });
-                });
+                    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                    $("#navGridAnexos_left").css("width", "");
+                }); 
             }
+            
 
         });
 

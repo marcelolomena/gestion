@@ -187,13 +187,16 @@ function showDocumentos(cui, proveedor, factura, fechaini, fechafin) {
                 var theDate = data.date.substring(0,10);
                 var display = theDate.substring(8)+'-'+theDate.substring(5,7)+'-'+theDate.substring(0,4);
                 $grid.jqGrid('setCaption', 'Lista de Facturas al ' + display);
-            });            
+            });
+            $("#pager_left").css("width", "");            
         },               
         subGrid: true, // set the subGrid property to true to show expand buttons for each row
         footerrow: true,
         userDataOnFooter: true,         
         subGridRowExpanded: showDetalle // javascript function that will take care of showing the child grid                        
     });
+
+   
 
     $("#grid").jqGrid('filterToolbar', {stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
@@ -273,11 +276,14 @@ function showDetalle(parentRowID, parentRowKey) {
         sortable: "true",
         rowNum: 10,
         width: null,
+        shrinkToFit: false,
  		height: 'auto',  
         rowList: [5, 10, 20, 50],
-        autowidth:false,       
+        // autowidth:false,       
         pager: "#" + childGridPagerID
     });
+
+    
     
     $("#" + childGridID).jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
 
@@ -287,7 +293,12 @@ function showDetalle(parentRowID, parentRowKey) {
         edit: false,
         del: false,
         refresh: true
-    });    
+    });  
+    
+    $("table.ui-jqgrid-htable").css('width','100%');      
+    $("table.ui-jqgrid-btable").css('width','100%');
+    $("table.ui-jqgrid-ftable").css('width','100%');
+    $("#" + childGridPagerID+"_left").css("width", "");
        
 }
 

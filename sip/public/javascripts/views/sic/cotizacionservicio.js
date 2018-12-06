@@ -213,10 +213,10 @@ function gridCotizaciones(parentRowID, parentRowKey, suffix) {
         rowNum: 20,
         datatype: "json",
         // caption: 'Cotización',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelSubcriterios,
         viewrecords: true,
@@ -238,6 +238,9 @@ function gridCotizaciones(parentRowID, parentRowKey, suffix) {
 
                 $("#" + childGridID).addRowData("blankRow", { "id": 0, "proveedor.razonsocial": "No hay datos" });
             }
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#" + childGridPagerID+"_left").css("width", "");
+        
         }
     });
 

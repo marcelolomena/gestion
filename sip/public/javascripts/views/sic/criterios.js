@@ -271,6 +271,8 @@ var gridCriterios = {
                         }
                     });
                 });
+                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                $("#navGridCrit_left").css("width", "");
             }
         });
         $gridTab.jqGrid('navGrid', '#navGridCrit', {

@@ -26,12 +26,14 @@ var gridEstado = {
         tmpl += "<div> {sData} {cData}  </div>";
         tmpl += "</div>";
 
+
         $gridTab.jqGrid({
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Id', 'Color', 'Etapa', 'Etapa', 'Comentario', 'Fecha Inicio', 'Fecha Esperada', 'Fecha Cierre', 'Estado', ''],
+            // colNames: ['Id', 'Color', 'Etapa', 'Etapa', 'Comentario', 'Fecha Inicio', 'Fecha Esperada', 'Fecha Cerre', 'Estado', ''],
             colModel: [{
+                    label: 'Id',
                     name: 'id',
                     index: 'id',
                     key: true,
@@ -47,7 +49,7 @@ var gridEstado = {
                 {
                     label: 'Color',
                     name: 'colorestado',
-                    width: 48,
+                    width: 40,
                     hidden: false,
                     search: false,
                     editable: true,
@@ -107,16 +109,17 @@ var gridEstado = {
                     label: 'Etapa',
                     name: 'clasificacion',
                     jsonmap: "clasificacion.nombre",
-                    width: 100,
+                    width: 90,
                     align: 'center',
                     search: false,
                     editable: true,
                     hidden: false
                 },
                 {
+                    label: 'Comentario',
                     name: 'comentario',
                     index: 'comentario',
-                    width: 500,
+                    width: 400,
                     hidden: false,
                     edittype: 'custom',
                     editoptions: {
@@ -173,7 +176,7 @@ var gridEstado = {
                 {
                     label: 'Fecha Inicio',
                     name: 'fechaInicio',
-                    width: 120,
+                    width: 100,
                     align: 'center',
                     search: true,
                     editable: true,
@@ -216,7 +219,7 @@ var gridEstado = {
                 {
                     label: 'Fecha Esperada',
                     name: 'fechaestadoesperada',
-                    width: 120,
+                    width: 100,
                     align: 'center',
                     search: true,
                     editable: true,
@@ -257,8 +260,9 @@ var gridEstado = {
                     }
                 },
                 {
+                    label: 'Fecha Cierre',
                     name: 'fechaCierre',
-                    width: 120,
+                    width: 100,
                     align: 'center',
                     search: false,
                     formatter: 'date',
@@ -306,7 +310,7 @@ var gridEstado = {
                     sortable: false
                 },
                 {
-                    label: '',
+                    label: 'Estado',
                     name: 'estado',
                     width: 100,
                     align: 'center',
@@ -319,13 +323,13 @@ var gridEstado = {
             styleUI: "Bootstrap",
             sortname: 'fechaestadoesperada',
             sortorder: "asc",
-            width: '100%',
+            width: null,
+            shrinkToFit: false,
             forceFit: true,
             hidegrid: false,
-            responsive: true,
-            autowidth: true,
-            responsive: true,
-            viewrecords: true,
+            // responsive: true,
+            // autowidth: true,
+            // responsive: true,
             restoreCellonFail : true,
             height: "auto",
             onSelectRow: function (id) {
@@ -350,7 +354,11 @@ var gridEstado = {
                         }
                     });
                 });
+                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                $("#navGridEst_left").css("width", "");
+                
             }
+            
 
         });
 
@@ -482,6 +490,9 @@ var gridEstado = {
                     return [true, "", ""]
             }
         });
+        
+
+
         $gridTab.jqGrid('navButtonAdd', '#navGridEst', {
             caption: "",
             id: "download_" + $(targ + "_t_" + parentRowKey).attr('id'),
@@ -502,6 +513,7 @@ var gridEstado = {
 
             }
         });
+
         
     }
 }

@@ -37,12 +37,12 @@ var gridCalendario = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['id', 'Descripcion', 'Fecha Esperada', 'Hora Esperada', 'Fecha Real', 'Hora Real', 'Observación', 'idtiporesponsable', 'Responsable'],
+            // colNames: ['id', 'Descripcion', 'Fecha Esperada', 'Hora Esperada', 'Fecha Real', 'Hora Real', 'Observación', 'idtiporesponsable', 'Responsable'],
             colModel: [
                 { name: 'id', index: 'id', key: true, hidden: true },
-                { name: 'descripcion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
+                { label: 'Descripción', name: 'descripcion', width: 200, editable: true, editoptions: { size: 25 }, editrules: { required: true } },
                 {
-                    name: 'fechaesperada', width: 120, align: 'center', search: true, editable: true, hidden: false,
+                    label: 'Fecha Esperada', name: 'fechaesperada', width: 120, align: 'center', search: true, editable: true, hidden: false,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                     searchoptions: {
                         dataInit: function (el) {
@@ -68,7 +68,7 @@ var gridCalendario = {
                     }
                 },
                 {
-                    name: 'horaesperada', align: 'center', search: false,
+                    label: 'Hora Esperada', name: 'horaesperada', align: 'center', search: false,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'ShortTime' },
                     editable: true, editrules: { required: false },
                     editoptions: {
@@ -80,7 +80,7 @@ var gridCalendario = {
                     },
                 },
                 {
-                    name: 'fechareal', width: 120, align: 'center', search: true, editable: true, hidden: false,
+                    label: 'Fecha Real', name: 'fechareal', width: 120, align: 'center', search: true, editable: true, hidden: false,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
                     searchoptions: {
                         dataInit: function (el) {
@@ -106,7 +106,7 @@ var gridCalendario = {
                     }
                 },
                 {
-                    name: 'horareal',  align: 'center', search: false, editable: true,
+                    label: 'Hora Real', name: 'horareal',  align: 'center', search: false, editable: true,
                     formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'ShortTime' },
                     editable: true, editrules: { required: false },
                     editoptions: {
@@ -117,7 +117,7 @@ var gridCalendario = {
                         },
                     },
                 },
-                { name: 'observacion', editable: true, editoptions: { size: 25 }, editrules: { required: false } },
+                { label: 'Observación', name: 'observacion', editable: true, editoptions: { size: 25 }, editrules: { required: false } },
                 {
                     name: 'idtiporesponsable', search: false, editable: true, hidden: true,
                     edittype: "select",
@@ -142,7 +142,7 @@ var gridCalendario = {
                         }
                     }
                 },
-                { name: 'valore.nombre', editable: true, editoptions: { size: 10 } },
+                {label: 'Responsable',  name: 'valore.nombre', editable: true, editoptions: { size: 10 } },
             ],
             rowNum: 10,
             rowList: [3, 6],
@@ -177,6 +177,9 @@ var gridCalendario = {
                         }
                     });
                 });
+
+                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                $("#navGridCal_left").css("width", "");
             }
         });
 

@@ -56,10 +56,10 @@ function gridEva1(parentRowID, parentRowKey, suffix) {
             rowNum: 20,
             datatype: "json",
             // caption: 'Evaluación Técnica (Nivel 1)',
-            //width: null,
-            //shrinkToFit: false,
-            autowidth: true,  // set 'true' here
-            shrinkToFit: true, // well, it's 'true' by default
+            width: null,
+            shrinkToFit: true,
+            // autowidth: true,  // set 'true' here
+            // shrinkToFit: true, // well, it's 'true' by default
             page: 1,
             colModel: colmodel,
             viewrecords: true,
@@ -118,6 +118,9 @@ function gridEva1(parentRowID, parentRowKey, suffix) {
                         $('.footrow').hide();
                     }
                 });
+                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                $("#" + childGridPagerID+"_left").css("width", "");
+           
             }
         });
 

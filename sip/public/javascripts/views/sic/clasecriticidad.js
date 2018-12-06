@@ -113,13 +113,17 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
+        width: null,
         shrinkToFit: true,
+        viewrecords: true,
         caption: 'Lista de Clases de Criticidad',
         pager: "#pager",
-        viewrecords: true,
         rowList: [5, 10, 20, 50],
         styleUI: "Bootstrap",
+        gridComplete: function () {
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pager_left").css("width", "");
+        },
         editurl: '/sic/clasecriticidad/action',
         loadError: sipLibrary.jqGrid_loadErrorHandler,
         gridComplete: function () {
@@ -288,10 +292,10 @@ $(document).ready(function () {
 
     $("#pager_left").css("width", "");
 
-    $(window).bind('resize', function () {
-        $("#grid").setGridWidth($(".gcontainer").width(), true);
-        $("#pager").setGridWidth($(".gcontainer").width(), true);
-    });
+    // $(window).bind('resize', function () {
+    //     $("#grid").setGridWidth($(".gcontainer").width(), true);
+    //     $("#pager").setGridWidth($(".gcontainer").width(), true);
+    // });
 });
 
 function gridDesgloseFactores(parentRowID, parentRowKey,suffix) {
@@ -364,11 +368,11 @@ function gridDesgloseFactores(parentRowID, parentRowKey,suffix) {
         mtype: "POST",
         datatype: "json",
         page: 1,
-        caption: 'Desglose Factores',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        // caption: 'Desglose Factores',
+        width: null,
+        shrinkToFit: true,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         colModel: modelDesglose,
         viewrecords: true,
         styleUI: "Bootstrap",
@@ -382,6 +386,8 @@ function gridDesgloseFactores(parentRowID, parentRowKey,suffix) {
 
                 $("#" + childGridID).addRowData("blankRow", { "nombrefactor": "No hay datos" });
             }
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#"+childGridPagerID+"_left").css("width", "");
         },
         subGrid: true,
         subGridRowExpanded: gridDesgloseNotas,
@@ -609,7 +615,7 @@ function gridDesgloseColores(parentRowID, parentRowKey,suffix) {
         }
     ];
 
-    $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+    $('#' + parentRowID).append('<br><table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
 
     $("#" + childGridID).jqGrid({
@@ -617,11 +623,11 @@ function gridDesgloseColores(parentRowID, parentRowKey,suffix) {
         mtype: "POST",
         datatype: "json",
         page: 1,
-        caption: 'Desglose Colores',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        // caption: 'Desglose Colores',
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         colModel: modelDesgloseNotas,
         viewrecords: true,
         styleUI: "Bootstrap",
@@ -635,6 +641,8 @@ function gridDesgloseColores(parentRowID, parentRowKey,suffix) {
 
                 $("#" + childGridID).addRowData("blankRow", { "nombrenota": "No hay datos" },{"nota":""});
             }
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#"+childGridPagerID+"_left").css("width", "");
         }
     });
 
@@ -813,11 +821,11 @@ function gridDesgloseNotas(parentRowID, parentRowKey) {
         mtype: "POST",
         datatype: "json",
         page: 1,
-        caption: 'Desglose Notas',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        // caption: 'Desglose Notas',
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         colModel: modelDesgloseNotas,
         viewrecords: true,
         styleUI: "Bootstrap",
@@ -831,6 +839,8 @@ function gridDesgloseNotas(parentRowID, parentRowKey) {
 
                 $("#" + childGridID).addRowData("blankRow", { "nombrenota": "No hay datos" },{"nota":""});
             }
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#"+childGridPagerID+"_left").css("width", "");
         }
     });
 

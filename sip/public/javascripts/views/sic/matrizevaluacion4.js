@@ -66,11 +66,11 @@ setTimeout(function () {
         mtype: "GET",
         rowNum: 20,
         datatype: "json",
-        caption: 'Evaluación Técnica (Nivel 2)',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        // caption: 'Evaluación Técnica (Nivel 2)',
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: colmodel,
         viewrecords: true,
@@ -92,6 +92,9 @@ setTimeout(function () {
 
                 $("#" + childGridID).addRowData("blankRow", { "id": 0, "proveedor.razonsocial": "No hay datos" });
             }
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#" + childGridPagerID+"_left").css("width", "");
+       
         }
     });
    

@@ -39,17 +39,17 @@ var gridDoc = {
             url: loadurl,
             datatype: "json",
             mtype: "GET",
-            colNames: ['Doc', 'Nombre Documento', 'Descripción', 'Tipo', 'Tipo', 'Responsable', 'Descripción', 'Archivo', 'Archivo'],
+            // colNames: ['Doc', 'Nombre Documento', 'Descripción', 'Tipo', 'Tipo', 'Responsable', 'Descripción', 'Archivo', 'Archivo'],
             colModel: [
                 {
                     name: 'id', index: 'id', key: true, hidden: true, width: 10,
                     editable: true, hidedlg: true, sortable: false, editrules: { edithidden: false },
                 },
 
-                { name: 'nombrecorto', index: 'nombrecorto', width: 50, align: "left", editable: true },
+                { label: 'Nombre Documento', name: 'nombrecorto', index: 'nombrecorto', width: 50, align: "left", editable: true },
 
                 {
-                    name: 'descripcionlarga', index: 'descripcionlarga', width: 100, hidden: true,
+                  label: 'Descripción', name: 'descripcionlarga', index: 'descripcionlarga', width: 100, hidden: true,
                     edittype: 'custom',
                     editoptions: {
                         custom_element: function (value, options) {
@@ -97,7 +97,7 @@ var gridDoc = {
                     },
                     editable: true, editrules: { edithidden: true }
                 },
-                { name: 'tipodocumento.nombrecorto', width: 50, editable: false, align: "left", hidden: false },
+                { label: 'Tipo', name: 'tipodocumento.nombrecorto', width: 50, editable: false, align: "left", hidden: false },
 
                 {
                     name: 'idtipodocumento', search: false, editable: true, hidden: true,
@@ -149,10 +149,10 @@ var gridDoc = {
                 },
 
 
-                { name: 'nombreresponsable', index: 'nombreresponsable', width: 50, align: "left", editable: true },
-                { name: 'descripcionlarga', index: 'descripcionlarga', width: 125, align: "left", editable: true },
+                { label: 'Responsable', name: 'nombreresponsable', index: 'nombreresponsable', width: 50, align: "left", editable: true },
+                { label: 'Descripción', name: 'descripcionlarga', index: 'descripcionlarga', width: 125, align: "left", editable: true },
                 {
-                    name: 'nombrearchivo', index: 'nombrearchivo', hidden: false, width: 100, align: "left", editable: true,
+                    label: 'Archivo', name: 'nombrearchivo', index: 'nombrearchivo', hidden: false, width: 100, align: "left", editable: true,
                     editoptions: {
                         custom_element: labelEditFunc,
                         custom_value: getLabelValue
@@ -162,6 +162,7 @@ var gridDoc = {
 
                 },
                 {
+                    label: 'Archivo',
                     name: 'fileToUpload',
                     hidden: true,
                     editable: true,
@@ -186,6 +187,7 @@ var gridDoc = {
             sortorder: "asc",
             height: "auto",
             width: null,
+            shrinkToFit: true,
             forceFit: true,
             hidegrid: true,
             viewrecords: true,
@@ -215,7 +217,10 @@ var gridDoc = {
                         }
 
                     }
+                    
                 });
+
+                
             },
             viewrecords: true,
             caption: "Documentos",
@@ -234,8 +239,11 @@ var gridDoc = {
                         }
                     });
                 });
+                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                $("#navGrid_left").css("width", "");
             }
         });
+        
 
         $gridTab.jqGrid('navGrid', '#navGrid', { edit: true, add: true, del: true, search: false },
             {
@@ -429,6 +437,7 @@ function gridabrobaciondoc(parentRowID, parentRowKey, suffix) {
                 $("#" + childGridID).addRowData("blankRow", { "id": 0, "nombre": "No hay datos" });
             }
         }
+        
     });
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
@@ -492,6 +501,8 @@ function gridabrobaciondoc(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#" + childGridPagerID+"_left").css("width", "");
 
 
 }

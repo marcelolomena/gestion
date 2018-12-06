@@ -145,7 +145,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             //dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Art', name: 'codigoart', width: 150, align: 'left',
+            label: 'Art', name: 'codigoart', width: 90, align: 'left',
             search: true, editable: true, hidden: false,
             editoptions: {
             dataEvents: [{
@@ -247,12 +247,12 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'División', name: 'divisionsponsor', width: 200, align: 'left',
+            label: 'División', name: 'divisionsponsor', width: 160, align: 'left',
             search: false, editable: true, hidedlg: true,
             editrules: { required: true, edithidden: false }
         },
         {
-            label: 'Sponsor', name: 'sponsor1', width: 150, align: 'left',
+            label: 'Sponsor', name: 'sponsor1', width: 100, align: 'left',
             search: false, editable: true, hidden: false,
         },
         {
@@ -293,7 +293,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Gerente', name: 'gerenteresponsable', width: 150, align: 'left',
+            label: 'Gerente', name: 'gerenteresponsable', width: 120, align: 'left',
             search: false, editable: true, hidedlg: true,
             editrules: { required: true, edithidden: false }
         },
@@ -334,7 +334,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'PMO', name: 'pmoresponsable', width: 200, align: 'left',
+            label: 'PMO', name: 'pmoresponsable', width: 100, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true },
         },
@@ -375,17 +375,17 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Categoria', name: 'categoria', width: 160, align: 'left',
+            label: 'Categoria', name: 'categoria', width: 120, align: 'left',
             search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Estado', name: 'estado', width: 210, align: 'left',
+            label: 'Estado', name: 'estado', width: 90, align: 'left',
             search: true, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
         {
-            label: 'Año', name: 'ano', width: 78, align: 'left',
+            label: 'Año', name: 'ano', width: 45, align: 'left',
             search: false, editable: true,
             editrules: { required: true },
             editoptions: {
@@ -396,23 +396,23 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Q1', name: 'q1', width: 50, align: 'left',
+            label: 'Q1', name: 'q1', width: 40, align: 'left',
             search: false, editable: true, hidden: false
         },
         {
-            label: 'Q2', name: 'q2', width: 50, align: 'left',
+            label: 'Q2', name: 'q2', width: 40, align: 'left',
             search: false, editable: true, hidden: false
         },
         {
-            label: 'Q3', name: 'q3', width: 50, align: 'left',
+            label: 'Q3', name: 'q3', width: 40, align: 'left',
             search: false, editable: true, hidden: false
         },
         {
-            label: 'Q4', name: 'q4', width: 50, align: 'left',
+            label: 'Q4', name: 'q4', width: 40, align: 'left',
             search: false, editable: true, hidden: false
         },
         {
-            label: 'Fec. Últ. Comité', name: 'fechacomite', width: 130, align: 'left',
+            label: 'Fec. Últ. Comité', name: 'fechacomite', width: 110, align: 'left',
             search: false, editable: true, formatter: 'date',
             formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
             searchoptions: {
@@ -444,7 +444,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             editrules: { required: true }
         },
         {
-            label: 'Gto. Etmdo.(US$)', name: 'pptoestimadogasto', width: 170, align: 'right',
+            label: 'Gto. Etmdo.(US$)', name: 'pptoestimadogasto', width: 125, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -452,7 +452,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Iver. Etmda.(US$)', name: 'pptoestimadoinversion', width: 190, align: 'right',
+            label: 'Inv. Etmda.(US$)', name: 'pptoestimadoinversion', width: 125, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -460,7 +460,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Ppto- Etmd.(US$)', name: 'pptoestimadoprevisto', width: 225, align: 'left',
+            label: 'Ppto- Etmd.(US$)', name: 'pptoestimadoprevisto', width: 125, align: 'left',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -468,7 +468,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Gto. Apr.(CLP)', name: 'pptoaprobadogasto', width: 170, align: 'right',
+            label: 'Gto. Apr.(CLP)', name: 'pptoaprobadogasto', width: 100, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
@@ -476,7 +476,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Inv. Apr.(CLP)', name: 'pptoaprobadoinversion', width: 190, align: 'right',
+            label: 'Inv. Apr.(CLP)', name: 'pptoaprobadoinversion', width: 100, align: 'right',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
@@ -484,7 +484,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Ppto. Apr.(CLP)', name: 'pptoaprobadoprevisto', width: 225, align: 'left',
+            label: 'Ppto. Apr.(CLP)', name: 'pptoaprobadoprevisto', width: 105, align: 'left',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editoptions: {
@@ -492,7 +492,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Ppto. Apr. (US$)', name: 'pptoaprobadodolares', width: 225, align: 'left',
+            label: 'Ppto. Apr. (US$)', name: 'pptoaprobadodolares', width: 110, align: 'left',
             search: false, editable: true, hidden: false, formatter: 'number',
             formatoptions: { decimalPlaces: 2 },
             editoptions: {
@@ -500,7 +500,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }
         },
         {
-            label: 'Etapa', name: 'parametro.nombre', width: 140, align: 'left',
+            label: 'Etapa', name: 'parametro.nombre', width: 100, align: 'left',
             search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false, required: true }
         },
@@ -566,7 +566,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             }, dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Duracion', name: 'duracion', width: 88, align: 'left',
+            label: 'Duracion', name: 'duracion', width: 80, align: 'left',
             search: false, editable: false, hidedlg: true, formatter: 'number',
             formatoptions: { decimalPlaces: 0 },
             editrules: { edithidden: false },
@@ -615,7 +615,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
             dataInit: function (elem) { $(elem).width(200); }
         },
         {
-            label: 'Subcategoria', name: 'subcategoria', width: 150, align: 'left',
+            label: 'Subcategoria', name: 'subcategoria', width: 100, align: 'left',
             search: false, editable: true, hidedlg: true,
             editrules: { edithidden: false }
         },
@@ -705,10 +705,10 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         datatype: "json",
         page: 1,
         // caption: 'Iniciativa / Programa',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         colModel: modelIniciativaPrograma,
         viewrecords: true,
         styleUI: "Bootstrap",
@@ -735,6 +735,7 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         stringResult: true, searchOperators: true,
         searchOnEnter: false, defaultSearch: 'cn'
     });
+
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
@@ -1010,7 +1011,15 @@ function gridIniciativaPrograma(parentRowID, parentRowKey) {
         }
     );
 
+    $("table.ui-jqgrid-htable").css('width','100%');      
+    $("table.ui-jqgrid-btable").css('width','100%');
+
+    $("#" + childGridPagerID+"_left").css("width", "");
+    
+
 }
+
+
 function showSubGrids(subgrid_id, row_id) {
     gridPresupuestoIniciativa(subgrid_id, row_id, 'presupuesto');
     gridIniciativaFecha(subgrid_id, row_id, 'fecha');

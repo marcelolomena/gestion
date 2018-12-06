@@ -318,11 +318,11 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "GET",
         datatype: "json",
-        caption: 'Presupuesto',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        // caption: 'Presupuesto',
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         rowNum: 10,
         rowList: [5, 10, 20, 50],
@@ -347,6 +347,7 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             }
         }
     });
+    
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
@@ -519,6 +520,9 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#" + pager_id + "_left").css("width", "");  
     
     $("#" + childGridID).jqGrid('navButtonAdd',  "#" + childGridPagerID, {
         caption: "",
@@ -554,6 +558,8 @@ function gridPresupuestoIniciativa(parentRowID, parentRowKey, suffix) {
     });
     
 }
+
+
 function showSubGrids2(subgrid_id, row_id) {
     gridTareasNuevosProyectos(subgrid_id, row_id, 'tareas');
 }

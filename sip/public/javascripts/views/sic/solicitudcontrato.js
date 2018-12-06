@@ -101,15 +101,23 @@ $(document).ready(function () {
                 }
             },
             {
-                label: 'Etapa',
-                name: 'clasificacion',
-                jsonmap: "clasificacion.nombre",
-                width: 120,
-                align: 'center',
-                search: false,
-                editable: true,
-                hidden: false
+            label: 'Etapa',
+            name: 'idclasificacionsolicitud',
+            jsonmap: "clasificacion.nombre",
+            width: 70,
+            align: 'center',
+            search: false,
+            editable: true,
+            hidden: false,
+            editoptions: {
+                rows: "2",
+                cols: "50"
             },
+            editrules: {
+                required: true
+            },
+            edittype: "textarea"
+        },
             {
                 label: 'Grupo',
                 name: 'grupo',
@@ -635,6 +643,9 @@ $(document).ready(function () {
         height: 'auto',
         sortname: 'colorestado',
         sortorder: "desc",
+        width: null,
+        shrinkToFit: false,
+        viewrecords: true,
         editurl: '/sic/grid_solicitudcotizacion',
         caption: 'Solicitud de Cotización',
         styleUI: "Bootstrap",
@@ -664,6 +675,8 @@ $(document).ready(function () {
                     }
                 });
             });
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pagerMaster_left").css("width", "");
         }
     });
 

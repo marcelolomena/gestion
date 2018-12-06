@@ -102,11 +102,8 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        width: '100%',
-        forceFit: true,
-        hidegrid: false,
-        responsive: true,
-        autowidth: true,
+        width: null,
+        shrinkToFit: true,
         viewrecords: true,
 		restoreCellonFail : true,
         caption: 'Lista de parametros',
@@ -114,6 +111,10 @@ $(document).ready(function () {
         rowList: [5, 10, 20, 50],
         editurl: '/sic/valores/action',
         styleUI: "Bootstrap",
+        gridComplete: function () {
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pager_left").css("width", "");
+        },
         loadError: function (jqXHR, textStatus, errorThrown) {
             alert('HTTP status code: ' + jqXHR.status + '\n' +
                 'textStatus: ' + textStatus + '\n' +

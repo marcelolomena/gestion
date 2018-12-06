@@ -29,11 +29,8 @@ $(document).ready(function () {
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        width: '100%',
-        forceFit: true,
-        hidegrid: false,
-        responsive: true,
-        autowidth: true,
+        width: null,
+        shrinkToFit: true,
         viewrecords: true,
 		restoreCellonFail : true,
         editurl: '/sic/grid_toctipo',
@@ -43,6 +40,10 @@ $(document).ready(function () {
             var getID = $(this).jqGrid('getCell', id, 'id');
         },
         pager: "#pager",
+        gridComplete: function () {
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pager_left").css("width", "");
+        },
         subGrid: true,
         subGridRowExpanded: showSubGrids,
         subGridOptions: {

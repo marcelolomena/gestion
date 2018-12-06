@@ -652,6 +652,7 @@ function showIniciativas(nombreini, numart, pmo, estado) {
             $('#grid').jqGrid('excelExport', { "url": url });
         }
     });
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 
     $(window).bind('resize', function () {

@@ -112,6 +112,7 @@ var gridBitacora = {
 
             }
         });
+        
 
         $gridTab.jqGrid('navGrid', '#navGridBita', { edit: false, add: false, del: false, search: false },
             {
@@ -162,8 +163,8 @@ var gridBitacora = {
             }
         );
 
-        $("table.ui-jqgrid-htable").css('width','100%');
-    $("table.ui-jqgrid-btable").css('width','100%');
+        $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+        $("#navGridBita_left").css("width", "");
 
 
 

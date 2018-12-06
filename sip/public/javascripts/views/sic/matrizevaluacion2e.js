@@ -31,7 +31,7 @@ function gridEva1E(parentRowID, parentRowKey, suffix) {
         type: "GET",
         url: "/sic/matrizeco/" + parentRowKey + "/cols",
         success: function (jsonData) {
-            colmodel.push({ label: ' ', name: ' ', key: false, hidden: false })
+            // colmodel.push({ label: ' ', name: ' ', key: false, hidden: false })
             colmodel.push({ label: 'Moneda', name: 'moneda', key: false, hidden: false })
 
             for (i = 0; i < jsonData.length; i++) {
@@ -53,10 +53,10 @@ function gridEva1E(parentRowID, parentRowKey, suffix) {
             rowNum: 20,
             datatype: "json",
             // caption: 'Evaluación Económica',
-            //width: null,
-            //shrinkToFit: false,
-            autowidth: true,  // set 'true' here
-            shrinkToFit: true, // well, it's 'true' by default
+            width: null,
+            shrinkToFit: false,
+            // autowidth: true,  // set 'true' here
+            // shrinkToFit: true, // well, it's 'true' by default
             page: 1,
             colModel: colmodel,
             viewrecords: true,
@@ -96,6 +96,11 @@ function gridEva1E(parentRowID, parentRowKey, suffix) {
 */
                     }
                 });
+                $("table.ui-jqgrid-htable").css('width','100%');      
+                $("table.ui-jqgrid-btable").css('width','100%');
+                $("table.ui-jqgrid-ftable").css('width','100%');
+                $("#" + childGridPagerID+"_left").css("width", "");
+        
             }
         });
 

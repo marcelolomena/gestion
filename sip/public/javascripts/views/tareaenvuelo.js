@@ -244,12 +244,12 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             editrules: { required: true },
         },
         {
-            label: 'Tarea', name: 'tarea', width: 150, align: 'left',
+            label: 'Tarea', name: 'tarea', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
             editrules: { required: true },
         },
         {
-            label: 'Extensión', name: 'extension', width: 50, align: 'left',
+            label: 'Extensión', name: 'extension', width: 80, align: 'left',
             search: true, editable: true, hidden: false,
             editoptions: {
                 dataInit: function (el) {
@@ -258,7 +258,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             },
         },
         {
-            label: 'Glosa PreFactura', name: 'glosa', width: 150, align: 'left',
+            label: 'Glosa PreFactura', name: 'glosa', width: 120, align: 'left',
             search: true, editable: true, hidden: false,
             edittype: "textarea", editrules: { required: false },
         },
@@ -350,7 +350,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             },
         },
         {
-            label: 'Contrato', name: 'reqcontrato',
+            label: 'Contrato', width: 80, name: 'reqcontrato',
             search: false, editable: true, hidden: false,
             //editrules: { required: true },
             edittype: "custom",
@@ -410,7 +410,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         },
 
         {
-            label: 'Moneda', name: 'moneda.moneda', width: 50, align: 'left',
+            label: 'Moneda', name: 'moneda.moneda', width: 60, align: 'left',
             search: true, editable: false, hidden: false,
         },
         {
@@ -454,7 +454,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             search: false, editable: false, hidden: false,
         },
         {
-            label: 'Con IVA', name: 'coniva', search: false, editable: true, hidden: false,
+            label: 'Con IVA', name: 'coniva', width: 80, search: false, editable: true, hidden: false,
             edittype: "custom",
             //editrules: { required: true },
             editoptions: {
@@ -542,6 +542,7 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
       
 
     ];
+   
 
     $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
 
@@ -551,10 +552,10 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
         mtype: "POST",
         datatype: "json",
         // caption: 'Detalle Tarea/Servicio',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelTareaEnVuelo,
         viewrecords: true,
@@ -577,6 +578,8 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             }
         }
     });
+     
+
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: false, add: false, del: false, search: false, refresh: true, view: false, position: "left", cloneToTop: false
@@ -746,7 +749,15 @@ function gridTareaEnVuelo(parentRowID, parentRowKey, suffix) {
             recreateFilter: true
         }
     );
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    
+    $("#" + pager_id + "_left").css("width", "");      
 }
+
+
+
+
 function showSubGrids2(subgrid_id, row_id) {
     gridFlujoPagoEnVuelo(subgrid_id, row_id, 'flujo');
+    
 }

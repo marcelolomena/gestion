@@ -2,11 +2,11 @@ $(document).ready(function () {
 
     var $grid = $("#grid"), modelProyecto = [
         { label: 'id', name: 'id', key: true, hidden: true },
-        { label: '# SAP', name: 'sap', width: 150, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
+        { label: '# SAP', name: 'sap', width: 80, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 1 } },
         { label: 'Nombre Proyecto', name: 'nombre', width: 250, align: 'left', search: true, editable: true, formoptions: { rowpos: 1, colpos: 2 } },
-        { label: 'PMO', name: 'pmo', width: 140, align: 'left', search: true },
+        { label: 'PMO', name: 'pmo', width: 130, align: 'left', search: true },
         {
-            label: 'Fecha Inscripción', name: 'fechacreacion', width: 130, align: 'right', search: false, sortable: false,
+            label: 'Inscripción', name: 'fechacreacion', width: 90, align: 'center', search: false, sortable: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 2, colpos: 1 },
             editoptions: {
@@ -17,7 +17,7 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Fecha Paso Producción', name: 'papcomprometido', width: 170, align: 'right', search: false, sortable: false,
+            label: 'Paso Producción', name: 'papcomprometido', width: 120, align: 'center', search: false, sortable: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 3, colpos: 2 },
             editoptions: {
@@ -28,7 +28,7 @@ $(document).ready(function () {
             }
         },
         {
-            label: 'Fecha Cierre', name: 'fechavigencia', width: 110, align: 'right', search: false, sortable: false,
+            label: 'Cierre', name: 'fechavigencia', width: 80, align: 'center', search: false, sortable: false,
             formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'd-m-Y' },
             editable: true, formoptions: { rowpos: 2, colpos: 2 },
             editoptions: {
@@ -38,53 +38,53 @@ $(document).ready(function () {
                 }
             }
         },
-        { label: 'Estado', name: 'estado', width: 100, align: 'left', search: false },
+        { label: 'Estado', name: 'estado', width: 80, align: 'center', search: false },
         {
-            label: '% Consumido', name: 'avance2', width: 120, align: 'right', search: false, sortable: false,
+            label: '% Consumido', name: 'avance2', width: 100, align: 'center', search: false, sortable: false,
             formatter: 'number', formatoptions: { suffix: '%', decimalPlaces: 0 }, sorttype: 'currency'
         },
         {
-            label: 'Ppto Gasto', name: 'presupuestogasto', width: 150, align: 'right', search: false,
+            label: 'Ppto Gasto', name: 'presupuestogasto', width: 100, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 4, colpos: 1 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Ppto Inversion', name: 'presupuestoinversion', width: 150, align: 'right', search: false,
+            label: 'Ppto Inversion', name: 'presupuestoinversion', width: 120, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 4, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Total Presupuesto', name: 'totalpresupuesto', width: 150, align: 'right', search: false, sortable: false,
+            label: 'Total Presupuesto', name: 'totalpresupuesto', width: 130, align: 'right', search: false, sortable: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Pagado Gasto', name: 'realacumuladogasto', width: 150, align: 'right', search: false,
+            label: 'Pagado Gasto', name: 'realacumuladogasto', width: 110, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 5, colpos: 1 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Pagado Inversion', name: 'realacumuladoinversion', width: 150, align: 'right', search: false,
+            label: 'Pagado Inversion', name: 'realacumuladoinversion', width: 122, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Total Pagado', name: 'totalacumulado', width: 150, align: 'right', search: false, sortable: false,
+            label: 'Total Pagado', name: 'totalacumulado', width: 100, align: 'right', search: false, sortable: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Saldo Gasto', name: 'saldo2gasto', width: 150, align: 'right', search: false,
+            label: 'Saldo Gasto', name: 'saldo2gasto', width: 100, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Saldo Inversión', name: 'saldo2inversion', width: 150, align: 'right', search: false,
+            label: 'Saldo Inversión', name: 'saldo2inversion', width: 115, align: 'right', search: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         },
         {
-            label: 'Total Saldo', name: 'totalsaldo', width: 150, align: 'right', search: false, sortable: false,
+            label: 'Total Saldo', name: 'totalsaldo', width: 100, align: 'right', search: false, sortable: false,
             editable: true, formoptions: { rowpos: 5, colpos: 2 },
             formatter: 'number', formatoptions: { decimalPlaces: 0 }
         }
@@ -149,6 +149,8 @@ $(document).ready(function () {
         }
     });
 
+    $("table.ui-jqgrid-htable").css('width','100%');      
+    $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_left").css("width", "");
 });
 
@@ -257,6 +259,11 @@ function showProyectosTareas(parentRowID, parentRowKey) {
             $("#" + childGridID).jqGrid('excelExport', { "url": url });
         }
     });
+    $("table.ui-jqgrid-htable").css('width','100%');      
+    $("table.ui-jqgrid-btable").css('width','100%');
+    $("table.ui-jqgrid-ftable").css('width','100%');
+
+    $("#" + childGridPagerID+"_left").css("width", "");
 
 }
 
@@ -362,4 +369,5 @@ function showProyectoErogaciones(parentRowID, parentRowKey) {
             $("#" + childGridID).jqGrid('excelExport', { "url": url });
         }
     });
+    
 }

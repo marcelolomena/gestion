@@ -547,7 +547,7 @@ img {
 }
 .form-control {
 	font-size: 12px;
-	height: 25px;
+	/* height: 25px; */
 }
 .ui-jqgrid .ui-jqgrid-title {
 	line-height: 2;

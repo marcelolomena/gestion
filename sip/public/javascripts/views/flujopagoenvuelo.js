@@ -363,11 +363,11 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
         url: childGridURL,
         mtype: "POST",
         datatype: "json",
-        caption: 'Flujo de pagos',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        // caption: 'Flujo de pagos',
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelFlujoPagoEnVuelo,
         viewrecords: true,
@@ -382,6 +382,9 @@ function gridFlujoPagoEnVuelo(parentRowID, parentRowKey, suffix) {
 
                 $("#" + childGridID).addRowData("blankRow", { "id": 0, "glosaitem": "No hay datos" });
             }
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#" + childGridPagerID+"_left").css("width", "");
+       
         }
     });
 

@@ -9,6 +9,9 @@ $(document).ready(function () {
         },
         
     ];
+
+
+
     $("#table_compromisosporcui").jqGrid({
         url: '/compromisosporcui/list',
         mtype: "POST",
@@ -18,16 +21,17 @@ $(document).ready(function () {
         rowNum: 1000,
         regional: 'es',
         height: 'auto',
+        sortable: "true",
+        width: null,
+        shrinkToFit: false,
         caption: 'Lista de Compromisos por CUI',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         pager: "#pager_compromisosporcui",
         viewrecords: true,
         rowList: [5, 10, 20, 50],
-        editurl: '',
         styleUI: "Bootstrap",
+        editurl: '',
         subGrid: true,
         subGridRowExpanded: gridServicios,
         subGridOptions: {
@@ -106,5 +110,7 @@ $(document).ready(function () {
             recreateFilter: true
         }
     );
+    
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
     $("#pager_iniciativa_left").css("width", "");
 });

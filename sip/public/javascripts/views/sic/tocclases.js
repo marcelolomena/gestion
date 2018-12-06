@@ -140,10 +140,10 @@ function gridClases(parentRowID, parentRowKey, suffix) {
         rowNum: 20,
         datatype: "json",
         // caption: 'Clases de Secciones del Documento',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: true,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelClases,
         viewrecords: true,
@@ -165,6 +165,8 @@ function gridClases(parentRowID, parentRowKey, suffix) {
 
                 $("#" + childGridID).addRowData("blankRow", { "id": 0, "clase.titulo": "No hay datos" });
             }
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#" + childGridPagerID+"_left").css("width", "");
         }
     });
 

@@ -48,13 +48,14 @@ var gridRespuestasRFP = {
             styleUI: "Bootstrap",
             sortname: 'id',
             sortorder: "asc",
-            shrinkToFit: false,
+            
             height: "auto",
             width: null,
+            shrinkToFit: false,
+            viewrecords: true,
             onSelectRow: function (id) {
                 var getID = $(this).jqGrid('getCell', id, 'id');
             },
-            viewrecords: true,
             caption: "Respuesta del Proveedor",
             loadComplete: function (data) {
                 var thisId = $.jgrid.jqID(this.id);
@@ -229,11 +230,11 @@ console.log("la parentSolicitud : " + parentSolicitud)
         },
 
         {
-            label: 'Nombre Proveedor', name: 'proveedor.razonsocial', width: 600, align: 'left', search: true, editable: true,
+            label: 'Nombre Proveedor', name: 'proveedor.razonsocial', width: 400, align: 'left', search: true, editable: true,
             editrules: { edithidden: false, required: true }, hidedlg: true
         },
         {
-            label: 'Respuesta', name: 'respuesta', width: 600, search: false, editable: true, hidden: false,
+            label: 'Respuesta', name: 'respuesta', width: 400, search: false, editable: true, hidden: false,
             edittype: 'custom',
             editoptions: {
                 custom_element: function (value, options) {
@@ -299,10 +300,11 @@ console.log("la parentSolicitud : " + parentSolicitud)
         mtype: "GET",
         datatype: "json",
         // caption: 'Respuestas',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default
+        width: null,
+        shrinkToFit: false,
+        viewrecords: true,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default
         page: 1,
         colModel: modelIniciativaFecha,
         viewrecords: true,
@@ -320,6 +322,8 @@ console.log("la parentSolicitud : " + parentSolicitud)
             }
         }
     });
+
+    
 
     $("#" + childGridID).jqGrid('navGrid', "#" + childGridPagerID, {
         edit: true, add: true, del: true, search: false, refresh: true, view: false, position: "left", cloneToTop: false
@@ -387,4 +391,7 @@ console.log("la parentSolicitud : " + parentSolicitud)
             recreateFilter: true
         }
     );
+
+    $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+    $("#" + childGridPagerID+"_left").css("width", "");
 }

@@ -91,12 +91,13 @@ $(document).ready(function () {
         url: '/sic/etaparol/list',
         datatype: "json",
         mtype: "GET",
+        pager: "#pager",
         colModel: etapaRolModel,
         page: 1,
         rowNum: 20,
         regional: 'es',
         height: 'auto',
-        width: 1200,
+        width: null,
         shrinkToFit: true,
         viewrecords: true,
         editurl: '/sic/etaparol/list',
@@ -105,7 +106,10 @@ $(document).ready(function () {
         onSelectRow: function (id) {
             var getID = $(this).jqGrid('getCell', id, 'id');
         },
-        pager: "#pager",
+        gridComplete: function () {
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pager_left").css("width", "");
+        },
     });
 
     $grid.jqGrid('navGrid', '#pager', { edit: true, add: true, del: true, search: false },

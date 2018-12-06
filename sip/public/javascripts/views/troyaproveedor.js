@@ -168,10 +168,11 @@ function showDocumentos(proveedor, totalfact) {
         caption: "Facturas Proveedor por CUI (TOTAL:" + totalfact + ")",
         height: 'auto',
         styleUI: "Bootstrap",
-        autowidth: false,
-        shrinkToFit: true, // well, it's 'true' by default 
+        // autowidth: false,
+        // shrinkToFit: true, // well, it's 'true' by default 
         sortable: "true",
         width: null,
+        shrinkToFit: false,
         pager: "#pager",
         jsonReader: { cell: "" },
         page: 1,
@@ -203,12 +204,15 @@ function showDocumentos(proveedor, totalfact) {
 
     leida = true;
     $("#pager_left").css("width", "");
+    $("table.ui-jqgrid-htable").css('width','100%');      
+    $("table.ui-jqgrid-btable").css('width','100%');
+    $("table.ui-jqgrid-ftable").css('width','100%');
 
-    $(window).bind('resize', function () {
-        $("#grid").setGridWidth($(".gcontainer").width(), true);
-        //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
-        $("#pager").setGridWidth($(".gcontainer").width(), true);
-    });
+    // $(window).bind('resize', function () {
+    //     $("#grid").setGridWidth($(".gcontainer").width(), true);
+    //     //$("#grid").jqGrid("setGridWidth",$("#gcontainer").width() );
+    //     $("#pager").setGridWidth($(".gcontainer").width(), true);
+    // });
 }
 
 
