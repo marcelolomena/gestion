@@ -20,14 +20,14 @@ var tabReservaGrid = {
             label: 'Estado',
             name: 'estado',
             align: 'center',
-            width: 352,
+            width: 252,
             editable: false,
             search: false
         },
         {
             label: 'Cantidad',
             name: 'numlicencia',
-            width: 352,
+            width: 252,
             editable: true,
             align: 'center',
             search: false
@@ -35,7 +35,7 @@ var tabReservaGrid = {
         {
             label: 'Fecha de Solicitud',
             name: 'fechaSolicitud',
-            width: 352,
+            width: 252,
             align: 'center',
             sortable: false,
             editable: false,
@@ -69,7 +69,7 @@ var tabReservaGrid = {
             name: 'idUsuario',
             jsonmap: 'solicitante.nombre',
             align: 'center',
-            width: 352,
+            width: 252,
             editable: false,
             search: false
         },
@@ -78,7 +78,7 @@ var tabReservaGrid = {
             name: 'idUsuarioJefe',
             jsonmap: 'aprobador.nombre',
             align: 'center',
-            width: 352,
+            width: 252,
             editable: false,
             search: false
         }

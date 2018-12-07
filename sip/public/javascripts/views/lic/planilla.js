@@ -767,12 +767,8 @@
                    
                 });
             }
-        });       
-
-        $("#grid").jqGrid('filterToolbar', { stringResult: true, searchOperators: true, searchOnEnter: false, defaultSearch: 'cn' });
-
-
-        $('#grid').jqGrid('navGrid', "#pager", {
+        },'filterToolbar', { stringResult: true, searchOperators: true, 
+            searchOnEnter: false, defaultSearch: 'cn' },'navGrid', "#pager", {
             edit: true,
             add: true,
             del: true,
@@ -818,9 +814,7 @@
         }, {
 
         }
-    );
-
-    $('#grid').jqGrid('navButtonAdd', 'pager', {
+    ,'navButtonAdd', 'pager', {
         caption: "",
         buttonicon: "glyphicon glyphicon-download-alt",
         title: "Excel",

@@ -193,7 +193,7 @@ var compraGrid = {
     }, {
         label: 'Valor Mensual Neto',
         name: 'valorAnualNeto',
-        width: 125,
+        width: 115,
         align: 'center',
         sortable: false,
         editable: true,
@@ -267,28 +267,28 @@ var recepcionGrid = {
         }, {
             label: 'SAP',
             name: 'sap',
-            width: 80,
+            width: 70,
             align: 'center',
             sortable: true,
             editable: false
         }, {
             label: 'CUI',
             name: 'idCui',
-            width: 80,
+            width: 70,
             align: 'center',
             hidden: false,
             editable: false
         }, {
             label: '# Contrato',
             name: 'numContrato',
-            width: 80,
+            width: 70,
             align: 'center',
             hidden: false,
             editable: false
         }, {
             label: 'O.C.',
             name: 'ordenCompra',
-            width: 80,
+            width: 70,
             align: 'center',
             hidden: false,
             editable: false
@@ -296,7 +296,7 @@ var recepcionGrid = {
             label: 'Proveedor',
             name: 'idProveedor',
             jsonmap: 'proveedor.nombre',
-            width: 420,
+            width: 220,
             align: 'center',
             sortable: true,
             editable: false,
@@ -322,7 +322,7 @@ var recepcionGrid = {
         }, {
             label: 'Fec. Inicio',
             name: 'fechaInicio',
-            width: 100,
+            width: 90,
             align: 'center',
             sortable: true,
             editable: false,
@@ -330,7 +330,7 @@ var recepcionGrid = {
         }, {
             label: 'Fec. Término',
             name: 'fechaTermino',
-            width: 110,
+            width: 90,
             align: 'center',
             sortable: true,
             editable: false,
@@ -338,7 +338,7 @@ var recepcionGrid = {
         }, {
             label: 'Fec. Control',
             name: 'fechaControl',
-            width: 100,
+            width: 90,
             align: 'center',
             sortable: true,
             editable: false,
@@ -346,7 +346,9 @@ var recepcionGrid = {
         }, {
             label: 'Cantidad',
             name: 'cantidad',
+            width: 80,
             hidden: false,
+            align: 'center',
             editable: false,
             formatter: function (cellvalue, options, rowObject) {
                 return rowObject.ilimitado ? 'Ilimitado' : cellvalue;
@@ -359,7 +361,7 @@ var recepcionGrid = {
             label: 'Moneda',
             name: 'idMoneda',
             jsonmap: 'moneda.nombre',
-            width: 100,
+            width: 70,
             align: 'center',
             sortable: true,
             editable: false,
@@ -385,6 +387,7 @@ var recepcionGrid = {
             search: false
         }, {
             label: 'N° Factura',
+            width: 80,
             name: 'factura',
             hidden: false,
             editable: false
@@ -396,6 +399,7 @@ var recepcionGrid = {
         tabGrid.navParameters.add = false;
         tabGrid.navParameters.del = false;
         tabGrid.navParameters.view = false;
+        
 
         tabGrid.build();
     }

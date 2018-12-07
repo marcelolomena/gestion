@@ -22,7 +22,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Cantidad',
             name: 'numero',
-            width: 250,
+            width: 150,
             align: 'center',
             hidden: false,
             editrules: {
@@ -35,7 +35,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Monto',
             name: 'monto',
-            width: 250,
+            width: 150,
             align: 'center',
             hidden: false,
             editrules: {
@@ -50,7 +50,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Fecha Inicio',
             name: 'fechaInicio',
-            width: 250,
+            width: 150,
             align: 'center',
             sortable: false,
             editable: true,
@@ -76,7 +76,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Fecha Termino',
             name: 'fechaTermino',
-             width: 250,
+             width: 150,
             align: 'center',
             sortable: false,
             editable: true,
@@ -108,7 +108,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Fecha Control',
             name: 'fechaControl',
-             width: 250,
+             width: 150,
             align: 'center',
             sortable: false,
             editable: true,
@@ -159,7 +159,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Estado',
             name: 'estado',
-            width: 250,
+            width: 150,
             align: 'center',
             editable: true,
             edittype: "custom",
@@ -184,7 +184,7 @@ var tabdetalleCompraTramiteGrid = {
         {
             label: 'Comentario',
             name: 'comentario',
-            width: 250,
+            width: 150,
             hidden: false,
             editable: true,
             edittype: 'textarea',

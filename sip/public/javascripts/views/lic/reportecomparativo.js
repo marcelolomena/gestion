@@ -119,14 +119,18 @@ $(document).ready(function () {
         rowNum: 10,
         regional: 'es',
         height: 'auto',
-        //width: null,
-        //shrinkToFit: false,
-        autowidth: true,  // set 'true' here
-        shrinkToFit: true, // well, it's 'true' by default        
+        width: null,
+        shrinkToFit: false,
+        // autowidth: true,  // set 'true' here
+        // shrinkToFit: true, // well, it's 'true' by default        
         sortable: "true",
         width: null,
         caption: 'Reporte Comparativo',
         pager: "#pager",
+        gridComplete: function () {
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pager_left").css("width", "");
+        },
         viewrecords: true,
         rowList: [10, 20, 30, 40, 50],
         styleUI: "Bootstrap",

@@ -139,11 +139,15 @@
             regional: 'es',
             height: 'auto',
             width: null,
+            shrinkToFit: true,
+            viewrecords: true,
+            gridComplete: function () {
+                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+                $('#' + pagerName+"_left").css("width", "");
+            },
             page: 1,
             forceFit: true,
             hidegrid: false,
-            responsive: true,
-            autowidth: true,
             viewrecords: true,
             restoreCellonFail : true,
             sortorder: 'desc',

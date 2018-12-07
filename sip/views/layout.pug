@@ -43,7 +43,7 @@ body
       button.hamburger.hamburger-squeeze.mr-2(type='button', data-toggle='aside', aria-label='Menu', aria-controls='navigation')
        span.hamburger-box
         span.hamburger-inner
-      a(href='#')
+      //- a(href='#')
        img(src='/images/header_chico.png', weight='5', height='55', alt='')
      .top-bar-list
       .top-bar-item.px-2.d-md-none.d-lg-none.d-xl-none
@@ -52,7 +52,7 @@ body
          span.hamburger-inner
       .top-bar-item.top-bar-item-right.px-0.d-none.d-sm-flex
        ul.header-nav.nav
-        li.nav-item.dropdown.header-nav-dropdown.has-notified
+        //- li.nav-item.dropdown.header-nav-dropdown.has-notified
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
           span.oi.oi-pulse
          .dropdown-arrow
@@ -107,7 +107,7 @@ body
           a.dropdown-footer(href='user-activities.html')
            | Todas las actividades
            i.fa.fa-fw.fa-long-arrow-alt-right
-        li.nav-item.dropdown.header-nav-dropdown.has-notified
+        //- li.nav-item.dropdown.header-nav-dropdown.has-notified
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
           span.oi.oi-envelope-open
          .dropdown-arrow
@@ -158,7 +158,7 @@ body
           a.dropdown-footer(href='app-messages.html')
            | Todos los mensajes
            i.fa.fa-fw.fa-long-arrow-alt-right
-        li.nav-item.dropdown.header-nav-dropdown
+        //- li.nav-item.dropdown.header-nav-dropdown
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
           span.oi.oi-grid-three-up
          .dropdown-arrow
@@ -201,15 +201,15 @@ body
         .dropdown-arrow.dropdown-arrow-left
         .dropdown-menu
          h6.dropdown-header.d-none.d-md-block.d-lg-none  #{data[0].nombre}
-         a.dropdown-item(href='#')
-          span.dropdown-icon.oi.oi-person
-          |  Perfil
          a.dropdown-item(href='/menu/signout')
           span.dropdown-icon.oi.oi-account-logout
           |  Cerrar Sesión
-         .dropdown-divider
-         a.dropdown-item(href='#') Centro de Ayuda
-         a.dropdown-item(href='#') Preguntar Foro
+        //-  a.dropdown-item(href='#')
+        //-   span.dropdown-icon.oi.oi-person
+        //-   |  Perfil
+        //-  .dropdown-divider
+        //-  a.dropdown-item(href='#') Centro de Ayuda
+        //-  a.dropdown-item(href='#') Preguntar Foro
    aside.app-aside
     .aside-content
      header.aside-header
@@ -226,17 +226,17 @@ body
         span.account-description #{data[0].glosarol}
       #dropdown-aside.dropdown-aside.collapse
        .pb-3
-        a.dropdown-item(href='#')
-         span.dropdown-icon.oi.oi-person
-         |  Perfil
         a.dropdown-item(href='/menu/signout')
          span.dropdown-icon.oi.oi-account-logout
          |  Cerrar Sesión
-        .dropdown-divider
-        a.dropdown-item(href='#') Centro de Ayuda
-        a.dropdown-item(href='#') Preguntar Foro
+        //- .dropdown-divider
+        //- a.dropdown-item(href='#')
+        //-  span.dropdown-icon.oi.oi-person
+        //-  |  Perfil
+        //- a.dropdown-item(href='#') Centro de Ayuda
+        //- a.dropdown-item(href='#') Preguntar Foro
       .top-bar-brand
-       a(href='#')
+      //-  a(href='#')
         img(src='/images/logoRound.png',height='60px', alt='') 
         span.font-weight-bold(style='color: #234875;') &nbsp #{sistemas[data[0].sistema]}
      section.aside-menu.has-scrollable
@@ -256,7 +256,6 @@ body
                     else                    
                       a.menu-link(href='https://152.139.147.41:3001/'+vol.url)
                         span.menu-text=vol.opt        
-   main.app-main
     .wrapper
      .page
       .page-inner

@@ -31,6 +31,13 @@
                 }, 500);
             }
         }
+		grid.config.width= null;
+        grid.config.shrinkToFit= true;
+        grid.config.viewrecords= true;
+		grid.config.gridComplete: function () {
+            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+        };
+		
         grid.build();
     };
 
