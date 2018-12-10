@@ -2262,15 +2262,24 @@ a.card-footer-item.text-muted:focus,a.card-footer-item.text-muted:hover {
 .nav-link {
   outline: 0;
   color: #686f76;
+  
+}
+
+.nav-tabs .nav-link:focus {
+  color: #28313b;
+  border-color: #346cb0;
 }
 
 .active>.nav-link,.nav-link.active {
-  color: #346cb0;
+  color: #28313b;
+  border-color: #346cb0;
+  
 }
 
 .nav-link.has-badge>.badge {
   position: absolute;
   top: .25rem;
+  border-color: #346cb0;
   left: calc(100% - 1.25rem);
 }
 

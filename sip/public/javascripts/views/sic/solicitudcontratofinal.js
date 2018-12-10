@@ -776,9 +776,9 @@ $(document).ready(function () {
             var $this = $(this),
                 loadurl = $this.attr('href'),
                 targ = $this.attr('data-target');
-            // /*if (targ === '#proveedores') {
-            //     gridProveedor.renderGrid(loadurl, parentRowKey, targ)
-            // }*/
+            /*if (targ === '#proveedores') {
+                gridProveedor.renderGrid(loadurl, parentRowKey, targ)
+            }*/
             if (targ === '#estadosolicitud') {
                 gridEstado.renderGrid(loadurl, parentRowKey, targ)
             } else if (targ === '#adjudicacion') {

@@ -62,16 +62,20 @@
     }
 
     function TabTemplate(parentRowID, parentRowKey, tabs) {
+        
         var nav = "<br><ul class='nav nav-tabs tabs-up' id='myTab'>";
         var pane = "<div class='tab-content'>";
         var paneClass, navClass;
+        var activo = '';
         _.each(tabs, function (item, key) {
-            // console.log (item,key)
+            // console.log (parentRowID)
+             
             paneClass = key ? 'tab-pane' : 'tab-pane active';
-            if(key === 0)
-                {nav += '<li class="nav-item" data-toggle="tab"><a class="nav-link active show" href="/lic/' + item.id + '/' + parentRowKey + '" data-target="#' + item.id + '" id="' + item.id + '_tab_' + parentRowKey + '" data-toggle="tab_' + parentRowKey + '">' + item.nom + '</a></li>';}
-            else
-                {nav += '<li class="nav-item" data-toggle="tab"><a class="nav-link" href="/lic/' + item.id + '/' + parentRowKey + '" data-target="#' + item.id + '" id="' + item.id + '_tab_' + parentRowKey + '" data-toggle="tab_' + parentRowKey + '">' + item.nom + '</a></li>';}
+            
+            if (paneClass === 'tab-pane active')
+                {activo = "active show";}
+            nav += '<li class="nav-item" data-toggle="tab"><a class="nav-link '+ activo+' " href="/lic/' + item.id + '/' + parentRowKey + '" data-target="#' + item.id + '" id="' + item.id + '_tab_' + parentRowKey + '" data-toggle="tab_' + parentRowKey + '">' + item.nom + '</a></li>';
+            activo = '';
             pane += '<div class="tab-pane ' + paneClass + '" id="' + item.id + '"><div class="container-fluid"><table id="' + item.id + '_t_' + parentRowKey + '"></table><div id="navGrid' + item.id + '"></div></div></div>';
         });
         nav += '</ul>';
