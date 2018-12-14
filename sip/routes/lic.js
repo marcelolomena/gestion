@@ -372,5 +372,22 @@ module.exports = function (passport) {
     router.route('/lic/getParametroUbicacion')
         .get(isAuthenticated, parametroController.getParametroUbicacion);
 
+    router.route('/lic/ProductoPendiente')
+        .post(isAuthenticated, traduccionController.actionProductoPendiente)
+        .get(isAuthenticated, traduccionController.listProductoPendiente);
+
+    router.route('/lic/getLikeVersiones/:pId')
+        .get(isAuthenticated, traduccionController.getLikeVersiones);
+
+    router.route('/lic/getVersiones')
+        .get(isAuthenticated, traduccionController.getVersiones);
+
+    router.route('/lic/VersionPendiente')
+        .post(isAuthenticated, traduccionController.actionVersionesPendiente)
+        .get(isAuthenticated, traduccionController.listVersionPendiente);
+
+    router.route('/lic/getLikeProductos/:pId')
+        .get(isAuthenticated, traduccionController.getLikeProductos);
+
     return router;
 };

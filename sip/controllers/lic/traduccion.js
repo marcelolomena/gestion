@@ -3,6 +3,7 @@ var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
 var utilSeq = require('../../utils/seq');
 var base = require('./lic-controller');
+var logger = require("../../utils/logger");
 var _ = require('lodash');
 
 var entity = models.traduccion;
@@ -36,10 +37,6 @@ function mapper(data) {
         }
     });
 }
-
-// function list(req, res) {
-//     base.list(req, res, entity, includes, mapper);
-// }
 
 function list(req, res) {
     var page = req.query.page;
@@ -114,158 +111,6 @@ function list(req, res) {
     });
 }
 
-// exports.list = function (req, res) {
-//     var page = req.query.page;
-//     var rows = req.query.rows;
-//     var filters = req.query.filters;
-//     var sidx = req.query.sidx || 'numerorfp';
-//     var sord = req.query.sord || 'desc';
-
-//     var orden = "[solicitudcotizacion]." + sidx + " " + sord;
-
-//     var filter_one = []
-//     var filter_two = []
-//     var filter_three = []
-//     var filter_four = []
-
-//     if (filters != undefined) {
-//         //logger.debug(filters)
-//         var item = {}
-//         var jsonObj = JSON.parse(filters);
-
-//         jsonObj.rules.forEach(function (item) {
-//             if (item.field === "codigosolicitud") {
-//                 filter_one.push({
-//                     [item.field]: {
-//                         $like: '%' + item.data + '%'
-//                     }
-//                 });
-//             } else if (item.field === "numerorfp") {
-//                 filter_one.push({
-//                     [item.field]: item.data
-//                 });
-//             } else if (item.field === "cui") {
-//                 filter_two.push({
-//                     [item.field]: {
-//                         $like: '%' + item.data + '%'
-//                     }
-//                 });
-//             } else if (item.field === "descripcion") {
-//                 filter_one.push({
-//                     [item.field]: {
-//                         $like: '%' + item.data + '%'
-//                     }
-//                 });
-//             } else if (item.field === "first_name") {
-//                 filter_three.push({
-//                     [item.field]: {
-//                         $like: '%' + item.data + '%'
-//                     }
-//                 });
-//             } else if (item.field === "negociador") {
-//                 filter_four.push({
-//                     ['first_name']: {
-//                         $like: '%' + item.data + '%'
-//                     }
-//                 });
-//             }
-//         })
-//         filter_one.push({
-//             borrado: 1
-//         })
-//     }
-
-//     utilSeq.buildConditionFilter(filters, function (err, data) {
-//         if (err) {
-//             logger.debug("->>> " + err)
-//         } else {
-//             models.solicitudcotizacion.belongsTo(models.estructuracui, {
-//                 foreignKey: 'idcui'
-//             });
-//             models.solicitudcotizacion.belongsTo(models.programa, {
-//                 foreignKey: 'program_id'
-//             });
-//             models.solicitudcotizacion.belongsTo(models.user, {
-//                 as: 'tecnico',
-//                 foreignKey: 'idtecnico'
-//             });
-//             models.solicitudcotizacion.belongsTo(models.valores, {
-//                 as: 'clasificacion',
-//                 foreignKey: 'idclasificacionsolicitud'
-//             });
-//             models.solicitudcotizacion.belongsTo(models.user, {
-//                 as: 'negociador',
-//                 foreignKey: 'idnegociador'
-//             });
-//             models.solicitudcotizacion.belongsTo(models.tipoclausula, {
-//                 foreignKey: 'idtipo'
-//             });
-//             models.solicitudcotizacion.belongsTo(models.valores, {
-//                 as: 'grupo',
-//                 foreignKey: 'idgrupo'
-//             });
-//             models.solicitudcotizacion.count({
-//                 where: filter_one,
-//                 include: [{
-//                     model: models.estructuracui,
-//                     where: filter_two
-//                 }, {
-//                     model: models.user,
-//                     as: 'tecnico',
-//                     where: filter_three
-//                 }, {
-//                     model: models.user,
-//                     as: 'negociador',
-//                     where: filter_four
-//                 }]
-//             }).then(function (records) {
-//                 var total = Math.ceil(records / rows);
-//                 models.solicitudcotizacion.findAll({
-//                     offset: parseInt(rows * (page - 1)),
-//                     limit: parseInt(rows),
-//                     order: orden,
-//                     where: filter_one,
-//                     include: [{
-//                         model: models.estructuracui,
-//                         where: filter_two
-//                     }, {
-//                         model: models.programa
-//                     }, {
-//                         model: models.user,
-//                         as: 'tecnico',
-//                         where: filter_three
-//                     }, {
-//                         model: models.valores,
-//                         as: 'clasificacion'
-//                     }, {
-//                         model: models.user,
-//                         as: 'negociador',
-//                         where: filter_four
-//                     }, {
-//                         model: models.tipoclausula
-//                     }, {
-//                         model: models.valores,
-//                         as: 'grupo'
-//                     }]
-//                 }).then(function (solicitudcotizacion) {
-//                     return res.json({
-//                         records: records,
-//                         total: total,
-//                         page: page,
-//                         rows: solicitudcotizacion
-//                     });
-//                 }).catch(function (err) {
-//                     logger.error(err.message);
-//                     res.json({
-//                         error_code: 1
-//                     });
-//                 });
-//             })
-//         }
-//     });
-
-// }
-
 function listChilds(req, res) {
     base.listChilds(req, res, entity, 'idProducto', includes, mapper);
 }
@@ -297,10 +142,293 @@ function actualizarAddm(req, res) {
     });
 }
 
+function listProductoPendiente(req, res) {
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx || 'idProducto';
+    var sord = req.query.sord || 'desc';
+
+    var wherebusqueda = 'SELECT [nombre] FROM [lic].[traduccion]'
+
+    utilSeq.buildConditionFilter(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            models.producto.hasMany(models.compra, {
+                constraints: false,
+                foreignKey: 'idProducto'
+            });
+            models.producto.count({
+                where: {
+                    nombre: {
+                        $notIn: sequelize.literal('(' + wherebusqueda + ')'),
+                    }
+                },
+                include: [{
+                    model: models.compra,
+                    attributes: [
+                        ['idProducto', 'idProducto']
+                    ]
+                }]
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.producto.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    // order: orden,
+                    where: {
+                        nombre: {
+                            $notIn: sequelize.literal('(' + wherebusqueda + ')'),
+                        }
+                    },
+                    include: [{
+                        model: models.compra,
+                        attributes: [
+                            ['idProducto', 'idProducto']
+                        ]
+                    }]
+                }).then(function (tradc) {
+                    return res.json({
+                        records: records,
+                        total: total,
+                        page: page,
+                        rows: tradc
+                    });
+                }).catch(function (err) {
+                    logger.error(err.message);
+                    res.json({
+                        error_code: 1
+                    });
+                });
+            })
+        }
+    });
+}
+
+function listVersionPendiente(req, res) {
+    var page = req.query.page;
+    var rows = req.query.rows;
+    var filters = req.query.filters;
+    var sidx = req.query.sidx || 'idProducto';
+    var sord = req.query.sord || 'desc';
+
+    var wherebusqueda = 'SELECT [nombre] FROM [lic].[traduccion]'
+
+    var filter_one = []
+    var filter_four = []
+
+    utilSeq.buildConditionFilter(filters, function (err, data) {
+        if (err) {
+            logger.debug("->>> " + err)
+        } else {
+            models.snow$.count({
+                where: {
+                    aplicacion: {
+                        $notIn: sequelize.literal('(' + wherebusqueda + ')')
+                    },
+                    Licencia: 'Yes'
+                }
+            }).then(function (records) {
+                var total = Math.ceil(records / rows);
+                models.snow$.findAll({
+                    offset: parseInt(rows * (page - 1)),
+                    limit: parseInt(rows),
+                    where: {
+                        aplicacion: {
+                            $notIn: sequelize.literal('(' + wherebusqueda + ')')
+                        },
+                        Licencia: 'Yes'
+                    }
+                }).then(function (tradc) {
+                    return res.json({
+                        records: records,
+                        total: total,
+                        page: page,
+                        rows: tradc
+                    });
+                }).catch(function (err) {
+                    logger.error(err.message);
+                    res.json({
+                        error_code: 1
+                    });
+                });
+            })
+        }
+    });
+}
+
+function getLikeVersiones(req, res) {
+    var nombreProducto = '%' + req.params.pId.split(" ", 1) + '%';
+
+    models.snow$.findAll({
+        where: {
+            aplicacion: {
+                $like: nombreProducto
+            }
+        }
+    }).then(function (valores) {
+        return res.json(valores);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({
+            error: 1
+        });
+    });
+}
+
+function getVersiones(req, res) {
+    models.snow$.findAll({
+        where: {
+            Licencia: 'Yes'
+        }
+    }).then(function (versiones) {
+        return res.json(versiones);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({
+            error: 1
+        });
+    });
+}
+
+function actionProductoPendiente(req, res) {
+    var action = req.body.oper;
+    var nombreproducto = req.body.nombre;
+    var versionaplicacion = req.body.aplicacion;
+
+    switch (action) {
+        case 'edit':
+            models.producto.findOne({
+                where: {
+                    nombre: nombreproducto
+                }
+            }).then(function (idprodd) {
+                models.snow$.findOne({
+                    where: {
+                        aplicacion: versionaplicacion
+                    }
+                }).then(function (sno) {
+                    models.traduccion.create({
+                        idProducto: idprodd.id,
+                        nombre: req.body.aplicacion,
+                        snow: sno.instalaciones,
+                        addm: null
+                    }).then(function (traducc) {
+                        return res.json({
+                            id: traducc.id,
+                            message: 'EDITADO',
+                            success: true
+                        });
+                    }).catch(function (err) {
+                        logger.error(err.message)
+                        res.json({
+                            message: err.message,
+                            success: false
+                        });
+                    })
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({
+                        error: 1,
+                        glosa: err.message
+                    });
+                });
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({
+                    error: 1,
+                    glosa: err.message
+                });
+            });
+            break;
+    }
+}
+
+function getLikeProductos(req, res) {
+    var nombreVersion = '%' + req.params.pId.split(" ", 1) + '%';
+    models.producto.findAll({
+        where: {
+            nombre: {
+                $like: nombreVersion
+            }
+        },
+        attributes: ['id', 'nombre']
+    }).then(function (likeprod) {
+        return res.json(likeprod);
+    }).catch(function (err) {
+        logger.error(err);
+        res.json({
+            error: 1
+        });
+    });
+}
+
+function actionVersionesPendiente(req, res) {
+    var action = req.body.oper;
+    var nombreproducto = req.body.nombre;
+    var versionaplicacion = req.body.aplicacion;
+
+    switch (action) {
+        case 'edit':
+            models.producto.findOne({
+                where: {
+                    nombre: nombreproducto
+                }
+            }).then(function (idprodd) {
+                models.snow$.findOne({
+                    where: {
+                        aplicacion: versionaplicacion
+                    }
+                }).then(function (sno) {
+                    models.traduccion.create({
+                        idProducto: idprodd.id,
+                        nombre: req.body.aplicacion,
+                        snow: sno.instalaciones,
+                        addm: null
+                    }).then(function (traducc) {
+                        return res.json({
+                            id: traducc.id,
+                            message: 'EDITADO',
+                            success: true
+                        });
+                    }).catch(function (err) {
+                        logger.error(err.message)
+                        res.json({
+                            message: err.message,
+                            success: false
+                        });
+                    })
+                }).catch(function (err) {
+                    logger.error(err);
+                    return res.json({
+                        error: 1,
+                        glosa: err.message
+                    });
+                });
+            }).catch(function (err) {
+                logger.error(err);
+                return res.json({
+                    error: 1,
+                    glosa: err.message
+                });
+            });
+            break;
+    }
+}
+
+
 module.exports = {
     list: list,
     listChilds: listChilds,
     action: action,
     actualizarSnow: actualizarSnow,
-    actualizarAddm: actualizarAddm
+    actualizarAddm: actualizarAddm,
+    listProductoPendiente: listProductoPendiente,
+    listVersionPendiente: listVersionPendiente,
+    getLikeVersiones: getLikeVersiones,
+    getVersiones: getVersiones,
+    actionProductoPendiente: actionProductoPendiente,
+    getLikeProductos: getLikeProductos,
+    actionVersionesPendiente: actionVersionesPendiente
 };
