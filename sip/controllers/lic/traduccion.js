@@ -149,7 +149,7 @@ function listProductoPendiente(req, res) {
     var sidx = req.query.sidx || 'idProducto';
     var sord = req.query.sord || 'desc';
 
-    var wherebusqueda = 'SELECT [nombre] FROM [lic].[traduccion]'
+    var wherebusqueda = 'SELECT b.[nombre] FROM [lic].[traduccion] a join [lic].[producto] b on a.idproducto = b.id'
 
     utilSeq.buildConditionFilter(filters, function (err, data) {
         if (err) {
