@@ -1,6 +1,7 @@
 'use strict';
 var models = require('../../models');
 var sequelize = require('../../models/index').sequelize;
+var nodeExcel = require('excel-export');
 var utilSeq = require('../../utils/seq');
 var base = require('./lic-controller');
 var _ = require('lodash');
@@ -10,6 +11,7 @@ var path = require('path');
 var fs = require('fs');
 var constants = require("../../utils/constants");
 var nodemailer = require('nodemailer');
+
 
 var entity = models.instalacion;
 
@@ -41,7 +43,9 @@ function list(req, res) {
                 entity.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    order: [['codautorizacion', 'DESC']],
+                    order: [
+                        ['codautorizacion', 'DESC']
+                    ],
                     where: {
                         idUsuario: usuario
                     },
@@ -67,16 +71,6 @@ function list(req, res) {
         }
     });
 }
-
-// function misAutorizaciones(req, res) {
-//     models.sequelize.query("select distinct a.id, a.idproducto, b.nombre, a.numlicencia, b.idtipoinstalacion, a.codautoriza " +
-//         "from lic.reserva a " +
-//         "join lic.producto b on a.idproducto = b.id " +
-//         "join lic.instalacion c on c.idproducto = b.id " +
-//         "where a.idusuario = " + req.session.passport.user + " AND a.estado = 'Autorizado' AND b.licReserva <> 0 AND c.estado!= 'Instalado' AND c.estado! = 'Historico'").spread(function (rows) {
-//         return res.json(rows);
-//     });
-// }
 
 function misAutorizaciones(req, res) {
     models.sequelize.query("select distinct a.id, a.idproducto, b.nombre, a.numlicencia, b.idtipoinstalacion, a.codautoriza " +
@@ -221,45 +215,47 @@ function action(req, res) {
                 idTipoInstalacion: numero,
                 numlicencia: req.body.numlicencia
             }).then(function (instal) {
-				var htmltext = '<b>Estimado(a) <br><br> Se ha solicitado la instalaci&oacute;n de '+req.body.numlicencia+' licencia(s) de producto "' +
-					req.body.nombreProd + '" . <br>Adicionalmente considerar el siguiente comentario: '+req.body.informacion+'.';			
-				var mailtorre=constants.CORREOTO;
-				if (numero == constants.TIPO_INST_PC) {
-					mailtorre=constants.MAIL_INST_PC;
-				} else {
-					mailtorre=constants.MAIL_INST_SRV;
-				}
-				  let transporter = nodemailer.createTransport({
-					host: constants.CORREOIP,
-					port: 25,
-					secure: false, // true for 465, false for other ports
-					auth: {
-					  user: constants.CORREOUSR,
-					  pass: constants.CORREOPWD
-					},
-					tls: {rejectUnauthorized: false}
-				  });
-				  // setup email data with unicode symbols
-				  let mailOptions = {
-					from: constants.CORREOFROM, // sender address
-					to: constants.CORREOTO + ',' + mailtorre, // list of receivers
-					subject: 'Visado de instalacion de software', // Subject line
-					text: 'Visado de instalacion', // plain text body
-					html: htmltext
-				  };
+                var htmltext = '<b>Estimado(a) <br><br> Se ha solicitado la instalaci&oacute;n de ' + req.body.numlicencia + ' licencia(s) de producto "' +
+                    req.body.nombreProd + '" . <br>Adicionalmente considerar el siguiente comentario: ' + req.body.informacion + '.';
+                var mailtorre = constants.CORREOTO;
+                if (numero == constants.TIPO_INST_PC) {
+                    mailtorre = constants.MAIL_INST_PC;
+                } else {
+                    mailtorre = constants.MAIL_INST_SRV;
+                }
+                let transporter = nodemailer.createTransport({
+                    host: constants.CORREOIP,
+                    port: 25,
+                    secure: false, // true for 465, false for other ports
+                    auth: {
+                        user: constants.CORREOUSR,
+                        pass: constants.CORREOPWD
+                    },
+                    tls: {
+                        rejectUnauthorized: false
+                    }
+                });
+                // setup email data with unicode symbols
+                let mailOptions = {
+                    from: constants.CORREOFROM, // sender address
+                    to: constants.CORREOTO + ',' + mailtorre, // list of receivers
+                    subject: 'Visado de instalacion de software', // Subject line
+                    text: 'Visado de instalacion', // plain text body
+                    html: htmltext
+                };
 
-				  //console.log('MailOPt'+JSON.stringify(mailOptions));
-				  console.log("TO:"+constants.CORREOTO + ',' + mailtorre);
-				  // send mail with defined transport object
-				  transporter.sendMail(mailOptions, (error, info) => {
-					if (error) {
-					  return console.log(error);
-					}
-					console.log('Message sent: %s', info.messageId);
-					// Preview only available when sending through an Ethereal account
-					console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-				  });
-				
+                //console.log('MailOPt'+JSON.stringify(mailOptions));
+                console.log("TO:" + constants.CORREOTO + ',' + mailtorre);
+                // send mail with defined transport object
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        return console.log(error);
+                    }
+                    console.log('Message sent: %s', info.messageId);
+                    // Preview only available when sending through an Ethereal account
+                    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                });
+
                 return res.json({
                     id: instal.id,
                     message: 'Inicio carga',
@@ -320,58 +316,160 @@ function action(req, res) {
 }
 
 function listInstalacion(req, res) {
-    var id = req.params.id;
-    var usuario = req.session.passport.user;
+
+    var page = req.query.page;
+    var rowspp = req.query.rows;
+    var sidx = req.query.sidx;
+    var sord = req.query.sord;
+    var instal = 'Instalado';
+    var histor = 'Historico';
+    var filters = req.query.filters;
+    var condition = "";
     var idproduc = req.params.pId;
-    var instal = 'Instalado'
-    var histor = 'Historico'
+
+    if (filters) {
+        var jsonObj = JSON.parse(filters);
+        if (JSON.stringify(jsonObj.rules) != '[]') {
+            jsonObj.rules.forEach(function (item) {
+                if (item.op === 'cn' || item.op === 'eq')
+                    if (item.field == 'nombre') {
+                        condition += 'a.' + item.field + " like '%" + item.data + "%' AND ";
+                    } else {
+                        condition += 'a.' + item.field + "=" + item.data + " AND ";
+                    }
+            });
+            condition = condition.substring(0, condition.length - 5);
+            // logger.debug("***CONDICION:" + condition);
+        }
+    }
+    // var sqlcount = 'SELECT count(*) AS count FROM lic.reserva a JOIN lic.producto b ON a.idproducto=b.id ";
+    var sqlcount = "SELECT SUM(count) " +
+        "FROM (SELECT count(*) AS [count] " +
+        "FROM [lic]. [instalacion] AS[instalacion] " +
+        "WHERE [instalacion]. [estado] IN ( '" + instal + "', '" + histor + "') AND [instalacion]. [idproducto] = " + idproduc +
+        "union " +
+        "SELECT count( * ) AS [count] " +
+        "FROM lic.ubicacioninstalacion " +
+        "WHERE idproducto = " + idproduc +
+        ") a "
+    if (filters && condition != "") {
+        sqlcount += " WHERE " + condition + " ";
+    }
+    var rol = req.session.passport.sidebar[0].rid; //req.user[0].rid;
+    var sqlok;
+    var sql = "DECLARE @PageSize INT; " +
+        "SELECT @PageSize=" + rowspp + "; " +
+        "DECLARE @PageNumber INT; " +
+        "SELECT @PageNumber=" + page + "; " +
+        "SELECT  [instalacion].id, [instalacion].estado, [instalacion].codautorizacion, [instalacion].instalador, fechainstalacion, null as usuario, null as ubicacion, null as codigoInterno, null as observacion, null as nombrecui, null as nombre, null as licencia" +
+        "FROM [lic].[instalacion] AS [instalacion] LEFT OUTER JOIN [lic].[producto] AS [producto] ON [instalacion].[idproducto] = [producto].[id] " +
+        "LEFT OUTER JOIN [dbo].[art_user] AS [user] ON [instalacion].[idusuario] = [user].[uid] " +
+        "WHERE [instalacion].[estado] IN ( '" + instal + "', '" + histor + "' ) AND [instalacion].[idproducto] = " + idproduc +
+        "union all " +
+        "SELECT [id], estado, null, null, null, usuario, ubicacion, codigoInterno, observacion, nombrecui, nombre, licencia" +
+        "FROM lic.ubicacioninstalacion " +
+        "WHERE idproducto = " + idproduc
+    // "ORDER BY [id] OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY "
+
+    if (filters && condition != "") {
+        sql += "AND " + condition + " ";
+        logger.debug("**" + sql + "**");
+    }
+    var sql2 = sql + "ORDER BY id OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY";
+    var records;
+    // logger.debug("query:" + sql2);
+
+    sequelize.query(sqlcount).spread(function (recs) {
+        var records = recs[0].count;
+        var total = Math.ceil(parseInt(recs[0].count) / rowspp);
+        sequelize.query(sql2).spread(function (rows) {
+            res.json({
+                records: records,
+                total: total,
+                page: page,
+                rows: rows
+            });
+        }).catch(function (err) {
+            logger.error(err)
+            res.json({
+                error_code: 1
+            });
+        });
+    })
+}
+
+function listUbicacion(req, res) {
     var page = req.query.page;
     var rows = req.query.rows;
-    var filters = req.params.filters
-	console.log("******** page:"+page+", row:"+rows);
-    utilSeq.buildCondition(filters, function (err, data) {
+    var filters = req.query.filters;
+    var sidx = req.query.sidx || 'fecha';
+    var sord = 'desc';
+    // var provee = req.query.provee;
+    var orden = "[ubicacioninstalacion]." + sidx + " " + sord;
+    var filter_one = []
+    var filter_two = []
+    var filter_tres = []
+
+    var isrequired = false;
+    if (filters != undefined) {
+        var item = {}
+        var jsonObj = JSON.parse(filters);
+        jsonObj.rules.forEach(function (item) {
+            if (item.field === "nombreProd") {
+                filter_two.push({
+                    ['nombre']: {
+                        $like: '%' + item.data + '%'
+                    }
+                });
+            } else if (item.field === "usuario") {
+                filter_one.push({
+                    [item.field]: {
+                        $like: '%' + item.data + '%'
+                    }
+                });
+            } else if (item.field === "nombre") {
+                filter_one.push({
+                    [item.field]: {
+                        $like: '%' + item.data + '%'
+                    }
+                });
+            }
+        })
+    }
+    utilSeq.buildConditionFilter(filters, function (err, data) {
         if (err) {
             logger.debug("->>> " + err)
         } else {
-            entity.belongsTo(models.producto, {
-                foreignKey: 'idProducto'
+            models.ubicacioninstalacion.belongsTo(models.producto, {
+                foreignKey: 'idproducto'
             });
-            entity.belongsTo(models.user, {
-                foreignKey: 'idUsuario'
-            });
-            entity.belongsTo(models.tipoInstalacion, {
-                foreignKey: 'idTipoInstalacion'
-            });
-            entity.count({
-                where: {
-                    idProducto: idproduc,
-                    estado: [instal, histor]
-                },
+            models.ubicacioninstalacion.count({
+                where: filter_one,
+                include: [{
+                    model: models.producto,
+                    where: filter_two
+                }]
             }).then(function (records) {
                 var total = Math.ceil(records / rows);
-                entity.findAll({
+                models.ubicacioninstalacion.findAll({
                     offset: parseInt(rows * (page - 1)),
                     limit: parseInt(rows),
-                    // order: ['id'],
-                    where: {
-                        idProducto: idproduc,
-                        estado: [instal, histor]
-                    },
+                    order: orden,
+                    where: filter_one,
                     include: [{
-                        model: models.producto
-                    }, {
-                        model: models.user
+                        model: models.producto,
+                        where: filter_two
                     }]
-                }).then(function (instal) {
+                }).then(function (ubicacioninst) {
                     return res.json({
                         records: records,
                         total: total,
                         page: page,
-                        rows: instal
+                        rows: ubicacioninst
                     });
                 }).catch(function (err) {
-                    logger.error(err);
-                    return res.json({
+                    logger.error(err.message);
+                    res.json({
                         error_code: 1
                     });
                 });
@@ -380,7 +478,291 @@ function listInstalacion(req, res) {
     });
 }
 
+function actionUbicacion(req, res) {
+    var action = req.body.oper;
+    var hoy = "" + new Date().toISOString();
+    var opcion = req.body.codigoInterno
+    var codigosecuencie;
+    switch (opcion) {
+        case 'Asignación':
+            sequelize.query("execute lic.seqAsigna").spread(function (numero) {
+                codigosecuencie = numero[0].secuencia
+                models.ubicacioninstalacion.create({
+                    idproducto: req.body.idproducto,
+                    usuario: req.body.usuario,
+                    ubicacion: req.body.ubicacion,
+                    codigoInterno: codigosecuencie,
+                    estado: 'ubicacion',
+                    observacion: req.body.observacion,
+                    nombrecui: req.body.nombrecui,
+                    nombre: req.body.nombre,
+                    fecha: hoy
+                }).then(function (instal) {
+                    return res.json({
+                        id: instal.id,
+                        message: 'CREADO',
+                        success: true,
+                        error: 0
+                    });
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({
+                        id: instal.id,
+                        message: 'FALLA',
+                        success: false,
 
+                    });
+                });
+            });
+            break;
+        case 'Asignación Masiva':
+            sequelize.query("execute lic.seqAsigMasi").spread(function (numero) {
+                codigosecuencie = numero[0].secuencia
+                models.ubicacioninstalacion.create({
+                    idproducto: req.body.idproducto,
+                    usuario: req.body.usuario,
+                    ubicacion: req.body.ubicacion,
+                    codigoInterno: codigosecuencie,
+                    estado: 'ubicacion',
+                    observacion: req.body.observacion,
+                    nombrecui: req.body.nombrecui,
+                    nombre: req.body.nombre,
+                    fecha: hoy
+                }).then(function (instal) {
+                    return res.json({
+                        id: instal.id,
+                        message: 'CREADO',
+                        success: true,
+                        error: 0
+                    });
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({
+                        id: instal.id,
+                        message: 'FALLA',
+                        success: false,
+
+                    });
+                });
+            });
+            break;
+        case 'Desintalación':
+            sequelize.query("execute lic.seqDesinta").spread(function (numero) {
+                codigosecuencie = numero[0].secuencia
+                models.ubicacioninstalacion.create({
+                    idproducto: req.body.idproducto,
+                    usuario: req.body.usuario,
+                    ubicacion: req.body.ubicacion,
+                    codigoInterno: codigosecuencie,
+                    estado: 'ubicacion',
+                    observacion: req.body.observacion,
+                    nombrecui: req.body.nombrecui,
+                    nombre: req.body.nombre,
+                    fecha: hoy
+                }).then(function (instal) {
+                    return res.json({
+                        id: instal.id,
+                        message: 'CREADO',
+                        success: true,
+                        error: 0
+                    });
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({
+                        id: instal.id,
+                        message: 'FALLA',
+                        success: false,
+
+                    });
+                });
+
+
+            });
+            break;
+        case 'Reasignación':
+            sequelize.query("execute lic.seqReasig").spread(function (numero) {
+                codigosecuencie = numero[0].secuencia
+                models.ubicacioninstalacion.create({
+                    idproducto: req.body.idproducto,
+                    usuario: req.body.usuario,
+                    ubicacion: req.body.ubicacion,
+                    codigoInterno: codigosecuencie,
+                    estado: 'ubicacion',
+                    observacion: req.body.observacion,
+                    nombrecui: req.body.nombrecui,
+                    nombre: req.body.nombre,
+                    fecha: hoy
+                }).then(function (instal) {
+                    return res.json({
+                        id: instal.id,
+                        message: 'CREADO',
+                        success: true,
+                        error: 0
+                    });
+                }).catch(function (err) {
+                    logger.error(err)
+                    return res.json({
+                        id: instal.id,
+                        message: 'FALLA',
+                        success: false,
+
+                    });
+                });
+            });
+            break;
+        default:
+            switch (action) {
+                case "edit":
+                    models.ubicacioninstalacion.update({
+                        idproducto: req.body.idproducto,
+                        usuario: req.body.usuario,
+                        ubicacion: req.body.ubicacion,
+                        observacion: req.body.observacion,
+                        nombrecui: req.body.nombrecui,
+                        nombre: req.body.nombre
+                    }, {
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (clase) {
+                        res.json({
+                            id: req.body.id,
+                            message: 'EDITADO',
+                            success: true,
+                            error: 0
+                        });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({
+                            message: 'FALLA',
+                            success: false
+                        });
+                    });
+                    break;
+                case "del":
+                    models.ubicacioninstalacion.destroy({
+                        where: {
+                            id: req.body.id
+                        }
+                    }).then(function (rowDeleted) {
+                        res.json({
+                            error: 0,
+                            glosa: 'BORRADO'
+                        });
+                    }).catch(function (err) {
+                        logger.error(err)
+                        res.json({
+                            error: 1,
+                            glosa: 'FALLA'
+                        });
+                    });
+                    break;
+            }
+    }
+}
+
+function getExcel(req, res) {
+
+    var conf = {}
+    conf.cols = [{
+            caption: 'N',
+            type: 'number',
+            width: 3
+        },
+        {
+            caption: 'codigoInterno',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'Software',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'Nombre',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'Usuario',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'Ubicación',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'CUI',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'Observación',
+            type: 'string',
+            width: 200
+        },
+        {
+            caption: 'Fecha',
+            type: 'string',
+            width: 200
+        }
+    ];
+    var sql = "SELECT b.nombre as nombreProd, a.usuario, a.ubicacion, a.codigoInterno, a.observacion, a.nombrecui, a.nombre, a.fecha FROM lic.ubicacioninstalacion a " +
+        "JOIN lic.producto b ON b.id = a.idproducto " +
+        "ORDER BY a.fecha DESC";
+
+    // console.log("query:" + sql);
+    sequelize.query(sql)
+        .spread(function (ubicacion) {
+            var arr = [];
+            var nombreprod = '';
+            for (var i = 0; i < ubicacion.length; i++) {
+                if (nombreprod != ubicacion[i].nombreProd) {
+                    var a = [i + 1,
+                        ubicacion[i].codigoInterno,
+                        ubicacion[i].nombreProd,
+                        ubicacion[i].nombre,
+                        ubicacion[i].usuario,
+                        ubicacion[i].ubicacion,
+                        ubicacion[i].nombrecui,
+                        ubicacion[i].observacion,
+                        ubicacion[i].fecha ? ubicacion[i].fecha.toISOString().slice(0, 10) : 'sin fecha'
+                    ];
+                    nombreprod = ubicacion[i].nombreProd
+                } else {
+                    var a = [i + 1,
+                        ubicacion[i].codigoInterno,
+                        null,
+                        ubicacion[i].nombre,
+                        ubicacion[i].usuario,
+                        ubicacion[i].ubicacion,
+                        ubicacion[i].nombrecui,
+                        ubicacion[i].observacion,
+                        ubicacion[i].fecha ? ubicacion[i].fecha.toISOString().slice(0, 10) : 'sin fecha'
+                    ];
+                    nombreprod = ubicacion[i].nombreProd
+                }
+
+                arr.push(a);
+            }
+            conf.rows = arr;
+
+            var result = nodeExcel.execute(conf);
+            res.setHeader('Content-Type', 'application/vnd.openxmlformates');
+            res.setHeader("Content-Disposition", "attachment;filename=" + "ReporteUbicacionesLIC.xlsx");
+            res.end(result, 'binary');
+
+        }).catch(function (err) {
+            logger.debug(err);
+            res.json({
+                error_code: 100
+            });
+        });
+
+};
 
 module.exports = {
     list: list,
@@ -388,5 +770,10 @@ module.exports = {
     miscodigos: miscodigos,
     upload: upload,
     action: action,
-    listInstalacion: listInstalacion
+    listInstalacion: listInstalacion,
+    listUbicacion: listUbicacion,
+    actionUbicacion: actionUbicacion,
+    getExcel: getExcel
+
+
 };

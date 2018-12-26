@@ -7,7 +7,7 @@ var entity = models.estructuracuibch;
 
 exports.listAll = function (req, res) {
 
-  var sql = "SELECT cui id, convert(VARCHAR(10), cui)+' '+unidad AS nombre FROM lic.estructuracuibch WHERE estado='Activado'";
+  var sql = "SELECT cui id, convert(VARCHAR(10), cui)+' '+unidad AS nombre FROM lic.estructuracuibch WHERE estado in ('Activado', 'Principal')";
 
   sequelize.query(sql)
     .spread(function (rows) {

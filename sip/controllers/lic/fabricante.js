@@ -1,5 +1,6 @@
 'use strict';
 var models = require('../../models');
+var sequelize = require('../../models/index').sequelize;
 var base = require('./lic-controller');
 var _ = require('lodash');
 
@@ -38,6 +39,16 @@ function listAll(req, res) {
     });
 }
 
+function listAllFabricante(req, res) {
+    var sql = 'SELECT DISTINCT b.id, b.nombre FROM lic.producto a ' +
+        'JOIN lic.fabricante b ON b.id = a.idfabricante ' +
+        'JOIN lic.compra c ON c.idproducto = a.id ';
+    sequelize.query(sql)
+        .spread(function (rows) {
+            return res.json(rows);
+        });
+};
+
 function action(req, res) {
     switch (req.body.oper) {
         case 'add':
@@ -75,5 +86,6 @@ module.exports = {
     list: list,
     action: action,
     listAll: listAll,
-    existeOtroFabricante: existeOtroFabricante
+    existeOtroFabricante: existeOtroFabricante,
+    listAllFabricante: listAllFabricante
 };

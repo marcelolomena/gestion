@@ -348,7 +348,7 @@ function renderGrid(loadurl, tableId) {
                         var rowKey = $table.getGridParam("selrow");
                         var rowData = $table.getRowData(rowKey);
                         var thissid = $(this).val();
-                        var fechacontr = editar_fecha(thissid, -3, "m", "-");
+                        var fechacontr = editar_fecha(thissid, -1, "m", "-");
                         $("input#fechaControl").val(fechacontr);
 
                     }

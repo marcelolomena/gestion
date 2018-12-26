@@ -11,6 +11,9 @@ exports.action = function (req, res) {
     secuencia.getSecuencia(0, function (err, sec) {
         switch (action) {
             case "add":
+                if (req.body.idadministracion == 0) {
+                    req.body.idadministracion = null;
+                }
                 req.body.numerorfp = parseInt(sec);
                 var hoy = "" + new Date().toISOString();
                 if (req.body.fechaenviorfp) {

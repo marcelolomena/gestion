@@ -34,70 +34,89 @@ var tabInstalacionGrid = {
                 editrules: {
                     edithidden: false
                 }
-
-            }, {
-                label: 'Producto',
-                name: 'idProducto',
-                jsonmap: 'producto.nombre',
-                width: 400,
-                align: 'center',
-                sortable: false,
-                editable: false,
-                search: false
-            }, {
-                label: 'Numero Licencias',
-                name: 'numlicencia',
-                align: 'center',
-                width: 120,
-                editable: false,
-                search: false
-            }, {
+            },
+            {
                 label: 'Código de Autorización',
-                name: 'codAutorizacion',
+                name: 'codautorizacion',
                 align: 'center',
-                width: 200,
+                width: 155,
                 editable: false,
                 formatter: function (cellvalue, options, rowObject) {
                     var estado = rowObject.estado;
                     if (estado == 'Historico') {
                         return codauto = 'Historico'
-                    }else{
-                        return cellvalue
+                    } else {
+                        if (estado == 'ubicacion') {
+                            return codauto = 'Ubicación'
+                        } else {
+                            return cellvalue;
+                        }
                     }
                 },
                 search: false,
-                
-            }, 
+            },
+            {
+                label: 'Usuario',
+                name: 'usuario',
+                align: 'center',
+                width: 250,
+                editable: false,
+                search: false
+            },
+            {
+                label: 'Ubicación',
+                name: 'ubicacion',
+                align: 'center',
+                width: 150,
+                editable: false,
+                search: false
+            },
+            {
+                label: 'Código Interno',
+                name: 'codigoInterno',
+                align: 'center',
+                width: 140,
+                editable: false,
+                search: false
+            },
             {
                 label: 'Instalador',
                 name: 'instalador',
                 align: 'center',
-                width: 120,
+                width: 150,
                 editable: false,
                 search: false
             },
             {
                 label: 'Fecha de Instalación',
                 name: 'fechaInstalacion',
-                width: 200,
+                width: 110,
                 align: 'center',
                 sortable: false,
                 editable: true,
                 editoptions: {
                     fullRow: true,
                     readonly: 'readonly'
-                },        
+                },
                 formatter: function (cellvalue, options, rowObject) {
                     //2017-12-31T00:00:00.000Z
                     var val = rowObject.fechaInstalacion;
                     if (val != null) {
-                        val = val.substring(0,10);
-                        var fechaok = val.substring(8)+'-'+val.substring(5,7)+'-'+val.substring(0,4);
+                        val = val.substring(0, 10);
+                        var fechaok = val.substring(8) + '-' + val.substring(5, 7) + '-' + val.substring(0, 4);
                         return fechaok;
                     } else {
                         return '';
                     }
                 },
+                search: false
+            },
+            {
+                label: 'Observación',
+                name: 'observacion',
+                align: 'center',
+                width: 200,
+                editable: false,
                 search: false
             }
         ];
@@ -121,7 +140,7 @@ var tabInstalacionGrid = {
 
         }
 
-        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Instalaciones', 'Editar Instalación', 'Agregar Instalación', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
+        var tabGrid = new zs.SimpleGrid(tableName, 'navGrid' + tabName, 'Utilizadas', 'Editar Instalación', 'Agregar Instalación', loadurl, viewModel, 'id', '/lic/getsession', ['Administrador LIC']);
         tabGrid.navParameters.edit = false;
         tabGrid.navParameters.add = false;
         tabGrid.navParameters.del = false;
@@ -129,5 +148,4 @@ var tabInstalacionGrid = {
 
         tabGrid.build();
     }
-
 };

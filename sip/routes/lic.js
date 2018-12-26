@@ -43,6 +43,8 @@ var torreController = require('../controllers/lic/torre');
 var reportecompController = require('../controllers/lic/reportecomparativo');
 var graficoVencimController = require('../controllers/lic/graficovencimientos');
 var instConsultaController = require('../controllers/lic/instalacion-consulta');
+var controlUbicacionController = require('../controllers/lic/controlusuario');
+var parametroController = require('../controllers/lic/parametro');
 
 module.exports = function (passport) {
     router.get('/lic/getsession', function (req, res) {
@@ -336,7 +338,7 @@ module.exports = function (passport) {
         .get(isAuthenticated, detalleCompraTramiteController.existeRecepcion);
 
     router.route('/lic/buscaprod/:pId')
-    .get(isAuthenticated, reservaSolicitudController.buscaprod);
+        .get(isAuthenticated, reservaSolicitudController.buscaprod);
 
     // router.route('/lic/getResulProd/:nombreProd')
     //     .get(isAuthenticated, productoController.getResulProd);
@@ -349,6 +351,43 @@ module.exports = function (passport) {
 
     router.route('/lic/fichatecnica/upload')
         .post(isAuthenticated, detalleRecepcionController.upload);
+
+    router.route('/lic/ubicacioninstalacion')
+        .post(isAuthenticated, instalacionSolicitudController.actionUbicacion)
+        .get(isAuthenticated, instalacionSolicitudController.listUbicacion)
+
+    router.route('/lic/ubicacionexcel')
+        .get(isAuthenticated, instalacionSolicitudController.getExcel);
+
+    router.route('/lic/listAllFabricante')
+        .get(isAuthenticated, fabricanteController.listAllFabricante);
+
+    router.route('/lic/controlusuario')
+        .post(isAuthenticated, controlUbicacionController.action)
+        .get(isAuthenticated, controlUbicacionController.list)
+
+    router.route('/lic/controlexcel')
+        .get(isAuthenticated, controlUbicacionController.getExcel);
+
+    router.route('/lic/getParametroUbicacion')
+        .get(isAuthenticated, parametroController.getParametroUbicacion);
+
+    router.route('/lic/ProductoPendiente')
+        .post(isAuthenticated, traduccionController.actionProductoPendiente)
+        .get(isAuthenticated, traduccionController.listProductoPendiente);
+
+    router.route('/lic/getLikeVersiones/:pId')
+        .get(isAuthenticated, traduccionController.getLikeVersiones);
+
+    router.route('/lic/getVersiones')
+        .get(isAuthenticated, traduccionController.getVersiones);
+
+    router.route('/lic/VersionPendiente')
+        .post(isAuthenticated, traduccionController.actionVersionesPendiente)
+        .get(isAuthenticated, traduccionController.listVersionPendiente);
+
+    router.route('/lic/getLikeProductos/:pId')
+        .get(isAuthenticated, traduccionController.getLikeProductos);
 
     return router;
 };
