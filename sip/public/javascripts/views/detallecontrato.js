@@ -109,11 +109,31 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
         templateServicio += "<div class='column-half'>Diferido{diferido}</div>";
         templateServicio += "<div class='column-half'>Calculo Automático de Cuotas{tipogeneracion}</div>";   
     }  
-    templateServicio += "</div>";    
+    templateServicio += "</div>";   
+    
+    templateServicio += "<div class='form-row'>";     
+    templateServicio += "<div class='column-half'>Fecha Solicitud{fechasolicitud}</div>";
+    templateServicio += "</div>";     
+    
+    templateServicio += "<div class='form-row'>";     
+    templateServicio += "<div class='column-half'>Solicitante{uidsolicitante}</div>";
+    templateServicio += "</div>"; 
+    
+    templateServicio += "<div class='form-row'>";     
+    templateServicio += "<div class='column-half'>Funnel{funnel}</div>";
+    templateServicio += "</div>"; 
+    
+    if (tipocontrato == 'Proyectos') {
+        templateServicio += "<div class='form-row'>";     
+        templateServicio += "<div class='column-half'>Lider{uidlider}</div>";
+        templateServicio += "</div>";   
+    }  
 
     templateServicio += "<hr style='width:100%;'/>";
     templateServicio += "<div> {sData} {cData}  </div>";
     templateServicio += "</div>";
+
+    
 
     $('#' + subgrid_id).append('<table id=' + subgrid_table_id + ' class=scroll></table><div id=' + pager_id + ' class=scroll></div>');
 
@@ -702,7 +722,111 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
             },
             {
                 label: 'Numero Ficha Criticidad', name: 'numfichacriticidad', search: false, editable: true, hidden: true,
-            }                                                                 
+            },
+            {
+                label: 'Comentario', name: 'comentario', search: false, editable: true, hidden: false,
+                edittype: "textarea", editoptions: {maxlength:"1000"}
+            },
+            {
+                label: 'Fecha Solicitud', name: 'fechasolicitud', search: false, editable: true, hidden: true,
+                formatter: 'date', formatoptions: { srcformat: 'ISO8601Long', newformat: 'Y-m-d' },
+                editoptions: {
+                    size: 10, maxlengh: 10,
+                    dataInit: function (element) {
+                        $(element).mask("0000-00-00", { placeholder: "____-__-__" });
+                        $(element).datepicker({ language: 'es', format: 'yyyy-mm-dd', autoclose: true })
+                    }
+                }
+            },
+            {
+                label: 'Solicitante', name: 'uidsolicitante', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/contratosListaLider/All',
+                    buildSelect: function (response) {
+                        var grid = $("#grid");
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.uidpmo;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Solicitante--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].uid == thissid) {
+                                s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            }
+                        });                                 
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#uidsolicitante").val($('option:selected', this).text());
+                        }
+                    }],
+                }    
+            },
+            {
+                label: 'Funnel', name: 'funnel', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/parameters/funnel',
+                    buildSelect: function (response) {
+                        var grid = $("#grid");
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.plazocontrato;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Funnel--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].nombre == thissid) {
+                                s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                            }
+                        });
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            var thistid = $(this).val();
+                            $("input#funnel").val($('option:selected', this).text());
+                        }
+                    }],
+                }
+            },
+            {
+                label: 'Lider', name: 'uidlider', search: false, editable: true, hidden: true,
+                edittype: "select",
+                editoptions: {
+                    dataUrl: '/contratosListaLider/Lider',
+                    buildSelect: function (response) {
+                        var grid = $("#grid");
+                        var rowKey = grid.getGridParam("selrow");
+                        var rowData = grid.getRowData(rowKey);
+                        var thissid = rowData.uidpmo;
+                        var data = JSON.parse(response);
+                        var s = "<select>";//el default
+                        s += '<option value="0">--Escoger Lider--</option>';
+                        $.each(data, function (i, item) {
+                            if (data[i].uid == thissid) {
+                                s += '<option value="' + data[i].uid + '" selected>' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            } else {
+                                s += '<option value="' + data[i].uid + '">' + data[i].first_name + ' ' + data[i].last_name + '</option>';
+                            }
+                        });                  
+                        return s + "</select>";
+                    },
+                    dataEvents: [{
+                        type: 'change', fn: function (e) {
+                            $("input#uidlider").val($('option:selected', this).text());
+                        }
+                    }],
+                }                    
+            },                                                
+
         ],
         shrinkToFit: true,
         autowidth: true,

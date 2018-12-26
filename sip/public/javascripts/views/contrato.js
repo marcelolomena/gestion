@@ -8,6 +8,9 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-full'>Contrato<span style='color:red'>*</span>{nombre}</div>";
+    template += "</div>";
+
+    template += "<div class='form-row'>";
     template += "<div class='column-full'>Proveedor<span style='color:red'>*</span>{idproveedor}</div>";
     template += "</div>";
 
@@ -18,15 +21,19 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Número{numero}</div>";
-    template += "</div>";
-
-    template += "<div class='form-row'>";
     template += "<div class='column-half'>Negociador<span style='color:red'>*</span>{uidpmo}</div>";
     template += "</div>";
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Origen<span style='color:red'>*</span>{tipocontrato}</div>";
     template += "</div>";
+        
+    template += "<div class='form-row'>";
+    template += "<div class='column-half'>Tipo Enrolamiento Proveedor<span style='color:red'>*</span>{enrolamiento}</div>";
+    template += "<div class='column-half'>Tipo Proveedor<span style='color:red'>*</span>{tipoproveedor}</div>";
+    template += "</div>";
+    
+
 
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>razonsocial{razonsocial}</div>";
@@ -348,7 +355,67 @@ $(document).ready(function () {
         {
             label: 'Negociador', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
-        }                
+        },
+        {
+            label: 'Tipo Enrolamiento', name: 'enrolamiento', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/parameters/enrolamiento',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.plazocontrato;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tipo Enrolamiento--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thistid = $(this).val();
+                        $("input#enrolamiento").val($('option:selected', this).text());
+                    }
+                }],
+            }
+        },         
+        {
+            label: 'Tipo Proveedor', name: 'tipoproveedor', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/parameters/tipoproveedor',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.plazocontrato;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tipo Proveedor--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thistid = $(this).val();
+                        $("input#tipoproveedor").val($('option:selected', this).text());
+                    }
+                }],
+            }
+        },                         
     ];
     $("#grid").jqGrid({
         url: '/contratos/list',
@@ -431,6 +498,10 @@ $(document).ready(function () {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
                     return [false, "Negociador: Debe escoger un valor", ""];                
+                } if (parseInt(postdata.enrolamiento) == 0) {
+                    return [false, "Enrolamiento: Debe escoger un tipo de enrolamiento", ""];                
+                } if (parseInt(postdata.tipoproveedor) == 0) {
+                    return [false, "Tipo Proveedor: Debe escoger un tipo de proveedor", ""];                
                 } else {
                     return [true, "", ""]
                 }
@@ -477,6 +548,10 @@ $(document).ready(function () {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
                     return [false, "Negociador: Debe escoger un valor", ""];                 
+                }  if (parseInt(postdata.enrolamiento) == 0) {
+                    return [false, "Enrolamiento: Debe escoger un tipo de enrolamiento", ""];                
+                } if (parseInt(postdata.tipoproveedor) == 0) {
+                    return [false, "Tipo Proveedor: Debe escoger un tipo de proveedor", ""];                
                 } else {
                     return [true, "", ""]
                 }

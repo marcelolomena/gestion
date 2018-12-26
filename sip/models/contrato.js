@@ -76,6 +76,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },    
+    enrolamiento: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    tipoproveedor: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },	
     borrado: {
       type: DataTypes.INTEGER,
       allowNull: true

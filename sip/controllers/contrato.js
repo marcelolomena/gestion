@@ -241,6 +241,8 @@ exports.action = function (req, res) {
         idproveedor: req.body.idproveedor,
         uidpmo: req.body.uidpmo,
         pmoresponsable: req.body.pmoresponsable,
+        enrolamiento: req.body.enrolamiento,
+        tipoproveedor: req.body.tipoproveedor,
         borrado: 1
       }).then(function (contratonew) {
         console.log("****CREA contrato:"+constants.CreaContrato);
@@ -267,6 +269,7 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
+      console.log("****Actualiza contrato:"+ req.body.enrolamiento+ ' prov:'+req.body.tipoproveedor);
 				logtransaccion.registrar(
 					constants.ActualizaContrato,
 					req.body.id,
@@ -288,7 +291,9 @@ exports.action = function (req, res) {
                 nombre: req.body.nombre,
                 idproveedor: req.body.idproveedor,
                 uidpmo: req.body.uidpmo,
-                pmoresponsable: req.body.pmoresponsable
+                pmoresponsable: req.body.pmoresponsable,
+                enrolamiento: req.body.enrolamiento,
+                tipoproveedor: req.body.tipoproveedor,                
               }, {
                   where: {
                     id: req.body.id
@@ -550,3 +555,5 @@ exports.getCodigoart = function (req, res) {
     });
 
 };
+
+

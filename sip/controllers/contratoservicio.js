@@ -156,6 +156,7 @@ exports.action = function (req, res) {
     var periodoinicioservicio = (typeof(req.body.periodoinicioservicio) != "undefined") ? req.body.periodoinicioservicio:"NULL";
     var diferido = (typeof(req.body.diferido) != "undefined") ? req.body.diferido:"NULL";
     var tipogeneracion = (typeof(req.body.tipogeneracion) != "undefined") ? req.body.tipogeneracion:"NULL";
+    var lider = (typeof(req.body.uidlider) != "undefined") ? req.body.uidlider:"NULL";
     switch (action) {
         
         case "add":
@@ -167,14 +168,15 @@ exports.action = function (req, res) {
                 "fechainicio, fechatermino, fechacontrol, valorcuota, valortotal, idmoneda, " +
                 "idplazocontrato, idcondicion, numerosolicitud, numfichacriticidad, impuesto, factorimpuesto, idestadocto, estadocontrato, " +
                 "glosaservicio, borrado, mesesentrecuotas, periodoprimeracuota, numerocuotas, periodoinicioservicio, " +
-                "diferido, saldopresupuesto, tipogeneracion, comentario, montocontrato " + sapcampos + ") " +
+                "diferido, saldopresupuesto, tipogeneracion, comentario, montocontrato, fechasolicitud, uidsolicitante, funnel, uidlider " + sapcampos + ") " +
                 "VALUES (" + req.body.parent_id + ",'" + anexo + "'," + req.body.idcui + "," + req.body.idservicio + ", @ctacontable,'" + req.body.fechainicio + "','" +
                 req.body.fechatermino + "','" + req.body.fechacontrol + "'," + cuota + "," + cuota + "," + req.body.idmoneda + "," +
                 req.body.idplazocontrato + "," + req.body.idcondicion + ",'" +req.body.numerosolicitud + "','" +req.body.numfichacriticidad + "'," +
                 req.body.impuesto + "," + factorimpuesto + "," + req.body.idestadocto + ",@estadocto,'" +
                 req.body.glosaservicio + "',1," + mesesentrecuotas + "," + periodoprimeracuota + "," +
                 numerocuotas + "," + periodoinicioservicio + "," + diferido + "," + req.body.saldopresupuesto + "," +
-                tipogeneracion + ",'" + req.body.comentario + "'," + req.body.montocontrato + sapdatos + "); " +
+                tipogeneracion + ",'" + req.body.comentario + "'," + req.body.montocontrato + ",'" + req.body.fechasolicitud 
+                +"'," + req.body.uidsolicitante + "," + req.body.funnel +"," + lider + sapdatos + "); " +
                 "DECLARE @id INT;" +
                 "select @id = @@IDENTITY; " +
                 "select @id as id;";
@@ -243,7 +245,8 @@ exports.action = function (req, res) {
                 ", idestadocto=" + req.body.idestadocto + ", estadocontrato=@estadocto, glosaservicio='" + req.body.glosaservicio + "', mesesentrecuotas=" + mesesentrecuotas +
                 ", periodoprimeracuota=" + periodoprimeracuota + ", numerocuotas=" + numerocuotas + ", periodoinicioservicio=" + periodoinicioservicio +
                 ", diferido=" + diferido + ", saldopresupuesto=" + req.body.saldopresupuesto + ", tipogeneracion=" + tipogeneracion +
-                ", comentario='" + req.body.comentario + "', montocontrato="+ req.body.montocontrato + upsap + " " +
+                ", comentario='" + req.body.comentario + "', montocontrato="+ req.body.montocontrato + ", fechasolicitud='"+ req.body.fechasolicitud 
+                + "', uidsolicitante="+ req.body.uidsolicitante + ", funnel="+ req.body.funnel + ", uidlider="+ lider + upsap + " " +
                 "WHERE id=" + req.body.id;
             console.log("******SQLUP:" + sql);
             logtransaccion.registrar(
@@ -818,6 +821,31 @@ exports.getListaTareas = function (req, res) {
     logger.debug("query:" + sql);
     sequelize.query(sql).spread(function (tareas) {
         logger.debug("En getSAP2:" + tareas);
+        res.json(tareas);
+    }).catch(function (err) {
+        logger.debug(err);
+        res.json({ error_code: 1 });
+    });
+};
+
+//SELECT uid,first_name,last_name, user_profile FROM art_user WHERE CAST(user_profile AS VARCHAR) in ('dm', 'prm') ORDER BY first_name,last_name
+exports.getListaLider = function (req, res) {
+    var servicio = req.params.id;
+    var sql = '';
+
+    if (servicio == 'All' ) {
+        sql = "SELECT a.uid,a.first_name,a.last_name FROM art_user a "+
+        "JOIN RecursosHumanos b ON a.email=b.emailTrab "+
+        "WHERE b.periodo = (SELECT max(periodo) FROM RecursosHumanos) "+
+        "ORDER BY a.first_name,a.last_name";
+    } else {
+        sql = "SELECT a.uid,a.first_name,a.last_name FROM art_user a "+
+        "JOIN RecursosHumanos b ON a.email=b.emailTrab "+
+        "WHERE b.periodo = (SELECT max(periodo) FROM RecursosHumanos) AND CAST(a.user_profile AS VARCHAR) in ('dm', 'prm') "+
+        "ORDER BY a.first_name,a.last_name";
+    }
+
+    sequelize.query(sql).spread(function (tareas) {
         res.json(tareas);
     }).catch(function (err) {
         logger.debug(err);

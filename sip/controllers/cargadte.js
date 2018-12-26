@@ -895,9 +895,16 @@ exports.archivo = function (req, res) {
     busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
 
       console.log(filename)
-
       var data = [], dataLen = 0;
-
+	  
+	  //RRM:Guarda archivo en, codigo para poder subir el discovery y procesarlo
+	  var saveTo = path.join(__dirname, '../docs/', 'discover', filename);
+      console.log('Uploading: ' + saveTo);
+      file.pipe(fs.createWriteStream(saveTo));
+	  
+	  //Este return es solo para cortar el avance y dejar solo el upload.
+	  return res.json({ message: "archivo " + filename + " cargado", success: true });
+	  
       file.on('data', function (chunk) {
         data.push(chunk);
         dataLen += chunk.length;

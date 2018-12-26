@@ -66,7 +66,10 @@ module.exports = function (passport) {
     router.get('/contratoslectura', isAuthenticated, function (req, res) {
         res.render('contrato_lectura', { user: req.user, data: req.session.passport.sidebar });
     });		
-        
+	
+    router.route('/contratosListaLider/:id')
+        .get(isAuthenticated, contratoservicioController.getListaLider); 	
+	
     return router;
 
 }

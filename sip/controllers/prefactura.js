@@ -81,7 +81,7 @@ exports.test = function (req, res) {
 						SELECT x.id idproveedor, MIN(y.id) idcontacto  FROM sip.proveedor x join sip.contactoproveedor y on x.id=y.idproveedor GROUP BY x.id 
 					) z ON w.id= z.idcontacto
 				) d ON c.id = d.idproveedor
-                WHERE a.id=:id AND m.periodo = (SELECT MAX(periodo) FROM dbo.RecursosHumanos)       
+                WHERE a.id=:id AND m.periodo = (SELECT MAX(periodo) FROM dbo.RecursosHumanos where emailTrab=l.email)       
             `
 
 
@@ -152,7 +152,7 @@ var sql_2 =
 						SELECT x.id idproveedor, MIN(y.id) idcontacto  FROM sip.proveedor x join sip.contactoproveedor y on x.id=y.idproveedor GROUP BY x.id 
 					) z ON w.id= z.idcontacto
 				) d ON c.id = d.idproveedor
-                WHERE a.id=:id AND m.periodo = (SELECT MAX(periodo) FROM dbo.RecursosHumanos)             
+                WHERE a.id=:id AND m.periodo = (SELECT MAX(periodo) FROM dbo.RecursosHumanos where emailTrab=l.email)             
             `
         //Si continuidad sql_1, proyectos sql_2
         var sql_ok;

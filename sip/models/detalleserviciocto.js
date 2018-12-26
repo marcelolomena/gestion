@@ -189,7 +189,23 @@ module.exports = function(sequelize, DataTypes) {
     numfichacriticidad: {
       type: DataTypes.STRING,
       allowNull: true
-    }     
+    },
+    fechasolicitud: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    uidsolicitante: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    funnel: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    uidlider: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }                     
   }, {
     schema: 'sip',timestamps: false,tableName: 'detalleserviciocto'
   });
