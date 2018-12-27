@@ -75,7 +75,11 @@ module.exports = function (sequelize, DataTypes) {
     nombreapoderado2: {
       type: DataTypes.STRING,
       allowNull: true
-    }
+    },
+    enrolamiento: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    }    
   }, {
       schema: 'sip', timestamps: false, tableName: 'proveedor'
     });

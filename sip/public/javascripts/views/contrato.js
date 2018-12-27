@@ -26,14 +26,8 @@ $(document).ready(function () {
 
     template += "<div class='form-row'>";
     template += "<div class='column-half'>Origen<span style='color:red'>*</span>{tipocontrato}</div>";
+    template += "<div class='column-half'>Tipo Proveedor<span style='color:red'>*</span>{tipoproveedor}</div>";    
     template += "</div>";
-        
-    template += "<div class='form-row'>";
-    template += "<div class='column-half'>Tipo Enrolamiento Proveedor<span style='color:red'>*</span>{enrolamiento}</div>";
-    template += "<div class='column-half'>Tipo Proveedor<span style='color:red'>*</span>{tipoproveedor}</div>";
-    template += "</div>";
-    
-
 
     template += "<div class='form-row' style='display: none;'>";
     template += "<div class='column-half'>razonsocial{razonsocial}</div>";
@@ -356,6 +350,7 @@ $(document).ready(function () {
             label: 'Negociador', name: 'pmoresponsable', width: 200, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
         },
+/*        
         {
             label: 'Tipo Enrolamiento', name: 'enrolamiento', editable: true, hidden: true,
             edittype: "select",
@@ -386,6 +381,7 @@ $(document).ready(function () {
                 }],
             }
         },         
+*/        
         {
             label: 'Tipo Proveedor', name: 'tipoproveedor', editable: true, hidden: true,
             edittype: "select",
@@ -498,9 +494,9 @@ $(document).ready(function () {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
                     return [false, "Negociador: Debe escoger un valor", ""];                
-                } if (parseInt(postdata.enrolamiento) == 0) {
+                } /*if (parseInt(postdata.enrolamiento) == 0) {
                     return [false, "Enrolamiento: Debe escoger un tipo de enrolamiento", ""];                
-                } if (parseInt(postdata.tipoproveedor) == 0) {
+                }*/ if (parseInt(postdata.tipoproveedor) == 0) {
                     return [false, "Tipo Proveedor: Debe escoger un tipo de proveedor", ""];                
                 } else {
                     return [true, "", ""]
@@ -548,9 +544,9 @@ $(document).ready(function () {
                     return [false, "Estado Solicitud: Debe escoger un valor", ""];
                 } if (parseInt(postdata.uidpmo) == 0) {
                     return [false, "Negociador: Debe escoger un valor", ""];                 
-                }  if (parseInt(postdata.enrolamiento) == 0) {
+                } /* if (parseInt(postdata.enrolamiento) == 0) {
                     return [false, "Enrolamiento: Debe escoger un tipo de enrolamiento", ""];                
-                } if (parseInt(postdata.tipoproveedor) == 0) {
+                } */if (parseInt(postdata.tipoproveedor) == 0) {
                     return [false, "Tipo Proveedor: Debe escoger un tipo de proveedor", ""];                
                 } else {
                     return [true, "", ""]

@@ -241,7 +241,7 @@ exports.action = function (req, res) {
         idproveedor: req.body.idproveedor,
         uidpmo: req.body.uidpmo,
         pmoresponsable: req.body.pmoresponsable,
-        enrolamiento: req.body.enrolamiento,
+        //enrolamiento: req.body.enrolamiento,
         tipoproveedor: req.body.tipoproveedor,
         borrado: 1
       }).then(function (contratonew) {
@@ -269,7 +269,7 @@ exports.action = function (req, res) {
 
       break;
     case "edit":
-      console.log("****Actualiza contrato:"+ req.body.enrolamiento+ ' prov:'+req.body.tipoproveedor);
+      //console.log("****Actualiza contrato:"+ req.body.enrolamiento+ ' prov:'+req.body.tipoproveedor);
 				logtransaccion.registrar(
 					constants.ActualizaContrato,
 					req.body.id,
@@ -292,7 +292,7 @@ exports.action = function (req, res) {
                 idproveedor: req.body.idproveedor,
                 uidpmo: req.body.uidpmo,
                 pmoresponsable: req.body.pmoresponsable,
-                enrolamiento: req.body.enrolamiento,
+                //enrolamiento: req.body.enrolamiento,
                 tipoproveedor: req.body.tipoproveedor,                
               }, {
                   where: {
