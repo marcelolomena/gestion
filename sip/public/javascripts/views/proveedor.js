@@ -109,6 +109,7 @@ $(document).ready(function () {
     tmpl += "</div>";   
     tmpl += "<div class='form-row'>";
     tmpl += "<div class='column-half'>Nombre Segundo Apoderado {nombreapoderado2}</div>";
+    tmpl += "<div class='column-half'>Tipo Enrolamiento Proveedor<span style='color:red'>*</span>{enrolamiento}</div>";    
     tmpl += "</div>";             
     tmpl += "<hr style='width:100%;'/>";
     tmpl += "<div> {sData} {cData}  </div>";
@@ -210,7 +211,37 @@ $(document).ready(function () {
         {
             label: 'Nombre Segundo Apoderado', name: 'nombreapoderado2', width: 210, align: 'left', search: true, editable: true,
             editrules: { edithidden: false }, hidedlg: true
-        }        
+        }, 
+        {
+            label: 'Tipo Enrolamiento', name: 'enrolamiento', editable: true, hidden: true,
+            edittype: "select",
+            editoptions: {
+                dataUrl: '/parameters/enrolamiento',
+                buildSelect: function (response) {
+                    var grid = $("#grid");
+                    var rowKey = grid.getGridParam("selrow");
+                    var rowData = grid.getRowData(rowKey);
+                    var thissid = rowData.plazocontrato;
+                    var data = JSON.parse(response);
+                    var s = "<select>";//el default
+                    s += '<option value="0">--Escoger Tipo Enrolamiento--</option>';
+                    $.each(data, function (i, item) {
+                        if (data[i].nombre == thissid) {
+                            s += '<option value="' + data[i].id + '" selected>' + data[i].nombre + '</option>';
+                        } else {
+                            s += '<option value="' + data[i].id + '">' + data[i].nombre + '</option>';
+                        }
+                    });
+                    return s + "</select>";
+                },
+                dataEvents: [{
+                    type: 'change', fn: function (e) {
+                        var thistid = $(this).val();
+                        $("input#enrolamiento").val($('option:selected', this).text());
+                    }
+                }],
+            }
+        },               
     ];
 
     var tmpc = "<div id='responsive-form' class='clearfix'>";
