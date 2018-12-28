@@ -1,5 +1,5 @@
 var express = require('express')
-var router = express.Router()
+var router = express.Router();
 var isAuthenticated = require('../policies/isAuthenticated')
 var logger = require("../utils/logger");
 var menu = require('../utils/menu');
@@ -149,6 +149,83 @@ module.exports = function (passport) {
             });
         }
     });
+
+    router.get('/', passport.authenticate('local', redirects),
+        function (req, res) {
+            var idsistema = req.body.sistema ? req.body.sistema : 1;
+
+            menu.builUserdMenu(req, function (err, data) {
+                if (data) {
+                    req.session.save(() => {
+                        req.session.passport.sidebar = data
+                        models.pagina.belongsTo(models.sistema, {
+                            foreignKey: 'idsistema'
+                        });
+                        models.pagina.belongsTo(models.contenido, {
+                            foreignKey: 'idcontenido'
+                        });
+
+                        return models.sistema.findOne({
+                            where: {
+                                id: idsistema
+                            }
+                        }).then(function (home) {
+
+                            return models.pagina.findOne({
+                                where: {
+                                    nombre: home.pagina
+                                },
+                                include: [{
+                                        model: models.sistema
+                                    },
+                                    {
+                                        model: models.contenido
+                                    }
+                                ]
+                            }).then(function (pagina) {
+                                var tmpl = pug.renderFile(pagina.contenido.plantilla, {
+                                    title: pagina.title
+                                });
+                                var script = ""
+                                if (pagina.script)
+                                    script = pug.render(pagina.script);
+
+                                return res.render(home.pagina, {
+                                    user: req.user,
+                                    data: data,
+                                    page: home.pagina,
+                                    title: pagina.title,
+                                    type: pagina.contenido.nombre,
+                                    idtype: pagina.contenido.id,
+                                    html: tmpl,
+                                    script: script
+                                });
+                            }).catch(function (err) {
+                                logger.error(err);
+                            });
+
+                        }).catch(function (err) {
+                            logger.error(err);
+                        });
+                    })
+                } else {
+                    res.render('index', {
+                        message: err
+                    });
+                }
+            });
+        });
+
+
+
+    // router.get('/', (pug, res, next) => {
+    //     const testObj = 'Hola';
+    //     res.render('contratos', "Hola");
+    //     pug.renderFile('contratos', {
+    //         testObj: "Hola"
+    //     });
+    // });
+      
 
     return router;
 }

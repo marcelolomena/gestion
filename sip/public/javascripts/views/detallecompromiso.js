@@ -23,7 +23,7 @@ function gridDetail(parentRowID, parentRowKey) {
         rowNum: 100,
         regional: 'es',
         height: 'auto',
-        autowidth: true,
+        width: null,
         shrinkToFit: false,
         // caption: 'Compromisos',
         colModel: [
@@ -33,7 +33,7 @@ function gridDetail(parentRowID, parentRowKey) {
                 editoptions: { size: 10, readonly: 'readonly' }
             },
             {
-                label: 'Neto', name: 'valorcuota', width: 150, editable: true,
+                label: 'Neto', name: 'valorcuota', width: 100, editable: true,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: {
                     dataInit: function (el) {
@@ -42,22 +42,22 @@ function gridDetail(parentRowID, parentRowKey) {
                 }
             },
             {
-                label: 'Caja', name: 'montoorigen', width: 150, editable: false,
+                label: 'Caja', name: 'montoorigen', width: 100, editable: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: { size: 10, readonly: 'readonly' }
             },
             {
-                label: 'Impacto Operacional', name: 'costoorigen', width: 200, editable: false,
+                label: 'Impacto Operacional', name: 'costoorigen', width: 100, editable: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: { size: 10, readonly: 'readonly' }
             },
             {
-                label: 'Saldo', name: 'saldopago', width: 150, editable: false,
+                label: 'Saldo', name: 'saldopago', width: 100, editable: false,
                 formatter: 'number', formatoptions: { decimalPlaces: 2 },
                 editoptions: { size: 10, readonly: 'readonly' }
             },
             {
-                label: 'Estado', name: 'estadopago', width: 150, editable: false,
+                label: 'Estado', name: 'estadopago', width: 100, editable: false,
                 editoptions: { size: 10, readonly: 'readonly' }
             },
             {
@@ -198,8 +198,9 @@ function gridDetail(parentRowID, parentRowKey) {
             recreateFilter: true
         }
     );
-    $("table.ui-jqgrid-htable").css('width','100%');
+    $("table.ui-jqgrid-htable").css('width','100%');      
     $("table.ui-jqgrid-btable").css('width','100%');
+    
 
     $('#' + childGridID).closest("div.ui-jqgrid-view").children("div.ui-jqgrid-titlebar").css("background-color", "#0431B4");
 

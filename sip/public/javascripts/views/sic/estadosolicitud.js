@@ -339,7 +339,7 @@ var gridEstado = {
             viewrecords: true,
             caption: "Etapa",
             loadComplete: function (data) {
-                var thisId = $.jgrid.jqID(this.id);
+                // var thisId = $.jgrid.jqID(this.id);
                 $.get('/sic/getsession', function (data) {
                     $.each(data, function (i, item) {
                         console.log("EL ROL ES: " + item.glosarol)

@@ -540,8 +540,30 @@ exports.getTipoDocumentos = function (req, res) {
   res.json(promises);
 };
 
+// exports.getTitulo = function (req, res) {
+//   // console.log("codigo:"+req.params.id);
+//   console.log(req.body.sistema)
+//   console.log(req.req.body.urlMenu);
+//   var sql = "SELECT program_name AS nombreart, program_id FROM art_program WHERE program_code="+req.params.id;
+
+//   var sql = "SELECT DISTINCT b.descripcion AS padre, a.descripcion";
+//   sql += " FROM art_live.sip.menu 	a";
+//   sql += " JOIN art_live.sip.menu b ON b.id = a.pid";
+//   sql += " WHERE a.url like '%"+req.req.body.urlMenu+"'";
+//   sql += " AND a.idsistema = "+req.body.sistema;
+//   sql += " ORDER BY padre, descripcion;";
+
+//   sequelize.query(sql)
+//     .spread(function (rows) {
+//       res.json(rows);
+//     });
+
+// };
+
+
+
 exports.getCodigoart = function (req, res) {
-  console.log("codigo:"+req.params.id);
+  // console.log("codigo:"+req.params.id);
   var sql = "SELECT program_name AS nombreart, program_id FROM art_program WHERE program_code="+req.params.id;
 
   sequelize.query(sql)

@@ -1,7 +1,12 @@
 doctype transitional
 html(xmlns='http://www.w3.org/1999/xhtml')
   head
-    title LIC Banco de Chile - Sistema de Licencias 
+    -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software"];
+    -var titulo = ["","SIP Banco de Chile - Sistema Integrado de Presupuesto","SIC Banco de Chile - Sistema Integrado de Contratos","","LIC Banco de Chile - Sistema de Licencias"];
+    meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+    block titulo
+      title #{titulo[data[0].sistema]} - #{title}
     block head
      meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
      link(rel='stylesheet', href='/sourcemaps/bootstrap.min.css.map', type='text/css', media='screen', charset='utf-8')
@@ -33,7 +38,6 @@ html(xmlns='http://www.w3.org/1999/xhtml')
      script(type='text/javascript', src='/javascripts/sic.js')  
      script(type='text/javascript', src='/javascripts/moment.js')      
      script(type='text/javascript', src='/javascripts/bootstrap.min.js')
-     -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software"];   
 body
   block content
   .app.has-fullwidth
@@ -52,7 +56,7 @@ body
          span.hamburger-inner
       .top-bar-item.top-bar-item-right.px-0.d-none.d-sm-flex
        ul.header-nav.nav
-        //- li.nav-item.dropdown.header-nav-dropdown.has-notified
+        li.nav-item.dropdown.header-nav-dropdown.has-notified
          a.nav-link(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
           span.oi.oi-pulse
          .dropdown-arrow
@@ -63,48 +67,48 @@ body
             span.badge (2)
           .dropdown-scroll.has-scrollable
            a.dropdown-item.unread(href='#')
-            .user-avatar
-             img(src='/images/avatars/uifaces15.jpg', alt='')
+            //- .user-avatar
+            //-  img(src='/images/avatars/uifaces15.jpg', alt='')
             .dropdown-item-body
-             p.text  Jeffrey Wells creó un horario 
+             p.text  #{data[0].nombre} creó un horario 
              span.date Justo ahora
            a.dropdown-item.unread(href='#')
-            .user-avatar
-             img(src='/images/avatars/uifaces16.jpg', alt='')
+            //- .user-avatar
+            //-  img(src='/images/avatars/uifaces16.jpg', alt='')
             .dropdown-item-body
-             p.text  Anna Vargas ha iniciado sesión en un chat.
+             p.text  #{data[0].nombre} ha iniciado sesión en un chat.
              span.date hace 3 horas
            a.dropdown-item(href='#')
-            .user-avatar
-             img(src='/images/avatars/uifaces17.jpg', alt='')
+            //- .user-avatar
+            //-  img(src='/images/avatars/uifaces17.jpg', alt='')
             .dropdown-item-body
-             p.text  Sara Carr invitó a Stilearn Admin 
+             p.text  #{data[0].nombre} invitó a Stilearn Admin 
              span.date hace 5 ahoras
            a.dropdown-item(href='#')
-            .user-avatar
-             img(src='/images/avatars/uifaces18.jpg', alt='')
+            //- .user-avatar
+            //-  img(src='/images/avatars/uifaces18.jpg', alt='')
             .dropdown-item-body
-             p.text  Sara Carr actualizó un proyecto 
+             p.text  #{data[0].nombre} actualizó un proyecto 
              span.date hace 1 día
            a.dropdown-item(href='#')
-            .user-avatar
-             img(src='/images/avatars/uifaces19.jpg', alt='')
+            //- .user-avatar
+            //-  img(src='/images/avatars/uifaces19.jpg', alt='')
             .dropdown-item-body
-             p.text  Arthur Carroll creó una tarea 
+             p.text  #{data[0].nombre} creó una tarea 
              span.date hace 1 día
            a.dropdown-item(href='#')
-            .user-avatar
-             img(src='/images/avatars/uifaces20.jpg', alt='')
+            //- .user-avatar
+            //-  img(src='/images/avatars/uifaces20.jpg', alt='')
             .dropdown-item-body
-             p.text  Angela Peterson te asignó una tarea 
+             p.text  #{data[0].nombre} te asignó una tarea 
              span.date hace 2 día
            a.dropdown-item(href='#')
-            .user-avatar
-             img(src='/images/avatars/uifaces21.jpg', alt='')
+            //- .user-avatar
+            //-  img(src='/images/avatars/uifaces21.jpg', alt='')
             .dropdown-item-body
-             p.text  Willie Dixon y otros 3 te siguieron 
+             p.text  #{data[0].nombre} y otros 3 te siguieron 
              span.date hace 2 día
-          a.dropdown-footer(href='user-activities.html')
+          a.dropdown-footer(href='/actividades')
            | Todas las actividades
            i.fa.fa-fw.fa-long-arrow-alt-right
         //- li.nav-item.dropdown.header-nav-dropdown.has-notified
@@ -290,7 +294,7 @@ body
           .zerogrid_b
             block titulogrilla              
           .zerogrid_b
-          block grilla   
+            block grilla   
     //- footer.app-footer
     //-  ul.list-inline
     //-   li.list-inline-item

@@ -1,7 +1,12 @@
 doctype transitional
 html(xmlns='http://www.w3.org/1999/xhtml')
 block head
-  title SIP Banco de Chile - Sistema Integrado de Presupuesto
+  -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software"];
+  -var titulo = ["","SIP Banco de Chile - Sistema Integrado de Presupuesto","SIC Banco de Chile - Sistema Integrado de Contratos","","LIC Banco de Chile - Sistema de Licencias"];
+  meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+  meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+  title #{titulo[data[0].sistema]} - #{title}
+  //- title SIP Banco de Chile - Sistema Integrado de Presupuesto
   meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
   link(rel='stylesheet', href='/sourcemaps/bootstrap.min.css.map', type='text/css', media='screen', charset='utf-8')
   link(rel='stylesheet', href='/sourcemaps/main.min.css.map', type='text/css', media='screen', charset='utf-8')
@@ -40,7 +45,6 @@ block head
   script(type='text/javascript', src='/javascripts/sic.js')  
   script(type='text/javascript', src='/javascripts/moment.js')
   script(type='text/javascript', src='/javascripts/bootstrap.min.js')
-  -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software"];   
 body
   block content
   .app.has-fullwidth
@@ -243,6 +247,7 @@ body
         //- a.dropdown-item(href='#') Centro de Ayuda
         //- a.dropdown-item(href='#') Preguntar Foro
       .top-bar-brand
+      
       //-  a(href='#')
         img(src='/images/logoRound.png',height='60px', alt='') 
         span.font-weight-bold(style='color: #234875;') &nbsp #{sistemas[data[0].sistema]}
@@ -263,6 +268,7 @@ body
                     else                    
                       a.menu-link(href='https://152.139.147.41:3001/'+vol.url)
                         span.menu-text=vol.opt        
+                        
    main.app-main
     .wrapper
      .page
@@ -298,7 +304,8 @@ body
           .zerogrid_b
             block titulogrilla              
           .zerogrid_b
-          block grilla   
+            block grilla   
+      
     //- footer.app-footer
      ul.list-inline
       li.list-inline-item
@@ -310,6 +317,7 @@ body
       li.list-inline-item
        a.text-muted(href='#') Terminos de servicio
      .copyright  © 2018 Todos los derechos reservados.
+  
   script(src='/vendor/bootstrap/js/popper.min.js')
   script(src='/vendor/bootstrap/js/bootstrap.min.js')
   script(src='/vendor/stacked-menu/stacked-menu.min.js')

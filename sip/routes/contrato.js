@@ -54,6 +54,9 @@ module.exports = function (passport) {
     router.route('/contrato/tipodocumento')
         .get(isAuthenticated, contratoController.getTipoDocumentos);   
         
+    // router.route('/gettitulo')
+    //     .get(isAuthenticated, contratoController.getTitulo); 
+    
     router.route('/getcodigoart/:id')
         .get(isAuthenticated, contratoController.getCodigoart);        
         

@@ -146,8 +146,7 @@
             shrinkToFit: true,
             viewrecords: true,
             gridComplete: function () {
-                $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
-                $('#' + pagerName+"_left").css("width", "");
+                $("table.ui-jqgrid-htable").css('width','100%'); $('#' + pagerName+"_left").css("width", ""); $("table.ui-jqgrid-btable").css('width','100%');
             },
             page: 1,
             forceFit: true,

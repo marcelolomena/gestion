@@ -32,10 +32,12 @@
             }
         }
 		grid.config.width= null;
-        grid.config.shrinkToFit= true;
+        grid.config.shrinkToFit= false;
         grid.config.viewrecords= true;
-		grid.config.gridComplete: function () {
-            $("table.ui-jqgrid-htable").css('width','100%');      $("table.ui-jqgrid-btable").css('width','100%');
+		grid.config.gridComplete= function () {
+            $("table.ui-jqgrid-htable").css('width','100%');      
+            $("table.ui-jqgrid-btable").css('width','100%');
+            $("#pagerMaster_left").css("width", "");
         };
 		
         grid.build();
@@ -52,7 +54,7 @@
         }, {
             label: 'Estado',
             name: 'estado',
-            width: 197,
+            width: 100,
             align: 'center',
             editable: false,
             edittype: "custom",
@@ -76,7 +78,7 @@
         }, {
             label: 'Fecha de Trámite',
             name: 'fechaRecepcion',
-            width: 197,
+            width: 100,
             align: 'center',
             sortable: false,
             editable: false,
@@ -84,7 +86,7 @@
         }, {
             label: 'Descripción',
             name: 'nombre',
-            width: 197,
+            width: 100,
             align: 'center',
             hidden: false,
             editable: true,
@@ -98,7 +100,7 @@
         }, {
             label: 'SAP',
             name: 'sap',
-            width: 197,
+            width: 100,
             align: 'center',
             sortable: false,
             editable: true,
@@ -132,7 +134,7 @@
         }, {
             label: 'Nombre SAP',
             name: 'nombreSap',
-            width: 197,
+            width: 100,
             align: 'center',
             hidden: true,
             editable: true,
@@ -147,7 +149,7 @@
         }, {
             label: 'CUI',
             name: 'idCui',
-            width: 197,
+            width: 100,
             align: 'center',
             hidden: false,
             editable: true,
@@ -178,7 +180,7 @@
         }, {
             label: 'Unidad CUI',
             name: 'nombreCui',
-            width: 197,
+            width: 100,
             align: 'center',
             hidden: true,
             editable: true,
@@ -193,7 +195,7 @@
         }, {
             label: 'Número Contrato',
             name: 'numContrato',
-            width: 197,
+            width: 100,
             align: 'center',
             hidden: false,
             editable: true,
@@ -204,7 +206,7 @@
         }, {
             label: 'O.C.',
             name: 'ordenCompra',
-            width: 197,
+            width: 100,
             align: 'center',
             hidden: false,
             editable: true,
@@ -213,7 +215,7 @@
             label: 'Proveedor',
             name: 'idProveedor',
             jsonmap: 'proveedor.nombre',
-            width: 197,
+            width: 100,
             align: 'center',
             sortable: false,
             editable: true,
@@ -234,7 +236,7 @@
         }, {
             label: 'Responsable Servicio',
             name: 'comprador',
-            width: 197,
+            width: 100,
             align: 'center',
             hidden: true,
             hidden: false,
@@ -246,7 +248,7 @@
         }, {
             label: 'Comentario',
             name: 'comentario',
-            width: 10,
+            width: 100,
             hidden: false,
             editable: true,
             hidden: true,
@@ -258,7 +260,7 @@
         }, {
             label: 'Estado',
             name: 'estado',
-            width: 197,
+            width: 100,
             align: 'center',
             editable: true,
             hidden: true,

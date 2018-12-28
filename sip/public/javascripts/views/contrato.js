@@ -55,9 +55,12 @@ $(document).ready(function () {
                     var thissid = rowData.idproveedor;
                     
                     var data = JSON.parse(response);
+                    // console.log(response);
+
                     var s = "<select>";//el default
                     s += '<option value="0">--Escoger Proveedor--</option>';
                     $.each(data, function (i, item) {
+                        
                         if (data[i].id == thissid) {
                             s += '<option value="' + data[i].id + '" selected>' + data[i].razonsocial + '</option>';
                         } else {
@@ -350,6 +353,13 @@ $(document).ready(function () {
             editrules: { edithidden: false }, hidedlg: true
         }                
     ];
+
+var URLactual = window.location;
+var urll = URLactual.toString(URLactual);
+var res = urll.split("http://localhost:3000/");
+var urlMenu = res[1];
+console.log(urlMenu);
+
     $("#grid").jqGrid({
         url: '/contratos/list',
         mtype: "POST",
@@ -539,7 +549,11 @@ $(document).ready(function () {
     //     $("#pager").setGridWidth($(".gcontainer").width(), true);
     // });
 });
+
 function loadGrid(parentID) {
     var url = '/contratos/list';
+    var grid = $('#grid');
+    var rowKey = grid.getGridParam("selrow");
     $("#grid").jqGrid('setCaption', "Lista de contratos").jqGrid('setGridParam', { url: url, page: 1 }).jqGrid("setGridParam", { datatype: "json" }).trigger("reloadGrid");
 }
+

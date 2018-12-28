@@ -6614,7 +6614,7 @@ var menu = $.widget( "ui.menu", {
 		var menus, items,
 			that = this,
 			icon = this.options.icons.submenu,
-			submenus = this.element.find( this.options.menus );
+			// submenus = this.element.find( this.options.menus );
 
 		this.element.toggleClass( "ui-menu-icons", !!this.element.find( ".ui-icon" ).length );
 

@@ -1,6 +1,7 @@
 var logger = require("./logger");
 var sequelize = require('../models/index').sequelize;
 var models = require('../models');
+const router = require('express').Router();
 var co = require('co');
 
 module.exports = (function () {
@@ -13,13 +14,13 @@ module.exports = (function () {
 
                 var NeoSubMenu = function (op, uid, menu, callback) {
                     var sql_submenu = `
-											select distinct e.id,e.descripcion,e.url from art_user a
-											join sip.usr_rol b on a.uid = b.uid
-											join sip.rol c on b.rid = c.id
-											join sip.rol_func d on d.rid = c.id
-											join sip.menu e on e.id = d.mid
-											where a.uid=:uid and pid=:pid and e.idsistema =:idsys 
-										  `
+                        select distinct e.id,e.descripcion,e.url from art_user a
+                        join sip.usr_rol b on a.uid = b.uid
+                        join sip.rol c on b.rid = c.id
+                        join sip.rol_func d on d.rid = c.id
+                        join sip.menu e on e.id = d.mid
+                        where a.uid=:uid and pid=:pid and e.idsistema =:idsys 
+                        `
                     sequelize.query(sql_submenu,
                         {
                             replacements: { uid: uid, pid: menu.id, idsys: parseInt(req.body.sistema) },
@@ -46,13 +47,13 @@ module.exports = (function () {
                 var NeoMenu = function (uid, callback) {
                     var promises = []
                     var sql_menu = `
-											select distinct e.id,e.descripcion from art_user a
-											join sip.usr_rol b on a.uid = b.uid
-											join sip.rol c on b.rid = c.id
-											join sip.rol_func d on d.rid = c.id
-											join sip.menu e on e.id = d.mid
-											where a.uid=:uid and pid is null and e.idsistema =:idsys
-										  `
+                        select distinct e.id,e.descripcion from art_user a
+                        join sip.usr_rol b on a.uid = b.uid
+                        join sip.rol c on b.rid = c.id
+                        join sip.rol_func d on d.rid = c.id
+                        join sip.menu e on e.id = d.mid
+                        where a.uid=:uid and pid is null and e.idsistema =:idsys
+                        `
                     co(function* () {
 
                         var menu = yield sequelize.query(sql_menu,
@@ -154,12 +155,13 @@ module.exports = (function () {
                             nombre["uid"] = user.uid;
                             nombre["sistema"] = req.body.sistema;
                             nombre["glosarol"] = usr[0].glosarol;
+                            nombre["menuActivo"] = user.pid;     
                             logger.debug('ROL ------>> ' + usr[0].glosarol);
                             nombre["rol"] = _roles//[ { id: 12, glosarol: 'Técnico SIC' } ]
                             nombre["rid"] = _rolnegocio.rolnegocio;
                             usuario.push(nombre)
                             logger.debug('ROLNEGOCIO ------>> ' + _rolnegocio.rolnegocio);
-
+                            
                             return NeoMenu(user.uid, function (menu) {
                                 var supermenu = [];
                                 menu.forEach(function (opt) {

@@ -1,23 +1,21 @@
 extends base.pug
 block titulo
   title SIP Banco de Chile - Sistema Integrado de Presupuesto - Contratos
+
+   
 block jsgrilla
   script(type='text/javascript', src='/javascripts/views/contrato.js')
   script(type='text/javascript', src='/javascripts/views/detallecontrato.js')
   script(type='text/javascript', src='/javascripts/views/detallecompromiso.js')
-block titulogrilla
+block titulogrilla    
+  h2(style="font-family:'Roboto', sans-serif; color: #002464; font-weight:300; text-align:left; font-size:18px; text-indent:65px; line-height:50px") a #{title}  
 
-
-    //- .header
-    //-   ul
-    //-     each val in data[1].menus
-    //-       li.has-sub
-    //-         span=val.menu.menu
-    //-       ul
-    //-         each vol in val.submenu
-    //-           li
-    //-             if(vol.url!='conferencia')
-    //-               span=vol.opt
+        //- each val in data[1].menus
+        //-     li #{val.menu.menu}
+        //-     each vol in val.submenu
+        //-         if(vol.url!='conferencia')
+        //-           //- -console.log(val.menu.id)
+        //-           h4 #{vol.opt}
 
 block grilla
   .gcontainer

@@ -6,7 +6,7 @@
     var initMainGrid = function (_url, _colModel, _sortname, tabs) {
         var table = 'gridMaster';
         var tableId = '#' + table;
-        var grid = new zs.SimpleGrid(table, 'pagerMaster', 'Inventario de licencias', 'Modificar Licencia', 'Agtregar Licencia', _url, _colModel, _sortname, '/lic/getsession', ['Administrador LIC']);
+        var grid = new zs.SimpleGrid(table, 'pagerMaster', 'Inventario de licencias', 'Modificar Licencia', 'Agregar Licencia', _url, _colModel, _sortname, '/lic/getsession', ['Administrador LIC']);
         grid.navParameters.edit = false;
         grid.navParameters.add = false;
         grid.navParameters.del = false;
@@ -75,7 +75,7 @@
 
                  
             tabGrid.renderGrid(loadurl, parentRowKey, targ);
-            console.log($this);
+            // console.log($this);
             $this.tab('show');
             return false;
         });
@@ -85,7 +85,7 @@
                 targ = $this.attr('data-target'),
                 tabGrid = selectTabGrid(targ);
             tabGrid.renderGrid(loadurl, parentRowKey, targ);
-            console.log($this);
+            // console.log($this);
             $this.tab('show');
             return false;
         });

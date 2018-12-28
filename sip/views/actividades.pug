@@ -1,13 +1,11 @@
 html(xmlns='http://www.w3.org/1999/xhtml')
  head
-  meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
-  meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
   -var sistemas = ["","Presupuesto","Contratos","","Licencias de Software"];
   -var titulo = ["","SIP Banco de Chile - Sistema Integrado de Presupuesto","SIC Banco de Chile - Sistema Integrado de Contratos","","LIC Banco de Chile - Sistema de Licencias"];
   meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
   meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
   block titulo
-      title #{titulo[data[0].sistema]}
+      title #{titulo[data[0].sistema]} - Actividades
   meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
   link(rel='stylesheet', href='sourcemaps/bootstrap.min.css.map', type='text/css', media='screen', charset='utf-8')
   link(rel='stylesheet', href='sourcemaps/main.min.css.map', type='text/css', media='screen', charset='utf-8')
@@ -301,6 +299,260 @@ body
             block titulogrilla              
           .zerogrid_b
           block grilla   
+
+          // .page-cover
+          header.page-cover
+            .text-center
+              a.user-avatar.user-avatar-xl(href='user-profile.html')
+                img(src='images/avatars/profile.jpg', alt='User Avatar')
+              h2.h4.mt-3.mb-0  Beni Arisandi 
+              .my-1
+                i.fa.fa-star.text-yellow
+                i.fa.fa-star.text-yellow
+                i.fa.fa-star.text-yellow
+                i.fa.fa-star.text-yellow
+                i.far.fa-star.text-yellow
+              p.text-muted  Project Manager @CreativeDivision 
+              p  Huge fan of HTML, CSS and Javascript. Web design and open source lover. 
+            // .cover-controls
+            .cover-controls.cover-controls-bottom
+              a.btn.btn-light(href='#', data-toggle='modal', data-target='#followersModal') 2,159 Seguidores
+              a.btn.btn-light(href='#', data-toggle='modal', data-target='#followingModal') 136 Siguiendo
+          body
+            .modal-footer
+              // /.modal-footer
+              // /.modal-content
+              // /.modal-dialog
+              // /.modal
+              // /Following Modal
+              // .page-navs
+            nav.page-navs
+                // .nav-scroller
+                .nav-scroller
+                  // .nav
+                  .nav.nav-center.nav-tabs
+                    a.nav-link.active(href='actividades') Actividades
+                    a.nav-link(href='equipos') Equipos
+                    a.nav-link(href='proyectos') Proyectos
+                    a.nav-link(href='tareas') Tareas
+                    a.nav-link(href='configuraciones') Configuraciones
+                  // /.nav
+                  // /.nav-scroller
+                  // /.page-navs
+                  // .page-inner
+                .page-inner
+                  // .page-title-bar
+                header.page-title-bar
+                  nav(aria-label='breadcrumb')
+                    ol.breadcrumb
+                      li.breadcrumb-item.active
+                        a(href='user-profile.html')
+                          i.breadcrumb-icon.fa.fa-angle-left.mr-2
+                          | Beni Arisandi
+                  h1.page-title  Actividades 
+                  // /.page-title-bar
+                  // .page-section
+                  .page-section
+                    // .section-block
+                    .section-block
+                      h2.section-title  Hoy 
+                      // .timeline
+                      ul.timeline
+                        // .timeline-item
+                        li.timeline-item
+                          // .timeline-figure
+                          .timeline-figure
+                            span.tile.tile-circle.tile-sm
+                              i.far.fa-calendar-alt.fa-lg
+                          // /.timeline-figure
+                          // .timeline-body
+                          .timeline-body
+                            // .media
+                            .media
+                              // .media-body
+                              .media-body
+                                h6.timeline-heading
+                                  a.text-link(href='#') Management Meeting - W3 evaluation
+                                p.mb-0
+                                  a(href='#') Jeffrey Wells
+                                  |  created a schedule
+                                p.timeline-date.d-sm-none  Hace un minuto atras 
+                              // /.media-body
+                              // .media-right
+                              .d-none.d-sm-block
+                                span.timeline-date Hace un minuto atras
+                              // /.media-right
+                              // /.media
+                              // /.timeline-body
+                              // /.timeline-item
+                              // .timeline-item
+                              li.timeline-item
+                                // .timeline-figure
+                                .timeline-figure
+                                  span.tile.tile-circle.tile-sm
+                                    i.oi.oi-chat.fa-lg
+                                // /.timeline-figure
+                                // .timeline-body
+                                .timeline-body
+                                  // .media
+                                  .media
+                                    // .media-body
+                                    .media-body
+                                      h6.timeline-heading
+                                        a.text-link(href='#') Support Convertation
+                                      p.mb-0
+                                        a(href='#') Anna Vargas
+                                        |  logged a chat with team
+                                      p.timeline-date.d-sm-none  3 horas atrás 
+                                    // /.media-body
+                                    // .media-right
+                                    .d-none.d-sm-block
+                                      span.timeline-date 3 horas atrás
+                                    // /.media-right
+                                    // /.media
+                                    // /.timeline-body
+                                    // /.timeline-item
+                                    // .timeline
+                            h2.section-title  Ayer 
+                            // .timeline
+                            ul.timeline
+                              // .timeline-item
+                              li.timeline-item
+                                // .timeline-figure
+                                .timeline-figure
+                                  span.tile.tile-circle.tile-sm
+                                    i.fa.fa-tasks.fa-lg
+                                // /.timeline-figure
+                                // .timeline-body
+                                .timeline-body
+                                  // .media
+                                  .media
+                                    // .media-body
+                                    .media-body
+                                      h6.timeline-heading
+                                        span.custom-control.custom-control-inline.custom-checkbox
+                                          input#task1.custom-control-input(type='checkbox')
+                                          label.custom-control-label(for='task1')
+                                        a.text-link(href='#') Daily Report - Dealing targeting
+                                      p.mb-0
+                                        a(href='#') Arthur Carroll
+                                        |  created a todo on task
+                                      p.timeline-date.d-sm-none  at 8:14pm 
+                                    // /.media-body
+                                    // .media-right
+                                    .d-none.d-sm-block
+                                      span.timeline-date 8:14pm
+                                    // /.media-right
+                                    // /.media
+                                    // /.timeline-body
+                                    // /.timeline-item
+                                    // .timeline
+                            h2.section-title  25 Diciembre, 2018 
+                            // .timeline
+                            ul.timeline
+                              // .timeline-item
+                              li.timeline-item
+                                // .timeline-figure
+                                .timeline-figure
+                                  span.tile.tile-circle.tile-sm
+                                    i.fa.fa-cube.fa-lg
+                                // /.timeline-figure
+                                // .timeline-body
+                                .timeline-body
+                                  // .media
+                                  .media
+                                    // .media-body
+                                    .media-body
+                                      h6.timeline-heading
+                                        a.text-link(href='#') Project updated by Sara Carr
+                                      p.mb-0
+                                        a(href='#') Sara Carr
+                                        |  updated
+                                        strong Online Store App
+                                        |  to
+                                        a(href='#') Online Store
+                                      p.timeline-date.d-sm-none  at 3:21 AM 
+                                    // /.media-body
+                                    // .media-right
+                                    .d-none.d-sm-block
+                                      span.timeline-date 3:21am
+                                    // /.media-right
+                                    // /.media
+                                    // /.timeline-body
+                                    // /.timeline-item
+                                    // .timeline-item
+                                    li.timeline-item
+                                      // .timeline-figure
+                                      .timeline-figure
+                                        span.tile.tile-circle.tile-sm
+                                          i.fa.fa-tasks.fa-lg
+                                      // /.timeline-figure
+                                      // .timeline-body
+                                      .timeline-body
+                                        // .media
+                                        .media
+                                          // .media-body
+                                          .media-body
+                                            h6.timeline-heading
+                                              a.text-link(href='#') Someone assigned you to a task
+                                            p.mb-0
+                                              a(href='#') Angela Peterson
+                                              |  assign
+                                              a(href='#') Make lemonade from scratch
+                                              |  to you
+                                            p.timeline-date.d-sm-none  at 5:21pm 
+                                          // /.media-body
+                                          // .media-right
+                                          .d-none.d-sm-block
+                                            span.timeline-date 5:21pm
+                                          // /.media-right
+                                          // /.media
+                                          // /.timeline-body
+                                          // /.timeline-item
+                                          // .timeline-item
+                                          li.timeline-item
+                                            // .timeline-figure
+                                            .timeline-figure
+                                              span.tile.tile-circle.tile-sm
+                                                i.oi.oi-person.fa-lg
+                                            // /.timeline-figure
+                                            // .timeline-body
+                                            .timeline-body
+                                              // .media
+                                              .media
+                                                // .media-body
+                                                .media-body
+                                                  h6.timeline-heading
+                                                    a.text-link(href='#') You have new followers
+                                                  .avatar-group.mb-2
+                                                    a.user-avatar.user-avatar-sm(href='#')
+                                                      img(src='images/avatars/uifaces4.jpg', alt='User Avatar')
+                                                    a.user-avatar.user-avatar-sm(href='#')
+                                                      img(src='images/avatars/uifaces5.jpg', alt='User Avatar')
+                                                    a.user-avatar.user-avatar-sm(href='#')
+                                                      img(src='images/avatars/uifaces6.jpg', alt='User Avatar')
+                                                    a.user-avatar.user-avatar-sm(href='#')
+                                                      img(src='images/avatars/uifaces7.jpg', alt='User Avatar')
+                                                  p.mb-0
+                                                    a(href='#') Willie Dixon
+                                                    |  and 3 others followed you
+                                                  p.timeline-date.d-sm-none  at 10:32pm 
+                                                // /.media-body
+                                                // .media-right
+                                                .d-none.d-sm-block
+                                                  span.timeline-date 10:32pm
+                                                // /.media-right
+                                                // /.media
+                                                // /.timeline-body
+                                                // /.timeline-item
+                                                // /.timeline
+                                                // /.section-block
+                                  p.text-center
+                                    button.btn.btn-light(type='button')
+                                      i.fa.fa-fw.fa-angle-double-down
+                                      |  Cargar más
+
+                                                                                                        
     //- footer.app-footer
      ul.list-inline
       li.list-inline-item
