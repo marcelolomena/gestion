@@ -118,12 +118,12 @@ templateServicio += "<div class='column-half'>Plazo<span style='color:red'>*</sp
     templateServicio += "<div class='form-row'>";     
     templateServicio += "<div class='column-half'>Solicitante{uidsolicitante}</div>";
     templateServicio += "</div>"; 
+	
+    if (tipocontrato == 'Proyectos') {    
+		templateServicio += "<div class='form-row'>";     
+		templateServicio += "<div class='column-half'>Funnel{funnel}</div>";
+		templateServicio += "</div>"; 
     
-    templateServicio += "<div class='form-row'>";     
-    templateServicio += "<div class='column-half'>Funnel{funnel}</div>";
-    templateServicio += "</div>"; 
-    
-    if (tipocontrato == 'Proyectos') {
         templateServicio += "<div class='form-row'>";     
         templateServicio += "<div class='column-half'>Lider{uidlider}</div>";
         templateServicio += "</div>";   
