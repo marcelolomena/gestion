@@ -75,11 +75,13 @@ module.exports = function(sequelize, DataTypes) {
     codigoart: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },    
+    }, 
+/*       
     enrolamiento: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+*/    
     tipoproveedor: {
       type: DataTypes.INTEGER,
       allowNull: true

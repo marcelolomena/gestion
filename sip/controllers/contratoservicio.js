@@ -834,15 +834,15 @@ exports.getListaLider = function (req, res) {
     var sql = '';
 
     if (servicio == 'All' ) {
-        sql = "SELECT a.uid,a.first_name,a.last_name FROM art_user a "+
+        sql = "SELECT a.uid,b.nombre first_name,b.apellido last_name FROM art_user a "+
         "JOIN RecursosHumanos b ON a.email=b.emailTrab "+
         "WHERE b.periodo = (SELECT max(periodo) FROM RecursosHumanos) "+
-        "ORDER BY a.first_name,a.last_name";
+        "ORDER BY b.nombre,b.apellido";
     } else {
-        sql = "SELECT a.uid,a.first_name,a.last_name FROM art_user a "+
+        sql = "SELECT a.uid,b.nombre first_name,b.apellido last_name FROM art_user a "+
         "JOIN RecursosHumanos b ON a.email=b.emailTrab "+
         "WHERE b.periodo = (SELECT max(periodo) FROM RecursosHumanos) AND CAST(a.user_profile AS VARCHAR) in ('dm', 'prm') "+
-        "ORDER BY a.first_name,a.last_name";
+        "ORDER BY b.nombre,b.apellido";
     }
 
     sequelize.query(sql).spread(function (tareas) {

@@ -42,6 +42,7 @@ exports.action = function (req, res) {
         nombreapoderado1:req.body.nombreapoderado1,
         rutapoderado2:req.body.rutapoderado2,
         nombreapoderado2:req.body.nombreapoderado2,
+        enrolamiento: req.body.enrolamiento,
         borrado: 1
       }).then(function (proveedor) {
         res.json({ error_code: 0 });
@@ -83,6 +84,7 @@ exports.action = function (req, res) {
         nombreapoderado1:req.body.nombreapoderado1,
         rutapoderado2:req.body.rutapoderado2,
         nombreapoderado2:req.body.nombreapoderado2,
+        enrolamiento: req.body.enrolamiento,        
         borrado: 1
       }, {
           where: {
